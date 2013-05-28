@@ -11,8 +11,8 @@ The proyect will be developed through prototypes.
 
 ### First prototype. Goals
 For the first prototype, user will be capable of
-[] Creating cubes.
-[] Deleting cubes.
-[] Selecting and translating cubes in X, Y or Z.
-[] Selecting and rotating cubes in X, Y or Z.
-[] Selecting and scaling cubes in X, Y or Z.
+- [] Creating cubes.
+- [] Deleting cubes.
+- [] Selecting and translating cubes in X, Y or Z.
+- [] Selecting and rotating cubes in X, Y or Z.
+- [] Selecting and scaling cubes in X, Y or Z.
