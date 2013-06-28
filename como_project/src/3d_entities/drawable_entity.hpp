@@ -17,28 +17,30 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef OPENGL_CANVAS_HPP
-#define OPENGL_CANVAS_HPP
+#include <iostream>
+using namespace std;
 
-#include <QGLWidget>
-#include "../3d_entities/cube.hpp"
+#ifndef DRAWABLE_ENTITY_HPP
+#define DRAWABLE_ENTITY_HPP
 
-class OpenGLCanvas : public QGLWidget
+// http://www.opengl.org/discussion_boards/showthread.php/172481-glGenBuffer-was-not-declared
+#define GL_GLEXT_PROTOTYPES
+#include <QtOpenGL>
+
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glx.h>
+#include <glm/glm.hpp>
+
+class DrawableEntity
 {
-    Q_OBJECT
 public:
-    explicit OpenGLCanvas(QWidget *parent = 0);
+    virtual void draw() const = 0;
+
+    //virtual void translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz ) = 0;
 
 protected:
-    Cube cube;
-
-    void initializeGL();
-    void paintGL();
-    
-signals:
-    
-public slots:
-    
+    void update();
 };
 
-#endif // OPENGL_CANVAS_HPP
+#endif // DRAWABLE_ENTITY_HPP

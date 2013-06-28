@@ -19,9 +19,12 @@
 
 #include "src/gui/main_window.hpp"
 #include <QApplication>
+#include <GL/glew.h>
 
 int main(int argc, char *argv[])
 {
+    glEnableClientState( GL_VERTEX_ARRAY );
+
     QApplication a(argc, argv);
     MainWindow w;
     w.show();

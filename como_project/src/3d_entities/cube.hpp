@@ -17,28 +17,15 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef OPENGL_CANVAS_HPP
-#define OPENGL_CANVAS_HPP
+#ifndef CUBE_HPP
+#define CUBE_HPP
 
-#include <QGLWidget>
-#include "../3d_entities/cube.hpp"
+#include "geometry.hpp"
 
-class OpenGLCanvas : public QGLWidget
+class Cube : public Geometry
 {
-    Q_OBJECT
 public:
-    explicit OpenGLCanvas(QWidget *parent = 0);
-
-protected:
-    Cube cube;
-
-    void initializeGL();
-    void paintGL();
-    
-signals:
-    
-public slots:
-    
+    Cube();
 };
 
-#endif // OPENGL_CANVAS_HPP
+#endif // CUBE_HPP

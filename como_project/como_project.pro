@@ -14,10 +14,16 @@ TEMPLATE = app
 
 SOURCES += src/main.cpp\
         src/gui/main_window.cpp \
-    src/gui/opengl_canvas.cpp
+    src/gui/opengl_canvas.cpp \
+    src/3d_entities/geometry.cpp \
+    src/3d_entities/cube.cpp
 
 HEADERS  += \
     src/gui/main_window.hpp \
-    src/gui/opengl_canvas.hpp
+    src/gui/opengl_canvas.hpp \
+    src/3d_entities/geometry.hpp \
+    src/3d_entities/cube.hpp \
+    src/3d_entities/drawable_entity.hpp
 
 FORMS    += main_window.ui
+

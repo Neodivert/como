@@ -17,28 +17,35 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef OPENGL_CANVAS_HPP
-#define OPENGL_CANVAS_HPP
+#ifndef GEOMETRY_HPP
+#define GEOMETRY_HPP
 
-#include <QGLWidget>
-#include "../3d_entities/cube.hpp"
+#include "drawable_entity.hpp"
+#include <vector>
 
-class OpenGLCanvas : public QGLWidget
+enum VBOS
 {
-    Q_OBJECT
-public:
-    explicit OpenGLCanvas(QWidget *parent = 0);
+    VERTEX_DATA = 0,
+    VERTEX_INDICES,
 
-protected:
-    Cube cube;
-
-    void initializeGL();
-    void paintGL();
-    
-signals:
-    
-public slots:
-    
+    N_VBOS
 };
 
-#endif // OPENGL_CANVAS_HPP
+class Geometry : public DrawableEntity
+{
+protected:
+    GLuint vao;
+    GLuint* vbos;
+
+    glm::vec3 color;
+    std::vector< glm::vec3 > originalVertices;
+    std::vector< glm::vec3 > originalNormals;
+
+public:
+    Geometry();
+    ~Geometry();
+
+   virtual void draw() const;
+};
+
+#endif // GEOMETRY_HPP
