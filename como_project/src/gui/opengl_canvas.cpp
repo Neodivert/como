@@ -32,6 +32,10 @@ void OpenGLCanvas::initializeGL()
     glEnable( GL_DEPTH_TEST );
 
     glDepthFunc( GL_LEQUAL );
+
+    ShaderLoader shaderLoader;
+
+    shaderLoader.loadShaders( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
 }
 
 #include <iostream>
@@ -39,22 +43,47 @@ using namespace std;
 
 void OpenGLCanvas::paintGL()
 {
+    static GLfloat x = 0.0f;
+    cout << "Painting" << endl;
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     cube.draw();
-    /*
-    glBegin(GL_TRIANGLES);
-          glColor3f(1.0f, 0.0f, 0.0f);
-          glVertex3f(0.0f,0.0f, 0.0f);
-          glVertex3f(2.0f,0.0f, 0.0f);
-          glVertex3f(1.0f,1.0f, 0.0f);
 
+    glPointSize( 10.0f );
+    glBegin(GL_POINTS);
+
+          //glColor3f(0.0f, 1.0f, 0.0f);
+
+          glVertex3f( 1.0f, 0.0f, 0.0f );
+
+          glVertex3f( 0.0f, 1.0f, 0.0f );
+
+
+          glVertex3f( 0.0f, -1.0f, 0.0f );
+
+          glVertex3f( -1.0f, 0.0f, 0.0f );
+          /*
           glColor3f(0.0f,1.0f, 0.0f);
-          glVertex3f(-1.0f,0.0f, 0.0f);
-          glVertex3f(-3.0f,2.0f, 0.0f);
-          glVertex3f(-2.0f,0.0f, 0.0f);
+          glVertex3f(0.0f,0.0f, 0.0f);
+          glVertex3f(2.0f,2.0f, 0.0f);
+          glVertex3f(1.0f,0.0f, 0.0f);
+*/
     glEnd();
-    */
+
+    x += 0.5f;
 
     glFlush();
+}
+
+
+void OpenGLCanvas::resizeGL( int w, int h )
+{
+    cout << "Resizing" << endl;
+    glViewport( 0, 0, w, h );
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    // http://stackoverflow.com/questions/2571402/c-opengl-glortho-please-explain-the-usage-of-this-command
+    glOrtho(0.0f, w, h, 0.0f, 0.0f, 1.0f);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 }

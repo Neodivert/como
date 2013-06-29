@@ -23,6 +23,10 @@ using namespace std;
 #ifndef DRAWABLE_ENTITY_HPP
 #define DRAWABLE_ENTITY_HPP
 
+
+
+//#include <GL/glew.h>
+
 // http://www.opengl.org/discussion_boards/showthread.php/172481-glGenBuffer-was-not-declared
 #define GL_GLEXT_PROTOTYPES
 #include <QtOpenGL>
@@ -30,7 +34,10 @@ using namespace std;
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glx.h>
+
+
 #include <glm/glm.hpp>
+
 
 class DrawableEntity
 {

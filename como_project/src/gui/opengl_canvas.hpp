@@ -22,6 +22,7 @@
 
 #include <QGLWidget>
 #include "../3d_entities/cube.hpp"
+#include "../utilities/shader_loader.hpp"
 
 class OpenGLCanvas : public QGLWidget
 {
@@ -34,6 +35,7 @@ protected:
 
     void initializeGL();
     void paintGL();
+    void resizeGL( int w, int h );
     
 signals:
     

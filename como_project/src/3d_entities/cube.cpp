@@ -21,10 +21,34 @@
 
 Cube::Cube()
 {
+    /*** TODO: Move to Geometry constructor ***/
+    cout << "Geometry constructor" << endl;
+
+    vbos = new GLuint[N_VBOS];
+
+    // Generate a VAO for the geometry.
+    glGenVertexArrays( 1, &vao );
+
+    cout << "vao: " << vao << endl;
+
+    // Bind the previous VAO as the active one.
+    glBindVertexArray( vao );
+
+    // Generate some VBOs for the geometry's vertices data.
+    glGenBuffers( N_VBOS, vbos );
+
+    // Bind one VBO for keeping vertex data.
+    glBindBuffer( GL_ARRAY_BUFFER, vbos[VERTEX_DATA] );
+
+    // Bind one VBO for keeping vertex indices.
+    //glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, vbos[VERTEX_INDICES] );
+    /******/
+
     cout << "Cube constructor" << endl;
 
     const GLfloat cubeVertices[] =
     {
+        // Front face
         1.0f, 0.0f, 0.0f,
         1.0f, 1.0f, 0.0f,
         0.0f, 1.0f, 0.0f,
@@ -44,7 +68,7 @@ Cube::Cube()
 
     cout << sizeof( cubeVertices ) << endl;
     glBufferData( GL_ARRAY_BUFFER, sizeof( cubeVertices ), cubeVertices, GL_DYNAMIC_DRAW );
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeIndices ), cubeIndices, GL_STATIC_DRAW );
+    //glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeIndices ), cubeIndices, GL_STATIC_DRAW );
 
     // Bind one VBO for keeping vertex data.
     glBindBuffer( GL_ARRAY_BUFFER, vbos[VERTEX_DATA] );

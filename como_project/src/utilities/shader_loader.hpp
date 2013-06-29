@@ -17,21 +17,19 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
+#ifndef SHADER_LOADER_HPP
+#define SHADER_LOADER_HPP
 
-#include "src/gui/main_window.hpp"
-#include <QApplication>
-#include <src/utilities/shader_loader.hpp>
+#include <fstream>
+#include "../3d_entities/drawable_entity.hpp"
 
-
-int main(int argc, char *argv[])
+class ShaderLoader
 {
-    //glewInit();
-    glEnableClientState( GL_VERTEX_ARRAY );
+public:
+    ShaderLoader();
 
+    void readFile( const char* file, GLchar* buffer, const unsigned int n );
+    void loadShaders( const char* vertexShaderFile, const char* fragmentShaderFile );
+};
 
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    
-    return a.exec();
-}
+#endif // SHADER_LOADER_HPP
