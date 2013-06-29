@@ -25,30 +25,64 @@
 
 Geometry::Geometry()
 {
+    // Generate a VAO for the geometry.
+    glGenVertexArrays( 1, &vao );
 
+    cout << "vao: " << vao << endl;
+
+    // Bind the previous VAO as the active one.
+    glBindVertexArray( vao );
+
+    // Generate some VBOs for the geometry's vertices data.
+    glGenBuffers( 1, &vbo );
+
+    // Bind one VBO for keeping vertex data.
+    glBindBuffer( GL_ARRAY_BUFFER, vbo );
+
+    // Bind one VBO for keeping vertex indices.
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
 }
 
 
 Geometry::~Geometry()
 {
-    delete [] vbos;
+    glDeleteBuffers( 1, &vbo );
+    //delete [] vbos;
 }
 
 
 void Geometry::draw() const
 {
+    // Bind Geometry VAO as the active one.
     glBindVertexArray( vao );
-    glBindBuffer( GL_VERTEX_ARRAY, vbos[VERTEX_DATA] );
 
-    /*
-    glBegin(GL_LINE_LOOP);//start drawing a line loop
-        //glColor3f( 1.0f, 0.0f, 0.0f );
-          glVertex3f(-1.0f,0.0f,0.0f);//left of window
-          glVertex3f(0.0f,-1.0f,0.0f);//bottom of window
-          glVertex3f(1.0f,0.0f,0.0f);//right of window
-          glVertex3f(0.0f,1.0f,0.0f);//top of window
-        glEnd();//end drawing of line loop
-    */
-    glDrawArrays( GL_LINE_LOOP, 0, 6 );
-    //glDrawElements( GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, NULL );
+    // Draw Geometry primitives.
+    glDrawElements( GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, NULL );
+}
+
+
+void Geometry::update()
+{
+    cout << "Inside update()" << endl;
+    cout << "originalVertices.size(): " << originalVertices.size() << endl;
+
+    GLfloat* transformedVertices = NULL;
+    glm::vec4 transformedVertex;
+
+    transformedVertices = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
+
+    for( GLuint i = 0; i<originalVertices.size(); i++ ){
+        transformedVertex = transformationMatrix * glm::vec4( originalVertices[i], 1.0f );
+
+        transformedVertices[i*3+X] = transformedVertex.x;
+        transformedVertices[i*3+Y] = transformedVertex.y;
+        transformedVertices[i*3+Z] = transformedVertex.z;
+
+        cout << "transformedVertices[" << i << "]: "
+             << transformedVertices[i*3+X] << ", "
+             << transformedVertices[i*3+Y] << ", "
+             << transformedVertices[i*3+Z] << endl;
+    }
+
+    glUnmapBuffer( GL_ARRAY_BUFFER );
 }

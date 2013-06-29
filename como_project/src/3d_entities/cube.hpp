@@ -22,6 +22,8 @@
 
 #include "geometry.hpp"
 
+const GLuint N_CUBE_VERTICES = 8;
+
 class Cube : public Geometry
 {
 public:

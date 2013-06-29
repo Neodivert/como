@@ -17,13 +17,16 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include <iostream>
-using namespace std;
-
 #ifndef DRAWABLE_ENTITY_HPP
 #define DRAWABLE_ENTITY_HPP
 
 
+/***
+ * Includes
+ ***/
+
+#include <iostream>
+using namespace std;
 
 //#include <GL/glew.h>
 
@@ -35,19 +38,35 @@ using namespace std;
 #include <GL/glu.h>
 #include <GL/glx.h>
 
-
 #include <glm/glm.hpp>
 
 
+/***
+ * Enum types
+ ***/
+enum COORDINATES
+{
+    X = 0,
+    Y,
+    Z
+};
+
+
+/***
+ * Main file class
+ ***/
+
 class DrawableEntity
 {
-public:
-    virtual void draw() const = 0;
+    protected:
+        glm::mat4 transformationMatrix;
 
-    //virtual void translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz ) = 0;
+        virtual void update() = 0;
 
-protected:
-    void update();
+    public:
+        DrawableEntity();
+
+        virtual void draw() const = 0;
 };
 
 #endif // DRAWABLE_ENTITY_HPP

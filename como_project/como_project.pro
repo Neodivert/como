@@ -17,7 +17,8 @@ SOURCES += src/main.cpp\
     src/gui/opengl_canvas.cpp \
     src/3d_entities/geometry.cpp \
     src/3d_entities/cube.cpp \
-    src/utilities/shader_loader.cpp
+    src/utilities/shader_loader.cpp \
+    src/3d_entities/drawable_entity.cpp
 
 HEADERS  += \
     src/gui/main_window.hpp \

@@ -22,22 +22,31 @@
 OpenGLCanvas::OpenGLCanvas(QWidget *parent) :
     QGLWidget(parent)
 {
+    cube = NULL;
+}
+
+
+OpenGLCanvas::~OpenGLCanvas()
+{
+    delete cube;
 }
 
 
 void OpenGLCanvas::initializeGL()
 {
     //glClearColor( 1.0f, 1.0f, 1.0f, 0.0f );
-
-    glEnable( GL_DEPTH_TEST );
-
-    glDepthFunc( GL_LEQUAL );
-
     ShaderLoader* shaderLoader = ShaderLoader::getInstance();
 
     shaderLoader->loadShaders( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
 
     ShaderLoader::destroy();
+
+
+    glEnable( GL_DEPTH_TEST );
+
+    glDepthFunc( GL_LEQUAL );
+
+    cube = new Cube;
 }
 
 #include <iostream>
@@ -45,35 +54,12 @@ using namespace std;
 
 void OpenGLCanvas::paintGL()
 {
-    static GLfloat x = 0.0f;
     cout << "Painting" << endl;
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
 
     glPointSize( 10.0f );
-    cube.draw();
-
-    glBegin(GL_POINTS);
-
-          //glColor3f(0.0f, 1.0f, 0.0f);
-
-          glVertex3f( 1.0f, 0.0f, 0.0f );
-
-          glVertex3f( 0.0f, 1.0f, 0.0f );
-
-
-          glVertex3f( 0.0f, -1.0f, 0.0f );
-
-          glVertex3f( -1.0f, 0.0f, 0.0f );
-          /*
-          glColor3f(0.0f,1.0f, 0.0f);
-          glVertex3f(0.0f,0.0f, 0.0f);
-          glVertex3f(2.0f,2.0f, 0.0f);
-          glVertex3f(1.0f,0.0f, 0.0f);
-*/
-    glEnd();
-
-    x += 0.5f;
+    cube->draw();
 
     glFlush();
 }

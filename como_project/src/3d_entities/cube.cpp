@@ -21,57 +21,73 @@
 
 Cube::Cube()
 {
-    /*** TODO: Move to Geometry constructor ***/
-    cout << "Geometry constructor" << endl;
-
-    vbos = new GLuint[N_VBOS];
-
-    // Generate a VAO for the geometry.
-    glGenVertexArrays( 1, &vao );
-
-    cout << "vao: " << vao << endl;
-
-    // Bind the previous VAO as the active one.
-    glBindVertexArray( vao );
-
-    // Generate some VBOs for the geometry's vertices data.
-    glGenBuffers( N_VBOS, vbos );
-
-    // Bind one VBO for keeping vertex data.
-    glBindBuffer( GL_ARRAY_BUFFER, vbos[VERTEX_DATA] );
-
-    // Bind one VBO for keeping vertex indices.
-    //glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, vbos[VERTEX_INDICES] );
-    /******/
-
-    cout << "Cube constructor" << endl;
-
     const GLfloat cubeVertices[] =
     {
         // Front face
-        1.0f, 0.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f,
+        0.5f, -0.5f, 0.5f,  // V1 : Bottom right
+        0.5f, 0.5f, 0.5f,   // V2 : Top right
+        -0.5f, 0.5f, 0.5f,  // V3 : Top left
+        -0.5f, -0.5f, 0.5f, // V4 : Bottom left
 
-        1.0f, 0.0f, -1.0f,
-        1.0f, 1.0f, -1.0f,
-        0.0f, 1.0f, -1.0f,
-        0.0f, 0.0f, -1.0f
+        // Back face
+        0.5f, -0.5f, -0.5f, // V5 : Bottom right
+        0.5f, 0.5f, -0.5f,  // V6 : Top right
+        -0.5f, 0.5f, -0.5f, // V7 : Top left
+        -0.5f, -0.5f, -0.5f // V8 : Bottom left
     };
 
     const GLubyte cubeIndices[] =
     {
+        // Front face
         0, 1, 3,
-        1, 2, 3
+        1, 2, 3,
+
+        // Left face
+        3, 2, 7,
+        2, 6, 7,
+
+        // Back face
+        7, 6, 4,
+        6, 5, 4,
+
+        // Right face
+        4, 5, 7,
+        5, 1, 7,
+
+        // Top face
+        1, 5, 2,
+        5, 6, 2,
+
+        // Bottom face
+        4, 0, 7,
+        0, 3, 7
     };
 
+
+    originalVertices.resize( N_CUBE_VERTICES );
+    for( GLuint i=0; i<N_CUBE_VERTICES; i++ )
+    {
+        originalVertices[i] = glm::vec3( cubeVertices[i*3+X],
+                                         cubeVertices[i*3+Y],
+                                         cubeVertices[i*3+Z] );
+
+        cout << "originalVertices[" << i << "]: "
+             << originalVertices[i].x << ", "
+             << originalVertices[i].y << ", "
+             << originalVertices[i].z << ")" << endl;
+    }
+
     cout << sizeof( cubeVertices ) << endl;
-    glBufferData( GL_ARRAY_BUFFER, sizeof( cubeVertices ), cubeVertices, GL_DYNAMIC_DRAW );
-    //glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeIndices ), cubeIndices, GL_STATIC_DRAW );
+
+    glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeIndices ), cubeIndices, GL_STATIC_DRAW );
+
+    glBufferData( GL_ARRAY_BUFFER, sizeof( cubeVertices ), NULL, GL_DYNAMIC_DRAW );
+
+    cout << "calling to update()" << endl;
+    update();
 
     // Bind one VBO for keeping vertex data.
-    glBindBuffer( GL_ARRAY_BUFFER, vbos[VERTEX_DATA] );
+    //glBindBuffer( GL_ARRAY_BUFFER, vbo );
 
     GLint prog;
     glGetIntegerv( GL_CURRENT_PROGRAM, &prog );

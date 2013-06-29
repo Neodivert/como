@@ -34,12 +34,15 @@ enum VBOS
 class Geometry : public DrawableEntity
 {
 protected:
-    GLuint vao;
-    GLuint* vbos;
+    GLuint vao; // VAO : Vertex-Attributes Array
+    GLuint vbo; // VBO : Vertex-Buffer Array
+    GLuint ebo; // EBO : Elements-Buffer Array
 
-    glm::vec3 color;
+    //glm::vec3 color;
     std::vector< glm::vec3 > originalVertices;
     std::vector< glm::vec3 > originalNormals;
+
+    virtual void update();
 
 public:
     Geometry();

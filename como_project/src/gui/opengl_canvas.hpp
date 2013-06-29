@@ -29,9 +29,10 @@ class OpenGLCanvas : public QGLWidget
     Q_OBJECT
 public:
     explicit OpenGLCanvas(QWidget *parent = 0);
+    ~OpenGLCanvas();
 
 protected:
-    Cube cube;
+    Cube* cube;
 
     void initializeGL();
     void paintGL();
