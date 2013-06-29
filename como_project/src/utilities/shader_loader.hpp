@@ -25,8 +25,14 @@
 
 class ShaderLoader
 {
-public:
+private:
+    static ShaderLoader* instance;
     ShaderLoader();
+
+public:
+
+    static ShaderLoader* getInstance();
+    static void destroy();
 
     void readFile( const char* file, GLchar* buffer, const unsigned int n );
     void loadShaders( const char* vertexShaderFile, const char* fragmentShaderFile );

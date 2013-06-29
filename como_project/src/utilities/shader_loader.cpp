@@ -19,8 +19,27 @@
 
 #include "shader_loader.hpp"
 
+ShaderLoader* ShaderLoader::instance = NULL;
+
+
 ShaderLoader::ShaderLoader()
 {
+}
+
+
+ShaderLoader* ShaderLoader::getInstance()
+{
+    if( instance == NULL ){
+        instance = new ShaderLoader();
+    }
+    return instance;
+}
+
+
+void ShaderLoader::destroy()
+{
+    delete instance;
+    instance = NULL;
 }
 
 
@@ -101,12 +120,12 @@ void ShaderLoader::loadShaders( const char* vertexShaderFile, const char* fragme
 
 
     glLinkProgram( shaderProgram );
-    /*glGetShaderiv( fragmentShader, GL_COMPILE_STATUS, &compilationResult );
+    glGetProgramiv( shaderProgram, GL_LINK_STATUS, &linkingResult );
 
-    if( compilationResult == GL_FALSE ){
-        cout << "ERROR compiling fragment shader" << endl;
+    if( linkingResult == GL_FALSE ){
+        cout << "ERROR linking shader program" << endl;
         return;
-    }*/
+    }
 
 
     glUseProgram( shaderProgram );
@@ -115,6 +134,6 @@ void ShaderLoader::loadShaders( const char* vertexShaderFile, const char* fragme
     delete [] vertexShaderCode;
     delete [] fragmentShaderCode;
 
-    cout << "New shader program loaded!" << endl;
+    cout << "New shader program loaded and being used!" << endl;
 }
 

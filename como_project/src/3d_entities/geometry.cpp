@@ -38,6 +38,7 @@ Geometry::~Geometry()
 void Geometry::draw() const
 {
     glBindVertexArray( vao );
+    glBindBuffer( GL_VERTEX_ARRAY, vbos[VERTEX_DATA] );
 
     /*
     glBegin(GL_LINE_LOOP);//start drawing a line loop
@@ -48,6 +49,6 @@ void Geometry::draw() const
           glVertex3f(0.0f,1.0f,0.0f);//top of window
         glEnd();//end drawing of line loop
     */
-    glDrawArrays( GL_LINE_LOOP, 0, 3 );
+    glDrawArrays( GL_LINE_LOOP, 0, 6 );
     //glDrawElements( GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, NULL );
 }

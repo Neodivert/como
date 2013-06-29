@@ -75,7 +75,7 @@ Cube::Cube()
 
     GLint prog;
     glGetIntegerv( GL_CURRENT_PROGRAM, &prog );
-    GLint vPosition = glGetAttribLocation( prog, "position" );
+    GLint vPosition = glGetAttribLocation( prog, "vPosition" );
 
     if( vPosition == GL_INVALID_OPERATION ){
         cout << "Error getting layout of \"position\"" << endl;

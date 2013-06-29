@@ -33,9 +33,11 @@ void OpenGLCanvas::initializeGL()
 
     glDepthFunc( GL_LEQUAL );
 
-    ShaderLoader shaderLoader;
+    ShaderLoader* shaderLoader = ShaderLoader::getInstance();
 
-    shaderLoader.loadShaders( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
+    shaderLoader->loadShaders( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
+
+    ShaderLoader::destroy();
 }
 
 #include <iostream>
@@ -47,9 +49,10 @@ void OpenGLCanvas::paintGL()
     cout << "Painting" << endl;
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-    cube.draw();
 
     glPointSize( 10.0f );
+    cube.draw();
+
     glBegin(GL_POINTS);
 
           //glColor3f(0.0f, 1.0f, 0.0f);
