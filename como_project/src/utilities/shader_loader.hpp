@@ -52,8 +52,8 @@ class ShaderLoader
          * 2.
          ***/
         void readFile( const char* file, GLchar* buffer, const unsigned int n );
-        void loadShader( GLenum shaderType, const char* shaderFile );
-        void loadShaders( const char* vertexShaderFile, const char* fragmentShaderFile );
+        void loadShaderObject( GLenum shaderType, const char* shaderFile );
+        void loadMinimumShaderProgram( const char* vertexShaderFile, const char* fragmentShaderFile );
 };
 
 #endif // SHADER_LOADER_HPP

@@ -45,7 +45,7 @@ void OpenGLCanvas::initializeGL()
 
     // Load shaders.
     ShaderLoader* shaderLoader = ShaderLoader::getInstance();
-    shaderLoader->loadShaders( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
+    shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
     ShaderLoader::destroy();
 
     // Set OpenGL depth test.

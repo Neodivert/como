@@ -79,7 +79,7 @@ void ShaderLoader::readFile( const char* filePath, GLchar* buffer, const unsigne
 }
 
 
-void ShaderLoader::loadShader( GLenum shaderType, const char* shaderFile )
+void ShaderLoader::loadShaderObject( GLenum shaderType, const char* shaderFile )
 {
     const GLint STR_SIZE = 1024;
     GLchar* shaderCode = new GLchar[ STR_SIZE ];
@@ -110,12 +110,13 @@ void ShaderLoader::loadShader( GLenum shaderType, const char* shaderFile )
     delete [] shaderCode;
 }
 
-void ShaderLoader::loadShaders( const char* vertexShaderFile, const char* fragmentShaderFile )
+
+void ShaderLoader::loadMinimumShaderProgram( const char* vertexShaderFile, const char* fragmentShaderFile )
 {
     GLint linkingResult;
 
-    loadShader( GL_VERTEX_SHADER, vertexShaderFile );
-    loadShader( GL_FRAGMENT_SHADER, fragmentShaderFile );
+    loadShaderObject( GL_VERTEX_SHADER, vertexShaderFile );
+    loadShaderObject( GL_FRAGMENT_SHADER, fragmentShaderFile );
 
 
     glLinkProgram( shaderProgram );
