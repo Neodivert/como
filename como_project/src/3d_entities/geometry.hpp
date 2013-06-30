@@ -20,35 +20,45 @@
 #ifndef GEOMETRY_HPP
 #define GEOMETRY_HPP
 
+/***
+ * Includes
+ ***/
 #include "drawable_entity.hpp"
 #include <vector>
 
-enum VBOS
-{
-    VERTEX_DATA = 0,
-    VERTEX_INDICES,
 
-    N_VBOS
-};
+/***
+ * File main class
+ ***/
 
 class Geometry : public DrawableEntity
 {
-protected:
-    GLuint vao; // VAO : Vertex-Attributes Array
-    GLuint vbo; // VBO : Vertex-Buffer Array
-    GLuint ebo; // EBO : Elements-Buffer Array
+    protected:
+        GLuint vao; // VAO : Vertex-Attributes Array
+        GLuint vbo; // VBO : Vertex-Buffer Array
+        GLuint ebo; // EBO : Elements-Buffer Array
 
-    //glm::vec3 color;
-    std::vector< glm::vec3 > originalVertices;
-    std::vector< glm::vec3 > originalNormals;
+        //glm::vec3 color;
+        std::vector< glm::vec3 > originalVertices;
+        std::vector< glm::vec3 > originalNormals;
 
-    virtual void update();
+    public:
+        /***
+         * 1. Initialization and destruction
+         ***/
+        Geometry();
+        ~Geometry();
 
-public:
-    Geometry();
-    ~Geometry();
+        /***
+         * 2. Update and drawing.
+         ***/
+    protected:
+        // Recompute transformed vertices based on original ones and transformation matrix.
+        virtual void update();
 
-   virtual void draw() const;
+    public:
+        // Send geometry to OpenGL server for rendering it.
+        virtual void draw() const;
 };
 
 #endif // GEOMETRY_HPP

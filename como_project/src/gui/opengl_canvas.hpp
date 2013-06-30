@@ -20,23 +20,47 @@
 #ifndef OPENGL_CANVAS_HPP
 #define OPENGL_CANVAS_HPP
 
+
+/***
+ * Includes
+ ***/
+
 #include <QGLWidget>
 #include "../3d_entities/cube.hpp"
 #include "../utilities/shader_loader.hpp"
 
+
+/***
+ * File main class
+ ***/
+
 class OpenGLCanvas : public QGLWidget
 {
     Q_OBJECT
+
+    /***
+     * 1. Initialization and destruction
+     ***/
 public:
     explicit OpenGLCanvas(QWidget *parent = 0);
     ~OpenGLCanvas();
 
 protected:
+    // TODO: move to another place.
     Cube* cube;
 
+    // Initialize OpenGL context.
     void initializeGL();
-    void paintGL();
+
+    /***
+     * 2. Updating and drawing
+     ***/
+    // Resize OpenGL canvas.
     void resizeGL( int w, int h );
+
+    // Render OpenGL canvas.
+    void paintGL();
+
     
 signals:
     

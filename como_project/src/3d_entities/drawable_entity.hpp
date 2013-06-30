@@ -21,7 +21,7 @@
 #define DRAWABLE_ENTITY_HPP
 
 
-/***
+/****
  * Includes
  ***/
 
@@ -61,12 +61,13 @@ class DrawableEntity
     protected:
         glm::mat4 transformationMatrix;
 
-        virtual void update() = 0;
-
     public:
+        // Constructor. Initialize transformation matrix to identity matrix.
         DrawableEntity();
 
+    protected:
         virtual void draw() const = 0;
+        virtual void update() = 0;
 };
 
 #endif // DRAWABLE_ENTITY_HPP

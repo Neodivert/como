@@ -18,12 +18,28 @@
 ***/
 
 #include "shader_loader.hpp"
+#include <iostream>
+using namespace std;
 
 ShaderLoader* ShaderLoader::instance = NULL;
 
 
+/***
+ * 1. Initialization and destruction
+ ***/
+
 ShaderLoader::ShaderLoader()
 {
+    shaderProgram = glCreateProgram();
+    if( shaderProgram == 0 ){
+        cout << "ERROR in glCreateProgram()" << endl;
+        return;
+    }
+}
+
+ShaderLoader::~ShaderLoader()
+{
+    //delete [] shaders;
 }
 
 
@@ -43,80 +59,63 @@ void ShaderLoader::destroy()
 }
 
 
+/***
+ * 2.
+ ***/
 void ShaderLoader::readFile( const char* filePath, GLchar* buffer, const unsigned int n )
 {
+    // Open given file.
     std::ifstream file( filePath );
-
     if( !file.is_open() ){
         return;
     }
 
+    // Copy file content to buffer and append a null character.
     file.read( buffer, n-1 );
-
     buffer[file.gcount()] = 0;
 
+    // Close file.
     file.close();
 }
 
-#include <iostream>
-using namespace std;
+
+void ShaderLoader::loadShader( GLenum shaderType, const char* shaderFile )
+{
+    const GLint STR_SIZE = 1024;
+    GLchar* shaderCode = new GLchar[ STR_SIZE ];
+    GLuint shaderObject;
+    GLint compilationResult;
+
+    // Create shader object.
+    shaderObject = glCreateShader( shaderType );
+
+    // Read shader source from file.
+    readFile( shaderFile, shaderCode, STR_SIZE );
+    cout << shaderCode << endl;
+    glShaderSource( shaderObject, 1, &shaderCode, &STR_SIZE );
+
+    // Compile shader and check compilation result.
+    glCompileShader( shaderObject );
+    glGetShaderiv( shaderObject, GL_COMPILE_STATUS, &compilationResult );
+
+    if( compilationResult == GL_FALSE ){
+        // TODO: Difference between different shader types.
+        cout << "ERROR compiling shader" << endl;
+        return;
+    }
+
+    // Attach shader object to shader program.
+    glAttachShader( shaderProgram, shaderObject );
+
+    delete [] shaderCode;
+}
 
 void ShaderLoader::loadShaders( const char* vertexShaderFile, const char* fragmentShaderFile )
 {
-    const GLint STR_SIZE = 1024;
+    GLint linkingResult;
 
-    GLchar* vertexShaderCode = new GLchar [ STR_SIZE ];
-    GLchar* fragmentShaderCode = new GLchar [ STR_SIZE ];
-
-    readFile( vertexShaderFile, vertexShaderCode, STR_SIZE );
-    cout << vertexShaderCode << endl;
-
-    readFile( fragmentShaderFile, fragmentShaderCode, STR_SIZE );
-    cout << fragmentShaderCode << endl;
-
-
-    GLuint shaderProgram, vertexShader, fragmentShader;
-
-    shaderProgram = glCreateProgram();
-    if( shaderProgram == 0 ){
-        cout << "ERROR in glCreateProgram()" << endl;
-        return;
-    }
-
-    vertexShader = glCreateShader( GL_VERTEX_SHADER );
-    if( vertexShader == 0 ){
-        cout << "ERROR in glCreateProgram()" << endl;
-        return;
-    }
-
-    GLint compilationResult, linkingResult;
-    glShaderSource( vertexShader, 1, &vertexShaderCode, &STR_SIZE );
-    glCompileShader( vertexShader );
-    glGetShaderiv( vertexShader, GL_COMPILE_STATUS, &compilationResult );
-
-    if( compilationResult == GL_FALSE ){
-        cout << "ERROR compiling vertex shader" << endl;
-        return;
-    }
-
-    glAttachShader( shaderProgram, vertexShader );
-
-    fragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
-    if( fragmentShader == 0 ){
-        cout << "ERROR in glCreateProgram()" << endl;
-        return;
-    }
-    glShaderSource( fragmentShader, 1, &fragmentShaderCode, &STR_SIZE );
-
-    glCompileShader( fragmentShader );
-    glGetShaderiv( fragmentShader, GL_COMPILE_STATUS, &compilationResult );
-
-    if( compilationResult == GL_FALSE ){
-        cout << "ERROR compiling fragment shader" << endl;
-        return;
-    }
-
-    glAttachShader( shaderProgram, fragmentShader );
+    loadShader( GL_VERTEX_SHADER, vertexShaderFile );
+    loadShader( GL_FRAGMENT_SHADER, fragmentShaderFile );
 
 
     glLinkProgram( shaderProgram );
@@ -129,11 +128,6 @@ void ShaderLoader::loadShaders( const char* vertexShaderFile, const char* fragme
 
 
     glUseProgram( shaderProgram );
-
-
-    delete [] vertexShaderCode;
-    delete [] fragmentShaderCode;
-
     cout << "New shader program loaded and being used!" << endl;
 }
 

@@ -20,22 +20,40 @@
 #ifndef SHADER_LOADER_HPP
 #define SHADER_LOADER_HPP
 
+/***
+ * Includes
+ ***/
 #include <fstream>
 #include "../3d_entities/drawable_entity.hpp"
 
+
+/***
+ * File main class
+ ***/
 class ShaderLoader
 {
-private:
-    static ShaderLoader* instance;
-    ShaderLoader();
+    private:
+        // Singlenton pattern: only one static instance and a private constructor.
+        static ShaderLoader* instance;
 
-public:
+        GLuint shaderProgram;
 
-    static ShaderLoader* getInstance();
-    static void destroy();
+        /***
+         * 1. Initialization and destruction
+         ***/
+        ShaderLoader();
+        ~ShaderLoader();
 
-    void readFile( const char* file, GLchar* buffer, const unsigned int n );
-    void loadShaders( const char* vertexShaderFile, const char* fragmentShaderFile );
+    public:
+        static ShaderLoader* getInstance();
+        static void destroy();
+
+        /***
+         * 2.
+         ***/
+        void readFile( const char* file, GLchar* buffer, const unsigned int n );
+        void loadShader( GLenum shaderType, const char* shaderFile );
+        void loadShaders( const char* vertexShaderFile, const char* fragmentShaderFile );
 };
 
 #endif // SHADER_LOADER_HPP
