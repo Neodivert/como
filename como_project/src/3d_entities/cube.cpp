@@ -36,7 +36,7 @@ Cube::Cube()
         -0.5f, -0.5f, -0.5f // V8 : Bottom left
     };
 
-    const GLubyte cubeIndices[] =
+    const GLubyte cubeInnerElements[] =
     {
         // Front face
         0, 1, 3,
@@ -63,6 +63,33 @@ Cube::Cube()
         0, 3, 7
     };
 
+    const GLubyte cubeContourElements[] =
+    {
+        // Front face
+        0, 1,
+        1, 2,
+        2, 3,
+        3, 0,
+
+        // Back face
+        4, 5,
+        5, 6,
+        6, 7,
+        7, 4,
+
+        // Joins
+        0, 4,
+        1, 5,
+        2, 6,
+        3, 7
+    };
+
+
+    nInnerElements = sizeof( cubeInnerElements ) / sizeof( cubeInnerElements[0] );
+    nContourElements = sizeof( cubeContourElements ) / sizeof( cubeContourElements[0] );
+
+    cout << "nInnerElements: " << nInnerElements << "(36)" << endl;
+    cout << "nContourElements: " << nContourElements << "(24)" << endl;
 
     originalVertices.resize( N_CUBE_VERTICES );
     for( GLuint i=0; i<N_CUBE_VERTICES; i++ )
@@ -79,7 +106,24 @@ Cube::Cube()
 
     cout << sizeof( cubeVertices ) << endl;
 
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeIndices ), cubeIndices, GL_STATIC_DRAW );
+    glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeInnerElements ) + sizeof( cubeContourElements ), NULL, GL_STATIC_DRAW );
+    glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, 0, sizeof( cubeInnerElements ), cubeInnerElements );
+    glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeInnerElements ), sizeof( cubeContourElements ), cubeContourElements );
+
+
+    // Map the OpenGL's VBO for transformed vertices to client memory, so we can update it.
+    GLubyte* elements = (GLubyte*)glMapBuffer( GL_ELEMENT_ARRAY_BUFFER, GL_READ_ONLY );
+
+    // Recompute each transformed vertex by multiplying its corresponding original vertex
+    // by transformation matrix.
+    for( GLuint i = 0; i<24+36; i++ ){
+        cout << "elements[" << i << "] : " << (GLint)elements[i] << endl;
+    }
+
+    // We finished updating the VBO, unmap it so OpenGL can take control over it.
+    glUnmapBuffer( GL_ELEMENT_ARRAY_BUFFER );
+
+
 
     glBufferData( GL_ARRAY_BUFFER, sizeof( cubeVertices ), NULL, GL_DYNAMIC_DRAW );
 

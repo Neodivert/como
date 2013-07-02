@@ -61,8 +61,8 @@ Geometry::Geometry()
     }
 
 
-    setInnerColor( 1.0f, 0.0f, 0.0f, 1.0f );
-    setContourColor( 0.0f, 1.0f, 0.0f, 1.0f );
+    setInnerColor( 0.5f, 0.0f, 0.0f, 1.0f );
+    setContourColor( 1.0f, 0.0f, 0.0f, 1.0f );
 }
 
 
@@ -126,8 +126,7 @@ void Geometry::update()
 
 void Geometry::draw() const
 {
-
-    // Feed uniform shader variable "color" with geometry color.
+    // Feed uniform shader variable "color" with geometry inner color.
     // I fallen in a common mistake D:.
     // http://www.opengl.org/wiki/GLSL_:_common_mistakes
     // The problem is that for count, you set it to 4 while it should be 1 because you
@@ -138,9 +137,16 @@ void Geometry::draw() const
     // Bind Geometry VAO as the active one.
     glBindVertexArray( vao );
 
-    // Draw Geometry primitives.
-    // TODO: change and use full buffer.
-    glDrawElements( GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, NULL );
+    // Draw geometry interior.
+    glDrawElements( GL_TRIANGLES, nInnerElements, GL_UNSIGNED_BYTE, NULL );
+
+    // Feed uniform shader variable "color" with geometry contour color.
+    glUniform4fv( uniformColorLocation, 1, contourColor );
+
+    // Draw geometry contour.
+    // I fallen in another error D: (I was using glDrawElementsBaseIndex).
+    // http://stackoverflow.com/questions/9431923/using-an-offset-with-vbos-in-opengl
+    glDrawElements( GL_LINES, nContourElements, GL_UNSIGNED_BYTE, (GLvoid*)( sizeof( GLubyte )*nInnerElements ) );
 }
 
 

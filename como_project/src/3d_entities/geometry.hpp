@@ -48,6 +48,10 @@ class Geometry : public DrawableEntity
         std::vector< glm::vec3 > originalVertices;
         std::vector< glm::vec3 > originalNormals;
 
+        // Number of inner and contour elements to be renderer (for indexed drawing).
+        GLsizei nInnerElements;
+        GLsizei nContourElements;
+
     public:
         /***
          * 1. Initialization and destruction
