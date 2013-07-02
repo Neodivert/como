@@ -78,11 +78,12 @@ void OpenGLCanvas::paintGL()
 
 void OpenGLCanvas::resizeGL( int w, int h )
 {
+
     cout << "Resizing" << endl;
 
     // Viewport occuppies the full canvas.
     glViewport( 0, 0, w, h );
-
+    /*
     // Set a orthographic projection cube.
     // http://stackoverflow.com/questions/2571402/c-opengl-glortho-please-explain-the-usage-of-this-command
     glMatrixMode(GL_PROJECTION);
@@ -93,4 +94,5 @@ void OpenGLCanvas::resizeGL( int w, int h )
     // TODO: is this necessary?
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    */
 }

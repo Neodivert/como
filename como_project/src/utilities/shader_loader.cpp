@@ -40,6 +40,7 @@ ShaderLoader::ShaderLoader()
 ShaderLoader::~ShaderLoader()
 {
     //delete [] shaders;
+    // TODO (here or not): free allocated resources (shader objects, etc).
 }
 
 

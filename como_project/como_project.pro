@@ -30,4 +30,4 @@ HEADERS  += \
 
 FORMS    += main_window.ui
 
-LIBS += -lGLEW
+LIBS += -lGLEW -lGLU

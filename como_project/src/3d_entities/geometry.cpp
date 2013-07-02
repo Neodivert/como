@@ -23,6 +23,9 @@
 #include <GL/gl.h>
 #include <GL/glx.h>
 
+// Initialize the location of the uniform shader variable "color" as unitialized (-1).
+GLint Geometry::uniformColorLocation = -1;
+
 
 /***
  * 1. Initialization and destruction
@@ -30,6 +33,8 @@
 
 Geometry::Geometry()
 {   
+    GLint currentShaderProgram;
+
     // Generate a VAO for the geometry and bind it as the active one.
     glGenVertexArrays( 1, &vao );
     glBindVertexArray( vao );
@@ -41,6 +46,23 @@ Geometry::Geometry()
     // Generate an EBO and bind it for holding vertex indices.
     glGenBuffers( 1, &ebo );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
+
+
+    if( uniformColorLocation == -1 ){
+        // Location of uniform shader variable "color" hasn't been initialized yet.
+
+        // Get current shader program id.
+        glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+
+        // Get location of uniform shader variable "color".
+        uniformColorLocation = glGetUniformLocation( currentShaderProgram, "color" );
+
+        cout << "uniform color location initialized to (" << uniformColorLocation << ")" << endl;
+    }
+
+
+    setInnerColor( 1.0f, 0.0f, 0.0f, 1.0f );
+    setContourColor( 0.0f, 1.0f, 0.0f, 1.0f );
 }
 
 
@@ -55,7 +77,28 @@ Geometry::~Geometry()
 
 
 /***
- * 2. Update and drawing.
+ * 2. Getters and setters
+ ***/
+void Geometry::setInnerColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a )
+{
+    innerColor[0] = r;
+    innerColor[1] = g;
+    innerColor[2] = b;
+    innerColor[3] = a;
+}
+
+
+void Geometry::setContourColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a )
+{
+    contourColor[0] = r;
+    contourColor[1] = g;
+    contourColor[2] = b;
+    contourColor[3] = a;
+}
+
+
+/***
+ * 3. Update and drawing.
  ***/
 
 void Geometry::update()
@@ -83,10 +126,20 @@ void Geometry::update()
 
 void Geometry::draw() const
 {
+
+    // Feed uniform shader variable "color" with geometry color.
+    // I fallen in a common mistake D:.
+    // http://www.opengl.org/wiki/GLSL_:_common_mistakes
+    // The problem is that for count, you set it to 4 while it should be 1 because you
+    // are sending 1 vec4​ to the shader. The count is the number of that type
+    // (4f, which corresponds to vec4​) that you are setting.
+    glUniform4fv( uniformColorLocation, 1, innerColor );
+
     // Bind Geometry VAO as the active one.
     glBindVertexArray( vao );
 
     // Draw Geometry primitives.
+    // TODO: change and use full buffer.
     glDrawElements( GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, NULL );
 }
 

@@ -34,11 +34,17 @@
 class Geometry : public DrawableEntity
 {
     protected:
+        // Location of the uniform shader variable used for coloring geometries.
+        static GLint uniformColorLocation;
+
         GLuint vao; // VAO : Vertex-Attributes Array
         GLuint vbo; // VBO : Vertex-Buffer Array
         GLuint ebo; // EBO : Elements-Buffer Array
 
-        //glm::vec3 color;
+        // Colors
+        GLfloat innerColor[4];
+        GLfloat contourColor[4];
+
         std::vector< glm::vec3 > originalVertices;
         std::vector< glm::vec3 > originalNormals;
 
@@ -50,7 +56,13 @@ class Geometry : public DrawableEntity
         ~Geometry();
 
         /***
-         * 2. Update and drawing.
+         * 2. Getters and setters
+         ***/
+        void setInnerColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
+        void setContourColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
+
+        /***
+         * 3. Update and drawing.
          ***/
     protected:
         // Recompute transformed vertices based on original ones and transformation matrix.

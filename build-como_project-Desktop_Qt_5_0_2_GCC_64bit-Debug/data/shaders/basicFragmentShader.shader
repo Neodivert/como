@@ -7,10 +7,11 @@
 
 #version 430 core
 
-out vec4 fColor;
+uniform vec4 color;
+out vec4 finalColor;
 
 void main()
 {
-	fColor = vec4( 0.0, 1.0, 0.0, 1.0 );
+	finalColor = color;
 }
 
