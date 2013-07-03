@@ -56,6 +56,8 @@ protected:
      * 2. Events
      ***/
     void keyPressEvent( QKeyEvent *e );
+    void dragMoveEvent(QDragMoveEvent *dragMoveEvent );
+    void mouseMoveEvent( QMouseEvent *mouseMoveEvent );
 
     /***
      * 3. Updating and drawing

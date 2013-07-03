@@ -33,3 +33,4 @@ void DrawableEntity::translate( const GLfloat& tx, const GLfloat& ty, const GLfl
     transformationMatrix = glm::translate( transformationMatrix, glm::vec3( tx, ty, tz ) );
     update();
 }
+

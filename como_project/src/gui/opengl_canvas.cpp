@@ -30,6 +30,8 @@ OpenGLCanvas::OpenGLCanvas(QWidget *parent) :
 {
     cube = NULL;
     setFocusPolicy( Qt::StrongFocus );
+
+    setAcceptDrops( true );
 }
 
 
@@ -81,6 +83,19 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
 }
 
 
+void OpenGLCanvas::dragMoveEvent(QDragMoveEvent *dragMoveEvent )
+{
+    // The event needs to be accepted here
+    cout << "Drag move event accepted" << endl;
+    dragMoveEvent->accept();
+}
+
+void OpenGLCanvas::mouseMoveEvent( QMouseEvent *mouseMoveEvent )
+{
+    mouseMoveEvent->accept();
+    cout << "Mouse move event (" << mouseMoveEvent->x() << ", " << mouseMoveEvent->y() << ")!" << endl;
+}
+
 /***
  * 3. Updating and drawing
  ***/
@@ -93,6 +108,10 @@ void OpenGLCanvas::paintGL()
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     // Draw geometries.
+    glViewport( 0, 0, width()/2, height()/2 );
+    cube->draw();
+
+    glViewport( width()/2, height()/2, width()/2, height()/2 );
     cube->draw();
 
     // Flush.
