@@ -29,6 +29,7 @@ OpenGLCanvas::OpenGLCanvas(QWidget *parent) :
     QGLWidget(parent)
 {
     cube = NULL;
+    setFocusPolicy( Qt::StrongFocus );
 }
 
 
@@ -58,7 +59,30 @@ void OpenGLCanvas::initializeGL()
 
 
 /***
- * 2. Updating and drawing
+ * 2. Events
+ ***/
+
+void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
+{
+    cout << "Key press event" << endl;
+  switch ( e->key() )
+  {
+    case Qt::Key_Left:
+      cube->translate( -0.01f, 0.0f, 0.0f );
+    break;
+    case Qt::Key_Right:
+      cube->translate( 0.01f, 0.0f, 0.0f );
+    break;
+    default:
+      cout << "Unknown key (" << e->key() << ")" << endl;
+    break;
+  }
+  updateGL();
+}
+
+
+/***
+ * 3. Updating and drawing
  ***/
 
 void OpenGLCanvas::paintGL()

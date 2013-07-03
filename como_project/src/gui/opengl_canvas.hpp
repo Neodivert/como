@@ -53,7 +53,12 @@ protected:
     void initializeGL();
 
     /***
-     * 2. Updating and drawing
+     * 2. Events
+     ***/
+    void keyPressEvent( QKeyEvent *e );
+
+    /***
+     * 3. Updating and drawing
      ***/
     // Resize OpenGL canvas.
     void resizeGL( int w, int h );

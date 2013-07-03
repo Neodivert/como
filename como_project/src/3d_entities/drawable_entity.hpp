@@ -39,6 +39,7 @@ using namespace std;
 #include <GL/glx.h>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 
 /***
@@ -65,9 +66,14 @@ class DrawableEntity
         // Constructor. Initialize transformation matrix to identity matrix.
         DrawableEntity();
 
+
+        virtual void translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz );
+
     protected:
         virtual void draw() const = 0;
         virtual void update() = 0;
+
+
 };
 
 #endif // DRAWABLE_ENTITY_HPP

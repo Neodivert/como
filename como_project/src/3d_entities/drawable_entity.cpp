@@ -24,3 +24,12 @@ DrawableEntity::DrawableEntity()
     // Initialize transformation matrix to identity matrix.
     transformationMatrix = glm::mat4( 1.0f );
 }
+
+
+
+void DrawableEntity::translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz )
+{
+    cout << "Translating" << endl;
+    transformationMatrix = glm::translate( transformationMatrix, glm::vec3( tx, ty, tz ) );
+    update();
+}
