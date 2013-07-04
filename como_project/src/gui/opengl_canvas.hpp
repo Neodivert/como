@@ -27,6 +27,7 @@
 
 #include <QGLWidget>
 #include "../3d_entities/cube.hpp"
+#include "../3d_entities/scene.hpp"
 #include "../utilities/shader_loader.hpp"
 
 
@@ -47,7 +48,8 @@ public:
 
 protected:
     // TODO: move to another place.
-    Cube* cube;
+    Scene* scene;
+
 
     // Initialize OpenGL context.
     void initializeGL();

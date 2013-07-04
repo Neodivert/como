@@ -20,14 +20,51 @@
 #include "main_window.hpp"
 #include "ui_main_window.h"
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    /*
+    scene = new QGraphicsScene;
+
+    //populateScene();
+
+    h1Splitter = new QSplitter;
+    h2Splitter = new QSplitter;
+
+    QSplitter *vSplitter = new QSplitter;
+    vSplitter->setOrientation(Qt::Vertical);
+    vSplitter->addWidget(h1Splitter);
+    vSplitter->addWidget(h2Splitter);
+
+    ViewFrame *viewFrame = new ViewFrame("Top left view");
+    viewFrame->getView()->setScene(scene);
+    h1Splitter->addWidget( viewFrame );
+
+    viewFrame = new ViewFrame("Top right view");
+    viewFrame->getView()->setScene(scene);
+    h1Splitter->addWidget(viewFrame);
+
+    viewFrame = new ViewFrame("Bottom left view");
+    viewFrame->getView()->setScene(scene);
+    h2Splitter->addWidget( viewFrame );
+
+    viewFrame = new ViewFrame("Bottom right view");
+    viewFrame->getView()->setScene(scene);
+    h2Splitter->addWidget( viewFrame );
+
+    QHBoxLayout *layout = new QHBoxLayout;
+    layout->addWidget(vSplitter);
+    setLayout(layout);
+    */
+    //setWindowTitle(tr("Chip Demo"));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete scene;
 }

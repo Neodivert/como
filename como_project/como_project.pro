@@ -18,7 +18,9 @@ SOURCES += src/main.cpp\
     src/3d_entities/geometry.cpp \
     src/3d_entities/cube.cpp \
     src/utilities/shader_loader.cpp \
-    src/3d_entities/drawable_entity.cpp
+    src/3d_entities/drawable_entity.cpp \
+    src/gui/view_frame.cpp \
+    src/3d_entities/scene.cpp
 
 HEADERS  += \
     src/gui/main_window.hpp \
@@ -26,8 +28,13 @@ HEADERS  += \
     src/3d_entities/geometry.hpp \
     src/3d_entities/cube.hpp \
     src/3d_entities/drawable_entity.hpp \
-    src/utilities/shader_loader.hpp
+    src/utilities/shader_loader.hpp \
+    src/gui/view_frame.hpp \
+    src/3d_entities/scene.hpp
 
 FORMS    += main_window.ui
 
 LIBS += -lGLEW -lGLU
+
+# http://qt-project.org/forums/viewthread/19989
+CONFIG += c++11

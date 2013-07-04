@@ -28,7 +28,7 @@ using namespace std;
 OpenGLCanvas::OpenGLCanvas(QWidget *parent) :
     QGLWidget(parent)
 {
-    cube = NULL;
+    scene = NULL;
     setFocusPolicy( Qt::StrongFocus );
 
     setAcceptDrops( true );
@@ -37,7 +37,7 @@ OpenGLCanvas::OpenGLCanvas(QWidget *parent) :
 
 OpenGLCanvas::~OpenGLCanvas()
 {
-    delete cube;
+    delete scene;
 }
 
 
@@ -56,7 +56,9 @@ void OpenGLCanvas::initializeGL()
     glDepthFunc( GL_LEQUAL );
 
     // Initialize geometry.
-    cube = new Cube;
+    scene = new Scene;
+    scene->addCube( new Cube );
+    scene->selectAll();
 }
 
 
@@ -70,10 +72,10 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
   switch ( e->key() )
   {
     case Qt::Key_Left:
-      cube->translate( -0.01f, 0.0f, 0.0f );
+      scene->translateSelectedDrawables( -0.01f, 0.0f, 0.0f );
     break;
     case Qt::Key_Right:
-      cube->translate( 0.01f, 0.0f, 0.0f );
+      scene->translateSelectedDrawables( 0.01f, 0.0f, 0.0f );
     break;
     default:
       cout << "Unknown key (" << e->key() << ")" << endl;
@@ -109,10 +111,10 @@ void OpenGLCanvas::paintGL()
 
     // Draw geometries.
     glViewport( 0, 0, width()/2, height()/2 );
-    cube->draw();
+    scene->draw();
 
     glViewport( width()/2, height()/2, width()/2, height()/2 );
-    cube->draw();
+    scene->draw();
 
     // Flush.
     glFlush();

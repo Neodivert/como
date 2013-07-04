@@ -70,10 +70,10 @@ class DrawableEntity
         virtual void translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz );
 
     protected:
-        virtual void draw() const = 0;
         virtual void update() = 0;
 
-
+    public:
+        virtual void draw() const = 0;
 };
 
 #endif // DRAWABLE_ENTITY_HPP

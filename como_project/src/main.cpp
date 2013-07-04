@@ -21,6 +21,7 @@
 #include "src/gui/main_window.hpp"
 #include <QApplication>
 #include <src/utilities/shader_loader.hpp>
+//#include "3d_entities/scene.hpp"
 
 
 int main(int argc, char *argv[])
@@ -28,10 +29,51 @@ int main(int argc, char *argv[])
     //glewInit();
     glEnableClientState( GL_VERTEX_ARRAY );
 
-
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    QApplication app(argc, argv);
+    MainWindow mainWindow;
+    mainWindow.show();
     
-    return a.exec();
+    return app.exec();
+
+    /*
+    QApplication a(argc, argv);
+
+   QHBoxLayout* hl = new QHBoxLayout();
+
+   QGraphicsScene* scene = new QGraphicsScene();
+   QWidget* wdg = new QWidget();
+   wdg->setGeometry(0,0,150,150);
+   wdg->setWindowTitle("Title1");
+
+   QGraphicsProxyWidget* proxy = scene->addWidget(wdg);
+   proxy->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
+   proxy->setPos(-150,0);
+
+   //QGraphicsPixmapItem* pix = scene->addPixmap(QPixmap("e:/test.jpg"));
+   //pix->setScale(0.1);
+   //pix->setPos(50,0);
+
+   {
+   QGraphicsView* view = new QGraphicsView();
+   view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
+   view->setScene(scene);
+   hl->addWidget(view);
+   }
+
+   {
+   QGraphicsView* view = new QGraphicsView();
+   view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
+   view->setScene(scene);
+   QTransform t;
+   t.scale(0.5,0.5);
+   view->setTransform(t);
+   hl->addWidget(view);
+   }
+
+   QWidget* w = new QWidget();
+   w->setLayout(hl);
+   w->setGeometry(QRect(50, 50, 600, 400));
+   w->show();
+   return a.exec();
+    */
 }
