@@ -29,7 +29,6 @@ DrawableEntity::DrawableEntity()
 
 void DrawableEntity::translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz )
 {
-    cout << "Translating" << endl;
     transformationMatrix = glm::translate( transformationMatrix, glm::vec3( tx, ty, tz ) );
     update();
 }
