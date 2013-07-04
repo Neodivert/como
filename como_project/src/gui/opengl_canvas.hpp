@@ -39,16 +39,19 @@ class OpenGLCanvas : public QGLWidget
 {
     Q_OBJECT
 
+private:
+    Scene* scene;
+
     /***
      * 1. Initialization and destruction
      ***/
 public:
-    explicit OpenGLCanvas(QWidget *parent = 0);
+    explicit OpenGLCanvas( QWidget *parent = 0);
+    // add "explicit"?
+    OpenGLCanvas( QGLContext * context, Scene* scene, QWidget *parent = 0 );
     ~OpenGLCanvas();
 
 protected:
-    // TODO: move to another place.
-    Scene* scene;
 
 
     // Initialize OpenGL context.

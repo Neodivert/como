@@ -27,6 +27,18 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    QHBoxLayout *layout = new QHBoxLayout;
+
+    layout->addWidget( new RenderPanel );
+
+    setCentralWidget(new QWidget);
+    centralWidget()->setLayout( layout );
+
+    /*
+    renderPanel = new RenderPanel;
+    ui->statusBar->addWidget( renderPanel );
+*/
+
     /*
     scene = new QGraphicsScene;
 
@@ -66,5 +78,5 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete scene;
+    //delete scene;
 }

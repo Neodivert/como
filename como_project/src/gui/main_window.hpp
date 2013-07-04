@@ -22,12 +22,7 @@
 
 #include <QMainWindow>
 #include "view_frame.hpp"
-
-QT_FORWARD_DECLARE_CLASS(QGraphicsScene)
-QT_FORWARD_DECLARE_CLASS(QGraphicsView)
-QT_FORWARD_DECLARE_CLASS(QLabel)
-QT_FORWARD_DECLARE_CLASS(QSlider)
-QT_FORWARD_DECLARE_CLASS(QSplitter)
+#include "render_panel.hpp"
 
 namespace Ui {
 class MainWindow;
@@ -43,9 +38,6 @@ public:
     
 private:
     Ui::MainWindow *ui;
-    QGraphicsScene* scene;
-    QSplitter *h1Splitter;
-    QSplitter *h2Splitter;
 };
 
 #endif // MAIN_WINDOW_H

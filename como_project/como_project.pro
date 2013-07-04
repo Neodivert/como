@@ -20,7 +20,8 @@ SOURCES += src/main.cpp\
     src/utilities/shader_loader.cpp \
     src/3d_entities/drawable_entity.cpp \
     src/gui/view_frame.cpp \
-    src/3d_entities/scene.cpp
+    src/3d_entities/scene.cpp \
+    src/gui/render_panel.cpp
 
 HEADERS  += \
     src/gui/main_window.hpp \
@@ -30,7 +31,8 @@ HEADERS  += \
     src/3d_entities/drawable_entity.hpp \
     src/utilities/shader_loader.hpp \
     src/gui/view_frame.hpp \
-    src/3d_entities/scene.hpp
+    src/3d_entities/scene.hpp \
+    src/gui/render_panel.hpp
 
 FORMS    += main_window.ui
 

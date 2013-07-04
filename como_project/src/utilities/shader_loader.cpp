@@ -92,7 +92,6 @@ void ShaderLoader::loadShaderObject( GLenum shaderType, const char* shaderFile )
 
     // Read shader source from file.
     readFile( shaderFile, shaderCode, STR_SIZE );
-    cout << shaderCode << endl;
     glShaderSource( shaderObject, 1, &shaderCode, &STR_SIZE );
 
     // Compile shader and check compilation result.

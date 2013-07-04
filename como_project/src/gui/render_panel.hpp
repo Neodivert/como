@@ -17,12 +17,38 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
+#ifndef RENDER_PANEL_HPP
+#define RENDER_PANEL_HPP
+
+#include <QGLWidget>
+#include <QSplitter>
 #include "view_frame.hpp"
+#include "../utilities/shader_loader.hpp"
+
+QT_FORWARD_DECLARE_CLASS(QLabel)
+QT_FORWARD_DECLARE_CLASS(QSlider)
+QT_FORWARD_DECLARE_CLASS(QSplitter)
 
 
-ViewFrame::ViewFrame( const QString &name, QGLContext* glContext, Scene* scene )
+class RenderPanel : public QFrame
 {
-    QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget( new OpenGLCanvas( glContext, scene ) );
-    setLayout(layout);
-}
+    Q_OBJECT
+
+    private:
+        QSplitter *h1Splitter;
+        QSplitter *h2Splitter;
+        Scene* scene;
+
+    public:
+        explicit RenderPanel( QWidget *parent = 0 );
+
+        // Initialize OpenGL context.
+        //void initializeGL();
+
+    signals:
+
+    public slots:
+    
+};
+
+#endif // RENDER_PANEL_HPP

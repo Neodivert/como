@@ -106,13 +106,24 @@ Cube::Cube()
 
     cout << sizeof( cubeVertices ) << endl;
 
+    cout << "glBufferData ..." << endl;
+
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeInnerElements ) + sizeof( cubeContourElements ), NULL, GL_STATIC_DRAW );
     glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, 0, sizeof( cubeInnerElements ), cubeInnerElements );
     glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeInnerElements ), sizeof( cubeContourElements ), cubeContourElements );
 
+    cout << "glBufferData ...OK" << endl;
+
+    cout << "Mapping buffer ..." << endl;
 
     // Map the OpenGL's VBO for transformed vertices to client memory, so we can update it.
     GLubyte* elements = (GLubyte*)glMapBuffer( GL_ELEMENT_ARRAY_BUFFER, GL_READ_ONLY );
+
+    if( glGetError() != GL_NO_ERROR ){
+        cout << "ERROR" << endl;
+    }
+
+    cout << "elements: [" << elements << "]" << endl;
 
     // Recompute each transformed vertex by multiplying its corresponding original vertex
     // by transformation matrix.
@@ -123,7 +134,7 @@ Cube::Cube()
     // We finished updating the VBO, unmap it so OpenGL can take control over it.
     glUnmapBuffer( GL_ELEMENT_ARRAY_BUFFER );
 
-
+    cout << "Mapping buffer ...OK" << endl;
 
     glBufferData( GL_ARRAY_BUFFER, sizeof( cubeVertices ), NULL, GL_DYNAMIC_DRAW );
 

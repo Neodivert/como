@@ -34,10 +34,21 @@ OpenGLCanvas::OpenGLCanvas(QWidget *parent) :
     setAcceptDrops( true );
 }
 
+OpenGLCanvas::OpenGLCanvas( QGLContext * context, Scene* scene, QWidget *parent ) :
+    QGLWidget( context, parent )
+{
+    cout << "OpenGLCanvas created" << endl;
+    this->scene = scene;
+
+    setFocusPolicy( Qt::StrongFocus );
+
+    setAcceptDrops( true );
+}
+
 
 OpenGLCanvas::~OpenGLCanvas()
 {
-    delete scene;
+    //delete scene;
 }
 
 
@@ -46,19 +57,9 @@ void OpenGLCanvas::initializeGL()
     // Set clear color.
     glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 
-    // Load shaders.
-    ShaderLoader* shaderLoader = ShaderLoader::getInstance();
-    shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
-    ShaderLoader::destroy();
-
     // Set OpenGL depth test.
     glEnable( GL_DEPTH_TEST );
     glDepthFunc( GL_LEQUAL );
-
-    // Initialize geometry.
-    scene = new Scene;
-    scene->addCube( new Cube );
-    scene->selectAll();
 }
 
 
@@ -105,16 +106,17 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent *mouseMoveEvent )
 void OpenGLCanvas::paintGL()
 {
     cout << "Drawing GL" << endl;
+    glViewport( 0, 0, width(), height() );
 
     // Clear buffers.
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     // Draw geometries.
-    glViewport( 0, 0, width()/2, height()/2 );
+    //glViewport( 0, 0, width()/2, height()/2 );
     scene->draw();
 
-    glViewport( width()/2, height()/2, width()/2, height()/2 );
-    scene->draw();
+    /*glViewport( width()/2, height()/2, width()/2, height()/2 );
+    scene->draw();*/
 
     // Flush.
     glFlush();
@@ -123,7 +125,6 @@ void OpenGLCanvas::paintGL()
 
 void OpenGLCanvas::resizeGL( int w, int h )
 {
-
     cout << "Resizing" << endl;
 
     // Viewport occuppies the full canvas.

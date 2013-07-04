@@ -22,17 +22,18 @@
 
 #include <QFrame>
 #include <QGraphicsView>
+#include <QGLContext>
 #include "opengl_canvas.hpp"
+#include "../3d_entities/scene.hpp"
 
 class ViewFrame : public QFrame
 {
     private:
-        QGraphicsView *graphicsView;
+        //QGraphicsView *graphicsView;
+        OpenGLCanvas* openGLCanvas;
 
     public:
-        ViewFrame( const QString &name );
-
-        QGraphicsView* getView() const ;
+        ViewFrame( const QString &name, QGLContext* glContext, Scene* scene );
 };
 
 #endif // VIEW_FRAME_H
