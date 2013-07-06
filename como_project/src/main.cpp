@@ -17,62 +17,18 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "src/gui/app_window.hpp"
 #include <QGuiApplication>
-#include <src/utilities/shader_loader.hpp>
-//#include "3d_entities/scene.hpp"
-
-
+#include "src/gui/app_window.hpp"
 
 int main(int argc, char *argv[])
 {
-    //glewInit();
-
+    // Create a Qt application.
     QGuiApplication app( argc, argv );
+
+    // Create a Qt window and show it.
     AppWindow window;
     window.show();
     
+    // Run Qt application.
     return app.exec();
-
-    /*
-    QApplication a(argc, argv);
-
-   QHBoxLayout* hl = new QHBoxLayout();
-
-   QGraphicsScene* scene = new QGraphicsScene();
-   QWidget* wdg = new QWidget();
-   wdg->setGeometry(0,0,150,150);
-   wdg->setWindowTitle("Title1");
-
-   QGraphicsProxyWidget* proxy = scene->addWidget(wdg);
-   proxy->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
-   proxy->setPos(-150,0);
-
-   //QGraphicsPixmapItem* pix = scene->addPixmap(QPixmap("e:/test.jpg"));
-   //pix->setScale(0.1);
-   //pix->setPos(50,0);
-
-   {
-   QGraphicsView* view = new QGraphicsView();
-   view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
-   view->setScene(scene);
-   hl->addWidget(view);
-   }
-
-   {
-   QGraphicsView* view = new QGraphicsView();
-   view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
-   view->setScene(scene);
-   QTransform t;
-   t.scale(0.5,0.5);
-   view->setTransform(t);
-   hl->addWidget(view);
-   }
-
-   QWidget* w = new QWidget();
-   w->setLayout(hl);
-   w->setGeometry(QRect(50, 50, 600, 400));
-   w->show();
-   return a.exec();
-    */
 }
