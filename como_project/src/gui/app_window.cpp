@@ -17,16 +17,12 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "main_window.hpp"
-#include "ui_main_window.h"
+#include "app_window.hpp"
 
-
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+AppWindow::AppWindow( QScreen *screen ) :
+    QWindow( screen )
 {
-    ui->setupUi(this);
-
+    /*
     // Load OpenGL context.
     oglContext = shared_ptr<OpenGLContext>( new OpenGLContext );
 
@@ -43,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
     layout->addWidget( renderPanel );
     setCentralWidget(new QWidget);
     centralWidget()->setLayout( layout );
-
+    */
 
     //renderPanel->setWindowFlags(Qt::Widget);
 
@@ -96,10 +92,4 @@ MainWindow::MainWindow(QWidget *parent) :
     setLayout(layout);
     */
     //setWindowTitle(tr("Chip Demo"));
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
-    //delete scene;
 }

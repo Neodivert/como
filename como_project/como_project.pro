@@ -13,7 +13,6 @@ TEMPLATE = app
 
 
 SOURCES += src/main.cpp\
-        src/gui/main_window.cpp \
     src/gui/opengl_canvas.cpp \
     src/3d_entities/geometry.cpp \
     src/3d_entities/cube.cpp \
@@ -22,10 +21,10 @@ SOURCES += src/main.cpp\
     src/gui/view_frame.cpp \
     src/3d_entities/scene.cpp \
     src/gui/render_panel.cpp \
-    src/gui/opengl_context.cpp
+    src/gui/opengl_context.cpp \
+    src/gui/app_window.cpp
 
 HEADERS  += \
-    src/gui/main_window.hpp \
     src/gui/opengl_canvas.hpp \
     src/3d_entities/geometry.hpp \
     src/3d_entities/cube.hpp \
@@ -34,7 +33,8 @@ HEADERS  += \
     src/gui/view_frame.hpp \
     src/3d_entities/scene.hpp \
     src/gui/render_panel.hpp \
-    src/gui/opengl_context.hpp
+    src/gui/opengl_context.hpp \
+    src/gui/app_window.hpp
 
 FORMS    += main_window.ui
 

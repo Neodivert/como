@@ -33,7 +33,6 @@ class OpenGLContext : public QOffscreenSurface
 private:
     QOpenGLContext* oglContext;
 
-
 public:
     OpenGLContext();
 
