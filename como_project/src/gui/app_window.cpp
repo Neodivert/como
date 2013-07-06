@@ -22,13 +22,18 @@
 AppWindow::AppWindow( QScreen *screen ) :
     QWindow( screen )
 {
-    // Load OpenGL context and make it current for this surface.
+    // Create an OpenGL context.
     oglContext = shared_ptr<OpenGLContext>( new OpenGLContext );
 
-    setSurfaceType( QSurface::OpenGLSurface );
+    // Use the previous OpenGL context's format as the format of this window.
     setFormat( oglContext->format() );
+
+    // Set this surface to be rendered by OpenGL. This is a "cheat" so we can make
+    // previous OpenGL context current for this surface and so load the shaders.
+    setSurfaceType( QSurface::OpenGLSurface );
     create();
 
+    // Make previous OpenGL context current for this window.
     cout << "Making OGL context current for AppWindow: " << oglContext->makeCurrent( this ) << endl;
 
     // Load shaders.
@@ -36,78 +41,10 @@ AppWindow::AppWindow( QScreen *screen ) :
     shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
     shaderLoader->destroy();
 
+    // We are done with the OpenGL context for this window.
     oglContext->doneCurrent();
 
+    // Set this window to be rendered by Qt engine again.
     setSurfaceType( QSurface::RasterSurface );
     create();
-    /*
-
-    oglContext = shared_ptr<OpenGLContext>( new OpenGLContext );
-
-    // Load empty scene.
-    scene = shared_ptr<Scene>( new Scene );
-    scene->addCube( new Cube );
-    scene->selectAll();
-
-
-    RenderPanel* renderPanel = new RenderPanel( oglContext, scene );
-
-
-    QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget( renderPanel );
-    setCentralWidget(new QWidget);
-    centralWidget()->setLayout( layout );
-    */
-
-    //renderPanel->setWindowFlags(Qt::Widget);
-
-    //oglContext.LoadShaders();
-
-    //setCentralWidget( renderPanel );
-
-    /*
-    layout->addWidget( renderPanel );
-
-    setCentralWidget(new QWidget);
-    centralWidget()->setLayout( layout );
-    */
-    /*
-    renderPanel = new RenderPanel;
-    ui->statusBar->addWidget( renderPanel );
-*/
-
-    /*
-    scene = new QGraphicsScene;
-
-    //populateScene();
-
-    h1Splitter = new QSplitter;
-    h2Splitter = new QSplitter;
-
-    QSplitter *vSplitter = new QSplitter;
-    vSplitter->setOrientation(Qt::Vertical);
-    vSplitter->addWidget(h1Splitter);
-    vSplitter->addWidget(h2Splitter);
-
-    ViewFrame *viewFrame = new ViewFrame("Top left view");
-    viewFrame->getView()->setScene(scene);
-    h1Splitter->addWidget( viewFrame );
-
-    viewFrame = new ViewFrame("Top right view");
-    viewFrame->getView()->setScene(scene);
-    h1Splitter->addWidget(viewFrame);
-
-    viewFrame = new ViewFrame("Bottom left view");
-    viewFrame->getView()->setScene(scene);
-    h2Splitter->addWidget( viewFrame );
-
-    viewFrame = new ViewFrame("Bottom right view");
-    viewFrame->getView()->setScene(scene);
-    h2Splitter->addWidget( viewFrame );
-
-    QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget(vSplitter);
-    setLayout(layout);
-    */
-    //setWindowTitle(tr("Chip Demo"));
 }
