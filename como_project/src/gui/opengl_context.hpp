@@ -20,7 +20,6 @@
 #ifndef OPENGL_CONTEXT_H
 #define OPENGL_CONTEXT_H
 
-#include <QOffscreenSurface>
 #include <QOpenGLContext>
 #include "../utilities/shader_loader.hpp"
 #include "../3d_entities/scene.hpp"
@@ -28,15 +27,10 @@
 #include <memory>
 using namespace std;
 
-class OpenGLContext : public QOffscreenSurface
+class OpenGLContext : public QOpenGLContext
 {
-private:
-    QOpenGLContext* oglContext;
-
-public:
-    OpenGLContext();
-
-    bool makeCurrent(QSurface * surface);
+    public:
+        OpenGLContext();
 };
 
 #endif // OPENGL_CONTEXT_H

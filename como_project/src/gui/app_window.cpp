@@ -22,8 +22,26 @@
 AppWindow::AppWindow( QScreen *screen ) :
     QWindow( screen )
 {
+    // Load OpenGL context and make it current for this surface.
+    oglContext = shared_ptr<OpenGLContext>( new OpenGLContext );
+
+    setSurfaceType( QSurface::OpenGLSurface );
+    setFormat( oglContext->format() );
+    create();
+
+    cout << "Making OGL context current for AppWindow: " << oglContext->makeCurrent( this ) << endl;
+
+    // Load shaders.
+    ShaderLoader* shaderLoader = ShaderLoader::getInstance();
+    shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
+    shaderLoader->destroy();
+
+    oglContext->doneCurrent();
+
+    setSurfaceType( QSurface::RasterSurface );
+    create();
     /*
-    // Load OpenGL context.
+
     oglContext = shared_ptr<OpenGLContext>( new OpenGLContext );
 
     // Load empty scene.

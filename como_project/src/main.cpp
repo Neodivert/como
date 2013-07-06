@@ -18,7 +18,7 @@
 ***/
 
 #include "src/gui/app_window.hpp"
-#include <QApplication>
+#include <QGuiApplication>
 #include <src/utilities/shader_loader.hpp>
 //#include "3d_entities/scene.hpp"
 
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 {
     //glewInit();
 
-    QApplication app(argc, argv);
+    QGuiApplication app( argc, argv );
     AppWindow window;
     window.show();
     
