@@ -17,30 +17,22 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef MAIN_WINDOW_H
-#define MAIN_WINDOW_H
+#ifndef OPENGL_CONTEXT_H
+#define OPENGL_CONTEXT_H
 
-#include <QMainWindow>
-#include "view_frame.hpp"
-#include "render_panel.hpp"
-#include "opengl_context.hpp"
+#include <QOffscreenSurface>
+#include <QOpenGLContext>
+#include "../utilities/shader_loader.hpp"
+#include <iostream>
+using namespace std;
 
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+class OpenGLContext : public QOffscreenSurface
 {
-    Q_OBJECT
-    
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-
-    OpenGLContext oglContext;
-    
 private:
-    Ui::MainWindow *ui;
+    QOpenGLContext* oglContext;
+
+public:
+    OpenGLContext();
 };
 
-#endif // MAIN_WINDOW_H
+#endif // OPENGL_CONTEXT_H

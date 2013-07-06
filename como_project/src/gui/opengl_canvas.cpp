@@ -35,9 +35,24 @@ OpenGLCanvas::OpenGLCanvas(QWidget *parent) :
 }
 
 OpenGLCanvas::OpenGLCanvas( QGLContext * context, Scene* scene, QWidget *parent ) :
-    QGLWidget( context, parent )
+    QGLWidget( parent )
 {
-    cout << "OpenGLCanvas created" << endl;
+    //setWindowFlags(Qt::Widget);
+
+    //context->makeCurrent( this );
+
+    cout << "OpenGLCanvas created. QGLContext is valid?: " << this->context()->isValid() << ")" << endl;
+
+    /*
+    context = create_context();
+     setFormat( context->format() );
+     context->setDevice( this );
+     setContext( context );
+    */
+    /*
+    context->setDevice( this );
+    setContext( context );
+*/
     this->scene = scene;
 
     setFocusPolicy( Qt::StrongFocus );
@@ -54,8 +69,9 @@ OpenGLCanvas::~OpenGLCanvas()
 
 void OpenGLCanvas::initializeGL()
 {
+    cout << "OpenGLCanvas::initializeGL()" << endl;
     // Set clear color.
-    glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+    glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
     // Set OpenGL depth test.
     glEnable( GL_DEPTH_TEST );
@@ -105,6 +121,7 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent *mouseMoveEvent )
 
 void OpenGLCanvas::paintGL()
 {
+
     cout << "Drawing GL" << endl;
     glViewport( 0, 0, width(), height() );
 
@@ -113,11 +130,11 @@ void OpenGLCanvas::paintGL()
 
     // Draw geometries.
     //glViewport( 0, 0, width()/2, height()/2 );
-    scene->draw();
+    //scene->draw();
 
     /*glViewport( width()/2, height()/2, width()/2, height()/2 );
-    scene->draw();*/
-
+    scene->draw();
+    */
     // Flush.
     glFlush();
 }

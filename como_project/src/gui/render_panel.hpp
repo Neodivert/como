@@ -22,15 +22,17 @@
 
 #include <QGLWidget>
 #include <QSplitter>
+#include <QOpenGLContext>
 #include "view_frame.hpp"
 #include "../utilities/shader_loader.hpp"
+#include <QOffscreenSurface>
 
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QSlider)
 QT_FORWARD_DECLARE_CLASS(QSplitter)
 
 
-class RenderPanel : public QFrame
+class RenderPanel : public QOffscreenSurface
 {
     Q_OBJECT
 
@@ -39,12 +41,20 @@ class RenderPanel : public QFrame
         QSplitter *h2Splitter;
         Scene* scene;
 
+        QOpenGLContext* glContext;
+
     public:
         explicit RenderPanel( QWidget *parent = 0 );
 
+        void initializeGL();
         // Initialize OpenGL context.
         //void initializeGL();
-
+        /*
+        virtual QSurfaceFormat format() const;
+        virtual QPlatformSurface* surfaceHandle() const;
+        virtual QSurface::SurfaceType surfaceType() const;
+        virtual QSize size() const;
+        */
     signals:
 
     public slots:

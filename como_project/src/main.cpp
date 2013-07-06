@@ -27,11 +27,10 @@
 int main(int argc, char *argv[])
 {
     //glewInit();
-    glEnableClientState( GL_VERTEX_ARRAY );
 
     QApplication app(argc, argv);
     MainWindow mainWindow;
-    mainWindow.show();
+    mainWindow.QMainWindow::show();
     
     return app.exec();
 

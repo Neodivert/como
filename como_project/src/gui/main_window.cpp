@@ -29,11 +29,19 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QHBoxLayout *layout = new QHBoxLayout;
 
-    layout->addWidget( new RenderPanel );
+    RenderPanel* renderPanel = new RenderPanel( this );
+    //renderPanel->setWindowFlags(Qt::Widget);
+
+    oglContext.LoadShaders();
+
+    //setCentralWidget( renderPanel );
+
+    /*
+    layout->addWidget( renderPanel );
 
     setCentralWidget(new QWidget);
     centralWidget()->setLayout( layout );
-
+    */
     /*
     renderPanel = new RenderPanel;
     ui->statusBar->addWidget( renderPanel );

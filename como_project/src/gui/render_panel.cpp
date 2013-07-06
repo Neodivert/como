@@ -24,30 +24,23 @@ void LoadShaders()
 
 }
 
-RenderPanel::RenderPanel( QWidget* parent ) :
-    QFrame(parent)
+RenderPanel::RenderPanel( QWidget* parent )
+    /*(parent)*/ /*, QOpenGLWidget(parent)*/
 {
     //hide();
+    //setSurfaceType( QSurface::OpenGLSurface );
 
-    // http://stackoverflow.com/questions/11000014/cant-set-desired-opengl-version-in-qglwidget
-    QGLFormat qglFormat;
-    qglFormat.setVersion(4,2);
-    qglFormat.setProfile(QGLFormat::CoreProfile);
-    qglFormat.setSampleBuffers(true);
 
-    QGLContext* glContext = new QGLContext( qglFormat, new QGLWidget );
-    glContext->create();
-    glContext->makeCurrent();
 
-    cout << "Context is valid?: " << glContext->isValid() << endl;
-    cout << "Context->version: " << glContext->format().majorVersion() << " . " << glContext->format().minorVersion() << endl;
 
+    /*
+    glEnableClientState( GL_VERTEX_ARRAY );
+    */
     // Load shaders.
-    ShaderLoader* shaderLoader = ShaderLoader::getInstance();
-    shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
-    shaderLoader->destroy();
+
 
     // Load empty scene.
+    /*
     scene = new Scene;
     scene->addCube( new Cube );
     scene->selectAll();
@@ -61,28 +54,63 @@ RenderPanel::RenderPanel( QWidget* parent ) :
     vSplitter->addWidget(h2Splitter);
 
     ViewFrame *viewFrame = new ViewFrame( "Top left view", glContext, scene );
-    //viewFrame->getView()->setScene(scene);
     h1Splitter->addWidget( viewFrame );
-
+    cout << "Context is valid?: " << glContext->isValid() << endl;
+    /*
     viewFrame = new ViewFrame("Top right view", glContext, scene );
-    //viewFrame->getView()->setScene(scene);
     h1Splitter->addWidget( viewFrame );
+    cout << "Context is valid?: " << glContext->isValid() << endl;
 
     viewFrame = new ViewFrame("Bottom left view", glContext, scene );
-    //viewFrame->getView()->setScene(scene);
     h2Splitter->addWidget( viewFrame );
+    cout << "Context is valid?: " << glContext->isValid() << endl;
 
     viewFrame = new ViewFrame("Bottom right view", glContext, scene );
-    //viewFrame->getView()->setScene(scene);
     h2Splitter->addWidget( viewFrame );
-
+    cout << "Context is valid?: " << glContext->isValid() << endl;
+    */
+    /*
     QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget(vSplitter);
-    //layout->addWidget( viewFrame );
+    //layout->addWidget(vSplitter);
+    layout->addWidget( viewFrame );
     setLayout(layout);
-
+    */
     cout << "Render panel constructor OK" << endl;
 }
+
+/*
+void RenderPanel::initializeGL()
+{
+    cout << "RenderPanel::initializeGL" << endl;
+    glContext->makeCurrent(this);
+    initializeOpenGLFunctions();
+
+    ShaderLoader* shaderLoader = ShaderLoader::getInstance();
+    shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
+    shaderLoader->destroy();
+}
+
+/*
+
+QSurfaceFormat RenderPanel::format() const
+{
+    return &format;
+}
+
+QPlatformSurface* surfaceHandle() const
+{
+    return QSurface::OpenGLSurface;
+}
+
+
+QSurface::SurfaceType RenderPanel::surfaceType() const
+{
+    return QSurface::OpenGLSurface;
+}
+
+
+virtual QSize size() const;
+*/
 
 /*
 void RenderPanel::initializeGL()
