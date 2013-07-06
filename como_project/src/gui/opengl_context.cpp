@@ -27,7 +27,7 @@ OpenGLContext::OpenGLContext()
     QSurfaceFormat format;
     format.setMajorVersion(4);
     format.setMinorVersion(2);
-    format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setProfile( QSurfaceFormat::CoreProfile );
     //qglFormat.setSampleBuffers(true);
 
     oglContext = new QOpenGLContext();
@@ -38,7 +38,25 @@ OpenGLContext::OpenGLContext()
     cout << "Context is valid?: " << oglContext->isValid() << endl;
     cout << "Context->version: " << oglContext->format().majorVersion() << " . " << oglContext->format().minorVersion() << endl;
 
+    // TODO: Do I have to do this or call glewInit()?
+
+    // Obtain a functions object and resolve all entry points
+
+    QAbstractOpenGLFunctions* oglFunctions = oglContext->versionFunctions();
+    if ( !oglFunctions ) {
+        qWarning( "Could not obtain OpenGL versions object" );
+        exit( 1 );
+    }
+    oglFunctions->initializeOpenGLFunctions();
+
+    // Load shaders.
     ShaderLoader* shaderLoader = ShaderLoader::getInstance();
     shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
     shaderLoader->destroy();
+}
+
+
+bool OpenGLContext::makeCurrent(QSurface * surface)
+{
+    return oglContext->makeCurrent( surface );
 }

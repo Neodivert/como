@@ -32,19 +32,20 @@ QT_FORWARD_DECLARE_CLASS(QSlider)
 QT_FORWARD_DECLARE_CLASS(QSplitter)
 
 
-class RenderPanel : public QOffscreenSurface
+class RenderPanel : public QFrame
 {
     Q_OBJECT
 
     private:
         QSplitter *h1Splitter;
         QSplitter *h2Splitter;
-        Scene* scene;
 
-        QOpenGLContext* glContext;
+
+        shared_ptr< OpenGLContext > glContext;
+        shared_ptr< Scene > scene;
 
     public:
-        explicit RenderPanel( QWidget *parent = 0 );
+        explicit RenderPanel( shared_ptr<OpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent = 0 );
 
         void initializeGL();
         // Initialize OpenGL context.

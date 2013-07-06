@@ -29,49 +29,66 @@
 #include "../3d_entities/cube.hpp"
 #include "../3d_entities/scene.hpp"
 #include "../utilities/shader_loader.hpp"
+#include "opengl_context.hpp"
 
 
 /***
  * File main class
  ***/
 
-class OpenGLCanvas : public QGLWidget
+class OpenGLCanvas : public QWindow, protected QOpenGLFunctions
 {
     Q_OBJECT
 
 private:
-    Scene* scene;
+    shared_ptr<OpenGLContext> oglContext;
+    shared_ptr<Scene> scene;
+
+    QOpenGLPaintDevice* m_device;
+
 
     /***
      * 1. Initialization and destruction
      ***/
 public:
-    explicit OpenGLCanvas( QWidget *parent = 0);
+    //explicit OpenGLCanvas( QWidget *parent = 0);
     // add "explicit"?
-    OpenGLCanvas( QGLContext * context, Scene* scene, QWidget *parent = 0 );
+    OpenGLCanvas( shared_ptr<OpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent = 0 );
     ~OpenGLCanvas();
 
 protected:
 
 
     // Initialize OpenGL context.
-    void initializeGL();
+    //void initializeGL();
 
     /***
      * 2. Events
      ***/
+    /*
     void keyPressEvent( QKeyEvent *e );
     void dragMoveEvent(QDragMoveEvent *dragMoveEvent );
     void mouseMoveEvent( QMouseEvent *mouseMoveEvent );
+    */
 
     /***
      * 3. Updating and drawing
      ***/
     // Resize OpenGL canvas.
-    void resizeGL( int w, int h );
+    //void resizeGL( int w, int h );
 
     // Render OpenGL canvas.
-    void paintGL();
+    //void paintGL();
+
+    virtual bool event(QEvent *event);
+    virtual void exposeEvent(QExposeEvent *event);
+    virtual void resizeEvent(QResizeEvent *event);
+
+    virtual void initialize();
+    virtual void render();
+
+
+    void render(QPainter *painter);
 
     
 signals:

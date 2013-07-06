@@ -33,7 +33,7 @@ class ViewFrame : public QFrame
         OpenGLCanvas* openGLCanvas;
 
     public:
-        ViewFrame( const QString &name, QGLContext* glContext, Scene* scene );
+        ViewFrame( const QString &name, shared_ptr<OpenGLContext> glContext, shared_ptr<Scene> scene );
 };
 
 #endif // VIEW_FRAME_H

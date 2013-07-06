@@ -24,27 +24,17 @@ void LoadShaders()
 
 }
 
-RenderPanel::RenderPanel( QWidget* parent )
-    /*(parent)*/ /*, QOpenGLWidget(parent)*/
+RenderPanel::RenderPanel( shared_ptr<OpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent ) :
+    QFrame( parent ) /*, QOpenGLWidget(parent)*/
 {
     //hide();
     //setSurfaceType( QSurface::OpenGLSurface );
-
-
-
 
     /*
     glEnableClientState( GL_VERTEX_ARRAY );
     */
     // Load shaders.
-
-
-    // Load empty scene.
     /*
-    scene = new Scene;
-    scene->addCube( new Cube );
-    scene->selectAll();
-
     h1Splitter = new QSplitter;
     h2Splitter = new QSplitter;
 
@@ -52,10 +42,10 @@ RenderPanel::RenderPanel( QWidget* parent )
     vSplitter->setOrientation(Qt::Vertical);
     vSplitter->addWidget(h1Splitter);
     vSplitter->addWidget(h2Splitter);
-
-    ViewFrame *viewFrame = new ViewFrame( "Top left view", glContext, scene );
-    h1Splitter->addWidget( viewFrame );
-    cout << "Context is valid?: " << glContext->isValid() << endl;
+    */
+    ViewFrame *viewFrame = new ViewFrame( "Top left view", oglContext, scene );
+    //h1Splitter->addWidget( viewFrame );
+    //cout << "Context is valid?: " << glContext->isValid() << endl;
     /*
     viewFrame = new ViewFrame("Top right view", glContext, scene );
     h1Splitter->addWidget( viewFrame );
@@ -69,12 +59,12 @@ RenderPanel::RenderPanel( QWidget* parent )
     h2Splitter->addWidget( viewFrame );
     cout << "Context is valid?: " << glContext->isValid() << endl;
     */
-    /*
+
     QHBoxLayout *layout = new QHBoxLayout;
     //layout->addWidget(vSplitter);
     layout->addWidget( viewFrame );
     setLayout(layout);
-    */
+
     cout << "Render panel constructor OK" << endl;
 }
 

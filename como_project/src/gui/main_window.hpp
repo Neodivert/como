@@ -37,7 +37,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    OpenGLContext oglContext;
+    shared_ptr<OpenGLContext> oglContext;
+    shared_ptr<Scene> scene;
     
 private:
     Ui::MainWindow *ui;

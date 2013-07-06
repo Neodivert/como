@@ -17,11 +17,11 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-
 #include "src/gui/main_window.hpp"
 #include <QApplication>
 #include <src/utilities/shader_loader.hpp>
 //#include "3d_entities/scene.hpp"
+
 
 
 int main(int argc, char *argv[])

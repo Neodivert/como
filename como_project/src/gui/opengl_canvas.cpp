@@ -24,24 +24,30 @@ using namespace std;
 /***
  * 1. Initialization and destruction
  ***/
-
-OpenGLCanvas::OpenGLCanvas(QWidget *parent) :
-    QGLWidget(parent)
+/*
+OpenGLCanvas::OpenGLCanvas(QWidget *parent) //:
+    //QWindow(parent)
 {
     scene = NULL;
     setFocusPolicy( Qt::StrongFocus );
 
     setAcceptDrops( true );
 }
+*/
 
-OpenGLCanvas::OpenGLCanvas( QGLContext * context, Scene* scene, QWidget *parent ) :
-    QGLWidget( parent )
+OpenGLCanvas::OpenGLCanvas( shared_ptr<OpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent ) //:
+    //QWindow( parent )
 {
+    // We will render using OpenGL.
+    setSurfaceType( QWindow::OpenGLSurface );
+
+    //create();
+
     //setWindowFlags(Qt::Widget);
 
     //context->makeCurrent( this );
 
-    cout << "OpenGLCanvas created. QGLContext is valid?: " << this->context()->isValid() << ")" << endl;
+    //cout << "OpenGLCanvas created. QGLContext is valid?: " << this->context()->isValid() << ")" << endl;
 
     /*
     context = create_context();
@@ -53,11 +59,20 @@ OpenGLCanvas::OpenGLCanvas( QGLContext * context, Scene* scene, QWidget *parent 
     context->setDevice( this );
     setContext( context );
 */
+
+    cout << "OpenGLCanvas constructor" << endl;
+
     this->scene = scene;
+    this->oglContext = oglContext;
 
-    setFocusPolicy( Qt::StrongFocus );
+    //setFocusPolicy( Qt::StrongFocus );
 
-    setAcceptDrops( true );
+    //setAcceptDrops( true );
+
+    //cout << "\tmakeCurrent: " << oglContext->makeCurrent( this ) << endl;
+    //initializeOpenGLFunctions();
+
+
 }
 
 
@@ -66,7 +81,52 @@ OpenGLCanvas::~OpenGLCanvas()
     //delete scene;
 }
 
+void OpenGLCanvas::render(QPainter *painter)
+{
+    Q_UNUSED(painter);
+}
 
+
+
+void OpenGLCanvas::initialize()
+{
+    cout << "OpenGLCanvas::initialize()" << endl;
+    cout << "\tmakeCurrent: " << oglContext->makeCurrent( this ) << endl;
+
+    // Viewport occuppies the full canvas.
+    glViewport( 0, 0, width(), height() );
+}
+
+
+
+bool OpenGLCanvas::event(QEvent *event)
+{
+    switch (event->type()) {
+    case QEvent::UpdateRequest:
+        render();
+        return true;
+    default:
+        return QWindow::event(event);
+    }
+}
+
+void OpenGLCanvas::exposeEvent(QExposeEvent *event)
+{
+    Q_UNUSED(event);
+
+    if (isExposed())
+        render();
+}
+
+void OpenGLCanvas::resizeEvent(QResizeEvent *event)
+{
+    Q_UNUSED(event);
+
+    if (isExposed())
+        render();
+}
+
+/*
 void OpenGLCanvas::initializeGL()
 {
     cout << "OpenGLCanvas::initializeGL()" << endl;
@@ -77,12 +137,12 @@ void OpenGLCanvas::initializeGL()
     glEnable( GL_DEPTH_TEST );
     glDepthFunc( GL_LEQUAL );
 }
-
+*/
 
 /***
  * 2. Events
  ***/
-
+/*
 void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
 {
     cout << "Key press event" << endl;
@@ -98,7 +158,7 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
       cout << "Unknown key (" << e->key() << ")" << endl;
     break;
   }
-  updateGL();
+  //updateGL();
 }
 
 
@@ -114,14 +174,13 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent *mouseMoveEvent )
     mouseMoveEvent->accept();
     cout << "Mouse move event (" << mouseMoveEvent->x() << ", " << mouseMoveEvent->y() << ")!" << endl;
 }
-
+*/
 /***
  * 3. Updating and drawing
  ***/
-
+/*
 void OpenGLCanvas::paintGL()
 {
-
     cout << "Drawing GL" << endl;
     glViewport( 0, 0, width(), height() );
 
@@ -136,9 +195,10 @@ void OpenGLCanvas::paintGL()
     scene->draw();
     */
     // Flush.
-    glFlush();
-}
+    /*glFlush();
+}*/
 
+/*
 
 void OpenGLCanvas::resizeGL( int w, int h )
 {
@@ -157,5 +217,36 @@ void OpenGLCanvas::resizeGL( int w, int h )
     // TODO: is this necessary?
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
+}*/
+
+
+void OpenGLCanvas::render()
+{
+    initialize();
+    initializeOpenGLFunctions();
+
+    glViewport( 0, 0, width(), height() );
+
+    cout << "OpenGLCanvas::render()" << endl;
+
+    glClearColor( 1.0f, 1.0f, 1.0f, 1.0f );
+
+    cout << "\tisValid: " << oglContext->isValid() << endl;
+    cout << "\tmakeCurrent: " << oglContext->makeCurrent( this ) << endl;
+    glClear( GL_COLOR_BUFFER_BIT );
+
+    // TODO: move
+    /*
+    cout << "renderOld" << endl;
+    if (!m_device)
+        m_device = new QOpenGLPaintDevice;
+
+    m_device->setSize(size());
+
+    QPainter painter(m_device);
+    render(&painter);
     */
+
+    glFlush();
 }

@@ -20,9 +20,14 @@
 #include "view_frame.hpp"
 
 
-ViewFrame::ViewFrame( const QString &name, QGLContext* glContext, Scene* scene )
+ViewFrame::ViewFrame( const QString &name, shared_ptr<OpenGLContext> glContext, shared_ptr<Scene> scene ) :
+    QFrame()
 {
     QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget( new OpenGLCanvas( glContext, scene ) );
+
+    QWidget *container = QWidget::createWindowContainer( new OpenGLCanvas( glContext, scene ) );
+    container->setFocusPolicy( Qt::StrongFocus );
+    container->setAcceptDrops( true );
+    layout->addWidget( container );
     setLayout(layout);
 }

@@ -27,12 +27,27 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QHBoxLayout *layout = new QHBoxLayout;
+    // Load OpenGL context.
+    oglContext = shared_ptr<OpenGLContext>( new OpenGLContext );
 
-    RenderPanel* renderPanel = new RenderPanel( this );
+    // Load empty scene.
+    scene = shared_ptr<Scene>( new Scene );
+    scene->addCube( new Cube );
+    scene->selectAll();
+
+
+    RenderPanel* renderPanel = new RenderPanel( oglContext, scene );
+
+
+    QHBoxLayout *layout = new QHBoxLayout;
+    layout->addWidget( renderPanel );
+    setCentralWidget(new QWidget);
+    centralWidget()->setLayout( layout );
+
+
     //renderPanel->setWindowFlags(Qt::Widget);
 
-    oglContext.LoadShaders();
+    //oglContext.LoadShaders();
 
     //setCentralWidget( renderPanel );
 

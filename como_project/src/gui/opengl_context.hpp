@@ -23,7 +23,9 @@
 #include <QOffscreenSurface>
 #include <QOpenGLContext>
 #include "../utilities/shader_loader.hpp"
+#include "../3d_entities/scene.hpp"
 #include <iostream>
+#include <memory>
 using namespace std;
 
 class OpenGLContext : public QOffscreenSurface
@@ -31,8 +33,11 @@ class OpenGLContext : public QOffscreenSurface
 private:
     QOpenGLContext* oglContext;
 
+
 public:
     OpenGLContext();
+
+    bool makeCurrent(QSurface * surface);
 };
 
 #endif // OPENGL_CONTEXT_H
