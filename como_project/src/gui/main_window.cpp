@@ -17,17 +17,22 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "app_window.hpp"
+#include "main_window.hpp"
+#include "ui_main_window.h"
 
-AppWindow::AppWindow( QScreen *screen ) :
-    QWindow( screen )
+MainWindow::MainWindow( QWidget* parent ) :
+    QMainWindow( parent ),
+    ui(new Ui::MainWindow)
 {
+    ui->setupUi(this);
+
     // Create an OpenGL context.
     oglContext = shared_ptr<OpenGLContext>( new OpenGLContext );
 
     // Use the previous OpenGL context's format as the format of this window.
-    setFormat( oglContext->format() );
+    //setFormat( oglContext->format() );
 
+    /*
     // Set this surface to be rendered by OpenGL. This is a "cheat" so we can make
     // previous OpenGL context current for this surface and so load the shaders.
     setSurfaceType( QSurface::OpenGLSurface );
@@ -47,4 +52,19 @@ AppWindow::AppWindow( QScreen *screen ) :
     // Set this window to be rendered by Qt engine again.
     setSurfaceType( QSurface::RasterSurface );
     create();
+    */
+
+    setCentralWidget( new QWidget );
+
+    /*
+    QHBoxLayout *layout = new QHBoxLayout;
+    //layout->addWidget(vSplitter);
+    layout->addWidget( new QFrame );
+    setLayout(layout);
+    */
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
 }

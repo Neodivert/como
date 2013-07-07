@@ -18,15 +18,15 @@
 ***/
 
 #include <QGuiApplication>
-#include "src/gui/app_window.hpp"
+#include "src/gui/main_window.hpp"
 
-int main(int argc, char *argv[])
+int main( int argc, char *argv[] )
 {
     // Create a Qt application.
-    QGuiApplication app( argc, argv );
+    QApplication app( argc, argv );
 
     // Create a Qt window and show it.
-    AppWindow window;
+    MainWindow window;
     window.show();
     
     // Run Qt application.

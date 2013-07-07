@@ -17,26 +17,33 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef APP_WINDOW_H
-#define APP_WINDOW_H
+#ifndef MAIN_WINDOW_HPP
+#define MAIN_WINDOW_HPP
 
-#include <QWindow>
+#include <QMainWindow>
 #include <QScreen>
 #include "view_frame.hpp"
 #include "render_panel.hpp"
 #include "opengl_context.hpp"
 
 
-class AppWindow : public QWindow
+namespace Ui {
+    class MainWindow;
+}
+
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
     
     private:
+        Ui::MainWindow *ui;
+
         shared_ptr<OpenGLContext> oglContext;
         shared_ptr<Scene> scene;
 
     public:
-        AppWindow( QScreen* screen = 0 );
+        explicit MainWindow( QWidget* parent = 0 );
+        ~MainWindow();
 };
 
-#endif // APP_WINDOW_H
+#endif // MAIN_WINDOW_HPP
