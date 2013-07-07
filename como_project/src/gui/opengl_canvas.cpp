@@ -35,7 +35,7 @@ OpenGLCanvas::OpenGLCanvas(QWidget *parent) //:
 }
 */
 
-OpenGLCanvas::OpenGLCanvas( shared_ptr<OpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent ) //:
+OpenGLCanvas::OpenGLCanvas( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent ) //:
     //QWindow( parent )
 {
     // We will render using OpenGL.

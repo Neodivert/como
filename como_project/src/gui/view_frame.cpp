@@ -20,7 +20,7 @@
 #include "view_frame.hpp"
 
 
-ViewFrame::ViewFrame( const QString &name, shared_ptr<OpenGLContext> glContext, shared_ptr<Scene> scene ) :
+ViewFrame::ViewFrame( const QString &name, shared_ptr<QOpenGLContext> glContext, shared_ptr<Scene> scene ) :
     QFrame()
 {
     QHBoxLayout *layout = new QHBoxLayout;

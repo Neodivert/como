@@ -24,7 +24,7 @@
 #include <QScreen>
 #include "view_frame.hpp"
 #include "render_panel.hpp"
-#include "opengl_context.hpp"
+#include "opengl_initializer.hpp"
 
 
 namespace Ui {
@@ -38,7 +38,7 @@ class MainWindow : public QMainWindow
     private:
         Ui::MainWindow *ui;
 
-        shared_ptr<OpenGLContext> oglContext;
+        shared_ptr<QOpenGLContext> oglContext;
         shared_ptr<Scene> scene;
 
     public:

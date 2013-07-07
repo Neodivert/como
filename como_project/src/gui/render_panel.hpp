@@ -41,11 +41,11 @@ class RenderPanel : public QFrame
         QSplitter *h2Splitter;
 
 
-        shared_ptr< OpenGLContext > glContext;
+        shared_ptr< QOpenGLContext > glContext;
         shared_ptr< Scene > scene;
 
     public:
-        explicit RenderPanel( shared_ptr<OpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent = 0 );
+        explicit RenderPanel( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent = 0 );
 
         void initializeGL();
         // Initialize OpenGL context.

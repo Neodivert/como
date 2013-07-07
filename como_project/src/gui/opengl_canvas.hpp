@@ -29,7 +29,6 @@
 #include "../3d_entities/cube.hpp"
 #include "../3d_entities/scene.hpp"
 #include "../utilities/shader_loader.hpp"
-#include "opengl_context.hpp"
 
 
 /***
@@ -41,7 +40,7 @@ class OpenGLCanvas : public QWindow, protected QOpenGLFunctions
     Q_OBJECT
 
 private:
-    shared_ptr<OpenGLContext> oglContext;
+    shared_ptr<QOpenGLContext> oglContext;
     shared_ptr<Scene> scene;
 
     QOpenGLPaintDevice* m_device;
@@ -53,7 +52,7 @@ private:
 public:
     //explicit OpenGLCanvas( QWidget *parent = 0);
     // add "explicit"?
-    OpenGLCanvas( shared_ptr<OpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent = 0 );
+    OpenGLCanvas( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent = 0 );
     ~OpenGLCanvas();
 
 protected:

@@ -17,9 +17,9 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "opengl_context.hpp"
+#include "opengl_initializer.hpp"
 
-OpenGLContext::OpenGLContext()
+OpenGLInitializer::OpenGLInitializer()
 {
     create();
 
@@ -32,21 +32,39 @@ OpenGLContext::OpenGLContext()
     //format.setSampleBuffers(true);
 
     // Take previous format for this OpenGL context.
+    oglContext = shared_ptr< QOpenGLContext >( new QOpenGLContext );
+    oglContext->setFormat( format );
+
+    // Set this surface's format.
     setFormat( format );
 
     // Create the OpenGL context and make it the current one.
-    cout << "oglContext->create() : " << create() << endl;
+    cout << "oglContext->create() : " << oglContext->create() << endl;
     //cout << "oglContext->makeCurrent() : " << oglContext->makeCurrent( this ) << endl;
-    cout << "Context is valid?: " << isValid() << endl;
-    cout << "Context->version: " << this->format().majorVersion() << " . " << this->format().minorVersion() << endl;
+    cout << "Context is valid?: " << oglContext->isValid() << endl;
+    cout << "Context->version: " << oglContext->format().majorVersion() << " . " << oglContext->format().minorVersion() << endl;
 
     // TODO: Do I have to do this or call glewInit()?
 
     // Obtain a functions object and resolve all entry points
-    QAbstractOpenGLFunctions* oglFunctions = versionFunctions();
+    QAbstractOpenGLFunctions* oglFunctions = oglContext->versionFunctions();
     if ( !oglFunctions ) {
         qWarning( "Could not obtain OpenGL versions object" );
         exit( 1 );
     }
     oglFunctions->initializeOpenGLFunctions();
+
+    // Make previous OpenGL context current for this window.
+    cout << "Making OGL context current for AppWindow: " << oglContext->makeCurrent( this ) << endl;
+
+    // Load shaders
+    ShaderLoader* shaderLoader = ShaderLoader::getInstance();
+    shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
+    shaderLoader->destroy();
+}
+
+
+shared_ptr< QOpenGLContext > OpenGLInitializer::context()
+{
+    return oglContext;
 }

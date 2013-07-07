@@ -27,32 +27,9 @@ MainWindow::MainWindow( QWidget* parent ) :
     ui->setupUi(this);
 
     // Create an OpenGL context.
-    oglContext = shared_ptr<OpenGLContext>( new OpenGLContext );
+    OpenGLInitializer openGLInitializer;
 
-    // Use the previous OpenGL context's format as the format of this window.
-    //setFormat( oglContext->format() );
-
-    /*
-    // Set this surface to be rendered by OpenGL. This is a "cheat" so we can make
-    // previous OpenGL context current for this surface and so load the shaders.
-    setSurfaceType( QSurface::OpenGLSurface );
-    create();
-
-    // Make previous OpenGL context current for this window.
-    cout << "Making OGL context current for AppWindow: " << oglContext->makeCurrent( this ) << endl;
-
-    // Load shaders.
-    ShaderLoader* shaderLoader = ShaderLoader::getInstance();
-    shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
-    shaderLoader->destroy();
-
-    // We are done with the OpenGL context for this window.
-    oglContext->doneCurrent();
-
-    // Set this window to be rendered by Qt engine again.
-    setSurfaceType( QSurface::RasterSurface );
-    create();
-    */
+    oglContext = openGLInitializer.context();
 
     setCentralWidget( new QWidget );
 

@@ -24,7 +24,7 @@ void LoadShaders()
 
 }
 
-RenderPanel::RenderPanel( shared_ptr<OpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent ) :
+RenderPanel::RenderPanel( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent ) :
     QFrame( parent ) /*, QOpenGLWidget(parent)*/
 {
     //hide();
@@ -75,9 +75,7 @@ void RenderPanel::initializeGL()
     glContext->makeCurrent(this);
     initializeOpenGLFunctions();
 
-    ShaderLoader* shaderLoader = ShaderLoader::getInstance();
-    shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
-    shaderLoader->destroy();
+
 }
 
 /*
