@@ -41,7 +41,7 @@ class RenderPanel : public QFrame
         QSplitter *h2Splitter;
 
 
-        shared_ptr< QOpenGLContext > glContext;
+        shared_ptr< QOpenGLContext > oglContext;
         shared_ptr< Scene > scene;
 
     public:

@@ -31,7 +31,10 @@ MainWindow::MainWindow( QWidget* parent ) :
 
     oglContext = openGLInitializer.context();
 
-    setCentralWidget( new QWidget );
+    scene = openGLInitializer.getScene();
+
+    setCentralWidget( new RenderPanel( oglContext, scene ) );
+
 
     /*
     QHBoxLayout *layout = new QHBoxLayout;

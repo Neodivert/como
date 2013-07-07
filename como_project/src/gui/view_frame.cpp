@@ -23,11 +23,13 @@
 ViewFrame::ViewFrame( const QString &name, shared_ptr<QOpenGLContext> glContext, shared_ptr<Scene> scene ) :
     QFrame()
 {
-    QHBoxLayout *layout = new QHBoxLayout;
+    // Creates a QWidget wrapper for an existing QWindow, allowing it to live inside
+    // a QWidget-based application.
+    QWidget* openGLCanvasWidget = QWidget::createWindowContainer( new OpenGLCanvas( glContext, scene ) );
+    openGLCanvasWidget->setFocusPolicy( Qt::StrongFocus );
+    //openGLCanvasWidget->setAcceptDrops( true );
 
-    QWidget *container = QWidget::createWindowContainer( new OpenGLCanvas( glContext, scene ) );
-    container->setFocusPolicy( Qt::StrongFocus );
-    container->setAcceptDrops( true );
-    layout->addWidget( container );
+    QHBoxLayout *layout = new QHBoxLayout;
+    layout->addWidget( openGLCanvasWidget );
     setLayout(layout);
 }

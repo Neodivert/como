@@ -35,7 +35,7 @@
  * File main class
  ***/
 
-class OpenGLCanvas : public QWindow, protected QOpenGLFunctions
+class OpenGLCanvas : public QWindow
 {
     Q_OBJECT
 
@@ -64,9 +64,9 @@ protected:
     /***
      * 2. Events
      ***/
-    /*
+
     void keyPressEvent( QKeyEvent *e );
-    void dragMoveEvent(QDragMoveEvent *dragMoveEvent );
+    /*void dragMoveEvent(QDragMoveEvent *dragMoveEvent );
     void mouseMoveEvent( QMouseEvent *mouseMoveEvent );
     */
 
@@ -83,7 +83,7 @@ protected:
     virtual void exposeEvent(QExposeEvent *event);
     virtual void resizeEvent(QResizeEvent *event);
 
-    virtual void initialize();
+    virtual void initializeGL();
     virtual void render();
 
 

@@ -31,11 +31,14 @@ class OpenGLInitializer : public QOffscreenSurface
 {
     private:
         shared_ptr< QOpenGLContext > oglContext;
+        shared_ptr< Scene > scene;
 
     public:
         OpenGLInitializer();
 
         shared_ptr< QOpenGLContext > context();
+
+        shared_ptr< Scene > getScene();
 };
 
 #endif // OPENGL_INITIALIZER_H

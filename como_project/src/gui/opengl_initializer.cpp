@@ -44,8 +44,6 @@ OpenGLInitializer::OpenGLInitializer()
     cout << "Context is valid?: " << oglContext->isValid() << endl;
     cout << "Context->version: " << oglContext->format().majorVersion() << " . " << oglContext->format().minorVersion() << endl;
 
-    // TODO: Do I have to do this or call glewInit()?
-
     // Obtain a functions object and resolve all entry points
     QAbstractOpenGLFunctions* oglFunctions = oglContext->versionFunctions();
     if ( !oglFunctions ) {
@@ -61,10 +59,27 @@ OpenGLInitializer::OpenGLInitializer()
     ShaderLoader* shaderLoader = ShaderLoader::getInstance();
     shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
     shaderLoader->destroy();
+
+    // Set clear color.
+    glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+
+    // Set OpenGL depth test.
+    glEnable( GL_DEPTH_TEST );
+    glDepthFunc( GL_LEQUAL );
 }
 
 
 shared_ptr< QOpenGLContext > OpenGLInitializer::context()
 {
     return oglContext;
+}
+
+
+shared_ptr< Scene > OpenGLInitializer::getScene()
+{
+    scene = shared_ptr<Scene>( new Scene );
+    scene->addCube( new Cube );
+    scene->selectAll();
+
+    return scene;
 }

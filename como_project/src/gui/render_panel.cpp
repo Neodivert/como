@@ -33,8 +33,10 @@ RenderPanel::RenderPanel( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scen
     /*
     glEnableClientState( GL_VERTEX_ARRAY );
     */
-    // Load shaders.
-    /*
+
+    this->oglContext = oglContext;
+    this->scene = scene;
+
     h1Splitter = new QSplitter;
     h2Splitter = new QSplitter;
 
@@ -42,27 +44,26 @@ RenderPanel::RenderPanel( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scen
     vSplitter->setOrientation(Qt::Vertical);
     vSplitter->addWidget(h1Splitter);
     vSplitter->addWidget(h2Splitter);
-    */
+
     ViewFrame *viewFrame = new ViewFrame( "Top left view", oglContext, scene );
-    //h1Splitter->addWidget( viewFrame );
-    //cout << "Context is valid?: " << glContext->isValid() << endl;
-    /*
-    viewFrame = new ViewFrame("Top right view", glContext, scene );
     h1Splitter->addWidget( viewFrame );
-    cout << "Context is valid?: " << glContext->isValid() << endl;
+    //cout << "Context is valid?: " << glContext->isValid() << endl;
 
-    viewFrame = new ViewFrame("Bottom left view", glContext, scene );
-    h2Splitter->addWidget( viewFrame );
-    cout << "Context is valid?: " << glContext->isValid() << endl;
+    viewFrame = new ViewFrame("Top right view", oglContext, scene );
+    h1Splitter->addWidget( viewFrame );
+    //cout << "Context is valid?: " << glContext->isValid() << endl;
 
-    viewFrame = new ViewFrame("Bottom right view", glContext, scene );
+    viewFrame = new ViewFrame("Bottom left view", oglContext, scene );
     h2Splitter->addWidget( viewFrame );
-    cout << "Context is valid?: " << glContext->isValid() << endl;
-    */
+    //cout << "Context is valid?: " << glContext->isValid() << endl;
+
+    viewFrame = new ViewFrame("Bottom right view", oglContext, scene );
+    h2Splitter->addWidget( viewFrame );
+    //cout << "Context is valid?: " << glContext->isValid() << endl;
 
     QHBoxLayout *layout = new QHBoxLayout;
-    //layout->addWidget(vSplitter);
-    layout->addWidget( viewFrame );
+    layout->addWidget(vSplitter);
+    //layout->addWidget( viewFrame );
     setLayout(layout);
 
     cout << "Render panel constructor OK" << endl;

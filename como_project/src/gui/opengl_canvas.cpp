@@ -38,10 +38,19 @@ OpenGLCanvas::OpenGLCanvas(QWidget *parent) //:
 OpenGLCanvas::OpenGLCanvas( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent ) //:
     //QWindow( parent )
 {
+    cout << "OpenGLCanvas constructor ..." << endl;
+
+    this->scene = scene;
+    this->oglContext = oglContext;
+
     // We will render using OpenGL.
     setSurfaceType( QWindow::OpenGLSurface );
 
-    //create();
+    setFormat( oglContext->format() );
+    create();
+    cout << "\tOpenGLCanvas created. OpenGL context is valid?: " << oglContext->isValid() << ")" << endl;
+
+    // context->setDevice( this );
 
     //setWindowFlags(Qt::Widget);
 
@@ -60,10 +69,11 @@ OpenGLCanvas::OpenGLCanvas( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Sc
     setContext( context );
 */
 
-    cout << "OpenGLCanvas constructor" << endl;
+    initializeGL();
 
-    this->scene = scene;
-    this->oglContext = oglContext;
+    cout << "OpenGLCanvas constructor ...OK" << endl;
+
+
 
     //setFocusPolicy( Qt::StrongFocus );
 
@@ -71,8 +81,6 @@ OpenGLCanvas::OpenGLCanvas( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Sc
 
     //cout << "\tmakeCurrent: " << oglContext->makeCurrent( this ) << endl;
     //initializeOpenGLFunctions();
-
-
 }
 
 
@@ -85,18 +93,6 @@ void OpenGLCanvas::render(QPainter *painter)
 {
     Q_UNUSED(painter);
 }
-
-
-
-void OpenGLCanvas::initialize()
-{
-    cout << "OpenGLCanvas::initialize()" << endl;
-    cout << "\tmakeCurrent: " << oglContext->makeCurrent( this ) << endl;
-
-    // Viewport occuppies the full canvas.
-    glViewport( 0, 0, width(), height() );
-}
-
 
 
 bool OpenGLCanvas::event(QEvent *event)
@@ -126,23 +122,21 @@ void OpenGLCanvas::resizeEvent(QResizeEvent *event)
         render();
 }
 
-/*
+
 void OpenGLCanvas::initializeGL()
 {
     cout << "OpenGLCanvas::initializeGL()" << endl;
-    // Set clear color.
-    glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+    cout << "\tmakeCurrent: " << oglContext->makeCurrent( this ) << endl;
 
-    // Set OpenGL depth test.
-    glEnable( GL_DEPTH_TEST );
-    glDepthFunc( GL_LEQUAL );
+    // Set clear color.
+
 }
-*/
+
 
 /***
  * 2. Events
  ***/
-/*
+
 void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
 {
     cout << "Key press event" << endl;
@@ -161,7 +155,7 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
   //updateGL();
 }
 
-
+/*
 void OpenGLCanvas::dragMoveEvent(QDragMoveEvent *dragMoveEvent )
 {
     // The event needs to be accepted here
@@ -178,64 +172,25 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent *mouseMoveEvent )
 /***
  * 3. Updating and drawing
  ***/
-/*
-void OpenGLCanvas::paintGL()
-{
-    cout << "Drawing GL" << endl;
-    glViewport( 0, 0, width(), height() );
-
-    // Clear buffers.
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
-    // Draw geometries.
-    //glViewport( 0, 0, width()/2, height()/2 );
-    //scene->draw();
-
-    /*glViewport( width()/2, height()/2, width()/2, height()/2 );
-    scene->draw();
-    */
-    // Flush.
-    /*glFlush();
-}*/
-
-/*
-
-void OpenGLCanvas::resizeGL( int w, int h )
-{
-    cout << "Resizing" << endl;
-
-    // Viewport occuppies the full canvas.
-    glViewport( 0, 0, w, h );
-    /*
-    // Set a orthographic projection cube.
-    // http://stackoverflow.com/questions/2571402/c-opengl-glortho-please-explain-the-usage-of-this-command
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0.0f, w, h, 0.0f, 0.0f, 1.0f);
-
-    // Initialize modelview matrix to identity one.
-    // TODO: is this necessary?
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-}*/
 
 
 void OpenGLCanvas::render()
 {
-    initialize();
-    initializeOpenGLFunctions();
-
-    glViewport( 0, 0, width(), height() );
-
-    cout << "OpenGLCanvas::render()" << endl;
-
-    glClearColor( 1.0f, 1.0f, 1.0f, 1.0f );
+    cout << "OpenGLCanvas::render() ..." << endl;
 
     cout << "\tisValid: " << oglContext->isValid() << endl;
     cout << "\tmakeCurrent: " << oglContext->makeCurrent( this ) << endl;
-    glClear( GL_COLOR_BUFFER_BIT );
 
+    //oglContext->versionFunctions()->initializeOpenGLFunctions();
+
+    // Viewport occuppies the full canvas.
+    glViewport( 0, 0, width(), height() );
+
+
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+
+    scene->draw();
     // TODO: move
     /*
     cout << "renderOld" << endl;
@@ -249,4 +204,7 @@ void OpenGLCanvas::render()
     */
 
     glFlush();
+
+    oglContext->swapBuffers( this );
+    cout << "OpenGLCanvas::render() ...OK" << endl;
 }
