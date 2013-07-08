@@ -17,8 +17,6 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-
-
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
@@ -32,31 +30,32 @@ typedef std::list< std::shared_ptr< DrawableEntity> > DrawablesList;
 class Scene
 {
     private:
+        // Scene's drawables not selected by user.
         DrawablesList nonSelectedDrawables;
+
+        // Scene's drawables selected by user.
         DrawablesList selectedDrawables;
 
     public:
-        Scene();
-
         /***
-         * 2. Drawables administration
+         * 1. Drawables administration
          ***/
         void addDrawable( shared_ptr<DrawableEntity> drawable );
         void addCube( Cube* cube );
 
 
         /***
-         * 3. Drawables selection.
+         * 2. Drawables selection.
          ***/
         void selectAll();
 
         /***
-         * 4. Transformations
+         * 3. Transformations
          ***/
         void translateSelectedDrawables( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz );
 
         /***
-         * 5. Drawing
+         * 4. Drawing
          ***/
         void draw();
 };

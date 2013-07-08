@@ -21,11 +21,6 @@
 #define MAIN_WINDOW_HPP
 
 #include <QMainWindow>
-#include <QScreen>
-#include "view_frame.hpp"
-#include "render_panel.hpp"
-#include "opengl_initializer.hpp"
-
 
 namespace Ui {
     class MainWindow;
@@ -38,10 +33,16 @@ class MainWindow : public QMainWindow
     private:
         Ui::MainWindow *ui;
 
+        // Main OpenGL context used in the app.
         shared_ptr<QOpenGLContext> oglContext;
+
+        // Current 3D scene (set of drawables).
         shared_ptr<Scene> scene;
 
     public:
+        /***
+         * 1. Initialization and destruction
+         ***/
         explicit MainWindow( QWidget* parent = 0 );
         ~MainWindow();
 };

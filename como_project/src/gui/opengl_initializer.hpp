@@ -17,8 +17,8 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef OPENGL_INITIALIZER_H
-#define OPENGL_INITIALIZER_H
+#ifndef OPENGL_INITIALIZER_HPP
+#define OPENGL_INITIALIZER_HPP
 
 #include <QOpenGLContext>
 #include "../utilities/shader_loader.hpp"
@@ -30,15 +30,23 @@ using namespace std;
 class OpenGLInitializer : public QOffscreenSurface
 {
     private:
-        shared_ptr< QOpenGLContext > oglContext;
-        shared_ptr< Scene > scene;
+        // Pointer to shared OpenGL context.
+        shared_ptr<QOpenGLContext> oglContext;
+
+        // Pointer to current 3D scene.
+        shared_ptr<Scene> scene;
 
     public:
+        /***
+         * 1. Initialization
+         ***/
         OpenGLInitializer();
 
+        /***
+         * 2. Getters
+         ***/
         shared_ptr< QOpenGLContext > context();
-
         shared_ptr< Scene > getScene();
 };
 
-#endif // OPENGL_INITIALIZER_H
+#endif // OPENGL_INITIALIZER_HPP

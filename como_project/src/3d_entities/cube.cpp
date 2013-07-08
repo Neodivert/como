@@ -19,8 +19,14 @@
 
 #include "cube.hpp"
 
+
+/***
+ * 1. Initialization
+ ***/
+
 Cube::Cube()
 {
+    // Cube's default vertices.
     const GLfloat cubeVertices[] =
     {
         // Front face
@@ -36,6 +42,7 @@ Cube::Cube()
         -0.5f, -0.5f, -0.5f // V8 : Bottom left
     };
 
+    // Vertex indices for the cube's faces.
     const GLubyte cubeInnerElements[] =
     {
         // Front face
@@ -63,6 +70,7 @@ Cube::Cube()
         0, 3, 7
     };
 
+    // Vertex indices for defining the cube's contour.
     const GLubyte cubeContourElements[] =
     {
         // Front face
@@ -85,36 +93,31 @@ Cube::Cube()
     };
 
 
+    // Compute the number of vertex indices for the cube's both faces and contour.
     nInnerElements = sizeof( cubeInnerElements ) / sizeof( cubeInnerElements[0] );
     nContourElements = sizeof( cubeContourElements ) / sizeof( cubeContourElements[0] );
 
-    //cout << "nInnerElements: " << nInnerElements << "(36)" << endl;
-    //cout << "nContourElements: " << nContourElements << "(24)" << endl;
-
+    // Copy default cube's vertices to this geometry's original vertices.
     originalVertices.resize( N_CUBE_VERTICES );
     for( GLuint i=0; i<N_CUBE_VERTICES; i++ )
     {
         originalVertices[i] = glm::vec3( cubeVertices[i*3+X],
                                          cubeVertices[i*3+Y],
                                          cubeVertices[i*3+Z] );
-
-        /*cout << "originalVertices[" << i << "]: "
-             << originalVertices[i].x << ", "
-             << originalVertices[i].y << ", "
-             << originalVertices[i].z << ")" << endl;*/
     }
 
+    // Copy the geometry's elements to a VBO.
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeInnerElements ) + sizeof( cubeContourElements ), NULL, GL_STATIC_DRAW );
     glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, 0, sizeof( cubeInnerElements ), cubeInnerElements );
     glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeInnerElements ), sizeof( cubeContourElements ), cubeContourElements );
 
-
+    // Allocate a VBO for cube's transformed vertices.
     glBufferData( GL_ARRAY_BUFFER, sizeof( cubeVertices ), NULL, GL_DYNAMIC_DRAW );
+
+    // Update transformed vertices (original vertices * transformation matrix).
     update();
 
-    // Bind one VBO for keeping vertex data.
-    //glBindBuffer( GL_ARRAY_BUFFER, vbo );
-
+    // Get the location of the input variable "vPosition" for the current shader program.
     GLint prog;
     glGetIntegerv( GL_CURRENT_PROGRAM, &prog );
     GLint vPosition = glGetAttribLocation( prog, "vPosition" );
@@ -125,7 +128,11 @@ Cube::Cube()
         cout << "vPosition: (" << vPosition << ")" << endl;
     }
 
+    // By using the previous "vPosition" position, specify the location and data format of
+    // the array of vertex positions.
     glVertexAttribPointer( vPosition, 3, GL_FLOAT, GL_FALSE, 0, 0 );
+
+    // Enable previous array of vertex positions.
     glEnableVertexAttribArray( vPosition );
 }
 

@@ -37,14 +37,20 @@ class Geometry : public DrawableEntity
         // Location of the uniform shader variable used for coloring geometries.
         static GLint uniformColorLocation;
 
-        GLuint vao; // VAO : Vertex-Attributes Array
-        GLuint vbo; // VBO : Vertex-Buffer Array
-        GLuint ebo; // EBO : Elements-Buffer Array
+        // VAO : Vertex Attributes Array.
+        GLuint vao;
+
+        // VBO for transformed vertices.
+        GLuint vbo;
+
+        // // EBO : Elements-Buffer Array.
+        GLuint ebo;
 
         // Colors
         GLfloat innerColor[4];
         GLfloat contourColor[4];
 
+        // Original vertex attribues.
         std::vector< glm::vec3 > originalVertices;
         std::vector< glm::vec3 > originalNormals;
 

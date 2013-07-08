@@ -19,6 +19,13 @@
 
 #include "main_window.hpp"
 #include "ui_main_window.h"
+#include "opengl_initializer.hpp"
+#include "render_panel.hpp"
+
+
+/***
+ * 1. Initialization and destruction
+ ***/
 
 MainWindow::MainWindow( QWidget* parent ) :
     QMainWindow( parent ),
@@ -26,23 +33,22 @@ MainWindow::MainWindow( QWidget* parent ) :
 {
     ui->setupUi(this);
 
-    // Create an OpenGL context.
+    // Create an retrieve an OpenGL context.
     OpenGLInitializer openGLInitializer;
-
     oglContext = openGLInitializer.context();
 
+    // Get empty scene from OpenGL initializer.
     scene = openGLInitializer.getScene();
 
-    setCentralWidget( new RenderPanel( oglContext, scene ) );
+    // Set a QFrame as the central widget. This frame will hold all others widgets.
+    setCentralWidget( new QFrame );
 
-
-    /*
+    // Add to window a RenderPanel (Set of four OpenGL canvas).
     QHBoxLayout *layout = new QHBoxLayout;
-    //layout->addWidget(vSplitter);
-    layout->addWidget( new QFrame );
-    setLayout(layout);
-    */
+    layout->addWidget( new RenderPanel( oglContext, scene )  );
+    centralWidget()->setLayout( layout );
 }
+
 
 MainWindow::~MainWindow()
 {

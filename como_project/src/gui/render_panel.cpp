@@ -19,111 +19,50 @@
 
 #include "render_panel.hpp"
 
-void LoadShaders()
-{
 
-}
+/***
+ * 1. Initialization
+ ***/
 
 RenderPanel::RenderPanel( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent ) :
-    QFrame( parent ) /*, QOpenGLWidget(parent)*/
+    QFrame( parent )
 {
-    //hide();
-    //setSurfaceType( QSurface::OpenGLSurface );
+    QSplitter* vSplitter;
+    QSplitter* h1Splitter;
+    QSplitter* h2Splitter;
 
-    /*
-    glEnableClientState( GL_VERTEX_ARRAY );
-    */
-
+    // Make this render panel share the given OpenGL context and scene.
     this->oglContext = oglContext;
     this->scene = scene;
 
+    // Create splitters for arranging the four ViewFrame instances we are about to create.
+    vSplitter = new QSplitter;
     h1Splitter = new QSplitter;
     h2Splitter = new QSplitter;
 
-    QSplitter *vSplitter = new QSplitter;
-    vSplitter->setOrientation(Qt::Vertical);
-    vSplitter->addWidget(h1Splitter);
-    vSplitter->addWidget(h2Splitter);
+    // Create the splitters hierarchy.
+    vSplitter->setOrientation( Qt::Vertical );
+    vSplitter->addWidget( h1Splitter );
+    vSplitter->addWidget( h2Splitter );
 
+    // Create the top left ViewFrame.
     ViewFrame *viewFrame = new ViewFrame( "Top left view", oglContext, scene );
     h1Splitter->addWidget( viewFrame );
-    //cout << "Context is valid?: " << glContext->isValid() << endl;
 
-    viewFrame = new ViewFrame("Top right view", oglContext, scene );
+    // Create the top right ViewFrame.
+    viewFrame = new ViewFrame( "Top right view", oglContext, scene );
     h1Splitter->addWidget( viewFrame );
-    //cout << "Context is valid?: " << glContext->isValid() << endl;
 
-    viewFrame = new ViewFrame("Bottom left view", oglContext, scene );
+    // Create the bottom left ViewFrame.
+    viewFrame = new ViewFrame( "Bottom left view", oglContext, scene );
     h2Splitter->addWidget( viewFrame );
-    //cout << "Context is valid?: " << glContext->isValid() << endl;
 
-    viewFrame = new ViewFrame("Bottom right view", oglContext, scene );
+    // Create the Bottom right ViewFrame.
+    viewFrame = new ViewFrame( "Bottom right view", oglContext, scene );
     h2Splitter->addWidget( viewFrame );
-    //cout << "Context is valid?: " << glContext->isValid() << endl;
 
+    // Set the render panel layout by using previous splitters.
     QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget(vSplitter);
-    //layout->addWidget( viewFrame );
-    setLayout(layout);
-
-    cout << "Render panel constructor OK" << endl;
+    layout->addWidget( vSplitter );
+    setLayout( layout );
 }
-
-/*
-void RenderPanel::initializeGL()
-{
-    cout << "RenderPanel::initializeGL" << endl;
-    glContext->makeCurrent(this);
-    initializeOpenGLFunctions();
-
-
-}
-
-/*
-
-QSurfaceFormat RenderPanel::format() const
-{
-    return &format;
-}
-
-QPlatformSurface* surfaceHandle() const
-{
-    return QSurface::OpenGLSurface;
-}
-
-
-QSurface::SurfaceType RenderPanel::surfaceType() const
-{
-    return QSurface::OpenGLSurface;
-}
-
-
-virtual QSize size() const;
-*/
-
-/*
-void RenderPanel::initializeGL()
-{
-    //LoadShaders();
-    ShaderLoader* shaderLoader = ShaderLoader::getInstance();
-    shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
-    ShaderLoader::destroy();
-    //
-
-    // Set OpenGL depth test.
-    glEnable( GL_DEPTH_TEST );
-    glDepthFunc( GL_LEQUAL );
-
-    // Initialize geometry.
-    scene = new Scene;
-    scene->addCube( new Cube );
-    scene->selectAll();
-
-
-    ViewFrame* viewFrame = new ViewFrame("Top right view", this->context(), scene );
-
-    QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget( viewFrame );
-    setLayout(layout);
-}
-*/

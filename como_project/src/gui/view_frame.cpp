@@ -20,16 +20,33 @@
 #include "view_frame.hpp"
 
 
+/***
+ * 1. Initialization
+ ***/
+
 ViewFrame::ViewFrame( const QString &name, shared_ptr<QOpenGLContext> glContext, shared_ptr<Scene> scene ) :
     QFrame()
 {
-    // Creates a QWidget wrapper for an existing QWindow, allowing it to live inside
-    // a QWidget-based application.
-    QWidget* openGLCanvasWidget = QWidget::createWindowContainer( new OpenGLCanvas( glContext, scene ) );
-    openGLCanvasWidget->setFocusPolicy( Qt::StrongFocus );
-    //openGLCanvasWidget->setAcceptDrops( true );
+    // Create a OpenGL canvas.
+    openGLCanvas = new OpenGLCanvas( glContext, scene );
 
-    QHBoxLayout *layout = new QHBoxLayout;
+    // The OpenGL canvas inherits from QWindow. In order to allow it to live inside a QWidget-based
+    // application, we need to create a QWidget wrapper.
+    QWidget* openGLCanvasWidget = QWidget::createWindowContainer( openGLCanvas );
+
+    // Make the OpenGL widget accept focus by both tabbing and clicking.
+    openGLCanvasWidget->setFocusPolicy( Qt::StrongFocus );
+
+    // Make the OpenGL canvas ocuppy the maximum available space.
+    openGLCanvasWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
+
+    // Set a title label that takes the minimum space.
+    QLabel* titleLabel = new QLabel( name );
+    titleLabel->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
+
+    // Set the ViewFrame layout.
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget( titleLabel );
     layout->addWidget( openGLCanvasWidget );
     setLayout(layout);
 }

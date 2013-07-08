@@ -26,8 +26,11 @@ const GLuint N_CUBE_VERTICES = 8;
 
 class Cube : public Geometry
 {
-public:
-    Cube();
+    public:
+        /***
+         * 1. Initialization
+         ***/
+        Cube();
 };
 
 #endif // CUBE_HPP

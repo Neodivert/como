@@ -19,30 +19,31 @@
 
 #include "opengl_initializer.hpp"
 
+
+/***
+ * 1. Initialization
+ ***/
+
 OpenGLInitializer::OpenGLInitializer()
 {
-    create();
-
     // Create a surface format for OpenGL 4.2 Core.
     // http://stackoverflow.com/questions/11000014/cant-set-desired-opengl-version-in-qglwidget
     QSurfaceFormat format;
     format.setMajorVersion(4);
     format.setMinorVersion(2);
     format.setProfile( QSurfaceFormat::CoreProfile );
-    //format.setSampleBuffers(true);
 
-    // Take previous format for this OpenGL context.
+    // Create an OpenGL context and make it use the previous format.
     oglContext = shared_ptr< QOpenGLContext >( new QOpenGLContext );
     oglContext->setFormat( format );
 
-    // Set this surface's format.
+    // Initialize this offscreen surface with previous format.
     setFormat( format );
+    create();
 
-    // Create the OpenGL context and make it the current one.
-    cout << "oglContext->create() : " << oglContext->create() << endl;
-    //cout << "oglContext->makeCurrent() : " << oglContext->makeCurrent( this ) << endl;
-    cout << "Context is valid?: " << oglContext->isValid() << endl;
-    cout << "Context->version: " << oglContext->format().majorVersion() << " . " << oglContext->format().minorVersion() << endl;
+    // Initialize the OpenGL context and make it the current one.
+    oglContext->create();
+    oglContext->makeCurrent( this );
 
     // Obtain a functions object and resolve all entry points
     QAbstractOpenGLFunctions* oglFunctions = oglContext->versionFunctions();
@@ -51,9 +52,6 @@ OpenGLInitializer::OpenGLInitializer()
         exit( 1 );
     }
     oglFunctions->initializeOpenGLFunctions();
-
-    // Make previous OpenGL context current for this window.
-    cout << "Making OGL context current for AppWindow: " << oglContext->makeCurrent( this ) << endl;
 
     // Load shaders
     ShaderLoader* shaderLoader = ShaderLoader::getInstance();
@@ -66,8 +64,23 @@ OpenGLInitializer::OpenGLInitializer()
     // Set OpenGL depth test.
     glEnable( GL_DEPTH_TEST );
     glDepthFunc( GL_LEQUAL );
+
+    // Create an empty scene.
+    scene = shared_ptr<Scene>( new Scene );
+
+    // Add a cube to the scene and select it.
+    scene->addCube( new Cube );
+    scene->selectAll();
+
+    // TODO: Delete if not necessary.
+    // Enable vertex arrays.
+    glEnableClientState( GL_VERTEX_ARRAY );
 }
 
+
+/***
+ * 2. Getters
+ ***/
 
 shared_ptr< QOpenGLContext > OpenGLInitializer::context()
 {
@@ -77,9 +90,5 @@ shared_ptr< QOpenGLContext > OpenGLInitializer::context()
 
 shared_ptr< Scene > OpenGLInitializer::getScene()
 {
-    scene = shared_ptr<Scene>( new Scene );
-    scene->addCube( new Cube );
-    scene->selectAll();
-
     return scene;
 }

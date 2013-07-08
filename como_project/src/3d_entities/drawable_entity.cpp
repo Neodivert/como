@@ -19,6 +19,10 @@
 
 #include "drawable_entity.hpp"
 
+/***
+ * 1. Initialization
+ ***/
+
 DrawableEntity::DrawableEntity()
 {
     // Initialize transformation matrix to identity matrix.
@@ -26,10 +30,16 @@ DrawableEntity::DrawableEntity()
 }
 
 
+/***
+ * 2. Transformations
+ ***/
 
 void DrawableEntity::translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz )
 {
+    // Multiply the drawable's transformation matrix by a translation one.
     transformationMatrix = glm::translate( transformationMatrix, glm::vec3( tx, ty, tz ) );
+
+    // Update the VBO with the transformed vertices.
     update();
 }
 

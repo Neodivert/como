@@ -48,10 +48,16 @@ class ShaderLoader
         static ShaderLoader* getInstance();
         static void destroy();
 
+
+    protected:
         /***
-         * 2.
+         * 2. Utilities
          ***/
         void readFile( const char* file, GLchar* buffer, const unsigned int n );
+
+        /***
+         * 3. Shader loading
+         ***/
         void loadShaderObject( GLenum shaderType, const char* shaderFile );
         void loadMinimumShaderProgram( const char* vertexShaderFile, const char* fragmentShaderFile );
 };

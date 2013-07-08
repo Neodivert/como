@@ -63,12 +63,20 @@ class DrawableEntity
         glm::mat4 transformationMatrix;
 
     public:
+        /***
+         * 1. Initialization
+         ***/
         // Constructor. Initialize transformation matrix to identity matrix.
         DrawableEntity();
 
-
+        /***
+         * 2. Transformations
+         ***/
         virtual void translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz );
 
+        /***
+         * 3. Updating and drawing
+         ***/
     protected:
         virtual void update() = 0;
 

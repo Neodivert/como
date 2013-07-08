@@ -37,25 +37,18 @@ class RenderPanel : public QFrame
     Q_OBJECT
 
     private:
-        QSplitter *h1Splitter;
-        QSplitter *h2Splitter;
+        // Pointer to shared OpenGL context.
+        shared_ptr<QOpenGLContext> oglContext;
 
-
-        shared_ptr< QOpenGLContext > oglContext;
-        shared_ptr< Scene > scene;
+        // Pointer to current 3D scene.
+        shared_ptr<Scene> scene;
 
     public:
+        /***
+         * 1. Initialization
+         ***/
         explicit RenderPanel( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent = 0 );
 
-        void initializeGL();
-        // Initialize OpenGL context.
-        //void initializeGL();
-        /*
-        virtual QSurfaceFormat format() const;
-        virtual QPlatformSurface* surfaceHandle() const;
-        virtual QSurface::SurfaceType surfaceType() const;
-        virtual QSize size() const;
-        */
     signals:
 
     public slots:

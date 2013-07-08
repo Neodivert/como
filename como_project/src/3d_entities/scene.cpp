@@ -19,13 +19,9 @@
 
 #include "scene.hpp"
 
-Scene::Scene()
-{
-}
-
 
 /***
- * 2. Drawables administration
+ * 1. Drawables administration
  ***/
 
 void Scene::addCube( Cube* cube )
@@ -42,7 +38,7 @@ void Scene::addDrawable( shared_ptr<DrawableEntity> drawable )
 
 
 /***
- * 3. Drawables selection
+ * 2. Drawables selection
  ***/
 
 void Scene::selectAll()
@@ -52,7 +48,7 @@ void Scene::selectAll()
 
 
 /***
- * 4. Transformations
+ * 3. Transformations
  ***/
 
 void Scene::translateSelectedDrawables( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz )
@@ -67,7 +63,7 @@ void Scene::translateSelectedDrawables( const GLfloat& tx, const GLfloat& ty, co
 
 
 /***
- * 5. Drawing
+ * 4. Drawing
  ***/
 
 void Scene::draw()

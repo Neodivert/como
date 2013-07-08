@@ -25,10 +25,9 @@
  * Includes
  ***/
 
-#include <QGLWidget>
+#include <QWindow>
 #include "../3d_entities/cube.hpp"
 #include "../3d_entities/scene.hpp"
-#include "../utilities/shader_loader.hpp"
 
 
 /***
@@ -39,61 +38,39 @@ class OpenGLCanvas : public QWindow
 {
     Q_OBJECT
 
-private:
-    shared_ptr<QOpenGLContext> oglContext;
-    shared_ptr<Scene> scene;
+    private:
+        // Pointer to shared OpenGL context.
+        shared_ptr<QOpenGLContext> oglContext;
 
-    QOpenGLPaintDevice* m_device;
-
-
-    /***
-     * 1. Initialization and destruction
-     ***/
-public:
-    //explicit OpenGLCanvas( QWidget *parent = 0);
-    // add "explicit"?
-    OpenGLCanvas( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent = 0 );
-    ~OpenGLCanvas();
-
-protected:
+        // Pointer to current 3D scene.
+        shared_ptr<Scene> scene;
 
 
-    // Initialize OpenGL context.
-    //void initializeGL();
+    public:
+        /***
+         * 1. Initialization and destruction
+         ***/
 
-    /***
-     * 2. Events
-     ***/
+        //explicit OpenGLCanvas( QWidget *parent = 0);
+        // add "explicit"?
+        OpenGLCanvas( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scene> scene );
 
-    void keyPressEvent( QKeyEvent *e );
-    /*void dragMoveEvent(QDragMoveEvent *dragMoveEvent );
-    void mouseMoveEvent( QMouseEvent *mouseMoveEvent );
-    */
+        /***
+         * 2. Events
+         ***/
+        virtual bool event( QEvent *event );
+        virtual void exposeEvent( QExposeEvent *event );
+        virtual void resizeEvent( QResizeEvent *event );
+        void keyPressEvent( QKeyEvent *e );
 
-    /***
-     * 3. Updating and drawing
-     ***/
-    // Resize OpenGL canvas.
-    //void resizeGL( int w, int h );
+        /***
+         * 3. Updating and drawing
+         ***/
+        virtual void render();
 
-    // Render OpenGL canvas.
-    //void paintGL();
+    signals:
 
-    virtual bool event(QEvent *event);
-    virtual void exposeEvent(QExposeEvent *event);
-    virtual void resizeEvent(QResizeEvent *event);
-
-    virtual void initializeGL();
-    virtual void render();
-
-
-    void render(QPainter *painter);
-
-    
-signals:
-    
-public slots:
-    
+    public slots:
 };
 
 #endif // OPENGL_CANVAS_HPP

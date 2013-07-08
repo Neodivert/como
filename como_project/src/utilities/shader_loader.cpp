@@ -61,8 +61,9 @@ void ShaderLoader::destroy()
 
 
 /***
- * 2.
+ * 2. Utilities
  ***/
+
 void ShaderLoader::readFile( const char* filePath, GLchar* buffer, const unsigned int n )
 {
     // Open given file.
@@ -79,6 +80,10 @@ void ShaderLoader::readFile( const char* filePath, GLchar* buffer, const unsigne
     file.close();
 }
 
+
+/***
+ * 3. Shader loading
+ ***/
 
 void ShaderLoader::loadShaderObject( GLenum shaderType, const char* shaderFile )
 {
@@ -115,10 +120,11 @@ void ShaderLoader::loadMinimumShaderProgram( const char* vertexShaderFile, const
 {
     GLint linkingResult;
 
+    // Load both vertex and fragment shaders.
     loadShaderObject( GL_VERTEX_SHADER, vertexShaderFile );
     loadShaderObject( GL_FRAGMENT_SHADER, fragmentShaderFile );
 
-
+    // Link the shader program and check the result.
     glLinkProgram( shaderProgram );
     glGetProgramiv( shaderProgram, GL_LINK_STATUS, &linkingResult );
 
@@ -127,7 +133,7 @@ void ShaderLoader::loadMinimumShaderProgram( const char* vertexShaderFile, const
         return;
     }
 
-
+    // Set the created shader program as the active one.
     glUseProgram( shaderProgram );
     cout << "New shader program loaded and being used!" << endl;
 }

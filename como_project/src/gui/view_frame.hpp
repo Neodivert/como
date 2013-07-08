@@ -29,10 +29,13 @@
 class ViewFrame : public QFrame
 {
     private:
-        //QGraphicsView *graphicsView;
+        // OpenGL rendering surface.
         OpenGLCanvas* openGLCanvas;
 
     public:
+        /***
+         * 1. Initialization
+         ***/
         ViewFrame( const QString &name, shared_ptr<QOpenGLContext> glContext, shared_ptr<Scene> scene );
 };
 

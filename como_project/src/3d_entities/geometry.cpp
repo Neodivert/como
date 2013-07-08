@@ -60,7 +60,7 @@ Geometry::Geometry()
         cout << "uniform color location initialized to (" << uniformColorLocation << ")" << endl;
     }
 
-
+    // Set both inner and contour colors.
     setInnerColor( 0.5f, 0.0f, 0.0f, 1.0f );
     setContourColor( 1.0f, 0.0f, 0.0f, 1.0f );
 }
