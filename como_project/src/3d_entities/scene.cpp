@@ -66,12 +66,12 @@ void Scene::translateSelectedDrawables( const GLfloat& tx, const GLfloat& ty, co
  * 4. Drawing
  ***/
 
-void Scene::draw()
+void Scene::draw( Camera* camera )
 {
     DrawablesList::iterator it = nonSelectedDrawables.begin();
 
     for( ; it != nonSelectedDrawables.end(); it++ )
     {
-        (*it)->draw();
+        (*it)->draw( camera );
     }
 }

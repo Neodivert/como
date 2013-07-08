@@ -34,10 +34,10 @@ Camera::Camera() :
  *
  ***/
 
-void Camera::setShaderModelviewMatrix( glm::mat4 modelMatrix )
+void Camera::setShaderModelviewMatrix( const glm::mat4* modelMatrix )
 {
     // Compute modelview matrix.
-    glm::mat4 modelviewMatrix = modelMatrix * glm::inverse( transformationMatrix );
+    glm::mat4 modelviewMatrix = (*modelMatrix) * glm::inverse( transformationMatrix );
 
     // Copy computed modelview matrix to its corresponding shader uniform.
     glUniformMatrix4fv( modelviewMatrixLocation, 1, GL_FALSE, &modelviewMatrix[0][0] );

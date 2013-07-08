@@ -124,8 +124,11 @@ void Geometry::update()
 }
 
 
-void Geometry::draw() const
+void Geometry::draw( Camera* camera ) const
 {
+    // Set shader modelview matrix.
+    camera->setShaderModelViewMatrix( &transformationMatrix );
+
     // Feed uniform shader variable "color" with geometry inner color.
     // I fallen in a common mistake D:.
     // http://www.opengl.org/wiki/GLSL_:_common_mistakes

@@ -80,7 +80,7 @@ class Geometry : public DrawableEntity
 
     public:
         // Send geometry to OpenGL server for rendering it.
-        virtual void draw() const;
+        virtual void draw( Camera* camera ) const;
 };
 
 #endif // GEOMETRY_HPP

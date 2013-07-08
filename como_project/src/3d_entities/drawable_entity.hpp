@@ -41,6 +41,8 @@ using namespace std;
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "camera.hpp"
+
 
 /***
  * Enum types
@@ -81,7 +83,7 @@ class DrawableEntity
         virtual void update() = 0;
 
     public:
-        virtual void draw() const = 0;
+        virtual void draw( Camera* camera ) const = 0;
 };
 
 #endif // DRAWABLE_ENTITY_HPP

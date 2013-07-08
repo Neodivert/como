@@ -78,7 +78,7 @@ class Camera : public DrawableEntity
         /***
          * 3.
          ***/
-        void setShaderModelviewMatrix( glm::mat4 modelMatrix );
+        void setShaderModelviewMatrix( const glm::mat4* modelMatrix );
         void setShaderProjectionMatrix();
 
         /***

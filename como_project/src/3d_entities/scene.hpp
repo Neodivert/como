@@ -58,7 +58,7 @@ class Scene
         /***
          * 4. Drawing
          ***/
-        void draw();
+        void draw( Camera* camera );
 };
 
 #endif // SCENE_HPP
