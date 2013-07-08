@@ -97,15 +97,18 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
     switch ( e->key() )
     {
         case Qt::Key_Left:
-          scene->translateSelectedDrawables( -0.01f, 0.0f, 0.0f );
+          //scene->translateSelectedDrawables( -0.01f, 0.0f, 0.0f );
+          camera.translate( -0.01f, 0.0f, 0.0f );
         break;
         case Qt::Key_Right:
-          scene->translateSelectedDrawables( 0.01f, 0.0f, 0.0f );
+          //scene->translateSelectedDrawables( 0.01f, 0.0f, 0.0f );
+          camera.translate( +0.01f, 0.0f, 0.0f );
         break;
         default:
           cout << "Unknown key (" << e->key() << ")" << endl;
         break;
     }
+    render();
     //updateGL();
 }
 
@@ -128,7 +131,7 @@ void OpenGLCanvas::render()
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     // Draw scene.
-    scene->draw();
+    scene->draw( &camera );
 
     // Swap buffers.
     oglContext->swapBuffers( this );

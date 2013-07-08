@@ -41,8 +41,8 @@ using namespace std;
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "camera.hpp"
-
+//#include "camera.hpp"
+class Camera;
 
 /***
  * Enum types

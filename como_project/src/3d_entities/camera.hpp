@@ -96,7 +96,7 @@ class Camera : public DrawableEntity
          ***/
         virtual void update();
     public:
-        virtual void draw();
+        virtual void draw( Camera* camera ) const ;
 };
 
 #endif // CAMERA_HPP

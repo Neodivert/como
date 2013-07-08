@@ -22,6 +22,7 @@
 #include <X11/X.h>
 #include <GL/gl.h>
 #include <GL/glx.h>
+#include "camera.hpp"
 
 // Initialize the location of the uniform shader variable "color" as unitialized (-1).
 GLint Geometry::uniformColorLocation = -1;
@@ -127,7 +128,7 @@ void Geometry::update()
 void Geometry::draw( Camera* camera ) const
 {
     // Set shader modelview matrix.
-    camera->setShaderModelViewMatrix( &transformationMatrix );
+    camera->setShaderModelviewMatrix( &transformationMatrix );
 
     // Feed uniform shader variable "color" with geometry inner color.
     // I fallen in a common mistake D:.

@@ -28,6 +28,7 @@
 #include <QWindow>
 #include "../3d_entities/cube.hpp"
 #include "../3d_entities/scene.hpp"
+#include "../3d_entities/camera.hpp"
 
 
 /***
@@ -45,6 +46,8 @@ class OpenGLCanvas : public QWindow
         // Pointer to current 3D scene.
         shared_ptr<Scene> scene;
 
+        // Camera associated with the OpenGL canvas.
+        Camera camera;
 
     public:
         /***

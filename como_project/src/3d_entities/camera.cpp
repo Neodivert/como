@@ -96,6 +96,7 @@ int Camera::setPerspective( float fovy, float aspect,
     }
 }
 
+
 /***
  * Updating and drawing
  ***/
@@ -108,10 +109,13 @@ void Camera::update()
     transformedUp = transformationMatrix * originalUp;
 
     // Set view matrix.
-    glm::lookAt( transformedEye, transformedCenter, transformedUp );
+    glm::lookAt( glm::vec3( transformedEye ),
+                 glm::vec3( transformedCenter ),
+                 glm::vec3( transformedUp ) );
 }
 
-void Camera::draw()
+
+void Camera::draw( Camera* camera ) const
 {
 
 }
