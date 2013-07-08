@@ -22,7 +22,8 @@ SOURCES += src/main.cpp\
     src/3d_entities/scene.cpp \
     src/gui/render_panel.cpp \
     src/gui/main_window.cpp \
-    src/gui/opengl_initializer.cpp
+    src/gui/opengl_initializer.cpp \
+    src/3d_entities/camera.cpp
 
 HEADERS  += \
     src/gui/opengl_canvas.hpp \
@@ -34,7 +35,8 @@ HEADERS  += \
     src/3d_entities/scene.hpp \
     src/gui/render_panel.hpp \
     src/gui/main_window.hpp \
-    src/gui/opengl_initializer.hpp
+    src/gui/opengl_initializer.hpp \
+    src/3d_entities/camera.hpp
 
 FORMS    += main_window.ui
 

@@ -39,7 +39,8 @@ void DrawableEntity::translate( const GLfloat& tx, const GLfloat& ty, const GLfl
     // Multiply the drawable's transformation matrix by a translation one.
     transformationMatrix = glm::translate( transformationMatrix, glm::vec3( tx, ty, tz ) );
 
-    // Update the VBO with the transformed vertices.
+    // Update the transformed vertices using the original ones and the
+    // previous transformation matrix.
     update();
 }
 

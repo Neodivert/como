@@ -48,7 +48,6 @@ class ShaderLoader
         static ShaderLoader* getInstance();
         static void destroy();
 
-
     protected:
         /***
          * 2. Utilities
@@ -59,6 +58,7 @@ class ShaderLoader
          * 3. Shader loading
          ***/
         void loadShaderObject( GLenum shaderType, const char* shaderFile );
+    public:
         void loadMinimumShaderProgram( const char* vertexShaderFile, const char* fragmentShaderFile );
 };
 

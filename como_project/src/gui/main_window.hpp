@@ -21,6 +21,9 @@
 #define MAIN_WINDOW_HPP
 
 #include <QMainWindow>
+#include <QOpenGLContext>
+#include "../3d_entities/scene.hpp"
+#include <memory>
 
 namespace Ui {
     class MainWindow;
