@@ -45,14 +45,14 @@ class Camera : public DrawableEntity
 {
     protected:
         // Camera original position and orientation.
-        const glm::vec3 originalEye;
-        const glm::vec3 originalCenter;
-        const glm::vec3 originalUp;
+        const glm::vec4 originalEye;
+        const glm::vec4 originalCenter;
+        const glm::vec4 originalUp;
 
         // Camera transformed position and orientation.
-        glm::vec3 transformedEye;
-        glm::vec3 transformedCenter;
-        glm::vec3 transformedUp;
+        glm::vec4 transformedEye;
+        glm::vec4 transformedCenter;
+        glm::vec4 transformedUp;
 
         // If true, camera is using perspective projection. Otherwise, orthographic projection
         // is being used.
@@ -66,8 +66,8 @@ class Camera : public DrawableEntity
         glm::mat4 projectionMatrix;
 
         // Locations for shader uniform variables.
-        GLint viewMatrixLocation;
-        GLint projectionMatrixLocation;
+        static GLint modelviewMatrixLocation;
+        static GLint projectionMatrixLocation;
 
     public:
         /***
@@ -78,7 +78,7 @@ class Camera : public DrawableEntity
         /***
          * 3.
          ***/
-        void getViewMatrix();
+        void setShaderModelviewMatrix( glm::mat4 modelMatrix );
         void setShaderProjectionMatrix();
 
         /***

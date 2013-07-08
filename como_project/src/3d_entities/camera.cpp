@@ -1,21 +1,31 @@
 #include "camera.hpp"
 
+GLint Camera::modelviewMatrixLocation = -1;
+GLint Camera::projectionMatrixLocation = -1;
+
 Camera::Camera() :
     // Initialize original camera position and orientation.
     // TODO: It would better if I make these attributes static?
-    originalEye( 0.0f, 0.0f, 0.0f ),
-    originalCenter( 0.0f, 0.0f, -1.0f ),
-    originalUp( 0.0f, 1.0f, 0.0f )
+    originalEye( 0.0f, 0.0f, 0.0f, 1.0f ),
+    originalCenter( 0.0f, 0.0f, -1.0f, 1.0f ),
+    originalUp( 0.0f, 1.0f, 0.0f, 1.0f )
 {
-    /*
     GLint currentShaderProgram;
-
 
     // Get current shader program id.
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
 
-    // Get location of uniform shader variable "color".
-    uniformColorLocation = glGetUniformLocation( currentShaderProgram, "color" );
+    // Get location of uniform shader modelview matrix.
+    if( modelviewMatrixLocation == -1 ){
+        modelviewMatrixLocation = glGetUniformLocation( currentShaderProgram, "modelviewMatrix" );
+    }
+    cout << "modelviewMatrixLocation: (" << modelviewMatrixLocation << ")" << endl;
+
+    // Get location of uniform shader projection matrix.
+    /*
+    if( projectionMatrixLocation == -1 ){
+        uniformColorLocation = glGetUniformLocation( currentShaderProgram, "projectionMatrixLocation" );
+    }
     */
 }
 
@@ -24,9 +34,13 @@ Camera::Camera() :
  *
  ***/
 
-void Camera::getViewMatrix()
+void Camera::setShaderModelviewMatrix( glm::mat4 modelMatrix )
 {
+    // Compute modelview matrix.
+    glm::mat4 modelviewMatrix = modelMatrix * glm::inverse( transformationMatrix );
 
+    // Copy computed modelview matrix to its corresponding shader uniform.
+    glUniformMatrix4fv( modelviewMatrixLocation, 1, GL_FALSE, &modelviewMatrix[0][0] );
 }
 
 
@@ -77,6 +91,8 @@ int Camera::setPerspective( float fovy, float aspect,
         projectionMatrix = glm::perspective( fovy, aspect, zNear, zFar );
 
         return 0;
+    }else{
+        return -1;
     }
 }
 
@@ -87,9 +103,9 @@ int Camera::setPerspective( float fovy, float aspect,
 void Camera::update()
 {
     // Update transformed camera position and orientation.
-    transformedEye = transformationMatrix * vec4( originalEye );
-    transformedCenter = transformationMatrix * vec4( originalCenter );
-    transformedUp = transformationMatrix * vec4( originalUp );
+    transformedEye = transformationMatrix * originalEye;
+    transformedCenter = transformationMatrix * originalCenter;
+    transformedUp = transformationMatrix * originalUp;
 }
 
 void Camera::draw()

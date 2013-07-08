@@ -14,6 +14,6 @@ uniform mat4 modelviewMatrix;
 
 void main()
 {
-	gl_Position = /*projectionMatrix **/ modelViewMatrix * vec4( vPosition.x, vPosition.y, vPosition.z, 1.0f );
+	gl_Position = modelviewMatrix * vec4( vPosition.x, vPosition.y, vPosition.z, 1.0f );
 }
 
