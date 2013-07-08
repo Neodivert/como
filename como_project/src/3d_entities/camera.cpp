@@ -106,6 +106,9 @@ void Camera::update()
     transformedEye = transformationMatrix * originalEye;
     transformedCenter = transformationMatrix * originalCenter;
     transformedUp = transformationMatrix * originalUp;
+
+    // Set view matrix.
+    glm::lookAt( transformedEye, transformedCenter, transformedUp );
 }
 
 void Camera::draw()
