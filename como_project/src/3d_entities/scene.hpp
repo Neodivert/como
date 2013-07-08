@@ -24,6 +24,7 @@
 #include <memory>
 #include "drawable_entity.hpp"
 #include "cube.hpp"
+#include "camera.hpp"
 
 typedef std::list< std::shared_ptr< DrawableEntity> > DrawablesList;
 

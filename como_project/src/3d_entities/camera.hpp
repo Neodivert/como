@@ -24,20 +24,22 @@
 #include "drawable_entity.hpp"
 
 enum OrthoAttribute {
-    LEFT = 0,
-    RIGHT,
-    BOTTOM,
-    TOP
+    ORTHO_LEFT = 0,
+    ORTHO_RIGHT,
+    ORTHO_BOTTOM,
+    ORTHO_TOP,
+    ORTHO_Z_NEAR,
+    ORTHO_Z_FAR
 };
 
 enum PerspectiveAttribute {
-    FOVY = 0,
-    ASPECT,
-    Z_NEAR,
-    Z_FAR
+    PERSPECTIVE_FOVY = 0,
+    PERSPECTIVE_ASPECT,
+    PERSPECTIVE_Z_NEAR,
+    PERSPECTIVE_Z_FAR
 };
 
-const int N_PROJECTION_ATTRIBUTES = 4;
+const int N_PROJECTION_ATTRIBUTES = 6;
 
 class Camera : public DrawableEntity
 {
@@ -63,8 +65,38 @@ class Camera : public DrawableEntity
         // Projection matrix.
         glm::mat4 projectionMatrix;
 
+        // Locations for shader uniform variables.
+        GLint viewMatrixLocation;
+        GLint projectionMatrixLocation;
+
     public:
+        /***
+         * 1. Initializations
+         ***/
         Camera();
+
+        /***
+         * 3.
+         ***/
+        void getViewMatrix();
+        void setShaderProjectionMatrix();
+
+        /***
+         * 2. Projections
+         ***/
+        int setOrtho( float left, float right,
+                      float bottom, float top,
+                      float zNear, float zFar );
+        int setPerspective( float fovy, float aspect,
+                            float zNear, float zFar );
+
+    protected:
+        /***
+         * 3. Updating and drawing
+         ***/
+        virtual void update();
+    public:
+        virtual void draw();
 };
 
 #endif // CAMERA_HPP
