@@ -25,18 +25,17 @@ using namespace std;
  * 1. Initialization and destruction
  ***/
 
-OpenGLCanvas::OpenGLCanvas( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scene> scene ) :
+OpenGLCanvas::OpenGLCanvas( shared_ptr< ComoApp > comoApp ) :
     QWindow()
 {
-    // Make this canvas share the given OpenGL context and scene.
-    this->oglContext = oglContext;
-    this->scene = scene;
+    // Make this canvas share the given app's state.
+    this->comoApp = comoApp;
 
     // We will render using OpenGL.
     setSurfaceType( QWindow::OpenGLSurface );
 
-    // Set this surface to the same format used by the shared OpenGL context.
-    setFormat( oglContext->format() );
+    // Set this surface to the same format used by the app's shared OpenGL context.
+    setFormat( comoApp->getOpenGLContext()->format() );
     create();
 }
 
@@ -133,7 +132,7 @@ void OpenGLCanvas::render()
     cout << "OpenGLCanvas - Rendering" << endl;
 
     // Make shared OpenGL context current for this surface.
-    oglContext->makeCurrent( this );
+    comoApp->getOpenGLContext()->makeCurrent( this );
 
     // Make viewport occuppy the full canvas.
     glViewport( 0, 0, width(), height() );
@@ -142,8 +141,8 @@ void OpenGLCanvas::render()
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     // Draw scene.
-    scene->draw( &camera );
+    comoApp->getScene()->draw( &camera );
 
     // Swap buffers.
-    oglContext->swapBuffers( this );
+    comoApp->getOpenGLContext()->swapBuffers( this );
 }

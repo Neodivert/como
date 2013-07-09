@@ -17,29 +17,39 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "opengl_initializer.hpp"
+#include "opengl_engine.hpp"
 
 
 /***
  * 1. Initialization
  ***/
 
-OpenGLInitializer::OpenGLInitializer()
+OpenGLEngine::OpenGLEngine()
 {
     // Create a surface format for OpenGL 4.2 Core.
     // http://stackoverflow.com/questions/11000014/cant-set-desired-opengl-version-in-qglwidget
     QSurfaceFormat format;
-    format.setMajorVersion(4);
-    format.setMinorVersion(2);
+    format.setMajorVersion( 4 );
+    format.setMinorVersion( 2 );
     format.setProfile( QSurfaceFormat::CoreProfile );
-
-    // Create an OpenGL context and make it use the previous format.
-    oglContext = shared_ptr< QOpenGLContext >( new QOpenGLContext );
-    oglContext->setFormat( format );
 
     // Initialize this offscreen surface with previous format.
     setFormat( format );
     create();
+}
+
+
+/***
+ * 2. Getters
+ ***/
+
+shared_ptr< QOpenGLContext > OpenGLEngine::createOpenGLContext()
+{
+    shared_ptr< QOpenGLContext > oglContext;
+
+    // Create an empty OpenGL context and make it use this surface's format.
+    oglContext = shared_ptr< QOpenGLContext >( new QOpenGLContext );
+    oglContext->setFormat( format() );
 
     // Initialize the OpenGL context and make it the current one.
     oglContext->create();
@@ -65,30 +75,24 @@ OpenGLInitializer::OpenGLInitializer()
     glEnable( GL_DEPTH_TEST );
     glDepthFunc( GL_LEQUAL );
 
+    // TODO: Delete if not necessary.
+    // Enable vertex arrays.
+    glEnableClientState( GL_VERTEX_ARRAY );
+
+    return oglContext;
+}
+
+shared_ptr< Scene > OpenGLEngine::createScene( QOpenGLContext* oglContext )
+{
+    // Make the given OpenGL context current for this surface.
+    oglContext->makeCurrent( this );
+
     // Create an empty scene.
-    scene = shared_ptr<Scene>( new Scene );
+    shared_ptr< Scene > scene = shared_ptr<Scene>( new Scene );
 
     // Add a cube to the scene and select it.
     scene->addCube( new Cube );
     scene->selectAll();
 
-    // TODO: Delete if not necessary.
-    // Enable vertex arrays.
-    glEnableClientState( GL_VERTEX_ARRAY );
-}
-
-
-/***
- * 2. Getters
- ***/
-
-shared_ptr< QOpenGLContext > OpenGLInitializer::context()
-{
-    return oglContext;
-}
-
-
-shared_ptr< Scene > OpenGLInitializer::getScene()
-{
     return scene;
 }

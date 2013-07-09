@@ -24,11 +24,11 @@
  * 1. Initialization
  ***/
 
-ViewFrame::ViewFrame( const QString &name, shared_ptr<QOpenGLContext> glContext, shared_ptr<Scene> scene ) :
+ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     QFrame()
 {
     // Create a OpenGL canvas.
-    openGLCanvas = new OpenGLCanvas( glContext, scene );
+    openGLCanvas = new OpenGLCanvas( comoApp );
 
     // The OpenGL canvas inherits from QWindow. In order to allow it to live inside a QWidget-based
     // application, we need to create a QWidget wrapper.

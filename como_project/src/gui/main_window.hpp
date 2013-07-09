@@ -23,6 +23,7 @@
 #include <QMainWindow>
 #include <QOpenGLContext>
 #include "../3d_entities/scene.hpp"
+#include "../como_app.hpp"
 #include <memory>
 
 namespace Ui {
@@ -36,11 +37,8 @@ class MainWindow : public QMainWindow
     private:
         Ui::MainWindow *ui;
 
-        // Main OpenGL context used in the app.
-        shared_ptr<QOpenGLContext> oglContext;
-
-        // Current 3D scene (set of drawables).
-        shared_ptr<Scene> scene;
+        // App's singlenton instance.
+        shared_ptr< ComoApp > comoApp;
 
     public:
         /***

@@ -24,16 +24,15 @@
  * 1. Initialization
  ***/
 
-RenderPanel::RenderPanel( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent ) :
+RenderPanel::RenderPanel( shared_ptr< ComoApp > comoApp, QWidget *parent ) :
     QFrame( parent )
 {
     QSplitter* vSplitter;
     QSplitter* h1Splitter;
     QSplitter* h2Splitter;
 
-    // Make this render panel share the given OpenGL context and scene.
-    this->oglContext = oglContext;
-    this->scene = scene;
+    // Make this render panel share the given app's state.
+    this->comoApp = comoApp;
 
     // Create splitters for arranging the four ViewFrame instances we are about to create.
     vSplitter = new QSplitter;
@@ -46,19 +45,19 @@ RenderPanel::RenderPanel( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scen
     vSplitter->addWidget( h2Splitter );
 
     // Create the top left ViewFrame.
-    ViewFrame *viewFrame = new ViewFrame( "Top left view", oglContext, scene );
+    ViewFrame *viewFrame = new ViewFrame( "Top left view", comoApp );
     h1Splitter->addWidget( viewFrame );
 
     // Create the top right ViewFrame.
-    viewFrame = new ViewFrame( "Top right view", oglContext, scene );
+    viewFrame = new ViewFrame( "Top right view", comoApp );
     h1Splitter->addWidget( viewFrame );
 
     // Create the bottom left ViewFrame.
-    viewFrame = new ViewFrame( "Bottom left view", oglContext, scene );
+    viewFrame = new ViewFrame( "Bottom left view", comoApp );
     h2Splitter->addWidget( viewFrame );
 
     // Create the Bottom right ViewFrame.
-    viewFrame = new ViewFrame( "Bottom right view", oglContext, scene );
+    viewFrame = new ViewFrame( "Bottom right view", comoApp );
     h2Splitter->addWidget( viewFrame );
 
     // Set the render panel layout by using previous splitters.

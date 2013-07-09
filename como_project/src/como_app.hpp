@@ -20,6 +20,9 @@
 #ifndef COMO_APP_HPP
 #define COMO_APP_HPP
 
+#include "3d_entities/scene.hpp"
+#include <QOpenGLContext>
+
 enum AppMode {
     MODE_CREATION = 0,
     MODE_EDITION
@@ -40,11 +43,24 @@ enum EditionSubMode
 
 class ComoApp {
     protected:
+        // Current app mode.
         AppMode appMode;
+
+        // When in edition mode, this sets whether editions are applied to drawables
+        // in local (object) or global (world) coordinates.
         EditionScope editionScope;
+
+        // Current edition submode.
         EditionSubMode editionSubMode;
 
+        // Singlenton class instance.
         static ComoApp* singlentonInstance;
+
+        // Current OpenGL context.
+        shared_ptr< QOpenGLContext > oglContext;
+
+        // Curren scene.
+        shared_ptr< Scene > scene;
 
         /***
          * 1. Initialization and destruction
@@ -53,8 +69,8 @@ class ComoApp {
         ComoApp();
 
     public:
-        ComoApp* getInstance();
-        void destroy();
+        static ComoApp* getInstance();
+        static void destroy();
 
         /***
          * 2. Setters and getters
@@ -67,6 +83,10 @@ class ComoApp {
 
         void setEditionSubMode( EditionSubMode editionSubMode );
         EditionSubMode getEditionSubMode() const ;
+
+        shared_ptr< Scene > getScene() const ;
+
+        shared_ptr< QOpenGLContext > getOpenGLContext() const ;
 };
 
 #endif // COMO_APP_HPP

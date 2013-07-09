@@ -18,6 +18,7 @@
 ***/
 
 #include "como_app.hpp"
+#include "gui/opengl_engine.hpp"
 
 ComoApp* ComoApp::singlentonInstance = nullptr;
 
@@ -27,6 +28,22 @@ ComoApp* ComoApp::singlentonInstance = nullptr;
 
 ComoApp::ComoApp()
 {
+    OpenGLEngine openGLEngine;
+
+    // Set default app mode.
+    appMode = MODE_EDITION;
+
+    // Set default edition scope.
+    editionScope = GLOBAL;
+
+    // Set default edition submode.
+    editionSubMode = TRANSLATION;
+
+    // Set default OpenGL context.
+    oglContext = openGLEngine.createOpenGLContext();
+
+    // Set default scene.
+    scene = openGLEngine.createScene( oglContext.get() );
 }
 
 ComoApp* ComoApp::getInstance()
@@ -74,4 +91,14 @@ void ComoApp::setEditionSubMode( EditionSubMode editionSubMode )
 EditionSubMode ComoApp::getEditionSubMode() const
 {
     return editionSubMode;
+}
+
+shared_ptr< Scene > ComoApp::getScene() const
+{
+    return scene;
+}
+
+shared_ptr< QOpenGLContext > ComoApp::getOpenGLContext() const
+{
+    return oglContext;
 }

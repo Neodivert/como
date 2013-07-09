@@ -27,26 +27,19 @@
 #include <memory>
 using namespace std;
 
-class OpenGLInitializer : public QOffscreenSurface
+class OpenGLEngine : public QOffscreenSurface
 {
-    private:
-        // Pointer to shared OpenGL context.
-        shared_ptr<QOpenGLContext> oglContext;
-
-        // Pointer to current 3D scene.
-        shared_ptr<Scene> scene;
-
     public:
         /***
          * 1. Initialization
          ***/
-        OpenGLInitializer();
+        OpenGLEngine();
 
         /***
          * 2. Getters
          ***/
-        shared_ptr< QOpenGLContext > context();
-        shared_ptr< Scene > getScene();
+        shared_ptr< QOpenGLContext > createOpenGLContext();
+        shared_ptr< Scene > createScene( QOpenGLContext* oglContext );
 };
 
 #endif // OPENGL_INITIALIZER_HPP

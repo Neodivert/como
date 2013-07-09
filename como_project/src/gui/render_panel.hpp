@@ -25,6 +25,7 @@
 #include <QOpenGLContext>
 #include "view_frame.hpp"
 #include "../utilities/shader_loader.hpp"
+#include "../como_app.hpp"
 #include <QOffscreenSurface>
 
 QT_FORWARD_DECLARE_CLASS(QLabel)
@@ -37,17 +38,14 @@ class RenderPanel : public QFrame
     Q_OBJECT
 
     private:
-        // Pointer to shared OpenGL context.
-        shared_ptr<QOpenGLContext> oglContext;
-
-        // Pointer to current 3D scene.
-        shared_ptr<Scene> scene;
+        // Pointer to app's current state.
+        shared_ptr< ComoApp > comoApp;
 
     public:
         /***
          * 1. Initialization
          ***/
-        explicit RenderPanel( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scene> scene, QWidget *parent = 0 );
+        explicit RenderPanel( shared_ptr< ComoApp > comoApp, QWidget *parent = 0 );
 
     signals:
 

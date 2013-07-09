@@ -29,6 +29,7 @@
 #include "../3d_entities/cube.hpp"
 #include "../3d_entities/scene.hpp"
 #include "../3d_entities/camera.hpp"
+#include "../como_app.hpp"
 
 
 /***
@@ -40,11 +41,8 @@ class OpenGLCanvas : public QWindow
     Q_OBJECT
 
     private:
-        // Pointer to shared OpenGL context.
-        shared_ptr<QOpenGLContext> oglContext;
-
-        // Pointer to current 3D scene.
-        shared_ptr<Scene> scene;
+        // Pointer to app's current state.
+        shared_ptr< ComoApp > comoApp;
 
         // Camera associated with the OpenGL canvas.
         Camera camera;
@@ -56,7 +54,7 @@ class OpenGLCanvas : public QWindow
 
         //explicit OpenGLCanvas( QWidget *parent = 0);
         // add "explicit"?
-        OpenGLCanvas( shared_ptr<QOpenGLContext> oglContext, shared_ptr<Scene> scene );
+        OpenGLCanvas( shared_ptr< ComoApp > comoApp );
 
         /***
          * 2. Events
