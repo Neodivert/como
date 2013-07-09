@@ -18,13 +18,67 @@
 ***/
 
 #include "tools_menu.hpp"
-#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
 {
+    QGridLayout* layout;
+    QLabel* appModeLabel;
+    QComboBox* appModeSelector;
+    QGroupBox* editionScopeGroupBox;
+    QVBoxLayout* editionScopeGroupBoxLayout;
+
+
+    // Share the given pointer to app's state.
     this->comoApp = comoApp;
 
-    QHBoxLayout *layout = new QHBoxLayout;
+    // Set app mode's label.
+    appModeLabel = new QLabel( "App mode" );
+
+    // Set app mode's selector.
+    appModeSelector = new QComboBox;
+    for( int i = 0; i < N_APP_MODES; i++ ){
+        appModeSelector->addItem( QString( appModeStrings[i] ) );
+    }
+
+    editionScopeGroupBox = new QGroupBox( tr( "Edition scope" ) );
+    editionScopeGroupBoxLayout = new QVBoxLayout;
+    for( int i = 0; i < N_EDITION_SCOPES; i++ ){
+        editionScopeGroupBoxLayout->addWidget( new QRadioButton( tr( editionScopeStrings[i] ) ) );
+    }
+    editionScopeGroupBox->setLayout( editionScopeGroupBoxLayout );
+
+
+    // Set tools panel layout.
+    layout = new QGridLayout;
+    layout->setSpacing( 1 );
     layout->addWidget( new QLabel( "Tools menu" ) );
+    layout->addWidget( new QLabel( "App mode" ) );
+    layout->addWidget( appModeSelector );
+    layout->addWidget( editionScopeGroupBox );
     setLayout( layout );
+
+
+    /*
+    QGroupBox *groupBox = new QGroupBox(tr("Exclusive Radio Buttons"));
+
+         QRadioButton *radio1 = new QRadioButton(tr("&Radio button 1"));
+         QRadioButton *radio2 = new QRadioButton(tr("R&adio button 2"));
+         QRadioButton *radio3 = new QRadioButton(tr("Ra&dio button 3"));
+
+    QGroupBox *groupBox = new QGroupBox(tr("Exclusive Radio Buttons"));
+
+      QRadioButton *radio1 = new QRadioButton(tr("&Radio button 1"));
+      QRadioButton *radio2 = new QRadioButton(tr("R&adio button 2"));
+      QRadioButton *radio3 = new QRadioButton(tr("Ra&dio button 3"));
+
+      radio1->setChecked(true);
+
+      QVBoxLayout *vbox = new QVBoxLayout;
+      vbox->addWidget(radio1);
+      vbox->addWidget(radio2);
+      vbox->addWidget(radio3);
+      vbox->addStretch(1);
+      groupBox->setLayout(vbox);
+      */
 }

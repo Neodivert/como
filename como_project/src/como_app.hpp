@@ -22,16 +22,32 @@
 
 #include "3d_entities/scene.hpp"
 #include <QOpenGLContext>
+#include <string>
+#include <vector>
 
 enum AppMode {
     MODE_CREATION = 0,
-    MODE_EDITION
+    MODE_EDITION,
+
+    N_APP_MODES
+};
+
+const char appModeStrings [N_APP_MODES][50] = {
+    "Creation",
+    "Edition"
 };
 
 enum EditionScope
 {
     GLOBAL = 0,
-    LOCAL
+    LOCAL,
+
+    N_EDITION_SCOPES
+};
+
+const char editionScopeStrings [N_EDITION_SCOPES][50] = {
+    "Global",
+    "Local"
 };
 
 enum EditionSubMode
