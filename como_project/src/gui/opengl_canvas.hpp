@@ -62,8 +62,9 @@ class OpenGLCanvas : public QWindow
          * 2. Events
          ***/
         virtual bool event( QEvent *event );
-        virtual void exposeEvent( QExposeEvent *event );
-        virtual void resizeEvent( QResizeEvent *event );
+        virtual void exposeEvent( QExposeEvent* event );
+        virtual void resizeEvent( QResizeEvent* event );
+        virtual void mouseMoveEvent( QMouseEvent* mouseMoveEvent );
         void keyPressEvent( QKeyEvent *e );
 
         /***

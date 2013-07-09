@@ -45,7 +45,7 @@ void DrawableEntity::translate( const GLfloat& tx, const GLfloat& ty, const GLfl
 }
 
 
-void rotate( const GLfloat& angle, const GLfloat& x, const GLfloat& y, const GLfloat& z )
+void DrawableEntity::rotate( const GLfloat& angle, const GLfloat& x, const GLfloat& y, const GLfloat& z )
 {
     // Multiply the drawable's transformation matrix by a rotation one.
     transformationMatrix = glm::rotate( transformationMatrix, angle, glm::vec3( x, y, z ) );

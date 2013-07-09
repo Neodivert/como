@@ -86,11 +86,6 @@ void OpenGLCanvas::resizeEvent(QResizeEvent *event)
     }
 }
 
-
-/***
- * 2. Events
- ***/
-
 void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
 {
     cout << "Key press event" << endl;
@@ -110,6 +105,22 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
     }
     render();
     //updateGL();
+}
+
+void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
+{
+    static int lastX = mouseMoveEvent->x();
+    static int lastY = mouseMoveEvent->y();
+
+    cout << "OpenGLCanvas::mouseMoveEvent (" << mouseMoveEvent->x()-lastX << ", " << mouseMoveEvent->y()-lastY << ")" << endl;
+
+    camera.rotateLaterally( mouseMoveEvent->x()-lastX );
+    //camera.rotate( mouseMoveEvent->x()-lastX, 0.0f, 1.0f, 0.0f );
+
+    lastX = mouseMoveEvent->x();
+    lastY = mouseMoveEvent->y();
+
+    render();
 }
 
 

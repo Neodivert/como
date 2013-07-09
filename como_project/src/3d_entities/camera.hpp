@@ -21,6 +21,7 @@
 #define CAMERA_HPP
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "drawable_entity.hpp"
 
 enum OrthoAttribute {
@@ -54,6 +55,9 @@ class Camera : public DrawableEntity
         glm::vec4 transformedCenter;
         glm::vec4 transformedUp;
 
+        // View matrix.
+        //
+
         // If true, camera is using perspective projection. Otherwise, orthographic projection
         // is being used.
         bool perspective;
@@ -69,11 +73,17 @@ class Camera : public DrawableEntity
         static GLint modelviewMatrixLocation;
         static GLint projectionMatrixLocation;
 
+
+        //glm::mat4 vieeeewMatrix;
+
     public:
         /***
          * 1. Initializations
          ***/
         Camera();
+
+
+        void rotateLaterally( float angle );
 
         /***
          * 3.
@@ -89,6 +99,8 @@ class Camera : public DrawableEntity
                       float zNear, float zFar );
         int setPerspective( float fovy, float aspect,
                             float zNear, float zFar );
+
+
 
     protected:
         /***
