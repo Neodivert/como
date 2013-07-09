@@ -21,11 +21,12 @@ Camera::Camera() :
     }
     cout << "modelviewMatrixLocation: (" << modelviewMatrixLocation << ")" << endl;
 
-    // Get location of uniform shader projection matrix.
     /*
+    // Get location of uniform shader projection matrix.
     if( projectionMatrixLocation == -1 ){
-        uniformColorLocation = glGetUniformLocation( currentShaderProgram, "projectionMatrixLocation" );
+        projectionMatrixLocation = glGetUniformLocation( currentShaderProgram, "projectionMatrix" );
     }
+    cout << "projectionMatrixLocation: (" << projectionMatrixLocation << ")" << endl;
     */
 }
 

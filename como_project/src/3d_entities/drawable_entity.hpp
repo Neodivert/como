@@ -75,6 +75,7 @@ class DrawableEntity
          * 2. Transformations
          ***/
         virtual void translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz );
+        virtual void rotate( const GLfloat& angle, const GLfloat& x, const GLfloat& y, const GLfloat& z );
 
         /***
          * 3. Updating and drawing
