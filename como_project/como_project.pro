@@ -23,7 +23,8 @@ SOURCES += src/main.cpp\
     src/gui/render_panel.cpp \
     src/gui/main_window.cpp \
     src/gui/opengl_initializer.cpp \
-    src/3d_entities/camera.cpp
+    src/3d_entities/camera.cpp \
+    src/como_app.cpp
 
 HEADERS  += \
     src/gui/opengl_canvas.hpp \
@@ -36,7 +37,8 @@ HEADERS  += \
     src/gui/render_panel.hpp \
     src/gui/main_window.hpp \
     src/gui/opengl_initializer.hpp \
-    src/3d_entities/camera.hpp
+    src/3d_entities/camera.hpp \
+    src/como_app.hpp
 
 FORMS    += main_window.ui
 
