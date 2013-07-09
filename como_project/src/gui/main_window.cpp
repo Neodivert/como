@@ -21,6 +21,7 @@
 #include "ui_main_window.h"
 #include "opengl_engine.hpp"
 #include "render_panel.hpp"
+#include "tools_menu.hpp"
 
 
 /***
@@ -32,6 +33,8 @@ MainWindow::MainWindow( QWidget* parent ) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ToolsMenu* toolsMenu;
+    RenderPanel* renderPanel;
 
     // Create a instance of singlenton class ComoApp.
     comoApp = shared_ptr< ComoApp >( ComoApp::getInstance() );
@@ -46,9 +49,20 @@ MainWindow::MainWindow( QWidget* parent ) :
     // Set a QFrame as the central widget. This frame will hold all others widgets.
     setCentralWidget( new QFrame );
 
-    // Add to window a RenderPanel (Set of four OpenGL canvas).
+    // Create a tools' menu.
+    toolsMenu = new ToolsMenu( comoApp );
+    toolsMenu->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
+
+    // Create a render panel (set of four OpenGL canvas).
+    renderPanel = new RenderPanel( comoApp );
+    renderPanel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
+
+    // Set window layout.
     QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget( new RenderPanel( comoApp ) );
+
+    layout->addWidget( toolsMenu );
+    layout->addWidget( renderPanel );
+
     centralWidget()->setLayout( layout );
 }
 

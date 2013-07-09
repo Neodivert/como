@@ -24,7 +24,8 @@ SOURCES += src/main.cpp\
     src/gui/main_window.cpp \
     src/3d_entities/camera.cpp \
     src/como_app.cpp \
-    src/gui/opengl_engine.cpp
+    src/gui/opengl_engine.cpp \
+    src/gui/tools_menu.cpp
 
 HEADERS  += \
     src/gui/opengl_canvas.hpp \
@@ -38,7 +39,8 @@ HEADERS  += \
     src/gui/main_window.hpp \
     src/3d_entities/camera.hpp \
     src/como_app.hpp \
-    src/gui/opengl_engine.hpp
+    src/gui/opengl_engine.hpp \
+    src/gui/tools_menu.hpp
 
 FORMS    += main_window.ui
 
