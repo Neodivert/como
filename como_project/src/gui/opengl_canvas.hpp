@@ -29,7 +29,7 @@
 #include "../3d_entities/cube.hpp"
 #include "../3d_entities/scene.hpp"
 #include "../3d_entities/camera.hpp"
-#include "../como_app.hpp"
+#include "como_app.hpp"
 
 
 /***

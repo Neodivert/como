@@ -20,7 +20,7 @@
 #ifndef COMO_APP_HPP
 #define COMO_APP_HPP
 
-#include "3d_entities/scene.hpp"
+#include "../3d_entities/scene.hpp"
 #include <QOpenGLContext>
 #include <string>
 #include <vector>
@@ -57,7 +57,7 @@ enum EditionSubMode
     SCALE
 };
 
-class ComoApp {
+class ComoApp : public QObject {
     protected:
         // Current app mode.
         AppMode appMode;

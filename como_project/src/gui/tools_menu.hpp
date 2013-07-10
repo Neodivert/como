@@ -22,7 +22,7 @@
 
 #include <QFrame>
 #include <memory>
-#include "../como_app.hpp"
+#include "como_app.hpp"
 
 class ToolsMenu : public QFrame
 {
@@ -32,6 +32,9 @@ class ToolsMenu : public QFrame
 
     public:
         ToolsMenu( shared_ptr< ComoApp > comoApp );
+
+    signals:
+
 };
 
 #endif // TOOLS_MENU_HPP

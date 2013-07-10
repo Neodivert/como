@@ -22,15 +22,18 @@
 
 ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
 {
-    QGridLayout* layout;
+    QVBoxLayout* layout;
+    QLabel* toolsMenuLabel;
     QLabel* appModeLabel;
     QComboBox* appModeSelector;
     QGroupBox* editionScopeGroupBox;
     QVBoxLayout* editionScopeGroupBoxLayout;
 
-
     // Share the given pointer to app's state.
     this->comoApp = comoApp;
+
+    // Set tools menu's label.
+    toolsMenuLabel = new QLabel( "Tools menu" );
 
     // Set app mode's label.
     appModeLabel = new QLabel( "App mode" );
@@ -48,16 +51,14 @@ ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
     }
     editionScopeGroupBox->setLayout( editionScopeGroupBoxLayout );
 
-
     // Set tools panel layout.
-    layout = new QGridLayout;
+    layout = new QVBoxLayout;
     layout->setSpacing( 1 );
-    layout->addWidget( new QLabel( "Tools menu" ) );
-    layout->addWidget( new QLabel( "App mode" ) );
+    layout->addWidget( toolsMenuLabel );
+    layout->addWidget( appModeLabel );
     layout->addWidget( appModeSelector );
     layout->addWidget( editionScopeGroupBox );
     setLayout( layout );
-
 
     /*
     QGroupBox *groupBox = new QGroupBox(tr("Exclusive Radio Buttons"));

@@ -23,7 +23,7 @@ SOURCES += src/main.cpp\
     src/gui/render_panel.cpp \
     src/gui/main_window.cpp \
     src/3d_entities/camera.cpp \
-    src/como_app.cpp \
+    src/gui/como_app.cpp \
     src/gui/opengl_engine.cpp \
     src/gui/tools_menu.cpp
 
@@ -38,7 +38,7 @@ HEADERS  += \
     src/gui/render_panel.hpp \
     src/gui/main_window.hpp \
     src/3d_entities/camera.hpp \
-    src/como_app.hpp \
+    src/gui/como_app.hpp \
     src/gui/opengl_engine.hpp \
     src/gui/tools_menu.hpp
 

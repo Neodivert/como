@@ -18,7 +18,7 @@
 ***/
 
 #include "como_app.hpp"
-#include "gui/opengl_engine.hpp"
+#include "opengl_engine.hpp"
 
 ComoApp* ComoApp::singlentonInstance = nullptr;
 
