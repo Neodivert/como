@@ -37,7 +37,7 @@ MainWindow::MainWindow( QWidget* parent ) :
     RenderPanel* renderPanel;
 
     // Create a instance of singlenton class ComoApp.
-    comoApp = shared_ptr< ComoApp >( ComoApp::getInstance() );
+    comoApp = shared_ptr< ComoApp >( new ComoApp /*::getInstance()*/ );
 
     // Create an retrieve an OpenGL context.
     /*OpenGLInitializer openGLInitializer;

@@ -20,6 +20,9 @@
 #include "como_app.hpp"
 #include "opengl_engine.hpp"
 
+#include <iostream>
+using namespace std;
+
 ComoApp* ComoApp::singlentonInstance = nullptr;
 
 /***
@@ -45,7 +48,7 @@ ComoApp::ComoApp()
     // Set default scene.
     scene = openGLEngine.createScene( oglContext.get() );
 }
-
+/*
 ComoApp* ComoApp::getInstance()
 {
     if( singlentonInstance == nullptr ){
@@ -58,34 +61,19 @@ void ComoApp::destroy()
 {
     delete singlentonInstance;
 }
-
+*/
 /***
- * 2. Setters and getters
+ * 2. Getters
  ***/
-
-void ComoApp::setAppMode( AppMode appMode )
-{
-    this->appMode = appMode;
-}
 
 AppMode ComoApp::getAppMode() const
 {
     return appMode;
 }
 
-void ComoApp::setEditionScope( EditionScope editionScope )
-{
-    this->editionScope = editionScope;
-}
-
 EditionScope ComoApp::getEditionScope() const
 {
     return editionScope;
-}
-
-void ComoApp::setEditionSubMode( EditionSubMode editionSubMode )
-{
-    this->editionSubMode = editionSubMode;
 }
 
 EditionSubMode ComoApp::getEditionSubMode() const
@@ -102,3 +90,32 @@ shared_ptr< QOpenGLContext > ComoApp::getOpenGLContext() const
 {
     return oglContext;
 }
+
+
+/***
+ * 3. Setters
+ ***/
+
+void ComoApp::setAppMode( AppMode appMode )
+{
+    cout << "Changing app mode (" << appMode << ")" << endl;
+    this->appMode = appMode;
+}
+
+
+
+void ComoApp::setEditionScope( EditionScope editionScope )
+{
+    this->editionScope = editionScope;
+}
+
+
+
+void ComoApp::setEditionSubMode( EditionSubMode editionSubMode )
+{
+    this->editionSubMode = editionSubMode;
+}
+
+
+
+

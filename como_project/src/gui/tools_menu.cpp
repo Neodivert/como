@@ -44,6 +44,10 @@ ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
         appModeSelector->addItem( QString( appModeStrings[i] ) );
     }
 
+    void (QComboBox::*signal)(int) = &QComboBox::currentIndexChanged;
+    QObject::connect( appModeSelector, signal, comoApp.get(), &ComoApp::setAppMode );
+    cout << "Signal connected" << endl;
+
     editionScopeGroupBox = new QGroupBox( tr( "Edition scope" ) );
     editionScopeGroupBoxLayout = new QVBoxLayout;
     for( int i = 0; i < N_EDITION_SCOPES; i++ ){

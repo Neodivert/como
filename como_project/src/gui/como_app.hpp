@@ -24,6 +24,7 @@
 #include <QOpenGLContext>
 #include <string>
 #include <vector>
+#include <QObject>
 
 enum AppMode {
     MODE_CREATION = 0,
@@ -58,6 +59,8 @@ enum EditionSubMode
 };
 
 class ComoApp : public QObject {
+    Q_OBJECT
+
     protected:
         // Current app mode.
         AppMode appMode;
@@ -81,28 +84,32 @@ class ComoApp : public QObject {
         /***
          * 1. Initialization and destruction
          ***/
-    private:
-        ComoApp();
-
     public:
+        ComoApp();
+        /*
         static ComoApp* getInstance();
         static void destroy();
+        */
 
         /***
-         * 2. Setters and getters
+         * 2. Getters
          ***/
-        void setAppMode( AppMode appMode );
         AppMode getAppMode() const ;
-
-        void setEditionScope( EditionScope editionScope );
         EditionScope getEditionScope() const ;
-
-        void setEditionSubMode( EditionSubMode editionSubMode );
         EditionSubMode getEditionSubMode() const ;
 
         shared_ptr< Scene > getScene() const ;
 
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
+
+
+        /***
+         * 3. Setters
+         ***/
+    public slots:
+        void setAppMode( AppMode appMode );
+        void setEditionScope( EditionScope editionScope );
+        void setEditionSubMode( EditionSubMode editionSubMode );
 };
 
 #endif // COMO_APP_HPP
