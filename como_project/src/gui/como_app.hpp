@@ -25,33 +25,24 @@
 #include <string>
 #include <vector>
 #include <QObject>
+#include <map>
 
-enum AppMode {
-    MODE_CREATION = 0,
-    MODE_EDITION,
-
-    N_APP_MODES
+enum class AppMode {
+    CREATION = 0,
+    EDITION
 };
 
-const char appModeStrings [N_APP_MODES][50] = {
-    "Creation",
-    "Edition"
-};
+extern std::map<AppMode, std::string> appModeStrings;
 
-enum EditionScope
+enum class EditionScope
 {
     GLOBAL = 0,
-    LOCAL,
-
-    N_EDITION_SCOPES
+    LOCAL
 };
 
-const char editionScopeStrings [N_EDITION_SCOPES][50] = {
-    "Global",
-    "Local"
-};
+extern std::map<EditionScope, std::string> editionScopeStrings;
 
-enum EditionSubMode
+enum class EditionSubMode
 {
     TRANSLATION = 0,
     ROTATION,

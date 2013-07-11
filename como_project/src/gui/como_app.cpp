@@ -25,22 +25,36 @@ using namespace std;
 
 ComoApp* ComoApp::singlentonInstance = nullptr;
 
+std::map<AppMode, std::string> appModeStrings =
+{
+    { AppMode::CREATION, "Creation" },
+    { AppMode::EDITION, "Edition" }
+};
+
+std::map<EditionScope, std::string> editionScopeStrings =
+{
+    { EditionScope::LOCAL, "Local" },
+    { EditionScope::GLOBAL, "Global" }
+};
+
 /***
  * 1. Initialization and destruction
  ***/
 
 ComoApp::ComoApp()
 {
+    // Create an OpenGL engine (used for creating and initializing
+    // an OpenGL context and a scene.
     OpenGLEngine openGLEngine;
 
     // Set default app mode.
-    appMode = MODE_EDITION;
+    appMode = AppMode::EDITION;
 
     // Set default edition scope.
-    editionScope = GLOBAL;
+    editionScope = EditionScope::GLOBAL;
 
     // Set default edition submode.
-    editionSubMode = TRANSLATION;
+    editionSubMode = EditionSubMode::TRANSLATION;
 
     // Set default OpenGL context.
     oglContext = openGLEngine.createOpenGLContext();
@@ -48,6 +62,7 @@ ComoApp::ComoApp()
     // Set default scene.
     scene = openGLEngine.createScene( oglContext.get() );
 }
+
 /*
 ComoApp* ComoApp::getInstance()
 {
@@ -98,7 +113,7 @@ shared_ptr< QOpenGLContext > ComoApp::getOpenGLContext() const
 
 void ComoApp::setAppMode( AppMode appMode )
 {
-    cout << "Changing app mode (" << appMode << ")" << endl;
+    cout << "Changing app mode" << endl;
     this->appMode = appMode;
 }
 
