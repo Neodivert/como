@@ -25,11 +25,12 @@ using namespace std;
 
 ComoApp* ComoApp::singlentonInstance = nullptr;
 
-std::map<AppMode, std::string> appModeStrings =
+std::map<QString, AppMode> appModeStrings =
 {
-    { AppMode::CREATION, "Creation" },
-    { AppMode::EDITION, "Edition" }
+    { QString::fromUtf8( "Creation" ), AppMode::CREATION },
+    { QString::fromUtf8( "Edition" ), AppMode::EDITION }
 };
+
 
 std::map<EditionScope, std::string> editionScopeStrings =
 {

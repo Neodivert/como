@@ -42,18 +42,25 @@ ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
     // Set app mode's selector.
     appModeSelector = new QComboBox;
     for( auto appMode : appModeStrings ){
-        appModeSelector->addItem( QString( (appMode.second).c_str() ) );
+        appModeSelector->addItem( appMode.first );
+
     }
-    void (QComboBox::*signal)(int) = &QComboBox::currentIndexChanged;
-    //QObject::connect( appModeSelector, signal, comoApp.get(), &ComoApp::setAppMode );
+    void (QComboBox::*signal)(const QString& ) = &QComboBox::currentIndexChanged;
+    connect( appModeSelector, signal, [=]( QString appModeStr ) {
+        comoApp->setAppMode( appModeStrings[appModeStr] );
+    }  );
     cout << "Signal connected" << endl;
 
     editionScopeGroupBox = new QGroupBox( tr( "Edition scope" ) );
     editionScopeGroupBoxLayout = new QVBoxLayout;
     for( auto editionScope : editionScopeStrings ){
         editionScopeGroupBoxLayout->addWidget( new QRadioButton( tr( (editionScope.second).c_str() ) ) );
+
+        //currentIndexChanged(const QString & text)
     }
     editionScopeGroupBox->setLayout( editionScopeGroupBoxLayout );
+
+
 
     // Set tools panel layout.
     layout = new QVBoxLayout;

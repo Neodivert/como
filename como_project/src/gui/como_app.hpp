@@ -32,7 +32,7 @@ enum class AppMode {
     EDITION
 };
 
-extern std::map<AppMode, std::string> appModeStrings;
+extern std::map<QString, AppMode> appModeStrings;
 
 enum class EditionScope
 {
