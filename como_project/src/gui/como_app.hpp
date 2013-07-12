@@ -95,12 +95,19 @@ class ComoApp : public QObject {
 
 
         /***
-         * 3. Setters
+         * 3.
+         ***/
+        //void selectDrawableByClick( const int& x, const int& y );
+
+        /***
+         * 4. Setters (slots)
          ***/
     public slots:
         void setAppMode( AppMode appMode );
         void setEditionScope( EditionScope editionScope );
         void setEditionSubMode( EditionSubMode editionSubMode );
+
+
 };
 
 #endif // COMO_APP_HPP

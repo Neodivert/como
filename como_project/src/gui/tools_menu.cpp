@@ -60,8 +60,6 @@ ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
     }
     editionScopeGroupBox->setLayout( editionScopeGroupBoxLayout );
 
-
-
     // Set tools panel layout.
     layout = new QVBoxLayout;
     layout->setSpacing( 1 );

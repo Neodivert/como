@@ -111,6 +111,14 @@ Cube::Cube()
     glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, 0, sizeof( cubeInnerElements ), cubeInnerElements );
     glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeInnerElements ), sizeof( cubeContourElements ), cubeContourElements );
 
+    // Copy original triangles to this geometry's triangles.
+    triangles.reserve( nInnerElements / 3 );
+    for( GLint i = 0; i<nInnerElements/3; i++ ){
+        triangles[i][0] = cubeInnerElements[i*3];
+        triangles[i][1] = cubeInnerElements[i*3+1];
+        triangles[i][2] = cubeInnerElements[i*3+2];
+    }
+
     // Allocate a VBO for cube's transformed vertices.
     glBufferData( GL_ARRAY_BUFFER, sizeof( cubeVertices ), NULL, GL_DYNAMIC_DRAW );
 

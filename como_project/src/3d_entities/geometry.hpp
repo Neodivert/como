@@ -25,7 +25,7 @@
  ***/
 #include "drawable_entity.hpp"
 #include <vector>
-
+#include <array>
 
 /***
  * File main class
@@ -58,6 +58,9 @@ class Geometry : public DrawableEntity
         GLsizei nInnerElements;
         GLsizei nContourElements;
 
+
+        std::vector< std::array< GLubyte, 3 > > triangles;
+
     public:
         /***
          * 1. Initialization and destruction
@@ -72,7 +75,12 @@ class Geometry : public DrawableEntity
         void setContourColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
 
         /***
-         * 3. Update and drawing.
+         * 3. Intersections
+         ***/
+        float intersects( glm::vec4 r0, glm::vec4 r1 ) const ;
+
+        /***
+         * 4. Update and drawing.
          ***/
     protected:
         // Recompute transformed vertices based on original ones and transformation matrix.

@@ -72,13 +72,18 @@ class DrawableEntity
         DrawableEntity();
 
         /***
-         * 2. Transformations
+         * 2. Setters and getters
+         ***/
+        glm::mat4 getTransformationMatrix();
+
+        /***
+         * 3. Transformations
          ***/
         virtual void translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz );
         virtual void rotate( const GLfloat& angle, const GLfloat& x, const GLfloat& y, const GLfloat& z );
 
         /***
-         * 3. Updating and drawing
+         * 4. Updating and drawing
          ***/
     protected:
         virtual void update() = 0;

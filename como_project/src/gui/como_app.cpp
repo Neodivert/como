@@ -109,7 +109,7 @@ shared_ptr< QOpenGLContext > ComoApp::getOpenGLContext() const
 
 
 /***
- * 3. Setters
+ * 4. Setters (slots)
  ***/
 
 void ComoApp::setAppMode( AppMode appMode )

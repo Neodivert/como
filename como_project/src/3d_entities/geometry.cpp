@@ -23,6 +23,7 @@
 #include <GL/gl.h>
 #include <GL/glx.h>
 #include "camera.hpp"
+#include <glm/gtx/intersect.hpp>
 
 // Initialize the location of the uniform shader variable "color" as unitialized (-1).
 GLint Geometry::uniformColorLocation = -1;
@@ -99,7 +100,49 @@ void Geometry::setContourColor( const GLfloat& r, const GLfloat& g, const GLfloa
 
 
 /***
- * 3. Update and drawing.
+ * 3. Intersections
+ ***/
+
+float Geometry::intersects( glm::vec4 r0, glm::vec4 r1 ) const
+{
+    glm::mat4 modelToObjetTransform = glm::inverse( transformationMatrix );
+
+    r0 = modelToObjetTransform * r0;
+    r1 = modelToObjetTransform * r1;
+
+    glm::vec3 intersection;
+    for( int i = 0; i < triangles.size(); i++ ){
+        if( glm::intersectLineTriangle( glm::vec3( r0 ),
+                                        glm::vec3( glm::normalize( r1-r0 ) ),
+                                        originalVertices[triangles[i][0]],
+                                        originalVertices[triangles[i][1]],
+                                        originalVertices[triangles[i][2]],
+                                        intersection ) ){
+            return glm::distance( glm::vec3( r0 ), intersection );
+        }
+    }
+
+    return -1.0;
+    /*
+    // Map the OpenGL's VBO for transformed vertices to client memory, so we can update it.
+    transformedVertices = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
+
+    // Recompute each transformed vertex by multiplying its corresponding original vertex
+    // by transformation matrix.
+    for( GLuint i = 0; i<originalVertices.size(); i++ ){
+        transformedVertex = transformationMatrix * glm::vec4( originalVertices[i], 1.0f );
+
+        transformedVertices[i*3+X] = transformedVertex.x;
+        transformedVertices[i*3+Y] = transformedVertex.y;
+        transformedVertices[i*3+Z] = transformedVertex.z;
+    }
+
+    // We finished updating the VBO, unmap it so OpenGL can take control over it.
+    glUnmapBuffer( GL_ARRAY_BUFFER );*/
+}
+
+/***
+ * 4. Update and drawing.
  ***/
 
 void Geometry::update()

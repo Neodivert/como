@@ -48,7 +48,12 @@ class Scene
         /***
          * 2. Drawables selection.
          ***/
+    private:
+        //float rayPicking( glm::vec4 r0, glm::vec4 r1 ) const ;
+
+    public:
         void selectAll();
+        void selectDrawableByClick( const int& x, const int& y );
 
         /***
          * 3. Transformations

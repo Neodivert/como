@@ -31,7 +31,17 @@ DrawableEntity::DrawableEntity()
 
 
 /***
- * 2. Transformations
+* 2. Setters and getters
+ ***/
+
+glm::mat4 DrawableEntity::getTransformationMatrix()
+{
+    return transformationMatrix;
+}
+
+
+/***
+ * 3. Transformations
  ***/
 
 void DrawableEntity::translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz )

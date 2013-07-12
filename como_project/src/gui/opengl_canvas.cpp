@@ -85,6 +85,47 @@ void OpenGLCanvas::resizeEvent(QResizeEvent *event)
     }
 }
 
+
+void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
+{
+    // http://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection
+    glm::vec4 viewport = glm::vec4( 0, 0, width(), height() );
+    glm::vec3 wincoord = glm::vec3( mousePressEvent->x(), height() - mousePressEvent->y() - 1, 0.0f );
+    glm::mat4 projection = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f );
+
+    glm::vec3 objcoord = glm::unProject( wincoord, camera.getTransformationMatrix(), projection, viewport );
+
+    cout << "y: " << (height() - mousePressEvent->y() - 1) << endl;
+    //
+    cout << "Coordinates in object space (zNear): ("
+         << objcoord.x << ", "
+         << objcoord.y << ", "
+         << objcoord.z << ")" << endl;
+
+    wincoord.z = 1.0f;
+    objcoord = glm::unProject( wincoord, camera.getTransformationMatrix(), projection, viewport );
+
+    cout << "Coordinates in object space (zFar): ("
+         << objcoord.x << ", "
+         << objcoord.y << ", "
+         << objcoord.z << ")" << endl;
+
+
+    //comoApp->
+
+
+    float ndcX, ndcY;
+
+    if( mousePressEvent->button() == Qt::LeftButton ){
+        cout << "Mouse press event" << endl
+             << "\t Window coordinates: (" << mousePressEvent->x() << ", " << mousePressEvent->y() << ")" << endl;
+        ndcX = ( mousePressEvent->x() - (width() >> 1) ) / (float)(width() >> 1 );
+        ndcY = ( mousePressEvent->y() - (height() >> 1) ) / (float)(height() >> 1 );
+        cout << "\t Normalized Device Coordinates: (" << ndcX << " ," << ndcY << ")" << endl;
+    }
+
+}
+
 void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
 {
     cout << "Key press event" << endl;
@@ -111,9 +152,9 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     static int lastX = mouseMoveEvent->x();
     static int lastY = mouseMoveEvent->y();
 
-    cout << "OpenGLCanvas::mouseMoveEvent (" << mouseMoveEvent->x()-lastX << ", " << mouseMoveEvent->y()-lastY << ")" << endl;
+    //cout << "OpenGLCanvas::mouseMoveEvent (" << mouseMoveEvent->x()-lastX << ", " << mouseMoveEvent->y()-lastY << ")" << endl;
 
-    camera.rotateLaterally( mouseMoveEvent->x()-lastX );
+    //camera.rotateLaterally( mouseMoveEvent->x()-lastX );
     //camera.rotate( mouseMoveEvent->x()-lastX, 0.0f, 1.0f, 0.0f );
 
     lastX = mouseMoveEvent->x();
@@ -129,7 +170,7 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 
 void OpenGLCanvas::render()
 {
-    cout << "OpenGLCanvas - Rendering" << endl;
+    //cout << "OpenGLCanvas - Rendering" << endl;
 
     // Make shared OpenGL context current for this surface.
     comoApp->getOpenGLContext()->makeCurrent( this );
