@@ -88,42 +88,48 @@ void OpenGLCanvas::resizeEvent(QResizeEvent *event)
 
 void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
 {
+    shared_ptr< Scene > scene;
+    glm::vec4 viewport;
+    glm::vec3 windowCoordinates;
+    glm::mat4 projectionMatrix;
+    glm::vec3 worldCoordinates[2];
+
     // http://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection
-    glm::vec4 viewport = glm::vec4( 0, 0, width(), height() );
-    glm::vec3 wincoord = glm::vec3( mousePressEvent->x(), height() - mousePressEvent->y() - 1, 0.0f );
-    glm::mat4 projection = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f );
 
-    glm::vec3 objcoord = glm::unProject( wincoord, camera.getTransformationMatrix(), projection, viewport );
+    // Get this canvas' viewport limits.
+    viewport = glm::vec4( 0, 0, width(), height() );
 
-    cout << "y: " << (height() - mousePressEvent->y() - 1) << endl;
-    //
+    // Get window coordinates. Set z to near plane's z.
+    windowCoordinates = glm::vec3( mousePressEvent->x(), height() - mousePressEvent->y() - 1, 0.0f );
+
+    // Get projection matrix (TODO: In future versions, get the camera's one).
+    projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f );
+
+    // Get world coordinates in clipping near plane by unproyecting the window's ones.
+    worldCoordinates[0] = glm::unProject( windowCoordinates, camera.getTransformationMatrix(), projectionMatrix, viewport );
+
+    // TODO : remove.
     cout << "Coordinates in object space (zNear): ("
-         << objcoord.x << ", "
-         << objcoord.y << ", "
-         << objcoord.z << ")" << endl;
+         << worldCoordinates[0].x << ", "
+         << worldCoordinates[0].y << ", "
+         << worldCoordinates[0].z << ")" << endl;
 
-    wincoord.z = 1.0f;
-    objcoord = glm::unProject( wincoord, camera.getTransformationMatrix(), projection, viewport );
+    // Get world coordinates in far clipping plane by unproyecting the window's ones.
+    windowCoordinates.z = 1.0f;
+    worldCoordinates[1] = glm::unProject( windowCoordinates, camera.getTransformationMatrix(), projectionMatrix, viewport );
 
+    // TODO : remove.
     cout << "Coordinates in object space (zFar): ("
-         << objcoord.x << ", "
-         << objcoord.y << ", "
-         << objcoord.z << ")" << endl;
+         << worldCoordinates[1].x << ", "
+         << worldCoordinates[1].y << ", "
+         << worldCoordinates[1].z << ")" << endl;
 
 
-    //comoApp->
+    // Get scene and do the ray picking.
+    scene = comoApp->getScene();
 
-
-    float ndcX, ndcY;
-
-    if( mousePressEvent->button() == Qt::LeftButton ){
-        cout << "Mouse press event" << endl
-             << "\t Window coordinates: (" << mousePressEvent->x() << ", " << mousePressEvent->y() << ")" << endl;
-        ndcX = ( mousePressEvent->x() - (width() >> 1) ) / (float)(width() >> 1 );
-        ndcY = ( mousePressEvent->y() - (height() >> 1) ) / (float)(height() >> 1 );
-        cout << "\t Normalized Device Coordinates: (" << ndcX << " ," << ndcY << ")" << endl;
-    }
-
+    //glm::vec4 r0 = glm::vec4( worldCoordinates[0], 1.0f );
+    scene->selectDrawableByRayPicking( glm::vec4( worldCoordinates[0], 1.0f ), glm::normalize( glm::vec4( worldCoordinates[1] - worldCoordinates[0], 1.0f ) ) );
 }
 
 void OpenGLCanvas::keyPressEvent( QKeyEvent *e )

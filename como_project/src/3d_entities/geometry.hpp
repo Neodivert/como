@@ -77,7 +77,7 @@ class Geometry : public DrawableEntity
         /***
          * 3. Intersections
          ***/
-        float intersects( glm::vec4 r0, glm::vec4 r1 ) const ;
+        virtual float intersects( glm::vec4 r0, glm::vec4 r1 ) const ;
 
         /***
          * 4. Update and drawing.

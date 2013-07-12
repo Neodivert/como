@@ -85,6 +85,9 @@ class Camera : public DrawableEntity
 
         void rotateLaterally( float angle );
 
+
+        virtual float intersects( glm::vec4 r0, glm::vec4 r1 ) const { return -1.0f; }
+
         /***
          * 3.
          ***/

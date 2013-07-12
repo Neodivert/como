@@ -52,8 +52,12 @@ class Scene
         //float rayPicking( glm::vec4 r0, glm::vec4 r1 ) const ;
 
     public:
+        void selectDrawable( const unsigned int index );
         void selectAll();
-        void selectDrawableByClick( const int& x, const int& y );
+
+        //float intersects( glm::vec4 r0, glm::vec4 r1 ) const ;
+
+        int selectDrawableByRayPicking( glm::vec4 r0, glm::vec4 r1, bool addToSelection = false );
 
         /***
          * 3. Transformations

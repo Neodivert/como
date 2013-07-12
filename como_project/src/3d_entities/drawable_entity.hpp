@@ -82,6 +82,9 @@ class DrawableEntity
         virtual void translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz );
         virtual void rotate( const GLfloat& angle, const GLfloat& x, const GLfloat& y, const GLfloat& z );
 
+
+        virtual float intersects( glm::vec4 r0, glm::vec4 r1 ) const = 0;
+
         /***
          * 4. Updating and drawing
          ***/

@@ -105,40 +105,56 @@ void Geometry::setContourColor( const GLfloat& r, const GLfloat& g, const GLfloa
 
 float Geometry::intersects( glm::vec4 r0, glm::vec4 r1 ) const
 {
-    glm::mat4 modelToObjetTransform = glm::inverse( transformationMatrix );
-
-    r0 = modelToObjetTransform * r0;
-    r1 = modelToObjetTransform * r1;
-
+    const float MAX_DISTANCE = 999999.9f;
+    float minDistance = MAX_DISTANCE;
+    float distance;
     glm::vec3 intersection;
+
+    cout << "Geometry::intersects (world coordinates) " << endl
+         << "\t r0: " << r0.x << ", " << r0.y << ", " << r0.z << ")" << endl
+         << "\t r1: " << r1.x << ", " << r1.y << ", " << r1.z << ")" << endl << endl;
+
+    // Get a transformation matrix from world coordinates to objet
+    // coordinates (of this geometry).
+    glm::mat4 worldToObjetTransform = glm::inverse( transformationMatrix );
+
+    // Transform ray from world to object coordinates.
+    r0 = worldToObjetTransform * r0;
+    r1 = worldToObjetTransform * r1;
+
+    cout << "Geometry::intersects (object coordinates) " << endl
+         << "\t r0: " << r0.x << ", " << r0.y << ", " << r0.z << ")" << endl
+         << "\t r1: " << r1.x << ", " << r1.y << ", " << r1.z << ")" << endl << endl;
+
+    cout << "triangles.size(): " << triangles.size() << endl;
+    // Compute intersections with all triangles in this geometry.
     for( int i = 0; i < triangles.size(); i++ ){
-        if( glm::intersectLineTriangle( glm::vec3( r0 ),
-                                        glm::vec3( glm::normalize( r1-r0 ) ),
-                                        originalVertices[triangles[i][0]],
-                                        originalVertices[triangles[i][1]],
-                                        originalVertices[triangles[i][2]],
-                                        intersection ) ){
-            return glm::distance( glm::vec3( r0 ), intersection );
+        cout << "triangle: " << i << endl;
+        if( glm::intersectRayTriangle( glm::vec3( r0 ),
+                                       glm::vec3( glm::normalize( r1 ) ),
+                                       originalVertices[triangles[i][0]],
+                                       originalVertices[triangles[i][1]],
+                                       originalVertices[triangles[i][2]],
+                                       intersection ) ){
+
+
+            distance = glm::distance( glm::vec3( r0 ), intersection );
+            cout << "New intersection found. Distance: " << distance << endl;
+
+            if( distance < minDistance ){
+                cout << "\tNew MIN intersection found. Distance: " << distance << endl;
+                minDistance = distance;
+            }
         }
     }
 
-    return -1.0;
-    /*
-    // Map the OpenGL's VBO for transformed vertices to client memory, so we can update it.
-    transformedVertices = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
-
-    // Recompute each transformed vertex by multiplying its corresponding original vertex
-    // by transformation matrix.
-    for( GLuint i = 0; i<originalVertices.size(); i++ ){
-        transformedVertex = transformationMatrix * glm::vec4( originalVertices[i], 1.0f );
-
-        transformedVertices[i*3+X] = transformedVertex.x;
-        transformedVertices[i*3+Y] = transformedVertex.y;
-        transformedVertices[i*3+Z] = transformedVertex.z;
+    if( minDistance < MAX_DISTANCE ){
+        cout << "Min distance with this geometry: " << minDistance << endl;
+        return minDistance;
+    }else{
+        cout << "The ray does not intersect with this geometry" << endl;
+        return -1.0f;
     }
-
-    // We finished updating the VBO, unmap it so OpenGL can take control over it.
-    glUnmapBuffer( GL_ARRAY_BUFFER );*/
 }
 
 /***
