@@ -96,11 +96,14 @@ void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
 
     // http://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection
 
+    //cout << "mouseClick: (" << mousePressEvent->x()/(float)width() << ", " << mousePressEvent->y()/(float)height() << ")" << endl;
+
     // Get this canvas' viewport limits.
     viewport = glm::vec4( 0, 0, width(), height() );
 
     // Get window coordinates. Set z to near plane's z.
     windowCoordinates = glm::vec3( mousePressEvent->x(), height() - mousePressEvent->y() - 1, 0.0f );
+    //windowCoordinates = glm::vec3( mousePressEvent->x(), mousePressEvent->y(), 0.0f );
 
     // Get projection matrix (TODO: In future versions, get the camera's one).
     projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f );
@@ -109,7 +112,7 @@ void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
     worldCoordinates[0] = glm::unProject( windowCoordinates, camera.getTransformationMatrix(), projectionMatrix, viewport );
 
     // TODO : remove.
-    cout << "Coordinates in object space (zNear): ("
+    cout << "Coordinates in world space (zNear): ("
          << worldCoordinates[0].x << ", "
          << worldCoordinates[0].y << ", "
          << worldCoordinates[0].z << ")" << endl;
@@ -119,7 +122,7 @@ void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
     worldCoordinates[1] = glm::unProject( windowCoordinates, camera.getTransformationMatrix(), projectionMatrix, viewport );
 
     // TODO : remove.
-    cout << "Coordinates in object space (zFar): ("
+    cout << "Coordinates in world space (zFar): ("
          << worldCoordinates[1].x << ", "
          << worldCoordinates[1].y << ", "
          << worldCoordinates[1].z << ")" << endl;
@@ -129,7 +132,8 @@ void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
     scene = comoApp->getScene();
 
     //glm::vec4 r0 = glm::vec4( worldCoordinates[0], 1.0f );
-    scene->selectDrawableByRayPicking( glm::vec4( worldCoordinates[0], 1.0f ), glm::normalize( glm::vec4( worldCoordinates[1] - worldCoordinates[0], 1.0f ) ) );
+    scene->selectDrawableByRayPicking( worldCoordinates[0],
+                                       worldCoordinates[1] - worldCoordinates[0] );
 }
 
 void OpenGLCanvas::keyPressEvent( QKeyEvent *e )

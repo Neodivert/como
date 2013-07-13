@@ -103,57 +103,53 @@ void Geometry::setContourColor( const GLfloat& r, const GLfloat& g, const GLfloa
  * 3. Intersections
  ***/
 
-float Geometry::intersects( glm::vec4 r0, glm::vec4 r1 ) const
+void Geometry::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT, unsigned int* triangle ) const
 {
-    const float MAX_DISTANCE = 999999.9f;
-    float minDistance = MAX_DISTANCE;
-    float distance;
+    const float MAX_T = 999999.9f;
+    float t = MAX_T;
+
+    minT = MAX_T;
+
     glm::vec3 intersection;
 
-    cout << "Geometry::intersects (world coordinates) " << endl
-         << "\t r0: " << r0.x << ", " << r0.y << ", " << r0.z << ")" << endl
-         << "\t r1: " << r1.x << ", " << r1.y << ", " << r1.z << ")" << endl << endl;
+    // Normalize the direction of the ray.
+    rayDirection = glm::normalize( rayDirection );
 
     // Get a transformation matrix from world coordinates to objet
     // coordinates (of this geometry).
     glm::mat4 worldToObjetTransform = glm::inverse( transformationMatrix );
 
     // Transform ray from world to object coordinates.
-    r0 = worldToObjetTransform * r0;
-    r1 = worldToObjetTransform * r1;
+    rayOrigin = glm::vec3( worldToObjetTransform * glm::vec4( rayOrigin, 1.0f ) );
+    rayDirection = glm::normalize( glm::vec3( worldToObjetTransform * glm::vec4( rayDirection, 1.0f ) ) );
 
-    cout << "Geometry::intersects (object coordinates) " << endl
-         << "\t r0: " << r0.x << ", " << r0.y << ", " << r0.z << ")" << endl
-         << "\t r1: " << r1.x << ", " << r1.y << ", " << r1.z << ")" << endl << endl;
-
-    cout << "triangles.size(): " << triangles.size() << endl;
     // Compute intersections with all triangles in this geometry.
-    for( int i = 0; i < triangles.size(); i++ ){
-        cout << "triangle: " << i << endl;
-        if( glm::intersectRayTriangle( glm::vec3( r0 ),
-                                       glm::vec3( glm::normalize( r1 ) ),
+    for( unsigned int i = 0; i < triangles.size(); i++ ){
+        if( glm::intersectRayTriangle( rayOrigin,
+                                       rayDirection,
                                        originalVertices[triangles[i][0]],
                                        originalVertices[triangles[i][1]],
                                        originalVertices[triangles[i][2]],
                                        intersection ) ){
 
+            // There was an intersection with this triangle. Get the parameter t.
+            t = intersection.z;
 
-            distance = glm::distance( glm::vec3( r0 ), intersection );
-            cout << "New intersection found. Distance: " << distance << endl;
+            cout << "Geometry::t : " << t << endl;
 
-            if( distance < minDistance ){
-                cout << "\tNew MIN intersection found. Distance: " << distance << endl;
-                minDistance = distance;
+            // Do we have a new minimum t?
+            if( ( t >= 0.0f ) && ( t <= 1.0f ) && ( t < minT ) ){
+                minT = t;
+                cout << "\t Geometry::minT : " << minT << endl;
+                if( triangle != nullptr ){
+                    *triangle = i;
+                }
             }
         }
     }
 
-    if( minDistance < MAX_DISTANCE ){
-        cout << "Min distance with this geometry: " << minDistance << endl;
-        return minDistance;
-    }else{
-        cout << "The ray does not intersect with this geometry" << endl;
-        return -1.0f;
+    if( minT >= MAX_T ){
+        minT = -1.0f;
     }
 }
 

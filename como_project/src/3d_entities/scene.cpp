@@ -58,13 +58,20 @@ void Scene::selectAll()
 }
 
 
-int Scene::selectDrawableByRayPicking( glm::vec4 r0, glm::vec4 r1, bool addToSelection )
+int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection )
 {
-    const float MAX_DISTANCE = 9999999.0f;
-    float distance;
+    const float MAX_T = 9999999.0f;
+    float minT = MAX_T;
+    float t = MAX_T;
     unsigned int currentObject = 0;
-    unsigned int closestObject = 0;
-    float minDistance = MAX_DISTANCE;
+    unsigned int closestObject = -1;
+
+    r1 = glm::normalize( r1 );
+
+    cout << "Scene::selectDrawableByRayPicking" << endl
+         << "\tr0 : (" << r0.x << ", " << r0.y << ", " << r0.z << ")" << endl
+         << "\tr1 : (" << r1.x << ", " << r1.y << ", " << r1.z << ")" << endl;
+
 
     // Does the user want to keep the actual set of selected objects and simply add
     // a new one? If that's NOT the case, we need to clear the set of selected drawables
@@ -77,32 +84,40 @@ int Scene::selectDrawableByRayPicking( glm::vec4 r0, glm::vec4 r1, bool addToSel
     // them or not. Get the closest object.
     DrawablesList::iterator it;
     for( it = nonSelectedDrawables.begin(); it != nonSelectedDrawables.end(); it++, currentObject++ ){
-        distance = (*it)->intersects( r0, r1 );
-        if( ( distance > 0.0f ) && (distance < minDistance ) ){
-            cout << "selectDrawableByRayPicking - new closest object : " << distance << endl;
+        (*it)->intersects( r0, r1, t );
+        cout << "Geometry t: " << t << endl;
+        if( ( t >= 0.0f ) && (t < minT ) ){
+            //cout << "selectDrawableByRayPicking - new closest object : " << distance << endl;
+            cout << "\t NEW closest geometry" << endl;
             // New closest object, get its index and distance.
             closestObject = currentObject;
-            minDistance = distance;
+            minT = t;
         }
     }
 
     // Iterate over all non selected drawables and check if the given ray intersects
     // them or not. Get the closest object.
     for( it = selectedDrawables.begin(); it != selectedDrawables.end(); it++, currentObject++ ){
-        distance = (*it)->intersects( r0, r1 );
-        if( ( distance > 0.0f ) && (distance < minDistance ) ){
-            cout << "selectDrawableByRayPicking - new closest object : " << distance << endl;
+        (*it)->intersects( r0, r1, t );
+        cout << "Geometry t: " << t << endl;
+        if( ( t > 0.0f ) && (t < minT ) ){
+            cout << "\t NEW closest geometry" << endl;
+            //cout << "selectDrawableByRayPicking - new closest object : " << distance << endl;
             // New closest object, get its index and distance.
             closestObject = currentObject;
-            minDistance = distance;
+            minT = t;
         }
     }
 
     // If there were intersections, select the closest one.
-    if( minDistance < MAX_DISTANCE ){
-        cout << "Final closest object: " << closestObject << endl;
+    if( minT < MAX_T ){
+        cout << "FINAL CLOSEST OBJECT: " << closestObject << endl
+             << "\t min t: " << minT << ")" << endl
+             << "\t min distance: " << glm::distance( glm::vec3( 0.0f, 0.0f, 0.0f ), r1 * t ) << endl;
         selectDrawable( closestObject );
     }
+
+    return closestObject;
 }
 
 

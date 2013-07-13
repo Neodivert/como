@@ -57,7 +57,7 @@ class Scene
 
         //float intersects( glm::vec4 r0, glm::vec4 r1 ) const ;
 
-        int selectDrawableByRayPicking( glm::vec4 r0, glm::vec4 r1, bool addToSelection = false );
+        int selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection = false );
 
         /***
          * 3. Transformations

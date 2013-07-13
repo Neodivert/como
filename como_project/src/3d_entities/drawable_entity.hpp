@@ -83,7 +83,7 @@ class DrawableEntity
         virtual void rotate( const GLfloat& angle, const GLfloat& x, const GLfloat& y, const GLfloat& z );
 
 
-        virtual float intersects( glm::vec4 r0, glm::vec4 r1 ) const = 0;
+        virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle = nullptr  ) const = 0;
 
         /***
          * 4. Updating and drawing
