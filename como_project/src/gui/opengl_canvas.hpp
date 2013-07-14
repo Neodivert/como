@@ -45,7 +45,16 @@ class OpenGLCanvas : public QWindow
         shared_ptr< ComoApp > comoApp;
 
         // Camera associated with the OpenGL canvas.
+        // TODO: Move cameras to comoApp (for better management and signaling)
+        // and save and identifier here.
         Camera camera;
+
+        // Window's Width and height inverses.
+        // In order to make user transformations relatives to canvas' dimensions, we
+        // multiply the transformation magnitude by the inverse of canvas' dimensions,
+        // instead of making the division (more expensive).
+        float widthInverse;
+        float heightInverse;
 
     public:
         /***
@@ -72,8 +81,6 @@ class OpenGLCanvas : public QWindow
         virtual void render();
 
     signals:
-
-    public slots:
 };
 
 #endif // OPENGL_CANVAS_HPP

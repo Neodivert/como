@@ -140,6 +140,7 @@ void Camera::update()
                               glm::vec3( transformedCenter ),
                               glm::vec3( transformedUp ) );
 
+    /*
     cout << "transformationMatrix: ";
     for( int i=0; i<4; i++ ){
         for( int j=0; j<4; j++ ){
@@ -156,6 +157,7 @@ void Camera::update()
         }
         cout << endl;
     }
+    */
 }
 
 

@@ -49,4 +49,17 @@ ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     layout->addWidget( titleLabel );
     layout->addWidget( openGLCanvasWidget );
     setLayout(layout);
+
+    // When a render is requested, render!
+    QObject::connect( comoApp.get(), &ComoApp::renderNeeded, this, &ViewFrame::render  );
+}
+
+
+/***
+ * 2. Updating and drawing
+ ***/
+
+void ViewFrame::render()
+{
+    openGLCanvas->render();
 }

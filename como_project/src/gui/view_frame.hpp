@@ -37,6 +37,12 @@ class ViewFrame : public QFrame
          * 1. Initialization
          ***/
         ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp );
+
+        /***
+         * 2. Updating and drawing
+         ***/
+    public slots:
+        virtual void render();
 };
 
 #endif // VIEW_FRAME_H

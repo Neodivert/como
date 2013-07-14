@@ -113,7 +113,6 @@ Cube::Cube()
 
     // Copy original triangles to this geometry's triangles.
     triangles.resize( nInnerElements / 3 );
-    cout << "nInnerElements / 3: " << (nInnerElements / 3) << endl;
     for( GLint i = 0; i<nInnerElements/3; i++ ){
         triangles[i][0] = cubeInnerElements[i*3];
         triangles[i][1] = cubeInnerElements[i*3+1];
