@@ -180,8 +180,11 @@ void Geometry::update()
 }
 
 
-void Geometry::draw( Camera* camera ) const
+void Geometry::draw( Camera* camera, bool selected ) const
 {
+    // Default color for selected drawables' contour.
+    GLfloat selectecContourColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
     // Set shader modelview matrix.
     camera->setShaderModelviewMatrix( &transformationMatrix );
 
@@ -199,8 +202,15 @@ void Geometry::draw( Camera* camera ) const
     // Draw geometry interior.
     glDrawElements( GL_TRIANGLES, nInnerElements, GL_UNSIGNED_BYTE, NULL );
 
-    // Feed uniform shader variable "color" with geometry contour color.
-    glUniform4fv( uniformColorLocation, 1, contourColor );
+    // Feed uniform shader variable "color" with one color or another
+    // depends on whether current geometry is selected by user or not.
+    if( selected ){
+        // Geometry selected by user. Set a default color.
+        glUniform4fv( uniformColorLocation, 1, selectecContourColor );
+    }else{
+        // Geometry not selected by user. Set geometry's own contour color.
+        glUniform4fv( uniformColorLocation, 1, contourColor );
+    }
 
     // Draw geometry contour.
     // I fallen in another error D: (I was using glDrawElementsBaseIndex).

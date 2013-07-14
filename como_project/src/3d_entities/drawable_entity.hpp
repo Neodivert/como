@@ -92,7 +92,7 @@ class DrawableEntity
         virtual void update() = 0;
 
     public:
-        virtual void draw( Camera* camera ) const = 0;
+        virtual void draw( Camera* camera, bool selected = false ) const = 0;
 };
 
 #endif // DRAWABLE_ENTITY_HPP

@@ -57,6 +57,11 @@ void Scene::selectAll()
     //selectedDrawables = nonSelectedDrawables;
 }
 
+void Scene::unselectAll()
+{
+    nonSelectedDrawables.splice( nonSelectedDrawables.end(), selectedDrawables );
+}
+
 
 int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection )
 {
@@ -115,6 +120,9 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
              << "\t min t: " << minT << ")" << endl
              << "\t min distance: " << glm::distance( glm::vec3( 0.0f, 0.0f, 0.0f ), r1 * t ) << endl;
         selectDrawable( closestObject );
+    }else{
+        cout << "NO CLOSEST OBJECT. Unselecting all" << endl;
+        unselectAll();
     }
 
     return closestObject;
@@ -150,6 +158,6 @@ void Scene::draw( Camera* camera )
     }
     for( it = selectedDrawables.begin(); it != selectedDrawables.end(); it++ )
     {
-        (*it)->draw( camera );
+        (*it)->draw( camera, true );
     }
 }

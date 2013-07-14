@@ -54,6 +54,7 @@ class Scene
     public:
         void selectDrawable( const unsigned int index );
         void selectAll();
+        void unselectAll();
 
         //float intersects( glm::vec4 r0, glm::vec4 r1 ) const ;
 

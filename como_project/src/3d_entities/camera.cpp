@@ -159,7 +159,9 @@ void Camera::update()
 }
 
 
-void Camera::draw( Camera* camera ) const
+void Camera::draw( Camera* camera, bool selected ) const
 {
-
+    // TODO: When ready, make Camera inherit from Geometry and delete this.
+    Q_UNUSED( camera );
+    Q_UNUSED( selected );
 }

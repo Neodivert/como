@@ -134,6 +134,8 @@ void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
     //glm::vec4 r0 = glm::vec4( worldCoordinates[0], 1.0f );
     scene->selectDrawableByRayPicking( worldCoordinates[0],
                                        worldCoordinates[1] - worldCoordinates[0] );
+
+    render();
 }
 
 void OpenGLCanvas::keyPressEvent( QKeyEvent *e )

@@ -113,7 +113,7 @@ class Camera : public DrawableEntity
          ***/
         virtual void update();
     public:
-        virtual void draw( Camera* camera ) const ;
+        virtual void draw( Camera* camera, bool selected = false ) const ;
 };
 
 #endif // CAMERA_HPP
