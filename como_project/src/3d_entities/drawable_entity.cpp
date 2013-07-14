@@ -64,3 +64,19 @@ void DrawableEntity::rotate( const GLfloat& angle, const GLfloat& x, const GLflo
     // previous transformation matrix.
     update();
 }
+
+
+/***
+ * 4. Selection
+ ***/
+
+void DrawableEntity::select()
+{
+    selected = true;
+}
+
+
+void DrawableEntity::unselect()
+{
+    selected = false;
+}

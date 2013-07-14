@@ -105,8 +105,6 @@ class Camera : public DrawableEntity
         int setPerspective( float fovy, float aspect,
                             float zNear, float zFar );
 
-
-
     protected:
         /***
          * 3. Updating and drawing
