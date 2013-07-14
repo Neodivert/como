@@ -62,6 +62,7 @@ enum COORDINATES
 class DrawableEntity
 {
     protected:
+        bool selected;
         glm::mat4 transformationMatrix;
 
     public:
@@ -86,7 +87,13 @@ class DrawableEntity
         virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle = nullptr  ) const = 0;
 
         /***
-         * 4. Updating and drawing
+         * 4. Selection
+         ***/
+        void select();
+        void unselect();
+
+        /***
+         * 5. Updating and drawing
          ***/
     protected:
         virtual void update() = 0;

@@ -161,5 +161,5 @@ void Camera::update()
 
 void Camera::draw( Camera* camera ) const
 {
-
+    Q_UNUSED( camera );
 }
