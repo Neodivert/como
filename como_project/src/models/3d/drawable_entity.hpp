@@ -62,7 +62,6 @@ enum COORDINATES
 class DrawableEntity
 {
     protected:
-        bool selected;
         glm::mat4 transformationMatrix;
 
     public:
