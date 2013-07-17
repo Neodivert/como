@@ -24,7 +24,7 @@
 #include <QGraphicsView>
 #include <QGLContext>
 #include "opengl_canvas.hpp"
-#include "../3d_entities/scene.hpp"
+#include "../managers/scene.hpp"
 
 class ViewFrame : public QFrame
 {

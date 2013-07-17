@@ -18,7 +18,7 @@
 ***/
 
 #include "como_app.hpp"
-#include "opengl_engine.hpp"
+#include "../gui/opengl_engine.hpp"
 
 #include <iostream>
 using namespace std;

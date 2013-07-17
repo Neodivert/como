@@ -22,7 +22,7 @@
 
 #include <QFrame>
 #include <memory>
-#include "como_app.hpp"
+#include "../managers/como_app.hpp"
 
 class ToolsMenu : public QFrame
 {

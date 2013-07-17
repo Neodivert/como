@@ -24,8 +24,7 @@
 #include <QSplitter>
 #include <QOpenGLContext>
 #include "view_frame.hpp"
-#include "../utilities/shader_loader.hpp"
-#include "como_app.hpp"
+#include "../managers/como_app.hpp"
 #include <QOffscreenSurface>
 
 QT_FORWARD_DECLARE_CLASS(QLabel)

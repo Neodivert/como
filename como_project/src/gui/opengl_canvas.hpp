@@ -26,10 +26,8 @@
  ***/
 
 #include <QWindow>
-#include "../3d_entities/cube.hpp"
-#include "../3d_entities/scene.hpp"
-#include "../3d_entities/camera.hpp"
-#include "como_app.hpp"
+#include "../managers/como_app.hpp"
+#include "../models/3d/camera.hpp"
 
 
 /***

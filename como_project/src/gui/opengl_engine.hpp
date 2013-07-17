@@ -21,8 +21,8 @@
 #define OPENGL_INITIALIZER_HPP
 
 #include <QOpenGLContext>
-#include "../utilities/shader_loader.hpp"
-#include "../3d_entities/scene.hpp"
+#include "../managers/shader_loader.hpp"
+#include "../managers/scene.hpp"
 #include <iostream>
 #include <memory>
 using namespace std;

@@ -22,8 +22,8 @@
 
 #include <QMainWindow>
 #include <QOpenGLContext>
-#include "../3d_entities/scene.hpp"
-#include "como_app.hpp"
+#include "../managers/scene.hpp"
+#include "../managers/como_app.hpp"
 #include <memory>
 
 namespace Ui {

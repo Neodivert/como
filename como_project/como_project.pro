@@ -13,34 +13,35 @@ TEMPLATE = app
 
 
 SOURCES += src/main.cpp\
+    src/gui/opengl_engine.cpp \
+    src/gui/tools_menu.cpp \
     src/gui/opengl_canvas.cpp \
-    src/3d_entities/geometry.cpp \
-    src/3d_entities/cube.cpp \
-    src/utilities/shader_loader.cpp \
-    src/3d_entities/drawable_entity.cpp \
-    src/gui/view_frame.cpp \
-    src/3d_entities/scene.cpp \
     src/gui/render_panel.cpp \
     src/gui/main_window.cpp \
-    src/3d_entities/camera.cpp \
-    src/gui/como_app.cpp \
-    src/gui/opengl_engine.cpp \
-    src/gui/tools_menu.cpp
+    src/gui/view_frame.cpp \
+    src/managers/como_app.cpp \
+    src/managers/scene.cpp \
+    src/managers/shader_loader.cpp \
+    src/models/3d/drawable_entity.cpp \
+    src/models/3d/geometry.cpp \
+    src/models/3d/cube.cpp \
+    src/models/3d/camera.cpp
+
 
 HEADERS  += \
+    src/gui/opengl_engine.hpp \
+    src/gui/tools_menu.hpp \
     src/gui/opengl_canvas.hpp \
-    src/3d_entities/geometry.hpp \
-    src/3d_entities/cube.hpp \
-    src/3d_entities/drawable_entity.hpp \
-    src/utilities/shader_loader.hpp \
-    src/gui/view_frame.hpp \
-    src/3d_entities/scene.hpp \
     src/gui/render_panel.hpp \
     src/gui/main_window.hpp \
-    src/3d_entities/camera.hpp \
-    src/gui/como_app.hpp \
-    src/gui/opengl_engine.hpp \
-    src/gui/tools_menu.hpp
+    src/gui/view_frame.hpp \
+    src/managers/como_app.hpp \
+    src/managers/scene.hpp \
+    src/managers/shader_loader.hpp \
+    src/models/3d/drawable_entity.hpp \
+    src/models/3d/geometry.hpp \
+    src/models/3d/cube.hpp \
+    src/models/3d/camera.hpp
 
 FORMS    += main_window.ui
 
