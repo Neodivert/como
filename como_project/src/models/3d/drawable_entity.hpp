@@ -41,6 +41,8 @@ using namespace std;
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <array>
+
 //#include "camera.hpp"
 class Camera;
 
@@ -62,6 +64,9 @@ enum COORDINATES
 class DrawableEntity
 {
     protected:
+        std::array< glm::vec3, 3 > originalOrientation;
+        std::array< glm::vec3, 3 > transformedOrientation;
+
         glm::mat4 transformationMatrix;
 
     public:
