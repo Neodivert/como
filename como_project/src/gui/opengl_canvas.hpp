@@ -30,6 +30,8 @@
 #include "../models/3d/camera.hpp"
 
 
+namespace como {
+
 /***
  * File main class
  ***/
@@ -80,5 +82,7 @@ class OpenGLCanvas : public QWindow
 
     signals:
 };
+
+} // namespace como
 
 #endif // OPENGL_CANVAS_HPP

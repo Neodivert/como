@@ -1,5 +1,7 @@
 #include "camera.hpp"
 
+namespace como {
+
 GLint Camera::modelviewMatrixLocation = -1;
 GLint Camera::projectionMatrixLocation = -1;
 
@@ -41,7 +43,7 @@ Camera::Camera() :
 
 void Camera::rotateLaterally( float angle )
 {
-    cout << "Rotating Laterally " << angle << " degrees around (" << transformedUp[como::X] << ", " << transformedUp[como::Y] << ", " << transformedUp[como::Z] << ")" << endl;
+    cout << "Rotating Laterally " << angle << " degrees around (" << transformedUp[X] << ", " << transformedUp[Y] << ", " << transformedUp[Z] << ")" << endl;
     glm::rotate( transformationMatrix, angle, glm::vec3( transformedUp ) );
 
     update();
@@ -167,3 +169,6 @@ void Camera::draw( Camera* camera, bool selected ) const
     Q_UNUSED( camera );
     Q_UNUSED( selected );
 }
+
+
+} // namespace como

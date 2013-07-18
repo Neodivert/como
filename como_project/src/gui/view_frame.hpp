@@ -26,6 +26,8 @@
 #include "opengl_canvas.hpp"
 #include "../managers/scene.hpp"
 
+namespace como {
+
 class ViewFrame : public QFrame
 {
     private:
@@ -44,5 +46,7 @@ class ViewFrame : public QFrame
     public slots:
         virtual void render();
 };
+
+} // namespace como
 
 #endif // VIEW_FRAME_H

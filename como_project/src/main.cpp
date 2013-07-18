@@ -26,7 +26,7 @@ int main( int argc, char *argv[] )
     QApplication app( argc, argv );
 
     // Create a Qt window and show it.
-    MainWindow window;
+    como::MainWindow window;
     window.show();
     
     // Run Qt application.

@@ -31,9 +31,9 @@ Drawable::Drawable()
     transformationMatrix = glm::mat4( 1.0f );
 
     // Initialize the drawable's original orientation.
-    originalOrientation[como::X] = glm::vec3( 1.0f, 0.0f, 0.0f );
-    originalOrientation[como::Y] = glm::vec3( 0.0f, 1.0f, 0.0f );
-    originalOrientation[como::Z] = glm::vec3( 0.0f, 0.0f, 1.0f );
+    originalOrientation[X] = glm::vec3( 1.0f, 0.0f, 0.0f );
+    originalOrientation[Y] = glm::vec3( 0.0f, 1.0f, 0.0f );
+    originalOrientation[Z] = glm::vec3( 0.0f, 0.0f, 1.0f );
 }
 
 

@@ -27,6 +27,8 @@
 #include "../models/3d/drawable.hpp"
 
 
+namespace como {
+
 /***
  * File main class
  ***/
@@ -61,5 +63,7 @@ class ShaderLoader
     public:
         void loadMinimumShaderProgram( const char* vertexShaderFile, const char* fragmentShaderFile );
 };
+
+} // namespace como
 
 #endif // SHADER_LOADER_HPP

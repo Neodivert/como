@@ -24,6 +24,8 @@
 #include "tools_menu.hpp"
 
 
+namespace como {
+
 /***
  * 1. Initialization and destruction
  ***/
@@ -71,3 +73,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+
+} // namespace como

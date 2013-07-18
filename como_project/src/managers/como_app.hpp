@@ -27,6 +27,8 @@
 #include <QObject>
 #include <map>
 
+namespace como {
+
 enum class AppMode {
     CREATION = 0,
     EDITION
@@ -100,5 +102,7 @@ class ComoApp : public QObject {
         void setEditionScope( EditionScope editionScope );
         void setEditionSubMode( EditionSubMode editionSubMode );
 };
+
+} // namespace como
 
 #endif // COMO_APP_HPP

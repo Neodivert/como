@@ -28,11 +28,14 @@
 #include <vector>
 #include <array>
 
+
+namespace como {
+
 /***
  * File main class
  ***/
 
-class Mesh : public como::Drawable
+class Mesh : public Drawable
 {
     protected:
         // Location of the uniform shader variable used for coloring geometries.
@@ -88,8 +91,10 @@ class Mesh : public como::Drawable
         virtual void update();
 
     public:
-        // Send geometry to OpenGL server for rendering it.
+        // Send mesh to OpenGL server for rendering it.
         virtual void draw( Camera* camera, bool selected = false ) const;
 };
+
+}
 
 #endif // MESH_HPP

@@ -19,6 +19,7 @@
 
 #include "scene.hpp"
 
+namespace como {
 
 /***
  * 1. Drawables administration
@@ -26,12 +27,12 @@
 
 void Scene::addCube( Cube* cube )
 {
-    shared_ptr<como::Drawable> cubePtr( cube );
+    shared_ptr<Drawable> cubePtr( cube );
 
     addDrawable( cubePtr );
 }
 
-void Scene::addDrawable( shared_ptr<como::Drawable> drawable )
+void Scene::addDrawable( shared_ptr<Drawable> drawable )
 {
     nonSelectedDrawables.push_back( drawable );
 }
@@ -167,3 +168,5 @@ void Scene::draw( Camera* camera )
         (*it)->draw( camera, true );
     }
 }
+
+} // namespace como

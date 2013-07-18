@@ -25,6 +25,8 @@
 #include "camera.hpp"
 #include <glm/gtx/intersect.hpp>
 
+namespace como {
+
 // Initialize the location of the uniform shader variable "color" as unitialized (-1).
 GLint Mesh::uniformColorLocation = -1;
 
@@ -170,15 +172,14 @@ void Mesh::update()
     for( GLuint i = 0; i<originalVertices.size(); i++ ){
         transformedVertex = transformationMatrix * glm::vec4( originalVertices[i], 1.0f );
 
-        transformedVertices[i*3+como::X] = transformedVertex.x;
-        transformedVertices[i*3+como::Y] = transformedVertex.y;
-        transformedVertices[i*3+como::Z] = transformedVertex.z;
+        transformedVertices[i*3+X] = transformedVertex.x;
+        transformedVertices[i*3+Y] = transformedVertex.y;
+        transformedVertices[i*3+Z] = transformedVertex.z;
     }
 
     // We finished updating the VBO, unmap it so OpenGL can take control over it.
     glUnmapBuffer( GL_ARRAY_BUFFER );
 }
-
 
 void Mesh::draw( Camera* camera, bool selected ) const
 {
@@ -218,5 +219,4 @@ void Mesh::draw( Camera* camera, bool selected ) const
     glDrawElements( GL_LINES, nContourElements, GL_UNSIGNED_BYTE, (GLvoid*)( sizeof( GLubyte )*nInnerElements ) );
 }
 
-
-
+} // namespace como

@@ -30,6 +30,8 @@ namespace Ui {
     class MainWindow;
 }
 
+namespace como {
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -47,5 +49,7 @@ class MainWindow : public QMainWindow
         explicit MainWindow( QWidget* parent = 0 );
         ~MainWindow();
 };
+
+} // namespace como
 
 #endif // MAIN_WINDOW_HPP

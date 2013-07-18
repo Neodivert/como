@@ -20,6 +20,9 @@
 #include "opengl_engine.hpp"
 
 
+namespace como {
+
+
 /***
  * 1. Initialization
  ***/
@@ -96,3 +99,5 @@ shared_ptr< Scene > OpenGLEngine::createScene( QOpenGLContext* oglContext )
 
     return scene;
 }
+
+} // namespace como

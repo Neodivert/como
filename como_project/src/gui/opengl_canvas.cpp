@@ -21,6 +21,9 @@
 #include <iostream>
 using namespace std;
 
+
+namespace como {
+
 /***
  * 1. Initialization and destruction
  ***/
@@ -197,3 +200,5 @@ void OpenGLCanvas::render()
     // Swap buffers.
     comoApp->getOpenGLContext()->swapBuffers( this );
 }
+
+} // namespace como

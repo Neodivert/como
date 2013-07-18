@@ -31,6 +31,7 @@ QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QSlider)
 QT_FORWARD_DECLARE_CLASS(QSplitter)
 
+namespace como {
 
 class RenderPanel : public QFrame
 {
@@ -51,5 +52,7 @@ class RenderPanel : public QFrame
     public slots:
     
 };
+
+} // namespace como
 
 #endif // RENDER_PANEL_HPP

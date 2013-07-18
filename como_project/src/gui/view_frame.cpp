@@ -19,6 +19,7 @@
 
 #include "view_frame.hpp"
 
+namespace como {
 
 /***
  * 1. Initialization
@@ -63,3 +64,5 @@ void ViewFrame::render()
 {
     openGLCanvas->render();
 }
+
+} // namespace como

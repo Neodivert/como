@@ -43,12 +43,10 @@ using namespace std;
 
 #include <array>
 
-class Camera;
-
 namespace como {
 
 //#include "camera.hpp"
-
+class Camera;
 
 /***
  * Enum types

@@ -19,6 +19,7 @@
 
 #include "render_panel.hpp"
 
+namespace como {
 
 /***
  * 1. Initialization
@@ -65,3 +66,5 @@ RenderPanel::RenderPanel( shared_ptr< ComoApp > comoApp, QWidget *parent ) :
     layout->addWidget( vSplitter );
     setLayout( layout );
 }
+
+} // namespace como

@@ -26,7 +26,10 @@
 #include "../models/3d/cube.hpp"
 #include "../models/3d/camera.hpp"
 
-typedef std::list< std::shared_ptr< como::Drawable > > DrawablesList;
+
+namespace como {
+
+typedef std::list< std::shared_ptr< Drawable > > DrawablesList;
 
 class Scene : public QObject
 {
@@ -43,7 +46,7 @@ class Scene : public QObject
         /***
          * 1. Drawables administration
          ***/
-        void addDrawable( shared_ptr<como::Drawable> drawable );
+        void addDrawable( shared_ptr<Drawable> drawable );
         void addCube( Cube* cube );
 
 
@@ -73,5 +76,7 @@ class Scene : public QObject
     signals:
         void renderNeeded();
 };
+
+} // namespace como
 
 #endif // SCENE_HPP

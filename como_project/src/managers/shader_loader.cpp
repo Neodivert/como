@@ -21,6 +21,8 @@
 #include <iostream>
 using namespace std;
 
+namespace como {
+
 ShaderLoader* ShaderLoader::instance = NULL;
 
 
@@ -138,3 +140,4 @@ void ShaderLoader::loadMinimumShaderProgram( const char* vertexShaderFile, const
     cout << "New shader program loaded and being used!" << endl;
 }
 
+} // namespace como

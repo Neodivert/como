@@ -22,6 +22,8 @@
 
 #include "mesh.hpp"
 
+namespace como {
+
 const GLuint N_CUBE_VERTICES = 8;
 
 class Cube : public Mesh
@@ -32,5 +34,8 @@ class Cube : public Mesh
          ***/
         Cube();
 };
+
+
+} // namespace como.
 
 #endif // CUBE_HPP

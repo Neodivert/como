@@ -20,6 +20,8 @@
 #include "tools_menu.hpp"
 #include <QVBoxLayout>
 
+namespace como {
+
 ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
 {
 
@@ -92,3 +94,5 @@ ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
       groupBox->setLayout(vbox);
       */
 }
+
+} // namespace como

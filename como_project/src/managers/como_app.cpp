@@ -23,6 +23,8 @@
 #include <iostream>
 using namespace std;
 
+namespace como {
+
 ComoApp* ComoApp::singlentonInstance = nullptr;
 
 std::map<QString, AppMode> appModeStrings =
@@ -132,3 +134,5 @@ void ComoApp::setEditionSubMode( EditionSubMode editionSubMode )
 {
     this->editionSubMode = editionSubMode;
 }
+
+} // namespace como

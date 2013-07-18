@@ -27,6 +27,8 @@
 #include <memory>
 using namespace std;
 
+namespace como {
+
 class OpenGLEngine : public QOffscreenSurface
 {
     public:
@@ -41,5 +43,7 @@ class OpenGLEngine : public QOffscreenSurface
         shared_ptr< QOpenGLContext > createOpenGLContext();
         shared_ptr< Scene > createScene( QOpenGLContext* oglContext );
 };
+
+} // namespace como
 
 #endif // OPENGL_INITIALIZER_HPP

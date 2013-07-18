@@ -24,6 +24,8 @@
 #include <memory>
 #include "../managers/como_app.hpp"
 
+namespace como {
+
 class ToolsMenu : public QFrame
 {
     protected:
@@ -36,5 +38,7 @@ class ToolsMenu : public QFrame
     signals:
 
 };
+
+} // namespace como
 
 #endif // TOOLS_MENU_HPP

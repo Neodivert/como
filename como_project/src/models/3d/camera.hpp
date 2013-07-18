@@ -24,6 +24,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "drawable.hpp"
 
+namespace como {
+
 enum OrthoAttribute {
     ORTHO_LEFT = 0,
     ORTHO_RIGHT,
@@ -42,7 +44,7 @@ enum PerspectiveAttribute {
 
 const int N_PROJECTION_ATTRIBUTES = 6;
 
-class Camera : public como::Drawable
+class Camera : public Drawable
 {
     protected:
         // Camera original position and orientation.
@@ -113,5 +115,7 @@ class Camera : public como::Drawable
     public:
         virtual void draw( Camera* camera, bool selected = false ) const ;
 };
+
+} // namespace como
 
 #endif // CAMERA_HPP
