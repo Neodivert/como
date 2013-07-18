@@ -20,11 +20,11 @@
 #ifndef CUBE_HPP
 #define CUBE_HPP
 
-#include "geometry.hpp"
+#include "mesh.hpp"
 
 const GLuint N_CUBE_VERTICES = 8;
 
-class Cube : public Geometry
+class Cube : public Mesh
 {
     public:
         /***

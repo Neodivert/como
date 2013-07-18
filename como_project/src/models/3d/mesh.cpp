@@ -17,7 +17,7 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "geometry.hpp"
+#include "mesh.hpp"
 
 #include <X11/X.h>
 #include <GL/gl.h>
@@ -26,18 +26,18 @@
 #include <glm/gtx/intersect.hpp>
 
 // Initialize the location of the uniform shader variable "color" as unitialized (-1).
-GLint Geometry::uniformColorLocation = -1;
+GLint Mesh::uniformColorLocation = -1;
 
 
 /***
  * 1. Initialization and destruction
  ***/
 
-Geometry::Geometry()
+Mesh::Mesh()
 {   
     GLint currentShaderProgram;
 
-    // Generate a VAO for the geometry and bind it as the active one.
+    // Generate a VAO for the Mesh and bind it as the active one.
     glGenVertexArrays( 1, &vao );
     glBindVertexArray( vao );
 
@@ -68,7 +68,7 @@ Geometry::Geometry()
 }
 
 
-Geometry::~Geometry()
+Mesh::~Mesh()
 {
     // Tell OpenGL we are done with allocated buffer objects and
     // vertex attribute arrays.
@@ -81,7 +81,7 @@ Geometry::~Geometry()
 /***
  * 2. Getters and setters
  ***/
-void Geometry::setInnerColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a )
+void Mesh::setInnerColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a )
 {
     innerColor[0] = r;
     innerColor[1] = g;
@@ -90,7 +90,7 @@ void Geometry::setInnerColor( const GLfloat& r, const GLfloat& g, const GLfloat&
 }
 
 
-void Geometry::setContourColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a )
+void Mesh::setContourColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a )
 {
     contourColor[0] = r;
     contourColor[1] = g;
@@ -103,7 +103,7 @@ void Geometry::setContourColor( const GLfloat& r, const GLfloat& g, const GLfloa
  * 3. Intersections
  ***/
 
-void Geometry::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT, unsigned int* triangle ) const
+void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT, unsigned int* triangle ) const
 {
     const float MAX_T = 999999.9f;
     float t = MAX_T;
@@ -116,14 +116,14 @@ void Geometry::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& m
     rayDirection = glm::normalize( rayDirection );
 
     // Get a transformation matrix from world coordinates to objet
-    // coordinates (of this geometry).
+    // coordinates (of this Mesh).
     glm::mat4 worldToObjetTransform = glm::inverse( transformationMatrix );
 
     // Transform ray from world to object coordinates.
     rayOrigin = glm::vec3( worldToObjetTransform * glm::vec4( rayOrigin, 1.0f ) );
     rayDirection = glm::normalize( glm::vec3( worldToObjetTransform * glm::vec4( rayDirection, 1.0f ) ) );
 
-    // Compute intersections with all triangles in this geometry.
+    // Compute intersections with all triangles in this Mesh.
     for( unsigned int i = 0; i < triangles.size(); i++ ){
         if( glm::intersectRayTriangle( rayOrigin,
                                        rayDirection,
@@ -135,12 +135,12 @@ void Geometry::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& m
             // There was an intersection with this triangle. Get the parameter t.
             t = intersection.z;
 
-            cout << "Geometry::t : " << t << endl;
+            cout << "Mesh::t : " << t << endl;
 
             // Do we have a new minimum t?
             if( ( t >= 0.0f ) && ( t <= 1.0f ) && ( t < minT ) ){
                 minT = t;
-                cout << "\t Geometry::minT : " << minT << endl;
+                cout << "\t Mesh::minT : " << minT << endl;
                 if( triangle != nullptr ){
                     *triangle = i;
                 }
@@ -157,7 +157,7 @@ void Geometry::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& m
  * 4. Update and drawing.
  ***/
 
-void Geometry::update()
+void Mesh::update()
 {
     GLfloat* transformedVertices = NULL;
     glm::vec4 transformedVertex;
@@ -180,7 +180,7 @@ void Geometry::update()
 }
 
 
-void Geometry::draw( Camera* camera, bool selected ) const
+void Mesh::draw( Camera* camera, bool selected ) const
 {
     // Default color for selected drawables' contour.
     GLfloat selectecContourColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -188,7 +188,7 @@ void Geometry::draw( Camera* camera, bool selected ) const
     // Set shader modelview matrix.
     camera->setShaderModelviewMatrix( &transformationMatrix );
 
-    // Feed uniform shader variable "color" with geometry inner color.
+    // Feed uniform shader variable "color" with Mesh inner color.
     // I fallen in a common mistake D:.
     // http://www.opengl.org/wiki/GLSL_:_common_mistakes
     // The problem is that for count, you set it to 4 while it should be 1 because you
@@ -196,23 +196,23 @@ void Geometry::draw( Camera* camera, bool selected ) const
     // (4f, which corresponds to vec4​) that you are setting.
     glUniform4fv( uniformColorLocation, 1, innerColor );
 
-    // Bind Geometry VAO as the active one.
+    // Bind Mesh VAO as the active one.
     glBindVertexArray( vao );
 
-    // Draw geometry interior.
+    // Draw Mesh interior.
     glDrawElements( GL_TRIANGLES, nInnerElements, GL_UNSIGNED_BYTE, NULL );
 
     // Feed uniform shader variable "color" with one color or another
-    // depends on whether current geometry is selected by user or not.
+    // depends on whether current Mesh is selected by user or not.
     if( selected ){
-        // Geometry selected by user. Set a default color.
+        // Mesh selected by user. Set a default color.
         glUniform4fv( uniformColorLocation, 1, selectecContourColor );
     }else{
-        // Geometry not selected by user. Set geometry's own contour color.
+        // Mesh not selected by user. Set Mesh's own contour color.
         glUniform4fv( uniformColorLocation, 1, contourColor );
     }
 
-    // Draw geometry contour.
+    // Draw Mesh contour.
     // I fallen in another error D: (I was using glDrawElementsBaseIndex).
     // http://stackoverflow.com/questions/9431923/using-an-offset-with-vbos-in-opengl
     glDrawElements( GL_LINES, nContourElements, GL_UNSIGNED_BYTE, (GLvoid*)( sizeof( GLubyte )*nInnerElements ) );

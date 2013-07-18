@@ -22,10 +22,10 @@ SOURCES += src/main.cpp\
     src/managers/como_app.cpp \
     src/managers/scene.cpp \
     src/managers/shader_loader.cpp \
-    src/models/3d/geometry.cpp \
     src/models/3d/cube.cpp \
     src/models/3d/camera.cpp \
-    src/models/3d/drawable.cpp
+    src/models/3d/drawable.cpp \
+    src/models/3d/mesh.cpp
 
 
 HEADERS  += \
@@ -38,10 +38,10 @@ HEADERS  += \
     src/managers/como_app.hpp \
     src/managers/scene.hpp \
     src/managers/shader_loader.hpp \
-    src/models/3d/geometry.hpp \
     src/models/3d/cube.hpp \
     src/models/3d/camera.hpp \
-    src/models/3d/drawable.hpp
+    src/models/3d/drawable.hpp \
+    src/models/3d/mesh.hpp
 
 FORMS    += main_window.ui
 

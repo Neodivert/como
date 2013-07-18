@@ -17,8 +17,8 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef GEOMETRY_HPP
-#define GEOMETRY_HPP
+#ifndef MESH_HPP
+#define MESH_HPP
 
 /***
  * Includes
@@ -32,7 +32,7 @@
  * File main class
  ***/
 
-class Geometry : public como::Drawable
+class Mesh : public como::Drawable
 {
     protected:
         // Location of the uniform shader variable used for coloring geometries.
@@ -66,8 +66,8 @@ class Geometry : public como::Drawable
         /***
          * 1. Initialization and destruction
          ***/
-        Geometry();
-        ~Geometry();
+        Mesh();
+        ~Mesh();
 
         /***
          * 2. Getters and setters
@@ -92,4 +92,4 @@ class Geometry : public como::Drawable
         virtual void draw( Camera* camera, bool selected = false ) const;
 };
 
-#endif // GEOMETRY_HPP
+#endif // MESH_HPP
