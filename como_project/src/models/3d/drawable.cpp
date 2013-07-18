@@ -17,21 +17,23 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "drawable_entity.hpp"
+#include "drawable.hpp"
 
 /***
  * 1. Initialization
  ***/
 
-DrawableEntity::DrawableEntity()
+namespace como {
+
+Drawable::Drawable()
 {
     // Initialize transformation matrix to identity matrix.
     transformationMatrix = glm::mat4( 1.0f );
 
     // Initialize the drawable's original orientation.
-    originalOrientation[X] = glm::vec3( 1.0f, 0.0f, 0.0f );
-    originalOrientation[Y] = glm::vec3( 0.0f, 1.0f, 0.0f );
-    originalOrientation[Z] = glm::vec3( 0.0f, 0.0f, 1.0f );
+    originalOrientation[como::X] = glm::vec3( 1.0f, 0.0f, 0.0f );
+    originalOrientation[como::Y] = glm::vec3( 0.0f, 1.0f, 0.0f );
+    originalOrientation[como::Z] = glm::vec3( 0.0f, 0.0f, 1.0f );
 }
 
 
@@ -39,7 +41,7 @@ DrawableEntity::DrawableEntity()
 * 2. Setters and getters
  ***/
 
-glm::mat4 DrawableEntity::getTransformationMatrix()
+glm::mat4 Drawable::getTransformationMatrix()
 {
     return transformationMatrix;
 }
@@ -49,7 +51,7 @@ glm::mat4 DrawableEntity::getTransformationMatrix()
  * 3. Transformations
  ***/
 
-void DrawableEntity::translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz )
+void Drawable::translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz )
 {
     // Multiply the drawable's transformation matrix by a translation one.
     transformationMatrix = glm::translate( transformationMatrix, glm::vec3( tx, ty, tz ) );
@@ -60,7 +62,7 @@ void DrawableEntity::translate( const GLfloat& tx, const GLfloat& ty, const GLfl
 }
 
 
-void DrawableEntity::rotate( const GLfloat& angle, const GLfloat& x, const GLfloat& y, const GLfloat& z )
+void Drawable::rotate( const GLfloat& angle, const GLfloat& x, const GLfloat& y, const GLfloat& z )
 {
     // Multiply the drawable's transformation matrix by a rotation one.
     transformationMatrix = glm::rotate( transformationMatrix, angle, glm::vec3( x, y, z ) );
@@ -69,3 +71,5 @@ void DrawableEntity::rotate( const GLfloat& angle, const GLfloat& x, const GLflo
     // previous transformation matrix.
     update();
 }
+
+} // namespace como.

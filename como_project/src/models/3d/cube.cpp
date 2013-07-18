@@ -101,9 +101,9 @@ Cube::Cube()
     originalVertices.resize( N_CUBE_VERTICES );
     for( GLuint i=0; i<N_CUBE_VERTICES; i++ )
     {
-        originalVertices[i] = glm::vec3( cubeVertices[i*3+X],
-                                         cubeVertices[i*3+Y],
-                                         cubeVertices[i*3+Z] );
+        originalVertices[i] = glm::vec3( cubeVertices[i*3+como::X],
+                                         cubeVertices[i*3+como::Y],
+                                         cubeVertices[i*3+como::Z] );
     }
 
     // Copy the geometry's elements to a VBO.

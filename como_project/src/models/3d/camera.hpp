@@ -22,7 +22,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "drawable_entity.hpp"
+#include "drawable.hpp"
 
 enum OrthoAttribute {
     ORTHO_LEFT = 0,
@@ -42,7 +42,7 @@ enum PerspectiveAttribute {
 
 const int N_PROJECTION_ATTRIBUTES = 6;
 
-class Camera : public DrawableEntity
+class Camera : public como::Drawable
 {
     protected:
         // Camera original position and orientation.

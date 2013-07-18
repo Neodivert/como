@@ -41,7 +41,7 @@ Camera::Camera() :
 
 void Camera::rotateLaterally( float angle )
 {
-    cout << "Rotating Laterally " << angle << " degrees around (" << transformedUp[X] << ", " << transformedUp[Y] << ", " << transformedUp[Z] << ")" << endl;
+    cout << "Rotating Laterally " << angle << " degrees around (" << transformedUp[como::X] << ", " << transformedUp[como::Y] << ", " << transformedUp[como::Z] << ")" << endl;
     glm::rotate( transformationMatrix, angle, glm::vec3( transformedUp ) );
 
     update();

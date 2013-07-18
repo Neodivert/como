@@ -17,8 +17,8 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef DRAWABLE_ENTITY_HPP
-#define DRAWABLE_ENTITY_HPP
+#ifndef DRAWABLE_HPP
+#define DRAWABLE_HPP
 
 
 /****
@@ -43,8 +43,12 @@ using namespace std;
 
 #include <array>
 
-//#include "camera.hpp"
 class Camera;
+
+namespace como {
+
+//#include "camera.hpp"
+
 
 /***
  * Enum types
@@ -61,7 +65,7 @@ enum COORDINATES
  * Main file class
  ***/
 
-class DrawableEntity
+class Drawable
 {
     protected:
         std::array< glm::vec3, 3 > originalOrientation;
@@ -74,7 +78,7 @@ class DrawableEntity
          * 1. Initialization
          ***/
         // Constructor. Initialize transformation matrix to identity matrix.
-        DrawableEntity();
+        Drawable();
 
         /***
          * 2. Setters and getters
@@ -105,5 +109,7 @@ class DrawableEntity
     public:
         virtual void draw( Camera* camera, bool selected = false ) const = 0;
 };
+
+} // namespace como
 
 #endif // DRAWABLE_ENTITY_HPP

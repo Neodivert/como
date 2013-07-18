@@ -24,7 +24,7 @@
  * Includes
  ***/
 #include <fstream>
-#include "../models/3d/drawable_entity.hpp"
+#include "../models/3d/drawable.hpp"
 
 
 /***

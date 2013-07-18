@@ -26,12 +26,12 @@
 
 void Scene::addCube( Cube* cube )
 {
-    shared_ptr< DrawableEntity> cubePtr( cube );
+    shared_ptr<como::Drawable> cubePtr( cube );
 
     addDrawable( cubePtr );
 }
 
-void Scene::addDrawable( shared_ptr<DrawableEntity> drawable )
+void Scene::addDrawable( shared_ptr<como::Drawable> drawable )
 {
     nonSelectedDrawables.push_back( drawable );
 }

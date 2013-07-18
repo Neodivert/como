@@ -170,9 +170,9 @@ void Geometry::update()
     for( GLuint i = 0; i<originalVertices.size(); i++ ){
         transformedVertex = transformationMatrix * glm::vec4( originalVertices[i], 1.0f );
 
-        transformedVertices[i*3+X] = transformedVertex.x;
-        transformedVertices[i*3+Y] = transformedVertex.y;
-        transformedVertices[i*3+Z] = transformedVertex.z;
+        transformedVertices[i*3+como::X] = transformedVertex.x;
+        transformedVertices[i*3+como::Y] = transformedVertex.y;
+        transformedVertices[i*3+como::Z] = transformedVertex.z;
     }
 
     // We finished updating the VBO, unmap it so OpenGL can take control over it.

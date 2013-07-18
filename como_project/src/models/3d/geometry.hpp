@@ -23,7 +23,8 @@
 /***
  * Includes
  ***/
-#include "drawable_entity.hpp"
+#include "drawable.hpp"
+#include "camera.hpp"
 #include <vector>
 #include <array>
 
@@ -31,7 +32,7 @@
  * File main class
  ***/
 
-class Geometry : public DrawableEntity
+class Geometry : public como::Drawable
 {
     protected:
         // Location of the uniform shader variable used for coloring geometries.
