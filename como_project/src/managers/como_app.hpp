@@ -88,33 +88,17 @@ class ComoApp : public QObject {
         AppMode getAppMode() const ;
         EditionScope getEditionScope() const ;
         EditionSubMode getEditionSubMode() const ;
-
-        // TODO: remove. Only ComoApp will have access.
         shared_ptr< Scene > getScene() const ;
-
-        // TODO: remove. Only ComoApp will have access.
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
 
-        /***
-         * 3. Scene handle
-         ***/
-        int selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection = false );
-        void translateSelectedDrawables( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz );
 
         /***
-         * 4. Setters (slots)
+         * 3. Setters (slots)
          ***/
     public slots:
         void setAppMode( AppMode appMode );
         void setEditionScope( EditionScope editionScope );
         void setEditionSubMode( EditionSubMode editionSubMode );
-
-
-        /***
-         * 5. Signals
-         ***/
-    signals:
-        void renderNeeded();
 };
 
 #endif // COMO_APP_HPP

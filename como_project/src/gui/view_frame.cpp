@@ -51,7 +51,7 @@ ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     setLayout(layout);
 
     // When a render is requested, render!
-    QObject::connect( comoApp.get(), &ComoApp::renderNeeded, this, &ViewFrame::render  );
+    QObject::connect( comoApp->getScene().get(), &Scene::renderNeeded, this, &ViewFrame::render  );
 }
 
 

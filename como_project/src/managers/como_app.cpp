@@ -78,6 +78,7 @@ void ComoApp::destroy()
     delete singlentonInstance;
 }
 */
+
 /***
  * 2. Getters
  ***/
@@ -109,30 +110,7 @@ shared_ptr< QOpenGLContext > ComoApp::getOpenGLContext() const
 
 
 /***
- * 3. Scene handle
- ***/
-
-int ComoApp::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection )
-{
-    scene->selectDrawableByRayPicking( r0, r1, addToSelection );
-
-    emit renderNeeded();
-
-    // TODO: change.
-    return 0;
-}
-
-
-void ComoApp::translateSelectedDrawables( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz )
-{
-    scene->translateSelectedDrawables( tx, ty, tz );
-
-    emit renderNeeded();
-}
-
-
-/***
- * 4. Setters (slots)
+ * 3. Setters (slots)
  ***/
 
 void ComoApp::setAppMode( AppMode appMode )

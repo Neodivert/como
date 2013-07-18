@@ -28,8 +28,10 @@
 
 typedef std::list< std::shared_ptr< DrawableEntity> > DrawablesList;
 
-class Scene
+class Scene : public QObject
 {
+    Q_OBJECT
+
     private:
         // Scene's drawables not selected by user.
         DrawablesList nonSelectedDrawables;
@@ -48,15 +50,10 @@ class Scene
         /***
          * 2. Drawables selection.
          ***/
-    private:
-        //float rayPicking( glm::vec4 r0, glm::vec4 r1 ) const ;
-
     public:
         void selectDrawable( const unsigned int index );
         void selectAll();
         void unselectAll();
-
-        //float intersects( glm::vec4 r0, glm::vec4 r1 ) const ;
 
         int selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection = false );
 
@@ -69,6 +66,12 @@ class Scene
          * 4. Drawing
          ***/
         void draw( Camera* camera );
+
+        /***
+         * 5. Signals
+         ***/
+    signals:
+        void renderNeeded();
 };
 
 #endif // SCENE_HPP

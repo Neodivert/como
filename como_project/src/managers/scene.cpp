@@ -49,17 +49,21 @@ void Scene::selectDrawable( const unsigned int index )
     std::advance( it, index );
 
     selectedDrawables.splice( selectedDrawables.end(), nonSelectedDrawables, it );
+
+    emit renderNeeded();
 }
 
 void Scene::selectAll()
 {
     selectedDrawables.splice( selectedDrawables.end(), nonSelectedDrawables );
-    //selectedDrawables = nonSelectedDrawables;
+
+    emit renderNeeded();
 }
 
 void Scene::unselectAll()
 {
     nonSelectedDrawables.splice( nonSelectedDrawables.end(), selectedDrawables );
+    emit renderNeeded();
 }
 
 
@@ -125,6 +129,7 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
         unselectAll();
     }
 
+    emit renderNeeded();
     return closestObject;
 }
 
@@ -141,6 +146,7 @@ void Scene::translateSelectedDrawables( const GLfloat& tx, const GLfloat& ty, co
     {
         (*it)->translate( tx, ty, tz );
     }
+    emit renderNeeded();
 }
 
 

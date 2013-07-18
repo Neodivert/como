@@ -130,8 +130,8 @@ void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
     worldCoordinates[1] = glm::unProject( windowCoordinates, camera.getTransformationMatrix(), projectionMatrix, viewport );
 
     // Do the ray picking.
-    comoApp->selectDrawableByRayPicking( worldCoordinates[0],
-                                         worldCoordinates[1] - worldCoordinates[0] );
+    comoApp->getScene()->selectDrawableByRayPicking( worldCoordinates[0],
+                                                    worldCoordinates[1] - worldCoordinates[0] );
 }
 
 void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
@@ -139,11 +139,11 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
     switch ( e->key() )
     {
         case Qt::Key_Left:
-          comoApp->translateSelectedDrawables( -0.01f, 0.0f, 0.0f );
+          comoApp->getScene()->translateSelectedDrawables( -0.01f, 0.0f, 0.0f );
           //camera.translate( -0.01f, 0.0f, 0.0f );
         break;
         case Qt::Key_Right:
-          comoApp->translateSelectedDrawables( 0.01f, 0.0f, 0.0f );
+          comoApp->getScene()->translateSelectedDrawables( 0.01f, 0.0f, 0.0f );
           //camera.translate( +0.01f, 0.0f, 0.0f );
         break;
         default:
@@ -166,7 +166,7 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
         ty = ( lastY - mouseMoveEvent->y() ) * heightInverse;
 
         // Make the transformation requested by user.
-        comoApp->translateSelectedDrawables( tx, ty, 0.0f );
+        comoApp->getScene()->translateSelectedDrawables( tx, ty, 0.0f );
     }
 
     lastX = mouseMoveEvent->x();
