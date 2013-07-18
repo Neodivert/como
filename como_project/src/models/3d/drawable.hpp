@@ -66,8 +66,8 @@ enum COORDINATES
 class Drawable
 {
     protected:
-        std::array< glm::vec3, 3 > originalOrientation;
-        std::array< glm::vec3, 3 > transformedOrientation;
+        std::array< glm::vec4, 3 > originalOrientation;
+        std::array< glm::vec4, 3 > transformedOrientation;
 
         glm::mat4 transformationMatrix;
 
@@ -102,7 +102,7 @@ class Drawable
          * 5. Updating and drawing
          ***/
     protected:
-        virtual void update() = 0;
+        virtual void update();
 
     public:
         virtual void draw( Camera* camera, bool selected = false ) const = 0;

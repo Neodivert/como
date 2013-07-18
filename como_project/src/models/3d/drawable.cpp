@@ -31,9 +31,9 @@ Drawable::Drawable()
     transformationMatrix = glm::mat4( 1.0f );
 
     // Initialize the drawable's original orientation.
-    originalOrientation[X] = glm::vec3( 1.0f, 0.0f, 0.0f );
-    originalOrientation[Y] = glm::vec3( 0.0f, 1.0f, 0.0f );
-    originalOrientation[Z] = glm::vec3( 0.0f, 0.0f, 1.0f );
+    originalOrientation[X] = glm::vec4( 1.0f, 0.0f, 0.0f, 1.0f );
+    originalOrientation[Y] = glm::vec4( 0.0f, 1.0f, 0.0f, 1.0f );
+    originalOrientation[Z] = glm::vec4( 0.0f, 0.0f, 1.0f, 1.0f );
 }
 
 
@@ -71,5 +71,18 @@ void Drawable::rotate( const GLfloat& angle, const GLfloat& x, const GLfloat& y,
     // previous transformation matrix.
     update();
 }
+
+
+/***
+ * 5. Updating and drawing
+ ***/
+
+void Drawable::update()
+{
+    for( unsigned int i = 0; i<3; i++ ){
+        transformedOrientation[i] = transformationMatrix * originalOrientation[i];
+    }
+}
+
 
 } // namespace como.
