@@ -95,10 +95,7 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
     DrawablesList::iterator it;
     for( it = nonSelectedDrawables.begin(); it != nonSelectedDrawables.end(); it++, currentObject++ ){
         (*it)->intersects( r0, r1, t );
-        cout << "Geometry t: " << t << endl;
         if( ( t >= 0.0f ) && (t < minT ) ){
-            //cout << "selectDrawableByRayPicking - new closest object : " << distance << endl;
-            cout << "\t NEW closest geometry" << endl;
             // New closest object, get its index and distance.
             closestObject = currentObject;
             minT = t;
@@ -109,10 +106,7 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
     // them or not. Get the closest object.
     for( it = selectedDrawables.begin(); it != selectedDrawables.end(); it++, currentObject++ ){
         (*it)->intersects( r0, r1, t );
-        cout << "Geometry t: " << t << endl;
         if( ( t > 0.0f ) && (t < minT ) ){
-            cout << "\t NEW closest geometry" << endl;
-            //cout << "selectDrawableByRayPicking - new closest object : " << distance << endl;
             // New closest object, get its index and distance.
             closestObject = currentObject;
             minT = t;
@@ -131,6 +125,7 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
     }
 
     emit renderNeeded();
+
     return closestObject;
 }
 
@@ -155,17 +150,17 @@ void Scene::translateSelectedDrawables( const GLfloat& tx, const GLfloat& ty, co
  * 4. Drawing
  ***/
 
-void Scene::draw( Camera* camera )
+void Scene::draw( const glm::mat4& viewProjectionMatrix )
 {
     DrawablesList::iterator it = nonSelectedDrawables.begin();
 
     for( ; it != nonSelectedDrawables.end(); it++ )
     {
-        (*it)->draw( camera );
+        (*it)->draw( viewProjectionMatrix );
     }
     for( it = selectedDrawables.begin(); it != selectedDrawables.end(); it++ )
     {
-        (*it)->draw( camera, true );
+        (*it)->draw( viewProjectionMatrix, true );
     }
 }
 

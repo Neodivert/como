@@ -68,7 +68,7 @@ class Scene : public QObject
         /***
          * 4. Drawing
          ***/
-        void draw( Camera* camera );
+        void draw( const glm::mat4& viewProjectionMatrix );
 
         /***
          * 5. Signals

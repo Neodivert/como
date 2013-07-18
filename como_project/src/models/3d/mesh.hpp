@@ -24,7 +24,6 @@
  * Includes
  ***/
 #include "drawable.hpp"
-#include "camera.hpp"
 #include <vector>
 #include <array>
 
@@ -92,7 +91,7 @@ class Mesh : public Drawable
 
     public:
         // Send mesh to OpenGL server for rendering it.
-        virtual void draw( Camera* camera, bool selected = false ) const;
+        virtual void draw( const glm::mat4& viewProjectionMatrix, bool selected = false ) const;
 };
 
 }

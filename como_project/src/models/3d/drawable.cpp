@@ -25,8 +25,23 @@
 
 namespace como {
 
+GLint Drawable::mvpMatrixLocation = -1;
+
+void showError(){
+    GLenum errCode;
+    if ((errCode = glGetError()) != GL_NO_ERROR)
+    {
+        cout << "ERROR: " << gluErrorString(errCode) << endl;
+    }else{
+        cout << "NO ERROR" << endl;
+    }
+}
+
+
 Drawable::Drawable()
 {
+    GLint currentShaderProgram;
+
     // Initialize transformation matrix to identity matrix.
     transformationMatrix = glm::mat4( 1.0f );
 
@@ -34,6 +49,15 @@ Drawable::Drawable()
     originalOrientation[X] = glm::vec4( 1.0f, 0.0f, 0.0f, 1.0f );
     originalOrientation[Y] = glm::vec4( 0.0f, 1.0f, 0.0f, 1.0f );
     originalOrientation[Z] = glm::vec4( 0.0f, 0.0f, 1.0f, 1.0f );
+
+    // Get location of uniform shader modelview matrix.
+    if( mvpMatrixLocation == -1 ){
+        // Get current shader program id.
+        glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+
+        mvpMatrixLocation = glGetUniformLocation( currentShaderProgram, "mvpMatrix" );
+        cout << "mvpMatrixLocation: (" << mvpMatrixLocation << ")" << endl;
+    }
 }
 
 
@@ -70,6 +94,12 @@ void Drawable::rotate( const GLfloat& angle, const GLfloat& x, const GLfloat& y,
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.
     update();
+}
+
+
+void Drawable::sendMvpMatrixToShader( const glm::mat4& mvpMatrix ) const
+{
+    glUniformMatrix4fv( mvpMatrixLocation, 1, GL_FALSE, &mvpMatrix[0][0] );
 }
 
 

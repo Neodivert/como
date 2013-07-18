@@ -183,8 +183,6 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 
 void OpenGLCanvas::render()
 {
-    //cout << "OpenGLCanvas - Rendering" << endl;
-
     // Make shared OpenGL context current for this surface.
     comoApp->getOpenGLContext()->makeCurrent( this );
 
@@ -195,7 +193,8 @@ void OpenGLCanvas::render()
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     // Draw scene.
-    comoApp->getScene()->draw( &camera );
+    // TODO: use real viewProjection matrix.
+    comoApp->getScene()->draw( glm::mat4( 1.0f ) );
 
     // Swap buffers.
     comoApp->getOpenGLContext()->swapBuffers( this );

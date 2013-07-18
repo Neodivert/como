@@ -22,7 +22,8 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "drawable.hpp"
+#include "mesh.hpp"
+#include "cube.hpp"
 
 namespace como {
 
@@ -44,18 +45,14 @@ enum PerspectiveAttribute {
 
 const int N_PROJECTION_ATTRIBUTES = 6;
 
-class Camera : public Drawable
+class Camera : public Cube
 {
     protected:
-        // Camera original position and orientation.
+        // Camera's original eye.
         const glm::vec4 originalEye;
-        const glm::vec4 originalCenter;
-        const glm::vec4 originalUp;
 
-        // Camera transformed position and orientation.
+        // Camera's transformed eye.
         glm::vec4 transformedEye;
-        glm::vec4 transformedCenter;
-        glm::vec4 transformedUp;
 
         // View matrix.
         //
@@ -71,11 +68,6 @@ class Camera : public Drawable
         // Projection matrix.
         glm::mat4 projectionMatrix;
 
-        // Locations for shader uniform variables.
-        static GLint modelviewMatrixLocation;
-        static GLint projectionMatrixLocation;
-
-
         //glm::mat4 vieeeewMatrix;
 
     public:
@@ -83,20 +75,6 @@ class Camera : public Drawable
          * 1. Initializations
          ***/
         Camera();
-
-
-        void rotateLaterally( float angle );
-
-        virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle = nullptr  ) const
-        {
-            Q_UNUSED( r0 ); Q_UNUSED( r1 ); t = -1.0f; Q_UNUSED( triangle );
-        }
-
-        /***
-         * 3.
-         ***/
-        void setShaderModelviewMatrix( const glm::mat4* modelMatrix );
-        void setShaderProjectionMatrix();
 
         /***
          * 2. Projections
@@ -112,8 +90,6 @@ class Camera : public Drawable
          * 3. Updating and drawing
          ***/
         virtual void update();
-    public:
-        virtual void draw( Camera* camera, bool selected = false ) const ;
 };
 
 } // namespace como

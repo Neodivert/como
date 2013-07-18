@@ -25,6 +25,8 @@
 #include "camera.hpp"
 #include <glm/gtx/intersect.hpp>
 
+
+
 namespace como {
 
 // Initialize the location of the uniform shader variable "color" as unitialized (-1).
@@ -50,7 +52,6 @@ Mesh::Mesh()
     // Generate an EBO and bind it for holding vertex indices.
     glGenBuffers( 1, &ebo );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
-
 
     if( uniformColorLocation == -1 ){
         // Location of uniform shader variable "color" hasn't been initialized yet.
@@ -137,12 +138,9 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
             // There was an intersection with this triangle. Get the parameter t.
             t = intersection.z;
 
-            cout << "Mesh::t : " << t << endl;
-
             // Do we have a new minimum t?
             if( ( t >= 0.0f ) && ( t <= 1.0f ) && ( t < minT ) ){
                 minT = t;
-                cout << "\t Mesh::minT : " << minT << endl;
                 if( triangle != nullptr ){
                     *triangle = i;
                 }
@@ -161,11 +159,13 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
 
 void Mesh::update()
 {
-    GLfloat* transformedVertices = NULL;
+    GLfloat* transformedVertices = nullptr;
     glm::vec4 transformedVertex;
 
     // Update mesh's orientation.
     Drawable::update();
+
+    glBindVertexArray( vao );
 
     // Map the OpenGL's VBO for transformed vertices to client memory, so we can update it.
     transformedVertices = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
@@ -179,18 +179,17 @@ void Mesh::update()
         transformedVertices[i*3+Y] = transformedVertex.y;
         transformedVertices[i*3+Z] = transformedVertex.z;
     }
-
     // We finished updating the VBO, unmap it so OpenGL can take control over it.
     glUnmapBuffer( GL_ARRAY_BUFFER );
 }
 
-void Mesh::draw( Camera* camera, bool selected ) const
+void Mesh::draw( const glm::mat4& viewProjectionMatrix, bool selected ) const
 {
     // Default color for selected drawables' contour.
     GLfloat selectecContourColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-    // Set shader modelview matrix.
-    camera->setShaderModelviewMatrix( &transformationMatrix );
+    // Set ModelViewProjection matrix to shader.
+    sendMvpMatrixToShader( viewProjectionMatrix * transformationMatrix );
 
     // Feed uniform shader variable "color" with Mesh inner color.
     // I fallen in a common mistake D:.
