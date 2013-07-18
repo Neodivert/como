@@ -164,6 +164,9 @@ void Mesh::update()
     GLfloat* transformedVertices = NULL;
     glm::vec4 transformedVertex;
 
+    // Update mesh's orientation.
+    Drawable::update();
+
     // Map the OpenGL's VBO for transformed vertices to client memory, so we can update it.
     transformedVertices = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
 
