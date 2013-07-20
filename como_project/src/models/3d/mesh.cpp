@@ -25,8 +25,6 @@
 #include "camera.hpp"
 #include <glm/gtx/intersect.hpp>
 
-
-
 namespace como {
 
 // Initialize the location of the uniform shader variable "color" as unitialized (-1).
@@ -87,12 +85,12 @@ void Mesh::setVertices( const GLuint nVertices, const GLfloat* vertices )
     originalVertices.resize( nVertices );
     for( GLuint i=0; i<nVertices; i++ )
     {
-        originalVertices[i] = glm::vec3( vertices[i*3+X],
-                                         vertices[i*3+Y],
-                                         vertices[i*3+Z] );
+        originalVertices[i] = glm::vec3( vertices[i*COMPONENTS_PER_VERTEX+X],
+                                         vertices[i*COMPONENTS_PER_VERTEX+Y],
+                                         vertices[i*COMPONENTS_PER_VERTEX+Z] );
     }
-    // Allocate a VBO for cube's transformed vertices.
-    glBufferData( GL_ARRAY_BUFFER, nVertices*3*sizeof( GLfloat ), NULL, GL_DYNAMIC_DRAW );
+    // Allocate a VBO for transformed vertices.
+    glBufferData( GL_ARRAY_BUFFER, nVertices*COMPONENTS_PER_VERTEX*sizeof( GLfloat ), NULL, GL_DYNAMIC_DRAW );
 
     // Update transformed vertices.
     update();
@@ -102,7 +100,7 @@ void Mesh::setVertices( const GLuint nVertices, const GLfloat* vertices )
 void Mesh::setElements( const GLuint nElements, const GLubyte* elements )
 {
     // Compute the number of triangles for this mesh.
-    const GLuint nTriangles = nElements / 3;
+    const GLuint nTriangles = nElements / N_TRIANGLE_VERTICES;
 
     // Copy the number of elements (indices).
     this->nElements = nElements;
@@ -110,9 +108,9 @@ void Mesh::setElements( const GLuint nElements, const GLubyte* elements )
     // Copy original triangles to this geometry's triangles.
     triangles.resize( nTriangles );
     for( GLuint i = 0; i<nTriangles; i++ ){
-        triangles[i][0] = elements[i*3];
-        triangles[i][1] = elements[i*3+1];
-        triangles[i][2] = elements[i*3+2];
+        triangles[i][0] = elements[i*N_TRIANGLE_VERTICES];
+        triangles[i][1] = elements[i*N_TRIANGLE_VERTICES+1];
+        triangles[i][2] = elements[i*N_TRIANGLE_VERTICES+2];
     }
 
     // Copy the mesh's elements to a EBO.
@@ -213,9 +211,9 @@ void Mesh::update()
     for( GLuint i = 0; i<originalVertices.size(); i++ ){
         transformedVertex = transformationMatrix * glm::vec4( originalVertices[i], 1.0f );
 
-        transformedVertices[i*3+X] = transformedVertex.x;
-        transformedVertices[i*3+Y] = transformedVertex.y;
-        transformedVertices[i*3+Z] = transformedVertex.z;
+        transformedVertices[i*N_TRIANGLE_VERTICES+X] = transformedVertex.x;
+        transformedVertices[i*N_TRIANGLE_VERTICES+Y] = transformedVertex.y;
+        transformedVertices[i*N_TRIANGLE_VERTICES+Z] = transformedVertex.z;
     }
     // We finished updating the VBO, unmap it so OpenGL can take control over it.
     glUnmapBuffer( GL_ARRAY_BUFFER );
@@ -241,7 +239,7 @@ void Mesh::draw( const glm::mat4& viewProjectionMatrix, bool selected ) const
     glBindVertexArray( vao );
 
     // Draw Mesh's interior.
-    glDrawElements( GL_TRIANGLES, triangles.size()*3, GL_UNSIGNED_BYTE, NULL );
+    glDrawElements( GL_TRIANGLES, nElements, GL_UNSIGNED_BYTE, NULL );
 
     // Feed uniform shader variable "color" with one color or another
     // depends on whether current Mesh is selected by user or not.
@@ -259,7 +257,7 @@ void Mesh::draw( const glm::mat4& viewProjectionMatrix, bool selected ) const
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
     // Draw Mesh's contour
-    glDrawElements( GL_TRIANGLES, triangles.size()*3, GL_UNSIGNED_BYTE, NULL );
+    glDrawElements( GL_TRIANGLES, nElements, GL_UNSIGNED_BYTE, NULL );
 
     // Return polygon mode to previos GL_FILL.
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );

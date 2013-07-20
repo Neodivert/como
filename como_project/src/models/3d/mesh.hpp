@@ -29,7 +29,8 @@
 
 namespace como {
 
-const GLuint COMPONENTS_PER_VERTEX = 4;
+const GLuint COMPONENTS_PER_VERTEX = 3;
+const GLuint N_TRIANGLE_VERTICES = 3;
 
 /***
  * File main class
