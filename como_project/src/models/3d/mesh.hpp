@@ -57,13 +57,11 @@ class Mesh : public Drawable
         std::vector< glm::vec3 > originalVertices;
         std::vector< glm::vec3 > originalNormals;
 
-        // Number of inner and contour elements to be renderer (for indexed drawing).
-        GLsizei nInnerElements;
-        GLsizei nContourElements;
-
-
+        // Mesh's triangles.
         std::vector< std::array< GLubyte, 3 > > triangles;
 
+        // Number of elements in mesh.
+        GLuint nElements;
     public:
         /***
          * 1. Initialization and destruction

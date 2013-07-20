@@ -45,7 +45,7 @@ Cube::Cube()
     };
 
     // Vertex indices for the cube's faces.
-    const GLubyte cubeInnerElements[] =
+    const GLubyte cubeElements[] =
     {
         // Front face
         0, 1, 3,
@@ -72,32 +72,8 @@ Cube::Cube()
         0, 3, 7
     };
 
-    // Vertex indices for defining the cube's contour.
-    const GLubyte cubeContourElements[] =
-    {
-        // Front face
-        0, 1,
-        1, 2,
-        2, 3,
-        3, 0,
-
-        // Back face
-        4, 5,
-        5, 6,
-        6, 7,
-        7, 4,
-
-        // Joins
-        0, 4,
-        1, 5,
-        2, 6,
-        3, 7
-    };
-
-
     // Compute the number of vertex indices for the cube's both faces and contour.
-    nInnerElements = sizeof( cubeInnerElements ) / sizeof( cubeInnerElements[0] );
-    nContourElements = sizeof( cubeContourElements ) / sizeof( cubeContourElements[0] );
+    nElements = sizeof( cubeElements ) / sizeof( cubeElements[0] );
 
     // Copy default cube's vertices to this geometry's original vertices.
     originalVertices.resize( N_CUBE_VERTICES );
@@ -109,16 +85,17 @@ Cube::Cube()
     }
 
     // Copy the geometry's elements to a VBO.
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeInnerElements ) + sizeof( cubeContourElements ), NULL, GL_STATIC_DRAW );
-    glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, 0, sizeof( cubeInnerElements ), cubeInnerElements );
-    glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeInnerElements ), sizeof( cubeContourElements ), cubeContourElements );
+    //glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeInnerElements ) + sizeof( cubeContourElements ), NULL, GL_STATIC_DRAW );
+    glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeElements ), cubeElements, GL_STATIC_DRAW );
+    //glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeInnerElements ), sizeof( cubeContourElements ), cubeContourElements );
+
 
     // Copy original triangles to this geometry's triangles.
-    triangles.resize( nInnerElements / 3 );
-    for( GLint i = 0; i<nInnerElements/3; i++ ){
-        triangles[i][0] = cubeInnerElements[i*3];
-        triangles[i][1] = cubeInnerElements[i*3+1];
-        triangles[i][2] = cubeInnerElements[i*3+2];
+    triangles.resize( nElements / 3 );
+    for( GLuint i = 0; i<nElements/3; i++ ){
+        triangles[i][0] = cubeElements[i*3];
+        triangles[i][1] = cubeElements[i*3+1];
+        triangles[i][2] = cubeElements[i*3+2];
     }
 
     // Allocate a VBO for cube's transformed vertices.

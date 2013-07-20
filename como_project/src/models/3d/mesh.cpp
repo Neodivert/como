@@ -202,8 +202,8 @@ void Mesh::draw( const glm::mat4& viewProjectionMatrix, bool selected ) const
     // Bind Mesh VAO as the active one.
     glBindVertexArray( vao );
 
-    // Draw Mesh interior.
-    glDrawElements( GL_TRIANGLES, nInnerElements, GL_UNSIGNED_BYTE, NULL );
+    // Draw Mesh's interior.
+    glDrawElements( GL_TRIANGLES, triangles.size()*3, GL_UNSIGNED_BYTE, NULL );
 
     // Feed uniform shader variable "color" with one color or another
     // depends on whether current Mesh is selected by user or not.
@@ -215,10 +215,16 @@ void Mesh::draw( const glm::mat4& viewProjectionMatrix, bool selected ) const
         glUniform4fv( uniformColorLocation, 1, contourColor );
     }
 
-    // Draw Mesh contour.
-    // I fallen in another error D: (I was using glDrawElementsBaseIndex).
-    // http://stackoverflow.com/questions/9431923/using-an-offset-with-vbos-in-opengl
-    glDrawElements( GL_LINES, nContourElements, GL_UNSIGNED_BYTE, (GLvoid*)( sizeof( GLubyte )*nInnerElements ) );
+    // Now we'll draw mesh's contour. Set polygon mode for rendering
+    // lines.
+    // TODO: I still have to use polygon offset.
+    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
+    // Draw Mesh's contour
+    glDrawElements( GL_TRIANGLES, triangles.size()*3, GL_UNSIGNED_BYTE, NULL );
+
+    // Return polygon mode to previos GL_FILL.
+    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 }
 
 } // namespace como
