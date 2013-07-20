@@ -27,8 +27,9 @@
 #include <vector>
 #include <array>
 
-
 namespace como {
+
+const GLuint COMPONENTS_PER_VERTEX = 4;
 
 /***
  * File main class

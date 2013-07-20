@@ -72,8 +72,10 @@ Cube::Cube()
         0, 3, 7
     };
 
-
+    // Copy vertices to mesh.
     setVertices( 8, cubeVertices );
+
+    // Copy elements (indices) to mesh.
     setElements( sizeof( cubeElements ) / sizeof( cubeElements[0] ), cubeElements );
 
     // Update transformed vertices (original vertices * transformation matrix).
