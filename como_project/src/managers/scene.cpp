@@ -146,6 +146,17 @@ void Scene::translateSelectedDrawables( const GLfloat& tx, const GLfloat& ty, co
 }
 
 
+void Scene::rotateSelectedDrawables( const GLfloat& angle, const GLfloat& x, const GLfloat& y, const GLfloat& z )
+{
+    DrawablesList::iterator it = selectedDrawables.begin();
+
+    for( ; it != selectedDrawables.end(); it++ )
+    {
+        (*it)->rotate( angle, x, y, z );
+    }
+    emit renderNeeded();
+}
+
 /***
  * 4. Drawing
  ***/

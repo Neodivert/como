@@ -104,10 +104,9 @@ void OpenGLCanvas::resizeEvent(QResizeEvent *event)
     }
 }
 
-/*
+
 void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
 {
-    shared_ptr< Scene > scene;
     glm::vec4 viewport;
     glm::vec3 windowCoordinates;
     glm::mat4 projectionMatrix;
@@ -141,12 +140,16 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
 {
     switch ( e->key() )
     {
-        case Qt::Key_Left:
-          comoApp->getScene()->translateSelectedDrawables( -0.01f, 0.0f, 0.0f );
+        case Qt::Key_T:
+            comoApp->setAppMode( AppMode::EDITION );
+            comoApp->setEditionSubMode( EditionSubMode::TRANSLATION );
+          //comoApp->getScene()->translateSelectedDrawables( -0.01f, 0.0f, 0.0f );
           //camera.translate( -0.01f, 0.0f, 0.0f );
         break;
-        case Qt::Key_Right:
-          comoApp->getScene()->translateSelectedDrawables( 0.01f, 0.0f, 0.0f );
+        case Qt::Key_R:
+            comoApp->setAppMode( AppMode::EDITION );
+            comoApp->setEditionSubMode( EditionSubMode::ROTATION );
+          //comoApp->getScene()->translateSelectedDrawables( 0.01f, 0.0f, 0.0f );
           //camera.translate( +0.01f, 0.0f, 0.0f );
         break;
         default:
@@ -154,22 +157,32 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
         break;
     }
 }
-*/
+
+
 void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 {
     static int lastX = mouseMoveEvent->x();
     static int lastY = mouseMoveEvent->y();
     float tx, ty;
 
-    // Only transform the scene when user is holding mouse left button.
-    if( mouseMoveEvent->buttons() & Qt::LeftButton ){
+    // Only transform the scene when user is holding mouse left button and
+    // he/she in edition mode.
+    if( ( mouseMoveEvent->buttons() & Qt::LeftButton )
+            && ( comoApp->getAppMode() == AppMode::EDITION ) ){
 
         // Compute the magnitude of the transformation.
         tx = ( mouseMoveEvent->x() - lastX ) * widthInverse;
         ty = ( lastY - mouseMoveEvent->y() ) * heightInverse;
 
-        // Make the transformation requested by user.
-        comoApp->getScene()->translateSelectedDrawables( tx, ty, 0.0f );
+        switch( comoApp->getEditionSubMode() ){
+            case EditionSubMode::TRANSLATION:
+                // Make the transformation requested by user.
+                comoApp->getScene()->translateSelectedDrawables( tx, ty, 0.0f );
+            break;
+            case EditionSubMode::ROTATION:
+                comoApp->getScene()->rotateSelectedDrawables( 100*tx, 0.0f, 1.0f, 0.0f );
+            break;
+        }
     }
 
     lastX = mouseMoveEvent->x();
