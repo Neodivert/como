@@ -69,6 +69,10 @@ class Mesh : public Drawable
         Mesh();
         ~Mesh();
 
+        virtual void setVertices( const GLuint nVertices, const GLfloat* vertices );
+        virtual void setElements( const GLuint nElements, const GLubyte* elements );
+
+
         /***
          * 2. Getters and setters
          ***/

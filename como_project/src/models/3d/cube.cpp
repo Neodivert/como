@@ -72,37 +72,12 @@ Cube::Cube()
         0, 3, 7
     };
 
-    // Compute the number of vertex indices for the cube's both faces and contour.
-    nElements = sizeof( cubeElements ) / sizeof( cubeElements[0] );
 
-    // Copy default cube's vertices to this geometry's original vertices.
-    originalVertices.resize( N_CUBE_VERTICES );
-    for( GLuint i=0; i<N_CUBE_VERTICES; i++ )
-    {
-        originalVertices[i] = glm::vec3( cubeVertices[i*3+X],
-                                         cubeVertices[i*3+Y],
-                                         cubeVertices[i*3+Z] );
-    }
-
-    // Copy the geometry's elements to a VBO.
-    //glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeInnerElements ) + sizeof( cubeContourElements ), NULL, GL_STATIC_DRAW );
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeElements ), cubeElements, GL_STATIC_DRAW );
-    //glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, sizeof( cubeInnerElements ), sizeof( cubeContourElements ), cubeContourElements );
-
-
-    // Copy original triangles to this geometry's triangles.
-    triangles.resize( nElements / 3 );
-    for( GLuint i = 0; i<nElements/3; i++ ){
-        triangles[i][0] = cubeElements[i*3];
-        triangles[i][1] = cubeElements[i*3+1];
-        triangles[i][2] = cubeElements[i*3+2];
-    }
-
-    // Allocate a VBO for cube's transformed vertices.
-    glBufferData( GL_ARRAY_BUFFER, sizeof( cubeVertices ), NULL, GL_DYNAMIC_DRAW );
+    setVertices( 8, cubeVertices );
+    setElements( sizeof( cubeElements ) / sizeof( cubeElements[0] ), cubeElements );
 
     // Update transformed vertices (original vertices * transformation matrix).
-    update();
+    //update();
 
     // Get the location of the input variable "vPosition" for the current shader program.
     GLint prog;

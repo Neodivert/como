@@ -81,6 +81,47 @@ Mesh::~Mesh()
 }
 
 
+void Mesh::setVertices( const GLuint nVertices, const GLfloat* vertices )
+{
+    // Copy given vertices to this mesh's original vertices.
+    originalVertices.resize( nVertices );
+    for( GLuint i=0; i<nVertices; i++ )
+    {
+        cout << "Setting vertex: (" << vertices[i*3+X] << ", " << vertices[i*3+Y] << ", " << vertices[i*3+Z] << ")" << endl;
+        originalVertices[i] = glm::vec3( vertices[i*3+X],
+                                         vertices[i*3+Y],
+                                         vertices[i*3+Z] );
+    }
+
+    // Allocate a VBO for cube's transformed vertices.
+    glBufferData( GL_ARRAY_BUFFER, sizeof( vertices ), NULL, GL_DYNAMIC_DRAW );
+
+    // Update transformed vertices.
+    update();
+}
+
+
+void Mesh::setElements( const GLuint nElements, const GLubyte* elements )
+{
+    // Compute the number of triangles for this mesh.
+    const GLuint nTriangles = nElements / 3;
+
+    // Copy the number of elements (indices).
+    this->nElements = nElements;
+
+    // Copy original triangles to this geometry's triangles.
+    triangles.resize( nTriangles );
+    for( GLuint i = 0; i<nTriangles; i++ ){
+        cout << "Setting triangle: " << (int)elements[i*3] << ", " << (int)elements[i*3+1] << ", " << (int)elements[i*3+2] << ")" << endl;
+        triangles[i][0] = elements[i*3];
+        triangles[i][1] = elements[i*3+1];
+        triangles[i][2] = elements[i*3+2];
+    }
+
+    // Copy the mesh's elements to a EBO.
+    glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( elements ), elements, GL_STATIC_DRAW );
+}
+
 /***
  * 2. Getters and setters
  ***/
@@ -203,6 +244,7 @@ void Mesh::draw( const glm::mat4& viewProjectionMatrix, bool selected ) const
     glBindVertexArray( vao );
 
     // Draw Mesh's interior.
+    cout << "Drawing: " << triangles.size()*3 << " triangles" << endl;
     glDrawElements( GL_TRIANGLES, triangles.size()*3, GL_UNSIGNED_BYTE, NULL );
 
     // Feed uniform shader variable "color" with one color or another

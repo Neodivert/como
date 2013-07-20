@@ -104,7 +104,7 @@ void OpenGLCanvas::resizeEvent(QResizeEvent *event)
     }
 }
 
-
+/*
 void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
 {
     shared_ptr< Scene > scene;
@@ -154,7 +154,7 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
         break;
     }
 }
-
+*/
 void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 {
     static int lastX = mouseMoveEvent->x();

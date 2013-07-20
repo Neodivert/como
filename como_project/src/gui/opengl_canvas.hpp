@@ -47,7 +47,7 @@ class OpenGLCanvas : public QWindow
         // Camera associated with the OpenGL canvas.
         // TODO: Move cameras to comoApp (for better management and signaling)
         // and save and identifier here.
-        Camera camera;
+        //Camera camera;
 
         // Window's Width and height inverses.
         // In order to make user transformations relatives to canvas' dimensions, we
@@ -72,8 +72,8 @@ class OpenGLCanvas : public QWindow
         virtual void exposeEvent( QExposeEvent* event );
         virtual void resizeEvent( QResizeEvent* event );
         virtual void mouseMoveEvent( QMouseEvent* mouseMoveEvent );
-        virtual void mousePressEvent( QMouseEvent* mousePressEvent );
-        void keyPressEvent( QKeyEvent *e );
+        //virtual void mousePressEvent( QMouseEvent* mousePressEvent );
+        //void keyPressEvent( QKeyEvent *e );
 
         /***
          * 3. Updating and drawing
