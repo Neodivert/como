@@ -28,20 +28,23 @@ namespace como {
 
 Cube::Cube()
 {
+    // The cube has its center in the origin.
+    const GLfloat halfWidth = 0.5f;
+
     // Cube's default vertices.
     const GLfloat cubeVertices[] =
     {
         // Front face
-        0.5f, -0.5f, 0.5f,  // V1 : Bottom right
-        0.5f, 0.5f, 0.5f,   // V2 : Top right
-        -0.5f, 0.5f, 0.5f,  // V3 : Top left
-        -0.5f, -0.5f, 0.5f, // V4 : Bottom left
+        halfWidth, -halfWidth, halfWidth,  // V0 : Bottom right
+        halfWidth, halfWidth, halfWidth,   // V1 : Top right
+        -halfWidth, halfWidth, halfWidth,  // V2 : Top left
+        -halfWidth, -halfWidth, halfWidth, // V3 : Bottom left
 
         // Back face
-        0.5f, -0.5f, -0.5f, // V5 : Bottom right
-        0.5f, 0.5f, -0.5f,  // V6 : Top right
-        -0.5f, 0.5f, -0.5f, // V7 : Top left
-        -0.5f, -0.5f, -0.5f // V8 : Bottom left
+        halfWidth, -halfWidth, -halfWidth, // V4 : Bottom right
+        halfWidth, halfWidth, -halfWidth,  // V5 : Top right
+        -halfWidth, halfWidth, -halfWidth, // V6 : Top left
+        -halfWidth, -halfWidth, -halfWidth // V7 : Bottom left
     };
 
     // Vertex indices for the cube's faces.
@@ -60,8 +63,8 @@ Cube::Cube()
         6, 5, 4,
 
         // Right face
-        4, 5, 7,
-        5, 1, 7,
+        4, 5, 0,
+        5, 1, 0,
 
         // Top face
         1, 5, 2,

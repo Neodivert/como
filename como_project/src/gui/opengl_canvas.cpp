@@ -181,6 +181,7 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
             break;
             case EditionSubMode::ROTATION:
                 comoApp->getScene()->rotateSelectedDrawables( 100*tx, 0.0f, 1.0f, 0.0f );
+                comoApp->getScene()->rotateSelectedDrawables( 100*ty, 1.0f, 0.0f, 0.0f );
             break;
         }
     }
@@ -196,6 +197,12 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 
 void OpenGLCanvas::render()
 {
+    const glm::mat4 projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f );
+    //const glm::mat4 viewMatrix = glm::mat4( 1.0f );
+    const glm::mat4 viewMatrix = glm::lookAt( glm::vec3( 0.0f, 0.0f, 1.0f ),
+                                              glm::vec3( 0.0f, 0.0f, -1.0f ),
+                                              glm::vec3( 0.0f, 1.0f, 0.0f ) );
+
     // Make shared OpenGL context current for this surface.
     comoApp->getOpenGLContext()->makeCurrent( this );
 
@@ -207,7 +214,7 @@ void OpenGLCanvas::render()
 
     // Draw scene.
     // TODO: use real viewProjection matrix.
-    comoApp->getScene()->draw( glm::mat4( 1.0f ) );
+    comoApp->getScene()->draw( projectionMatrix*viewMatrix );
 
     // Swap buffers.
     comoApp->getOpenGLContext()->swapBuffers( this );
