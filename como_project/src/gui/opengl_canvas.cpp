@@ -152,6 +152,14 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
           //comoApp->getScene()->translateSelectedDrawables( 0.01f, 0.0f, 0.0f );
           //camera.translate( +0.01f, 0.0f, 0.0f );
         break;
+        case Qt::Key_Tab:
+            // Swap between Object and Edition modes.
+            if( comoApp->getAppMode() == AppMode::OBJECT ){
+                comoApp->setAppMode( AppMode::EDITION );
+            }else{
+                comoApp->setAppMode( AppMode::OBJECT );
+            }
+        break;
         default:
           cout << "Unknown key (" << e->key() << ")" << endl;
         break;

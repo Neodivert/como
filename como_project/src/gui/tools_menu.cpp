@@ -48,11 +48,16 @@ ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
 
     }
 
+    // When user change app mode in selector, call ComoApp::setAppMode().
     void (QComboBox::*signal)( int ) = &QComboBox::activated;
     connect( appModeSelector, signal, [=]( int index ) {
         comoApp->setAppMode( appModes[index] );
     }  );
-    cout << "Signal connected" << endl;
+    cout << "Signal 1 connected" << endl;
+
+    // When comoApp::setAppMode() be invoked, change appMode selector's index.
+    connect( comoApp.get(), &ComoApp::appModeIndexChanged, appModeSelector, &QComboBox::setCurrentIndex );
+    cout << "Signal 2 connected" << endl;
 
     editionScopeGroupBox = new QGroupBox( tr( "Edition scope" ) );
     editionScopeGroupBoxLayout = new QVBoxLayout;
