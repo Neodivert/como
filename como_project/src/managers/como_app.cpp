@@ -27,18 +27,24 @@ namespace como {
 
 ComoApp* ComoApp::singlentonInstance = nullptr;
 
-std::map<QString, AppMode> appModeStrings =
+AppModes appModes =
 {
-    { QString::fromUtf8( "Creation" ), AppMode::CREATION },
-    { QString::fromUtf8( "Edition" ), AppMode::EDITION }
+    AppMode::OBJECT,
+    AppMode::EDITION
 };
 
+std::array< QString, N_APP_MODES > appModeStrings =
+{
+    QString::fromUtf8( "Object mode" ),
+    QString::fromUtf8( "Edition mode" )
+};
 
 std::map<EditionScope, std::string> editionScopeStrings =
 {
     { EditionScope::LOCAL, "Local" },
     { EditionScope::GLOBAL, "Global" }
 };
+
 
 /***
  * 1. Initialization and destruction
@@ -117,8 +123,17 @@ shared_ptr< QOpenGLContext > ComoApp::getOpenGLContext() const
 
 void ComoApp::setAppMode( AppMode appMode )
 {
+    AppModes::iterator it;
+
+    // Change the app mode.
     cout << "Changing app mode" << endl;
     this->appMode = appMode;
+
+    // Get the integer index of the current appMode on a array of app modes and return it
+    // in a signal. This index is used in GUI appMode dropdown lists for updating its
+    // current value.
+    it = find( appModes.begin(), appModes.end(), appMode );
+    emit appModeIndexChanged( std::distance( appModes.begin(), it ) );
 }
 
 

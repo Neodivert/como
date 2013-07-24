@@ -44,12 +44,13 @@ ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
     // Set app mode's selector.
     appModeSelector = new QComboBox;
     for( auto appMode : appModeStrings ){
-        appModeSelector->addItem( appMode.first );
+        appModeSelector->addItem( appMode );
 
     }
-    void (QComboBox::*signal)(const QString& ) = &QComboBox::currentIndexChanged;
-    connect( appModeSelector, signal, [=]( QString appModeStr ) {
-        comoApp->setAppMode( appModeStrings[appModeStr] );
+
+    void (QComboBox::*signal)( int ) = &QComboBox::activated;
+    connect( appModeSelector, signal, [=]( int index ) {
+        comoApp->setAppMode( appModes[index] );
     }  );
     cout << "Signal connected" << endl;
 

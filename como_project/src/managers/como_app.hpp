@@ -26,15 +26,24 @@
 #include <vector>
 #include <QObject>
 #include <map>
+#include <array>
 
 namespace como {
 
 enum class AppMode {
-    CREATION = 0,
+    OBJECT = 0,
     EDITION
 };
+const unsigned int N_APP_MODES = 2;
 
-extern std::map<QString, AppMode> appModeStrings;
+// Array with all the possible app mode values (for conversion between
+// AppMode and int).
+typedef std::array< AppMode, N_APP_MODES > AppModes;
+extern AppModes appModes;
+
+// Array with a string for each app mode value (for output in GUI).
+extern std::array< QString, N_APP_MODES > appModeStrings;
+
 
 enum class EditionScope
 {
@@ -101,6 +110,9 @@ class ComoApp : public QObject {
         void setAppMode( AppMode appMode );
         void setEditionScope( EditionScope editionScope );
         void setEditionSubMode( EditionSubMode editionSubMode );
+
+    signals:
+        void appModeIndexChanged( int index );
 };
 
 } // namespace como

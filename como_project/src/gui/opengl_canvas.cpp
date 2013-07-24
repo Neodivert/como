@@ -183,6 +183,9 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 comoApp->getScene()->rotateSelectedDrawables( 100*tx, 0.0f, 1.0f, 0.0f );
                 comoApp->getScene()->rotateSelectedDrawables( 100*ty, 1.0f, 0.0f, 0.0f );
             break;
+            case EditionSubMode::SCALE:
+                cout << "Scale not implemented" << endl;
+            break;
         }
     }
 
