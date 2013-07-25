@@ -32,6 +32,11 @@ ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
     QGroupBox* editionScopeGroupBox;
     QVBoxLayout* editionScopeGroupBoxLayout;
 
+    QGroupBox* transformationModeGroupBox;
+    QButtonGroup* transformationModeButtonGroup;
+    QVBoxLayout* transformationModeGroupBoxLayout;
+    QRadioButton* transformationModeRadioButton;
+
     // Share the given pointer to app's state.
     this->comoApp = comoApp;
 
@@ -45,7 +50,6 @@ ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
     appModeSelector = new QComboBox;
     for( auto appMode : appModeStrings ){
         appModeSelector->addItem( appMode );
-
     }
 
     // When user change app mode in selector, call ComoApp::setAppMode().
@@ -53,20 +57,47 @@ ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
     connect( appModeSelector, signal, [=]( int index ) {
         comoApp->setAppMode( appModes[index] );
     }  );
-    cout << "Signal 1 connected" << endl;
 
     // When comoApp::setAppMode() be invoked, change appMode selector's index.
     connect( comoApp.get(), &ComoApp::appModeIndexChanged, appModeSelector, &QComboBox::setCurrentIndex );
-    cout << "Signal 2 connected" << endl;
 
+    // Create and fulfill edition scope's selector.
     editionScopeGroupBox = new QGroupBox( tr( "Edition scope" ) );
     editionScopeGroupBoxLayout = new QVBoxLayout;
     for( auto editionScope : editionScopeStrings ){
         editionScopeGroupBoxLayout->addWidget( new QRadioButton( tr( (editionScope.second).c_str() ) ) );
-
-        //currentIndexChanged(const QString & text)
     }
     editionScopeGroupBox->setLayout( editionScopeGroupBoxLayout );
+
+    // Create a transformation mode's selector. The different radio buttons are copied
+    // in two places:
+    // 1 - In a QGroupBox, for GUI output.
+    // 2 - In a QButtonGroup, for giving each button an unique id. This is used for signal
+    // connecting.
+    transformationModeGroupBox = new QGroupBox( tr( "Transformation mode") );
+    transformationModeButtonGroup = new QButtonGroup;
+    transformationModeGroupBoxLayout = new QVBoxLayout;
+
+    // Create a QRadioButton for each transformation mode in the app. Copy the button
+    // to the previous QGroupBox and QButtonGroup.
+    for( unsigned int i = 0; i < transformationModeStrings.size(); i++ ){
+        transformationModeRadioButton = new QRadioButton( transformationModeStrings[i] );
+        transformationModeButtonGroup->addButton( transformationModeRadioButton, i );
+        transformationModeGroupBoxLayout->addWidget( transformationModeRadioButton );
+    }
+    transformationModeGroupBox->setLayout( transformationModeGroupBoxLayout );
+
+    // Change current transformation mode when user select it in the GUI.
+    void (QButtonGroup::*buttonClicked)( int ) = &QButtonGroup::buttonClicked;
+    connect( transformationModeButtonGroup, buttonClicked, [=]( int index ) {
+        comoApp->setTransformationMode( transformationModes[index] );
+    } );
+
+    // Update the current checked button when the user change the current
+    // transformation mode (ie. by keypress).
+    connect( comoApp.get(), &ComoApp::transformationModeIndexChanged, [=]( int index ) {
+        ( ( transformationModeButtonGroup->buttons() )[index] )->toggle();
+    } );
 
     // Set tools panel layout.
     layout = new QVBoxLayout;
@@ -75,30 +106,8 @@ ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
     layout->addWidget( appModeLabel );
     layout->addWidget( appModeSelector );
     layout->addWidget( editionScopeGroupBox );
+    layout->addWidget( transformationModeGroupBox );
     setLayout( layout );
-
-    /*
-    QGroupBox *groupBox = new QGroupBox(tr("Exclusive Radio Buttons"));
-
-         QRadioButton *radio1 = new QRadioButton(tr("&Radio button 1"));
-         QRadioButton *radio2 = new QRadioButton(tr("R&adio button 2"));
-         QRadioButton *radio3 = new QRadioButton(tr("Ra&dio button 3"));
-
-    QGroupBox *groupBox = new QGroupBox(tr("Exclusive Radio Buttons"));
-
-      QRadioButton *radio1 = new QRadioButton(tr("&Radio button 1"));
-      QRadioButton *radio2 = new QRadioButton(tr("R&adio button 2"));
-      QRadioButton *radio3 = new QRadioButton(tr("Ra&dio button 3"));
-
-      radio1->setChecked(true);
-
-      QVBoxLayout *vbox = new QVBoxLayout;
-      vbox->addWidget(radio1);
-      vbox->addWidget(radio2);
-      vbox->addWidget(radio3);
-      vbox->addStretch(1);
-      groupBox->setLayout(vbox);
-      */
 }
 
 } // namespace como

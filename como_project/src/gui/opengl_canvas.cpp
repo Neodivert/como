@@ -143,14 +143,25 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
         case Qt::Key_T:
             comoApp->setAppMode( AppMode::EDITION );
             comoApp->setEditionSubMode( EditionSubMode::TRANSLATION );
-          //comoApp->getScene()->translateSelectedDrawables( -0.01f, 0.0f, 0.0f );
-          //camera.translate( -0.01f, 0.0f, 0.0f );
+            comoApp->setTransformationMode( TransformationMode::FREE );
+            //comoApp->getScene()->translateSelectedDrawables( -0.01f, 0.0f, 0.0f );
+            //camera.translate( -0.01f, 0.0f, 0.0f );
         break;
         case Qt::Key_R:
             comoApp->setAppMode( AppMode::EDITION );
             comoApp->setEditionSubMode( EditionSubMode::ROTATION );
-          //comoApp->getScene()->translateSelectedDrawables( 0.01f, 0.0f, 0.0f );
-          //camera.translate( +0.01f, 0.0f, 0.0f );
+            comoApp->setTransformationMode( TransformationMode::FREE );
+            //comoApp->getScene()->translateSelectedDrawables( 0.01f, 0.0f, 0.0f );
+            //camera.translate( +0.01f, 0.0f, 0.0f );
+        break;
+        case Qt::Key_X:
+            comoApp->setTransformationMode( TransformationMode::FIXED_X );
+        break;
+        case Qt::Key_Y:
+            comoApp->setTransformationMode( TransformationMode::FIXED_Y );
+        break;
+        case Qt::Key_Z:
+            comoApp->setTransformationMode( TransformationMode::FIXED_Z );
         break;
         case Qt::Key_Tab:
             // Swap between Object and Edition modes.
@@ -172,6 +183,7 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     static int lastX = mouseMoveEvent->x();
     static int lastY = mouseMoveEvent->y();
     float tx, ty;
+    TransformationMode transformationMode = comoApp->getTransformationMode();
 
     // Only transform the scene when user is holding mouse left button and
     // he/she in edition mode.
@@ -182,9 +194,13 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
         tx = ( mouseMoveEvent->x() - lastX ) * widthInverse;
         ty = ( lastY - mouseMoveEvent->y() ) * heightInverse;
 
+        // Truncate values if the current transformation mode is not the appropiate.
+        tx = ( ( transformationMode == TransformationMode::FREE ) || ( transformationMode == TransformationMode::FIXED_X ) ) * tx;
+        ty = ( ( transformationMode == TransformationMode::FREE ) || ( transformationMode == TransformationMode::FIXED_Y ) ) * ty;
+
+        // Make the transformation requested by user.
         switch( comoApp->getEditionSubMode() ){
             case EditionSubMode::TRANSLATION:
-                // Make the transformation requested by user.
                 comoApp->getScene()->translateSelectedDrawables( tx, ty, 0.0f );
             break;
             case EditionSubMode::ROTATION:

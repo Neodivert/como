@@ -45,6 +45,24 @@ std::map<EditionScope, std::string> editionScopeStrings =
     { EditionScope::GLOBAL, "Global" }
 };
 
+// Array will all the possible transformation modes.
+TransformationModes transformationModes =
+{
+    TransformationMode::FREE,
+    TransformationMode::FIXED_X,
+    TransformationMode::FIXED_Y,
+    TransformationMode::FIXED_Z
+};
+
+// Array with a string for each transformation mode value (for output in GUI).
+std::array< QString, N_TRANSFORMATION_MODES > transformationModeStrings =
+{
+    QString::fromUtf8( "Free" ),
+    QString::fromUtf8( "Fixed to X axis" ),
+    QString::fromUtf8( "Fixed to Y axis" ),
+    QString::fromUtf8( "Fixed to Z axis" )
+};
+
 
 /***
  * 1. Initialization and destruction
@@ -101,6 +119,11 @@ EditionScope ComoApp::getEditionScope() const
     return editionScope;
 }
 
+TransformationMode ComoApp::getTransformationMode() const
+{
+    return transformationMode;
+}
+
 EditionSubMode ComoApp::getEditionSubMode() const
 {
     return editionSubMode;
@@ -134,6 +157,20 @@ void ComoApp::setAppMode( AppMode appMode )
     // current value.
     it = find( appModes.begin(), appModes.end(), appMode );
     emit appModeIndexChanged( std::distance( appModes.begin(), it ) );
+}
+
+
+void ComoApp::setTransformationMode( TransformationMode transformationMode )
+{
+    TransformationModes::iterator it;
+
+    // Change the transformation mode.
+    cout << "Changin transformation mode" << endl;
+    this->transformationMode = transformationMode;
+
+    // Emit signal.
+    it = find( transformationModes.begin(), transformationModes.end(), transformationMode );
+    emit transformationModeIndexChanged( std::distance( transformationModes.begin(), it ) );
 }
 
 

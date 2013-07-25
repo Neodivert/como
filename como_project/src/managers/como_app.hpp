@@ -60,12 +60,33 @@ enum class EditionSubMode
     SCALE
 };
 
+
+enum class TransformationMode
+{
+    FREE = 0,
+    FIXED_X,
+    FIXED_Y,
+    FIXED_Z
+};
+const unsigned int N_TRANSFORMATION_MODES = 4;
+
+// Array will all the possible transformation modes.
+typedef std::array< TransformationMode, N_TRANSFORMATION_MODES > TransformationModes;
+extern TransformationModes transformationModes;
+
+// Array with a string for each transformation mode value (for output in GUI).
+extern std::array< QString, N_TRANSFORMATION_MODES > transformationModeStrings;
+
+
 class ComoApp : public QObject {
     Q_OBJECT
 
     protected:
         // Current app mode.
         AppMode appMode;
+
+        // This sets if the current user transformation is free or fixed to a axis.
+        TransformationMode transformationMode;
 
         // When in edition mode, this sets whether editions are applied to drawables
         // in local (object) or global (world) coordinates.
@@ -99,6 +120,7 @@ class ComoApp : public QObject {
         AppMode getAppMode() const ;
         EditionScope getEditionScope() const ;
         EditionSubMode getEditionSubMode() const ;
+        TransformationMode getTransformationMode() const ;
         shared_ptr< Scene > getScene() const ;
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
 
@@ -108,11 +130,14 @@ class ComoApp : public QObject {
          ***/
     public slots:
         void setAppMode( AppMode appMode );
+        void setTransformationMode( TransformationMode transformationMode );
+
         void setEditionScope( EditionScope editionScope );
         void setEditionSubMode( EditionSubMode editionSubMode );
 
     signals:
         void appModeIndexChanged( int index );
+        void transformationModeIndexChanged( int index );
 };
 
 } // namespace como
