@@ -64,7 +64,9 @@ Mesh::Mesh()
     }
 
     // Set both inner and contour colors.
-    setInnerColor( 0.5f, 0.0f, 0.0f, 1.0f );
+    //setInnerColor( 0.5f, 0.0f, 0.0f, 1.0f );
+    setInnerColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
+
     setContourColor( 1.0f, 0.0f, 0.0f, 1.0f );
 }
 
@@ -235,8 +237,10 @@ void Mesh::draw( const glm::mat4& viewProjectionMatrix, bool selected ) const
     // (4f, which corresponds to vec4​) that you are setting.
     glUniform4fv( uniformColorLocation, 1, innerColor );
 
-    // Bind Mesh VAO as the active one.
+    // Bind Mesh VAO and VBOs as the active ones.
     glBindVertexArray( vao );
+    glBindBuffer( GL_ARRAY_BUFFER, vbo );
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
 
     // Draw Mesh's interior.
     glDrawElements( GL_TRIANGLES, nElements, GL_UNSIGNED_BYTE, NULL );

@@ -41,7 +41,7 @@ DrawableTypeStrings drawableTypeStrings =
 
 void Scene::addDrawable( shared_ptr<Drawable> drawable )
 {
-    unselectAll();
+    //unselectAll();
 
     nonSelectedDrawables.push_back( drawable );
 
@@ -58,10 +58,12 @@ void Scene::addCube( Cube* cube )
 void Scene::addDrawable( DrawableType drawableType )
 {
     DrawablePtr drawable;
+    Cube* cube;
 
     switch( drawableType ){
         case DrawableType::CUBE:
-            drawable = DrawablePtr( new Cube );
+            cube = new Cube;
+            drawable = DrawablePtr( cube );
         break;
     }
 
@@ -89,8 +91,6 @@ void Scene::selectAll()
 {
     selectedDrawables.splice( selectedDrawables.end(), nonSelectedDrawables );
 
-    cout << "selectAll -> " << nonSelectedDrawables.size() << endl;
-
     emit renderNeeded();
 }
 
@@ -98,7 +98,6 @@ void Scene::unselectAll()
 {
     nonSelectedDrawables.splice( nonSelectedDrawables.end(), selectedDrawables );
 
-    cout << "unselectAll -> " << selectedDrawables.size() << endl;
     emit renderNeeded();
 }
 
@@ -123,8 +122,6 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
     // first.
     if( !addToSelection ){
         nonSelectedDrawables.splice( nonSelectedDrawables.end(), selectedDrawables );
-
-        cout << "unselectAll -> " << selectedDrawables.size() << endl;
     }
 
     // Iterate over all non selected drawables and check if the given ray intersects
@@ -206,7 +203,6 @@ void Scene::draw( const glm::mat4& viewProjectionMatrix )
 {
     DrawablesList::iterator it = nonSelectedDrawables.begin();
 
-    cout << "Drawing (non selected: " << nonSelectedDrawables.size() << ", selected: " << selectedDrawables.size() << ")" << endl;
     for( ; it != nonSelectedDrawables.end(); it++ )
     {
         (*it)->draw( viewProjectionMatrix );

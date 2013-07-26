@@ -32,9 +32,9 @@ void showError(){
     if ((errCode = glGetError()) != GL_NO_ERROR)
     {
         cout << "ERROR: " << gluErrorString(errCode) << endl;
-    }else{
+    }/*else{
         cout << "NO ERROR" << endl;
-    }
+    }*/
 }
 
 
