@@ -78,6 +78,7 @@ extern TransformationModes transformationModes;
 extern std::array< QString, N_TRANSFORMATION_MODES > transformationModeStrings;
 
 
+
 class ComoApp : public QObject {
     Q_OBJECT
 

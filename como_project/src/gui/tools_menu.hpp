@@ -35,6 +35,9 @@ class ToolsMenu : public QFrame
     public:
         ToolsMenu( shared_ptr< ComoApp > comoApp );
 
+    protected:
+        QGroupBox* createPrimitiveCreationMenu();
+
     signals:
 
 };

@@ -112,6 +112,10 @@ void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
     glm::mat4 projectionMatrix;
     glm::vec3 worldCoordinates[2];
 
+    // Record last mouse position.
+    lastMouseX = mousePressEvent->x();
+    lastMouseY = mousePressEvent->y();
+
     // http://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection
 
     // Get this canvas' viewport limits.
@@ -180,8 +184,6 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
 
 void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 {
-    static int lastX = mouseMoveEvent->x();
-    static int lastY = mouseMoveEvent->y();
     float tx, ty;
     TransformationMode transformationMode = comoApp->getTransformationMode();
 
@@ -191,8 +193,8 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
             && ( comoApp->getAppMode() == AppMode::EDITION ) ){
 
         // Compute the magnitude of the transformation.
-        tx = ( mouseMoveEvent->x() - lastX ) * widthInverse;
-        ty = ( lastY - mouseMoveEvent->y() ) * heightInverse;
+        tx = ( mouseMoveEvent->x() - lastMouseX ) * widthInverse;
+        ty = ( lastMouseY - mouseMoveEvent->y() ) * heightInverse;
 
         // Truncate values if the current transformation mode is not the appropiate.
         tx = ( ( transformationMode == TransformationMode::FREE ) || ( transformationMode == TransformationMode::FIXED_X ) ) * tx;
@@ -213,8 +215,9 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
         }
     }
 
-    lastX = mouseMoveEvent->x();
-    lastY = mouseMoveEvent->y();
+    // Record last mouse position.
+    lastMouseX = mouseMoveEvent->x();
+    lastMouseY = mouseMoveEvent->y();
 }
 
 

@@ -107,7 +107,50 @@ ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
     layout->addWidget( appModeSelector );
     layout->addWidget( editionScopeGroupBox );
     layout->addWidget( transformationModeGroupBox );
+    layout->addWidget( createPrimitiveCreationMenu() );
     setLayout( layout );
+}
+
+
+QGroupBox* ToolsMenu::createPrimitiveCreationMenu()
+{
+    QButtonGroup* primitiveCreationButtonGroup;
+    QGroupBox* primitiveCreationGroupBox;
+    QVBoxLayout* primitiveCreationGroupBoxLayout;
+    QPushButton* primitiveCreationButton;
+
+    // Create the containers and layouts.
+    primitiveCreationGroupBox = new QGroupBox( QString::fromUtf8( "Create primitive" ) );
+    primitiveCreationButtonGroup = new QButtonGroup;
+    primitiveCreationGroupBoxLayout = new QVBoxLayout;
+
+    // Add buttons to group box's layout and to buttons' group.
+    for( unsigned int i = 0; i < drawableTypeStrings.size(); i++ ){
+        primitiveCreationButton = new QPushButton( drawableTypeStrings[i] );
+
+        primitiveCreationGroupBoxLayout->addWidget( primitiveCreationButton );
+        primitiveCreationButtonGroup->addButton( primitiveCreationButton, i );
+    }
+
+
+    // Change current transformation mode when user select it in the GUI.
+    void (QButtonGroup::*buttonClicked)( int ) = &QButtonGroup::buttonClicked;
+    connect( primitiveCreationButtonGroup, buttonClicked, [=]( int index ) {
+        comoApp->getScene()->addDrawable( drawableTypes[index] );
+    } );
+
+    /*
+    // Update the current checked button when the user change the current
+    // transformation mode (ie. by keypress).
+    connect( comoApp.get(), &ComoApp::transformationModeIndexChanged, [=]( int index ) {
+        ( ( transformationModeButtonGroup->buttons() )[index] )->toggle();
+    } );
+    */
+
+    // Set the layout.
+    primitiveCreationGroupBox->setLayout( primitiveCreationGroupBoxLayout );
+
+    return primitiveCreationGroupBox;
 }
 
 } // namespace como

@@ -21,20 +21,51 @@
 
 namespace como {
 
+
+
+DrawableTypes drawableTypes =
+{
+    DrawableType::CUBE
+};
+
+
+DrawableTypeStrings drawableTypeStrings =
+{
+    QString::fromUtf8( "Cube" )
+};
+
+
 /***
  * 1. Drawables administration
  ***/
 
+void Scene::addDrawable( shared_ptr<Drawable> drawable )
+{
+    unselectAll();
+
+    nonSelectedDrawables.push_back( drawable );
+
+    emit renderNeeded();
+}
+
 void Scene::addCube( Cube* cube )
 {
-    shared_ptr<Drawable> cubePtr( cube );
+    DrawablePtr cubePtr( cube );
 
     addDrawable( cubePtr );
 }
 
-void Scene::addDrawable( shared_ptr<Drawable> drawable )
+void Scene::addDrawable( DrawableType drawableType )
 {
-    nonSelectedDrawables.push_back( drawable );
+    DrawablePtr drawable;
+
+    switch( drawableType ){
+        case DrawableType::CUBE:
+            drawable = DrawablePtr( new Cube );
+        break;
+    }
+
+    addDrawable( drawable );
 }
 
 
@@ -58,12 +89,16 @@ void Scene::selectAll()
 {
     selectedDrawables.splice( selectedDrawables.end(), nonSelectedDrawables );
 
+    cout << "selectAll -> " << nonSelectedDrawables.size() << endl;
+
     emit renderNeeded();
 }
 
 void Scene::unselectAll()
 {
     nonSelectedDrawables.splice( nonSelectedDrawables.end(), selectedDrawables );
+
+    cout << "unselectAll -> " << selectedDrawables.size() << endl;
     emit renderNeeded();
 }
 
@@ -88,6 +123,8 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
     // first.
     if( !addToSelection ){
         nonSelectedDrawables.splice( nonSelectedDrawables.end(), selectedDrawables );
+
+        cout << "unselectAll -> " << selectedDrawables.size() << endl;
     }
 
     // Iterate over all non selected drawables and check if the given ray intersects
@@ -110,6 +147,9 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
             // New closest object, get its index and distance.
             closestObject = currentObject;
             minT = t;
+            cout << "RETURN 0" << endl;
+            emit renderNeeded();
+            return 0;
         }
     }
 
@@ -157,6 +197,7 @@ void Scene::rotateSelectedDrawables( const GLfloat& angle, const GLfloat& x, con
     emit renderNeeded();
 }
 
+
 /***
  * 4. Drawing
  ***/
@@ -165,6 +206,7 @@ void Scene::draw( const glm::mat4& viewProjectionMatrix )
 {
     DrawablesList::iterator it = nonSelectedDrawables.begin();
 
+    cout << "Drawing (non selected: " << nonSelectedDrawables.size() << ", selected: " << selectedDrawables.size() << ")" << endl;
     for( ; it != nonSelectedDrawables.end(); it++ )
     {
         (*it)->draw( viewProjectionMatrix );

@@ -56,6 +56,9 @@ class OpenGLCanvas : public QWindow
         float widthInverse;
         float heightInverse;
 
+        int lastMouseX;
+        int lastMouseY;
+
     public:
         /***
          * 1. Initialization and destruction

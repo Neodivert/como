@@ -31,6 +31,20 @@ namespace como {
 
 typedef std::list< std::shared_ptr< Drawable > > DrawablesList;
 
+typedef shared_ptr<Drawable> DrawablePtr;
+
+enum class DrawableType
+{
+    CUBE = 0
+};
+const unsigned int N_DRAWABLE_TYPES = 1;
+
+typedef std::array< DrawableType, N_DRAWABLE_TYPES > DrawableTypes;
+extern DrawableTypes drawableTypes;
+
+typedef std::array< QString, N_DRAWABLE_TYPES > DrawableTypeStrings;
+extern DrawableTypeStrings drawableTypeStrings;
+
 class Scene : public QObject
 {
     Q_OBJECT
@@ -48,6 +62,7 @@ class Scene : public QObject
          ***/
         void addDrawable( shared_ptr<Drawable> drawable );
         void addCube( Cube* cube );
+        void addDrawable( DrawableType drawableType );
 
 
         /***
