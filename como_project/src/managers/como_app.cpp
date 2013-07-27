@@ -75,13 +75,13 @@ ComoApp::ComoApp()
     OpenGLEngine openGLEngine;
 
     // Set default app mode.
-    appMode = AppMode::EDITION;
+    appMode = AppMode::OBJECT;
 
     // Set default edition scope.
     editionScope = EditionScope::GLOBAL;
 
-    // Set default edition submode.
-    editionSubMode = EditionSubMode::TRANSLATION;
+    // Set default transformation type.
+    transformationType = TransformationType::NONE;
 
     // Set default OpenGL context.
     oglContext = openGLEngine.createOpenGLContext();
@@ -124,9 +124,9 @@ TransformationMode ComoApp::getTransformationMode() const
     return transformationMode;
 }
 
-EditionSubMode ComoApp::getEditionSubMode() const
+TransformationType ComoApp::getTransformationType() const
 {
-    return editionSubMode;
+    return transformationType;
 }
 
 shared_ptr< Scene > ComoApp::getScene() const
@@ -151,6 +151,8 @@ void ComoApp::setAppMode( AppMode appMode )
     // Change the app mode.
     cout << "Changing app mode" << endl;
     this->appMode = appMode;
+
+    transformationType = TransformationType::NONE;
 
     // Get the integer index of the current appMode on a array of app modes and return it
     // in a signal. This index is used in GUI appMode dropdown lists for updating its
@@ -182,9 +184,9 @@ void ComoApp::setEditionScope( EditionScope editionScope )
 
 
 
-void ComoApp::setEditionSubMode( EditionSubMode editionSubMode )
+void ComoApp::setTransformationType( TransformationType transformationType )
 {
-    this->editionSubMode = editionSubMode;
+    this->transformationType = transformationType;
 }
 
 } // namespace como

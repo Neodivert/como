@@ -53,9 +53,10 @@ enum class EditionScope
 
 extern std::map<EditionScope, std::string> editionScopeStrings;
 
-enum class EditionSubMode
+enum class TransformationType
 {
-    TRANSLATION = 0,
+    NONE = 0,
+    TRANSLATION,
     ROTATION,
     SCALE
 };
@@ -93,8 +94,8 @@ class ComoApp : public QObject {
         // in local (object) or global (world) coordinates.
         EditionScope editionScope;
 
-        // Current edition submode.
-        EditionSubMode editionSubMode;
+        // Current transformation type.
+        TransformationType transformationType;
 
         // Singlenton class instance.
         static ComoApp* singlentonInstance;
@@ -120,7 +121,7 @@ class ComoApp : public QObject {
          ***/
         AppMode getAppMode() const ;
         EditionScope getEditionScope() const ;
-        EditionSubMode getEditionSubMode() const ;
+        TransformationType getTransformationType() const ;
         TransformationMode getTransformationMode() const ;
         shared_ptr< Scene > getScene() const ;
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
@@ -134,7 +135,7 @@ class ComoApp : public QObject {
         void setTransformationMode( TransformationMode transformationMode );
 
         void setEditionScope( EditionScope editionScope );
-        void setEditionSubMode( EditionSubMode editionSubMode );
+        void setTransformationType( TransformationType transformationType );
 
     signals:
         void appModeIndexChanged( int index );

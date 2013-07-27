@@ -111,33 +111,48 @@ void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
     glm::vec3 windowCoordinates;
     glm::mat4 projectionMatrix;
     glm::vec3 worldCoordinates[2];
+    bool addToSelection = false;
 
-    // Record last mouse position.
-    lastMouseX = mousePressEvent->x();
-    lastMouseY = mousePressEvent->y();
+    // Do one thing or another depending on which transformation mode we are in.
+    if( comoApp->getTransformationType() == TransformationType::NONE ){
+        // We are not in transformation mode. This mouse press is for selecting
+        // a drawable.
 
-    // http://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection
+        // Record last mouse position.
+        lastMouseX = mousePressEvent->x();
+        lastMouseY = mousePressEvent->y();
 
-    // Get this canvas' viewport limits.
-    viewport = glm::vec4( 0, 0, width(), height() );
+        // http://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection
 
-    // Get window coordinates. Set z to near plane's z.
-    windowCoordinates = glm::vec3( mousePressEvent->x(), height() - mousePressEvent->y() - 1, 0.0f );
-    //windowCoordinates = glm::vec3( mousePressEvent->x(), mousePressEvent->y(), 0.0f );
+        // Get this canvas' viewport limits.
+        viewport = glm::vec4( 0, 0, width(), height() );
 
-    // Get projection matrix (TODO: In future versions, get the camera's one).
-    projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f );
+        // Get window coordinates. Set z to near plane's z.
+        windowCoordinates = glm::vec3( mousePressEvent->x(), height() - mousePressEvent->y() - 1, 0.0f );
+        //windowCoordinates = glm::vec3( mousePressEvent->x(), mousePressEvent->y(), 0.0f );
 
-    // Get world coordinates in clipping near plane by unproyecting the window's ones.
-    worldCoordinates[0] = glm::unProject( windowCoordinates, camera.getTransformationMatrix(), projectionMatrix, viewport );
+        // Get projection matrix (TODO: In future versions, get the camera's one).
+        projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f );
 
-    // Get world coordinates in far clipping plane by unproyecting the window's ones.
-    windowCoordinates.z = 1.0f;
-    worldCoordinates[1] = glm::unProject( windowCoordinates, camera.getTransformationMatrix(), projectionMatrix, viewport );
+        // Get world coordinates in clipping near plane by unproyecting the window's ones.
+        worldCoordinates[0] = glm::unProject( windowCoordinates, camera.getTransformationMatrix(), projectionMatrix, viewport );
 
-    // Do the ray picking.
-    comoApp->getScene()->selectDrawableByRayPicking( worldCoordinates[0],
-                                                    worldCoordinates[1] - worldCoordinates[0] );
+        // Get world coordinates in far clipping plane by unproyecting the window's ones.
+        windowCoordinates.z = 1.0f;
+        worldCoordinates[1] = glm::unProject( windowCoordinates, camera.getTransformationMatrix(), projectionMatrix, viewport );
+
+        // If user is pressing ctrl key while selecting a drawable, add it to the current
+        // selection. Otherwise, clear the current selection and select the new drawable.
+        addToSelection = mousePressEvent->modifiers() & Qt::ControlModifier;
+
+        // Do the ray picking.
+        comoApp->getScene()->selectDrawableByRayPicking( worldCoordinates[0],
+                                                        worldCoordinates[1] - worldCoordinates[0], addToSelection );
+    }else{
+        // We were in transformation mode. This mouse press is for droping
+        // the current selection.
+        comoApp->setTransformationType( TransformationType::NONE );
+    }
 }
 
 void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
@@ -145,15 +160,15 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
     switch ( e->key() )
     {
         case Qt::Key_T:
-            comoApp->setAppMode( AppMode::EDITION );
-            comoApp->setEditionSubMode( EditionSubMode::TRANSLATION );
+            //comoApp->setAppMode( AppMode::EDITION );
+            comoApp->setTransformationType( TransformationType::TRANSLATION );
             comoApp->setTransformationMode( TransformationMode::FREE );
             //comoApp->getScene()->translateSelectedDrawables( -0.01f, 0.0f, 0.0f );
             //camera.translate( -0.01f, 0.0f, 0.0f );
         break;
         case Qt::Key_R:
-            comoApp->setAppMode( AppMode::EDITION );
-            comoApp->setEditionSubMode( EditionSubMode::ROTATION );
+            //comoApp->setAppMode( AppMode::EDITION );
+            comoApp->setTransformationType( TransformationType::ROTATION );
             comoApp->setTransformationMode( TransformationMode::FREE );
             //comoApp->getScene()->translateSelectedDrawables( 0.01f, 0.0f, 0.0f );
             //camera.translate( +0.01f, 0.0f, 0.0f );
@@ -192,9 +207,8 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 
     // Only transform the scene when user is holding mouse left button and
     // he/she in edition mode.
-    if( ( mouseMoveEvent->buttons() & Qt::LeftButton )
-            && ( comoApp->getAppMode() == AppMode::EDITION ) ){
-
+    //if( ( mouseMoveEvent->buttons() & Qt::LeftButton )
+    if( comoApp->getAppMode() == AppMode::OBJECT ){
         // Compute the magnitude of the transformation.
         tx = ( mouseMoveEvent->x() - lastMouseX ) * widthInverse;
         ty = ( lastMouseY - mouseMoveEvent->y() ) * heightInverse;
@@ -204,16 +218,18 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
         ty = ( ( transformationMode == TransformationMode::FREE ) || ( transformationMode == TransformationMode::FIXED_Y ) ) * ty;
 
         // Make the transformation requested by user.
-        switch( comoApp->getEditionSubMode() ){
-            case EditionSubMode::TRANSLATION:
+        switch( comoApp->getTransformationType() ){
+            case TransformationType::TRANSLATION:
                 comoApp->getScene()->translateSelectedDrawables( tx, ty, 0.0f );
             break;
-            case EditionSubMode::ROTATION:
+            case TransformationType::ROTATION:
                 comoApp->getScene()->rotateSelectedDrawables( 100*tx, 0.0f, 1.0f, 0.0f );
                 comoApp->getScene()->rotateSelectedDrawables( 100*ty, 1.0f, 0.0f, 0.0f );
             break;
-            case EditionSubMode::SCALE:
+            case TransformationType::SCALE:
                 cout << "Scale not implemented" << endl;
+            break;
+            default:
             break;
         }
     }
