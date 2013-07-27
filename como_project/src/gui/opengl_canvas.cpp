@@ -18,11 +18,20 @@
 ***/
 
 #include "opengl_canvas.hpp"
+#include <cmath>
 #include <iostream>
 using namespace std;
 
 
 namespace como {
+
+
+void OpenGLCanvas::recordLastMousePos( const int& x, const int& y )
+{
+    lastMouseX = x;
+    lastMouseY = y;
+}
+
 
 /***
  * 1. Initialization and destruction
@@ -84,6 +93,7 @@ void OpenGLCanvas::exposeEvent( QExposeEvent *event )
     }
 }
 
+
 void OpenGLCanvas::resizeEvent(QResizeEvent *event)
 {
     // We are not interested in using the argument "event". The following macro prevents the
@@ -119,8 +129,7 @@ void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
         // a drawable.
 
         // Record last mouse position.
-        lastMouseX = mousePressEvent->x();
-        lastMouseY = mousePressEvent->y();
+        recordLastMousePos( mousePressEvent->x(), mousePressEvent->y() );
 
         // http://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection
 
@@ -160,18 +169,12 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
     switch ( e->key() )
     {
         case Qt::Key_T:
-            //comoApp->setAppMode( AppMode::EDITION );
             comoApp->setTransformationType( TransformationType::TRANSLATION );
             comoApp->setTransformationMode( TransformationMode::FREE );
-            //comoApp->getScene()->translateSelectedDrawables( -0.01f, 0.0f, 0.0f );
-            //camera.translate( -0.01f, 0.0f, 0.0f );
         break;
         case Qt::Key_R:
-            //comoApp->setAppMode( AppMode::EDITION );
             comoApp->setTransformationType( TransformationType::ROTATION );
             comoApp->setTransformationMode( TransformationMode::FREE );
-            //comoApp->getScene()->translateSelectedDrawables( 0.01f, 0.0f, 0.0f );
-            //camera.translate( +0.01f, 0.0f, 0.0f );
         break;
         case Qt::Key_X:
             comoApp->setTransformationMode( TransformationMode::FIXED_X );
@@ -235,8 +238,7 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     }
 
     // Record last mouse position.
-    lastMouseX = mouseMoveEvent->x();
-    lastMouseY = mouseMoveEvent->y();
+    recordLastMousePos( mouseMoveEvent->x(), mouseMoveEvent->y() );
 }
 
 

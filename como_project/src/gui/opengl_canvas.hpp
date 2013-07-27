@@ -59,6 +59,8 @@ class OpenGLCanvas : public QWindow
         int lastMouseX;
         int lastMouseY;
 
+        void recordLastMousePos( const int& x, const int& y );
+
     public:
         /***
          * 1. Initialization and destruction
