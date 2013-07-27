@@ -195,6 +195,15 @@ void Scene::rotateSelectedDrawables( const GLfloat& angle, const GLfloat& x, con
 }
 
 
+
+void Scene::deleteSelection()
+{
+    // Delete selected drawables.
+    selectedDrawables.clear();
+
+    emit renderNeeded();
+}
+
 /***
  * 4. Drawing
  ***/

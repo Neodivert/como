@@ -175,6 +175,9 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
                 comoApp->setAppMode( AppMode::OBJECT );
             }
         break;
+        case Qt::Key_Delete:
+            comoApp->getScene()->deleteSelection();
+        break;
         default:
           cout << "Unknown key (" << e->key() << ")" << endl;
         break;

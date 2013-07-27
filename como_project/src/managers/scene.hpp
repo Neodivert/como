@@ -80,6 +80,7 @@ class Scene : public QObject
          ***/
         void translateSelectedDrawables( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz );
         void rotateSelectedDrawables( const GLfloat& angle, const GLfloat& x, const GLfloat& y, const GLfloat& z );
+        void deleteSelection();
 
         /***
          * 4. Drawing
