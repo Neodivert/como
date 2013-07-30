@@ -62,6 +62,10 @@ class Mesh : public Drawable
         // Mesh's triangles.
         std::vector< std::array< GLubyte, 3 > > triangles;
 
+        // Mesh's centroid.
+        glm::vec4 originalCentroid;
+        glm::vec4 transformedCentroid;
+
         // Number of elements in mesh.
         GLuint nElements;
     public:
@@ -80,6 +84,7 @@ class Mesh : public Drawable
          ***/
         void setInnerColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
         void setContourColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
+
 
         /***
          * 3. Intersections

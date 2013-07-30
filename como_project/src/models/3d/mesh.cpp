@@ -203,7 +203,12 @@ void Mesh::update()
     // Update mesh's orientation.
     Drawable::update();
 
+    // Update mesh's centroid.
+    transformedCentroid = transformationMatrix * originalCentroid;
+
+    // Set Mesh's VAO and VBO as the current ones.
     glBindVertexArray( vao );
+    glBindBuffer( GL_ARRAY_BUFFER, vbo );
 
     // Map the OpenGL's VBO for transformed vertices to client memory, so we can update it.
     transformedVertices = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
