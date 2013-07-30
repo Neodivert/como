@@ -66,8 +66,11 @@ Mesh::Mesh()
     // Set both inner and contour colors.
     //setInnerColor( 0.5f, 0.0f, 0.0f, 1.0f );
     setInnerColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
-
     setContourColor( 1.0f, 0.0f, 0.0f, 1.0f );
+
+    // Set centroid w.
+    originalCentroid.w = 1.0f;
+    transformedCentroid.w = 1.0f;
 }
 
 
@@ -119,9 +122,11 @@ void Mesh::setElements( const GLuint nElements, const GLubyte* elements )
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, nElements*sizeof( GLubyte ), elements, GL_STATIC_DRAW );
 }
 
+
 /***
  * 2. Getters and setters
  ***/
+
 void Mesh::setInnerColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a )
 {
     innerColor[0] = r;
@@ -140,8 +145,25 @@ void Mesh::setContourColor( const GLfloat& r, const GLfloat& g, const GLfloat& b
 }
 
 
+glm::vec4 Mesh::getCentroid() const
+{
+    return transformedCentroid;
+}
+
+
 /***
- * 3. Intersections
+ * 3. Transformations
+ ***/
+
+void Mesh::rotateAroundCentroid( const GLfloat& angle, const glm::vec3& axis )
+{
+    // Set the transformed centroid as the pivot point and rotate the mesh.
+    rotate( angle, axis, glm::vec3( transformedCentroid ) );
+}
+
+
+/***
+ * 4. Intersections
  ***/
 
 void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT, unsigned int* triangle ) const
@@ -192,7 +214,7 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
 }
 
 /***
- * 4. Update and drawing.
+ * 5. Update and drawing.
  ***/
 
 void Mesh::update()

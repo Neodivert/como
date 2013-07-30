@@ -207,6 +207,7 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 {
     float tx, ty;
     TransformationMode transformationMode = comoApp->getTransformationMode();
+    glm::vec3 selectionCentroid;
 
     // Only transform the scene when user is holding mouse left button and
     // he/she in edition mode.
@@ -226,8 +227,14 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 comoApp->getScene()->translateSelection( glm::vec3( tx, ty, 0.0f ) );
             break;
             case TransformationType::ROTATION:
+                selectionCentroid = glm::vec3( comoApp->getScene()->getSelectionCentroid() );
+                comoApp->getScene()->rotateSelection( 100*tx, glm::vec3( 0.0f, 1.0f, 0.0f ), selectionCentroid );
+                comoApp->getScene()->rotateSelection( 100*ty, glm::vec3( 1.0f, 0.0f, 0.0f ), selectionCentroid );
+
+                /*
                 comoApp->getScene()->rotateSelection( 100*tx, glm::vec3( 0.0f, 1.0f, 0.0f ) );
                 comoApp->getScene()->rotateSelection( 100*ty, glm::vec3( 1.0f, 0.0f, 0.0f ) );
+                */
             break;
             case TransformationType::SCALE:
                 cout << "Scale not implemented" << endl;

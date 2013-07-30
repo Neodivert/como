@@ -84,15 +84,20 @@ class Mesh : public Drawable
          ***/
         void setInnerColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
         void setContourColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
-
+        glm::vec4 getCentroid() const ;
 
         /***
-         * 3. Intersections
+         * 3. Transformations
+         ***/
+        virtual void rotateAroundCentroid( const GLfloat& angle, const glm::vec3& axis );
+
+        /***
+         * 4. Intersections
          ***/
         virtual void intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT, unsigned int* triangle = nullptr ) const ;
 
         /***
-         * 4. Update and drawing.
+         * 5. Update and drawing.
          ***/
     protected:
         // Recompute transformed vertices based on original ones and transformation matrix.

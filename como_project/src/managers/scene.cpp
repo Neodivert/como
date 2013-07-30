@@ -167,6 +167,24 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
 }
 
 
+glm::vec4 Scene::getSelectionCentroid() const
+{
+    glm::vec4 selectionCentroid;
+    DrawablesList::const_iterator it = selectedDrawables.begin();
+
+    cout << "Getting selection centroid" << endl;
+
+    if( selectedDrawables.size() ){
+        for( ; it != selectedDrawables.end(); it++ )
+        {
+            selectionCentroid += (*it)->getCentroid();
+        }
+        selectionCentroid /= selectedDrawables.size();
+    }
+
+    return selectionCentroid;
+}
+
 /***
  * 3. Transformations
  ***/
@@ -195,6 +213,16 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis )
 }
 
 
+void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot )
+{
+    DrawablesList::iterator it = selectedDrawables.begin();
+
+    for( ; it != selectedDrawables.end(); it++ )
+    {
+        (*it)->rotate( angle, axis, pivot );
+    }
+    emit renderNeeded();
+}
 
 void Scene::deleteSelection()
 {

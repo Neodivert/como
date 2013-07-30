@@ -75,11 +75,16 @@ class Scene : public QObject
 
         int selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection = false );
 
+
+        glm::vec4 getSelectionCentroid() const ;
+
+
         /***
          * 3. Transformations
          ***/
         void translateSelection( const glm::vec3& direction );
         void rotateSelection( const GLfloat& angle, const glm::vec3& axis );
+        void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
 
         void deleteSelection();
 

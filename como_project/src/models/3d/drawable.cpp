@@ -97,8 +97,10 @@ void Drawable::rotate( const GLfloat& angle, const glm::vec3& axis )
 }
 
 
-void Drawable::rotate( const GLfloat& angle, const glm::vec3& pivot, const glm::vec3& axis )
+void Drawable::rotate( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot )
 {
+    cout << "Rotating around pivot: (" << pivot.x << ", " << pivot.y << ", " << pivot.z << ")" << endl;
+
     // Translate drawable until the pivot be at the origin.
     transformationMatrix = glm::translate( transformationMatrix, -pivot );
 
