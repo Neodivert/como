@@ -223,11 +223,11 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
         // Make the transformation requested by user.
         switch( comoApp->getTransformationType() ){
             case TransformationType::TRANSLATION:
-                comoApp->getScene()->translateSelectedDrawables( tx, ty, 0.0f );
+                comoApp->getScene()->translateSelection( glm::vec3( tx, ty, 0.0f ) );
             break;
             case TransformationType::ROTATION:
-                comoApp->getScene()->rotateSelectedDrawables( 100*tx, 0.0f, 1.0f, 0.0f );
-                comoApp->getScene()->rotateSelectedDrawables( 100*ty, 1.0f, 0.0f, 0.0f );
+                comoApp->getScene()->rotateSelection( 100*tx, glm::vec3( 0.0f, 1.0f, 0.0f ) );
+                comoApp->getScene()->rotateSelection( 100*ty, glm::vec3( 1.0f, 0.0f, 0.0f ) );
             break;
             case TransformationType::SCALE:
                 cout << "Scale not implemented" << endl;

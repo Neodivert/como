@@ -78,8 +78,9 @@ class Scene : public QObject
         /***
          * 3. Transformations
          ***/
-        void translateSelectedDrawables( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz );
-        void rotateSelectedDrawables( const GLfloat& angle, const GLfloat& x, const GLfloat& y, const GLfloat& z );
+        void translateSelection( const glm::vec3& direction );
+        void rotateSelection( const GLfloat& angle, const glm::vec3& axis );
+
         void deleteSelection();
 
         /***

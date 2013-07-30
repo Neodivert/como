@@ -171,25 +171,25 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
  * 3. Transformations
  ***/
 
-void Scene::translateSelectedDrawables( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz )
+void Scene::translateSelection( const glm::vec3& direction )
 {
     DrawablesList::iterator it = selectedDrawables.begin();
 
     for( ; it != selectedDrawables.end(); it++ )
     {
-        (*it)->translate( tx, ty, tz );
+        (*it)->translate( direction );
     }
     emit renderNeeded();
 }
 
 
-void Scene::rotateSelectedDrawables( const GLfloat& angle, const GLfloat& x, const GLfloat& y, const GLfloat& z )
+void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis )
 {
     DrawablesList::iterator it = selectedDrawables.begin();
 
     for( ; it != selectedDrawables.end(); it++ )
     {
-        (*it)->rotate( angle, x, y, z );
+        (*it)->rotate( angle, axis );
     }
     emit renderNeeded();
 }

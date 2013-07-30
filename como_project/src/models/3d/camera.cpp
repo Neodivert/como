@@ -30,14 +30,14 @@ void Camera::setShaderModelviewMatrix( const glm::mat4* modelMatrix )
     // Copy computed modelview matrix to its corresponding shader uniform.
     glUniformMatrix4fv( modelviewMatrixLocation, 1, GL_FALSE, &modelviewMatrix[0][0] );
 }
-*&/
+*
 
 void Camera::setShaderProjectionMatrix()
 {
 
 }
 
-
+/
 /***
  * Projections
  ***/

@@ -75,10 +75,10 @@ glm::mat4 Drawable::getTransformationMatrix()
  * 3. Transformations
  ***/
 
-void Drawable::translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& tz )
+void Drawable::translate( const glm::vec3& direction )
 {
     // Multiply the drawable's transformation matrix by a translation one.
-    transformationMatrix = glm::translate( transformationMatrix, glm::vec3( tx, ty, tz ) );
+    transformationMatrix = glm::translate( transformationMatrix, direction );
 
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.
@@ -86,10 +86,10 @@ void Drawable::translate( const GLfloat& tx, const GLfloat& ty, const GLfloat& t
 }
 
 
-void Drawable::rotate( const GLfloat& angle, const GLfloat& x, const GLfloat& y, const GLfloat& z )
+void Drawable::rotate( const GLfloat& angle, const glm::vec3& axis )
 {
     // Multiply the drawable's transformation matrix by a rotation one.
-    transformationMatrix = glm::rotate( transformationMatrix, angle, glm::vec3( x, y, z ) );
+    transformationMatrix = glm::rotate( transformationMatrix, angle, axis );
 
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.
