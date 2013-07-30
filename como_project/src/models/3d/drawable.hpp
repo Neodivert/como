@@ -90,7 +90,9 @@ class Drawable
          * 3. Transformations
          ***/
         virtual void translate( const glm::vec3& direction );
+
         virtual void rotate( const GLfloat& angle, const glm::vec3& axis );
+        virtual void rotate( const GLfloat& angle, const glm::vec3& pivot, const glm::vec3& axis );
 
         virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle = nullptr  ) const = 0;
 

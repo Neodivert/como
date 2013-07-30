@@ -88,8 +88,25 @@ void Drawable::translate( const glm::vec3& direction )
 
 void Drawable::rotate( const GLfloat& angle, const glm::vec3& axis )
 {
-    // Multiply the drawable's transformation matrix by a rotation one.
+    // Rotate drawable.
     transformationMatrix = glm::rotate( transformationMatrix, angle, axis );
+
+    // Update the transformed vertices using the original ones and the
+    // previous transformation matrix.
+    update();
+}
+
+
+void Drawable::rotate( const GLfloat& angle, const glm::vec3& pivot, const glm::vec3& axis )
+{
+    // Translate drawable until the pivot be at the origin.
+    transformationMatrix = glm::translate( transformationMatrix, -pivot );
+
+    // Rotate drawable.
+    transformationMatrix = glm::rotate( transformationMatrix, angle, axis );
+
+    // Translate drawable until its original position.
+    transformationMatrix = glm::translate( transformationMatrix, pivot );
 
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.
