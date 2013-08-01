@@ -72,6 +72,9 @@ class Drawable
         std::array< glm::vec4, 3 > originalOrientation;
         std::array< glm::vec4, 3 > transformedOrientation;
 
+        glm::mat4 translationMatrix;
+        glm::mat4 rotationMatrix;
+
         glm::mat4 transformationMatrix;
 
     public:
@@ -90,15 +93,18 @@ class Drawable
         /***
          * 3. Transformations
          ***/
-        virtual void translate( const glm::vec3& direction );
+        glm::vec3 transformToObjectSpace( const glm::vec3 worldVector );
 
-        virtual void rotate( const GLfloat& angle, const glm::vec3& axis );
+        virtual void translate( glm::vec3 direction );
+
+        virtual void rotate( GLfloat angle, glm::vec3 axis );
         virtual void rotate( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
 
         virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle = nullptr  ) const = 0;
 
         //
         void sendMvpMatrixToShader( const glm::mat4& mvpMatrix ) const;
+
 
         /***
          * 4. Selection

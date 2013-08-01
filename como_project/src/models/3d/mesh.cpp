@@ -254,7 +254,7 @@ void Mesh::draw( const glm::mat4& viewProjectionMatrix, bool selected ) const
     GLfloat selectecContourColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
     // Set ModelViewProjection matrix to shader.
-    sendMvpMatrixToShader( viewProjectionMatrix * transformationMatrix );
+    sendMvpMatrixToShader( viewProjectionMatrix /** transformationMatrix*/ );
 
     // Feed uniform shader variable "color" with Mesh inner color.
     // I fallen in a common mistake D:.

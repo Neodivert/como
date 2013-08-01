@@ -164,6 +164,7 @@ void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
     }
 }
 
+
 void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
 {
     switch ( e->key() )
@@ -192,6 +193,12 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
             }else{
                 comoApp->setAppMode( AppMode::OBJECT );
             }
+        break;
+        case Qt::Key_Left:
+            comoApp->getScene()->rotateSelection( 90.0f, glm::vec3( 0.0f, 0.0f, 1.0f ) );
+        break;
+        case Qt::Key_Right:
+            comoApp->getScene()->rotateSelection( -90.0f, glm::vec3( 0.0f, 0.0f, 1.0f ) );
         break;
         case Qt::Key_Delete:
             comoApp->getScene()->deleteSelection();
@@ -224,16 +231,17 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
         // Make the transformation requested by user.
         switch( comoApp->getTransformationType() ){
             case TransformationType::TRANSLATION:
-                comoApp->getScene()->translateSelection( glm::vec3( tx, ty, 0.0f ) );
+                comoApp->getScene()->translateSelection( glm::vec3( 2*tx, 2*ty, 0.0f ) );
             break;
             case TransformationType::ROTATION:
-                selectionCentroid = glm::vec3( comoApp->getScene()->getSelectionCentroid() );
-                comoApp->getScene()->rotateSelection( 100*tx, glm::vec3( 0.0f, 1.0f, 0.0f ), selectionCentroid );
-                comoApp->getScene()->rotateSelection( 100*ty, glm::vec3( 1.0f, 0.0f, 0.0f ), selectionCentroid );
+                //selectionCentroid = glm::vec3( comoApp->getScene()->getSelectionCentroid() );
+                //comoApp->getScene()->rotateSelection( 100*tx, glm::vec3( 0.0f, 1.0f, 0.0f ), selectionCentroid );
+                //comoApp->getScene()->rotateSelection( 100*ty, glm::vec3( 1.0f, 0.0f, 0.0f ), selectionCentroid );
 
-                /*
-                comoApp->getScene()->rotateSelection( 100*tx, glm::vec3( 0.0f, 1.0f, 0.0f ) );
-                comoApp->getScene()->rotateSelection( 100*ty, glm::vec3( 1.0f, 0.0f, 0.0f ) );
+
+                //comoApp->getScene()->rotateSelection( 100*tx, glm::vec3( 0.0f, 1.0f, 0.0f ) );
+                comoApp->getScene()->rotateSelection( 100*tx, glm::vec3( 0.0f, 0.0f, 1.0f ) );
+                /*comoApp->getScene()->rotateSelection( 100*ty, glm::vec3( 1.0f, 0.0f, 0.0f ) );
                 */
             break;
             case TransformationType::SCALE:
@@ -273,6 +281,7 @@ void OpenGLCanvas::render()
     // Draw scene.
     // TODO: use real viewProjection matrix.
     comoApp->getScene()->draw( projectionMatrix*viewMatrix );
+    //comoApp->getScene()->draw( glm::mat4( 1.0f ) );
 
     // Swap buffers.
     comoApp->getOpenGLContext()->swapBuffers( this );

@@ -18,6 +18,7 @@
 ***/
 
 #include "drawable.hpp"
+#include <glm/gtx/vector_angle.hpp>
 
 /***
  * 1. Initialization
@@ -43,6 +44,8 @@ Drawable::Drawable()
     GLint currentShaderProgram;
 
     // Initialize transformation matrix to identity matrix.
+    translationMatrix = glm::mat4( 1.0f );
+    rotationMatrix = glm::mat4( 1.0f );
     transformationMatrix = glm::mat4( 1.0f );
 
     // Initialize the drawable's original orientation.
@@ -75,21 +78,60 @@ glm::mat4 Drawable::getTransformationMatrix()
  * 3. Transformations
  ***/
 
-void Drawable::translate( const glm::vec3& direction )
+glm::vec3 Drawable::transformToObjectSpace( const glm::vec3 worldVector )
 {
-    // Multiply the drawable's transformation matrix by a translation one.
+    return glm::vec3( glm::inverse( rotationMatrix ) * glm::vec4( worldVector, 1.0f ) );
+    //glm::vec4 dir =
+}
+
+void Drawable::translate( glm::vec3 direction )
+{
+    // Rotate the vector "direction" from world to object space.
+    direction = glm::vec3( glm::inverse( rotationMatrix ) * glm::vec4( direction, 1.0f ) );
+
+    // Add translation to transformation matrix.
     transformationMatrix = glm::translate( transformationMatrix, direction );
+
+    // Multiply the drawable's transformation matrix by a translation one.
+    //translationMatrix = glm::translate( translationMatrix, direction );
 
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.
     update();
 }
 
+#include <cstdlib>
 
-void Drawable::rotate( const GLfloat& angle, const glm::vec3& axis )
+void Drawable::rotate( GLfloat angle, glm::vec3 axis )
 {
-    // Rotate drawable.
-    transformationMatrix = glm::rotate( transformationMatrix, angle, axis );
+    /*
+    const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
+
+    cout << "rotate()" << endl
+         << "Angle: " << angle << endl
+         << "Axis (world space): (" << axis.x << ", " << axis.y << ", " << axis.z << ")" << endl;
+    */
+
+    // Rotate rotation's axis to object space.
+    axis = glm::vec3( glm::inverse( rotationMatrix ) * glm::vec4( axis, 1.0f ) );
+    //cout << "Axis (object space): (" << axis.x << ", " << axis.y << ", " << axis.z << ")" << endl;
+
+    // Compute the rotation matrix for the given angle and the axis converted to
+    // object space.
+    glm::mat4 newRotation = glm::rotate( glm::mat4( 1.0f ), angle, axis );
+
+    // Concatenate new rotation to previous rotations.
+    rotationMatrix = newRotation * rotationMatrix;
+
+    // Concatenate new rotation to object's transformation matrix.
+    transformationMatrix = newRotation * transformationMatrix;
+
+    /*
+    glm::vec3 up = glm::normalize( glm::vec3( transformationMatrix * glm::vec4( yAxis, 1.0f ) ) );
+
+    cout << "New up: (" << up.x << ", " << up.y << ", " << up.z << ")" << endl;
+    cout << "Angle between up and global Y vectors: " << glm::angle( up, yAxis ) << endl;
+    */
 
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.
@@ -101,18 +143,24 @@ void Drawable::rotate( const GLfloat& angle, const glm::vec3& axis, const glm::v
 {
     cout << "Rotating around pivot: (" << pivot.x << ", " << pivot.y << ", " << pivot.z << ")" << endl;
 
+    //glm::mat4 rotationMatrix = glm::rotate(  );
     // Translate drawable until the pivot be at the origin.
-    transformationMatrix = glm::translate( transformationMatrix, -pivot );
+    //transformationMatrix = glm::translate( transformationMatrix, -pivot );
 
+    /*
     // Rotate drawable.
-    transformationMatrix = glm::rotate( transformationMatrix, angle, axis );
+    glm::mat4 rotationMatrix = glm::rotate( glm::mat4( 1.0f ), angle, axis );
+
+    transformationMatrix = rotationMatrix * transformationMatrix;
+    //transformationMatrix = glm::rotate( transformationMatrix, angle, axis );
 
     // Translate drawable until its original position.
-    transformationMatrix = glm::translate( transformationMatrix, pivot );
+    //transformationMatrix = glm::translate( transformationMatrix, pivot );
 
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.
     update();
+    */
 }
 
 
@@ -128,6 +176,8 @@ void Drawable::sendMvpMatrixToShader( const glm::mat4& mvpMatrix ) const
 
 void Drawable::update()
 {
+    //transformationMatrix = rotationMatrix * translationMatrix;
+
     for( unsigned int i = 0; i<3; i++ ){
         transformedOrientation[i] = transformationMatrix * originalOrientation[i];
     }

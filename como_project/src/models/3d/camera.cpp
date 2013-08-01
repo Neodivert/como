@@ -37,7 +37,7 @@ void Camera::setShaderProjectionMatrix()
 
 }
 
-/
+*/
 /***
  * Projections
  ***/
