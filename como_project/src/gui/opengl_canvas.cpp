@@ -212,6 +212,10 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
 
 void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 {
+    const glm::vec3 xAxis( 1.0f, 0.0f, 0.0f );
+    const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
+    const glm::vec3 zAxis( 0.0f, 0.0f, 1.0f );
+
     float tx, ty;
     TransformationMode transformationMode = comoApp->getTransformationMode();
     glm::vec3 selectionCentroid;
@@ -225,8 +229,8 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
         ty = ( lastMouseY - mouseMoveEvent->y() ) * heightInverse;
 
         // Truncate values if the current transformation mode is not the appropiate.
-        tx = ( ( transformationMode == TransformationMode::FREE ) || ( transformationMode == TransformationMode::FIXED_X ) ) * tx;
-        ty = ( ( transformationMode == TransformationMode::FREE ) || ( transformationMode == TransformationMode::FIXED_Y ) ) * ty;
+        //tx = ( ( transformationMode == TransformationMode::FREE ) || ( transformationMode == TransformationMode::FIXED_X ) ) * tx;
+        //ty = ( ( transformationMode == TransformationMode::FREE ) || ( transformationMode == TransformationMode::FIXED_Y ) ) * ty;
 
         // Make the transformation requested by user.
         switch( comoApp->getTransformationType() ){
@@ -234,15 +238,21 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 comoApp->getScene()->translateSelection( glm::vec3( 2*tx, 2*ty, 0.0f ) );
             break;
             case TransformationType::ROTATION:
-                //selectionCentroid = glm::vec3( comoApp->getScene()->getSelectionCentroid() );
-                //comoApp->getScene()->rotateSelection( 100*tx, glm::vec3( 0.0f, 1.0f, 0.0f ), selectionCentroid );
-                //comoApp->getScene()->rotateSelection( 100*ty, glm::vec3( 1.0f, 0.0f, 0.0f ), selectionCentroid );
-
-
-                //comoApp->getScene()->rotateSelection( 100*tx, glm::vec3( 0.0f, 1.0f, 0.0f ) );
-                comoApp->getScene()->rotateSelection( 100*tx, glm::vec3( 0.0f, 0.0f, 1.0f ) );
-                /*comoApp->getScene()->rotateSelection( 100*ty, glm::vec3( 1.0f, 0.0f, 0.0f ) );
-                */
+                switch( comoApp->getTransformationMode() ){
+                    case TransformationMode::FIXED_X:
+                        cout << "FIXED_X" << endl;
+                        comoApp->getScene()->rotateSelection( 100*tx, xAxis );
+                    break;
+                    case TransformationMode::FIXED_Y:
+                        cout << "FIXED_Y" << endl;
+                        comoApp->getScene()->rotateSelection( 100*tx, yAxis );
+                    break;
+                    case TransformationMode::FIXED_Z:
+                    case TransformationMode::FREE: // TODO: Change.
+                        cout << "FREE or FIXED_Z" << endl;
+                        comoApp->getScene()->rotateSelection( 100*tx, zAxis );
+                    break;
+                }
             break;
             case TransformationType::SCALE:
                 cout << "Scale not implemented" << endl;

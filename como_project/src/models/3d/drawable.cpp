@@ -92,9 +92,6 @@ void Drawable::translate( glm::vec3 direction )
     // Add translation to transformation matrix.
     transformationMatrix = glm::translate( transformationMatrix, direction );
 
-    // Multiply the drawable's transformation matrix by a translation one.
-    //translationMatrix = glm::translate( translationMatrix, direction );
-
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.
     update();
@@ -112,8 +109,8 @@ void Drawable::rotate( GLfloat angle, glm::vec3 axis )
          << "Axis (world space): (" << axis.x << ", " << axis.y << ", " << axis.z << ")" << endl;
     */
 
-    // Rotate rotation's axis to object space.
-    axis = glm::vec3( glm::inverse( rotationMatrix ) * glm::vec4( axis, 1.0f ) );
+    // Rotate rotation's axis from world to object space.
+    axis = glm::normalize( glm::vec3( glm::inverse( rotationMatrix ) * glm::vec4( axis, 1.0f ) ) );
     //cout << "Axis (object space): (" << axis.x << ", " << axis.y << ", " << axis.z << ")" << endl;
 
     // Compute the rotation matrix for the given angle and the axis converted to
@@ -121,10 +118,10 @@ void Drawable::rotate( GLfloat angle, glm::vec3 axis )
     glm::mat4 newRotation = glm::rotate( glm::mat4( 1.0f ), angle, axis );
 
     // Concatenate new rotation to previous rotations.
-    rotationMatrix = newRotation * rotationMatrix;
+    rotationMatrix = rotationMatrix * newRotation;
 
     // Concatenate new rotation to object's transformation matrix.
-    transformationMatrix = newRotation * transformationMatrix;
+    transformationMatrix = transformationMatrix * newRotation;
 
     /*
     glm::vec3 up = glm::normalize( glm::vec3( transformationMatrix * glm::vec4( yAxis, 1.0f ) ) );
