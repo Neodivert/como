@@ -27,6 +27,7 @@
 
 namespace como {
 
+/*
 enum OrthoAttribute {
     ORTHO_LEFT = 0,
     ORTHO_RIGHT,
@@ -42,33 +43,35 @@ enum PerspectiveAttribute {
     PERSPECTIVE_Z_NEAR,
     PERSPECTIVE_Z_FAR
 };
+*/
 
+/*
 const int N_PROJECTION_ATTRIBUTES = 6;
+*/
 
-class Camera : public Cube
+enum class View {
+    LEFT,
+    RIGHT,
+    TOP,
+    BOTTOM,
+    FRONT,
+    BACK,
+    CAMERA
+};
+
+
+class Camera : public Mesh
 {
     protected:
-        // Camera's original eye.
+        // Camera's original position and orientation.
         const glm::vec4 originalEye;
+        const glm::vec4 originalUp;
+        const glm::vec4 originalCenter;
 
-        // Camera's transformed eye.
+        // Camera's transformed position and orientation.
         glm::vec4 transformedEye;
-
-        // View matrix.
-        //
-
-        // If true, camera is using perspective projection. Otherwise, orthographic projection
-        // is being used.
-        bool perspective;
-
-        // If perspective == false, each element has a meaning according to OrthoAttribute enum.
-        // Otherwise, each element has a meaning according to PerspectiveAttribute enum.
-        float projectionAttributes[N_PROJECTION_ATTRIBUTES];
-
-        // Projection matrix.
-        glm::mat4 projectionMatrix;
-
-        //glm::mat4 vieeeewMatrix;
+        glm::vec4 transformedUp;
+        glm::vec4 transformedCenter;
 
     public:
         /***
@@ -76,15 +79,23 @@ class Camera : public Cube
          ***/
         Camera();
 
+
+        /***
+         * 2. Setters and getters
+         ***/
+        glm::mat4 getViewMatrix() const ;
+        void setView( View view );
+
         /***
          * 2. Projections
          ***/
+        /*
         int setOrtho( float left, float right,
                       float bottom, float top,
                       float zNear, float zFar );
         int setPerspective( float fovy, float aspect,
                             float zNear, float zFar );
-
+        */
     protected:
         /***
          * 3. Updating and drawing

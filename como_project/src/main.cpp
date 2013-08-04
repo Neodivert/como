@@ -23,28 +23,6 @@
 
 int main( int argc, char *argv[] )
 {
-    /*
-    const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
-    const glm::vec3 zAxis( 0.0f, 0.0f, 1.0f );
-
-    glm::vec4 up( 0.0f, 0.0f, 0.0f, 1.0f );
-
-    glm::mat4 totalRotation = glm::mat4( 1.0f );
-    glm::mat4 rotation45 = glm::rotate( glm::mat4( 1.0f ), 45.0f, zAxis );
-
-    for( unsigned int i = 0; i<8; i++ ){
-        cout << "Rotating: " << ((i+1)*45.0f) << " dregrees" << endl;
-
-        totalRotation = rotation45 * totalRotation;
-
-        up = totalRotation * glm::vec4( yAxis, 1.0f );
-
-        cout << "Resulting Up: (" << up.x << ", " << up.y << ", " << up.z << ")" << endl;
-
-        cout << "Resulting angle (up - Y): " << glm::angle( glm::normalize( glm::vec3( up ) ), yAxis ) << endl << endl;
-    }
-    */
-
     // Create a Qt application.
     QApplication app( argc, argv );
 
@@ -55,3 +33,4 @@ int main( int argc, char *argv[] )
     // Run Qt application.
     return app.exec();
 }
+

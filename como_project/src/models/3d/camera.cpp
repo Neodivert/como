@@ -4,12 +4,57 @@ namespace como {
 
 
 Camera::Camera() :
-    originalEye( 0.0f, 0.0f, 0.0f, 1.0f )
+    originalEye     ( 0.0f, 0.0f, 0.0f, 1.0f ),
+    originalUp      ( 0.0f, 1.0f, 0.0f, 1.0f ),
+    originalCenter  ( 0.0f, 0.0f, -1.0f, 1.0f )
 {
     // Update camera's vertices and orientation.
     update();
 }
 
+
+/***
+ * 2. Setters and getters
+ ***/
+
+
+glm::mat4 Camera::getViewMatrix() const
+{
+    return glm::inverse( transformationMatrix );
+}
+
+
+void Camera::setView( View view )
+{
+    const glm::vec3 X_AXIS = glm::vec3( 1.0f, 0.0f, 0.0f );
+    const glm::vec3 Y_AXIS = glm::vec3( 0.0f, 1.0f, 0.0f );
+    const glm::vec3 Z_AXIS = glm::vec3( 0.0f, 0.0f, 1.0f );
+
+    translationMatrix = glm::mat4( 1.0f );
+    switch( view ){
+        case View::LEFT:
+            rotationMatrix = glm::rotate( glm::mat4( 1.0f ), 90.0f, Y_AXIS );
+        break;
+        case View::RIGHT:
+        break;
+        case View::TOP:
+            rotationMatrix = glm::rotate( glm::mat4( 1.0f ), 90.0f, X_AXIS );
+        break;
+        case View::BOTTOM:
+        break;
+        case View::FRONT:
+            rotationMatrix = glm::mat4( 1.0f );
+        break;
+        case View::BACK:
+        break;
+        case View::CAMERA:
+        break;
+    }
+
+    transformationMatrix = rotationMatrix;
+
+    update();
+}
 
 /***
  *
@@ -41,6 +86,8 @@ void Camera::setShaderProjectionMatrix()
 /***
  * Projections
  ***/
+
+/*
 
 int Camera::setOrtho( float left, float right,
                       float bottom, float top,
@@ -84,6 +131,7 @@ int Camera::setPerspective( float fovy, float aspect,
     }
 }
 
+*/
 
 /***
  * Updating and drawing
@@ -96,13 +144,8 @@ void Camera::update()
 
     // Update transformed camera position and orientation.
     transformedEye = transformationMatrix * originalEye;
-
-    // Update view matrix with transformed camera's position and orientation.
-    glm::mat4 viewMatrix;
-
-    viewMatrix = glm::lookAt( glm::vec3( transformedEye ),
-                              glm::vec3( transformedOrientation[Z] ),
-                              glm::vec3( transformedOrientation[Y] ) );
+    transformedUp = transformationMatrix * originalUp;
+    transformedCenter = transformationMatrix * originalCenter;
 }
 
 

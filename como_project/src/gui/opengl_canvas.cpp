@@ -203,6 +203,21 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
         case Qt::Key_Delete:
             comoApp->getScene()->deleteSelection();
         break;
+        case Qt::Key_0:
+            cout << "Camera front" << endl;
+            camera.setView( View::FRONT );
+            comoApp->getScene()->renderNeeded();
+        break;
+        case Qt::Key_1:
+            cout << "Camera left" << endl;
+            camera.setView( View::LEFT );
+            comoApp->getScene()->renderNeeded();
+        break;
+        case Qt::Key_2:
+            cout << "Camera top" << endl;
+            camera.setView( View::TOP );
+            comoApp->getScene()->renderNeeded();
+        break;
         default:
           cout << "Unknown key (" << e->key() << ")" << endl;
         break;
@@ -275,9 +290,9 @@ void OpenGLCanvas::render()
 {
     const glm::mat4 projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f );
     //const glm::mat4 viewMatrix = glm::mat4( 1.0f );
-    const glm::mat4 viewMatrix = glm::lookAt( glm::vec3( 0.0f, 0.0f, 1.0f ),
+    const glm::mat4 viewMatrix = camera.getViewMatrix();/* glm::lookAt( glm::vec3( 0.0f, 0.0f, 1.0f ),
                                               glm::vec3( 0.0f, 0.0f, -1.0f ),
-                                              glm::vec3( 0.0f, 1.0f, 0.0f ) );
+                                              glm::vec3( 0.0f, 1.0f, 0.0f ) );*/
 
     // Make shared OpenGL context current for this surface.
     comoApp->getOpenGLContext()->makeCurrent( this );
