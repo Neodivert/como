@@ -2,6 +2,28 @@
 
 namespace como {
 
+Views views =
+{
+    View::LEFT,
+    View::RIGHT,
+    View::TOP,
+    View::BOTTOM,
+    View::FRONT,
+    View::BACK,
+    View::CAMERA
+};
+
+ViewStrings viewStrings =
+{
+    QString::fromUtf8( "Left view" ),
+    QString::fromUtf8( "Right view" ),
+    QString::fromUtf8( "Top view" ),
+    QString::fromUtf8( "Bottom view" ),
+    QString::fromUtf8( "Front view" ),
+    QString::fromUtf8( "Back view" ),
+    QString::fromUtf8( "Camera view" )
+};
+
 
 Camera::Camera() :
     originalEye     ( 0.0f, 0.0f, 0.0f, 1.0f ),

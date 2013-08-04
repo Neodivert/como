@@ -60,6 +60,19 @@ enum class View {
 };
 
 
+const unsigned int N_VIEWS = 7;
+
+// Array with all the possible app mode values (for conversion between
+// AppMode and int).
+typedef std::array< View, N_VIEWS > Views;
+extern Views views;
+
+// Array with a string for each app mode value (for output in GUI).
+typedef std::array< QString, N_VIEWS > ViewStrings;
+extern ViewStrings viewStrings;
+
+
+
 class Camera : public Mesh
 {
     protected:

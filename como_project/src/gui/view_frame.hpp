@@ -33,6 +33,8 @@ class ViewFrame : public QFrame
     private:
         // OpenGL rendering surface.
         OpenGLCanvas* openGLCanvas;
+        QComboBox* viewSelector;
+
 
     public:
         /***

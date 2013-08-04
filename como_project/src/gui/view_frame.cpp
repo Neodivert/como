@@ -41,20 +41,38 @@ ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     // Make the OpenGL canvas ocuppy the maximum available space.
     openGLCanvasWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
-    // Set a title label that takes the minimum space.
-    QLabel* titleLabel = new QLabel( name );
-    titleLabel->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
+    // Set a view label that takes the minimum space.
+    QLabel* viewLabel = new QLabel( name );
+    viewLabel->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
+
+
+    // Set app mode's selector.
+    viewSelector = new QComboBox;
+    for( auto viewString : viewStrings ){
+        viewSelector->addItem( viewString );
+    }
+
+    // When user change view in selector, call OpenGL::setView().
+    void (QComboBox::*signal)( int ) = &QComboBox::activated;
+    connect( viewSelector, signal, [=]( int index ) {
+        openGLCanvas->setView( views[index] );
+    }  );
+
+    // When comoApp::setAppMode() be invoked, change appMode selector's index.
+    connect( openGLCanvas, &OpenGLCanvas::viewIndexChanged, viewSelector, &QComboBox::setCurrentIndex );
+
 
     // Set the ViewFrame layout.
     QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget( titleLabel );
+    layout->addWidget( viewSelector );
     layout->addWidget( openGLCanvasWidget );
     setLayout(layout);
 
     // When a render is requested, render!
     QObject::connect( comoApp->getScene().get(), &Scene::renderNeeded, this, &ViewFrame::render  );
-}
 
+
+}
 
 /***
  * 2. Updating and drawing
@@ -64,5 +82,6 @@ void ViewFrame::render()
 {
     openGLCanvas->render();
 }
+
 
 } // namespace como

@@ -85,7 +85,17 @@ class OpenGLCanvas : public QWindow
          ***/
         virtual void render();
 
+        /***
+         * 4. Signals
+         ***/
     signals:
+        void viewIndexChanged( int viewIndex );
+
+        /***
+         * 5. Slots
+         ***/
+    public slots:
+        void setView( View view );
 };
 
 } // namespace como

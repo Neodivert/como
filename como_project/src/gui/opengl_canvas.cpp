@@ -204,19 +204,13 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
             comoApp->getScene()->deleteSelection();
         break;
         case Qt::Key_0:
-            cout << "Camera front" << endl;
-            camera.setView( View::FRONT );
-            comoApp->getScene()->renderNeeded();
+            setView( View::FRONT );
         break;
         case Qt::Key_1:
-            cout << "Camera left" << endl;
-            camera.setView( View::LEFT );
-            comoApp->getScene()->renderNeeded();
+            setView( View::LEFT );
         break;
         case Qt::Key_2:
-            cout << "Camera top" << endl;
-            camera.setView( View::TOP );
-            comoApp->getScene()->renderNeeded();
+            setView( View::TOP );
         break;
         default:
           cout << "Unknown key (" << e->key() << ")" << endl;
@@ -311,5 +305,23 @@ void OpenGLCanvas::render()
     // Swap buffers.
     comoApp->getOpenGLContext()->swapBuffers( this );
 }
+
+/***
+ * 5. Slots
+ ***/
+
+void OpenGLCanvas::setView( View view )
+{
+    Views::iterator viewsIterator;
+
+    camera.setView( view );
+    comoApp->getScene()->renderNeeded();
+
+    // Get the integer index of the current View on a array of views and return it
+    // in a signal.
+    viewsIterator = find( views.begin(), views.end(), view );
+    emit viewIndexChanged( std::distance( views.begin(), viewsIterator ) );
+}
+
 
 } // namespace como
