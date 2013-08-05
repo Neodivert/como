@@ -15,7 +15,6 @@ TEMPLATE = app
 SOURCES += src/main.cpp\
     src/gui/opengl_engine.cpp \
     src/gui/tools_menu.cpp \
-    src/gui/opengl_canvas.cpp \
     src/gui/render_panel.cpp \
     src/gui/main_window.cpp \
     src/gui/view_frame.cpp \
@@ -25,13 +24,13 @@ SOURCES += src/main.cpp\
     src/models/3d/cube.cpp \
     src/models/3d/camera.cpp \
     src/models/3d/drawable.cpp \
-    src/models/3d/mesh.cpp
+    src/models/3d/mesh.cpp \
+    src/gui/viewport.cpp
 
 
 HEADERS  += \
     src/gui/opengl_engine.hpp \
     src/gui/tools_menu.hpp \
-    src/gui/opengl_canvas.hpp \
     src/gui/render_panel.hpp \
     src/gui/main_window.hpp \
     src/gui/view_frame.hpp \
@@ -41,7 +40,8 @@ HEADERS  += \
     src/models/3d/cube.hpp \
     src/models/3d/camera.hpp \
     src/models/3d/drawable.hpp \
-    src/models/3d/mesh.hpp
+    src/models/3d/mesh.hpp \
+    src/gui/viewport.hpp
 
 FORMS    += main_window.ui
 

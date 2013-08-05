@@ -4,23 +4,23 @@ namespace como {
 
 Views views =
 {
+    View::FRONT,
+    View::BACK,
     View::LEFT,
     View::RIGHT,
     View::TOP,
     View::BOTTOM,
-    View::FRONT,
-    View::BACK,
     View::CAMERA
 };
 
 ViewStrings viewStrings =
 {
+    QString::fromUtf8( "Front view" ),
+    QString::fromUtf8( "Back view" ),
     QString::fromUtf8( "Left view" ),
     QString::fromUtf8( "Right view" ),
     QString::fromUtf8( "Top view" ),
     QString::fromUtf8( "Bottom view" ),
-    QString::fromUtf8( "Front view" ),
-    QString::fromUtf8( "Back view" ),
     QString::fromUtf8( "Camera view" )
 };
 

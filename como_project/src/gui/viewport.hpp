@@ -17,8 +17,8 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef OPENGL_CANVAS_HPP
-#define OPENGL_CANVAS_HPP
+#ifndef VIEWPORT_HPP
+#define VIEWPORT_HPP
 
 
 /***
@@ -36,7 +36,7 @@ namespace como {
  * File main class
  ***/
 
-class OpenGLCanvas : public QWindow
+class Viewport : public QWindow
 {
     Q_OBJECT
 
@@ -45,13 +45,11 @@ class OpenGLCanvas : public QWindow
         shared_ptr< ComoApp > comoApp;
 
         // Camera associated with the OpenGL canvas.
-        // TODO: Move cameras to comoApp (for better management and signaling)
-        // and save and identifier here.
         Camera camera;
 
         // Window's Width and height inverses.
-        // In order to make user transformations relatives to canvas' dimensions, we
-        // multiply the transformation magnitude by the inverse of canvas' dimensions,
+        // In order to make user transformations relatives to viewport's dimensions, we
+        // multiply the transformation magnitude by the inverse of viewport's dimensions,
         // instead of making the division (more expensive).
         float widthInverse;
         float heightInverse;
@@ -66,9 +64,9 @@ class OpenGLCanvas : public QWindow
          * 1. Initialization and destruction
          ***/
 
-        //explicit OpenGLCanvas( QWidget *parent = 0);
+        //explicit Viewport( QWidget *parent = 0);
         // add "explicit"?
-        OpenGLCanvas( shared_ptr< ComoApp > comoApp );
+        Viewport( shared_ptr< ComoApp > comoApp );
 
         /***
          * 2. Events
@@ -100,4 +98,4 @@ class OpenGLCanvas : public QWindow
 
 } // namespace como
 
-#endif // OPENGL_CANVAS_HPP
+#endif // VIEWPORT_HPP

@@ -23,7 +23,7 @@
 #include <QFrame>
 #include <QGraphicsView>
 #include <QGLContext>
-#include "opengl_canvas.hpp"
+#include "viewport.hpp"
 #include "../managers/scene.hpp"
 
 namespace como {
@@ -32,7 +32,7 @@ class ViewFrame : public QFrame
 {
     private:
         // OpenGL rendering surface.
-        OpenGLCanvas* openGLCanvas;
+        Viewport* viewport;
         QComboBox* viewSelector;
 
 

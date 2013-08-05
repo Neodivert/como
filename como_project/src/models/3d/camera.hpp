@@ -50,12 +50,12 @@ const int N_PROJECTION_ATTRIBUTES = 6;
 */
 
 enum class View {
+    FRONT,
+    BACK,
     LEFT,
     RIGHT,
     TOP,
     BOTTOM,
-    FRONT,
-    BACK,
     CAMERA
 };
 

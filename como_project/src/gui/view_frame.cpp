@@ -28,50 +28,46 @@ namespace como {
 ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     QFrame()
 {
-    // Create a OpenGL canvas.
-    openGLCanvas = new OpenGLCanvas( comoApp );
+    // Create a OpenGL viewport.
+    viewport = new Viewport( comoApp );
 
-    // The OpenGL canvas inherits from QWindow. In order to allow it to live inside a QWidget-based
+    // The viewport inherits from QWindow. In order to allow it to live inside a QWidget-based
     // application, we need to create a QWidget wrapper.
-    QWidget* openGLCanvasWidget = QWidget::createWindowContainer( openGLCanvas );
+    QWidget* viewportWidget = QWidget::createWindowContainer( viewport );
 
-    // Make the OpenGL widget accept focus by both tabbing and clicking.
-    openGLCanvasWidget->setFocusPolicy( Qt::StrongFocus );
+    // Make the viewport widget accept focus by both tabbing and clicking.
+    viewportWidget->setFocusPolicy( Qt::StrongFocus );
 
-    // Make the OpenGL canvas ocuppy the maximum available space.
-    openGLCanvasWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
+    // Make the viewport ocuppy the maximum available space.
+    viewportWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
     // Set a view label that takes the minimum space.
     QLabel* viewLabel = new QLabel( name );
     viewLabel->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
 
-
-    // Set app mode's selector.
+    // Set a dropdown list for selecting the viewport's current view.
     viewSelector = new QComboBox;
     for( auto viewString : viewStrings ){
         viewSelector->addItem( viewString );
     }
 
-    // When user change view in selector, call OpenGL::setView().
+    // When user change view in selector, call Viewport::setView().
     void (QComboBox::*signal)( int ) = &QComboBox::activated;
     connect( viewSelector, signal, [=]( int index ) {
-        openGLCanvas->setView( views[index] );
+        viewport->setView( views[index] );
     }  );
 
     // When comoApp::setAppMode() be invoked, change appMode selector's index.
-    connect( openGLCanvas, &OpenGLCanvas::viewIndexChanged, viewSelector, &QComboBox::setCurrentIndex );
-
+    connect( viewport, &Viewport::viewIndexChanged, viewSelector, &QComboBox::setCurrentIndex );
 
     // Set the ViewFrame layout.
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget( viewSelector );
-    layout->addWidget( openGLCanvasWidget );
+    layout->addWidget( viewportWidget );
     setLayout(layout);
 
     // When a render is requested, render!
     QObject::connect( comoApp->getScene().get(), &Scene::renderNeeded, this, &ViewFrame::render  );
-
-
 }
 
 /***
@@ -80,7 +76,7 @@ ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
 
 void ViewFrame::render()
 {
-    openGLCanvas->render();
+    viewport->render();
 }
 
 

@@ -17,7 +17,7 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "opengl_canvas.hpp"
+#include "viewport.hpp"
 #include <cmath>
 #include <iostream>
 using namespace std;
@@ -26,7 +26,7 @@ using namespace std;
 namespace como {
 
 
-void OpenGLCanvas::recordLastMousePos( const int& x, const int& y )
+void Viewport::recordLastMousePos( const int& x, const int& y )
 {
     lastMouseX = x;
     lastMouseY = y;
@@ -37,7 +37,7 @@ void OpenGLCanvas::recordLastMousePos( const int& x, const int& y )
  * 1. Initialization and destruction
  ***/
 
-OpenGLCanvas::OpenGLCanvas( shared_ptr< ComoApp > comoApp ) :
+Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
     QWindow()
 {
     // Make this canvas share the given app's state.
@@ -64,7 +64,7 @@ OpenGLCanvas::OpenGLCanvas( shared_ptr< ComoApp > comoApp ) :
  * 2. Events
  ***/
 
-bool OpenGLCanvas::event(QEvent *event)
+bool Viewport::event(QEvent *event)
 {
     switch (event->type()) {
         case QEvent::UpdateRequest:
@@ -81,26 +81,26 @@ bool OpenGLCanvas::event(QEvent *event)
 }
 
 
-void OpenGLCanvas::exposeEvent( QExposeEvent *event )
+void Viewport::exposeEvent( QExposeEvent *event )
 {
     // We are not interested in using the argument "event". The following macro prevents the
     // compiler from giving us a warning.
     Q_UNUSED(event);
 
-    // Render this OpenGL Canvas if it's exposed.
+    // Render this viewport if it's exposed.
     if ( isExposed() ){
         render();
     }
 }
 
 
-void OpenGLCanvas::resizeEvent(QResizeEvent *event)
+void Viewport::resizeEvent(QResizeEvent *event)
 {
     // We are not interested in using the argument "event". The following macro prevents the
     // compiler from giving us a warning.
     Q_UNUSED(event);
 
-    // Render this OpenGL Canvas if it's exposed.
+    // Render this viewport if it's exposed.
     if( isExposed() ){
         render();
     }
@@ -115,7 +115,7 @@ void OpenGLCanvas::resizeEvent(QResizeEvent *event)
 }
 
 
-void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
+void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
 {
     glm::vec4 viewport;
     glm::vec3 windowCoordinates;
@@ -165,7 +165,7 @@ void OpenGLCanvas::mousePressEvent( QMouseEvent* mousePressEvent )
 }
 
 
-void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
+void Viewport::keyPressEvent( QKeyEvent *e )
 {
     switch ( e->key() )
     {
@@ -219,7 +219,7 @@ void OpenGLCanvas::keyPressEvent( QKeyEvent *e )
 }
 
 
-void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
+void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 {
     const glm::vec3 xAxis( 1.0f, 0.0f, 0.0f );
     const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
@@ -280,7 +280,7 @@ void OpenGLCanvas::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
  * 3. Updating and drawing
  ***/
 
-void OpenGLCanvas::render()
+void Viewport::render()
 {
     const glm::mat4 projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f );
     //const glm::mat4 viewMatrix = glm::mat4( 1.0f );
@@ -310,7 +310,7 @@ void OpenGLCanvas::render()
  * 5. Slots
  ***/
 
-void OpenGLCanvas::setView( View view )
+void Viewport::setView( View view )
 {
     Views::iterator viewsIterator;
 
