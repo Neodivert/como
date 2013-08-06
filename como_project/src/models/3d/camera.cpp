@@ -44,8 +44,21 @@ glm::mat4 Camera::getViewMatrix() const
 {
     return glm::inverse( transformationMatrix );
 }
+/*
+void foo( char* str, glm::mat4 M )
+{
+    glm::vec4 eye = M * glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
+    glm::vec4 up = M * glm::vec4( 0.0f, 1.0f, 0.0f, 1.0f );
+    glm::vec4 center = M * glm::vec4( 0.0f, 0.0f, -1.0f, 1.0f );
 
-
+    cout << str << endl
+         << "---" << endl
+         << "Transformed eye: (" << eye.x << ", " << eye.y << ", " << eye.z << ")" << endl
+         << "Transformed up (" << up.x << ", " << up.y << ", " << up.z << ")" << endl
+         << "Transformed center (" << center.x << ", " << center.y << ", " << center.z << endl
+         << "---" << endl;
+}
+*/
 void Camera::setView( View view )
 {
     const glm::vec3 X_AXIS = glm::vec3( 1.0f, 0.0f, 0.0f );
@@ -55,19 +68,22 @@ void Camera::setView( View view )
     translationMatrix = glm::mat4( 1.0f );
     switch( view ){
         case View::LEFT:
-            rotationMatrix = glm::rotate( glm::mat4( 1.0f ), 90.0f, Y_AXIS );
+            rotationMatrix = glm::rotate( glm::mat4( 1.0f ), -90.0f, Y_AXIS );
         break;
         case View::RIGHT:
+            rotationMatrix = glm::rotate( glm::mat4( 1.0f ), 90.0f, Y_AXIS );
         break;
         case View::TOP:
-            rotationMatrix = glm::rotate( glm::mat4( 1.0f ), 90.0f, X_AXIS );
+            rotationMatrix = glm::rotate( glm::mat4( 1.0f ), -90.0f, X_AXIS );
         break;
         case View::BOTTOM:
+            rotationMatrix = glm::rotate( glm::mat4( 1.0f ), 90.0f, X_AXIS );
         break;
         case View::FRONT:
             rotationMatrix = glm::mat4( 1.0f );
         break;
         case View::BACK:
+            rotationMatrix = glm::rotate( glm::mat4( 1.0f ), 180.0f, Y_AXIS );
         break;
         case View::CAMERA:
         break;
