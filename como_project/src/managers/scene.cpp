@@ -236,17 +236,17 @@ void Scene::deleteSelection()
  * 4. Drawing
  ***/
 
-void Scene::draw( const glm::mat4& viewProjectionMatrix )
+void Scene::draw()
 {
     DrawablesList::iterator it = nonSelectedDrawables.begin();
 
     for( ; it != nonSelectedDrawables.end(); it++ )
     {
-        (*it)->draw( viewProjectionMatrix );
+        (*it)->draw();
     }
     for( it = selectedDrawables.begin(); it != selectedDrawables.end(); it++ )
     {
-        (*it)->draw( viewProjectionMatrix, true );
+        (*it)->draw( true );
     }
 }
 

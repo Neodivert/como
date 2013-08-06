@@ -47,6 +47,9 @@ class Viewport : public QWindow
         // Camera associated with the OpenGL canvas.
         Camera camera;
 
+        // Location for shader uniform variables.
+        static GLint viewProjectionMatrixLocation;
+
         // Window's Width and height inverses.
         // In order to make user transformations relatives to viewport's dimensions, we
         // multiply the transformation magnitude by the inverse of viewport's dimensions,
@@ -81,6 +84,7 @@ class Viewport : public QWindow
         /***
          * 3. Updating and drawing
          ***/
+        void sendViewProjectionMatrixToShader( const glm::mat4& vpMatrix ) const ;
         virtual void render();
 
         /***

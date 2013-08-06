@@ -9,10 +9,10 @@
 
 in vec3 vPosition;
 
-uniform mat4 mvpMatrix;
+uniform mat4 viewProjectionMatrix;
 
 void main()
 {
-	gl_Position = mvpMatrix * vec4( vPosition.x, vPosition.y, vPosition.z, 1.0f );
+	gl_Position = viewProjectionMatrix * vec4( vPosition.x, vPosition.y, vPosition.z, 1.0f );
 }
 

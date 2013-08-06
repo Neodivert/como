@@ -25,6 +25,8 @@ using namespace std;
 
 namespace como {
 
+GLint Viewport::viewProjectionMatrixLocation = -1;
+
 
 void Viewport::recordLastMousePos( const int& x, const int& y )
 {
@@ -40,6 +42,8 @@ void Viewport::recordLastMousePos( const int& x, const int& y )
 Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
     QWindow()
 {
+    GLint currentShaderProgram;
+
     // Make this canvas share the given app's state.
     this->comoApp = comoApp;
 
@@ -56,6 +60,15 @@ Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
     }
     if( height() ){
         heightInverse = 1.0f / height();
+    }
+
+    // Get location of uniform shader modelview matrix.
+    if( viewProjectionMatrixLocation == -1 ){
+        // Get current shader program id.
+        glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+
+        viewProjectionMatrixLocation = glGetUniformLocation( currentShaderProgram, "viewProjectionMatrix" );
+        cout << "viewProjectionMatrixLocation: (" << viewProjectionMatrixLocation << ")" << endl;
     }
 }
 
@@ -280,13 +293,15 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
  * 3. Updating and drawing
  ***/
 
+void Viewport::sendViewProjectionMatrixToShader( const glm::mat4& vpMatrix ) const
+{
+    glUniformMatrix4fv( viewProjectionMatrixLocation, 1, GL_FALSE, &vpMatrix[0][0] );
+}
+
 void Viewport::render()
 {
     const glm::mat4 projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f );
-    //const glm::mat4 viewMatrix = glm::mat4( 1.0f );
-    const glm::mat4 viewMatrix = camera.getViewMatrix();/* glm::lookAt( glm::vec3( 0.0f, 0.0f, 1.0f ),
-                                              glm::vec3( 0.0f, 0.0f, -1.0f ),
-                                              glm::vec3( 0.0f, 1.0f, 0.0f ) );*/
+    const glm::mat4 viewMatrix = camera.getViewMatrix();
 
     // Make shared OpenGL context current for this surface.
     comoApp->getOpenGLContext()->makeCurrent( this );
@@ -297,10 +312,12 @@ void Viewport::render()
     // Clear buffers.
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-    // Draw scene.
+    // Send view-projection matrix to shader.
     // TODO: use real viewProjection matrix.
-    comoApp->getScene()->draw( projectionMatrix*viewMatrix );
-    //comoApp->getScene()->draw( glm::mat4( 1.0f ) );
+    sendViewProjectionMatrixToShader( projectionMatrix*viewMatrix );
+
+    // Draw scene.
+    comoApp->getScene()->draw();
 
     // Swap buffers.
     comoApp->getOpenGLContext()->swapBuffers( this );
@@ -322,6 +339,5 @@ void Viewport::setView( View view )
     viewsIterator = find( views.begin(), views.end(), view );
     emit viewIndexChanged( std::distance( views.begin(), viewsIterator ) );
 }
-
 
 } // namespace como

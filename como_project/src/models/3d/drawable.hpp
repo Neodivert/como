@@ -66,9 +66,6 @@ void showError();
 class Drawable
 {
     protected:
-        // Locations for shader uniform variables.
-        static GLint mvpMatrixLocation;
-
         std::array< glm::vec4, 3 > originalOrientation;
         std::array< glm::vec4, 3 > transformedOrientation;
 
@@ -102,9 +99,6 @@ class Drawable
 
         virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle = nullptr  ) const = 0;
 
-        //
-        void sendMvpMatrixToShader( const glm::mat4& mvpMatrix ) const;
-
 
         /***
          * 4. Selection
@@ -119,7 +113,7 @@ class Drawable
         virtual void update();
 
     public:
-        virtual void draw( const glm::mat4& viewProjectionMatrix, bool selected = false ) const = 0;
+        virtual void draw( bool selected = false ) const = 0;
 };
 
 } // namespace como

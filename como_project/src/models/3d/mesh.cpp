@@ -248,13 +248,10 @@ void Mesh::update()
     glUnmapBuffer( GL_ARRAY_BUFFER );
 }
 
-void Mesh::draw( const glm::mat4& viewProjectionMatrix, bool selected ) const
+void Mesh::draw( bool selected ) const
 {
     // Default color for selected drawables' contour.
     GLfloat selectecContourColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-    // Set ModelViewProjection matrix to shader.
-    sendMvpMatrixToShader( viewProjectionMatrix /** transformationMatrix*/ );
 
     // Feed uniform shader variable "color" with Mesh inner color.
     // I fallen in a common mistake D:.

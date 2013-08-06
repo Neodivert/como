@@ -105,7 +105,7 @@ class Mesh : public Drawable
 
     public:
         // Send mesh to OpenGL server for rendering it.
-        virtual void draw( const glm::mat4& viewProjectionMatrix, bool selected = false ) const;
+        virtual void draw( bool selected = false ) const;
 };
 
 }
