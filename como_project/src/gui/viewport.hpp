@@ -32,6 +32,19 @@
 
 namespace como {
 
+enum class Projection {
+   ORTHO,
+   PERSPECTIVE
+};
+const unsigned int N_PROJECTIONS = 2;
+
+typedef std::array< Projection, N_PROJECTIONS > ProjectionModes;
+extern ProjectionModes projectionModes;
+
+typedef std::array< QString, N_PROJECTIONS > ProjectionModeStrings;
+extern ProjectionModeStrings projectionModeStrings;
+
+
 /***
  * File main class
  ***/
@@ -59,6 +72,8 @@ class Viewport : public QWindow
 
         int lastMouseX;
         int lastMouseY;
+
+        glm::mat4 projectionMatrix;
 
         void recordLastMousePos( const int& x, const int& y );
 
@@ -98,6 +113,7 @@ class Viewport : public QWindow
          ***/
     public slots:
         void setView( View view );
+        void setProjection( Projection projection );
 };
 
 } // namespace como

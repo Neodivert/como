@@ -22,8 +22,21 @@
 #include <iostream>
 using namespace std;
 
-
 namespace como {
+
+
+ProjectionModes projectionModes =
+{
+    Projection::ORTHO,
+    Projection::PERSPECTIVE
+};
+
+ProjectionModeStrings projectionModeStrings =
+{
+    QString::fromUtf8( "Ortho" ),
+    QString::fromUtf8( "Perspective" )
+};
+
 
 GLint Viewport::viewProjectionMatrixLocation = -1;
 
@@ -70,6 +83,9 @@ Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
         viewProjectionMatrixLocation = glGetUniformLocation( currentShaderProgram, "viewProjectionMatrix" );
         cout << "viewProjectionMatrixLocation: (" << viewProjectionMatrixLocation << ")" << endl;
     }
+
+    // Set default projection.
+    setProjection( Projection::ORTHO );
 }
 
 
@@ -300,7 +316,6 @@ void Viewport::sendViewProjectionMatrixToShader( const glm::mat4& vpMatrix ) con
 
 void Viewport::render()
 {
-    const glm::mat4 projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f );
     const glm::mat4 viewMatrix = camera.getViewMatrix();
 
     // Make shared OpenGL context current for this surface.
@@ -338,6 +353,22 @@ void Viewport::setView( View view )
     // in a signal.
     viewsIterator = find( views.begin(), views.end(), view );
     emit viewIndexChanged( std::distance( views.begin(), viewsIterator ) );
+}
+
+
+void Viewport::setProjection( Projection projection )
+{
+    // TODO: Make both projections share some connection.
+    switch( projection ){
+        case Projection::ORTHO:
+            projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f );
+        break;
+        case Projection::PERSPECTIVE:
+            projectionMatrix = glm::perspective( 60.0f, (float)(width())/(float)(height()), 0.1f, 1.0f );
+        break;
+    }
+
+    //comoApp->getScene()->renderNeeded();
 }
 
 } // namespace como

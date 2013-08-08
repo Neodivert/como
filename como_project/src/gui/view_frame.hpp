@@ -34,13 +34,14 @@ class ViewFrame : public QFrame
         // OpenGL rendering surface.
         Viewport* viewport;
         QComboBox* viewSelector;
-
+        QGroupBox* projectionModeSwitch;
 
     public:
         /***
          * 1. Initialization
          ***/
         ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp );
+        QGroupBox* createProjectionSwitch();
 
         /***
          * 2. Updating and drawing

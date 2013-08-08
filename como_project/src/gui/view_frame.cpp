@@ -28,6 +28,9 @@ namespace como {
 ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     QFrame()
 {
+    QFrame* header;
+    QHBoxLayout* headerLayout;
+
     // Create a OpenGL viewport.
     viewport = new Viewport( comoApp );
 
@@ -60,14 +63,68 @@ ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     // When comoApp::setAppMode() be invoked, change appMode selector's index.
     connect( viewport, &Viewport::viewIndexChanged, viewSelector, &QComboBox::setCurrentIndex );
 
+    //
+    projectionModeSwitch = createProjectionSwitch();
+
+    // Set the ViewFrame's header layout.
+    header = new QFrame;
+    headerLayout = new QHBoxLayout;
+    headerLayout->addWidget( viewSelector );
+    headerLayout->addWidget( projectionModeSwitch );
+    header->setLayout( headerLayout );
+
     // Set the ViewFrame layout.
     QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget( viewSelector );
+    layout->addWidget( header );
     layout->addWidget( viewportWidget );
     setLayout(layout);
 
     // When a render is requested, render!
     QObject::connect( comoApp->getScene().get(), &Scene::renderNeeded, this, &ViewFrame::render  );
+}
+
+
+QGroupBox* ViewFrame::createProjectionSwitch()
+{
+    QGroupBox* projectionModeGroupBox;
+    QButtonGroup* projectionModeButtonGroup;
+    QVBoxLayout* projectionModeGroupBoxLayout;
+    QRadioButton* projectionModeRadioButton;
+
+    // Create a projection mode's selector. The different radio buttons are copied
+    // in two places:
+    // 1 - In a QGroupBox, for GUI output.
+    // 2 - In a QButtonGroup, for giving each button an unique id. This is used for signal
+    // connecting.
+    projectionModeGroupBox = new QGroupBox( tr( "Projection mode") );
+    projectionModeButtonGroup = new QButtonGroup;
+    projectionModeGroupBoxLayout = new QVBoxLayout;
+
+    // Create a QRadioButton for each projection mode in the app. Copy the button
+    // to the previous QGroupBox and QButtonGroup.
+    for( unsigned int i = 0; i < projectionModeStrings.size(); i++ ){
+        projectionModeRadioButton = new QRadioButton( projectionModeStrings[i] );
+        projectionModeButtonGroup->addButton( projectionModeRadioButton, i );
+        projectionModeGroupBoxLayout->addWidget( projectionModeRadioButton );
+    }
+    projectionModeGroupBox->setLayout( projectionModeGroupBoxLayout );
+
+    // Toggle first projection mode option (ortho).
+    ( ( projectionModeButtonGroup->buttons() )[0] )->toggle();
+
+    // Change current projection mode when user select it in the GUI.
+    void (QButtonGroup::*buttonClicked)( int ) = &QButtonGroup::buttonClicked;
+    connect( projectionModeButtonGroup, buttonClicked, [=]( int index ) {
+        viewport->setProjection( projectionModes[index] );
+    } );
+
+    // Update the current checked button when the user change the current
+    // projection mode (ie. by keypress).
+    //connect( comoApp.get(), &ComoApp::transformationModeIndexChanged, [=]( int index ) {
+    //    ( ( transformationModeButtonGroup->buttons() )[index] )->toggle();
+    //} );
+
+    return projectionModeGroupBox;
 }
 
 /***

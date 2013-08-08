@@ -27,28 +27,6 @@
 
 namespace como {
 
-/*
-enum OrthoAttribute {
-    ORTHO_LEFT = 0,
-    ORTHO_RIGHT,
-    ORTHO_BOTTOM,
-    ORTHO_TOP,
-    ORTHO_Z_NEAR,
-    ORTHO_Z_FAR
-};
-
-enum PerspectiveAttribute {
-    PERSPECTIVE_FOVY = 0,
-    PERSPECTIVE_ASPECT,
-    PERSPECTIVE_Z_NEAR,
-    PERSPECTIVE_Z_FAR
-};
-*/
-
-/*
-const int N_PROJECTION_ATTRIBUTES = 6;
-*/
-
 enum class View {
     FRONT,
     BACK,
@@ -58,16 +36,14 @@ enum class View {
     BOTTOM,
     CAMERA
 };
-
-
 const unsigned int N_VIEWS = 7;
 
 // Array with all the possible app mode values (for conversion between
-// AppMode and int).
+// View and int).
 typedef std::array< View, N_VIEWS > Views;
 extern Views views;
 
-// Array with a string for each app mode value (for output in GUI).
+// Array with a string for each view value (for output in GUI).
 typedef std::array< QString, N_VIEWS > ViewStrings;
 extern ViewStrings viewStrings;
 
@@ -92,23 +68,12 @@ class Camera : public Mesh
          ***/
         Camera();
 
-
         /***
          * 2. Setters and getters
          ***/
         glm::mat4 getViewMatrix() const ;
         void setView( View view );
 
-        /***
-         * 2. Projections
-         ***/
-        /*
-        int setOrtho( float left, float right,
-                      float bottom, float top,
-                      float zNear, float zFar );
-        int setPerspective( float fovy, float aspect,
-                            float zNear, float zFar );
-        */
     protected:
         /***
          * 3. Updating and drawing
