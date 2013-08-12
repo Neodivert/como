@@ -80,7 +80,7 @@ shared_ptr< QOpenGLContext > OpenGLEngine::createOpenGLContext()
 
     // TODO: Delete if not necessary.
     // Enable vertex arrays.
-    glEnableClientState( GL_VERTEX_ARRAY );
+    //glEnableClientState( GL_VERTEX_ARRAY );
 
     return oglContext;
 }
@@ -92,15 +92,6 @@ shared_ptr< Scene > OpenGLEngine::createScene( QOpenGLContext* oglContext )
 
     // Create an empty scene.
     shared_ptr< Scene > scene = shared_ptr<Scene>( new Scene );
-
-    // Add a cube to the scene and select it.
-    /*
-    scene->addCube( new Cube );
-    scene->addCube( new Cube );
-    scene->addCube( new Cube );
-    scene->addCube( new Cube );
-    scene->addCube( new Cube );
-    //scene->selectAll(); */
 
     return scene;
 }

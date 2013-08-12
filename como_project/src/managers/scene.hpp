@@ -56,7 +56,17 @@ class Scene : public QObject
         // Scene's drawables selected by user.
         DrawablesList selectedDrawables;
 
+        GLuint guideRectsVAO;
+        GLuint guideRectsVBO;
+
+        GLuint uniformColorLocation;
     public:
+        /***
+         * 1. Initialization and destruction
+         ***/
+        Scene();
+        ~Scene();
+
         /***
          * 1. Drawables administration
          ***/
@@ -91,7 +101,7 @@ class Scene : public QObject
         /***
          * 4. Drawing
          ***/
-        void draw();
+        void draw( const int& drawGuideRect = -1 );
 
         /***
          * 5. Signals

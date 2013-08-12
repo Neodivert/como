@@ -36,6 +36,67 @@ DrawableTypeStrings drawableTypeStrings =
 
 
 /***
+ * 1. Initialization and destruction
+ ***/
+
+Scene::Scene()
+{
+    GLint currentShaderProgram;
+    GLint vPosition;
+    GLfloat guideRects[] =
+    {
+        // X axis
+        -100.0f, 0.0f, 0.0f,
+        100.0f, 0.0f, 0.0f,
+
+        // Y axis
+        0.0f, -100.0f, 0.0f,
+        0.0f, 100.0f, 0.0f,
+
+        // Z axis
+        0.0f, 0.0f, -100.0f,
+        0.0f, 0.0f, 100.0f
+    };
+
+    // Get the position of the vertex shader variable "vPosition"
+    // for the current shader program.
+    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+    vPosition = glGetAttribLocation( currentShaderProgram, "vPosition" );
+    if( vPosition == GL_INVALID_OPERATION ){
+        cout << "Error getting layout of \"position\"" << endl;
+    }else{
+        cout << "vPosition: (" << vPosition << ")" << endl;
+    }
+    // Get location of uniform shader variable "color".
+    uniformColorLocation = glGetUniformLocation( currentShaderProgram, "color" );
+    cout << "Scene: uniform color location initialized to (" << uniformColorLocation << ")" << endl;
+
+    // Set a VBO for the guide rects.
+    glGenBuffers( 1, &guideRectsVBO );
+    glBindBuffer( GL_ARRAY_BUFFER, guideRectsVBO );
+    glBufferData( GL_ARRAY_BUFFER, 18*sizeof( GLfloat ), guideRects, GL_STATIC_DRAW );
+
+    // Set a VAO for the guide rects.
+    glGenVertexArrays( 1, &guideRectsVAO );
+    glBindVertexArray( guideRectsVAO );
+
+    // By using the previous "vPosition" position, specify the location and data format of
+    // the array of vertex positions.
+    glVertexAttribPointer( vPosition, 3, GL_FLOAT, GL_FALSE, 0, 0 );
+    glEnableVertexAttribArray( vPosition );
+}
+
+
+Scene::~Scene()
+{
+    // Tell OpenGL we are done with allocated buffer objects and
+    // vertex attribute arrays.
+    glDeleteBuffers( 1, &guideRectsVBO );
+    glDeleteVertexArrays( 1, &guideRectsVAO );
+}
+
+
+/***
  * 1. Drawables administration
  ***/
 
@@ -236,8 +297,10 @@ void Scene::deleteSelection()
  * 4. Drawing
  ***/
 
-void Scene::draw()
+void Scene::draw( const int& drawGuideRect )
 {
+    GLfloat WHITE_COLOR[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
     DrawablesList::iterator it = nonSelectedDrawables.begin();
 
     for( ; it != nonSelectedDrawables.end(); it++ )
@@ -247,6 +310,19 @@ void Scene::draw()
     for( it = selectedDrawables.begin(); it != selectedDrawables.end(); it++ )
     {
         (*it)->draw( true );
+    }
+
+    // Draw a guide rect if asked.
+    if( drawGuideRect != -1 ){
+        // Change painting color to white.
+        glUniform4fv( uniformColorLocation, 1, WHITE_COLOR );
+
+        // Bind guide rects' VAO and VBO as the active ones.
+        glBindVertexArray( guideRectsVAO );
+        glBindBuffer( GL_ARRAY_BUFFER, guideRectsVBO );
+
+        // Draw the guide rect.
+        glDrawArrays( GL_LINES, drawGuideRect << 1, 2 );
     }
 }
 

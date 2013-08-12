@@ -83,11 +83,17 @@ ComoApp::ComoApp()
     // Set default transformation type.
     transformationType = TransformationType::NONE;
 
+    cout << "ComoApp::ComoApp() 0" << endl;
+    showError();
+
     // Set default OpenGL context.
     oglContext = openGLEngine.createOpenGLContext();
 
     // Set default scene.
     scene = openGLEngine.createScene( oglContext.get() );
+
+    cout << "End of ComoApp constructor" << endl;
+    showError();
 }
 
 /*
@@ -173,6 +179,9 @@ void ComoApp::setTransformationMode( TransformationMode transformationMode )
     // Emit signal.
     it = find( transformationModes.begin(), transformationModes.end(), transformationMode );
     emit transformationModeIndexChanged( std::distance( transformationModes.begin(), it ) );
+
+
+    scene->renderNeeded();
 }
 
 

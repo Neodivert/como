@@ -41,13 +41,6 @@ MainWindow::MainWindow( QWidget* parent ) :
     // Create a instance of singlenton class ComoApp.
     comoApp = shared_ptr< ComoApp >( new ComoApp /*::getInstance()*/ );
 
-    // Create an retrieve an OpenGL context.
-    /*OpenGLInitializer openGLInitializer;
-    oglContext = openGLInitializer.context();
-
-    // Get empty scene from OpenGL initializer.
-    scene = openGLInitializer.getScene();*/
-
     // Set a QFrame as the central widget. This frame will hold all others widgets.
     setCentralWidget( new QFrame );
 
@@ -57,6 +50,7 @@ MainWindow::MainWindow( QWidget* parent ) :
 
     // Create a render panel (set of four OpenGL canvas).
     renderPanel = new RenderPanel( comoApp );
+
     renderPanel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
     // Set window layout.

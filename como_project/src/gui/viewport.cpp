@@ -65,7 +65,13 @@ Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
 
     // Set this surface to the same format used by the app's shared OpenGL context.
     setFormat( comoApp->getOpenGLContext()->format() );
+    destroy();
     create();
+
+    comoApp->getOpenGLContext()->makeCurrent( this );
+
+    cout << "Viewport 0" << endl;
+    showError();
 
     // Compute dimensions' inverses.
     if( width() ){
@@ -74,6 +80,9 @@ Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
     if( height() ){
         heightInverse = 1.0f / height();
     }
+
+    cout << "Viewport 1" << endl;
+    showError();
 
     // Get location of uniform shader modelview matrix.
     if( viewProjectionMatrixLocation == -1 ){
@@ -278,16 +287,13 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
             case TransformationType::ROTATION:
                 switch( comoApp->getTransformationMode() ){
                     case TransformationMode::FIXED_X:
-                        cout << "FIXED_X" << endl;
                         comoApp->getScene()->rotateSelection( 100*tx, xAxis );
                     break;
                     case TransformationMode::FIXED_Y:
-                        cout << "FIXED_Y" << endl;
                         comoApp->getScene()->rotateSelection( 100*tx, yAxis );
                     break;
                     case TransformationMode::FIXED_Z:
                     case TransformationMode::FREE: // TODO: Change.
-                        cout << "FREE or FIXED_Z" << endl;
                         comoApp->getScene()->rotateSelection( 100*tx, zAxis );
                     break;
                 }
@@ -316,6 +322,8 @@ void Viewport::sendViewProjectionMatrixToShader( const glm::mat4& vpMatrix ) con
 
 void Viewport::render()
 {
+    TransformationModes::iterator it;
+
     const glm::mat4 viewMatrix = camera.getViewMatrix();
 
     // Make shared OpenGL context current for this surface.
@@ -332,7 +340,10 @@ void Viewport::render()
     sendViewProjectionMatrixToShader( projectionMatrix*viewMatrix );
 
     // Draw scene.
-    comoApp->getScene()->draw();
+    // TODO: move the find call to RenderPanel::render(). All the viewports will share
+    // the result.
+    it = find( transformationModes.begin(), transformationModes.end(), comoApp->getTransformationMode() );
+    comoApp->getScene()->draw( std::distance( transformationModes.begin(), it ) - 1 );
 
     // Swap buffers.
     comoApp->getOpenGLContext()->swapBuffers( this );
