@@ -176,17 +176,25 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
 
         // Get window coordinates. Set z to near plane's z.
         windowCoordinates = glm::vec3( mousePressEvent->x(), height() - mousePressEvent->y() - 1, 0.0f );
-        //windowCoordinates = glm::vec3( mousePressEvent->x(), mousePressEvent->y(), 0.0f );
-
-        // Get projection matrix (TODO: In future versions, get the camera's one).
-        projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f );
 
         // Get world coordinates in clipping near plane by unproyecting the window's ones.
-        worldCoordinates[0] = glm::unProject( windowCoordinates, camera.getTransformationMatrix(), projectionMatrix, viewport );
+        worldCoordinates[0] = glm::unProject( windowCoordinates, camera.getViewMatrix(), projectionMatrix, viewport );
 
         // Get world coordinates in far clipping plane by unproyecting the window's ones.
         windowCoordinates.z = 1.0f;
-        worldCoordinates[1] = glm::unProject( windowCoordinates, camera.getTransformationMatrix(), projectionMatrix, viewport );
+        worldCoordinates[1] = glm::unProject( windowCoordinates, camera.getViewMatrix(), projectionMatrix, viewport );
+
+        for( int i=0; i<2; i++ ){
+            cout << "World coordinates (" << i << "): (";
+            for( int j=0; j<3; j++ ){
+                cout << worldCoordinates[i][j] << ", ";
+            }
+            cout << endl;
+        }
+
+        cout << "direction: (" << worldCoordinates[1][0]-worldCoordinates[0][0] << ", "
+                               << worldCoordinates[1][1]-worldCoordinates[0][1] << ", "
+                               << worldCoordinates[1][2]-worldCoordinates[0][2] << ")" << endl;
 
         // If user is pressing ctrl key while selecting a drawable, add it to the current
         // selection. Otherwise, clear the current selection and select the new drawable.
@@ -263,38 +271,42 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
     const glm::vec3 zAxis( 0.0f, 0.0f, 1.0f );
 
-    float tx, ty;
+    // Compute the magnitude of the transformation.
+    glm::vec4 mouseMove(
+                ( mouseMoveEvent->x() - lastMouseX ) * widthInverse,
+                ( lastMouseY - mouseMoveEvent->y() ) * heightInverse,
+                0.0f,
+                1.0f
+        );
+
     TransformationMode transformationMode = comoApp->getTransformationMode();
     glm::vec3 selectionCentroid;
 
-    // Only transform the scene when user is holding mouse left button and
-    // he/she in edition mode.
-    //if( ( mouseMoveEvent->buttons() & Qt::LeftButton )
+    // Only transform the scene when user is in Object mode.
     if( comoApp->getAppMode() == AppMode::OBJECT ){
-        // Compute the magnitude of the transformation.
-        tx = ( mouseMoveEvent->x() - lastMouseX ) * widthInverse;
-        ty = ( lastMouseY - mouseMoveEvent->y() ) * heightInverse;
 
-        // Truncate values if the current transformation mode is not the appropiate.
-        //tx = ( ( transformationMode == TransformationMode::FREE ) || ( transformationMode == TransformationMode::FIXED_X ) ) * tx;
-        //ty = ( ( transformationMode == TransformationMode::FREE ) || ( transformationMode == TransformationMode::FIXED_Y ) ) * ty;
+        // Transform mouse move to world space.
+        //mouseMove = camera.getViewMatrix() * mouseMove;
+        mouseMove = glm::inverse( projectionMatrix*camera.getViewMatrix() ) * mouseMove;
+        mouseMove.z = -mouseMove.z;
+        //cout << "MouseMove (world coordinates): (" << mouseMove.x << ", " << mouseMove.y << ", " << mouseMove.z << ", " << mouseMove.w << ")" << endl;
 
         // Make the transformation requested by user.
         switch( comoApp->getTransformationType() ){
             case TransformationType::TRANSLATION:
-                comoApp->getScene()->translateSelection( glm::vec3( 2*tx, 2*ty, 0.0f ) );
+                comoApp->getScene()->translateSelection( glm::vec3( mouseMove ) );
             break;
             case TransformationType::ROTATION:
                 switch( comoApp->getTransformationMode() ){
                     case TransformationMode::FIXED_X:
-                        comoApp->getScene()->rotateSelection( 100*tx, xAxis );
+                        comoApp->getScene()->rotateSelection( 100*mouseMove.x, xAxis );
                     break;
                     case TransformationMode::FIXED_Y:
-                        comoApp->getScene()->rotateSelection( 100*tx, yAxis );
+                        comoApp->getScene()->rotateSelection( 100*mouseMove.y, yAxis );
                     break;
                     case TransformationMode::FIXED_Z:
                     case TransformationMode::FREE: // TODO: Change.
-                        comoApp->getScene()->rotateSelection( 100*tx, zAxis );
+                        comoApp->getScene()->rotateSelection( 100*mouseMove.x, zAxis );
                     break;
                 }
             break;

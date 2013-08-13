@@ -155,7 +155,6 @@ void ComoApp::setAppMode( AppMode appMode )
     AppModes::iterator it;
 
     // Change the app mode.
-    cout << "Changing app mode" << endl;
     this->appMode = appMode;
 
     transformationType = TransformationType::NONE;

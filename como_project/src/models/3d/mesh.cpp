@@ -170,36 +170,35 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
 {
     const float MAX_T = 999999.9f;
     float t = MAX_T;
+    glm::vec3 intersection;
 
     minT = MAX_T;
-
-    glm::vec3 intersection;
 
     // Normalize the direction of the ray.
     rayDirection = glm::normalize( rayDirection );
 
-    // Get a transformation matrix from world coordinates to objet
-    // coordinates (of this Mesh).
-    glm::mat4 worldToObjetTransform = glm::inverse( transformationMatrix );
+    // Set mesh's vbo as the active one.
+    glBindBuffer( GL_ARRAY_BUFFER, vbo );
 
-    // Transform ray from world to object coordinates.
-    rayOrigin = glm::vec3( worldToObjetTransform * glm::vec4( rayOrigin, 1.0f ) );
-    rayDirection = glm::normalize( glm::vec3( worldToObjetTransform * glm::vec4( rayDirection, 1.0f ) ) );
+    // The ray's origind and direction are in world space. We have to map the OpenGL's VBO with
+    // the mesh's transformed vertices (world space) to client memory, so we can intersect them
+    // (the ray and the mesh).
+    GLfloat* transformedVertices = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_READ_ONLY );
 
     // Compute intersections with all triangles in this Mesh.
     for( unsigned int i = 0; i < triangles.size(); i++ ){
         if( glm::intersectRayTriangle( rayOrigin,
                                        rayDirection,
-                                       originalVertices[triangles[i][0]],
-                                       originalVertices[triangles[i][1]],
-                                       originalVertices[triangles[i][2]],
+                                       glm::vec3( transformedVertices[triangles[i][0]*3+X], transformedVertices[triangles[i][0]*3+Y], transformedVertices[triangles[i][0]*3+Z] ),
+                                       glm::vec3( transformedVertices[triangles[i][1]*3+X], transformedVertices[triangles[i][1]*3+Y], transformedVertices[triangles[i][1]*3+Z] ),
+                                       glm::vec3( transformedVertices[triangles[i][2]*3+X], transformedVertices[triangles[i][2]*3+Y], transformedVertices[triangles[i][2]*3+Z] ),
                                        intersection ) ){
 
             // There was an intersection with this triangle. Get the parameter t.
             t = intersection.z;
 
             // Do we have a new minimum t?
-            if( ( t >= 0.0f ) && ( t <= 1.0f ) && ( t < minT ) ){
+            if( t < minT ){
                 minT = t;
                 if( triangle != nullptr ){
                     *triangle = i;
@@ -207,7 +206,10 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
             }
         }
     }
+    // We finished updating the VBO, unmap it so OpenGL can take control over it.
+    glUnmapBuffer( GL_ARRAY_BUFFER );
 
+    // If the ray didn't intersect the mesh, we "return" -1.
     if( minT >= MAX_T ){
         minT = -1.0f;
     }

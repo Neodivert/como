@@ -68,7 +68,6 @@ glm::mat4 Drawable::getTransformationMatrix()
 glm::vec3 Drawable::transformToObjectSpace( const glm::vec3 worldVector )
 {
     return glm::vec3( glm::inverse( rotationMatrix ) * glm::vec4( worldVector, 1.0f ) );
-    //glm::vec4 dir =
 }
 
 void Drawable::translate( glm::vec3 direction )
