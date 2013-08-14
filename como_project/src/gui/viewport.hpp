@@ -70,6 +70,8 @@ class Viewport : public QWindow
         float widthInverse;
         float heightInverse;
 
+        glm::vec2 lastMousePos;
+
         int lastMouseX;
         int lastMouseY;
 

@@ -20,6 +20,7 @@
 #include "viewport.hpp"
 #include <cmath>
 #include <iostream>
+#include <glm/gtx/vector_angle.hpp>
 using namespace std;
 
 namespace como {
@@ -167,7 +168,8 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
         // a drawable.
 
         // Record last mouse position.
-        recordLastMousePos( mousePressEvent->x(), mousePressEvent->y() );
+        //recordLastMousePos( mousePressEvent->x(), mousePressEvent->y() );
+        lastMousePos = glm::vec2( mousePressEvent->x() * widthInverse, mousePressEvent->y() * heightInverse );
 
         // http://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection
 
@@ -267,60 +269,64 @@ void Viewport::keyPressEvent( QKeyEvent *e )
 
 void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 {
+    // Reference axis used in rotations.
     const glm::vec3 xAxis( 1.0f, 0.0f, 0.0f );
     const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
     const glm::vec3 zAxis( 0.0f, 0.0f, 1.0f );
-    float angle;
+
+    // Compuse mouse pos (window normalized coordinates).
+    const glm::vec2 mousePos = glm::vec2( mouseMoveEvent->pos().x() * widthInverse, mouseMoveEvent->pos().y() * heightInverse );
 
     // Compute the magnitude of the transformation.
-    glm::vec4 mouseMove(
-                ( mouseMoveEvent->x() - lastMouseX ) * widthInverse,
-                ( lastMouseY - mouseMoveEvent->y() ) * heightInverse,
-                0.0f,
-                1.0f
-        );
+    glm::vec4 translationVector;
+    float angle;
 
-    mouseMove = 2.0f*mouseMove;
+    // Get current app's transformation type and mode.
+    TransformationType transformationType = comoApp->getTransformationType();
     TransformationMode transformationMode = comoApp->getTransformationMode();
 
     // Only transform the scene when user is in Object mode.
     if( comoApp->getAppMode() == AppMode::OBJECT ){
-
-        // Transform mouse move to world space.
-        mouseMove = glm::inverse( projectionMatrix*camera.getViewMatrix() ) * mouseMove;
-
         // Make the transformation requested by user.
-        switch( comoApp->getTransformationType() ){
+        switch( transformationType ){
             case TransformationType::TRANSLATION:
+                // Transform mouse move to a world space's translation vector.
+                translationVector = 2.0f * glm::inverse( projectionMatrix*camera.getViewMatrix() ) * glm::vec4( mousePos.x - lastMousePos.x, lastMousePos.y - mousePos.y, 0.0f, 1.0f );
+
+                // If requested, attach the translation vector to an axis.
                 switch( transformationMode ){
                     case TransformationMode::FIXED_X:
-                        mouseMove.y = 0.0f;
-                        mouseMove.z = 0.0f;
+                        translationVector.y = 0.0f;
+                        translationVector.z = 0.0f;
                     break;
                     case TransformationMode::FIXED_Y:
-                        mouseMove.x = 0.0f;
-                        mouseMove.z = 0.0f;
+                        translationVector.x = 0.0f;
+                        translationVector.z = 0.0f;
                     break;
                     case TransformationMode::FIXED_Z:
-                        mouseMove.x = 0.0f;
-                        mouseMove.y = 0.0f;
+                        translationVector.x = 0.0f;
+                        translationVector.y = 0.0f;
                     break;
                     default:
                     break;
                 }
-                comoApp->getScene()->translateSelection( glm::vec3( mouseMove ) );
+
+                // Do the translation.
+                comoApp->getScene()->translateSelection( glm::vec3( translationVector ) );
             break;
             case TransformationType::ROTATION:
+                angle = 2.0f * glm::angle( glm::normalize( lastMousePos ), glm::normalize( mousePos ) );
+                cout << "Angle: " << angle << endl;
                 switch( transformationMode ){
                     case TransformationMode::FIXED_X:
-                        comoApp->getScene()->rotateSelection( 100*mouseMove.x, xAxis );
+                        comoApp->getScene()->rotateSelection( angle, xAxis );
                     break;
                     case TransformationMode::FIXED_Y:
-                        comoApp->getScene()->rotateSelection( 100*mouseMove.y, yAxis );
+                        comoApp->getScene()->rotateSelection( angle, yAxis );
                     break;
                     case TransformationMode::FIXED_Z:
                     case TransformationMode::FREE: // TODO: Change.
-                        comoApp->getScene()->rotateSelection( 100*mouseMove.x, zAxis );
+                        comoApp->getScene()->rotateSelection( angle, zAxis );
                     break;
                 }
             break;
@@ -333,7 +339,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     }
 
     // Record last mouse position.
-    recordLastMousePos( mouseMoveEvent->x(), mouseMoveEvent->y() );
+    lastMousePos = mousePos;
 }
 
 
