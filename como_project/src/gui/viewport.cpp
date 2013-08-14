@@ -270,6 +270,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     const glm::vec3 xAxis( 1.0f, 0.0f, 0.0f );
     const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
     const glm::vec3 zAxis( 0.0f, 0.0f, 1.0f );
+    float angle;
 
     // Compute the magnitude of the transformation.
     glm::vec4 mouseMove(
@@ -279,25 +280,38 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 1.0f
         );
 
+    mouseMove = 2.0f*mouseMove;
     TransformationMode transformationMode = comoApp->getTransformationMode();
-    glm::vec3 selectionCentroid;
 
     // Only transform the scene when user is in Object mode.
     if( comoApp->getAppMode() == AppMode::OBJECT ){
 
         // Transform mouse move to world space.
-        //mouseMove = camera.getViewMatrix() * mouseMove;
         mouseMove = glm::inverse( projectionMatrix*camera.getViewMatrix() ) * mouseMove;
-        mouseMove.z = -mouseMove.z;
-        //cout << "MouseMove (world coordinates): (" << mouseMove.x << ", " << mouseMove.y << ", " << mouseMove.z << ", " << mouseMove.w << ")" << endl;
 
         // Make the transformation requested by user.
         switch( comoApp->getTransformationType() ){
             case TransformationType::TRANSLATION:
+                switch( transformationMode ){
+                    case TransformationMode::FIXED_X:
+                        mouseMove.y = 0.0f;
+                        mouseMove.z = 0.0f;
+                    break;
+                    case TransformationMode::FIXED_Y:
+                        mouseMove.x = 0.0f;
+                        mouseMove.z = 0.0f;
+                    break;
+                    case TransformationMode::FIXED_Z:
+                        mouseMove.x = 0.0f;
+                        mouseMove.y = 0.0f;
+                    break;
+                    default:
+                    break;
+                }
                 comoApp->getScene()->translateSelection( glm::vec3( mouseMove ) );
             break;
             case TransformationType::ROTATION:
-                switch( comoApp->getTransformationMode() ){
+                switch( transformationMode ){
                     case TransformationMode::FIXED_X:
                         comoApp->getScene()->rotateSelection( 100*mouseMove.x, xAxis );
                     break;
