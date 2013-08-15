@@ -169,7 +169,7 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
 
         // Record last mouse position.
         //recordLastMousePos( mousePressEvent->x(), mousePressEvent->y() );
-        lastMousePos = glm::vec2( mousePressEvent->x() * widthInverse, mousePressEvent->y() * heightInverse );
+        lastMousePos = getNormalizedMousePos( mousePressEvent->x(), mousePressEvent->y() );
 
         // http://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection
 
@@ -275,7 +275,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     const glm::vec3 zAxis( 0.0f, 0.0f, 1.0f );
 
     // Compuse mouse pos (window normalized coordinates).
-    const glm::vec2 mousePos = glm::vec2( mouseMoveEvent->pos().x() * widthInverse, mouseMoveEvent->pos().y() * heightInverse );
+    const glm::vec2 mousePos = getNormalizedMousePos( mouseMoveEvent->pos().x(), mouseMoveEvent->pos().y() );
 
     // Compute the magnitude of the transformation.
     glm::vec4 translationVector;
@@ -412,6 +412,16 @@ void Viewport::setProjection( Projection projection )
     }
 
     //comoApp->getScene()->renderNeeded();
+}
+
+
+/***
+ * 6. Auxiliar methods
+ ***/
+
+glm::vec2 Viewport::getNormalizedMousePos( const int& x, const int& y ) const
+{
+    return glm::vec2( x * widthInverse, y * heightInverse );
 }
 
 } // namespace como

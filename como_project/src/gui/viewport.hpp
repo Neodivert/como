@@ -116,6 +116,11 @@ class Viewport : public QWindow
     public slots:
         void setView( View view );
         void setProjection( Projection projection );
+
+        /***
+         * 6. Auxiliar methods
+         ***/
+        glm::vec2 getNormalizedMousePos( const int& x, const int& y ) const ;
 };
 
 } // namespace como
