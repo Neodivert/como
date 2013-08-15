@@ -308,8 +308,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 comoApp->getScene()->translateSelection( glm::vec3( translationVector ) );
             break;
             case TransformationType::ROTATION:
-                angle = 2.0f * glm::angle( glm::normalize( lastMousePos ), glm::normalize( mousePos ) );
-                cout << "Angle: " << angle << endl;
+                angle = glm::orientedAngle(glm::normalize( mousePos ), glm::normalize( lastMousePos ) );
                 switch( transformationMode ){
                     case TransformationMode::FIXED_X:
                         comoApp->getScene()->rotateSelection( angle, xAxis );
@@ -414,7 +413,7 @@ void Viewport::setProjection( Projection projection )
 
 glm::vec2 Viewport::getNormalizedMousePos( const int& x, const int& y ) const
 {
-    return glm::vec2( x * widthInverse, y * heightInverse );
+    return glm::vec2( (x * widthInverse) - 0.5f, (y * heightInverse) - 0.5f );
 }
 
 } // namespace como
