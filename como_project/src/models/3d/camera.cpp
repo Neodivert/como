@@ -93,6 +93,12 @@ void Camera::setView( View view )
     update();
 }
 
+
+glm::vec4 Camera::getCenterVector() const
+{
+    return transformedCenter;
+}
+
 /***
  *
  ***/

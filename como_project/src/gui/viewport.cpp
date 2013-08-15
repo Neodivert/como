@@ -308,7 +308,11 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 comoApp->getScene()->translateSelection( glm::vec3( translationVector ) );
             break;
             case TransformationType::ROTATION:
+                // Compute the angle between the vectors mousePos and lastMousePos.
                 angle = glm::orientedAngle(glm::normalize( mousePos ), glm::normalize( lastMousePos ) );
+
+                // Make the rotation about an axis or another depending on the current
+                // transformationMode.
                 switch( transformationMode ){
                     case TransformationMode::FIXED_X:
                         comoApp->getScene()->rotateSelection( angle, xAxis );
@@ -317,8 +321,11 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                         comoApp->getScene()->rotateSelection( angle, yAxis );
                     break;
                     case TransformationMode::FIXED_Z:
-                    case TransformationMode::FREE: // TODO: Change.
                         comoApp->getScene()->rotateSelection( angle, zAxis );
+                    break;
+                    case TransformationMode::FREE:
+                        // TODO: Why do I have to use -angle?
+                        comoApp->getScene()->rotateSelection( -angle, glm::vec3( camera.getCenterVector() ) );
                     break;
                 }
             break;

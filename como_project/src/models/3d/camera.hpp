@@ -73,6 +73,7 @@ class Camera : public Mesh
          ***/
         glm::mat4 getViewMatrix() const ;
         void setView( View view );
+        glm::vec4 getCenterVector() const ;
 
     protected:
         /***
