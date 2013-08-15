@@ -3,7 +3,7 @@
 namespace como {
 
 Views views =
-{
+{{
     View::FRONT,
     View::BACK,
     View::LEFT,
@@ -11,10 +11,10 @@ Views views =
     View::TOP,
     View::BOTTOM,
     View::CAMERA
-};
+}};
 
 ViewStrings viewStrings =
-{
+{{
     QString::fromUtf8( "Front view" ),
     QString::fromUtf8( "Back view" ),
     QString::fromUtf8( "Left view" ),
@@ -22,7 +22,7 @@ ViewStrings viewStrings =
     QString::fromUtf8( "Top view" ),
     QString::fromUtf8( "Bottom view" ),
     QString::fromUtf8( "Camera view" )
-};
+}};
 
 
 Camera::Camera() :
@@ -63,7 +63,6 @@ void Camera::setView( View view )
 {
     const glm::vec3 X_AXIS = glm::vec3( 1.0f, 0.0f, 0.0f );
     const glm::vec3 Y_AXIS = glm::vec3( 0.0f, 1.0f, 0.0f );
-    const glm::vec3 Z_AXIS = glm::vec3( 0.0f, 0.0f, 1.0f );
 
     translationMatrix = glm::mat4( 1.0f );
     switch( view ){

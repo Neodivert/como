@@ -24,15 +24,15 @@ namespace como {
 
 
 DrawableTypes drawableTypes =
-{
+{{
     DrawableType::CUBE
-};
+}};
 
 
 DrawableTypeStrings drawableTypeStrings =
-{
+{{
     QString::fromUtf8( "Cube" )
-};
+}};
 
 
 /***
@@ -273,7 +273,7 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis )
     emit renderNeeded();
 }
 
-
+/*
 void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot )
 {
     DrawablesList::iterator it = selectedDrawables.begin();
@@ -284,7 +284,7 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const 
     }
     emit renderNeeded();
 }
-
+*/
 void Scene::deleteSelection()
 {
     // Delete selected drawables.

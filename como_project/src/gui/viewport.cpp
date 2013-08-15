@@ -27,26 +27,19 @@ namespace como {
 
 
 ProjectionModes projectionModes =
-{
+{{
     Projection::ORTHO,
     Projection::PERSPECTIVE
-};
+}};
 
 ProjectionModeStrings projectionModeStrings =
-{
+{{
     QString::fromUtf8( "Ortho" ),
     QString::fromUtf8( "Perspective" )
-};
+}};
 
 
 GLint Viewport::viewProjectionMatrixLocation = -1;
-
-
-void Viewport::recordLastMousePos( const int& x, const int& y )
-{
-    lastMouseX = x;
-    lastMouseY = y;
-}
 
 
 /***

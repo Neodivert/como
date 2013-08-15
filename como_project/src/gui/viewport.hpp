@@ -72,12 +72,7 @@ class Viewport : public QWindow
 
         glm::vec2 lastMousePos;
 
-        int lastMouseX;
-        int lastMouseY;
-
         glm::mat4 projectionMatrix;
-
-        void recordLastMousePos( const int& x, const int& y );
 
     public:
         /***

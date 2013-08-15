@@ -121,7 +121,7 @@ void Drawable::rotate( GLfloat angle, glm::vec3 axis )
     update();
 }
 
-
+/*
 void Drawable::rotate( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot )
 {
     cout << "Rotating around pivot: (" << pivot.x << ", " << pivot.y << ", " << pivot.z << ")" << endl;
@@ -130,7 +130,6 @@ void Drawable::rotate( const GLfloat& angle, const glm::vec3& axis, const glm::v
     // Translate drawable until the pivot be at the origin.
     //transformationMatrix = glm::translate( transformationMatrix, -pivot );
 
-    /*
     // Rotate drawable.
     glm::mat4 rotationMatrix = glm::rotate( glm::mat4( 1.0f ), angle, axis );
 
@@ -143,9 +142,9 @@ void Drawable::rotate( const GLfloat& angle, const glm::vec3& axis, const glm::v
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.
     update();
-    */
-}
 
+}
+*/
 
 /***
  * 5. Updating and drawing

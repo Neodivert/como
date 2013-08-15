@@ -28,40 +28,40 @@ namespace como {
 ComoApp* ComoApp::singlentonInstance = nullptr;
 
 AppModes appModes =
-{
+{{
     AppMode::OBJECT,
     AppMode::EDITION
-};
+}};
 
 std::array< QString, N_APP_MODES > appModeStrings =
-{
+{{
     QString::fromUtf8( "Object mode" ),
     QString::fromUtf8( "Edition mode" )
-};
+}};
 
 std::map<EditionScope, std::string> editionScopeStrings =
-{
+{{
     { EditionScope::LOCAL, "Local" },
     { EditionScope::GLOBAL, "Global" }
-};
+}};
 
 // Array will all the possible transformation modes.
 TransformationModes transformationModes =
-{
+{{
     TransformationMode::FREE,
     TransformationMode::FIXED_X,
     TransformationMode::FIXED_Y,
     TransformationMode::FIXED_Z
-};
+}};
 
 // Array with a string for each transformation mode value (for output in GUI).
 std::array< QString, N_TRANSFORMATION_MODES > transformationModeStrings =
-{
+{{
     QString::fromUtf8( "Free" ),
     QString::fromUtf8( "Fixed to X axis" ),
     QString::fromUtf8( "Fixed to Y axis" ),
     QString::fromUtf8( "Fixed to Z axis" )
-};
+}};
 
 
 /***

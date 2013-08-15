@@ -155,12 +155,13 @@ glm::vec4 Mesh::getCentroid() const
  * 3. Transformations
  ***/
 
+/*
 void Mesh::rotateAroundCentroid( const GLfloat& angle, const glm::vec3& axis )
 {
     // Set the transformed centroid as the pivot point and rotate the mesh.
     rotate( angle, axis, glm::vec3( transformedCentroid ) );
 }
-
+*/
 
 /***
  * 4. Intersections

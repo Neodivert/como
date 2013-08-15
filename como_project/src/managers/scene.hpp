@@ -94,7 +94,7 @@ class Scene : public QObject
          ***/
         void translateSelection( const glm::vec3& direction );
         void rotateSelection( const GLfloat& angle, const glm::vec3& axis );
-        void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
+        //void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
 
         void deleteSelection();
 

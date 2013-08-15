@@ -89,7 +89,7 @@ class Mesh : public Drawable
         /***
          * 3. Transformations
          ***/
-        virtual void rotateAroundCentroid( const GLfloat& angle, const glm::vec3& axis );
+        //virtual void rotateAroundCentroid( const GLfloat& angle, const glm::vec3& axis );
 
         /***
          * 4. Intersections
