@@ -273,6 +273,18 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis )
     emit renderNeeded();
 }
 
+
+void Scene::scaleSelection( const glm::vec3& scaleFactors )
+{
+    DrawablesList::iterator it = selectedDrawables.begin();
+
+    for( ; it != selectedDrawables.end(); it++ )
+    {
+        (*it)->scale( scaleFactors );
+    }
+    emit renderNeeded();
+}
+
 /*
 void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot )
 {

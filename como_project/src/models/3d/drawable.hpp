@@ -95,6 +95,8 @@ class Drawable
         virtual void translate( glm::vec3 direction );
 
         virtual void rotate( GLfloat angle, glm::vec3 axis );
+
+        virtual void scale( glm::vec3 scaleFactors );
         //virtual void rotate( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
 
         virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle = nullptr  ) const = 0;

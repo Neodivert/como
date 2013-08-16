@@ -218,6 +218,10 @@ void Viewport::keyPressEvent( QKeyEvent *e )
             comoApp->setTransformationType( TransformationType::ROTATION );
             comoApp->setTransformationMode( TransformationMode::FREE );
         break;
+        case Qt::Key_S:
+            comoApp->setTransformationType( TransformationType::SCALE );
+            comoApp->setTransformationMode( TransformationMode::FREE );
+        break;
         case Qt::Key_X:
             comoApp->setTransformationMode( TransformationMode::FIXED_X );
         break;
@@ -330,7 +334,17 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 }
             break;
             case TransformationType::SCALE:
-                cout << "Scale not implemented" << endl;
+                translationVector = glm::vec4( mousePos.x / lastMousePos.x, 1.0f, 1.0f, 1.0f );
+                cout << "Scaling factors (window coordinates): " << translationVector.x << ", " << translationVector.y << ", " << translationVector.z << ", " << translationVector.w << ")" << endl;
+                translationVector = glm::inverse( projectionMatrix*camera.getViewMatrix() ) * translationVector;
+
+                cout << "lastMousePos: (" << lastMousePos.x << ", " << lastMousePos.y << ")" << endl;
+                cout << "mousePos:     (" << mousePos.x << ", " << mousePos.y << ")" << endl;
+                cout << "Scaling factors (world coordinates): " << translationVector.x << ", " << translationVector.y << ", " << translationVector.z << ", " << translationVector.w << ")" << endl;
+
+                // Do the scale.
+                comoApp->getScene()->scaleSelection( glm::vec3( translationVector ) );
+                //cout << "Scale not implemented" << endl;
             break;
             default:
             break;
