@@ -336,7 +336,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
             case TransformationType::SCALE:
                 translationVector = glm::vec4( mousePos.x / lastMousePos.x, 1.0f, 1.0f, 1.0f );
                 cout << "Scaling factors (window coordinates): " << translationVector.x << ", " << translationVector.y << ", " << translationVector.z << ", " << translationVector.w << ")" << endl;
-                translationVector = glm::inverse( projectionMatrix*camera.getViewMatrix() ) * translationVector;
+                translationVector = glm::inverse( projectionMatrix/* *camera.getViewMatrix() */ ) * translationVector;
 
                 cout << "lastMousePos: (" << lastMousePos.x << ", " << lastMousePos.y << ")" << endl;
                 cout << "mousePos:     (" << mousePos.x << ", " << mousePos.y << ")" << endl;
@@ -417,7 +417,7 @@ void Viewport::setProjection( Projection projection )
     // TODO: Make both projections share some connection.
     switch( projection ){
         case Projection::ORTHO:
-            projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f );
+            projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f );
         break;
         case Projection::PERSPECTIVE:
             projectionMatrix = glm::perspective( 60.0f, (float)(width())/(float)(height()), 0.1f, 1.0f );
