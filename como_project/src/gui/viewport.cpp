@@ -271,14 +271,13 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
     const glm::vec3 zAxis( 0.0f, 0.0f, 1.0f );
 
-    glm::vec4 auxVector( 0.0f, 0.0f, 2.0f, 0.0f );
-
-    // Compuse mouse pos (window normalized coordinates).
-    const glm::vec2 mousePos = getNormalizedMousePos( mouseMoveEvent->pos().x(), mouseMoveEvent->pos().y() );
-
-    // Compute the magnitude of the transformation.
-    glm::vec4 translationVector;
+    // Variables used for computing the magnitude of the transformation.
+    glm::vec4 reversalVector( 0.0f );
+    glm::vec4 transformVector;
     float angle;
+
+    // Compute mouse pos (window normalized coordinates [-0.5, 0.5]).
+    const glm::vec2 mousePos = getNormalizedMousePos( mouseMoveEvent->pos().x(), mouseMoveEvent->pos().y() );
 
     // Get current app's transformation type and mode.
     TransformationType transformationType = comoApp->getTransformationType();
@@ -290,28 +289,28 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
         switch( transformationType ){
             case TransformationType::TRANSLATION:
                 // Transform mouse move to a world space's translation vector.
-                translationVector = 2.0f * glm::inverse( projectionMatrix*camera.getViewMatrix() ) * glm::vec4( mousePos.x - lastMousePos.x, lastMousePos.y - mousePos.y, 0.0f, 1.0f );
+                transformVector = 2.0f * glm::inverse( projectionMatrix*camera.getViewMatrix() ) * glm::vec4( mousePos.x - lastMousePos.x, lastMousePos.y - mousePos.y, 0.0f, 1.0f );
 
                 // If requested, attach the translation vector to an axis.
                 switch( transformationMode ){
                     case TransformationMode::FIXED_X:
-                        translationVector.y = 0.0f;
-                        translationVector.z = 0.0f;
+                        transformVector.y = 0.0f;
+                        transformVector.z = 0.0f;
                     break;
                     case TransformationMode::FIXED_Y:
-                        translationVector.x = 0.0f;
-                        translationVector.z = 0.0f;
+                        transformVector.x = 0.0f;
+                        transformVector.z = 0.0f;
                     break;
                     case TransformationMode::FIXED_Z:
-                        translationVector.x = 0.0f;
-                        translationVector.y = 0.0f;
+                        transformVector.x = 0.0f;
+                        transformVector.y = 0.0f;
                     break;
                     default:
                     break;
                 }
 
                 // Do the translation.
-                comoApp->getScene()->translateSelection( glm::vec3( translationVector ) );
+                comoApp->getScene()->translateSelection( glm::vec3( transformVector ) );
             break;
             case TransformationType::ROTATION:
                 // Compute the angle between the vectors mousePos and lastMousePos.
@@ -336,44 +335,53 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 }
             break;
             case TransformationType::SCALE:
-                auxVector = glm::vec4( mousePos.x / lastMousePos.x, mousePos.y / lastMousePos.y, 1.0f, 1.0f );
-                translationVector = auxVector;
-                cout << "Scaling factors (window coordinates): " << translationVector.x << ", " << translationVector.y << ", " << translationVector.z << ", " << translationVector.w << ")" << endl;
-                translationVector = glm::inverse( projectionMatrix * camera.getViewMatrix() ) * translationVector;
+                // Compute the scale magnitud.
+                transformVector = glm::vec4( mousePos.x / lastMousePos.x, mousePos.y / lastMousePos.y, 1.0f, 1.0f );
 
-                // If any component has been inverted, discard the change.
+                // If a coordinate has been inverted, indicate it in the reversal vector.
+                if( transformVector.x < 0.0f ){
+                    reversalVector.x = 1.0f;
+                }
+                if( transformVector.y < 0.0f ){
+                    reversalVector.y = 1.0f;
+                }
+
+                // Transform the scale and the reversal vectors from window to world space.
+                transformVector = glm::inverse( projectionMatrix * camera.getViewMatrix() ) * transformVector;
+                reversalVector = glm::inverse( projectionMatrix * camera.getViewMatrix() ) * reversalVector;
+
+                // When the transformation vector is moved from window to world space, some
+                // components can be inverted due to the rotations inherent to the space change.
+                // Because of that, we use the transformed reversal vector in order to know when a reversion
+                // is "true" (commanded by user) or "false" (due to space change).
                 for( unsigned int i=0; i<3; i++ ){
-                    if( ( translationVector[i] * auxVector[i] ) < 0.0f ){
-                        translationVector[i] = -translationVector[i];
+                    if( abs( reversalVector[i] ) > 0.00001f ){
+                        transformVector[i] = - abs( transformVector[i] );
+                    }else{
+                        transformVector[i] = abs( transformVector[i] );
                     }
                 }
 
-                // If requested, attach the translation vector to an axis.
-                /*
+                // If requested, attach the tranformation vector to an axis.
                 switch( transformationMode ){
                     case TransformationMode::FIXED_X:
-                        translationVector.y = 1.0f;
-                        translationVector.z = 1.0f;
+                        transformVector.y = 1.0f;
+                        transformVector.z = 1.0f;
                     break;
                     case TransformationMode::FIXED_Y:
-                        translationVector.x = 1.0f;
-                        translationVector.z = 1.0f;
+                        transformVector.x = 1.0f;
+                        transformVector.z = 1.0f;
                     break;
                     case TransformationMode::FIXED_Z:
-                        translationVector.x = 1.0f;
-                        translationVector.y = 1.0f;
+                        transformVector.x = 1.0f;
+                        transformVector.y = 1.0f;
                     break;
                     default:
                     break;
                 }
-                */
-
-                cout << "Scaling factors (world coordinates): " << translationVector.x << ", " << translationVector.y << ", " << translationVector.z << ", " << translationVector.w << ")" << endl;
-                cout << "auxVector: (" << auxVector.x << ", " << auxVector.y << ", " << auxVector.z << ", " << auxVector.w << ")" << endl;
 
                 // Do the scale.
-                comoApp->getScene()->scaleSelection( glm::vec3( translationVector ) );
-                //cout << "Scale not implemented" << endl;
+                comoApp->getScene()->scaleSelection( glm::vec3( transformVector ) );
             break;
             default:
             break;

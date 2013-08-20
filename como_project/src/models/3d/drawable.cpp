@@ -127,8 +127,6 @@ void Drawable::scale( glm::vec3 scaleFactors )
     // Rotate the vector "scaleFactors" from world to object space.
     scaleFactors = glm::vec3( glm::inverse( rotationMatrix ) * glm::vec4( scaleFactors, 1.0f ) );
 
-    cout << "Drawable::scaling: (" << scaleFactors.x << ", " << scaleFactors.y << ", " << scaleFactors.z << ")" << endl;
-
     // Compute the scale matrix.
     glm::mat4 newScale = glm::scale( glm::mat4( 1.0f ), scaleFactors );
 
