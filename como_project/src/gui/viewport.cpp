@@ -272,7 +272,6 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     const glm::vec3 zAxis( 0.0f, 0.0f, 1.0f );
 
     // Variables used for computing the magnitude of the transformation.
-    glm::vec4 reversalVector( 0.0f );
     glm::vec4 transformVector;
     float angle;
 
@@ -338,29 +337,8 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 // Compute the scale magnitud.
                 transformVector = glm::vec4( mousePos.x / lastMousePos.x, mousePos.y / lastMousePos.y, 1.0f, 1.0f );
 
-                // If a coordinate has been inverted, indicate it in the reversal vector.
-                if( transformVector.x < 0.0f ){
-                    reversalVector.x = 1.0f;
-                }
-                if( transformVector.y < 0.0f ){
-                    reversalVector.y = 1.0f;
-                }
-
-                // Transform the scale and the reversal vectors from window to world space.
-                transformVector = glm::inverse( projectionMatrix * camera.getViewMatrix() ) * transformVector;
-                reversalVector = glm::inverse( projectionMatrix * camera.getViewMatrix() ) * reversalVector;
-
-                // When the transformation vector is moved from window to world space, some
-                // components can be inverted due to the rotations inherent to the space change.
-                // Because of that, we use the transformed reversal vector in order to know when a reversion
-                // is "true" (commanded by user) or "false" (due to space change).
-                for( unsigned int i=0; i<3; i++ ){
-                    if( abs( reversalVector[i] ) > 0.00001f ){
-                        transformVector[i] = - abs( transformVector[i] );
-                    }else{
-                        transformVector[i] = abs( transformVector[i] );
-                    }
-                }
+                // Transform the scale vector from window to world space.
+                transformVector = Drawable::transformScaleVector( transformVector, glm::inverse( projectionMatrix * camera.getViewMatrix() ) );
 
                 // If requested, attach the tranformation vector to an axis.
                 switch( transformationMode ){

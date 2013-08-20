@@ -69,8 +69,11 @@ class Drawable
         std::array< glm::vec4, 3 > originalOrientation;
         std::array< glm::vec4, 3 > transformedOrientation;
 
-        glm::mat4 translationMatrix;
         glm::mat4 rotationMatrix;
+        glm::mat4 rotationAndScaleMatrix;
+
+
+        glm::vec3 scaleVector;
 
         glm::mat4 transformationMatrix;
 
@@ -116,6 +119,11 @@ class Drawable
 
     public:
         virtual void draw( bool selected = false ) const = 0;
+
+        /***
+         * 6. Auxiliar methods
+         ***/
+        static glm::vec4 transformScaleVector( glm::vec4 scaleVector, const glm::mat4& transformMatrix );
 };
 
 } // namespace como

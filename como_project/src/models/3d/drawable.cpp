@@ -40,9 +40,12 @@ void showError(){
 Drawable::Drawable()
 {
     // Initialize transformation matrix to identity matrix.
-    translationMatrix = glm::mat4( 1.0f );
     rotationMatrix = glm::mat4( 1.0f );
     transformationMatrix = glm::mat4( 1.0f );
+    rotationAndScaleMatrix = glm::mat4( 1.0f );
+
+    // Initialize the scale vector.
+    scaleVector = glm::vec3( 1.0f );
 
     // Initialize the drawable's original orientation.
     originalOrientation[X] = glm::vec4( 1.0f, 0.0f, 0.0f, 1.0f );
@@ -75,6 +78,10 @@ void Drawable::translate( glm::vec3 direction )
     // Rotate the vector "direction" from world to object space.
     direction = glm::vec3( glm::inverse( rotationMatrix ) * glm::vec4( direction, 1.0f ) );
 
+    direction.x *= 1/scaleVector.x;
+    direction.y *= 1/scaleVector.y;
+    direction.z *= 1/scaleVector.z;
+
     // Add translation to transformation matrix.
     transformationMatrix = glm::translate( transformationMatrix, direction );
 
@@ -105,6 +112,7 @@ void Drawable::rotate( GLfloat angle, glm::vec3 axis )
 
     // Concatenate new rotation to previous rotations.
     rotationMatrix = rotationMatrix * newRotation;
+    rotationAndScaleMatrix = rotationAndScaleMatrix * newRotation;
 
     // Concatenate new rotation to object's transformation matrix.
     transformationMatrix = transformationMatrix * newRotation;
@@ -126,12 +134,19 @@ void Drawable::scale( glm::vec3 scaleFactors )
 {
     // Rotate the vector "scaleFactors" from world to object space.
     scaleFactors = glm::vec3( glm::inverse( rotationMatrix ) * glm::vec4( scaleFactors, 1.0f ) );
+    //scaleFactors = glm::vec3( transformScaleVector( glm::vec4( scaleFactors, 1.0f ), glm::inverse( rotationAndScaleMatrix ) ) );
 
     // Compute the scale matrix.
     glm::mat4 newScale = glm::scale( glm::mat4( 1.0f ), scaleFactors );
 
     // Append new slace to object's transformation matrix.
     transformationMatrix = transformationMatrix * newScale;
+    //rotationAndScaleMatrix = rotationAndScaleMatrix * newScale;
+
+    // Update the Drawable's scale factors.
+    scaleVector.x *= scaleFactors.x;
+    scaleVector.y *= scaleFactors.y;
+    scaleVector.z *= scaleFactors.z;
 
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.
@@ -174,6 +189,42 @@ void Drawable::update()
     for( unsigned int i = 0; i<3; i++ ){
         transformedOrientation[i] = transformationMatrix * originalOrientation[i];
     }
+}
+
+
+/***
+ * 6. Auxiliar methods
+ ***/
+
+glm::vec4 Drawable::transformScaleVector( glm::vec4 scaleVector, const glm::mat4& transformMatrix )
+{
+    glm::vec4 reversalVector;
+
+    // If a coordinate has been inverted, indicate it in the reversal vector.
+    if( scaleVector.x < 0.0f ){
+        reversalVector.x = 1.0f;
+    }
+    if( scaleVector.y < 0.0f ){
+        reversalVector.y = 1.0f;
+    }
+
+    // Transform the scale and the reversal vectors with the given transform matrix.
+    scaleVector = glm::inverse( transformMatrix ) * scaleVector;
+    reversalVector = glm::inverse( transformMatrix ) * reversalVector;
+
+    // When the transformation vector is moved from window to world space, some
+    // components can be inverted due to the rotations inherent to the space change.
+    // Because of that, we use the transformed reversal vector in order to know when a reversion
+    // is "true" (commanded by user) or "false" (due to space change).
+    for( unsigned int i=0; i<3; i++ ){
+        if( abs( reversalVector[i] ) > 0.00001f ){
+            scaleVector[i] = - abs( scaleVector[i] );
+        }else{
+            scaleVector[i] = abs( scaleVector[i] );
+        }
+    }
+
+    return scaleVector;
 }
 
 

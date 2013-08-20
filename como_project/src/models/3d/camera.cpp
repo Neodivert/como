@@ -64,7 +64,6 @@ void Camera::setView( View view )
     const glm::vec3 X_AXIS = glm::vec3( 1.0f, 0.0f, 0.0f );
     const glm::vec3 Y_AXIS = glm::vec3( 0.0f, 1.0f, 0.0f );
 
-    translationMatrix = glm::mat4( 1.0f );
     switch( view ){
         case View::LEFT:
             rotationMatrix = glm::rotate( glm::mat4( 1.0f ), -90.0f, Y_AXIS );
