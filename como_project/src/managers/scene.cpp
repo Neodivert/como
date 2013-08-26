@@ -103,19 +103,27 @@ void Scene::initWorldAxis()
 {
     GLint currentShaderProgram;
     GLint vPosition;
+    const GLfloat x0 = -0.5f;
+    const GLfloat y0 = -0.5f;
+    const GLfloat z0 = 0.5f;
+
+    const GLfloat x1 = 0.5f;
+    const GLfloat y1 = 0.5f;
+    const GLfloat z1 = -0.5f;
+
     GLfloat worldAxisVectors[] =
     {
         // X axis
-        0.0f, 0.0f, 0.0f,
-        1.0f, 0.0f, 0.0f,
+        x0, y0, z0,
+        x1, y0, z0,
 
         // Y axis
-        0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
+        x0, y0, z0,
+        x0, y1, z0,
 
         // Z axis
-        0.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, -1.0f
+        x0, y0, z0,
+        x0, y0, z1
     };
 
     // Get the position of the vertex shader variable "vPosition"
