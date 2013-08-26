@@ -359,11 +359,11 @@ void Scene::deleteSelection()
  * 4. Drawing
  ***/
 
-void Scene::draw( const int& drawGuideRect )
+void Scene::draw( const int& drawGuideRect ) const
 {
     GLfloat WHITE_COLOR[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-    DrawablesList::iterator it = nonSelectedDrawables.begin();
+    DrawablesList::const_iterator it = nonSelectedDrawables.begin();
 
     for( ; it != nonSelectedDrawables.end(); it++ )
     {
@@ -389,7 +389,7 @@ void Scene::draw( const int& drawGuideRect )
 }
 
 
-void Scene::drawWorldAxis()
+void Scene::drawWorldAxis() const
 {
     GLfloat worldAxisColors[3][4] =
     {

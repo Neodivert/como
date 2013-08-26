@@ -109,8 +109,8 @@ class Scene : public QObject
         /***
          * 4. Drawing
          ***/
-        void draw( const int& drawGuideRect = -1 );
-        void drawWorldAxis();
+        void draw( const int& drawGuideRect = -1 ) const ;
+        void drawWorldAxis() const ;
 
         /***
          * 5. Signals
