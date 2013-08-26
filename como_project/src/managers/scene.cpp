@@ -84,6 +84,9 @@ Scene::Scene()
     // the array of vertex positions.
     glVertexAttribPointer( vPosition, 3, GL_FLOAT, GL_FALSE, 0, 0 );
     glEnableVertexAttribArray( vPosition );
+
+    // Initialize world axis
+    initWorldAxis();
 }
 
 
@@ -95,6 +98,53 @@ Scene::~Scene()
     glDeleteVertexArrays( 1, &guideRectsVAO );
 }
 
+
+void Scene::initWorldAxis()
+{
+    GLint currentShaderProgram;
+    GLint vPosition;
+    GLfloat worldAxisVectors[] =
+    {
+        // X axis
+        0.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+
+        // Y axis
+        0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+
+        // Z axis
+        0.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, -1.0f
+    };
+
+    // Get the position of the vertex shader variable "vPosition"
+    // for the current shader program.
+    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+    vPosition = glGetAttribLocation( currentShaderProgram, "vPosition" );
+    if( vPosition == GL_INVALID_OPERATION ){
+        cout << "Error getting layout of \"position\"" << endl;
+    }else{
+        cout << "vPosition: (" << vPosition << ")" << endl;
+    }
+    // Get location of uniform shader variable "color".
+    uniformColorLocation = glGetUniformLocation( currentShaderProgram, "color" );
+    cout << "Scene: uniform color location initialized to (" << uniformColorLocation << ")" << endl;
+
+    // Set a VBO for the world axis rects.
+    glGenBuffers( 1, &worldAxisVBO );
+    glBindBuffer( GL_ARRAY_BUFFER, worldAxisVBO );
+    glBufferData( GL_ARRAY_BUFFER, 18*sizeof( GLfloat ), worldAxisVectors, GL_STATIC_DRAW );
+
+    // Set a VAO for the world axis rects.
+    glGenVertexArrays( 1, &worldAxisVAO );
+    glBindVertexArray( worldAxisVAO );
+
+    // By using the previous "vPosition" position, specify the location and data format of
+    // the array of vertex positions.
+    glVertexAttribPointer( vPosition, 3, GL_FLOAT, GL_FALSE, 0, 0 );
+    glEnableVertexAttribArray( vPosition );
+}
 
 /***
  * 1. Drawables administration
@@ -335,6 +385,27 @@ void Scene::draw( const int& drawGuideRect )
 
         // Draw the guide rect.
         glDrawArrays( GL_LINES, drawGuideRect << 1, 2 );
+    }
+}
+
+
+void Scene::drawWorldAxis()
+{
+    GLfloat worldAxisColors[3][4] =
+    {
+        { 1.0f, 0.0f, 0.0f, 1.0f },
+        { 0.0f, 1.0f, 0.0f, 1.0f },
+        { 0.0f, 0.0f, 1.0f, 1.0f }
+    };
+
+    // Bind world axis rects' VAO and VBO as the active ones.
+    glBindVertexArray( worldAxisVAO );
+    glBindBuffer( GL_ARRAY_BUFFER, worldAxisVBO );
+
+    // Draw each world axis with its corresponding color.
+    for( unsigned int i=0; i<3; i++ ){
+        glUniform4fv( uniformColorLocation, 1, worldAxisColors[i] );
+        glDrawArrays( GL_LINES, i << 1, 2 );
     }
 }
 

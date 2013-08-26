@@ -60,12 +60,19 @@ class Scene : public QObject
         GLuint guideRectsVBO;
 
         GLuint uniformColorLocation;
+
+        // VAO and VBO for displaying the world coordinates system axis for
+        // each viewport.
+        GLuint worldAxisVAO;
+        GLuint worldAxisVBO;
     public:
         /***
          * 1. Initialization and destruction
          ***/
         Scene();
         ~Scene();
+
+        void initWorldAxis();
 
         /***
          * 1. Drawables administration
@@ -103,6 +110,7 @@ class Scene : public QObject
          * 4. Drawing
          ***/
         void draw( const int& drawGuideRect = -1 );
+        void drawWorldAxis();
 
         /***
          * 5. Signals

@@ -405,6 +405,14 @@ void Viewport::render()
     it = find( transformationModes.begin(), transformationModes.end(), comoApp->getTransformationMode() );
     comoApp->getScene()->draw( std::distance( transformationModes.begin(), it ) - 1 );
 
+    // Make viewport occupy the bottom left corner.
+    glViewport( width()-50, 0, 50, 50 );
+
+    // Draw scene's world axis.
+    glDisable( GL_DEPTH_TEST );
+    comoApp->getScene()->drawWorldAxis();
+    glEnable( GL_DEPTH_TEST );
+
     // Swap buffers.
     comoApp->getOpenGLContext()->swapBuffers( this );
 }
