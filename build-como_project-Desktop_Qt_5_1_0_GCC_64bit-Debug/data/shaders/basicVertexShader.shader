@@ -5,7 +5,7 @@
 	Version 4.3. The Khronos OpenGL ARB Working Group . Editorial Pearson. 2013.
 ***/
 
-#version 430 core
+#version 420 core
 
 in vec3 vPosition;
 

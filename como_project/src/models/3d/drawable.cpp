@@ -132,16 +132,12 @@ void Drawable::rotate( GLfloat angle, glm::vec3 axis )
 
 void Drawable::scale( glm::vec3 scaleFactors )
 {
-    // Rotate the vector "scaleFactors" from world to object space.
-    scaleFactors = glm::vec3( glm::inverse( rotationMatrix ) * glm::vec4( scaleFactors, 1.0f ) );
-    //scaleFactors = glm::vec3( transformScaleVector( glm::vec4( scaleFactors, 1.0f ), glm::inverse( rotationAndScaleMatrix ) ) );
-
     // Compute the scale matrix.
     glm::mat4 newScale = glm::scale( glm::mat4( 1.0f ), scaleFactors );
 
-    // Append new slace to object's transformation matrix.
-    transformationMatrix = transformationMatrix * newScale;
-    //rotationAndScaleMatrix = rotationAndScaleMatrix * newScale;
+    // Rotate the drawable until its axis meet the world ones, apply the requested scale
+    // and then reverse the previous rotation.
+    transformationMatrix = transformationMatrix * glm::inverse( rotationMatrix ) * newScale * rotationMatrix;
 
     // Update the Drawable's scale factors.
     scaleVector.x *= scaleFactors.x;

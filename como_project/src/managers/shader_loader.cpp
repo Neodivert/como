@@ -91,6 +91,7 @@ void ShaderLoader::loadShaderObject( GLenum shaderType, const char* shaderFile )
 {
     const GLint STR_SIZE = 1024;
     GLchar* shaderCode = new GLchar[ STR_SIZE ];
+    GLchar log[STR_SIZE] = "";
     GLuint shaderObject;
     GLint compilationResult;
 
@@ -107,7 +108,9 @@ void ShaderLoader::loadShaderObject( GLenum shaderType, const char* shaderFile )
 
     if( compilationResult == GL_FALSE ){
         // TODO: Difference between different shader types.
-        cout << "ERROR compiling shader" << endl;
+        glGetShaderInfoLog( shaderObject, STR_SIZE, NULL, log );
+        cout << "ERROR compiling shader: " << endl
+             << log << endl;
         return;
     }
 
@@ -121,6 +124,8 @@ void ShaderLoader::loadShaderObject( GLenum shaderType, const char* shaderFile )
 void ShaderLoader::loadMinimumShaderProgram( const char* vertexShaderFile, const char* fragmentShaderFile )
 {
     GLint linkingResult;
+    const GLint STR_SIZE = 1024;
+    GLchar log[STR_SIZE];
 
     // Load both vertex and fragment shaders.
     loadShaderObject( GL_VERTEX_SHADER, vertexShaderFile );
@@ -131,7 +136,11 @@ void ShaderLoader::loadMinimumShaderProgram( const char* vertexShaderFile, const
     glGetProgramiv( shaderProgram, GL_LINK_STATUS, &linkingResult );
 
     if( linkingResult == GL_FALSE ){
-        cout << "ERROR linking shader program" << endl;
+        glGetProgramInfoLog( shaderProgram, STR_SIZE, NULL, log );
+
+        cout << "ERROR linking shader program" << endl
+             << log << endl;
+
         return;
     }
 
@@ -139,5 +148,7 @@ void ShaderLoader::loadMinimumShaderProgram( const char* vertexShaderFile, const
     glUseProgram( shaderProgram );
     cout << "New shader program loaded and being used!" << endl;
 }
+
+
 
 } // namespace como
