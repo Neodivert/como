@@ -39,13 +39,8 @@ void showError(){
 
 Drawable::Drawable()
 {
-    // Initialize transformation matrix to identity matrix.
-    rotationMatrix = glm::mat4( 1.0f );
+    // Initialize transformation matrixes to identity matrix.
     transformationMatrix = glm::mat4( 1.0f );
-    rotationAndScaleMatrix = glm::mat4( 1.0f );
-
-    // Initialize the scale vector.
-    scaleVector = glm::vec3( 1.0f );
 
     // Initialize the drawable's original orientation.
     originalOrientation[X] = glm::vec4( 1.0f, 0.0f, 0.0f, 1.0f );
@@ -68,24 +63,14 @@ glm::mat4 Drawable::getTransformationMatrix()
  * 3. Transformations
  ***/
 
-glm::vec3 Drawable::transformToObjectSpace( const glm::vec3 worldVector )
-{
-    return glm::vec3( glm::inverse( rotationMatrix ) * glm::vec4( worldVector, 1.0f ) );
-}
-
 void Drawable::translate( glm::vec3 direction )
 {
-    // Scale the direction vector by the Drawable's scale factors.
-    direction.x *= 1/scaleVector.x;
-    direction.y *= 1/scaleVector.y;
-    direction.z *= 1/scaleVector.z;
-
     // Compute the translation matrix.
     glm::mat4 newTranslation = glm::translate( glm::mat4( 1.0f ), direction );
 
-    // Rotate the drawable until its axis meet the world ones, apply the requested
-    // translation and then reverse the previous rotation.
-    transformationMatrix = transformationMatrix * glm::inverse( rotationMatrix ) * newTranslation * rotationMatrix;
+    // Move the drawable from object to world space, then apply the translation and
+    // finally move back the drawable from world to object space.
+    transformationMatrix = transformationMatrix * glm::inverse( transformationMatrix ) * newTranslation * transformationMatrix;
 
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.
@@ -96,35 +81,16 @@ void Drawable::translate( glm::vec3 direction )
 
 void Drawable::rotate( GLfloat angle, glm::vec3 axis )
 {
-    /*
-    const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
-
-    cout << "rotate()" << endl
-         << "Angle: " << angle << endl
-         << "Axis (world space): (" << axis.x << ", " << axis.y << ", " << axis.z << ")" << endl;
-    */
-
-    // Rotate rotation's axis from world to object space.
-    axis = glm::normalize( glm::vec3( glm::inverse( rotationMatrix ) * glm::vec4( axis, 1.0f ) ) );
-    //cout << "Axis (object space): (" << axis.x << ", " << axis.y << ", " << axis.z << ")" << endl;
+    // Normalize the vector "axis".
+    axis = glm::normalize( axis );
 
     // Compute the rotation matrix for the given angle and the axis converted to
     // object space.
     glm::mat4 newRotation = glm::rotate( glm::mat4( 1.0f ), angle, axis );
 
-    // Concatenate new rotation to previous rotations.
-    rotationMatrix = rotationMatrix * newRotation;
-    rotationAndScaleMatrix = rotationAndScaleMatrix * newRotation;
-
-    // Concatenate new rotation to object's transformation matrix.
-    transformationMatrix = transformationMatrix * newRotation;
-
-    /*
-    glm::vec3 up = glm::normalize( glm::vec3( transformationMatrix * glm::vec4( yAxis, 1.0f ) ) );
-
-    cout << "New up: (" << up.x << ", " << up.y << ", " << up.z << ")" << endl;
-    cout << "Angle between up and global Y vectors: " << glm::angle( up, yAxis ) << endl;
-    */
+    // Move the drawable from object to world space, then apply the rotation and
+    // finally move back the drawable from world to object space.
+    transformationMatrix = transformationMatrix * glm::inverse( transformationMatrix ) * newRotation * transformationMatrix;
 
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.
@@ -137,14 +103,9 @@ void Drawable::scale( glm::vec3 scaleFactors )
     // Compute the scale matrix.
     glm::mat4 newScale = glm::scale( glm::mat4( 1.0f ), scaleFactors );
 
-    // Rotate the drawable until its axis meet the world ones, apply the requested scale
-    // and then reverse the previous rotation.
-    transformationMatrix = transformationMatrix * glm::inverse( rotationMatrix ) * newScale * rotationMatrix;
-
-    // Update the Drawable's scale factors.
-    scaleVector.x *= scaleFactors.x;
-    scaleVector.y *= scaleFactors.y;
-    scaleVector.z *= scaleFactors.z;
+    // Move the drawable from object to world space, then apply the scale and
+    // finally move back the drawable from world to object space.
+    transformationMatrix = transformationMatrix * glm::inverse( transformationMatrix ) * newScale * transformationMatrix;
 
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.

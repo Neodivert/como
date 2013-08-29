@@ -66,28 +66,26 @@ void Camera::setView( View view )
 
     switch( view ){
         case View::LEFT:
-            rotationMatrix = glm::rotate( glm::mat4( 1.0f ), -90.0f, Y_AXIS );
+            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), -90.0f, Y_AXIS );
         break;
         case View::RIGHT:
-            rotationMatrix = glm::rotate( glm::mat4( 1.0f ), 90.0f, Y_AXIS );
+            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), 90.0f, Y_AXIS );
         break;
         case View::TOP:
-            rotationMatrix = glm::rotate( glm::mat4( 1.0f ), -90.0f, X_AXIS );
+            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), -90.0f, X_AXIS );
         break;
         case View::BOTTOM:
-            rotationMatrix = glm::rotate( glm::mat4( 1.0f ), 90.0f, X_AXIS );
+            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), 90.0f, X_AXIS );
         break;
         case View::FRONT:
-            rotationMatrix = glm::mat4( 1.0f );
+            transformationMatrix = glm::mat4( 1.0f );
         break;
         case View::BACK:
-            rotationMatrix = glm::rotate( glm::mat4( 1.0f ), 180.0f, Y_AXIS );
+            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), 180.0f, Y_AXIS );
         break;
         case View::CAMERA:
         break;
     }
-
-    transformationMatrix = rotationMatrix;
 
     update();
 }

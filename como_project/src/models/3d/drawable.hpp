@@ -69,12 +69,6 @@ class Drawable
         std::array< glm::vec4, 3 > originalOrientation;
         std::array< glm::vec4, 3 > transformedOrientation;
 
-        glm::mat4 rotationMatrix;
-        glm::mat4 rotationAndScaleMatrix;
-
-
-        glm::vec3 scaleVector;
-
         glm::mat4 transformationMatrix;
 
     public:
@@ -93,7 +87,6 @@ class Drawable
         /***
          * 3. Transformations
          ***/
-        glm::vec3 transformToObjectSpace( const glm::vec3 worldVector );
 
         virtual void translate( glm::vec3 direction );
 
