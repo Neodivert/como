@@ -75,15 +75,17 @@ glm::vec3 Drawable::transformToObjectSpace( const glm::vec3 worldVector )
 
 void Drawable::translate( glm::vec3 direction )
 {
-    // Rotate the vector "direction" from world to object space.
-    direction = glm::vec3( glm::inverse( rotationMatrix ) * glm::vec4( direction, 1.0f ) );
-
+    // Scale the direction vector by the Drawable's scale factors.
     direction.x *= 1/scaleVector.x;
     direction.y *= 1/scaleVector.y;
     direction.z *= 1/scaleVector.z;
 
-    // Add translation to transformation matrix.
-    transformationMatrix = glm::translate( transformationMatrix, direction );
+    // Compute the translation matrix.
+    glm::mat4 newTranslation = glm::translate( glm::mat4( 1.0f ), direction );
+
+    // Rotate the drawable until its axis meet the world ones, apply the requested
+    // translation and then reverse the previous rotation.
+    transformationMatrix = transformationMatrix * glm::inverse( rotationMatrix ) * newTranslation * rotationMatrix;
 
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.
