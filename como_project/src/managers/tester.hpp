@@ -21,10 +21,11 @@
 #define TESTER_HPP
 
 #include "../models/3d/mesh.hpp"
+#include "shader_loader.hpp"
 
 namespace como {
 
-class Tester
+class Tester : public QOffscreenSurface
 {
     private:
         static Tester* instance;
@@ -33,6 +34,8 @@ class Tester
          * 1. Initialization and destruction
          ***/
     public:
+        Tester();
+
         static Tester* getInstance();
         void destroy();
 

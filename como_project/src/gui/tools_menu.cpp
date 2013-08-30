@@ -24,7 +24,6 @@ namespace como {
 
 ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
 {
-
     QVBoxLayout* layout;
     QLabel* toolsMenuLabel;
     QLabel* appModeLabel;

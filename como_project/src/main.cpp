@@ -26,25 +26,20 @@
 
 int main( int argc, char *argv[] )
 {
-#ifdef TESTING_MODE
-    // We dont use the argc and argv arguments in testing mode.
-    Q_UNUSED( argc );
-    Q_UNUSED( argv );
+    // Create a Qt application.
+    QApplication app( argc, argv );
 
+#ifdef TESTING_MODE
     // Run tests.
     como::Tester* tester = como::Tester::getInstance();
     tester->testMeshes();
     tester->destroy();
 #else
-    // Create a Qt application.
-    QApplication app( argc, argv );
-
     // Create a Qt window and show it.
     como::MainWindow window;
     window.show();
-    
+#endif
     // Run Qt application.
     return app.exec();
-#endif
 }
 

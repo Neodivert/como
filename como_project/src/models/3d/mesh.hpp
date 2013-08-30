@@ -85,6 +85,7 @@ class Mesh : public Drawable
         void setInnerColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
         void setContourColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
         glm::vec4 getCentroid() const ;
+        void getTransformedVertices( unsigned int& n, GLfloat* vertices );
 
         /***
          * 3. Transformations

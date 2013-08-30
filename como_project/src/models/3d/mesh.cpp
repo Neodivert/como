@@ -151,6 +151,26 @@ glm::vec4 Mesh::getCentroid() const
 }
 
 
+void Mesh::getTransformedVertices( unsigned int& n, GLfloat* vertices )
+{
+    GLfloat* mappedVBO = nullptr;
+
+    // Get the number of vertices of the mesh.
+    n = originalVertices.size();
+
+    // Bind the mesh's VBO
+    glBindBuffer( GL_ARRAY_BUFFER, vbo );
+
+    // Map the VBO to client memory.
+    mappedVBO = (GLfloat *)glMapBuffer( GL_ARRAY_BUFFER, GL_READ_ONLY );
+
+    // Copy the VBO data to the pointer given as an argument.
+    memcpy( vertices, mappedVBO, sizeof( n * sizeof( GLfloat ) ) );
+
+    // Unmap the VBO.
+    glUnmapBuffer( GL_ARRAY_BUFFER );
+}
+
 /***
  * 3. Transformations
  ***/

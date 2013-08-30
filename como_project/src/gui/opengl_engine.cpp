@@ -19,7 +19,6 @@
 
 #include "opengl_engine.hpp"
 
-
 namespace como {
 
 
@@ -77,10 +76,6 @@ shared_ptr< QOpenGLContext > OpenGLEngine::createOpenGLContext()
     // Set OpenGL depth test.
     glEnable( GL_DEPTH_TEST );
     glDepthFunc( GL_LEQUAL );
-
-    // TODO: Delete if not necessary.
-    // Enable vertex arrays.
-    //glEnableClientState( GL_VERTEX_ARRAY );
 
     return oglContext;
 }
