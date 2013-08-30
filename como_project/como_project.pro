@@ -25,7 +25,8 @@ SOURCES += src/main.cpp\
     src/models/3d/camera.cpp \
     src/models/3d/drawable.cpp \
     src/models/3d/mesh.cpp \
-    src/gui/viewport.cpp
+    src/gui/viewport.cpp \
+    src/managers/tester.cpp
 
 
 HEADERS  += \
@@ -41,7 +42,8 @@ HEADERS  += \
     src/models/3d/camera.hpp \
     src/models/3d/drawable.hpp \
     src/models/3d/mesh.hpp \
-    src/gui/viewport.hpp
+    src/gui/viewport.hpp \
+    src/managers/tester.hpp
 
 FORMS    += main_window.ui
 

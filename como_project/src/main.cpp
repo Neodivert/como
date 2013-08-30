@@ -20,9 +20,22 @@
 #include <QGuiApplication>
 #include "src/gui/main_window.hpp"
 #include <glm/gtx/vector_angle.hpp>
+#include "managers/tester.hpp"
+
+#define TESTING_MODE 1
 
 int main( int argc, char *argv[] )
 {
+#ifdef TESTING_MODE
+    // We dont use the argc and argv arguments in testing mode.
+    Q_UNUSED( argc );
+    Q_UNUSED( argv );
+
+    // Run tests.
+    como::Tester* tester = como::Tester::getInstance();
+    tester->testMeshes();
+    tester->destroy();
+#else
     // Create a Qt application.
     QApplication app( argc, argv );
 
@@ -32,5 +45,6 @@ int main( int argc, char *argv[] )
     
     // Run Qt application.
     return app.exec();
+#endif
 }
 
