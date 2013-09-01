@@ -18,8 +18,6 @@
 ***/
 
 #include "shader_loader.hpp"
-#include <iostream>
-using namespace std;
 
 namespace como {
 

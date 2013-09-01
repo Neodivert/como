@@ -24,8 +24,7 @@
  * Includes
  ***/
 #include <fstream>
-#include "../models/3d/drawable.hpp"
-
+#include "../models/dependencies.hpp"
 
 namespace como {
 

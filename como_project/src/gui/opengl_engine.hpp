@@ -21,11 +21,7 @@
 #define OPENGL_INITIALIZER_HPP
 
 #include <QOpenGLContext>
-#include "../managers/shader_loader.hpp"
 #include "../managers/scene.hpp"
-#include <iostream>
-#include <memory>
-using namespace std;
 
 namespace como {
 

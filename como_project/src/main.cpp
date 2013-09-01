@@ -22,7 +22,7 @@
 #include <glm/gtx/vector_angle.hpp>
 #include "managers/tester.hpp"
 
-#define TESTING_MODE 1
+//#define TESTING_MODE 1
 
 int main( int argc, char *argv[] )
 {

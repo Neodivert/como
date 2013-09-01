@@ -18,6 +18,7 @@
 ***/
 
 #include "opengl_engine.hpp"
+#include "../managers/shader_loader.hpp"
 
 namespace como {
 

@@ -18,11 +18,6 @@
 ***/
 
 #include "mesh.hpp"
-
-#include <X11/X.h>
-#include <GL/gl.h>
-#include <GL/glx.h>
-#include "camera.hpp"
 #include <glm/gtx/intersect.hpp>
 
 namespace como {

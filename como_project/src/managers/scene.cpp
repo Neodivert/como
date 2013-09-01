@@ -21,8 +21,6 @@
 
 namespace como {
 
-
-
 DrawableTypes drawableTypes =
 {{
     DrawableType::CUBE

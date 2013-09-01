@@ -18,11 +18,8 @@
 ***/
 
 #include "main_window.hpp"
-#include "ui_main_window.h"
-#include "opengl_engine.hpp"
 #include "render_panel.hpp"
 #include "tools_menu.hpp"
-
 
 namespace como {
 

@@ -43,7 +43,8 @@ HEADERS  += \
     src/models/3d/drawable.hpp \
     src/models/3d/mesh.hpp \
     src/gui/viewport.hpp \
-    src/managers/tester.hpp
+    src/managers/tester.hpp \
+    src/models/dependencies.hpp
 
 FORMS    += main_window.ui
 

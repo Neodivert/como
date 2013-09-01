@@ -21,10 +21,8 @@
 #define MAIN_WINDOW_HPP
 
 #include <QMainWindow>
-#include <QOpenGLContext>
-#include "../managers/scene.hpp"
+#include "ui_main_window.h"
 #include "../managers/como_app.hpp"
-#include <memory>
 
 namespace Ui {
     class MainWindow;

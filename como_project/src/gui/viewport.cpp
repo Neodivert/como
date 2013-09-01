@@ -329,6 +329,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                     break;
                     case TransformationMode::FREE:
                         // TODO: Why do I have to use -angle?
+                        // Maybe because I have to reverse the camera center vector?
                         comoApp->getScene()->rotateSelection( -angle, glm::vec3( camera.getCenterVector() ) );
                     break;
                 }
@@ -396,7 +397,6 @@ void Viewport::render()
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     // Send view-projection matrix to shader.
-    // TODO: use real viewProjection matrix.
     sendViewProjectionMatrixToShader( projectionMatrix*viewMatrix );
 
     // Draw scene.

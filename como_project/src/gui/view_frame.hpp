@@ -21,8 +21,6 @@
 #define VIEW_FRAME_H
 
 #include <QFrame>
-#include <QGraphicsView>
-#include <QGLContext>
 #include "viewport.hpp"
 #include "../managers/scene.hpp"
 

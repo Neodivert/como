@@ -29,7 +29,6 @@
 #include "../managers/como_app.hpp"
 #include "../models/3d/camera.hpp"
 
-
 namespace como {
 
 enum class Projection {

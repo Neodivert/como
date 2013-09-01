@@ -17,38 +17,27 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef RENDER_PANEL_HPP
-#define RENDER_PANEL_HPP
+#ifndef DEPENDENCIES_HPP
+#define DEPENDENCIES_HPP
 
-#include "view_frame.hpp"
-#include "../managers/como_app.hpp"
+// Qt OpenGL
+// http://www.opengl.org/discussion_boards/showthread.php/172481-glGenBuffer-was-not-declared
+#define GL_GLEXT_PROTOTYPES
+#include <QtOpenGL>
 
-QT_FORWARD_DECLARE_CLASS(QLabel)
-QT_FORWARD_DECLARE_CLASS(QSlider)
-QT_FORWARD_DECLARE_CLASS(QSplitter)
+// OpenGL
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glx.h>
 
-namespace como {
+// GLM
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
-class RenderPanel : public QFrame
-{
-    Q_OBJECT
+// STD
+#include <array>
+#include <iostream>
+#include <memory>
+using namespace std;
 
-    private:
-        // Pointer to app's current state.
-        shared_ptr< ComoApp > comoApp;
-
-    public:
-        /***
-         * 1. Initialization
-         ***/
-        explicit RenderPanel( shared_ptr< ComoApp > comoApp, QWidget *parent = 0 );
-
-    signals:
-
-    public slots:
-    
-};
-
-} // namespace como
-
-#endif // RENDER_PANEL_HPP
+#endif // DEPENDENCIES_HPP

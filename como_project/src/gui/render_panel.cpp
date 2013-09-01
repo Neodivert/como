@@ -18,6 +18,7 @@
 ***/
 
 #include "render_panel.hpp"
+#include <QSplitter>
 
 namespace como {
 

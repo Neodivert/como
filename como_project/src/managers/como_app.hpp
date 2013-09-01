@@ -23,7 +23,6 @@
 #include "scene.hpp"
 #include <QOpenGLContext>
 #include <string>
-#include <vector>
 #include <QObject>
 #include <map>
 #include <array>

@@ -20,28 +20,7 @@
 #ifndef DRAWABLE_HPP
 #define DRAWABLE_HPP
 
-
-/****
- * Includes
- ***/
-
-#include <iostream>
-using namespace std;
-
-//#include <GL/glew.h>
-
-// http://www.opengl.org/discussion_boards/showthread.php/172481-glGenBuffer-was-not-declared
-#define GL_GLEXT_PROTOTYPES
-#include <QtOpenGL>
-
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glx.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <array>
+#include "../dependencies.hpp"
 
 namespace como {
 

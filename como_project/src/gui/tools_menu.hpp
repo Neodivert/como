@@ -21,7 +21,6 @@
 #define TOOLS_MENU_HPP
 
 #include <QFrame>
-#include <memory>
 #include "../managers/como_app.hpp"
 
 namespace como {

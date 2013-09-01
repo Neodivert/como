@@ -18,7 +18,6 @@
 ***/
 
 #include "drawable.hpp"
-#include <glm/gtx/vector_angle.hpp>
 
 /***
  * 1. Initialization

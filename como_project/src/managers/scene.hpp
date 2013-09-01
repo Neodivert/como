@@ -21,8 +21,6 @@
 #define SCENE_HPP
 
 #include <list>
-#include <memory>
-
 #include "../models/3d/cube.hpp"
 #include "../models/3d/camera.hpp"
 
