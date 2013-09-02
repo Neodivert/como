@@ -106,6 +106,7 @@ ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
     layout->addWidget( appModeSelector );
     layout->addWidget( editionScopeGroupBox );
     layout->addWidget( transformationModeGroupBox );
+    layout->addWidget( createPivotPointModeSelector() );
     layout->addWidget( createPrimitiveCreationMenu() );
     setLayout( layout );
 }
@@ -151,5 +152,37 @@ QGroupBox* ToolsMenu::createPrimitiveCreationMenu()
 
     return primitiveCreationGroupBox;
 }
+
+
+QGroupBox* ToolsMenu::createPivotPointModeSelector()
+{
+    QGroupBox* pivotPointModeGroupBox = nullptr;
+    QVBoxLayout* pivotPointModeLayout = nullptr;
+    QComboBox* pivotPointModeSelector = nullptr;
+
+    // Create a QComboBox ("selector") with all possible pivot point modes.
+    pivotPointModeSelector = new QComboBox;
+    for( auto pivotPointModeString : pivotPointModeStrings ){
+        pivotPointModeSelector->addItem( pivotPointModeString );
+    }
+
+    // When user change pivot point mode in selector, call ComoApp::setPivotPoint().
+    void (QComboBox::*signal)( int ) = &QComboBox::activated;
+    connect( pivotPointModeSelector, signal, [=]( int index ) {
+        comoApp->setPivotPointMode( pivotPointModes[index] );
+    }  );
+
+    // Set pivot point mode frame layout.
+    pivotPointModeLayout = new QVBoxLayout;
+    pivotPointModeLayout->addWidget( pivotPointModeSelector );
+
+    // Set pivot point mode layout.
+    pivotPointModeGroupBox = new QGroupBox( tr( "Pivot point mode" ) );
+    pivotPointModeGroupBox->setLayout( pivotPointModeLayout );
+
+    // Return the created pivot point mode selector.
+    return pivotPointModeGroupBox;
+}
+
 
 } // namespace como

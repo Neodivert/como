@@ -36,9 +36,9 @@ class ToolsMenu : public QFrame
 
     protected:
         QGroupBox* createPrimitiveCreationMenu();
+        QGroupBox* createPivotPointModeSelector();
 
     signals:
-
 };
 
 } // namespace como
