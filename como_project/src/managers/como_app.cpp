@@ -64,21 +64,6 @@ std::array< QString, N_TRANSFORMATION_MODES > transformationModeStrings =
 }};
 
 
-PivotPointModes pivotPointModes =
-{{
-    PivotPointMode::MEDIAN_POINT,
-    PivotPointMode::INDIVIDUAL_CENTROIDS
-}};
-
-
-// Array with a string for each pivot point mode value (for output in GUI).
-PivotPointModeStrings pivotPointModeStrings =
-{{
-     QString::fromUtf8( "Median Point" ),
-     QString::fromUtf8( "Individual Centroid" )
-}};
-
-
 /***
  * 1. Initialization and destruction
  ***/

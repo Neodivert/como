@@ -26,12 +26,23 @@ DrawableTypes drawableTypes =
     DrawableType::CUBE
 }};
 
-
 DrawableTypeStrings drawableTypeStrings =
 {{
     QString::fromUtf8( "Cube" )
 }};
 
+PivotPointModes pivotPointModes =
+{{
+    PivotPointMode::MEDIAN_POINT,
+    PivotPointMode::INDIVIDUAL_CENTROIDS
+}};
+
+// Array with a string for each pivot point mode value (for output in GUI).
+PivotPointModeStrings pivotPointModeStrings =
+{{
+     QString::fromUtf8( "Median Point" ),
+     QString::fromUtf8( "Individual Centroid" )
+}};
 
 /***
  * 1. Initialization and destruction
@@ -318,14 +329,34 @@ void Scene::translateSelection( const glm::vec3& direction )
 }
 
 
-void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis )
+void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode )
 {
     DrawablesList::iterator it = selectedDrawables.begin();
 
-    for( ; it != selectedDrawables.end(); it++ )
-    {
-        (*it)->rotate( angle, axis );
+    switch( pivotPointMode ){
+        case PivotPointMode::INDIVIDUAL_CENTROIDS:
+            for( ; it != selectedDrawables.end(); it++ )
+            {
+                (*it)->rotate( angle, axis, glm::vec3( (*it)->getCentroid() ) );
+            }
+        break;
+        case PivotPointMode::MEDIAN_POINT:
+            for( ; it != selectedDrawables.end(); it++ )
+            {
+                (*it)->rotate( angle, axis, glm::vec3( getSelectionCentroid() ) );
+            }
+        break;
     }
+
+    /*
+     * TODO: Rotate around the world origin
+     *
+     for( ; it != selectedDrawables.end(); it++ )
+            {
+                (*it)->rotate( angle, axis, (*it)->getCentroid() );
+            }
+    */
+
     emit renderNeeded();
 }
 

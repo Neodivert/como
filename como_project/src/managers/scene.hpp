@@ -43,6 +43,23 @@ extern DrawableTypes drawableTypes;
 typedef std::array< QString, N_DRAWABLE_TYPES > DrawableTypeStrings;
 extern DrawableTypeStrings drawableTypeStrings;
 
+enum class PivotPointMode
+{
+    MEDIAN_POINT = 0,
+    INDIVIDUAL_CENTROIDS
+};
+const unsigned int N_PIVOT_POINT_MODES = 2;
+
+// Array with all the possible pivot point modes (for conversion between
+// PivotPointMode and int).
+typedef std::array< PivotPointMode, N_PIVOT_POINT_MODES > PivotPointModes;
+extern PivotPointModes pivotPointModes;
+
+// Array with a string for each app mode value (for output in GUI).
+typedef std::array< QString, N_PIVOT_POINT_MODES > PivotPointModeStrings;
+extern PivotPointModeStrings pivotPointModeStrings;
+
+
 class Scene : public QObject
 {
     Q_OBJECT
@@ -98,7 +115,7 @@ class Scene : public QObject
          * 3. Transformations
          ***/
         void translateSelection( const glm::vec3& direction );
-        void rotateSelection( const GLfloat& angle, const glm::vec3& axis );
+        void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode );
         void scaleSelection( const glm::vec3& scaleFactors );
         //void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
 
