@@ -46,9 +46,10 @@ extern DrawableTypeStrings drawableTypeStrings;
 enum class PivotPointMode
 {
     MEDIAN_POINT = 0,
-    INDIVIDUAL_CENTROIDS
+    INDIVIDUAL_CENTROIDS,
+    WORLD_ORIGIN
 };
-const unsigned int N_PIVOT_POINT_MODES = 2;
+const unsigned int N_PIVOT_POINT_MODES = 3;
 
 // Array with all the possible pivot point modes (for conversion between
 // PivotPointMode and int).

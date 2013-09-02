@@ -34,14 +34,16 @@ DrawableTypeStrings drawableTypeStrings =
 PivotPointModes pivotPointModes =
 {{
     PivotPointMode::MEDIAN_POINT,
-    PivotPointMode::INDIVIDUAL_CENTROIDS
+    PivotPointMode::INDIVIDUAL_CENTROIDS,
+    PivotPointMode::WORLD_ORIGIN
 }};
 
 // Array with a string for each pivot point mode value (for output in GUI).
 PivotPointModeStrings pivotPointModeStrings =
 {{
      QString::fromUtf8( "Median Point" ),
-     QString::fromUtf8( "Individual Centroid" )
+     QString::fromUtf8( "Individual Centroid" ),
+     QString::fromUtf8( "World origin" )
 }};
 
 /***
@@ -335,27 +337,21 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const 
 
     switch( pivotPointMode ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
-            for( ; it != selectedDrawables.end(); it++ )
-            {
+            for( ; it != selectedDrawables.end(); it++ ){
                 (*it)->rotate( angle, axis, glm::vec3( (*it)->getCentroid() ) );
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
-            for( ; it != selectedDrawables.end(); it++ )
-            {
+            for( ; it != selectedDrawables.end(); it++ ){
                 (*it)->rotate( angle, axis, glm::vec3( getSelectionCentroid() ) );
             }
         break;
-    }
-
-    /*
-     * TODO: Rotate around the world origin
-     *
-     for( ; it != selectedDrawables.end(); it++ )
-            {
-                (*it)->rotate( angle, axis, (*it)->getCentroid() );
+        case PivotPointMode::WORLD_ORIGIN:
+            for( ; it != selectedDrawables.end(); it++ ){
+                (*it)->rotate( angle, axis );
             }
-    */
+        break;
+    }
 
     emit renderNeeded();
 }
