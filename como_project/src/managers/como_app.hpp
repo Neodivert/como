@@ -70,13 +70,29 @@ enum class TransformationMode
 };
 const unsigned int N_TRANSFORMATION_MODES = 4;
 
-// Array will all the possible transformation modes.
+// Array with all the possible transformation modes.
 typedef std::array< TransformationMode, N_TRANSFORMATION_MODES > TransformationModes;
 extern TransformationModes transformationModes;
 
 // Array with a string for each transformation mode value (for output in GUI).
 extern std::array< QString, N_TRANSFORMATION_MODES > transformationModeStrings;
 
+
+enum class PivotPointMode
+{
+    MEDIAN_POINT = 0,
+    INDIVIDUAL_CENTROIDS
+};
+const unsigned int N_PIVOT_POINT_MODES = 2;
+
+// Array with all the possible pivot point modes (for conversion between
+// PivotPointMode and int).
+typedef std::array< PivotPointMode, N_PIVOT_POINT_MODES > PivotPointModes;
+extern PivotPointModes pivotPointModes;
+
+// Array with a string for each app mode value (for output in GUI).
+typedef std::array< QString, N_PIVOT_POINT_MODES > PivotPointModeStrings;
+extern PivotPointModeStrings pivotPointModeStrings;
 
 
 class ComoApp : public QObject {
@@ -95,6 +111,9 @@ class ComoApp : public QObject {
 
         // Current transformation type.
         TransformationType transformationType;
+
+        // Current pivot point mode.
+        PivotPointMode pivotPointMode;
 
         // Singlenton class instance.
         static ComoApp* singlentonInstance;
@@ -122,6 +141,7 @@ class ComoApp : public QObject {
         EditionScope getEditionScope() const ;
         TransformationType getTransformationType() const ;
         TransformationMode getTransformationMode() const ;
+        PivotPointMode getPivotPointMode() const;
         shared_ptr< Scene > getScene() const ;
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
 
@@ -135,6 +155,8 @@ class ComoApp : public QObject {
 
         void setEditionScope( EditionScope editionScope );
         void setTransformationType( TransformationType transformationType );
+
+        void setPivotPointMode( PivotPointMode pivotPointMode );
 
     signals:
         void appModeIndexChanged( int index );

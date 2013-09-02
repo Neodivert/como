@@ -64,6 +64,21 @@ std::array< QString, N_TRANSFORMATION_MODES > transformationModeStrings =
 }};
 
 
+PivotPointModes pivotPointModes =
+{{
+    PivotPointMode::MEDIAN_POINT,
+    PivotPointMode::INDIVIDUAL_CENTROIDS
+}};
+
+
+// Array with a string for each pivot point mode value (for output in GUI).
+PivotPointModeStrings pivotPointModeStrings =
+{{
+     QString::fromUtf8( "Median Point" ),
+     QString::fromUtf8( "Individual Centroid" )
+}};
+
+
 /***
  * 1. Initialization and destruction
  ***/
@@ -82,6 +97,9 @@ ComoApp::ComoApp()
 
     // Set default transformation type.
     transformationType = TransformationType::NONE;
+
+    // Set default pivot point mode.
+    pivotPointMode = PivotPointMode::MEDIAN_POINT;
 
     cout << "ComoApp::ComoApp() 0" << endl;
     showError();
@@ -133,6 +151,11 @@ TransformationMode ComoApp::getTransformationMode() const
 TransformationType ComoApp::getTransformationType() const
 {
     return transformationType;
+}
+
+PivotPointMode ComoApp::getPivotPointMode() const
+{
+    return pivotPointMode;
 }
 
 shared_ptr< Scene > ComoApp::getScene() const
@@ -195,6 +218,12 @@ void ComoApp::setEditionScope( EditionScope editionScope )
 void ComoApp::setTransformationType( TransformationType transformationType )
 {
     this->transformationType = transformationType;
+}
+
+
+void ComoApp::setPivotPointMode( PivotPointMode pivotPointMode )
+{
+    this->pivotPointMode = pivotPointMode;
 }
 
 } // namespace como
