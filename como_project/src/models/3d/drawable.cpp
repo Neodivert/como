@@ -97,6 +97,29 @@ void Drawable::rotate( GLfloat angle, glm::vec3 axis )
 }
 
 
+void Drawable::rotate( const GLfloat& angle, glm::vec3 axis, const glm::vec3& pivot )
+{
+    // Normalize the vector "axis".
+    axis = glm::normalize( axis );
+
+    // Compute the rotation matrix for the given angle and the axis converted to
+    // object space.
+    glm::mat4 newRotation = glm::rotate( glm::mat4( 1.0f ), angle, axis );
+
+    // Compute the translation matrix for moving the drawable to the pivot point.
+    glm::mat4 pivotTranslation = glm::translate( glm::mat4( 1.0f ), -pivot );
+
+    // Move the drawable from object to world space, then apply the rotation
+    // around the pivot point and finally move back the drawable from world
+    // to object space.
+    transformationMatrix = transformationMatrix * glm::inverse( transformationMatrix ) * glm::inverse( pivotTranslation ) * newRotation * pivotTranslation * transformationMatrix;
+
+    // Update the transformed vertices using the original ones and the
+    // previous transformation matrix.
+    update();
+}
+
+
 void Drawable::scale( glm::vec3 scaleFactors )
 {
     // Compute the scale matrix.
