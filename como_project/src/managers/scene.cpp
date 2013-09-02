@@ -98,6 +98,9 @@ Scene::Scene()
 
     // Initialize world axis
     initWorldAxis();
+
+    // Initializa pivot point.
+    initPivotPoint( vPosition );
 }
 
 
@@ -107,6 +110,9 @@ Scene::~Scene()
     // vertex attribute arrays.
     glDeleteBuffers( 1, &guideRectsVBO );
     glDeleteVertexArrays( 1, &guideRectsVAO );
+
+    glDeleteBuffers( 1, &pivotPointVBO );
+    glDeleteVertexArrays( 1, &pivotPointVAO );
 }
 
 
@@ -165,6 +171,29 @@ void Scene::initWorldAxis()
     glEnableVertexAttribArray( vPosition );
 }
 
+
+void Scene::initPivotPoint( const GLuint& vPosition )
+{
+    GLfloat defaultPivotPoint[3] =
+    {
+        0.0f, 0.0f, 0.0f
+    };
+
+    // Set a VBO for the pivot point.
+    glGenBuffers( 1, &pivotPointVBO );
+    glBindBuffer( GL_ARRAY_BUFFER, pivotPointVBO );
+    glBufferData( GL_ARRAY_BUFFER, 3*sizeof( GLfloat ), defaultPivotPoint, GL_DYNAMIC_DRAW );
+
+    // Set a VAO for the world axis rects.
+    glGenVertexArrays( 1, &pivotPointVAO );
+    glBindVertexArray( pivotPointVAO );
+
+    // By using the previous "vPosition" position, specify the location and data format of
+    // the array of vertex positions.
+    glVertexAttribPointer( vPosition, 3, GL_FLOAT, GL_FALSE, 0, 0 );
+    glEnableVertexAttribArray( vPosition );
+}
+
 /***
  * 1. Drawables administration
  ***/
@@ -214,6 +243,8 @@ void Scene::selectDrawable( const unsigned int index )
 
     selectedDrawables.splice( selectedDrawables.end(), nonSelectedDrawables, it );
 
+    updatePivotPoint();
+
     emit renderNeeded();
 }
 
@@ -221,12 +252,16 @@ void Scene::selectAll()
 {
     selectedDrawables.splice( selectedDrawables.end(), nonSelectedDrawables );
 
+    updatePivotPoint();
+
     emit renderNeeded();
 }
 
 void Scene::unselectAll()
 {
     nonSelectedDrawables.splice( nonSelectedDrawables.end(), selectedDrawables );
+
+    updatePivotPoint();
 
     emit renderNeeded();
 }
@@ -299,7 +334,7 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
 
 glm::vec4 Scene::getSelectionCentroid() const
 {
-    glm::vec4 selectionCentroid;
+    glm::vec4 selectionCentroid( 0.0f );
     DrawablesList::const_iterator it = selectedDrawables.begin();
 
     cout << "Getting selection centroid" << endl;
@@ -310,6 +345,7 @@ glm::vec4 Scene::getSelectionCentroid() const
             selectionCentroid += (*it)->getCentroid();
         }
         selectionCentroid /= selectedDrawables.size();
+        selectionCentroid.w = 1.0f;
     }
 
     return selectionCentroid;
@@ -327,6 +363,9 @@ void Scene::translateSelection( const glm::vec3& direction )
     {
         (*it)->translate( direction );
     }
+
+    updatePivotPoint();
+
     emit renderNeeded();
 }
 
@@ -342,6 +381,7 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const 
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
+            std::cout << "Pivot point: (" << getSelectionCentroid().x << ", " << getSelectionCentroid().y << ", " << getSelectionCentroid().z << ")" << endl;
             for( ; it != selectedDrawables.end(); it++ ){
                 (*it)->rotate( angle, axis, glm::vec3( getSelectionCentroid() ) );
             }
@@ -352,6 +392,8 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const 
             }
         break;
     }
+
+    updatePivotPoint();
 
     emit renderNeeded();
 }
@@ -365,6 +407,9 @@ void Scene::scaleSelection( const glm::vec3& scaleFactors )
     {
         (*it)->scale( scaleFactors );
     }
+
+    updatePivotPoint();
+
     emit renderNeeded();
 }
 
@@ -388,8 +433,30 @@ void Scene::deleteSelection()
     emit renderNeeded();
 }
 
+
 /***
- * 4. Drawing
+ * 4. Updating
+ ***/
+
+void Scene::updatePivotPoint() const
+{
+    glm::vec4 pivotPoint = getSelectionCentroid();
+    GLfloat* pivotPointBuffer = nullptr;
+
+    // Map the pivot point VBO to client memory and update the pivot point coordinates.
+    glBindBuffer( GL_ARRAY_BUFFER, pivotPointVBO );
+    pivotPointBuffer = (GLfloat *)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
+
+    for( unsigned int i=0; i<3; i++ ){
+        pivotPointBuffer[i] = pivotPoint[i];
+    }
+
+    glUnmapBuffer( GL_ARRAY_BUFFER );
+}
+
+
+/***
+ * 5. Drawing
  ***/
 
 void Scene::draw( const int& drawGuideRect ) const
@@ -419,6 +486,11 @@ void Scene::draw( const int& drawGuideRect ) const
         // Draw the guide rect.
         glDrawArrays( GL_LINES, drawGuideRect << 1, 2 );
     }
+
+    // Draw pivot point.
+    glDisable( GL_DEPTH_TEST );
+    drawPivotPoint();
+    glEnable( GL_DEPTH_TEST );
 }
 
 
@@ -440,6 +512,29 @@ void Scene::drawWorldAxis() const
         glUniform4fv( uniformColorLocation, 1, worldAxisColors[i] );
         glDrawArrays( GL_LINES, i << 1, 2 );
     }
+}
+
+
+void Scene::drawPivotPoint() const
+{
+    const GLfloat pivotPointColor[4] =
+    {
+        0.0f, 1.0f, 0.0f, 1.0f
+    };
+
+    // Bind world axis rects' VAO and VBO as the active ones.
+    glBindVertexArray( pivotPointVAO );
+    glBindBuffer( GL_ARRAY_BUFFER, pivotPointVBO );
+
+    // Set pivot point color.
+    glUniform4fv( uniformColorLocation, 1, pivotPointColor );
+
+    // Draw pivot point.
+    // TODO: The range of point sizes are implementation-dependent. Also I have to
+    // check wheter point size mode is enabled or not.
+    glPointSize( 3.0f );
+    glDrawArrays( GL_POINTS, 0, 1 );
+    glPointSize( 1.0f );
 }
 
 } // namespace como

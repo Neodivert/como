@@ -63,9 +63,9 @@ Mesh::Mesh()
     setInnerColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
     setContourColor( 1.0f, 0.0f, 0.0f, 1.0f );
 
-    // Set centroid w.
-    originalCentroid.w = 1.0f;
-    transformedCentroid.w = 1.0f;
+    // Set both original and transformed centroids.
+    originalCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
+    transformedCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
 }
 
 
@@ -81,14 +81,22 @@ Mesh::~Mesh()
 
 void Mesh::setVertices( const GLuint nVertices, const GLfloat* vertices )
 {
-    // Copy given vertices to this mesh's original vertices.
+    // Copy given vertices to this mesh's original vertices. Also compute
+    // the mesh's centroid.
     originalVertices.resize( nVertices );
     for( GLuint i=0; i<nVertices; i++ )
     {
         originalVertices[i] = glm::vec3( vertices[i*COMPONENTS_PER_VERTEX+X],
                                          vertices[i*COMPONENTS_PER_VERTEX+Y],
                                          vertices[i*COMPONENTS_PER_VERTEX+Z] );
+
+        originalCentroid += glm::vec4( originalVertices[i], 1.0f );
     }
+    originalCentroid /= originalVertices.size();
+    originalCentroid.w = 1.0f;
+
+    std::cout << "Original Centroid: (" << originalCentroid.x << ", " << originalCentroid.y << ", " << originalCentroid.z << ", " << originalCentroid.w << ")" << std::endl;
+
     // Allocate a VBO for transformed vertices.
     glBufferData( GL_ARRAY_BUFFER, nVertices*COMPONENTS_PER_VERTEX*sizeof( GLfloat ), NULL, GL_DYNAMIC_DRAW );
 
@@ -245,6 +253,8 @@ void Mesh::update()
 
     // Update mesh's centroid.
     transformedCentroid = transformationMatrix * originalCentroid;
+
+    std::cout << "Transformed Centroid: (" << transformedCentroid.x << ", " << transformedCentroid.y << ", " << transformedCentroid.z << ", " << transformedCentroid.w << ")" << std::endl;
 
     // Set Mesh's VAO and VBO as the current ones.
     glBindVertexArray( vao );
