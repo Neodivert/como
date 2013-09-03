@@ -38,7 +38,7 @@ const GLuint N_TRIANGLE_VERTICES = 3;
 
 class Mesh : public Drawable
 {
-    protected:
+    private:
         // Location of the uniform shader variable used for coloring geometries.
         static GLint uniformColorLocation;
 
@@ -68,6 +68,7 @@ class Mesh : public Drawable
 
         // Number of elements in mesh.
         GLuint nElements;
+
     public:
         /***
          * 1. Initialization and destruction
