@@ -243,7 +243,7 @@ void Scene::selectDrawable( const unsigned int index )
 
     selectedDrawables.splice( selectedDrawables.end(), nonSelectedDrawables, it );
 
-    ////updatePivotPoint();
+    updateSelectionCentroid();
 
     emit renderNeeded();
 }
@@ -252,7 +252,7 @@ void Scene::selectAll()
 {
     selectedDrawables.splice( selectedDrawables.end(), nonSelectedDrawables );
 
-    ////updatePivotPoint();
+    updateSelectionCentroid();
 
     emit renderNeeded();
 }
@@ -261,7 +261,7 @@ void Scene::unselectAll()
 {
     nonSelectedDrawables.splice( nonSelectedDrawables.end(), selectedDrawables );
 
-    ////updatePivotPoint();
+    updateSelectionCentroid();
 
     emit renderNeeded();
 }
@@ -350,7 +350,7 @@ void Scene::translateSelection( const glm::vec3& direction )
         (*it)->translate( direction );
     }
 
-    ////updatePivotPoint();
+    updateSelectionCentroid();
 
     emit renderNeeded();
 }
@@ -378,7 +378,7 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const 
         break;
     }
 
-    ////updatePivotPoint();
+    updateSelectionCentroid();
 
     emit renderNeeded();
 }
@@ -393,7 +393,7 @@ void Scene::scaleSelection( const glm::vec3& scaleFactors )
         (*it)->scale( scaleFactors );
     }
 
-    ////updatePivotPoint();
+    updateSelectionCentroid();
 
     emit renderNeeded();
 }
@@ -427,11 +427,11 @@ void Scene::updateSelectionCentroid()
 {
     DrawablesList::const_iterator it = selectedDrawables.begin();
     GLfloat* selectionCentroidBuffer = nullptr;
+    selectionCentroid = glm::vec4( 0.0f );
 
     // Update scene selection centroid.
     if( selectedDrawables.size() ){
-        for( ; it != selectedDrawables.end(); it++ )
-        {
+        for( ; it != selectedDrawables.end(); it++ ){
             selectionCentroid += (*it)->getCentroid();
         }
         selectionCentroid /= selectedDrawables.size();

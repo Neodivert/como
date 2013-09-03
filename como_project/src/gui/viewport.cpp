@@ -215,7 +215,6 @@ void Viewport::keyPressEvent( QKeyEvent *e )
             comoApp->setTransformationMode( TransformationMode::FREE );
         break;
         case Qt::Key_R:
-            comoApp->getScene()->updateSelectionCentroid();
             comoApp->setTransformationType( TransformationType::ROTATION );
             comoApp->setTransformationMode( TransformationMode::FREE );
         break;
