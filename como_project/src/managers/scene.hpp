@@ -77,9 +77,11 @@ class Scene : public QObject
 
         GLuint uniformColorLocation;
 
-        // Scene's pivot point VAO and VBO.
-        GLuint pivotPointVAO;
-        GLuint pivotPointVBO;
+        // Scene's selection centroid VAO and VBO.
+        GLuint selectionCentroidVAO;
+        GLuint selectionCentroidVBO;
+        glm::vec4 selectionCentroid;
+
 
         // VAO and VBO for displaying the world coordinates system axis for
         // each viewport.
@@ -93,7 +95,7 @@ class Scene : public QObject
         ~Scene();
 
         void initWorldAxis();
-        void initPivotPoint( const GLuint& vPosition );
+        void initSelectionCentroid( const GLuint& vPosition );
 
         /***
          * 1. Drawables administration
@@ -130,14 +132,14 @@ class Scene : public QObject
         /***
          * 4. Updating
          ***/
-        void updatePivotPoint() const ;
+        void updateSelectionCentroid();
 
         /***
          * 5. Drawing
          ***/
         void draw( const int& drawGuideRect = -1 ) const ;
         void drawWorldAxis() const ;
-        void drawPivotPoint() const ;
+        void drawSelectionCentroid() const ;
 
         /***
          * 5. Signals

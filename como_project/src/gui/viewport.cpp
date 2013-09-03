@@ -215,6 +215,7 @@ void Viewport::keyPressEvent( QKeyEvent *e )
             comoApp->setTransformationMode( TransformationMode::FREE );
         break;
         case Qt::Key_R:
+            comoApp->getScene()->updateSelectionCentroid();
             comoApp->setTransformationType( TransformationType::ROTATION );
             comoApp->setTransformationMode( TransformationMode::FREE );
         break;
@@ -274,7 +275,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     // Variables used for computing the magnitude of the transformation.
     glm::vec4 transformVector;
     float angle;
-    glm::vec3 pivotPoint( 0.0f );
+    glm::vec4 pivotPoint( 0.0f );
 
     // Compute mouse pos (window normalized coordinates [-0.5, 0.5]).
     const glm::vec2 mousePos = getNormalizedMousePos( mouseMoveEvent->pos().x(), mouseMoveEvent->pos().y() );
@@ -329,9 +330,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                         comoApp->getScene()->rotateSelection( angle, zAxis, comoApp->getPivotPointMode() );
                     break;
                     case TransformationMode::FREE:
-                        // TODO: Why do I have to use -angle?
-                        // Maybe because I have to reverse the camera center vector?
-                        comoApp->getScene()->rotateSelection( -angle, glm::vec3( camera.getCenterVector() ), comoApp->getPivotPointMode() );
+                        comoApp->getScene()->rotateSelection( angle, glm::vec3( -camera.getCenterVector() ), comoApp->getPivotPointMode() );
                     break;
                 }
             break;

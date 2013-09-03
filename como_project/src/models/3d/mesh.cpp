@@ -254,7 +254,7 @@ void Mesh::update()
     // Update mesh's centroid.
     transformedCentroid = transformationMatrix * originalCentroid;
 
-    std::cout << "Transformed Centroid: (" << transformedCentroid.x << ", " << transformedCentroid.y << ", " << transformedCentroid.z << ", " << transformedCentroid.w << ")" << std::endl;
+    //std::cout << "Transformed Centroid: (" << transformedCentroid.x << ", " << transformedCentroid.y << ", " << transformedCentroid.z << ", " << transformedCentroid.w << ")" << std::endl;
 
     // Set Mesh's VAO and VBO as the current ones.
     glBindVertexArray( vao );

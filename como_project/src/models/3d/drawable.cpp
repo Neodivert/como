@@ -99,6 +99,10 @@ void Drawable::rotate( GLfloat angle, glm::vec3 axis )
 
 void Drawable::rotate( const GLfloat& angle, glm::vec3 axis, const glm::vec3& pivot )
 {
+    translate( -pivot );
+    rotate( angle, axis );
+    translate( pivot );
+    /*
     // Normalize the vector "axis".
     axis = glm::normalize( axis );
 
@@ -119,6 +123,7 @@ void Drawable::rotate( const GLfloat& angle, glm::vec3 axis, const glm::vec3& pi
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.
     update();
+    */
 }
 
 
