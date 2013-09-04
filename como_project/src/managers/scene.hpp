@@ -60,6 +60,15 @@ extern PivotPointModes pivotPointModes;
 typedef std::array< QString, N_PIVOT_POINT_MODES > PivotPointModeStrings;
 extern PivotPointModeStrings pivotPointModeStrings;
 
+
+enum LinesBufferOffset {
+    WORLD_AXIS = 0,
+    GUIDE_AXIS,
+    TRANSFORM_GUIDE_LINE,
+
+    N_LINES_BUFFER_OFFSETS
+};
+
 class Scene : public QObject
 {
     Q_OBJECT
@@ -71,24 +80,14 @@ class Scene : public QObject
         // Scene's drawables selected by user.
         DrawablesList selectedDrawables;
 
-        GLuint guideRectsVAO;
-        GLuint guideRectsVBO;
+        // Lines VAO, VBO and offsets.
+        GLuint linesVAO;
+        GLuint linesVBO;
+        GLuint linesBufferOffsets[N_LINES_BUFFER_OFFSETS];
 
         GLuint uniformColorLocation;
-
-        // Scene's points VAO and VBO.
-        //GLuint pointsVAO;
-        //GLuint pointsVBO;
-        //GLuint pivotPointBufferOffset;
-
-        GLuint selectionCentroidVAO;
-        GLuint selectionCentroidVBO;
         glm::vec4 selectionCentroid;
 
-        // VAO and VBO for displaying the world coordinates system axis for
-        // each viewport.
-        GLuint worldAxisVAO;
-        GLuint worldAxisVBO;
     public:
         /***
          * 1. Initialization and destruction
@@ -96,13 +95,12 @@ class Scene : public QObject
         Scene();
         ~Scene();
 
-        void initWorldAxis();
-        void initSelectionCentroid( const GLuint& vPosition );
+        void initLinesBuffer();
 
         /***
          * 2. Getters and setters
          ***/
-        void setGuideRect( glm::vec3 origin, glm::vec3 destiny );
+        void setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny );
         glm::vec3 getPivotPoint( const PivotPointMode& pivotPointMode );
 
 
@@ -149,8 +147,7 @@ class Scene : public QObject
          ***/
         void draw( const int& drawGuideRect = -1 ) const ;
         void drawWorldAxis() const ;
-        void drawSelectionCentroid() const ;
-        //void drawGuideRect() const ;
+        void drawTransformGuideLine() const ;
 
 
         /***

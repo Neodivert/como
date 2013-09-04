@@ -25,9 +25,6 @@ using namespace std;
 
 namespace como {
 
-GLuint Viewport::guideRectVAO = 0;
-GLuint Viewport::guideRectVBO = 0;
-
 ProjectionModes projectionModes =
 {{
     Projection::ORTHO,
@@ -91,41 +88,6 @@ Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
 
     // Set default projection.
     setProjection( Projection::ORTHO );
-
-    // Initialize the guide rect's VAO and VBO.
-    if( !guideRectVAO ){
-        initGuideRect();
-    }
-
-    focus = false;
-}
-
-Viewport::~Viewport()
-{
-    glDeleteVertexArrays( 1, &guideRectVAO );
-    glDeleteBuffers( 1, &guideRectVBO );
-}
-
-void Viewport::initGuideRect()
-{
-    const GLfloat guideRect[] {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, 0.5f, 0.0f
-    };
-
-    // Create a VAO for the guide rect.
-    glGenVertexArrays( 1, &guideRectVAO );
-    glBindVertexArray( guideRectVAO );
-
-    // Create a VBO for the guide rect.
-    glGenBuffers( 1, &guideRectVBO );
-    glBindBuffer( GL_ARRAY_BUFFER, guideRectVBO );
-    glBufferData( GL_ARRAY_BUFFER, 6*sizeof( GLfloat ), guideRect, GL_DYNAMIC_DRAW );
-
-    // TODO: Use real vPosition.
-    GLuint vPosition = 0;
-    glVertexAttribPointer( vPosition, 3, GL_FLOAT, GL_FALSE, 0, 0 );
-    glEnableVertexAttribArray( vPosition );
 }
 
 
@@ -346,7 +308,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                     break;
                 }
 
-                updateGuideRect( mouseMoveEvent->pos().x(), height() - mouseMoveEvent->pos().y() - 1 );
+
             break;
             case TransformationType::SCALE:
                 // Compute the scale magnitud.
@@ -380,6 +342,9 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
             break;
         }
     }
+
+    // Update the transform guide line.
+    updateTransformGuideLine( mouseMoveEvent->pos().x(), height() - mouseMoveEvent->pos().y() - 1 );
 
     // Record last mouse position.
     lastMousePos = mousePos;
@@ -423,7 +388,7 @@ void Viewport::render()
     if( ( comoApp->getTransformationType() == TransformationType::ROTATION ) ||
         ( comoApp->getTransformationType() == TransformationType::SCALE ) ){
         // TODO: Draw only if we have mouse focus.
-        renderGuideRect();
+        comoApp->getScene()->drawTransformGuideLine();
     }
 
     // Make viewport occupy the bottom left corner.
@@ -436,17 +401,6 @@ void Viewport::render()
 
     // Swap buffers.
     comoApp->getOpenGLContext()->swapBuffers( this );
-}
-
-
-void Viewport::renderGuideRect()
-{
-    glBindVertexArray( guideRectVAO );
-    glBindBuffer( GL_ARRAY_BUFFER, guideRectVBO );
-
-    glDisable( GL_DEPTH_TEST );
-    glDrawArrays( GL_LINES, 0, 2 );
-    glEnable( GL_DEPTH_TEST );
 }
 
 
@@ -493,6 +447,7 @@ glm::vec2 Viewport::getNormalizedMousePos( const int& x, const int& y ) const
     return glm::vec2( (x * widthInverse) - 0.5f, (y * heightInverse) - 0.5f );
 }
 
+
 void Viewport::traceRay( const GLfloat& x, const GLfloat& y, glm::vec3& rayOrigin, glm::vec3& rayDirection ) const
 {
     glm::vec4 viewport;
@@ -513,13 +468,12 @@ void Viewport::traceRay( const GLfloat& x, const GLfloat& y, glm::vec3& rayOrigi
     rayDirection = glm::unProject( windowCoordinates, camera.getViewMatrix(), projectionMatrix, viewport ) - rayOrigin;
 }
 
-void Viewport::updateGuideRect( const GLfloat& x, const GLfloat& y )
+
+void Viewport::updateTransformGuideLine( const GLfloat& x, const GLfloat& y )
 {
-    glm::vec3 rayOrigin, rayDestiny;
+    glm::vec3 rayOrigin, rayDestination;
     GLfloat t;
     glm::vec3 destination;
-    GLfloat* guideRectBuffer = nullptr;
-    unsigned int i = 0;
 
     // The scene's current pivot point will be the rect's origin.
     glm::vec3 origin = comoApp->getScene()->getPivotPoint( comoApp->getPivotPointMode() );
@@ -533,27 +487,16 @@ void Viewport::updateGuideRect( const GLfloat& x, const GLfloat& y )
 
     // Trace a ray from pixel (x, y) towards camera center vector. Get the the ray's
     // origin (at zNear plane) and direction.
-    traceRay( x, y, rayOrigin, rayDestiny );
+    traceRay( x, y, rayOrigin, rayDestination );
 
     // Get the intersection between the previous ray and plane.
-    t = -( ( A * rayOrigin.x + B * rayOrigin.y + C * rayOrigin.z + D ) / ( A * rayDestiny.x + B * rayDestiny.y + C * rayDestiny.z ) );
+    t = -( ( A * rayOrigin.x + B * rayOrigin.y + C * rayOrigin.z + D ) / ( A * rayDestination.x + B * rayDestination.y + C * rayDestination.z ) );
 
     // Use the previous intersection parameter t for computing the guide rect's destination.
-    destination = rayOrigin + rayDestiny * t;
+    destination = rayOrigin + rayDestination * t;
 
-    // Map the guide rect VBO to client memory and update it with the newest
-    // origin and destination.
-    glBindBuffer( GL_ARRAY_BUFFER, guideRectVBO );
-    guideRectBuffer = (GLfloat *)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
-
-    for( ; i<3; i++ ){
-        guideRectBuffer[i] = origin[i];
-    }
-    for( ; i<6; i++ ){
-        guideRectBuffer[i] = destination[i-3];
-    }
-
-    glUnmapBuffer( GL_ARRAY_BUFFER );
+    // Update the transform guide line with the new origin and destination.
+    comoApp->getScene()->setTransformGuideLine( origin, destination );
 }
 
 

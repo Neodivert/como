@@ -52,59 +52,7 @@ PivotPointModeStrings pivotPointModeStrings =
 
 Scene::Scene()
 {
-    GLint currentShaderProgram;
-    GLint vPosition;
-    GLfloat guideRects[] =
-    {
-        // X axis
-        -100.0f, 0.0f, 0.0f,
-        100.0f, 0.0f, 0.0f,
-
-        // Y axis
-        0.0f, -100.0f, 0.0f,
-        0.0f, 100.0f, 0.0f,
-
-        // Z axis
-        0.0f, 0.0f, -100.0f,
-        0.0f, 0.0f, 100.0f,
-
-        // Auxiliar vector for rotations and scales
-        0.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.0f
-    };
-
-    // Get the position of the vertex shader variable "vPosition"
-    // for the current shader program.
-    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
-    vPosition = glGetAttribLocation( currentShaderProgram, "vPosition" );
-    if( vPosition == GL_INVALID_OPERATION ){
-        cout << "Error getting layout of \"position\"" << endl;
-    }else{
-        cout << "vPosition: (" << vPosition << ")" << endl;
-    }
-    // Get location of uniform shader variable "color".
-    uniformColorLocation = glGetUniformLocation( currentShaderProgram, "color" );
-    cout << "Scene: uniform color location initialized to (" << uniformColorLocation << ")" << endl;
-
-    // Set a VBO for the guide rects.
-    glGenBuffers( 1, &guideRectsVBO );
-    glBindBuffer( GL_ARRAY_BUFFER, guideRectsVBO );
-    glBufferData( GL_ARRAY_BUFFER, 24*sizeof( GLfloat ), guideRects, GL_DYNAMIC_DRAW );
-
-    // Set a VAO for the guide rects.
-    glGenVertexArrays( 1, &guideRectsVAO );
-    glBindVertexArray( guideRectsVAO );
-
-    // By using the previous "vPosition" position, specify the location and data format of
-    // the array of vertex positions.
-    glVertexAttribPointer( vPosition, 3, GL_FLOAT, GL_FALSE, 0, 0 );
-    glEnableVertexAttribArray( vPosition );
-
-    // Initialize world axis
-    initWorldAxis();
-
-    // Initializa selection centroid.
-    initSelectionCentroid( vPosition );
+    initLinesBuffer();
 }
 
 
@@ -112,18 +60,16 @@ Scene::~Scene()
 {
     // Tell OpenGL we are done with allocated buffer objects and
     // vertex attribute arrays.
-    glDeleteBuffers( 1, &guideRectsVBO );
-    glDeleteVertexArrays( 1, &guideRectsVAO );
-
-    glDeleteBuffers( 1, &selectionCentroidVBO );
-    glDeleteVertexArrays( 1, &selectionCentroidVAO );
+    glDeleteBuffers( 1, &linesVBO );
+    glDeleteVertexArrays( 1, &linesVAO );
 }
 
 
-void Scene::initWorldAxis()
+void Scene::initLinesBuffer()
 {
     GLint currentShaderProgram;
     GLint vPosition;
+
     const GLfloat x0 = -0.5f;
     const GLfloat y0 = -0.5f;
     const GLfloat z0 = 0.5f;
@@ -132,20 +78,42 @@ void Scene::initWorldAxis()
     const GLfloat y1 = 0.5f;
     const GLfloat z1 = -0.5f;
 
-    GLfloat worldAxisVectors[] =
+    GLfloat linesData[] =
     {
-        // X axis
+        // World X axis
         x0, y0, z0,
         x1, y0, z0,
 
-        // Y axis
+        // World Y axis
         x0, y0, z0,
         x0, y1, z0,
 
-        // Z axis
+        // World Z axis
         x0, y0, z0,
-        x0, y0, z1
+        x0, y0, z1,
+
+        // X guide axis
+        -100.0f, 0.0f, 0.0f,
+        100.0f, 0.0f, 0.0f,
+
+        // Y guide axis
+        0.0f, -100.0f, 0.0f,
+        0.0f, 100.0f, 0.0f,
+
+        // Z guide axis
+        0.0f, 0.0f, -100.0f,
+        0.0f, 0.0f, 100.0f,
+
+        // Auxiliar line for rotations and scales
+        0.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 0.0f
     };
+
+    const int LINES_BUFFER_SIZE = 42 * sizeof( GLfloat );
+
+    linesBufferOffsets[WORLD_AXIS] = 0;
+    linesBufferOffsets[GUIDE_AXIS] = 6;
+    linesBufferOffsets[TRANSFORM_GUIDE_LINE] = 12;
 
     // Get the position of the vertex shader variable "vPosition"
     // for the current shader program.
@@ -161,36 +129,13 @@ void Scene::initWorldAxis()
     cout << "Scene: uniform color location initialized to (" << uniformColorLocation << ")" << endl;
 
     // Set a VBO for the world axis rects.
-    glGenBuffers( 1, &worldAxisVBO );
-    glBindBuffer( GL_ARRAY_BUFFER, worldAxisVBO );
-    glBufferData( GL_ARRAY_BUFFER, 18*sizeof( GLfloat ), worldAxisVectors, GL_STATIC_DRAW );
+    glGenBuffers( 1, &linesVBO );
+    glBindBuffer( GL_ARRAY_BUFFER, linesVBO );
+    glBufferData( GL_ARRAY_BUFFER, LINES_BUFFER_SIZE, linesData, GL_DYNAMIC_DRAW );
 
     // Set a VAO for the world axis rects.
-    glGenVertexArrays( 1, &worldAxisVAO );
-    glBindVertexArray( worldAxisVAO );
-
-    // By using the previous "vPosition" position, specify the location and data format of
-    // the array of vertex positions.
-    glVertexAttribPointer( vPosition, 3, GL_FLOAT, GL_FALSE, 0, 0 );
-    glEnableVertexAttribArray( vPosition );
-}
-
-
-void Scene::initSelectionCentroid( const GLuint& vPosition )
-{
-    GLfloat defaultPivotPoint[3] =
-    {
-        0.0f, 0.0f, 0.0f
-    };
-
-    // Set a VBO for the pivot point.
-    glGenBuffers( 1, &selectionCentroidVBO );
-    glBindBuffer( GL_ARRAY_BUFFER, selectionCentroidVBO );
-    glBufferData( GL_ARRAY_BUFFER, 3*sizeof( GLfloat ), defaultPivotPoint, GL_DYNAMIC_DRAW );
-
-    // Set a VAO for the world axis rects.
-    glGenVertexArrays( 1, &selectionCentroidVAO );
-    glBindVertexArray( selectionCentroidVAO );
+    glGenVertexArrays( 1, &linesVAO );
+    glBindVertexArray( linesVAO );
 
     // By using the previous "vPosition" position, specify the location and data format of
     // the array of vertex positions.
@@ -203,13 +148,13 @@ void Scene::initSelectionCentroid( const GLuint& vPosition )
  * 2. Getters and setters
  ***/
 
-void Scene::setGuideRect( glm::vec3 origin, glm::vec3 destiny )
+void Scene::setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny )
 {
-    GLfloat* guideRectsBuffer;
-    unsigned int i=0;
+    GLfloat* guideRectsBuffer = nullptr;
+    unsigned int i = 0;
 
-    glBindBuffer( GL_ARRAY_BUFFER, guideRectsVBO );
-    guideRectsBuffer = (GLfloat *)glMapBufferRange( GL_ARRAY_BUFFER, 18*sizeof( GLfloat ), 6*sizeof( GLfloat ), GL_MAP_WRITE_BIT );
+    glBindBuffer( GL_ARRAY_BUFFER, linesVBO );
+    guideRectsBuffer = (GLfloat *)glMapBufferRange( GL_ARRAY_BUFFER, linesBufferOffsets[TRANSFORM_GUIDE_LINE]*3*sizeof( GLfloat ), 6*sizeof( GLfloat ), GL_MAP_WRITE_BIT );
 
     for( ; i<3; i++ ){
         guideRectsBuffer[i] = origin[i];
@@ -219,7 +164,6 @@ void Scene::setGuideRect( glm::vec3 origin, glm::vec3 destiny )
     }
 
     glUnmapBuffer( GL_ARRAY_BUFFER );
-
 }
 
 
@@ -471,7 +415,7 @@ void Scene::deleteSelection()
 void Scene::updateSelectionCentroid()
 {
     DrawablesList::const_iterator it = selectedDrawables.begin();
-    GLfloat* selectionCentroidBuffer = nullptr;
+    //GLfloat* selectionCentroidBuffer = nullptr;
     selectionCentroid = glm::vec4( 0.0f );
 
     // Update scene selection centroid.
@@ -483,6 +427,7 @@ void Scene::updateSelectionCentroid()
         selectionCentroid.w = 1.0f;
     }
 
+    /*
     // Map the pivot point VBO to client memory and update the selection centroid
     // coordinates (for drawing).
     glBindBuffer( GL_ARRAY_BUFFER, selectionCentroidVBO );
@@ -493,6 +438,7 @@ void Scene::updateSelectionCentroid()
     }
 
     glUnmapBuffer( GL_ARRAY_BUFFER );
+    */
 }
 
 
@@ -521,17 +467,12 @@ void Scene::draw( const int& drawGuideRect ) const
         glUniform4fv( uniformColorLocation, 1, WHITE_COLOR );
 
         // Bind guide rects' VAO and VBO as the active ones.
-        glBindVertexArray( guideRectsVAO );
-        glBindBuffer( GL_ARRAY_BUFFER, guideRectsVBO );
+        glBindVertexArray( linesVAO );
+        glBindBuffer( GL_ARRAY_BUFFER, linesVBO );
 
         // Draw the guide rect.
-        glDrawArrays( GL_LINES, drawGuideRect << 1, 2 );
+        glDrawArrays( GL_LINES, linesBufferOffsets[GUIDE_AXIS] + (drawGuideRect << 1), 2 );
     }
-
-    // Draw selectionCentroid.
-    glDisable( GL_DEPTH_TEST );
-    drawSelectionCentroid();
-    glEnable( GL_DEPTH_TEST );
 }
 
 
@@ -545,57 +486,40 @@ void Scene::drawWorldAxis() const
     };
 
     // Bind world axis rects' VAO and VBO as the active ones.
-    glBindVertexArray( worldAxisVAO );
-    glBindBuffer( GL_ARRAY_BUFFER, worldAxisVBO );
+    glBindVertexArray( linesVAO );
+    glBindBuffer( GL_ARRAY_BUFFER, linesVBO );
 
     // Draw each world axis with its corresponding color.
     for( unsigned int i=0; i<3; i++ ){
         glUniform4fv( uniformColorLocation, 1, worldAxisColors[i] );
-        glDrawArrays( GL_LINES, i << 1, 2 );
+        glDrawArrays( GL_LINES, linesBufferOffsets[WORLD_AXIS] + (i << 1), 2 );
     }
 }
 
 
-void Scene::drawSelectionCentroid() const
+void Scene::drawTransformGuideLine() const
 {
-    const GLfloat selectionCentroidColor[4] =
+    const GLfloat lineColor[4] =
     {
         0.0f, 1.0f, 0.0f, 1.0f
     };
 
     // Bind selection centroid VAO and VBO as the active ones.
-    glBindVertexArray( selectionCentroidVAO );
-    glBindBuffer( GL_ARRAY_BUFFER, selectionCentroidVBO );
+    glBindVertexArray( linesVAO );
+    glBindBuffer( GL_ARRAY_BUFFER, linesVBO );
 
     // Set selection centroid color.
-    glUniform4fv( uniformColorLocation, 1, selectionCentroidColor );
+    glUniform4fv( uniformColorLocation, 1, lineColor );
 
     // Draw selection centroid point.
     // TODO: The range of point sizes are implementation-dependent. Also I have to
     // check wheter point size mode is enabled or not.
-    glPointSize( 3.0f );
-    glDrawArrays( GL_POINTS, 0, 1 );
-    glPointSize( 1.0f );
-}
-
-/*
-void Scene::drawGuideRect() const
-{
-    const GLfloat guideRectColor[4] =
-    {
-        0.0f, 0.0f, 1.0f, 1.0f
-    };
-
-    glBindVertexArray( guideRectsVAO );
-    glBindBuffer( GL_ARRAY_BUFFER, guideRectsVBO );
-
-    // Set guide rect color.
-    glUniform4fv( uniformColorLocation, 1, guideRectColor );
-
     glDisable( GL_DEPTH_TEST );
-    glDrawArrays( GL_LINES, 6, 2 );
+    glPointSize( 3.0f );
+    glDrawArrays( GL_POINTS, linesBufferOffsets[TRANSFORM_GUIDE_LINE], 1 );
+    glPointSize( 1.0f );
+    glDrawArrays( GL_LINES, linesBufferOffsets[TRANSFORM_GUIDE_LINE], 2 );
     glEnable( GL_DEPTH_TEST );
 }
-*/
 
 } // namespace como

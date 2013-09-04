@@ -62,11 +62,6 @@ class Viewport : public QWindow
         // Location for shader uniform variables.
         static GLint viewProjectionMatrixLocation;
 
-        //
-        static GLuint guideRectVAO;
-        static GLuint guideRectVBO;
-
-
         // Window's Width and height inverses.
         // In order to make user transformations relatives to viewport's dimensions, we
         // multiply the transformation magnitude by the inverse of viewport's dimensions,
@@ -78,18 +73,11 @@ class Viewport : public QWindow
 
         glm::mat4 projectionMatrix;
 
-        bool focus;
-
     public:
         /***
          * 1. Initialization and destruction
          ***/
-
-        //explicit Viewport( QWidget *parent = 0);
-        // add "explicit"?
         Viewport( shared_ptr< ComoApp > comoApp );
-        ~Viewport();
-        static void initGuideRect();
 
         /***
          * 2. Events
@@ -126,7 +114,7 @@ class Viewport : public QWindow
          ***/
         glm::vec2 getNormalizedMousePos( const int& x, const int& y ) const ;
         void traceRay( const GLfloat& x, const GLfloat& y, glm::vec3& rayOrigin, glm::vec3& rayDirection ) const ;
-        void updateGuideRect( const GLfloat& x, const GLfloat& y );
+        void updateTransformGuideLine( const GLfloat& x, const GLfloat& y );
 };
 
 } // namespace como
