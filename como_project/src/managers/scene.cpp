@@ -171,12 +171,11 @@ glm::vec3 Scene::getPivotPoint( const PivotPointMode& pivotPointMode )
 {
     switch( pivotPointMode ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
-        case PivotPointMode::WORLD_ORIGIN:
-            return glm::vec3( 0.0f, 0.0f, 0.0f );
+        case PivotPointMode::MEDIAN_POINT:
+            return glm::vec3( selectionCentroid );
         break;
         default:
-        //case PivotPointMode::MEDIAN_POINT:
-            return glm::vec3( selectionCentroid );
+            return glm::vec3( 0.0f, 0.0f, 0.0f );
         break;
     }
 }
@@ -373,13 +372,26 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const 
 }
 
 
-void Scene::scaleSelection( const glm::vec3& scaleFactors )
+void Scene::scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode )
 {
     DrawablesList::iterator it = selectedDrawables.begin();
 
-    for( ; it != selectedDrawables.end(); it++ )
-    {
-        (*it)->scale( scaleFactors );
+    switch( pivotPointMode ){
+        case PivotPointMode::INDIVIDUAL_CENTROIDS:
+            for( ; it != selectedDrawables.end(); it++ ){
+                (*it)->scale( scaleFactors, glm::vec3( (*it)->getCentroid() ) );
+            }
+        break;
+        case PivotPointMode::MEDIAN_POINT:
+            for( ; it != selectedDrawables.end(); it++ ){
+                (*it)->scale( scaleFactors, glm::vec3( selectionCentroid ) );
+            }
+        break;
+        case PivotPointMode::WORLD_ORIGIN:
+            for( ; it != selectedDrawables.end(); it++ ){
+                (*it)->scale( scaleFactors );
+            }
+        break;
     }
 
     updateSelectionCentroid();

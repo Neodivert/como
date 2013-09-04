@@ -130,7 +130,7 @@ class Scene : public QObject
          ***/
         void translateSelection( const glm::vec3& direction );
         void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode );
-        void scaleSelection( const glm::vec3& scaleFactors );
+        void scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode );
         //void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
 
         void deleteSelection();

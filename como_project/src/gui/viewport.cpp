@@ -289,7 +289,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
             break;
             case TransformationType::ROTATION:
                 // Compute the angle between the vectors mousePos and lastMousePos.
-                angle = glm::orientedAngle(glm::normalize( mousePos ), glm::normalize( lastMousePos ) );
+                angle = glm::orientedAngle( glm::normalize( mousePos ), glm::normalize( lastMousePos ) );
 
                 // Make the rotation about an axis or another depending on the current
                 // transformationMode.
@@ -336,7 +336,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 }
 
                 // Do the scale.
-                comoApp->getScene()->scaleSelection( glm::vec3( transformVector ) );
+                comoApp->getScene()->scaleSelection( glm::vec3( transformVector ), comoApp->getPivotPointMode() );
             break;
             default:
             break;
