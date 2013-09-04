@@ -25,6 +25,8 @@ using namespace std;
 
 namespace como {
 
+GLuint Viewport::guideRectVAO = 0;
+GLuint Viewport::guideRectVBO = 0;
 
 ProjectionModes projectionModes =
 {{
@@ -89,6 +91,41 @@ Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
 
     // Set default projection.
     setProjection( Projection::ORTHO );
+
+    // Initialize the guide rect's VAO and VBO.
+    if( !guideRectVAO ){
+        initGuideRect();
+    }
+
+    focus = false;
+}
+
+Viewport::~Viewport()
+{
+    glDeleteVertexArrays( 1, &guideRectVAO );
+    glDeleteBuffers( 1, &guideRectVBO );
+}
+
+void Viewport::initGuideRect()
+{
+    const GLfloat guideRect[] {
+        -0.5f, -0.5f, 0.0f,
+        0.5f, 0.5f, 0.0f
+    };
+
+    // Create a VAO for the guide rect.
+    glGenVertexArrays( 1, &guideRectVAO );
+    glBindVertexArray( guideRectVAO );
+
+    // Create a VBO for the guide rect.
+    glGenBuffers( 1, &guideRectVBO );
+    glBindBuffer( GL_ARRAY_BUFFER, guideRectVBO );
+    glBufferData( GL_ARRAY_BUFFER, 6*sizeof( GLfloat ), guideRect, GL_DYNAMIC_DRAW );
+
+    // TODO: Use real vPosition.
+    GLuint vPosition = 0;
+    glVertexAttribPointer( vPosition, 3, GL_FLOAT, GL_FALSE, 0, 0 );
+    glEnableVertexAttribArray( vPosition );
 }
 
 
@@ -149,10 +186,7 @@ void Viewport::resizeEvent(QResizeEvent *event)
 
 void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
 {
-    glm::vec4 viewport;
-    glm::vec3 windowCoordinates;
-    glm::mat4 projectionMatrix;
-    glm::vec3 worldCoordinates[2];
+    glm::vec3 rayOrigin, rayDirection;
     bool addToSelection = false;
 
     // Do one thing or another depending on which transformation mode we are in.
@@ -166,38 +200,17 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
 
         // http://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection
 
-        // Get this canvas' viewport limits.
-        viewport = glm::vec4( 0, 0, width(), height() );
-
-        // Get window coordinates. Set z to near plane's z.
-        windowCoordinates = glm::vec3( mousePressEvent->x(), height() - mousePressEvent->y() - 1, 0.0f );
-
-        // Get world coordinates in clipping near plane by unproyecting the window's ones.
-        worldCoordinates[0] = glm::unProject( windowCoordinates, camera.getViewMatrix(), projectionMatrix, viewport );
-
-        // Get world coordinates in far clipping plane by unproyecting the window's ones.
-        windowCoordinates.z = 1.0f;
-        worldCoordinates[1] = glm::unProject( windowCoordinates, camera.getViewMatrix(), projectionMatrix, viewport );
-
-        for( int i=0; i<2; i++ ){
-            cout << "World coordinates (" << i << "): (";
-            for( int j=0; j<3; j++ ){
-                cout << worldCoordinates[i][j] << ", ";
-            }
-            cout << endl;
-        }
-
-        cout << "direction: (" << worldCoordinates[1][0]-worldCoordinates[0][0] << ", "
-                               << worldCoordinates[1][1]-worldCoordinates[0][1] << ", "
-                               << worldCoordinates[1][2]-worldCoordinates[0][2] << ")" << endl;
+        // Tace a ray from pixel towards camera's center vector.
+        traceRay( mousePressEvent->x(), height() - mousePressEvent->y() - 1, rayOrigin, rayDirection );
 
         // If user is pressing ctrl key while selecting a drawable, add it to the current
         // selection. Otherwise, clear the current selection and select the new drawable.
         addToSelection = mousePressEvent->modifiers() & Qt::ControlModifier;
 
         // Do the ray picking.
-        comoApp->getScene()->selectDrawableByRayPicking( worldCoordinates[0],
-                                                        worldCoordinates[1] - worldCoordinates[0], addToSelection );
+        comoApp->getScene()->selectDrawableByRayPicking( rayOrigin,
+                                                         rayDirection,
+                                                         addToSelection );
     }else{
         // We were in transformation mode. This mouse press is for droping
         // the current selection.
@@ -274,7 +287,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     // Variables used for computing the magnitude of the transformation.
     glm::vec4 transformVector;
     float angle;
-    glm::vec4 pivotPoint( 0.0f );
+    //glm::vec4 pivotPoint( 0.0f );
 
     // Compute mouse pos (window normalized coordinates [-0.5, 0.5]).
     const glm::vec2 mousePos = getNormalizedMousePos( mouseMoveEvent->pos().x(), mouseMoveEvent->pos().y() );
@@ -332,6 +345,8 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                         comoApp->getScene()->rotateSelection( angle, glm::vec3( -camera.getCenterVector() ), comoApp->getPivotPointMode() );
                     break;
                 }
+
+                updateGuideRect( mouseMoveEvent->pos().x(), height() - mouseMoveEvent->pos().y() - 1 );
             break;
             case TransformationType::SCALE:
                 // Compute the scale magnitud.
@@ -404,6 +419,13 @@ void Viewport::render()
     it = find( transformationModes.begin(), transformationModes.end(), comoApp->getTransformationMode() );
     comoApp->getScene()->draw( std::distance( transformationModes.begin(), it ) - 1 );
 
+    // Draw guide rect
+    if( ( comoApp->getTransformationType() == TransformationType::ROTATION ) ||
+        ( comoApp->getTransformationType() == TransformationType::SCALE ) ){
+        // TODO: Draw only if we have mouse focus.
+        renderGuideRect();
+    }
+
     // Make viewport occupy the bottom left corner.
     glViewport( width()-50, 0, 50, 50 );
 
@@ -415,6 +437,18 @@ void Viewport::render()
     // Swap buffers.
     comoApp->getOpenGLContext()->swapBuffers( this );
 }
+
+
+void Viewport::renderGuideRect()
+{
+    glBindVertexArray( guideRectVAO );
+    glBindBuffer( GL_ARRAY_BUFFER, guideRectVBO );
+
+    glDisable( GL_DEPTH_TEST );
+    glDrawArrays( GL_LINES, 0, 2 );
+    glEnable( GL_DEPTH_TEST );
+}
+
 
 /***
  * 5. Slots
@@ -458,5 +492,69 @@ glm::vec2 Viewport::getNormalizedMousePos( const int& x, const int& y ) const
 {
     return glm::vec2( (x * widthInverse) - 0.5f, (y * heightInverse) - 0.5f );
 }
+
+void Viewport::traceRay( const GLfloat& x, const GLfloat& y, glm::vec3& rayOrigin, glm::vec3& rayDirection ) const
+{
+    glm::vec4 viewport;
+    glm::vec3 windowCoordinates;
+
+    // Get this canvas' viewport limits.
+    viewport = glm::vec4( 0, 0, width(), height() );
+
+    // Get window coordinates. Set z to near plane's z.
+    windowCoordinates = glm::vec3( x, y, 0.0f );
+
+    // Get ray origin coordinates at clipping near plane by unproyecting the window's ones.
+    rayOrigin = glm::unProject( windowCoordinates, camera.getViewMatrix(), projectionMatrix, viewport );
+
+    // Get ray direction coordinates by unproyecting the window's ones to far plane and
+    // then substracting the ray origin.
+    windowCoordinates.z = 1.0f;
+    rayDirection = glm::unProject( windowCoordinates, camera.getViewMatrix(), projectionMatrix, viewport ) - rayOrigin;
+}
+
+void Viewport::updateGuideRect( const GLfloat& x, const GLfloat& y )
+{
+    glm::vec3 rayOrigin, rayDestiny;
+    GLfloat t;
+    glm::vec3 destination;
+    GLfloat* guideRectBuffer = nullptr;
+    unsigned int i = 0;
+
+    // The scene's current pivot point will be the rect's origin.
+    glm::vec3 origin = comoApp->getScene()->getPivotPoint( comoApp->getPivotPointMode() );
+
+    // Get the equation of a plane which contains the origin point and whose normal
+    // is the opposite of the camera's center vector.
+    const GLfloat A = ( -camera.getCenterVector() ).x;
+    const GLfloat B = ( -camera.getCenterVector() ).y;
+    const GLfloat C = ( -camera.getCenterVector() ).z;
+    const GLfloat D = -A * origin.x - B * origin.y - C * origin.z;
+
+    // Trace a ray from pixel (x, y) towards camera center vector. Get the the ray's
+    // origin (at zNear plane) and direction.
+    traceRay( x, y, rayOrigin, rayDestiny );
+
+    // Get the intersection between the previous ray and plane.
+    t = -( ( A * rayOrigin.x + B * rayOrigin.y + C * rayOrigin.z + D ) / ( A * rayDestiny.x + B * rayDestiny.y + C * rayDestiny.z ) );
+
+    // Use the previous intersection parameter t for computing the guide rect's destination.
+    destination = rayOrigin + rayDestiny * t;
+
+    // Map the guide rect VBO to client memory and update it with the newest
+    // origin and destination.
+    glBindBuffer( GL_ARRAY_BUFFER, guideRectVBO );
+    guideRectBuffer = (GLfloat *)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
+
+    for( ; i<3; i++ ){
+        guideRectBuffer[i] = origin[i];
+    }
+    for( ; i<6; i++ ){
+        guideRectBuffer[i] = destination[i-3];
+    }
+
+    glUnmapBuffer( GL_ARRAY_BUFFER );
+}
+
 
 } // namespace como

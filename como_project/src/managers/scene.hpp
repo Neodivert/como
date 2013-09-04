@@ -60,7 +60,6 @@ extern PivotPointModes pivotPointModes;
 typedef std::array< QString, N_PIVOT_POINT_MODES > PivotPointModeStrings;
 extern PivotPointModeStrings pivotPointModeStrings;
 
-
 class Scene : public QObject
 {
     Q_OBJECT
@@ -77,11 +76,14 @@ class Scene : public QObject
 
         GLuint uniformColorLocation;
 
-        // Scene's selection centroid VAO and VBO.
+        // Scene's points VAO and VBO.
+        //GLuint pointsVAO;
+        //GLuint pointsVBO;
+        //GLuint pivotPointBufferOffset;
+
         GLuint selectionCentroidVAO;
         GLuint selectionCentroidVBO;
         glm::vec4 selectionCentroid;
-
 
         // VAO and VBO for displaying the world coordinates system axis for
         // each viewport.
@@ -98,7 +100,14 @@ class Scene : public QObject
         void initSelectionCentroid( const GLuint& vPosition );
 
         /***
-         * 1. Drawables administration
+         * 2. Getters and setters
+         ***/
+        void setGuideRect( glm::vec3 origin, glm::vec3 destiny );
+        glm::vec3 getPivotPoint( const PivotPointMode& pivotPointMode );
+
+
+        /***
+         * 3. Drawables administration
          ***/
         void addDrawable( shared_ptr<Drawable> drawable );
         void addCube( Cube* cube );
@@ -106,7 +115,7 @@ class Scene : public QObject
 
 
         /***
-         * 2. Drawables selection.
+         * 4. Drawables selection.
          ***/
     public:
         void selectDrawable( const unsigned int index );
@@ -115,12 +124,11 @@ class Scene : public QObject
 
         int selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection = false );
 
-
         glm::vec4 getSelectionCentroid() const ;
 
 
         /***
-         * 3. Transformations
+         * 5. Transformations
          ***/
         void translateSelection( const glm::vec3& direction );
         void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode );
@@ -129,20 +137,24 @@ class Scene : public QObject
 
         void deleteSelection();
 
+
         /***
-         * 4. Updating
+         * 6. Updating
          ***/
         void updateSelectionCentroid();
 
+
         /***
-         * 5. Drawing
+         * 7. Drawing
          ***/
         void draw( const int& drawGuideRect = -1 ) const ;
         void drawWorldAxis() const ;
         void drawSelectionCentroid() const ;
+        //void drawGuideRect() const ;
+
 
         /***
-         * 5. Signals
+         * 8. Signals
          ***/
     signals:
         void renderNeeded();

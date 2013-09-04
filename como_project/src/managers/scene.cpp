@@ -66,7 +66,11 @@ Scene::Scene()
 
         // Z axis
         0.0f, 0.0f, -100.0f,
-        0.0f, 0.0f, 100.0f
+        0.0f, 0.0f, 100.0f,
+
+        // Auxiliar vector for rotations and scales
+        0.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 0.0f
     };
 
     // Get the position of the vertex shader variable "vPosition"
@@ -85,7 +89,7 @@ Scene::Scene()
     // Set a VBO for the guide rects.
     glGenBuffers( 1, &guideRectsVBO );
     glBindBuffer( GL_ARRAY_BUFFER, guideRectsVBO );
-    glBufferData( GL_ARRAY_BUFFER, 18*sizeof( GLfloat ), guideRects, GL_STATIC_DRAW );
+    glBufferData( GL_ARRAY_BUFFER, 24*sizeof( GLfloat ), guideRects, GL_DYNAMIC_DRAW );
 
     // Set a VAO for the guide rects.
     glGenVertexArrays( 1, &guideRectsVAO );
@@ -194,8 +198,48 @@ void Scene::initSelectionCentroid( const GLuint& vPosition )
     glEnableVertexAttribArray( vPosition );
 }
 
+
 /***
- * 1. Drawables administration
+ * 2. Getters and setters
+ ***/
+
+void Scene::setGuideRect( glm::vec3 origin, glm::vec3 destiny )
+{
+    GLfloat* guideRectsBuffer;
+    unsigned int i=0;
+
+    glBindBuffer( GL_ARRAY_BUFFER, guideRectsVBO );
+    guideRectsBuffer = (GLfloat *)glMapBufferRange( GL_ARRAY_BUFFER, 18*sizeof( GLfloat ), 6*sizeof( GLfloat ), GL_MAP_WRITE_BIT );
+
+    for( ; i<3; i++ ){
+        guideRectsBuffer[i] = origin[i];
+    }
+    for( ; i<6; i++ ){
+        guideRectsBuffer[i] = destiny[i-3];
+    }
+
+    glUnmapBuffer( GL_ARRAY_BUFFER );
+
+}
+
+
+glm::vec3 Scene::getPivotPoint( const PivotPointMode& pivotPointMode )
+{
+    switch( pivotPointMode ){
+        case PivotPointMode::INDIVIDUAL_CENTROIDS:
+        case PivotPointMode::WORLD_ORIGIN:
+            return glm::vec3( 0.0f, 0.0f, 0.0f );
+        break;
+        default:
+        //case PivotPointMode::MEDIAN_POINT:
+            return glm::vec3( selectionCentroid );
+        break;
+    }
+}
+
+
+/***
+ * 3. Drawables administration
  ***/
 
 void Scene::addDrawable( shared_ptr<Drawable> drawable )
@@ -231,7 +275,7 @@ void Scene::addDrawable( DrawableType drawableType )
 
 
 /***
- * 2. Drawables selection
+ * 4. Drawables selection
  ***/
 
 void Scene::selectDrawable( const unsigned int index )
@@ -337,8 +381,9 @@ glm::vec4 Scene::getSelectionCentroid() const
     return selectionCentroid;
 }
 
+
 /***
- * 3. Transformations
+ * 5. Transformations
  ***/
 
 void Scene::translateSelection( const glm::vec3& direction )
@@ -420,7 +465,7 @@ void Scene::deleteSelection()
 
 
 /***
- * 4. Updating
+ * 6. Updating
  ***/
 
 void Scene::updateSelectionCentroid()
@@ -452,7 +497,7 @@ void Scene::updateSelectionCentroid()
 
 
 /***
- * 5. Drawing
+ * 7. Drawing
  ***/
 
 void Scene::draw( const int& drawGuideRect ) const
@@ -532,5 +577,25 @@ void Scene::drawSelectionCentroid() const
     glDrawArrays( GL_POINTS, 0, 1 );
     glPointSize( 1.0f );
 }
+
+/*
+void Scene::drawGuideRect() const
+{
+    const GLfloat guideRectColor[4] =
+    {
+        0.0f, 0.0f, 1.0f, 1.0f
+    };
+
+    glBindVertexArray( guideRectsVAO );
+    glBindBuffer( GL_ARRAY_BUFFER, guideRectsVBO );
+
+    // Set guide rect color.
+    glUniform4fv( uniformColorLocation, 1, guideRectColor );
+
+    glDisable( GL_DEPTH_TEST );
+    glDrawArrays( GL_LINES, 6, 2 );
+    glEnable( GL_DEPTH_TEST );
+}
+*/
 
 } // namespace como
