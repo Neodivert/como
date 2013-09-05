@@ -83,24 +83,6 @@ Cube::Cube()
 
     // Update transformed vertices (original vertices * transformation matrix).
     //update();
-
-    // Get the location of the input variable "vPosition" for the current shader program.
-    GLint prog;
-    glGetIntegerv( GL_CURRENT_PROGRAM, &prog );
-    GLint vPosition = glGetAttribLocation( prog, "vPosition" );
-
-    if( vPosition == GL_INVALID_OPERATION ){
-        cout << "Error getting layout of \"position\"" << endl;
-    }else{
-        cout << "vPosition: (" << vPosition << ")" << endl;
-    }
-
-    // By using the previous "vPosition" position, specify the location and data format of
-    // the array of vertex positions.
-    glVertexAttribPointer( vPosition, 3, GL_FLOAT, GL_FALSE, 0, 0 );
-
-    // Enable previous array of vertex positions.
-    glEnableVertexAttribArray( vPosition );
 }
 
 } // namespace como

@@ -24,7 +24,6 @@ namespace como {
 
 Tester* Tester::instance = nullptr;
 
-
 /***
  * 1. Initialization and destruction
  ***/
@@ -42,17 +41,17 @@ Tester::Tester()
     setFormat( format );
     create();
 
-    QOpenGLContext oglContext;
+    oglContext = new QOpenGLContext;
 
     // Create an empty OpenGL context and make it use this surface's format.
-    oglContext.setFormat( this->format() );
+    oglContext->setFormat( this->format() );
 
     // Initialize the OpenGL context and make it the current one.
-    oglContext.create();
-    oglContext.makeCurrent( this );
+    oglContext->create();
+    oglContext->makeCurrent( this );
 
     // Obtain a functions object and resolve all entry points
-    QAbstractOpenGLFunctions* oglFunctions = oglContext.versionFunctions();
+    QAbstractOpenGLFunctions* oglFunctions = oglContext->versionFunctions();
     if ( !oglFunctions ) {
         qWarning( "Could not obtain OpenGL versions object" );
         exit( 1 );
@@ -63,6 +62,11 @@ Tester::Tester()
     ShaderLoader* shaderLoader = ShaderLoader::getInstance();
     shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
     shaderLoader->destroy();
+}
+
+Tester::~Tester()
+{
+    delete oglContext;
 }
 
 Tester* Tester::getInstance()
@@ -90,36 +94,108 @@ void Tester::testMeshes() const
 
 void Tester::testMeshTranslations() const
 {
-    std::cout << "Running test [Mesh Translations] ..." << std::endl;
+    glm::vec3 acumTranslation( 0.0f );
+    glm::vec3 translation( 0.0f );
+    unsigned int currentTest = 0;
+    const unsigned int N_TESTS = 50;
+    unsigned int i = 0;
+    unsigned int n;
     const unsigned int N_TRIANGLES = 6;
-    const unsigned int N_VERTICES = N_TRIANGLES * 3;
-    GLubyte elements[N_VERTICES];
-    GLfloat originalVertices[N_VERTICES];
-    GLfloat transformedVertices[N_VERTICES];
-    Mesh mesh;
 
+    GLfloat originalVertexData[N_TRIANGLES*3*3];
+    GLfloat transformedVertexData[N_TRIANGLES*3*3];
+
+    std::cout << "Running test [Mesh Translations - Number of tests: " << N_TESTS << ")] ..." << std::endl;
+
+    Mesh* mesh = generateRandomMesh( N_TRIANGLES );
+    mesh->getTransformedVertices( n, originalVertexData );
+
+    for( currentTest=0; currentTest<N_TESTS; currentTest++ ){
+        translation.x = generateRandomFloat( MIN_FLOAT, MAX_FLOAT );
+        translation.y = generateRandomFloat( MIN_FLOAT, MAX_FLOAT );
+        translation.z = generateRandomFloat( MIN_FLOAT, MAX_FLOAT );
+
+        std::cout << "translation: (" << translation.x << ", " << translation.y << ", " << translation.z << ")" << std::endl;
+        acumTranslation += translation;
+
+        mesh->translate( translation );
+
+        mesh->getTransformedVertices( n, transformedVertexData );
+        assert( n == N_TRIANGLES*3 );
+        for( i=0; i < (n * COMPONENTS_PER_VERTEX); i+=3 ){
+            assert( transformedVertexData[i] == ( originalVertexData[i] + acumTranslation.x ) );
+            assert( transformedVertexData[i+1] == ( originalVertexData[i+1] + acumTranslation.y ) );
+            assert( transformedVertexData[i+2] == ( originalVertexData[i+2] + acumTranslation.z ) );
+        }
+    }
+
+    delete mesh;
+    std::cout << "Running test [Mesh Translations] ...OK" << std::endl;
+}
+
+
+/***
+ * 4. Auxiliar methods
+ ***/
+
+Mesh* Tester::generateRandomMesh( const unsigned int& nTriangles ) const
+{
+    const unsigned int N_VERTICES = nTriangles * 3;
+    GLubyte* elements = nullptr;
+    GLfloat* originalVertexData = nullptr;
+    GLfloat* transformedVertexData = nullptr;
+    Mesh* mesh = nullptr;
     unsigned int i = 0;
     unsigned int n;
 
+
     // Mesh are always rendered indirectly (by using indices). For simplifying, here
     // we simulate a direct rendering by incrementing indices one by one.
+    elements = new GLubyte[nTriangles*3];
     for( i=0; i<N_VERTICES; i++ ){
         elements[i] = i;
     }
 
-    // Generate a set of random values for the Mesh's original vertices.
-    generateRandomValues( N_VERTICES, originalVertices );
+    // Generate a vector with random vertex data for the mesh.
+    originalVertexData = new GLfloat[nTriangles*3*3];
+    generateRandomValues( N_VERTICES * 3, originalVertexData );
 
-    // Set mesh's vertices and indices.
-    mesh.setVertices( N_VERTICES, originalVertices );
-    mesh.setElements( N_VERTICES, elements );
+    // Generate a mesh and set its vertices and indices.
+    mesh = new Mesh;
+    mesh->setVertices( N_VERTICES, originalVertexData );
+    mesh->setElements( N_VERTICES, elements );
 
-    mesh.getTransformedVertices( n, transformedVertices );
+    // When initialized, mesh's transformed vertices are equal to the original
+    // ones (the transformation matrix is an identity one).
+    // Get transformed vertices from mesh and check this equality.
+    transformedVertexData = new GLfloat[nTriangles*3*3];
+    mesh->getTransformedVertices( n, transformedVertexData );
     assert( n == N_VERTICES );
-    for( i=0; i<n; i++ ){
-        assert( transformedVertices[i] == originalVertices[i] );
+    for( i=0; i < (n * COMPONENTS_PER_VERTEX); i++ ){
+        assert( transformedVertexData[i] == originalVertexData[i] );
     }
-    std::cout << "Running test [Mesh Translations] ...OK" << std::endl;
+
+    // Free resources.
+    delete [] elements;
+    delete [] originalVertexData;
+    delete [] transformedVertexData;
+
+    // Return generated mesh.
+    return mesh;
+}
+
+
+/***
+ * 5. Auxiliar functions
+ ***/
+
+float generateRandomFloat( float min, float max )
+{
+    float randomFloat = (float)rand() / (float)RAND_MAX;
+
+    randomFloat = randomFloat * (max - min) + min;
+
+    return randomFloat;
 }
 
 

@@ -37,10 +37,12 @@ Mesh::Mesh()
     // Generate a VAO for the Mesh and bind it as the active one.
     glGenVertexArrays( 1, &vao );
     glBindVertexArray( vao );
+    std::cout << "Mesh::vao: " << vao << std::endl;
 
     // Generate a VBO and bind it for holding vertex data.
     glGenBuffers( 1, &vbo );
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
+    std::cout << "Mesh::vbo: " << vbo << std::endl;
 
     // Generate an EBO and bind it for holding vertex indices.
     glGenBuffers( 1, &ebo );
@@ -81,6 +83,8 @@ Mesh::~Mesh()
 
 void Mesh::setVertices( const GLuint nVertices, const GLfloat* vertices )
 {
+    std::cout << "Mesh::setVertices (nVertices: " << nVertices << ") ..." << std::endl;
+
     // Copy given vertices to this mesh's original vertices. Also compute
     // the mesh's centroid.
     originalVertices.resize( nVertices );
@@ -94,19 +98,46 @@ void Mesh::setVertices( const GLuint nVertices, const GLfloat* vertices )
     }
     originalCentroid /= originalVertices.size();
     originalCentroid.w = 1.0f;
+    std::cout << "originalVertices.size(): " << originalVertices.size() << std::endl;
 
     std::cout << "Original Centroid: (" << originalCentroid.x << ", " << originalCentroid.y << ", " << originalCentroid.z << ", " << originalCentroid.w << ")" << std::endl;
 
     // Allocate a VBO for transformed vertices.
+    glBindBuffer( GL_ARRAY_BUFFER, vbo );
     glBufferData( GL_ARRAY_BUFFER, nVertices*COMPONENTS_PER_VERTEX*sizeof( GLfloat ), NULL, GL_DYNAMIC_DRAW );
+    showError();
+    std::cout << "glBufferData(" << nVertices*COMPONENTS_PER_VERTEX*sizeof( GLfloat) << ") ...OK" << std::endl;
+
+    // Get the location of the input variable "vPosition" for the current shader program.
+    GLint prog;
+    glGetIntegerv( GL_CURRENT_PROGRAM, &prog );
+    GLint vPosition = glGetAttribLocation( prog, "vPosition" );
+
+    if( vPosition == GL_INVALID_OPERATION ){
+        cout << "Error getting layout of \"position\"" << endl;
+    }else{
+        cout << "vPosition: (" << vPosition << ")" << endl;
+    }
+
+    // By using the previous "vPosition" position, specify the location and data format of
+    // the array of vertex positions.
+    glBindVertexArray( vao );
+    glVertexAttribPointer( vPosition, 3, GL_FLOAT, GL_FALSE, 0, 0 );
+
+    // Enable previous array of vertex positions.
+    glEnableVertexAttribArray( vPosition );
 
     // Update transformed vertices.
     update();
+
+    std::cout << "Mesh::setVertices ...OK" << std::endl;
 }
 
 
 void Mesh::setElements( const GLuint nElements, const GLubyte* elements )
 {
+    std::cout << "Mesh::setElements ..." << std::endl;
+
     // Compute the number of triangles for this mesh.
     const GLuint nTriangles = nElements / N_TRIANGLE_VERTICES;
 
@@ -123,6 +154,8 @@ void Mesh::setElements( const GLuint nElements, const GLubyte* elements )
 
     // Copy the mesh's elements to a EBO.
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, nElements*sizeof( GLubyte ), elements, GL_STATIC_DRAW );
+
+    std::cout << "Mesh::setElements ...OK" << std::endl;
 }
 
 
@@ -168,7 +201,7 @@ void Mesh::getTransformedVertices( unsigned int& n, GLfloat* vertices )
     mappedVBO = (GLfloat *)glMapBuffer( GL_ARRAY_BUFFER, GL_READ_ONLY );
 
     // Copy the VBO data to the pointer given as an argument.
-    memcpy( vertices, mappedVBO, sizeof( n * sizeof( GLfloat ) ) );
+    memcpy( vertices, mappedVBO, n * COMPONENTS_PER_VERTEX * sizeof( GLfloat ) );
 
     // Unmap the VBO.
     glUnmapBuffer( GL_ARRAY_BUFFER );

@@ -25,16 +25,22 @@
 
 namespace como {
 
+const float MIN_FLOAT = -500.0f;
+const float MAX_FLOAT = 500.0f;
+
 class Tester : public QOffscreenSurface
 {
     private:
         static Tester* instance;
+        QOpenGLContext* oglContext;
+
 
         /***
          * 1. Initialization and destruction
          ***/
     public:
         Tester();
+        ~Tester();
 
         static Tester* getInstance();
         void destroy();
@@ -44,15 +50,23 @@ class Tester : public QOffscreenSurface
          * 2. General tests
          ***/
 
+
         /***
          * 3. Tests related to meshes
          ***/
         void testMeshes() const ;
         void testMeshTranslations() const ;
+
+
+        /***
+         * 4. Auxiliar methods
+         ***/
+        Mesh* generateRandomMesh( const unsigned int& nTriangles ) const ;
 };
 
+
 /***
- * 3. Auxiliar functions
+ * 5. Auxiliar functions
  ***/
 
 template <class T>
@@ -62,6 +76,8 @@ void generateRandomValues( unsigned int n, T* vector )
         vector[i] = (T)rand()/(T)RAND_MAX;
     }
 }
+
+float generateRandomFloat( float min, float max );
 
 } // namespace como
 
