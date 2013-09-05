@@ -249,7 +249,13 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     // Variables used for computing the magnitude of the transformation.
     glm::vec4 transformVector;
     float angle;
-    //glm::vec4 pivotPoint( 0.0f );
+    // TODO: Not a complete conversion to screen coordinates.
+    glm::vec2 scenePivotPoint = glm::vec2( projectionMatrix * camera.getViewMatrix() * glm::vec4( comoApp->getScene()->getPivotPoint( comoApp->getPivotPointMode() ), 1.0f ) );
+    scenePivotPoint.x *= 0.5f;
+    scenePivotPoint.y *= -0.5f;
+
+    glm::vec2 pivotPointToMousePosVector;
+    glm::vec2 lastPivotPointToMousePosVector;
 
     // Compute mouse pos (window normalized coordinates [-0.5, 0.5]).
     const glm::vec2 mousePos = getNormalizedMousePos( mouseMoveEvent->pos().x(), mouseMoveEvent->pos().y() );
@@ -288,8 +294,11 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 comoApp->getScene()->translateSelection( glm::vec3( transformVector ) );
             break;
             case TransformationType::ROTATION:
-                // Compute the angle between the vectors mousePos and lastMousePos.
-                angle = glm::orientedAngle( glm::normalize( mousePos ), glm::normalize( lastMousePos ) );
+                // Compute the angle between the vectors.
+                pivotPointToMousePosVector = glm::normalize( mousePos - scenePivotPoint );
+                lastPivotPointToMousePosVector = glm::normalize( lastMousePos - scenePivotPoint );
+
+                angle = glm::orientedAngle( pivotPointToMousePosVector, lastPivotPointToMousePosVector );
 
                 // Make the rotation about an axis or another depending on the current
                 // transformationMode.
@@ -312,7 +321,13 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
             break;
             case TransformationType::SCALE:
                 // Compute the scale magnitud.
-                transformVector = glm::vec4( mousePos.x / lastMousePos.x, mousePos.y / lastMousePos.y, 1.0f, 1.0f );
+                pivotPointToMousePosVector = mousePos - scenePivotPoint;
+                lastPivotPointToMousePosVector = lastMousePos - scenePivotPoint;
+
+                transformVector = glm::vec4( pivotPointToMousePosVector.x / lastPivotPointToMousePosVector.x,
+                                             pivotPointToMousePosVector.y / lastPivotPointToMousePosVector.y,
+                                             1.0f,
+                                             1.0f );
 
                 // Transform the scale vector from window to world space.
                 transformVector = Drawable::transformScaleVector( transformVector, glm::inverse( projectionMatrix * camera.getViewMatrix() ) );

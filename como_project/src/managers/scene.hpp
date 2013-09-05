@@ -60,7 +60,6 @@ extern PivotPointModes pivotPointModes;
 typedef std::array< QString, N_PIVOT_POINT_MODES > PivotPointModeStrings;
 extern PivotPointModeStrings pivotPointModeStrings;
 
-
 enum LinesBufferOffset {
     WORLD_AXIS = 0,
     GUIDE_AXIS,
