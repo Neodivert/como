@@ -17,30 +17,16 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include <QGuiApplication>
-#include "src/gui/main_window.hpp"
-#include <glm/gtx/vector_angle.hpp>
-#include "managers/tester.hpp"
+#include "user.hpp"
 
-//#define TESTING_MODE 1
+namespace como {
 
-int main( int argc, char *argv[] )
+User::User( const GLfloat& r, const GLfloat& g, const GLfloat& b )
 {
-    // Create a Qt application.
-    QApplication app( argc, argv );
-
-#ifdef TESTING_MODE
-    // Run tests.
-    como::Tester* tester = como::Tester::getInstance();
-    tester->testMeshes();
-    tester->destroy();
-#else
-    // Create a Qt window and show it.
-    como::MainWindow window;
-    window.show();
-
-    // Run Qt application.
-    return app.exec();
-#endif
+    color[0] = r;
+    color[1] = g;
+    color[2] = b;
+    color[3] = 1.0f;
 }
 
+} // namespace como

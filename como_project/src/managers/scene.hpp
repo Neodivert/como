@@ -23,13 +23,10 @@
 #include <list>
 #include "../models/3d/cube.hpp"
 #include "../models/3d/camera.hpp"
+#include "../models/users/user.hpp"
 
 
 namespace como {
-
-typedef std::list< std::shared_ptr< Drawable > > DrawablesList;
-
-typedef shared_ptr<Drawable> DrawablePtr;
 
 enum class DrawableType
 {
@@ -75,6 +72,8 @@ class Scene : public QObject
     private:
         // Scene's drawables not selected by user.
         DrawablesList nonSelectedDrawables;
+
+        //std::list< std::shared_ptr<User> > users;
 
         // Scene's drawables selected by user.
         DrawablesList selectedDrawables;

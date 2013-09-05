@@ -17,30 +17,29 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include <QGuiApplication>
-#include "src/gui/main_window.hpp"
-#include <glm/gtx/vector_angle.hpp>
-#include "managers/tester.hpp"
+#ifndef USER_HPP
+#define USER_HPP
 
-//#define TESTING_MODE 1
+#include "../3d/drawable.hpp"
 
-int main( int argc, char *argv[] )
+namespace como {
+
+typedef shared_ptr<Drawable> DrawablePtr;
+typedef std::list< std::shared_ptr< Drawable > > DrawablesList;
+
+class User
 {
-    // Create a Qt application.
-    QApplication app( argc, argv );
+    private:
+        GLfloat color[4];
+        DrawablesList drawablesSelection;
 
-#ifdef TESTING_MODE
-    // Run tests.
-    como::Tester* tester = como::Tester::getInstance();
-    tester->testMeshes();
-    tester->destroy();
-#else
-    // Create a Qt window and show it.
-    como::MainWindow window;
-    window.show();
+    public:
+        /***
+         * 1. Initialization
+         ***/
+        User( const GLfloat& r, const GLfloat& g, const GLfloat& b );
+};
 
-    // Run Qt application.
-    return app.exec();
-#endif
-}
+} // namespace como
 
+#endif // USER_HPP
