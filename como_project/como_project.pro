@@ -26,8 +26,7 @@ SOURCES += src/main.cpp\
     src/models/3d/drawable.cpp \
     src/models/3d/mesh.cpp \
     src/gui/viewport.cpp \
-    src/managers/tester.cpp \
-    src/models/users/user.cpp
+    src/managers/tester.cpp
 
 
 HEADERS  += \

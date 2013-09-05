@@ -70,13 +70,11 @@ class Scene : public QObject
     Q_OBJECT
 
     private:
-        // Scene's drawables not selected by user.
+        // Scene's non selected drawables.
         DrawablesList nonSelectedDrawables;
 
-        //std::list< std::shared_ptr<User> > users;
-
-        // Scene's drawables selected by user.
-        DrawablesList selectedDrawables;
+        // Users sharing this scene.
+        std::vector< User > users;
 
         // Lines VAO, VBO and offsets.
         GLuint linesVAO;
@@ -95,15 +93,22 @@ class Scene : public QObject
 
         void initLinesBuffer();
 
+
         /***
-         * 2. Getters and setters
+         * 2. Users administration
+         ***/
+        void addUser( const float& r, const float& g, const float& b );
+
+
+        /***
+         * 3. Getters and setters
          ***/
         void setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny );
         glm::vec3 getPivotPoint( const PivotPointMode& pivotPointMode );
 
 
         /***
-         * 3. Drawables administration
+         * 4. Drawables administration
          ***/
         void addDrawable( shared_ptr<Drawable> drawable );
         void addCube( Cube* cube );
@@ -111,37 +116,37 @@ class Scene : public QObject
 
 
         /***
-         * 4. Drawables selection.
+         * 5. Drawables selection.
          ***/
     public:
-        void selectDrawable( const unsigned int index );
+        void selectDrawable( const unsigned int& index, const unsigned int& userId = 0 );
         void selectAll();
-        void unselectAll();
+        void unselectAll( const unsigned int& userId );
 
-        int selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection = false );
+        int selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection = false, const unsigned int& userId = 0 );
 
         glm::vec4 getSelectionCentroid() const ;
 
 
         /***
-         * 5. Transformations
+         * 6. Transformations
          ***/
-        void translateSelection( const glm::vec3& direction );
-        void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode );
-        void scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode );
+        void translateSelection( const glm::vec3& direction, const unsigned int& userId = 0 );
+        void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode, const unsigned int& userId = 0 );
+        void scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode, const unsigned int& userId = 0 );
         //void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
 
-        void deleteSelection();
+        void deleteSelection( const unsigned int& userId = 0 );
 
 
         /***
-         * 6. Updating
+         * 7. Updating
          ***/
-        void updateSelectionCentroid();
+        void updateSelectionCentroid( const unsigned int& userId = 0 );
 
 
         /***
-         * 7. Drawing
+         * 8. Drawing
          ***/
         void draw( const int& drawGuideRect = -1 ) const ;
         void drawWorldAxis() const ;
@@ -149,7 +154,7 @@ class Scene : public QObject
 
 
         /***
-         * 8. Signals
+         * 9. Signals
          ***/
     signals:
         void renderNeeded();

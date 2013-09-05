@@ -27,17 +27,10 @@ namespace como {
 typedef shared_ptr<Drawable> DrawablePtr;
 typedef std::list< std::shared_ptr< Drawable > > DrawablesList;
 
-class User
+struct User
 {
-    private:
-        GLfloat color[4];
-        DrawablesList drawablesSelection;
-
-    public:
-        /***
-         * 1. Initialization
-         ***/
-        User( const GLfloat& r, const GLfloat& g, const GLfloat& b );
+    GLfloat color[4];
+    DrawablesList selection;
 };
 
 } // namespace como
