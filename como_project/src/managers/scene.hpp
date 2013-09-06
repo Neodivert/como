@@ -84,6 +84,8 @@ class Scene : public QObject
         GLuint uniformColorLocation;
         glm::vec4 selectionCentroid;
 
+        GLfloat defaultContourColor[4];
+
     public:
         /***
          * 1. Initialization and destruction
@@ -103,6 +105,7 @@ class Scene : public QObject
         /***
          * 3. Getters and setters
          ***/
+        void setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a );
         void setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny );
         glm::vec3 getPivotPoint( const PivotPointMode& pivotPointMode );
 

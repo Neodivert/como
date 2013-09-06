@@ -60,10 +60,8 @@ Mesh::Mesh()
         cout << "uniform color location initialized to (" << uniformColorLocation << ")" << endl;
     }
 
-    // Set both inner and contour colors.
-    //setInnerColor( 0.5f, 0.0f, 0.0f, 1.0f );
-    setInnerColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
-    setContourColor( 1.0f, 0.0f, 0.0f, 1.0f );
+    // Set the mesh's color.
+    setColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
 
     // Set both original and transformed centroids.
     originalCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
@@ -163,21 +161,12 @@ void Mesh::setElements( const GLuint nElements, const GLubyte* elements )
  * 2. Getters and setters
  ***/
 
-void Mesh::setInnerColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a )
+void Mesh::setColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a )
 {
-    innerColor[0] = r;
-    innerColor[1] = g;
-    innerColor[2] = b;
-    innerColor[3] = a;
-}
-
-
-void Mesh::setContourColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a )
-{
-    contourColor[0] = r;
-    contourColor[1] = g;
-    contourColor[2] = b;
-    contourColor[3] = a;
+    color[0] = r;
+    color[1] = g;
+    color[2] = b;
+    color[3] = a;
 }
 
 
@@ -309,18 +298,15 @@ void Mesh::update()
     glUnmapBuffer( GL_ARRAY_BUFFER );
 }
 
-void Mesh::draw( bool selected ) const
+void Mesh::draw( const GLfloat* contourColor ) const
 {
-    // Default color for selected drawables' contour.
-    GLfloat selectecContourColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
     // Feed uniform shader variable "color" with Mesh inner color.
     // I fallen in a common mistake D:.
     // http://www.opengl.org/wiki/GLSL_:_common_mistakes
     // The problem is that for count, you set it to 4 while it should be 1 because you
     // are sending 1 vec4​ to the shader. The count is the number of that type
     // (4f, which corresponds to vec4​) that you are setting.
-    glUniform4fv( uniformColorLocation, 1, innerColor );
+    glUniform4fv( uniformColorLocation, 1, color );
 
     // Bind Mesh VAO and VBOs as the active ones.
     glBindVertexArray( vao );
@@ -330,26 +316,21 @@ void Mesh::draw( bool selected ) const
     // Draw Mesh's interior.
     glDrawElements( GL_TRIANGLES, nElements, GL_UNSIGNED_BYTE, NULL );
 
-    // Feed uniform shader variable "color" with one color or another
-    // depends on whether current Mesh is selected by user or not.
-    if( selected ){
-        // Mesh selected by user. Set a default color.
-        glUniform4fv( uniformColorLocation, 1, selectecContourColor );
-    }else{
-        // Mesh not selected by user. Set Mesh's own contour color.
+    // Set the color for the mesh's contour.
+    if( contourColor != nullptr ){
         glUniform4fv( uniformColorLocation, 1, contourColor );
+
+        // Now we'll draw mesh's contour. Set polygon mode for rendering
+        // lines.
+        // TODO: I still have to use polygon offset.
+        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
+        // Draw Mesh's contour
+        glDrawElements( GL_TRIANGLES, nElements, GL_UNSIGNED_BYTE, NULL );
+
+        // Return polygon mode to previos GL_FILL.
+        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     }
-
-    // Now we'll draw mesh's contour. Set polygon mode for rendering
-    // lines.
-    // TODO: I still have to use polygon offset.
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-
-    // Draw Mesh's contour
-    glDrawElements( GL_TRIANGLES, nElements, GL_UNSIGNED_BYTE, NULL );
-
-    // Return polygon mode to previos GL_FILL.
-    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 }
 
 } // namespace como

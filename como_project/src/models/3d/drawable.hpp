@@ -91,7 +91,7 @@ class Drawable
         virtual void update();
 
     public:
-        virtual void draw( bool selected = false ) const = 0;
+        virtual void draw( const GLfloat* contourColor = nullptr ) const = 0;
 
         /***
          * 6. Auxiliar methods

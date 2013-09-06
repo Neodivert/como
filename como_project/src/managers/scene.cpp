@@ -54,8 +54,22 @@ Scene::Scene()
 {
     initLinesBuffer();
 
+    // Set the default contour color for those drawable that are
+    // not selected by any user.
+    defaultContourColor[0] = 0.0f;
+    defaultContourColor[1] = 0.0f;
+    defaultContourColor[2] = 0.0f;
+    defaultContourColor[3] = 0.0f;
+
+    // Set the background color.
+    setBackgroundColor( 0.9f, 0.9f, 0.9f, 0.9f );
+
     // Insert the local user as the first one in the users list.
     addUser( 0.0f, 0.0f, 1.0f );
+
+    // TODO: delete
+    addUser( 1.0f, 0.0f, 0.0f );
+    addUser( 0.0f, 1.0f, 0.0f );
 }
 
 
@@ -170,6 +184,12 @@ void Scene::addUser( const float& r, const float& g, const float& b )
 /***
  * 3. Getters and setters
  ***/
+
+void Scene::setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a )
+{
+    glClearColor( r, g, b, a );
+}
+
 
 void Scene::setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny )
 {
@@ -505,13 +525,13 @@ void Scene::draw( const int& drawGuideRect ) const
 
     for( ; it != nonSelectedDrawables.end(); it++ )
     {
-        (*it)->draw();
+        (*it)->draw( defaultContourColor );
     }
     for( user = 0; user < users.size(); user++  ){
         userSelection = users[user].selection;
 
         for( it = userSelection.begin(); it != userSelection.end(); it++ ){
-            (*it)->draw( true );
+            (*it)->draw( users[user].color );
         }
     }
 

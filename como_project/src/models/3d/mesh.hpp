@@ -52,8 +52,7 @@ class Mesh : public Drawable
         GLuint ebo;
 
         // Colors
-        GLfloat innerColor[4];
-        GLfloat contourColor[4];
+        GLfloat color[4];
 
         // Original vertex attribues.
         std::vector< glm::vec3 > originalVertices;
@@ -83,8 +82,7 @@ class Mesh : public Drawable
         /***
          * 2. Getters and setters
          ***/
-        void setInnerColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
-        void setContourColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
+        void setColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
         glm::vec4 getCentroid() const ;
         void getTransformedVertices( unsigned int& n, GLfloat* vertices );
 
@@ -107,7 +105,7 @@ class Mesh : public Drawable
 
     public:
         // Send mesh to OpenGL server for rendering it.
-        virtual void draw( bool selected = false ) const;
+        virtual void draw( const GLfloat* contourColor = nullptr ) const;
 };
 
 }
