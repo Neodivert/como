@@ -32,6 +32,8 @@ MainWindow::MainWindow( QWidget* parent ) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setStyleSheet( "background-color: #F3E2A9;" );
+
     ToolsMenu* toolsMenu;
     RenderPanel* renderPanel;
 
