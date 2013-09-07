@@ -1,0 +1,3 @@
+[submodule "como_project/src/models/utilities/msl"]
+	path = como_project/src/models/utilities/msl
+	url = git@github.com:Neodivert/msl
