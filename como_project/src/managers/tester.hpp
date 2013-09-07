@@ -21,7 +21,7 @@
 #define TESTER_HPP
 
 #include "../models/3d/mesh.hpp"
-#include "shader_loader.hpp"
+#include "../models/utilities/msl/src/shader_loader.hpp"
 
 namespace como {
 

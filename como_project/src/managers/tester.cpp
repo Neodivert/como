@@ -59,7 +59,7 @@ Tester::Tester()
     oglFunctions->initializeOpenGLFunctions();
 
     // Load shaders
-    ShaderLoader* shaderLoader = ShaderLoader::getInstance();
+    msl::ShaderLoader* shaderLoader = msl::ShaderLoader::getInstance();
     shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
     shaderLoader->destroy();
 }

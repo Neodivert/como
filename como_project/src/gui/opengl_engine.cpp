@@ -18,7 +18,7 @@
 ***/
 
 #include "opengl_engine.hpp"
-#include "../managers/shader_loader.hpp"
+#include "../models/utilities/msl/src/shader_loader.hpp"
 
 namespace como {
 
@@ -67,7 +67,7 @@ shared_ptr< QOpenGLContext > OpenGLEngine::createOpenGLContext()
     oglFunctions->initializeOpenGLFunctions();
 
     // Load shaders
-    ShaderLoader* shaderLoader = ShaderLoader::getInstance();
+    msl::ShaderLoader* shaderLoader = msl::ShaderLoader::getInstance();
     shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
     shaderLoader->destroy();
 

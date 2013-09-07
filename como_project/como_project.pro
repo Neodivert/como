@@ -20,13 +20,13 @@ SOURCES += src/main.cpp\
     src/gui/view_frame.cpp \
     src/managers/como_app.cpp \
     src/managers/scene.cpp \
-    src/managers/shader_loader.cpp \
     src/models/3d/cube.cpp \
     src/models/3d/camera.cpp \
     src/models/3d/drawable.cpp \
     src/models/3d/mesh.cpp \
     src/gui/viewport.cpp \
-    src/managers/tester.cpp
+    src/managers/tester.cpp \
+    src/models/utilities/msl/src/shader_loader.cpp
 
 
 HEADERS  += \
@@ -37,7 +37,6 @@ HEADERS  += \
     src/gui/view_frame.hpp \
     src/managers/como_app.hpp \
     src/managers/scene.hpp \
-    src/managers/shader_loader.hpp \
     src/models/3d/cube.hpp \
     src/models/3d/camera.hpp \
     src/models/3d/drawable.hpp \
@@ -45,7 +44,8 @@ HEADERS  += \
     src/gui/viewport.hpp \
     src/managers/tester.hpp \
     src/models/dependencies.hpp \
-    src/models/users/user.hpp
+    src/models/users/user.hpp \
+    src/models/utilities/msl/src/shader_loader.hpp
 
 FORMS    += main_window.ui
 
