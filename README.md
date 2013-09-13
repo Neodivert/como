@@ -22,14 +22,19 @@ Currently, I'm designing the online component: thinking how the scenes will be s
 ## Instalation
 1. Clone this repository in local:
 
-	**git clone** *git@github.com:Neodivert/como* *directory*
+```
+	git clone git@github.com:Neodivert/como directory
+```
 
 2. Enter in the previous local directory.
 
-	**cd** *directory*
+```
+	cd directory
+```
 
 3. Initialize and update the repository's submodules:
 
-	**git submodules init**  
-	**git submodules update**  
-
+```
+	git submodules init  
+	git submodules update  
+```
