@@ -20,14 +20,15 @@ By now, COMO is only a local modeller of cubes :). The user can:
 Currently, I'm designing the online component: thinking how the scenes will be shared, how the synchronization between clients will be done, etc.
 
 ## Instalation
-- 1. Clone this repository in local:
-git clone git@github.com:Neodivert/como - directory -
+1. Clone this repository in local:
 
-- 2. Enter in the previous local directory.
-cd - directory -
+	git clone git@github.com:Neodivert/como - directory -
 
-- 3. Initialize and update the repository's submodules:
-```
-git submodules init
-git submodules update
-```
+2.  Enter in the previous local directory.
+
+	cd - directory -
+
+3. Initialize and update the repository's submodules:
+
+	git submodules init
+	git submodules update
