@@ -9,10 +9,23 @@ COMO is a project which aims to create a Cooperative Modeller, where users could
 ## Roadmap
 The proyect will be developed through prototypes.
 
-### First prototype. Goals
-For the first prototype, user will be capable of
-- [] Creating cubes.
-- [] Deleting cubes.
-- [] Selecting and translating cubes in X, Y or Z.
-- [] Selecting and rotating cubes in X, Y or Z.
-- [] Selecting and scaling cubes in X, Y or Z.
+### Current status
+By now, COMO is only a local modeller of cubes :). The user can:
+- [X] Create cubes.
+- [X] Delete cubes.
+- [X] View the scene through 4 viewports, whose cameras can be set to six predefined views: left, right, top, bottom, front and back. 
+- [X] Transform cubes (translations, rotations and scales). The rotations and scales can be made relative to three different pivot points: selection centroid, individual origins and world origin.
+
+### Next steps
+Currently, I'm designing the online component: thinking how the scenes will be shared, how the synchronization between clients will be done, etc.
+
+## Instalation
+- 1. Clone this repository in local:
+git clone git@github.com:Neodivert/como <directory>
+
+- 2. Enter in the previous local directory.
+cd <directory>
+
+- 3. Initialize and update the repository's submodules:
+git submodules init
+git submodules update
