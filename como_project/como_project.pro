@@ -56,3 +56,6 @@ CONFIG += c++11
 
 QMAKE_CXXFLAGS_WARN_ON += -Wall -Werror
 QMAKE_CXXFLAGS += -pedantic-errors
+
+unix|win32: LIBS += -lboost_system
+unix|win32: LIBS += -lboost_thread

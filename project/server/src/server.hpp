@@ -17,14 +17,52 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
+/*
+ * The server code was created from the following example:
+ *
+ * Daytime.2 - A synchronous TCP daytime server
+ * http://www.boost.org/doc/libs/1_54_0/doc/html/boost_asio/tutorial/tutdaytime2.html
+ */
+
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#include <ctime>
+#include <iostream>
+#include <string>
+#include <boost/asio.hpp>
+
+using boost::asio::ip::tcp;
+
 namespace como {
 
-class Server {
+class Server
+{
+    private:
+        // I/O service.
+        boost::asio::io_service io_service;
+
+        // TCP acceptor.
+        tcp::acceptor acceptor;
+
     public:
-        Server();
+        /***
+         * 1. Initialization and destruction
+         ***/
+        Server( int port );
+
+
+        /***
+         * 2. Main loop
+         ***/
+        void run();
+
+
+        /***
+         * 3. Auxiliar methods
+         ***/
+    private:
+        std::string getCurrentDayTime() const ;
 };
 
 } // namespace como
