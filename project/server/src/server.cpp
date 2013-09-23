@@ -17,13 +17,12 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include <iostream>
+#include "server.hpp"
 
-using namespace std;
+namespace como {
 
-int main()
+Server::Server()
 {
-    cout << "Hello World!" << endl;
-    return 0;
 }
 
+} // namespace como
