@@ -21,12 +21,21 @@
 
 namespace como {
 
-Server::Server( int port ) :
-    // Create an acceptor for listening for new connections. It will listen
-    // on TCP port 13, for IPv4.
-    acceptor( io_service, tcp::endpoint(tcp::v4(), port ) )
+Server::Server( unsigned int port_, unsigned int nThreads ) :
+    // Initialize the server parameters.
+    work( io_service ),
+    socket( io_service ),
+    N_THREADS( nThreads ),
+    port( port_ )
 {
+    unsigned int i;
+
+    // Create the threads pool.
+    for( i=0; i<N_THREADS; i++ ){
+        threads.create_thread( boost::bind( &Server::workerThread, this ) );
+    }
 }
+
 
 /***
  * 2. Main loop
@@ -34,33 +43,120 @@ Server::Server( int port ) :
 
 void Server::run()
 {
-    std::string message;
-    boost::system::error_code ignored_error;
+    // Create a TCP resolver and a query for getting the endpoint the server
+    // must listen to.
+    boost::asio::ip::tcp::resolver resolver( io_service );
+    boost::asio::ip::tcp::resolver::query query( "localhost", boost::lexical_cast< std::string >( port ) );
 
-    while( true ){
-        // Create a TCP socket and start listening.
-        std::cout << "Listening ..." << std::endl;
-        tcp::socket socket( io_service );
-        acceptor.accept( socket );
+    try{
+        coutMutex.lock();
+        std::cout << "Press any key to exit" << std::endl;
+        coutMutex.unlock();
+
+        // Resolve the query to localhost:port and get its TCP end point.
+        boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve( query );
+        boost::asio::ip::tcp::endpoint endPoint = *iterator;
+
+        // Create a TCP acceptor and set its parameters.
+        boost::shared_ptr< boost::asio::ip::tcp::acceptor > acceptor( new boost::asio::ip::tcp::acceptor( io_service ) );
+        acceptor->open( endPoint.protocol() );
+        acceptor->set_option( boost::asio::ip::tcp::acceptor::reuse_address( false ) );
+
+        // Start listening.
+        acceptor->bind( endPoint );
+        acceptor->listen( boost::asio::socket_base::max_connections );
+
+        // Wait for new connections.
+        acceptor->async_accept( socket, boost::bind( &Server::onAccept, this, _1 ) );
+
+        coutMutex.lock();
+        std::cout << "Listening on: " << endPoint << std::endl;
+        coutMutex.unlock();
+        std::cin.get();
+
+        boost::system::error_code errorCode;
+
+        // Free TCP acceptor and socket.
+        acceptor->close( errorCode );
+        socket.shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
+        socket.close( errorCode );
+
+        // Stop the I/O processing.
+        io_service.stop();
+
+        // Wait for the server's threads to finish.
+        threads.join_all();
+    }catch( std::exception& ex ){
+        std::cout << "Exception: " << ex.what() << std::endl;
+    }
+
+}
 
 
-        // Someone has connected to the server! Get the current day time and
-        // send it to the client.is accessing our service.
-        message = getCurrentDayTime();
-        boost::asio::write( socket, boost::asio::buffer(message), ignored_error );
-        std::cout << "Client attended!" << std::endl << std::endl;
+/***
+ * 3. Handlers
+ ***/
+
+void Server::onAccept( const boost::system::error_code& errorCode )
+{
+    if( errorCode ){
+        coutMutex.lock();
+        std::cout << "[" << boost::this_thread::get_id() << "]: ERROR(" << errorCode << ")" << std::endl;
+        coutMutex.unlock();
+    }else{
+        coutMutex.lock();
+        std::cout << "[" << boost::this_thread::get_id() << "]: Connected!" << std::endl;
+        coutMutex.unlock();
     }
 }
 
 
 /***
- * 3. Auxiliar methods
+ * 4. Auxiliar methods
  ***/
 
 std::string Server::getCurrentDayTime() const
 {
     std::time_t now = std::time( 0 );
     return std::ctime(&now);
+}
+
+
+void Server::workerThread()
+{
+    coutMutex.lock();
+    std::cout << "[" << boost::this_thread::get_id()
+        << "] Thread Start" << std::endl;
+    coutMutex.unlock();
+
+    while( true )
+    {
+        try
+        {
+            boost::system::error_code ec;
+            io_service.run( ec );
+            if( ec )
+            {
+                coutMutex.lock();
+                std::cout << "[" << boost::this_thread::get_id()
+                    << "] Error: " << ec << std::endl;
+                coutMutex.unlock();
+            }
+            break;
+        }
+        catch( std::exception & ex )
+        {
+            coutMutex.lock();
+            std::cout << "[" << boost::this_thread::get_id()
+                << "] Exception: " << ex.what() << std::endl;
+            coutMutex.unlock();
+        }
+    }
+
+    coutMutex.lock();
+    std::cout << "[" << boost::this_thread::get_id()
+        << "] Thread Finish" << std::endl;
+    coutMutex.unlock();
 }
 
 } // namespace como

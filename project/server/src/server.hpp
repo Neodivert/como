@@ -18,10 +18,10 @@
 ***/
 
 /*
- * The server code was created from the following example:
+ * The server code was created thanks to the following tutorial:
  *
- * Daytime.2 - A synchronous TCP daytime server
- * http://www.boost.org/doc/libs/1_54_0/doc/html/boost_asio/tutorial/tutdaytime2.html
+ * A guide to getting started with boost::asio
+ * http://www.gamedev.net/blog/950/entry-2249317-a-guide-to-getting-started-with-boostasio/
  */
 
 #ifndef SERVER_HPP
@@ -31,6 +31,10 @@
 #include <iostream>
 #include <string>
 #include <boost/asio.hpp>
+#include <boost/thread.hpp>
+#include <boost/bind.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/lexical_cast.hpp>
 
 using boost::asio::ip::tcp;
 
@@ -42,14 +46,29 @@ class Server
         // I/O service.
         boost::asio::io_service io_service;
 
-        // TCP acceptor.
-        tcp::acceptor acceptor;
+        // Work object.
+        boost::asio::io_service::work work;
+
+        // Socket object.
+        boost::asio::ip::tcp::socket socket;
+
+        // Number of worker threads in the server.
+        const unsigned int N_THREADS;
+
+        // Threads pool
+        boost::thread_group threads;
+
+        // Mutex for console output (cout).
+        boost::mutex coutMutex;
+
+        // Server's port.
+        unsigned int port;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        Server( int port );
+        Server( unsigned int port_, unsigned int nThreads = 5 );
 
 
         /***
@@ -59,10 +78,17 @@ class Server
 
 
         /***
-         * 3. Auxiliar methods
+         * 3. Handlers
+         ***/
+        void onAccept( const boost::system::error_code& errorCode );
+
+
+        /***
+         * 4. Auxiliar methods
          ***/
     private:
         std::string getCurrentDayTime() const ;
+        void workerThread();
 };
 
 } // namespace como

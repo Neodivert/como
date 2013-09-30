@@ -22,7 +22,7 @@
 int main()
 {
     try {
-        como::Server server( 13 );
+        como::Server server( 7777 );
 
         server.run();
     }catch (std::exception& e){
