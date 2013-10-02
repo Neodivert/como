@@ -23,9 +23,11 @@ namespace como {
 
 Server::Server( unsigned int port_, unsigned int nThreads ) :
     // Initialize the server parameters.
+    acceptor_( io_service ),
     work( io_service ),
-    socket( io_service ),
+    newSocket_( io_service ),
     N_THREADS( nThreads ),
+    MAX_USERS( 2 ),
     port( port_ )
 {
     unsigned int i;
@@ -57,44 +59,62 @@ void Server::run()
         boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve( query );
         boost::asio::ip::tcp::endpoint endPoint = *iterator;
 
-        // Create a TCP acceptor and set its parameters.
-        boost::shared_ptr< boost::asio::ip::tcp::acceptor > acceptor( new boost::asio::ip::tcp::acceptor( io_service ) );
-        acceptor->open( endPoint.protocol() );
-        acceptor->set_option( boost::asio::ip::tcp::acceptor::reuse_address( false ) );
+        // Set the acceptor parameters.
+        acceptor_.open( endPoint.protocol() );
+        acceptor_.set_option( boost::asio::ip::tcp::acceptor::reuse_address( false ) );
 
         // Start listening.
-        acceptor->bind( endPoint );
-        acceptor->listen( boost::asio::socket_base::max_connections );
+        // FIXME: Sometimes I get an exception "bind address already in use"
+        acceptor_.bind( endPoint );
+        acceptor_.listen( MAX_USERS );
 
         // Wait for new connections.
-        acceptor->async_accept( socket, boost::bind( &Server::onAccept, this, _1 ) );
+        listen();
 
-        coutMutex.lock();
-        std::cout << "Listening on: " << endPoint << std::endl;
-        coutMutex.unlock();
+        // User only needs to press any key to stop the server.
         std::cin.get();
 
         boost::system::error_code errorCode;
 
-        // Free TCP acceptor and socket.
-        acceptor->close( errorCode );
-        socket.shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
-        socket.close( errorCode );
-
         // Stop the I/O processing.
         io_service.stop();
+
+        // Close all user connections.
+        for( unsigned int i = 0; i<users.size(); i++ ){
+            users[i].socket.shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
+            users[i].socket.close( errorCode );
+        }
+
+        // Free TCP acceptor.
+        acceptor_.close( errorCode );
 
         // Wait for the server's threads to finish.
         threads.join_all();
     }catch( std::exception& ex ){
+        coutMutex.lock();
         std::cout << "Exception: " << ex.what() << std::endl;
+        coutMutex.unlock();
     }
-
 }
 
 
 /***
- * 3. Handlers
+ * 3. Listeners
+ ***/
+
+void Server::listen()
+{
+    coutMutex.lock();
+    std::cout << "Listening on port (" << port << ")" << std::endl;
+    coutMutex.unlock();
+
+    // Wait for a new user connection.
+    acceptor_.async_accept( newSocket_, boost::bind( &Server::onAccept, this, _1 ) );
+}
+
+
+/***
+ * 4. Handlers
  ***/
 
 void Server::onAccept( const boost::system::error_code& errorCode )
@@ -107,12 +127,28 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         coutMutex.lock();
         std::cout << "[" << boost::this_thread::get_id() << "]: Connected!" << std::endl;
         coutMutex.unlock();
+
+        // Add the new user to the users vector.
+        users.emplace_back( users.size(), std::move( newSocket_ ) );
+
+        coutMutex.lock();
+        std::cout << "New user: (" << users.back().id << ") - total users: " << users.size() << std::endl;
+        coutMutex.unlock();
+
+        if( users.size() < MAX_USERS ){
+            // Wait for a new connection.
+            listen();
+        }else{
+            coutMutex.lock();
+            std::cout << "Server is full (MAX_USERS: " << MAX_USERS << ")" << std::endl;
+            coutMutex.unlock();
+        }
     }
 }
 
 
 /***
- * 4. Auxiliar methods
+ * 5. Auxiliar methods
  ***/
 
 std::string Server::getCurrentDayTime() const

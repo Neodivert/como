@@ -40,20 +40,40 @@ using boost::asio::ip::tcp;
 
 namespace como {
 
+struct User
+{
+    int id;
+    boost::asio::ip::tcp::socket socket;
+
+    User( int id_, boost::asio::ip::tcp::socket socket_ ) :
+        id( id_ ),
+        socket( std::move( socket_ ) )
+    {}
+};
+
 class Server
 {
     private:
         // I/O service.
         boost::asio::io_service io_service;
 
+        // Aceptor
+        boost::asio::ip::tcp::acceptor acceptor_;
+
         // Work object.
         boost::asio::io_service::work work;
 
-        // Socket object.
-        boost::asio::ip::tcp::socket socket;
+        // Users vector.
+        std::vector< User > users;
+
+        // This is where a new socket is created when a user connects to the server.
+        boost::asio::ip::tcp::socket newSocket_;
 
         // Number of worker threads in the server.
         const unsigned int N_THREADS;
+
+        // Maximum number of users allowed in the server.
+        const unsigned int MAX_USERS;
 
         // Threads pool
         boost::thread_group threads;
@@ -78,13 +98,19 @@ class Server
 
 
         /***
-         * 3. Handlers
+         * 3. Listeners
+         ***/
+        void listen();
+
+
+        /***
+         * 4. Handlers
          ***/
         void onAccept( const boost::system::error_code& errorCode );
 
 
         /***
-         * 4. Auxiliar methods
+         * 5. Auxiliar methods
          ***/
     private:
         std::string getCurrentDayTime() const ;
