@@ -63,7 +63,11 @@ void Session::read()
 void Session::onRead( const boost::system::error_code& errorCode, std::size_t length )
 {
     if( errorCode ){
-        std::cout << "onRead - ERROR: " << errorCode << std::endl;
+        if( errorCode == boost::asio::error::eof ){
+            std::cout << "User disconnected" << std::endl;
+        }else{
+            std::cout << "onRead - ERROR: " << errorCode << std::endl;
+        }
     }else{
         std::cout << "Client " << id_ << " : ";
         std::cout.write( buffer_, length );

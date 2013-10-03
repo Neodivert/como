@@ -153,6 +153,12 @@ void Server::onAccept( const boost::system::error_code& errorCode )
  * 5. Auxiliar methods
  ***/
 
+void Server::deleteSession( unsigned int id )
+{
+    sessions.erase( sessions.begin() + id );
+}
+
+
 std::string Server::getCurrentDayTime() const
 {
     std::time_t now = std::time( 0 );

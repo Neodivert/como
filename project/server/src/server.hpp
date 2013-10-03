@@ -102,9 +102,11 @@ class Server
         /***
          * 5. Auxiliar methods
          ***/
+        void deleteSession( unsigned int id );
     private:
         std::string getCurrentDayTime() const ;
         void workerThread();
+
 };
 
 } // namespace como
