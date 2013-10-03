@@ -79,14 +79,11 @@ void Server::run()
         // Stop the I/O processing.
         io_service.stop();
 
-        // Close all user connections.
-        for( unsigned int i = 0; i<users.size(); i++ ){
-            users[i].socket.shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
-            users[i].socket.close( errorCode );
-        }
+        //newSocket_.shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
+        //newSocket_.close( errorCode );
 
         // Free TCP acceptor.
-        acceptor_.close( errorCode );
+        //acceptor_.close( errorCode );
 
         // Wait for the server's threads to finish.
         threads.join_all();
@@ -119,6 +116,8 @@ void Server::listen()
 
 void Server::onAccept( const boost::system::error_code& errorCode )
 {
+    boost::system::error_code closingErrorCode;
+
     if( errorCode ){
         coutMutex.lock();
         std::cout << "[" << boost::this_thread::get_id() << "]: ERROR(" << errorCode << ")" << std::endl;
@@ -128,19 +127,22 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         std::cout << "[" << boost::this_thread::get_id() << "]: Connected!" << std::endl;
         coutMutex.unlock();
 
-        // Add the new user to the users vector.
-        users.emplace_back( users.size(), std::move( newSocket_ ) );
+        // Add the new user to the sessions vector.
+        sessions.push_back( std::make_shared<Session>( sessions.size(), std::move( newSocket_ ) ) );
 
         coutMutex.lock();
-        std::cout << "New user: (" << users.back().id << ") - total users: " << users.size() << std::endl;
+        std::cout << "New sessions: (" << sessions.back()->getId() << ") - total sessions: " << sessions.size() << std::endl;
         coutMutex.unlock();
 
-        if( users.size() < MAX_USERS ){
+        if( sessions.size() < MAX_USERS ){
             // Wait for a new connection.
             listen();
         }else{
+            acceptor_.close( closingErrorCode );
+
             coutMutex.lock();
             std::cout << "Server is full (MAX_USERS: " << MAX_USERS << ")" << std::endl;
+            std::cout << "acceptor_.close() : " << closingErrorCode << std::endl;
             coutMutex.unlock();
         }
     }

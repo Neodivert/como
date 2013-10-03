@@ -35,21 +35,11 @@
 #include <boost/bind.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/lexical_cast.hpp>
+#include "session.hpp"
 
 using boost::asio::ip::tcp;
 
 namespace como {
-
-struct User
-{
-    int id;
-    boost::asio::ip::tcp::socket socket;
-
-    User( int id_, boost::asio::ip::tcp::socket socket_ ) :
-        id( id_ ),
-        socket( std::move( socket_ ) )
-    {}
-};
 
 class Server
 {
@@ -63,8 +53,8 @@ class Server
         // Work object.
         boost::asio::io_service::work work;
 
-        // Users vector.
-        std::vector< User > users;
+        // Sessions vector.
+        std::vector< SessionPtr > sessions;
 
         // This is where a new socket is created when a user connects to the server.
         boost::asio::ip::tcp::socket newSocket_;

@@ -5,12 +5,14 @@ CONFIG -= qt
 
 SOURCES += \
     src/main.cpp \
-    src/server.cpp
+    src/server.cpp \
+    src/session.cpp
 
 LIBS += -lpthread
 
 HEADERS += \
-    src/server.hpp
+    src/server.hpp \
+    src/session.hpp
 
 # Link boost libraries
 unix|win32: LIBS += -lboost_system
