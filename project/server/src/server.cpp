@@ -1,4 +1,4 @@
-/***
+﻿/***
  * Copyright 2013 Moises J. Bonilla Caraballo (Neodivert)
  *
  * This file is part of COMO.
@@ -21,20 +21,21 @@
 
 namespace como {
 
-Server::Server( unsigned int port_, unsigned int nThreads ) :
+Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThreads ) :
     // Initialize the server parameters.
-    acceptor_( io_service ),
-    work( io_service ),
-    newSocket_( io_service ),
+    acceptor_( io_service_ ),
+    work_( io_service_ ),
     N_THREADS( nThreads ),
-    MAX_USERS( 2 ),
-    port( port_ )
+    MAX_SESSIONS( maxSessions ),
+    newSocket_( io_service_ ),
+    newId_( 0 ),
+    port_( port_ )
 {
     unsigned int i;
 
     // Create the threads pool.
     for( i=0; i<N_THREADS; i++ ){
-        threads.create_thread( boost::bind( &Server::workerThread, this ) );
+        threads_.create_thread( boost::bind( &Server::workerThread, this ) );
     }
 }
 
@@ -47,26 +48,20 @@ void Server::run()
 {
     // Create a TCP resolver and a query for getting the endpoint the server
     // must listen to.
-    boost::asio::ip::tcp::resolver resolver( io_service );
-    boost::asio::ip::tcp::resolver::query query( "localhost", boost::lexical_cast< std::string >( port ) );
+    boost::asio::ip::tcp::resolver resolver( io_service_ );
+    boost::asio::ip::tcp::resolver::query query( "localhost", boost::lexical_cast< std::string >( port_ ) );
 
     try{
-        coutMutex.lock();
+        coutMutex_.lock();
         std::cout << "Press any key to exit" << std::endl;
-        coutMutex.unlock();
+        coutMutex_.unlock();
 
         // Resolve the query to localhost:port and get its TCP end point.
         boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve( query );
-        boost::asio::ip::tcp::endpoint endPoint = *iterator;
+        endPoint_ = *iterator;
 
-        // Set the acceptor parameters.
-        acceptor_.open( endPoint.protocol() );
-        acceptor_.set_option( boost::asio::ip::tcp::acceptor::reuse_address( false ) );
-
-        // Start listening.
-        // FIXME: Sometimes I get an exception "bind address already in use"
-        acceptor_.bind( endPoint );
-        acceptor_.listen( MAX_USERS );
+        // Open the acceptor.
+        openAcceptor();
 
         // Wait for new connections.
         listen();
@@ -77,8 +72,9 @@ void Server::run()
         boost::system::error_code errorCode;
 
         // Stop the I/O processing.
-        io_service.stop();
+        io_service_.stop();
 
+        // TODO: Are these methods called in their corresponding destructors?
         //newSocket_.shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
         //newSocket_.close( errorCode );
 
@@ -86,11 +82,11 @@ void Server::run()
         //acceptor_.close( errorCode );
 
         // Wait for the server's threads to finish.
-        threads.join_all();
+        threads_.join_all();
     }catch( std::exception& ex ){
-        coutMutex.lock();
+        coutMutex_.lock();
         std::cout << "Exception: " << ex.what() << std::endl;
-        coutMutex.unlock();
+        coutMutex_.unlock();
     }
 }
 
@@ -101,9 +97,9 @@ void Server::run()
 
 void Server::listen()
 {
-    coutMutex.lock();
-    std::cout << "Listening on port (" << port << ")" << std::endl;
-    coutMutex.unlock();
+    coutMutex_.lock();
+    std::cout << "Listening on port (" << port_ << ")" << std::endl;
+    coutMutex_.unlock();
 
     // Wait for a new user connection.
     acceptor_.async_accept( newSocket_, boost::bind( &Server::onAccept, this, _1 ) );
@@ -119,31 +115,36 @@ void Server::onAccept( const boost::system::error_code& errorCode )
     boost::system::error_code closingErrorCode;
 
     if( errorCode ){
-        coutMutex.lock();
-        std::cout << "[" << boost::this_thread::get_id() << "]: ERROR(" << errorCode << ")" << std::endl;
-        coutMutex.unlock();
+        coutMutex_.lock();
+        std::cout << "[" << boost::this_thread::get_id() << "]: ERROR(" << errorCode.message() << ")" << std::endl;
+        coutMutex_.unlock();
     }else{
-        coutMutex.lock();
+        coutMutex_.lock();
         std::cout << "[" << boost::this_thread::get_id() << "]: Connected!" << std::endl;
-        coutMutex.unlock();
+        coutMutex_.unlock();
 
         // Add the new user to the sessions vector.
-        sessions.push_back( std::make_shared<Session>( sessions.size(), std::move( newSocket_ ) ) );
+        sessions_.push_back( std::make_shared<Session>( newId_, std::move( newSocket_ ), std::bind( &Server::deleteSession, this, std::placeholders::_1 ) ) );
 
-        coutMutex.lock();
-        std::cout << "New sessions: (" << sessions.back()->getId() << ") - total sessions: " << sessions.size() << std::endl;
-        coutMutex.unlock();
+        // Increment the "new id" for the next user.
+        newId_++;
 
-        if( sessions.size() < MAX_USERS ){
-            // Wait for a new connection.
+        coutMutex_.lock();
+        std::cout << "New sessions: (" << sessions_.back()->getId() << ") - total sessions: " << sessions_.size() << std::endl;
+        coutMutex_.unlock();
+
+        if( sessions_.size() < MAX_SESSIONS ){
+            // There is room for more users, wait for a new connection.
             listen();
         }else{
+            // There isn't room for more users, close the acceptor.
             acceptor_.close( closingErrorCode );
+            //acceptor_.cancel();
 
-            coutMutex.lock();
-            std::cout << "Server is full (MAX_USERS: " << MAX_USERS << ")" << std::endl;
-            std::cout << "acceptor_.close() : " << closingErrorCode << std::endl;
-            coutMutex.unlock();
+            coutMutex_.lock();
+            std::cout << "Server is full (MAX_SESSIONS: " << MAX_SESSIONS << ")" << std::endl;
+            //std::cout << "acceptor_.close() : " << closingErrorCode << std::endl;
+            coutMutex_.unlock();
         }
     }
 }
@@ -155,7 +156,33 @@ void Server::onAccept( const boost::system::error_code& errorCode )
 
 void Server::deleteSession( unsigned int id )
 {
-    sessions.erase( sessions.begin() + id );
+    unsigned int i = 0;
+    std::cout << "Server::deleteSession(" << id << ")" << std::endl;
+
+    while( ( i < sessions_.size() ) &&
+           ( id != sessions_[i]->getId() ) ){
+        i++;
+    }
+
+    if( i < sessions_.size() ){
+        std::cout << "Erasing (id: " << id << ") - (id: " << id << ")" << std::endl;
+        sessions_.erase( sessions_.begin() + i );
+    }
+
+    if( sessions_.size() == (MAX_SESSIONS - 1) ){
+        // If the server was full before this user got out, that means the acceptor wasn't
+        // listening for new connections. Start listening now that there is room again.
+
+        //acceptor_.open( endPoint_.protocol() );
+        //acceptor_.listen( 0 );
+        openAcceptor();
+
+        // Start listening.
+        // FIXME: Sometimes I get an exception "bind address already in use" when is
+        // the server who closes the connections.
+
+        listen();
+    }
 }
 
 
@@ -168,39 +195,54 @@ std::string Server::getCurrentDayTime() const
 
 void Server::workerThread()
 {
-    coutMutex.lock();
+    coutMutex_.lock();
     std::cout << "[" << boost::this_thread::get_id()
         << "] Thread Start" << std::endl;
-    coutMutex.unlock();
+    coutMutex_.unlock();
 
     while( true )
     {
         try
         {
             boost::system::error_code ec;
-            io_service.run( ec );
+            io_service_.run( ec );
             if( ec )
             {
-                coutMutex.lock();
+                coutMutex_.lock();
                 std::cout << "[" << boost::this_thread::get_id()
-                    << "] Error: " << ec << std::endl;
-                coutMutex.unlock();
+                    << "] Error: " << ec.message() << std::endl;
+                coutMutex_.unlock();
             }
             break;
         }
         catch( std::exception & ex )
         {
-            coutMutex.lock();
+            coutMutex_.lock();
             std::cout << "[" << boost::this_thread::get_id()
                 << "] Exception: " << ex.what() << std::endl;
-            coutMutex.unlock();
+            coutMutex_.unlock();
         }
     }
 
-    coutMutex.lock();
+    coutMutex_.lock();
     std::cout << "[" << boost::this_thread::get_id()
         << "] Thread Finish" << std::endl;
-    coutMutex.unlock();
+    coutMutex_.unlock();
+}
+
+
+void Server::openAcceptor()
+{
+    // Set the acceptor parameters.
+    acceptor_.open( endPoint_.protocol() );
+    acceptor_.set_option( boost::asio::ip::tcp::acceptor::reuse_address( true ) );
+
+    // Start listening.
+    // FIXME: Sometimes I get an exception "bind address already in use" when is
+    // the server who closes the connections.
+    acceptor_.bind( endPoint_ );
+    acceptor_.listen( 0 );
+
 }
 
 } // namespace como

@@ -45,40 +45,46 @@ class Server
 {
     private:
         // I/O service.
-        boost::asio::io_service io_service;
+        boost::asio::io_service io_service_;
 
         // Aceptor
         boost::asio::ip::tcp::acceptor acceptor_;
 
         // Work object.
-        boost::asio::io_service::work work;
+        boost::asio::io_service::work work_;
 
         // Sessions vector.
-        std::vector< SessionPtr > sessions;
-
-        // This is where a new socket is created when a user connects to the server.
-        boost::asio::ip::tcp::socket newSocket_;
+        std::vector< SessionPtr > sessions_;
 
         // Number of worker threads in the server.
         const unsigned int N_THREADS;
 
-        // Maximum number of users allowed in the server.
-        const unsigned int MAX_USERS;
+        // Maximum number of sessions (users) allowed in the server.
+        const unsigned int MAX_SESSIONS;
+
+        // End point the acceptor listens to.
+        boost::asio::ip::tcp::endpoint endPoint_;
 
         // Threads pool
-        boost::thread_group threads;
+        boost::thread_group threads_;
 
         // Mutex for console output (cout).
-        boost::mutex coutMutex;
+        boost::mutex coutMutex_;
+
+        // New socket
+        Socket newSocket_;
+
+        // When a new user connect to the server, this will be the id givent to him/her.
+        unsigned int newId_;
 
         // Server's port.
-        unsigned int port;
+        unsigned int port_;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        Server( unsigned int port_, unsigned int nThreads = 5 );
+        Server( unsigned int port_, unsigned int maxSessions, unsigned int nThreads = 1 );
 
 
         /***
@@ -106,7 +112,7 @@ class Server
     private:
         std::string getCurrentDayTime() const ;
         void workerThread();
-
+        void openAcceptor();
 };
 
 } // namespace como

@@ -24,24 +24,30 @@
 #include <boost/asio.hpp>
 #include <iostream>
 #include <boost/bind.hpp>
+#include <functional>
 
 namespace como {
 
 const unsigned int BUFFER_SIZE = 1024;
 
+typedef boost::asio::ip::tcp::socket Socket;
+typedef std::shared_ptr< Socket > SocketPtr;
+
 class Session : public std::enable_shared_from_this<Session>
 {
     private:
         unsigned int id_;
-        boost::asio::ip::tcp::socket socket_;
+        Socket socket_;
 
         char buffer_[BUFFER_SIZE];
+
+        std::function<void (unsigned int)> removeUserCallback_;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        Session( unsigned int id, boost::asio::ip::tcp::socket socket );
+        Session( unsigned int id, Socket socket, std::function<void (unsigned int)> removeUserCallback );
         ~Session();
 
 

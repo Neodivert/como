@@ -26,9 +26,10 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-Session::Session( unsigned int id, boost::asio::ip::tcp::socket socket ) :
+Session::Session( unsigned int id, Socket socket, std::function<void (unsigned int)> removeUserCallback ) :
     id_( id ),
-    socket_( std::move( socket ) )
+    socket_( std::move( socket ) ),
+    removeUserCallback_( removeUserCallback )
 {
     std::cout << "Session created (id: " << id_ << ")" << std::endl;
     read();
@@ -66,8 +67,9 @@ void Session::onRead( const boost::system::error_code& errorCode, std::size_t le
         if( errorCode == boost::asio::error::eof ){
             std::cout << "User disconnected" << std::endl;
         }else{
-            std::cout << "onRead - ERROR: " << errorCode << std::endl;
+            std::cout << "onRead - ERROR: " << errorCode.message() << std::endl;
         }
+        removeUserCallback_( id_ );
     }else{
         std::cout << "Client " << id_ << " : ";
         std::cout.write( buffer_, length );
