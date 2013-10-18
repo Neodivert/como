@@ -21,6 +21,7 @@
 #include "gui/main_window.hpp"
 #include <glm/gtx/vector_angle.hpp>
 #include "managers/tester.hpp"
+#include "models/server/server_interface.hpp"
 
 //#define TESTING_MODE 1
 
@@ -32,8 +33,10 @@ void connect( const char* server );
 
 int main( int argc, char *argv[] )
 {
+    // Test connection to the server.
+    como::ServerInterface server;
+    server.connect( "localhost", "7777" );
     //connect( "localhost" );
-    //exit( 0 );
 
     // Create a Qt application.
     QApplication app( argc, argv );

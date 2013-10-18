@@ -39,7 +39,8 @@ HEADERS += \
     ../../src/client/models/3d/cube.hpp \
     ../../src/client/models/3d/camera.hpp \
     ../../src/client/models/users/user.hpp \
-    ../../src/client/models/utilities/msl/src/shader_loader.hpp
+    ../../src/client/models/utilities/msl/src/shader_loader.hpp \
+    ../../src/client/models/server/server_interface.hpp
 
 SOURCES += \
     ../../src/client/gui/viewport.cpp \
@@ -56,4 +57,5 @@ SOURCES += \
     ../../src/client/models/3d/cube.cpp \
     ../../src/client/models/3d/camera.cpp \
     ../../src/client/models/utilities/msl/src/shader_loader.cpp \
-    ../../src/client/main.cpp
+    ../../src/client/main.cpp \
+    ../../src/client/models/server/server_interface.cpp
