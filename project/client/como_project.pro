@@ -11,42 +11,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = como_project
 TEMPLATE = app
 
-
-SOURCES += src/main.cpp\
-    src/gui/opengl_engine.cpp \
-    src/gui/tools_menu.cpp \
-    src/gui/render_panel.cpp \
-    src/gui/main_window.cpp \
-    src/gui/view_frame.cpp \
-    src/managers/como_app.cpp \
-    src/managers/scene.cpp \
-    src/models/3d/cube.cpp \
-    src/models/3d/camera.cpp \
-    src/models/3d/drawable.cpp \
-    src/models/3d/mesh.cpp \
-    src/gui/viewport.cpp \
-    src/managers/tester.cpp \
-    src/models/utilities/msl/src/shader_loader.cpp
-
-
-HEADERS  += \
-    src/gui/opengl_engine.hpp \
-    src/gui/tools_menu.hpp \
-    src/gui/render_panel.hpp \
-    src/gui/main_window.hpp \
-    src/gui/view_frame.hpp \
-    src/managers/como_app.hpp \
-    src/managers/scene.hpp \
-    src/models/3d/cube.hpp \
-    src/models/3d/camera.hpp \
-    src/models/3d/drawable.hpp \
-    src/models/3d/mesh.hpp \
-    src/gui/viewport.hpp \
-    src/managers/tester.hpp \
-    src/models/dependencies.hpp \
-    src/models/users/user.hpp \
-    src/models/utilities/msl/src/shader_loader.hpp
-
 FORMS    += main_window.ui
 
 LIBS += -lGLEW -lGLU
@@ -59,3 +23,37 @@ QMAKE_CXXFLAGS += -pedantic-errors
 
 unix|win32: LIBS += -lboost_system
 unix|win32: LIBS += -lboost_thread
+
+HEADERS += \
+    ../../src/client/gui/viewport.hpp \
+    ../../src/client/gui/view_frame.hpp \
+    ../../src/client/gui/tools_menu.hpp \
+    ../../src/client/gui/render_panel.hpp \
+    ../../src/client/gui/opengl_engine.hpp \
+    ../../src/client/gui/main_window.hpp \
+    ../../src/client/managers/tester.hpp \
+    ../../src/client/managers/scene.hpp \
+    ../../src/client/managers/como_app.hpp \
+    ../../src/client/models/3d/mesh.hpp \
+    ../../src/client/models/3d/drawable.hpp \
+    ../../src/client/models/3d/cube.hpp \
+    ../../src/client/models/3d/camera.hpp \
+    ../../src/client/models/users/user.hpp \
+    ../../src/client/models/utilities/msl/src/shader_loader.hpp
+
+SOURCES += \
+    ../../src/client/gui/viewport.cpp \
+    ../../src/client/gui/view_frame.cpp \
+    ../../src/client/gui/tools_menu.cpp \
+    ../../src/client/gui/render_panel.cpp \
+    ../../src/client/gui/opengl_engine.cpp \
+    ../../src/client/gui/main_window.cpp \
+    ../../src/client/managers/tester.cpp \
+    ../../src/client/managers/scene.cpp \
+    ../../src/client/managers/como_app.cpp \
+    ../../src/client/models/3d/mesh.cpp \
+    ../../src/client/models/3d/drawable.cpp \
+    ../../src/client/models/3d/cube.cpp \
+    ../../src/client/models/3d/camera.cpp \
+    ../../src/client/models/utilities/msl/src/shader_loader.cpp \
+    ../../src/client/main.cpp

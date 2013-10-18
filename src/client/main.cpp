@@ -18,7 +18,7 @@
 ***/
 
 #include <QGuiApplication>
-#include "src/gui/main_window.hpp"
+#include "gui/main_window.hpp"
 #include <glm/gtx/vector_angle.hpp>
 #include "managers/tester.hpp"
 
@@ -32,8 +32,8 @@ void connect( const char* server );
 
 int main( int argc, char *argv[] )
 {
-    connect( "localhost" );
-    exit( 0 );
+    //connect( "localhost" );
+    //exit( 0 );
 
     // Create a Qt application.
     QApplication app( argc, argv );
