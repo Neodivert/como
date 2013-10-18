@@ -47,7 +47,22 @@ void UserAccepted::encode( char* code ) const
 
 void UserAccepted::decode( const char* code )
 {
+    const std::uint8_t* colorPtr = nullptr;
+    unsigned int i = 0;
 
+    // Get the user's id.
+    id = translateFromNetworkOrder( ( reinterpret_cast< const std::uint32_t* >( code ) )[0] );
+
+    // Get the user's name.
+    strncpy( name, &code[4], NAME_SIZE );
+
+    // Get the user's selection color.
+    colorPtr = reinterpret_cast< const std::uint8_t* >( &code[4+NAME_SIZE] );
+    for( ; i<4; i++ ){
+        selectionColor[i] = *colorPtr;
+
+        colorPtr++;
+    }
 }
 
 

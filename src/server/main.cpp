@@ -25,13 +25,10 @@
 int main()
 {
     try {
-
         std::uint32_t value = 0x01000000;
 
         std::cout << "LITTLE_ENDIAN: " << value << std::endl
                   << "BIG_ENDIAN: " << como::translateToNetworkOrder( value ) << std::endl;
-
-        std::uint16_t size = 0;
         char buffer[256];
 
         como::UserAccepted p;
@@ -54,6 +51,16 @@ int main()
         for( ; i<p.getCodeSize(); i++ ){
             std::cout << "\t[" << i << "]: " << (int)buffer[i] << std::endl;
         }
+
+        como::UserAccepted p1;
+
+        p1.decode( buffer );
+
+        std::cout << p1.id << std::endl
+                  << p1.name << std::endl
+                  << "(" << p1.selectionColor[0] << ", " << p1.selectionColor[1] << ", " << p1.selectionColor[2] << ", " << p1.selectionColor[3] << ")" << std::endl;
+
+
 
         como::Server server( 7777, 2, 1 );
 
