@@ -17,16 +17,26 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "server.hpp"
+#ifndef ENDIANNESS_HPP
+#define ENDIANNESS_HPP
 
-int main()
-{
-    try {
-        como::Server server( 7777, 2, 1 );
+#include <cstdint>
 
-        server.run();
-    }catch (std::exception& e){
-        std::cerr << e.what() << std::endl;
-    }
-}
+namespace como {
 
+/***
+ * 1. Uint16 translation
+ ***/
+std::uint16_t translateToNetworkOrder( const std::uint16_t& value );
+std::uint16_t translateFromNetworkOrder( const std::uint16_t& value );
+
+
+/***
+ * 2. Uint32 translation
+ ***/
+std::uint32_t translateToNetworkOrder( const std::uint32_t& value );
+std::uint32_t translateFromNetworkOrder( const std::uint32_t& value );
+
+} // namespace como
+
+#endif // ENDIANNESS_HPP
