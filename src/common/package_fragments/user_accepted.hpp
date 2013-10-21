@@ -34,10 +34,10 @@ class UserAccepted : public PackageFragment
 
     public:
         /***
-         * 1. Encoding and decoding
+         * 1. Packing and unpacking
          ***/
-        virtual void encode( char* code ) const;
-        virtual void decode( const char* code );
+        virtual void pack( char* code ) const;
+        virtual void unpack( const char* code );
 
         /***
          * 2. Getters

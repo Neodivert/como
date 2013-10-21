@@ -21,11 +21,12 @@
 
 namespace como {
 
+
 /***
- * 1. Encoding and decoding
+ * 1. Packing and unpacking
  ***/
 
-void UserAccepted::encode( char* code ) const
+void UserAccepted::pack( char* code ) const
 {
     unsigned int i = 0;
     std::uint8_t* colorPtr = nullptr;
@@ -45,7 +46,7 @@ void UserAccepted::encode( char* code ) const
     }
 }
 
-void UserAccepted::decode( const char* code )
+void UserAccepted::unpack( const char* code )
 {
     const std::uint8_t* colorPtr = nullptr;
     unsigned int i = 0;

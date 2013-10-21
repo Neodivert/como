@@ -27,9 +27,12 @@ ServerInterface::ServerInterface() :
 }
 
 
-bool ServerInterface::connect( const char* host, const char* port )
+void ServerInterface::connect( const char* host, const char* port, const char* userName )
 {
     boost::system::error_code errorCode;
+    como::NewUser newUserPackage;
+    como::UserAccepted userAcceptedPackage;
+    char buffer[128];
 
     // Create the TCP resolver and query needed for connecting to the server.
     boost::asio::ip::tcp::resolver resolver( io_service_ );
@@ -43,15 +46,43 @@ bool ServerInterface::connect( const char* host, const char* port )
     socket_.connect( *endpoint_iterator, errorCode );
 
     if( errorCode ){
-        std::cerr << "ERROR: Couldn't connect to server" << "(" << errorCode.message() << ")" << std::endl;
-        return false;
+        throw std::runtime_error( std::string( "ERROR: Couldn't connect to server (" ) + errorCode.message() + ")" );
     }
 
     std::cout << "Connected!" << std::endl;
 
-    socket_.close();
+    // Prepare a NEW_USER network package with the user name, and send it to
+    // the server.
+    strcpy( newUserPackage.name, userName );
+    newUserPackage.pack( buffer );
+    boost::asio::write( socket_, boost::asio::buffer( buffer ), errorCode );
 
-    return true;
+    if( errorCode ){
+        throw std::runtime_error( std::string( "ERROR when sending NEW_USER package to server (" ) + errorCode.message() + ")" );
+    }
+
+    // Read from the server an USER_ACCEPTED network package and unpack it.
+    boost::asio::read( socket_, boost::asio::buffer( buffer ), errorCode );
+    userAcceptedPackage.unpack( buffer );
+
+    std::cout << "User accepted: " << std::endl
+              << "\tID: [" << userAcceptedPackage.id << "]" << std::endl
+              << "\tName: [" << userAcceptedPackage.name << "]" << std::endl
+              << "\tSelection color: [" << (int)userAcceptedPackage.selectionColor[0] << ", "
+              << (int)userAcceptedPackage.selectionColor[1] << ", "
+              << (int)userAcceptedPackage.selectionColor[2] << ", "
+              << (int)userAcceptedPackage.selectionColor[3] << ")" << std::endl << std::endl;
+
+    if( errorCode ){
+        throw std::runtime_error( std::string( "ERROR when receiving USER_ACCEPTED package from server (" ) + errorCode.message() + ")" );
+    }
+
+    std::cout << "Press any key to close the connection" << std::endl;
+    std::cin.get();
+
+    // TODO: Delete this in future versions.
+    // Close the socket.
+    socket_.close();
 }
 
 

@@ -26,11 +26,12 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-Session::Session( unsigned int id, Socket socket, std::function<void (unsigned int)> removeUserCallback ) :
+Session::Session( unsigned int id, const char* name, Socket socket, std::function<void (unsigned int)> removeUserCallback ) :
     id_( id ),
     socket_( std::move( socket ) ),
     removeUserCallback_( removeUserCallback )
 {
+    strncpy( name_, name, 64 );
     std::cout << "Session created (id: " << id_ << ")" << std::endl;
     read();
 }
@@ -49,6 +50,12 @@ Session::~Session()
 unsigned int Session::getId()
 {
     return id_;
+}
+
+
+const char* Session::getName()
+{
+    return name_;
 }
 
 

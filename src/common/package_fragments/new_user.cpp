@@ -23,16 +23,16 @@
 namespace como {
 
 /***
- * 1. Encoding and decoding
+ * 1. Packing and unpacking
  ***/
 
-void NewUser::encode( char* code ) const
+void NewUser::pack( char* code ) const
 {
     strncpy( code, name, NAME_SIZE );
 }
 
 
-void NewUser::decode( const char* code )
+void NewUser::unpack( const char* code )
 {
     strncpy( name, code, NAME_SIZE );
 }

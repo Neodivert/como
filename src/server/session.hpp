@@ -39,6 +39,7 @@ class Session : public std::enable_shared_from_this<Session>
         unsigned int id_;
         Socket socket_;
 
+        char name_[64];
         char buffer_[BUFFER_SIZE];
 
         std::function<void (unsigned int)> removeUserCallback_;
@@ -47,7 +48,7 @@ class Session : public std::enable_shared_from_this<Session>
         /***
          * 1. Initialization and destruction
          ***/
-        Session( unsigned int id, Socket socket, std::function<void (unsigned int)> removeUserCallback );
+        Session( unsigned int id, const char* name, Socket socket, std::function<void (unsigned int)> removeUserCallback );
         ~Session();
 
 
@@ -55,6 +56,7 @@ class Session : public std::enable_shared_from_this<Session>
          * 2. Getters
          ***/
         unsigned int getId();
+        const char* getName();
 
 
         /***

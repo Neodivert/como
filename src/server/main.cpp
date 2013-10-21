@@ -22,9 +22,10 @@
 #include "../common/package_fragments/user_accepted.hpp"
 #include <endian.h>
 
-int main()
+int main( int argc, char* argv[] )
 {
     try {
+        /*
         std::uint32_t value = 0x01000000;
 
         std::cout << "LITTLE_ENDIAN: " << value << std::endl
@@ -59,11 +60,14 @@ int main()
         std::cout << p1.id << std::endl
                   << p1.name << std::endl
                   << "(" << p1.selectionColor[0] << ", " << p1.selectionColor[1] << ", " << p1.selectionColor[2] << ", " << p1.selectionColor[3] << ")" << std::endl;
+        */
 
+        if( argc < 3 ){
+            std::cerr << "Usage: server <port> <max_users>" << std::endl;
+            exit( -1 );
+        }
 
-
-        como::Server server( 7777, 2, 1 );
-
+        como::Server server( atoi( argv[1] ), atoi( argv[2] ), 1 );
         server.run();
     }catch (std::exception& e){
         std::cerr << e.what() << std::endl;

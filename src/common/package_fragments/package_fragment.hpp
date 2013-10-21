@@ -30,10 +30,10 @@ class PackageFragment
 {
     public:
         /***
-         * 1. Encoding and decoding
+         * 1. Packing and unpacking
          ***/
-        virtual void encode( char* code ) const = 0;
-        virtual void decode( const char* code ) = 0;
+        virtual void pack( char* code ) const = 0;
+        virtual void unpack( const char* code ) = 0;
 
 
         /***

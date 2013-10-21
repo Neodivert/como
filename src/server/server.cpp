@@ -113,18 +113,51 @@ void Server::listen()
 void Server::onAccept( const boost::system::error_code& errorCode )
 {
     boost::system::error_code closingErrorCode;
+    boost::system::error_code readingErrorCode;
+    como::NewUser newUserPackage;
+    como::UserAccepted userAcceptedPackage;
+    char buffer[128];
 
     if( errorCode ){
         coutMutex_.lock();
         std::cout << "[" << boost::this_thread::get_id() << "]: ERROR(" << errorCode.message() << ")" << std::endl;
         coutMutex_.unlock();
     }else{
+        // Connection established. Wait synchronously for a NEW_USER package.
+        boost::asio::read( newSocket_, boost::asio::buffer( buffer ), readingErrorCode );
+
+        // Unpack the received NEW_USER package and prompt the new user's name.
+        newUserPackage.unpack( buffer );
         coutMutex_.lock();
-        std::cout << "[" << boost::this_thread::get_id() << "]: Connected!" << std::endl;
+        std::cout << "[" << newUserPackage.name << "] (" << boost::this_thread::get_id() << "): Connected!" << std::endl;
         coutMutex_.unlock();
 
+        /*** Prepare an USER_ACCEPTED package in respond to the previous NEW_USER one ***/
+
+        // Assign a id to the new user.
+        userAcceptedPackage.id = newId_;
+
+        // Check if the new user's name is already in use in the server. If
+        // yes, concatenate the string (<id>) to it.
+        strcpy( userAcceptedPackage.name, newUserPackage.name );
+        if( nameInUse( userAcceptedPackage.name ) ){
+            sprintf( userAcceptedPackage.name, "%s (%d)", newUserPackage.name, newId_ );
+        }
+
+        // Assign the new user a fixed selectionColor.
+        // TODO: In future versions with multiple writers, change this so
+        // every user receives a different color.
+        userAcceptedPackage.selectionColor[0] = 255;
+        userAcceptedPackage.selectionColor[1] = 0;
+        userAcceptedPackage.selectionColor[2] = 0;
+        userAcceptedPackage.selectionColor[3] = 255;
+
+        // Pack the network package and send it synchronously to the client.
+        userAcceptedPackage.pack( buffer );
+        boost::asio::write( newSocket_, boost::asio::buffer( buffer ), readingErrorCode );
+
         // Add the new user to the sessions vector.
-        sessions_.push_back( std::make_shared<Session>( newId_, std::move( newSocket_ ), std::bind( &Server::deleteSession, this, std::placeholders::_1 ) ) );
+        sessions_.push_back( std::make_shared<Session>( newId_, userAcceptedPackage.name, std::move( newSocket_ ), std::bind( &Server::deleteSession, this, std::placeholders::_1 ) ) );
 
         // Increment the "new id" for the next user.
         newId_++;
@@ -242,7 +275,20 @@ void Server::openAcceptor()
     // the server who closes the connections.
     acceptor_.bind( endPoint_ );
     acceptor_.listen( 0 );
+}
 
+
+bool Server::nameInUse( const char* newName ) const
+{
+    unsigned int i = 0;
+
+    for( ; i<sessions_.size(); i++ ){
+        if( !strcmp( newName, sessions_[i]->getName() ) ){
+            return true;
+        }
+    }
+
+    return false;
 }
 
 } // namespace como

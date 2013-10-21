@@ -40,7 +40,11 @@ HEADERS += \
     ../../src/client/models/3d/camera.hpp \
     ../../src/client/models/users/user.hpp \
     ../../src/client/models/utilities/msl/src/shader_loader.hpp \
-    ../../src/client/models/server/server_interface.hpp
+    ../../src/client/models/server/server_interface.hpp \
+    ../../src/common/package_fragments/user_accepted.hpp \
+    ../../src/common/package_fragments/package_fragment.hpp \
+    ../../src/common/package_fragments/new_user.hpp \
+    ../../src/common/utilities/endianness.hpp
 
 SOURCES += \
     ../../src/client/gui/viewport.cpp \
@@ -58,4 +62,8 @@ SOURCES += \
     ../../src/client/models/3d/camera.cpp \
     ../../src/client/models/utilities/msl/src/shader_loader.cpp \
     ../../src/client/main.cpp \
-    ../../src/client/models/server/server_interface.cpp
+    ../../src/client/models/server/server_interface.cpp \
+    ../../src/common/package_fragments/user_accepted.cpp \
+    ../../src/common/package_fragments/package_fragment.cpp \
+    ../../src/common/package_fragments/new_user.cpp \
+    ../../src/common/utilities/endianness.cpp

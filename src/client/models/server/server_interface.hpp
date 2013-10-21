@@ -21,6 +21,7 @@
 #define SERVER_INTERFACE_HPP
 
 #include "../../../common/package_fragments/new_user.hpp"
+#include "../../../common/package_fragments/user_accepted.hpp"
 #include <boost/asio.hpp>
 
 namespace como {
@@ -36,7 +37,7 @@ class ServerInterface
          * 1. Initialization and destruction
          ***/
         ServerInterface();
-        bool connect( const char* host, const char* port );
+        void connect( const char* host, const char* port, const char* userName );
 };
 
 } // namespace como

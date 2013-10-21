@@ -33,10 +33,16 @@ void connect( const char* server );
 
 int main( int argc, char *argv[] )
 {
+    if( argc < 2 ){
+        std::cout << "ERROR: name expected" << std::endl;
+        exit( -1 );
+    }
+
     // Test connection to the server.
     como::ServerInterface server;
-    server.connect( "localhost", "7777" );
+    server.connect( "localhost", "7777", argv[1] );
     //connect( "localhost" );
+    exit( 0 );
 
     // Create a Qt application.
     QApplication app( argc, argv );
