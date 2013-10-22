@@ -22,6 +22,7 @@
 #include <glm/gtx/vector_angle.hpp>
 #include "managers/tester.hpp"
 #include "models/server/server_interface.hpp"
+#include "gui/connection_wizard/connection_wizard.hpp"
 
 //#define TESTING_MODE 1
 
@@ -33,6 +34,8 @@ void connect( const char* server );
 
 int main( int argc, char *argv[] )
 {
+    std::shared_ptr< como::ServerInterface > serverInterface = std::shared_ptr< como::ServerInterface >( new como::ServerInterface );
+    /*
     if( argc < 2 ){
         std::cout << "ERROR: name expected" << std::endl;
         exit( -1 );
@@ -42,7 +45,7 @@ int main( int argc, char *argv[] )
     como::ServerInterface server;
     server.connect( "localhost", "7777", argv[1] );
     //connect( "localhost" );
-    exit( 0 );
+    exit( 0 );*/
 
     // Create a Qt application.
     QApplication app( argc, argv );
@@ -56,6 +59,9 @@ int main( int argc, char *argv[] )
     // Create a Qt window and show it.
     como::MainWindow window;
     window.show();
+
+    como::ConnectionWizard connectionWizard( serverInterface );
+    connectionWizard.show();
 
     // Run Qt application.
     return app.exec();

@@ -17,36 +17,42 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SERVER_INTERFACE_HPP
-#define SERVER_INTERFACE_HPP
+#ifndef CONNECT_SERVER_PAGE_HPP
+#define CONNECT_SERVER_PAGE_HPP
 
-#include "../../../common/package_fragments/new_user.hpp"
-#include "../../../common/package_fragments/user_accepted.hpp"
-#include <boost/asio.hpp>
+#include <QWizardPage>
+#include <QLabel>
+#include <QRadioButton>
+#include <QVBoxLayout>
+#include <QLineEdit>
+#include <QFormLayout>
+#include <QRegExpValidator>
+#include "../../models/server/server_interface.hpp"
 
 namespace como {
 
-class ServerInterface
+class ConnectServerPage : public QWizardPage
 {
     private:
-        boost::asio::io_service io_service_;
-        boost::asio::ip::tcp::socket socket_;
+        std::shared_ptr< ServerInterface > serverInterface_;
+        QLineEdit* ipInput_;
+        QLineEdit* portInput_;
+        QLineEdit* userNameInput_;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        ServerInterface();
-        ~ServerInterface();
+        ConnectServerPage( std::shared_ptr< ServerInterface > serverInterface );
 
 
         /***
-         * 2. Connection and disconnection
+         * 2. Validators
          ***/
-        void connect( const char* host, const char* port, const char* userName );
-        void disconnect();
+    protected:
+        virtual bool validatePage();
 };
 
 } // namespace como
 
-#endif // SERVER_INTERFACE_HPP
+#endif // CONNECT_SERVER_PAGE_HPP

@@ -21,11 +21,26 @@
 
 namespace como {
 
+
+/***
+ * 1. Initialization and destruction
+ ***/
+
 ServerInterface::ServerInterface() :
     socket_( io_service_ )
 {
 }
 
+
+ServerInterface::~ServerInterface()
+{
+    disconnect();
+}
+
+
+/***
+ * 2. Connection and disconnection
+ ***/
 
 void ServerInterface::connect( const char* host, const char* port, const char* userName )
 {
@@ -76,14 +91,17 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
     if( errorCode ){
         throw std::runtime_error( std::string( "ERROR when receiving USER_ACCEPTED package from server (" ) + errorCode.message() + ")" );
     }
-
-    std::cout << "Press any key to close the connection" << std::endl;
-    std::cin.get();
-
-    // TODO: Delete this in future versions.
-    // Close the socket.
-    socket_.close();
 }
 
+
+void ServerInterface::disconnect()
+{
+    // Close the socket to the server if it's open.
+    if( socket_.is_open() ){
+        std::cout << "Closing socket to server" << std::endl;
+        socket_.close();
+    }
+    std::cout << "Disconnected from server" << std::endl;
+}
 
 } // namespace como

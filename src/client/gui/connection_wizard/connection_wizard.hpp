@@ -17,36 +17,31 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SERVER_INTERFACE_HPP
-#define SERVER_INTERFACE_HPP
+#ifndef CONNECTION_WIZARD_HPP
+#define CONNECTION_WIZARD_HPP
 
-#include "../../../common/package_fragments/new_user.hpp"
-#include "../../../common/package_fragments/user_accepted.hpp"
-#include <boost/asio.hpp>
+#include <QWizard>
+#include <QWizardPage>
+#include "../../models/server/server_interface.hpp"
 
 namespace como {
 
-class ServerInterface
+class ConnectionWizard : public QWizard
 {
-    private:
-        boost::asio::io_service io_service_;
-        boost::asio::ip::tcp::socket socket_;
+    Q_OBJECT
 
     public:
+        enum { PAGE_INTRO, PAGE_CONNECT_SERVER /*Page_Intro, Page_Evaluate, Page_Register, Page_Details,
+                Page_Conclusion*/ };
+
         /***
          * 1. Initialization and destruction
          ***/
-        ServerInterface();
-        ~ServerInterface();
-
-
-        /***
-         * 2. Connection and disconnection
-         ***/
-        void connect( const char* host, const char* port, const char* userName );
-        void disconnect();
+        ConnectionWizard( std::shared_ptr< ServerInterface > serverInterface );
+    private:
+        QWizardPage* createIntroPage() const ;
 };
 
-} // namespace como
+}
 
-#endif // SERVER_INTERFACE_HPP
+#endif // CONNECTION_WIZARD_HPP

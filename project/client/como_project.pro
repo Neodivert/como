@@ -44,7 +44,9 @@ HEADERS += \
     ../../src/common/package_fragments/user_accepted.hpp \
     ../../src/common/package_fragments/package_fragment.hpp \
     ../../src/common/package_fragments/new_user.hpp \
-    ../../src/common/utilities/endianness.hpp
+    ../../src/common/utilities/endianness.hpp \
+    ../../src/client/gui/connection_wizard/connection_wizard.hpp \
+    ../../src/client/gui/connection_wizard/connect_server_page.hpp
 
 SOURCES += \
     ../../src/client/gui/viewport.cpp \
@@ -66,4 +68,6 @@ SOURCES += \
     ../../src/common/package_fragments/user_accepted.cpp \
     ../../src/common/package_fragments/package_fragment.cpp \
     ../../src/common/package_fragments/new_user.cpp \
-    ../../src/common/utilities/endianness.cpp
+    ../../src/common/utilities/endianness.cpp \
+    ../../src/client/gui/connection_wizard/connection_wizard.cpp \
+    ../../src/client/gui/connection_wizard/connect_server_page.cpp
