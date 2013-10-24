@@ -41,12 +41,17 @@ HEADERS += \
     ../../src/client/models/users/user.hpp \
     ../../src/client/models/utilities/msl/src/shader_loader.hpp \
     ../../src/client/models/server/server_interface.hpp \
-    ../../src/common/package_fragments/user_accepted.hpp \
-    ../../src/common/package_fragments/package_fragment.hpp \
-    ../../src/common/package_fragments/new_user.hpp \
-    ../../src/common/utilities/endianness.hpp \
     ../../src/client/gui/connection_wizard/connection_wizard.hpp \
-    ../../src/client/gui/connection_wizard/connect_server_page.hpp
+    ../../src/client/gui/connection_wizard/connect_server_page.hpp \
+    ../../src/client/gui/connection_wizard/create_server_page.hpp \
+    ../../src/client/gui/connection_wizard/intro_page.hpp \
+    ../../src/client/gui/connection_wizard/page_ids.hpp \
+    ../../src/common/packets/user_accepted.hpp \
+    ../../src/common/packets/packets.hpp \
+    ../../src/common/packets/packet.hpp \
+    ../../src/common/packets/packable.hpp \
+    ../../src/common/packets/new_user.hpp \
+    ../../src/common/utilities/endianness.hpp
 
 SOURCES += \
     ../../src/client/gui/viewport.cpp \
@@ -65,9 +70,12 @@ SOURCES += \
     ../../src/client/models/utilities/msl/src/shader_loader.cpp \
     ../../src/client/main.cpp \
     ../../src/client/models/server/server_interface.cpp \
-    ../../src/common/package_fragments/user_accepted.cpp \
-    ../../src/common/package_fragments/package_fragment.cpp \
-    ../../src/common/package_fragments/new_user.cpp \
-    ../../src/common/utilities/endianness.cpp \
     ../../src/client/gui/connection_wizard/connection_wizard.cpp \
-    ../../src/client/gui/connection_wizard/connect_server_page.cpp
+    ../../src/client/gui/connection_wizard/connect_server_page.cpp \
+    ../../src/client/gui/connection_wizard/create_server_page.cpp \
+    ../../src/client/gui/connection_wizard/intro_page.cpp \
+    ../../src/common/packets/user_accepted.cpp \
+    ../../src/common/packets/packet.cpp \
+    ../../src/common/packets/packable.cpp \
+    ../../src/common/packets/new_user.cpp \
+    ../../src/common/utilities/endianness.cpp

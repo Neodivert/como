@@ -17,8 +17,46 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "package_fragment.hpp"
+#ifndef NEW_USER_HPP
+#define NEW_USER_HPP
+
+#include "packet.hpp"
 
 namespace como {
 
+class NewUser : public Packet
+{  
+    public:
+        char name_[NAME_SIZE];
+
+    public:
+        /***
+         * 1. Initialization and destruction
+         ***/
+        NewUser();
+        NewUser( const char* name );
+
+
+        /***
+         * 2. Packing and unpacking
+         ***/
+        virtual void pack( char* buffer ) const ;
+        virtual void unpack( const char* buffer );
+
+
+        /***
+         * 3. Getters
+         ***/
+        virtual std::uint16_t getPacketSize() const ;
+        const char* getName() const ;
+
+
+        /***
+         * 4. Setters
+         ***/
+        void setName( const char* name );
+};
+
 } // namespace como
+
+#endif // NEW_USER_HPP

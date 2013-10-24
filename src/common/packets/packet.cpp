@@ -17,32 +17,59 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "connection_wizard.hpp"
-#include <QLabel>
-#include <QRadioButton>
-#include <QVBoxLayout>
-#include <QLineEdit>
-#include <QFormLayout>
-#include <QRegExpValidator>
-
-#include "page_ids.hpp"
-#include "intro_page.hpp"
-#include "connect_server_page.hpp"
-#include "create_server_page.hpp"
+#include "packet.hpp"
 
 namespace como {
+
 
 /***
  * 1. Initialization and destruction
  ***/
 
-ConnectionWizard::ConnectionWizard( std::shared_ptr< ServerInterface > serverInterface )
+Packet::Packet( PacketType type ) :
+    type_( type )
 {
-    setPage( PAGE_INTRO, new IntroPage );
-    setPage( PAGE_CONNECT_SERVER, new ConnectServerPage( serverInterface ) );
-    setPage( PAGE_CREATE_SERVER, new CreateServerPage( serverInterface ) );
-
-    setStartId( PAGE_INTRO );
 }
 
+
+/***
+ * 2. Packing and unpacking
+ ***/
+
+char* Packet::packHeader( char* buffer ) const
+{
+    // Place the package type at the beginning.
+    buffer[0] = static_cast< char >( type_ );
+
+    // Return a pointer to the body info.
+    return &( buffer[Packet::getPacketSize()] );
 }
+
+
+const char* Packet::unpackHeader( const char* buffer )
+{
+    // Unpack the package type.
+    type_ = static_cast< PacketType >( buffer[0] );
+
+    // Return a pointer to the body info.
+    return &( buffer[Packet::getPacketSize()] );
+}
+
+
+/***
+ * 3. Getters
+ ***/
+
+PacketType Packet::getType() const
+{
+    return type_;
+}
+
+
+std::uint16_t Packet::getPacketSize() const
+{
+    return sizeof( type_ );
+}
+
+} // namespace como
+

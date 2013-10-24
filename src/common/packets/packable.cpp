@@ -17,32 +17,8 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef NEW_USER_HPP
-#define NEW_USER_HPP
-
-#include "package_fragment.hpp"
+#include "packable.hpp"
 
 namespace como {
 
-class NewUser : public PackageFragment
-{  
-    public:
-        char name[NAME_SIZE];
-
-    public:
-        /***
-         * 1. Packing and unpacking
-         ***/
-        virtual void pack( char* code ) const;
-        virtual void unpack( const char* code );
-
-
-        /***
-         * 2. Getters
-         ***/
-        virtual std::uint16_t getCodeSize();
-};
-
 } // namespace como
-
-#endif // NEW_USER_HPP

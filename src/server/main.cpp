@@ -18,8 +18,7 @@
 ***/
 
 #include "server.hpp"
-#include "../common/package_fragments/package_fragment.hpp"
-#include "../common/package_fragments/user_accepted.hpp"
+#include "../common/packets/packets.hpp"
 #include <endian.h>
 
 int main( int argc, char* argv[] )

@@ -89,4 +89,14 @@ bool ConnectServerPage::validatePage()
     }
 }
 
+
+/***
+ * 3. Auxiliar methods
+ ***/
+
+int ConnectServerPage::nextId() const
+{
+    return -1;
+}
+
 } // namespace como

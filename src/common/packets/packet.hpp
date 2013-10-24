@@ -17,49 +17,53 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef CONNECT_SERVER_PAGE_HPP
-#define CONNECT_SERVER_PAGE_HPP
+#ifndef PACKAGE_HPP
+#define PACKAGE_HPP
 
-#include <QWizardPage>
-#include <QLabel>
-#include <QRadioButton>
-#include <QVBoxLayout>
-#include <QLineEdit>
-#include <QFormLayout>
-#include <QRegExpValidator>
-#include "../../models/server/server_interface.hpp"
+#include "packable.hpp"
+#include "../utilities/endianness.hpp"
+#include <stdexcept>
 
 namespace como {
 
-class ConnectServerPage : public QWizardPage
+enum class PacketType : std::int8_t
+{
+    NEW_USER = 0,
+    USER_ACCEPTED = 1,
+    SCENE_UPDATE = 2
+};
+
+class Packet : public Packable
 {
     private:
-        std::shared_ptr< ServerInterface > serverInterface_;
-        QLineEdit* ipInput_;
-        QLineEdit* portInput_;
-        QLineEdit* userNameInput_;
+        PacketType type_;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        ConnectServerPage( std::shared_ptr< ServerInterface > serverInterface );
+        Packet( PacketType type );
 
 
         /***
-         * 2. Validators
+         * 2. Packing and unpacking
          ***/
+        virtual void pack( char* buffer ) const = 0;
+        virtual void unpack( const char* buffer ) = 0;
     protected:
-        virtual bool validatePage();
+        char* packHeader( char* buffer ) const ;
+        const char* unpackHeader( const char* buffer );
+    public:
 
 
         /***
-         * 3. Auxiliar methods
+         * 3. Getters
          ***/
-    public:
-        virtual int nextId() const ;
+        PacketType getType() const ;
+        //static std::uint16_t getType( const char* buffer ) ;
+        virtual std::uint16_t getPacketSize() const ;
 };
 
 } // namespace como
 
-#endif // CONNECT_SERVER_PAGE_HPP
+#endif // PACKAGE_HPP

@@ -17,35 +17,10 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SERVER_INTERFACE_HPP
-#define SERVER_INTERFACE_HPP
+#ifndef PACKETS_HPP
+#define PACKETS_HPP
 
-#include "../../../common/packets/packets.hpp"
-#include <boost/asio.hpp>
+#include "new_user.hpp"
+#include "user_accepted.hpp"
 
-namespace como {
-
-class ServerInterface
-{
-    private:
-        boost::asio::io_service io_service_;
-        boost::asio::ip::tcp::socket socket_;
-
-    public:
-        /***
-         * 1. Initialization and destruction
-         ***/
-        ServerInterface();
-        ~ServerInterface();
-
-
-        /***
-         * 2. Connection and disconnection
-         ***/
-        void connect( const char* host, const char* port, const char* userName );
-        void disconnect();
-};
-
-} // namespace como
-
-#endif // SERVER_INTERFACE_HPP
+#endif // PACKETS_HPP

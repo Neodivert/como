@@ -17,33 +17,34 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef CONNECT_SERVER_PAGE_HPP
-#define CONNECT_SERVER_PAGE_HPP
+#ifndef CREATE_SERVER_PAGE_HPP
+#define CREATE_SERVER_PAGE_HPP
 
-#include <QWizardPage>
-#include <QLabel>
-#include <QRadioButton>
-#include <QVBoxLayout>
-#include <QLineEdit>
-#include <QFormLayout>
-#include <QRegExpValidator>
 #include "../../models/server/server_interface.hpp"
+#include <QWizardPage>
+#include <QLineEdit>
+#include <QLabel>
+#include <memory>
+
+const char SERVER_PATH[] = "../server/server";
 
 namespace como {
 
-class ConnectServerPage : public QWizardPage
+class CreateServerPage : public QWizardPage
 {
+    Q_OBJECT
+
     private:
         std::shared_ptr< ServerInterface > serverInterface_;
-        QLineEdit* ipInput_;
         QLineEdit* portInput_;
+        QLineEdit* maxUsersInput_;
         QLineEdit* userNameInput_;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        ConnectServerPage( std::shared_ptr< ServerInterface > serverInterface );
+        CreateServerPage( std::shared_ptr< ServerInterface > serverInterface );
 
 
         /***
@@ -57,9 +58,9 @@ class ConnectServerPage : public QWizardPage
          * 3. Auxiliar methods
          ***/
     public:
-        virtual int nextId() const ;
+        virtual int nextId() const;
 };
 
 } // namespace como
 
-#endif // CONNECT_SERVER_PAGE_HPP
+#endif // CREATE_SERVER_PAGE_HPP

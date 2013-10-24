@@ -17,34 +17,13 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef USER_ACCEPTED_HPP
-#define USER_ACCEPTED_HPP
-
-#include "package_fragment.hpp"
-#include <cstring>
+#ifndef PAGE_IDS_HPP
+#define PAGE_IDS_HPP
 
 namespace como {
 
-class UserAccepted : public PackageFragment
-{
-    public:
-        std::uint32_t id;
-        char name[NAME_SIZE];
-        std::uint8_t selectionColor[4]; // RGBA format.
-
-    public:
-        /***
-         * 1. Packing and unpacking
-         ***/
-        virtual void pack( char* code ) const;
-        virtual void unpack( const char* code );
-
-        /***
-         * 2. Getters
-         ***/
-        virtual std::uint16_t getCodeSize();
-};
+enum { PAGE_INTRO, PAGE_CONNECT_SERVER, PAGE_CREATE_SERVER };
 
 } // namespace como
 
-#endif // USER_ACCEPTED_HPP
+#endif // PAGE_IDS_HPP

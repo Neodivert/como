@@ -45,9 +45,10 @@ ServerInterface::~ServerInterface()
 void ServerInterface::connect( const char* host, const char* port, const char* userName )
 {
     boost::system::error_code errorCode;
-    como::NewUser newUserPackage;
-    como::UserAccepted userAcceptedPackage;
+    como::NewUser newUserPacket;
+    como::UserAccepted userAcceptedPacket;
     char buffer[128];
+    const std::uint8_t* selectionColor;
 
     // Create the TCP resolver and query needed for connecting to the server.
     boost::asio::ip::tcp::resolver resolver( io_service_ );
@@ -68,8 +69,8 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
 
     // Prepare a NEW_USER network package with the user name, and send it to
     // the server.
-    strcpy( newUserPackage.name, userName );
-    newUserPackage.pack( buffer );
+    newUserPacket.setName( userName );
+    newUserPacket.pack( buffer );
     boost::asio::write( socket_, boost::asio::buffer( buffer ), errorCode );
 
     if( errorCode ){
@@ -78,15 +79,16 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
 
     // Read from the server an USER_ACCEPTED network package and unpack it.
     boost::asio::read( socket_, boost::asio::buffer( buffer ), errorCode );
-    userAcceptedPackage.unpack( buffer );
+    userAcceptedPacket.unpack( buffer );
 
+    selectionColor = userAcceptedPacket.getSelectionColor();
     std::cout << "User accepted: " << std::endl
-              << "\tID: [" << userAcceptedPackage.id << "]" << std::endl
-              << "\tName: [" << userAcceptedPackage.name << "]" << std::endl
-              << "\tSelection color: [" << (int)userAcceptedPackage.selectionColor[0] << ", "
-              << (int)userAcceptedPackage.selectionColor[1] << ", "
-              << (int)userAcceptedPackage.selectionColor[2] << ", "
-              << (int)userAcceptedPackage.selectionColor[3] << ")" << std::endl << std::endl;
+              << "\tID: [" << userAcceptedPacket.getId() << "]" << std::endl
+              << "\tName: [" << userAcceptedPacket.getName() << "]" << std::endl
+              << "\tSelection color: [" << (int)selectionColor[0] << ", "
+              << (int)selectionColor[1] << ", "
+              << (int)selectionColor[2] << ", "
+              << (int)selectionColor[3] << ")" << std::endl << std::endl;
 
     if( errorCode ){
         throw std::runtime_error( std::string( "ERROR when receiving USER_ACCEPTED package from server (" ) + errorCode.message() + ")" );

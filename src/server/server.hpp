@@ -36,8 +36,7 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/lexical_cast.hpp>
 #include "session.hpp"
-#include "../common/package_fragments/new_user.hpp"
-#include "../common/package_fragments/user_accepted.hpp"
+#include "../common/packets/packets.hpp"
 
 using boost::asio::ip::tcp;
 

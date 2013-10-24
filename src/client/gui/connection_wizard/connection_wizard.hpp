@@ -24,6 +24,7 @@
 #include <QWizardPage>
 #include "../../models/server/server_interface.hpp"
 
+
 namespace como {
 
 class ConnectionWizard : public QWizard
@@ -31,15 +32,10 @@ class ConnectionWizard : public QWizard
     Q_OBJECT
 
     public:
-        enum { PAGE_INTRO, PAGE_CONNECT_SERVER /*Page_Intro, Page_Evaluate, Page_Register, Page_Details,
-                Page_Conclusion*/ };
-
         /***
          * 1. Initialization and destruction
          ***/
         ConnectionWizard( std::shared_ptr< ServerInterface > serverInterface );
-    private:
-        QWizardPage* createIntroPage() const ;
 };
 
 }

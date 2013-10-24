@@ -17,35 +17,31 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "new_user.hpp"
-#include <cstring>
+#ifndef PACKABLE_HPP
+#define PACKABLE_HPP
+
+#include "../utilities/endianness.hpp"
 
 namespace como {
 
-/***
- * 1. Packing and unpacking
- ***/
+const unsigned int NAME_SIZE = 64;
 
-void NewUser::pack( char* code ) const
+class Packable
 {
-    strncpy( code, name, NAME_SIZE );
-}
+    public:
+        /***
+         * 1. Packing and unpacking
+         ***/
+        virtual void pack( char* buffer ) const = 0;
+        virtual void unpack( const char* buffer ) = 0;
 
 
-void NewUser::unpack( const char* code )
-{
-    strncpy( name, code, NAME_SIZE );
-}
-
-
-/***
- * 2. Getters
- ***/
-
-std::uint16_t NewUser::getCodeSize()
-{
-    return NAME_SIZE * sizeof( char );
-}
-
+        /***
+         * 2. Getters
+         ***/
+        virtual std::uint16_t getPacketSize() const = 0;
+};
 
 } // namespace como
+
+#endif // PACKABLE_HPP

@@ -17,31 +17,38 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PACKAGE_FRAGMENT_HPP
-#define PACKAGE_FRAGMENT_HPP
+#ifndef INTRO_PAGE_HPP
+#define INTRO_PAGE_HPP
 
-#include "../utilities/endianness.hpp"
+#include <QLabel>
+#include <QRadioButton>
+#include <QVBoxLayout>
+#include <QLineEdit>
+#include <QFormLayout>
+#include <QRegExpValidator>
+#include "connect_server_page.hpp"
 
 namespace como {
 
-const unsigned int NAME_SIZE = 64;
-
-class PackageFragment
+class IntroPage : public QWizardPage
 {
+    private:
+        QRadioButton* createServerRadioButton_;
+        QRadioButton* connectToServerRadioButton_;
+
     public:
         /***
-         * 1. Packing and unpacking
+         * 1. Initialization and destruction
          ***/
-        virtual void pack( char* code ) const = 0;
-        virtual void unpack( const char* code ) = 0;
+        IntroPage();
 
 
         /***
-         * 2. Getters
+         * 2. Auxiliar methods
          ***/
-        virtual std::uint16_t getCodeSize() = 0;
+        virtual int nextId() const;
 };
 
 } // namespace como
 
-#endif // PACKAGE_FRAGMENT_HPP
+#endif // INTRO_PAGE_HPP
