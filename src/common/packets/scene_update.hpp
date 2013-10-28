@@ -17,32 +17,26 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PACKAGE_HPP
-#define PACKAGE_HPP
+#ifndef SCENE_UPDATE_HPP
+#define SCENE_UPDATE_HPP
 
-#include "packable.hpp"
-#include "../utilities/packer.hpp"
-#include <stdexcept>
+#include "packet.hpp"
 
 namespace como {
 
-enum class PacketType : std::int8_t
-{
-    NEW_USER = 0,
-    USER_ACCEPTED = 1,
-    SCENE_UPDATE = 2
-};
-
-class Packet : public Packable
+class SceneUpdate : public Packet
 {
     private:
-        PacketType type_;
+        std::uint32_t lastCommandSent_;
+        std::uint32_t lastCommandConfirmed_;
+        std::uint32_t nUnsyncCommands;
+        //std::vector< SceneCommand > sceneCommands;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        Packet( PacketType type );
+        SceneUpdate( PacketType type );
 
 
         /***
@@ -50,20 +44,15 @@ class Packet : public Packable
          ***/
         virtual void pack( char* buffer ) const = 0;
         virtual void unpack( const char* buffer ) = 0;
-    protected:
-        char* packHeader( char* buffer ) const ;
-        const char* unpackHeader( const char* buffer );
-    public:
 
 
         /***
          * 3. Getters
          ***/
-        PacketType getType() const ;
         //static std::uint16_t getType( const char* buffer ) ;
-        virtual std::uint16_t getPacketSize() const ;
+        //virtual std::uint16_t getPacketSize() const ;
 };
 
 } // namespace como
 
-#endif // PACKAGE_HPP
+#endif // SCENE_UPDATE_HPP

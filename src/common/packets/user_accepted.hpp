@@ -29,7 +29,7 @@ namespace como {
 class UserAccepted : public Packet
 {
     public:
-        std::uint32_t id_;
+        ID id_;
         char name_[NAME_SIZE];
         std::uint8_t selectionColor_[4]; // RGBA format.
 

@@ -65,30 +65,25 @@ void UserAccepted::setData( const std::uint32_t& id, const char* name, const std
 void UserAccepted::pack( char* buffer ) const
 {
     unsigned int i = 0;
-    std::uint8_t* colorPtr = nullptr;
 
     // Place the packet's header at the beginning of the buffer.
     buffer = packHeader( buffer );
 
     // Place the user's id into the buffer.
-    ( reinterpret_cast< std::uint32_t* >( buffer ) )[0] = translateToNetworkOrder( id_ );
+    packer::pack( id_, buffer );
 
     // Place the user's name after the id in the stream.
-    strncpy( &buffer[4], name_, NAME_SIZE );
+    packer::pack( name_, buffer, NAME_SIZE );
 
     // Place the user's selection color at the end.
-    colorPtr = reinterpret_cast< std::uint8_t* >( &buffer[4+NAME_SIZE] );
     for( ; i < 4; i++ ){
-        *colorPtr = selectionColor_[i];
-
-        colorPtr++;
+        packer::pack( selectionColor_[i], buffer );
     }
 }
 
 
 void UserAccepted::unpack( const char* buffer )
 {
-    const std::uint8_t* colorPtr = nullptr;
     unsigned int i = 0;
 
     // Unpack the packet's header.
@@ -100,17 +95,14 @@ void UserAccepted::unpack( const char* buffer )
     }
 
     // Get the user's id.
-    id_ = translateFromNetworkOrder( ( reinterpret_cast< const std::uint32_t* >( buffer ) )[0] );
+    packer::unpack( id_, buffer );
 
     // Get the user's name.
-    strncpy( name_, &buffer[4], NAME_SIZE );
+    packer::unpack( name_, buffer, NAME_SIZE );
 
     // Get the user's selection color.
-    colorPtr = reinterpret_cast< const std::uint8_t* >( &buffer[4+NAME_SIZE] );
     for( ; i<4; i++ ){
-        selectionColor_[i] = *colorPtr;
-
-        colorPtr++;
+        packer::unpack( selectionColor_[i], buffer );
     }
 }
 

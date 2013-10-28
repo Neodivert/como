@@ -17,26 +17,9 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef ENDIANNESS_HPP
-#define ENDIANNESS_HPP
+#ifndef SCENE_COMMANDS_HPP
+#define SCENE_COMMANDS_HPP
 
-#include <cstdint>
+#include "scene_command.hpp"
 
-namespace como {
-
-/***
- * 1. Uint16 translation
- ***/
-std::uint16_t translateToNetworkOrder( const std::uint16_t& value );
-std::uint16_t translateFromNetworkOrder( const std::uint16_t& value );
-
-
-/***
- * 2. Uint32 translation
- ***/
-std::uint32_t translateToNetworkOrder( const std::uint32_t& value );
-std::uint32_t translateFromNetworkOrder( const std::uint32_t& value );
-
-} // namespace como
-
-#endif // ENDIANNESS_HPP
+#endif // SCENE_COMMANDS_HPP

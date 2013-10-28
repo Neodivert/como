@@ -53,7 +53,7 @@ void NewUser::pack( char* buffer ) const
     bodyBuffer = packHeader( buffer );
 
     // Pack the user name into the buffer.
-    strncpy( bodyBuffer, name_, NAME_SIZE );
+    packer::pack( name_, bodyBuffer, NAME_SIZE );
 }
 
 
@@ -68,7 +68,7 @@ void NewUser::unpack( const char* buffer )
     }
 
     // Pack the user name into the buffer.
-    strncpy( name_, buffer, NAME_SIZE );
+    packer::unpack( name_, buffer, NAME_SIZE );
 }
 
 

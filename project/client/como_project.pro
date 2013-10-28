@@ -51,7 +51,7 @@ HEADERS += \
     ../../src/common/packets/packet.hpp \
     ../../src/common/packets/packable.hpp \
     ../../src/common/packets/new_user.hpp \
-    ../../src/common/utilities/endianness.hpp
+    ../../src/common/utilities/packer.hpp
 
 SOURCES += \
     ../../src/client/gui/viewport.cpp \
@@ -78,4 +78,4 @@ SOURCES += \
     ../../src/common/packets/packet.cpp \
     ../../src/common/packets/packable.cpp \
     ../../src/common/packets/new_user.cpp \
-    ../../src/common/utilities/endianness.cpp
+    ../../src/common/utilities/packer.cpp

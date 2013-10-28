@@ -17,17 +17,17 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "packet.hpp"
+#include "scene_command.hpp"
 
 namespace como {
-
 
 /***
  * 1. Initialization and destruction
  ***/
 
-Packet::Packet( PacketType type ) :
-    type_( type )
+SceneCommand::SceneCommand( SceneCommandType type, std::uint32_t userID ) :
+    type_( type ),
+    userID_( userID )
 {
 }
 
@@ -36,28 +36,17 @@ Packet::Packet( PacketType type ) :
  * 2. Packing and unpacking
  ***/
 
-char* Packet::packHeader( char* buffer ) const
-{
-    // Pack the packet's type.
-    packer::pack( static_cast< std::uint8_t >( type_ ), buffer );
 
-    // The previous packing call applies an offet to the buffer.
-    // Return the new pointer.
-    return buffer;
+char* SceneCommand::packHeader( char* buffer ) const
+{
+    //( reinterpret_cast< SceneCommandType >( buffer ) )[0] = type_;
+    //( reinterpret_cast< std::uint32_t >(buffer) )
 }
 
 
-const char* Packet::unpackHeader( const char* buffer )
+const char* SceneCommand::unpacHeader( const char* buffer )
 {
-    std::uint8_t type;
 
-    // Unpack the packet's type.
-    packer::unpack( type, buffer );
-    type_ = static_cast< PacketType >( type );
-
-    // The previous unpacking call applies an offet to the buffer.
-    // Return the new pointer.
-    return buffer;
 }
 
 
@@ -65,16 +54,9 @@ const char* Packet::unpackHeader( const char* buffer )
  * 3. Getters
  ***/
 
-PacketType Packet::getType() const
+std::uint16_t SceneCommand::getPacketSize() const
 {
-    return type_;
-}
-
-
-std::uint16_t Packet::getPacketSize() const
-{
-    return sizeof( type_ );
+    return sizeof( type_ ) + sizeof( userID_ );
 }
 
 } // namespace como
-

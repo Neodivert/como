@@ -17,32 +17,15 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PACKABLE_HPP
-#define PACKABLE_HPP
-
-#include "../utilities/packer.hpp"
+#include "scene_update.hpp"
 
 namespace como {
 
-const unsigned int NAME_SIZE = 64;
-typedef std::uint32_t ID;
-
-class Packable
-{
-    public:
-        /***
-         * 1. Packing and unpacking
-         ***/
-        virtual void pack( char* buffer ) const = 0;
-        virtual void unpack( const char* buffer ) = 0;
+/***
+ * 3. Getters
+ ***/
 
 
-        /***
-         * 2. Getters
-         ***/
-        virtual std::uint16_t getPacketSize() const = 0;
-};
+//static std::uint16_t getType( const char* buffer ) ;
 
 } // namespace como
-
-#endif // PACKABLE_HPP
