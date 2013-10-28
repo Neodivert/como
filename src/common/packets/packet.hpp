@@ -48,12 +48,8 @@ class Packet : public Packable
         /***
          * 2. Packing and unpacking
          ***/
-        virtual void pack( char* buffer ) const = 0;
-        virtual void unpack( const char* buffer ) = 0;
-    protected:
-        char* packHeader( char* buffer ) const ;
-        const char* unpackHeader( const char* buffer );
-    public:
+        virtual char* pack( char* buffer ) const ;
+        virtual const char* unpack( const char* buffer );
 
 
         /***

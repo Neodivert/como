@@ -42,8 +42,8 @@ class SceneUpdate : public Packet
         /***
          * 2. Packing and unpacking
          ***/
-        virtual void pack( char* buffer ) const = 0;
-        virtual void unpack( const char* buffer ) = 0;
+        virtual char* pack( char* buffer ) const = 0;
+        virtual const char* unpack( const char* buffer ) = 0;
 
 
         /***

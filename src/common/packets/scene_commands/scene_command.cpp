@@ -36,17 +36,28 @@ SceneCommand::SceneCommand( SceneCommandType type, std::uint32_t userID ) :
  * 2. Packing and unpacking
  ***/
 
-
-char* SceneCommand::packHeader( char* buffer ) const
+char* SceneCommand::pack( char* buffer ) const
 {
-    //( reinterpret_cast< SceneCommandType >( buffer ) )[0] = type_;
-    //( reinterpret_cast< std::uint32_t >(buffer) )
+    // Pack the SceneCommand's "header".
+    packer::pack( static_cast< std::uint8_t >( type_ ), buffer );
+    packer::pack( userID_, buffer );
+
+    // Return the updated buffer.
+    return buffer;
 }
 
 
-const char* SceneCommand::unpacHeader( const char* buffer )
+const char* SceneCommand::unpack( const char* buffer )
 {
+    std::uint8_t type;
 
+    // Pack the SceneCommand's "header".
+    packer::unpack( type, buffer );
+    type_ = static_cast< SceneCommandType >( type );
+    packer::unpack( userID_, buffer );
+
+    // Return the updated buffer.
+    return buffer;
 }
 
 

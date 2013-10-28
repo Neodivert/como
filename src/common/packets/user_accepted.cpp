@@ -59,15 +59,15 @@ void UserAccepted::setData( const std::uint32_t& id, const char* name, const std
 
 
 /***
- * 1. Packing and unpacking
+ * 2. Packing and unpacking
  ***/
 
-void UserAccepted::pack( char* buffer ) const
+char* UserAccepted::pack( char* buffer ) const
 {
     unsigned int i = 0;
 
     // Place the packet's header at the beginning of the buffer.
-    buffer = packHeader( buffer );
+    buffer = Packet::pack( buffer );
 
     // Place the user's id into the buffer.
     packer::pack( id_, buffer );
@@ -79,15 +79,18 @@ void UserAccepted::pack( char* buffer ) const
     for( ; i < 4; i++ ){
         packer::pack( selectionColor_[i], buffer );
     }
+
+    // Return the updated buffer pointer.
+    return buffer;
 }
 
 
-void UserAccepted::unpack( const char* buffer )
+const char* UserAccepted::unpack( const char* buffer )
 {
     unsigned int i = 0;
 
     // Unpack the packet's header.
-    buffer = unpackHeader( buffer );
+    buffer = Packet::unpack( buffer );
 
     // Check if the packet's type is the expected one.
     if( getType() != PacketType::USER_ACCEPTED ){
@@ -104,11 +107,14 @@ void UserAccepted::unpack( const char* buffer )
     for( ; i<4; i++ ){
         packer::unpack( selectionColor_[i], buffer );
     }
+
+    // Return the updated buffer pointer.
+    return buffer;
 }
 
 
 /***
- * 2. Getters
+ * 3. Getters
  ***/
 
 std::uint16_t UserAccepted::getPacketSize() const

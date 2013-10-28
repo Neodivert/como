@@ -45,8 +45,8 @@ class UserAccepted : public Packet
         /***
          * 2. Packing and unpacking
          ***/
-        virtual void pack( char* buffer ) const ;
-        virtual void unpack( const char* buffer );
+        virtual char* pack( char* buffer ) const ;
+        virtual const char* unpack( const char* buffer );
 
 
         /***

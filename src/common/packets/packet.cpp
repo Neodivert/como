@@ -36,18 +36,17 @@ Packet::Packet( PacketType type ) :
  * 2. Packing and unpacking
  ***/
 
-char* Packet::packHeader( char* buffer ) const
+char* Packet::pack( char* buffer ) const
 {
     // Pack the packet's type.
     packer::pack( static_cast< std::uint8_t >( type_ ), buffer );
 
-    // The previous packing call applies an offet to the buffer.
-    // Return the new pointer.
+    // Return the updated pointer (the packing updates it).
     return buffer;
 }
 
 
-const char* Packet::unpackHeader( const char* buffer )
+const char* Packet::unpack( const char* buffer )
 {
     std::uint8_t type;
 
@@ -55,8 +54,7 @@ const char* Packet::unpackHeader( const char* buffer )
     packer::unpack( type, buffer );
     type_ = static_cast< PacketType >( type );
 
-    // The previous unpacking call applies an offet to the buffer.
-    // Return the new pointer.
+    // Return the updated pointer (the unpacking updates it).
     return buffer;
 }
 

@@ -45,22 +45,23 @@ NewUser::NewUser( const char* name ) :
  * 2. Packing and unpacking
  ***/
 
-void NewUser::pack( char* buffer ) const
+char* NewUser::pack( char* buffer ) const
 {
-    char* bodyBuffer = nullptr;
-
     // Pack the header into the buffer.
-    bodyBuffer = packHeader( buffer );
+    buffer = Packet::pack( buffer );
 
     // Pack the user name into the buffer.
-    packer::pack( name_, bodyBuffer, NAME_SIZE );
+    packer::pack( name_, buffer, NAME_SIZE );
+
+    // Return the updated buffer pointer.
+    return buffer;
 }
 
 
-void NewUser::unpack( const char* buffer )
+const char* NewUser::unpack( const char* buffer )
 {
     // Pack the header into the buffer.
-    buffer = unpackHeader( buffer );
+    buffer = Packet::unpack( buffer );
 
     // Check if the packet being unpacked is one of NewUser type.
     if( getType() != PacketType::NEW_USER ){
@@ -69,6 +70,9 @@ void NewUser::unpack( const char* buffer )
 
     // Pack the user name into the buffer.
     packer::unpack( name_, buffer, NAME_SIZE );
+
+    // Return the updated buffer pointer.
+    return buffer;
 }
 
 

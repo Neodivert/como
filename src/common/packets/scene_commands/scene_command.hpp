@@ -46,12 +46,8 @@ class SceneCommand : public Packable
         /***
          * 2. Packing and unpacking
          ***/
-        virtual void pack( char* buffer ) const = 0;
-        virtual void unpack( const char* buffer ) = 0;
-    private:
-        char* packHeader( char* buffer ) const ;
-        const char* unpacHeader( const char* buffer );
-    public:
+        virtual char* pack( char* buffer ) const = 0;
+        virtual const char* unpack( const char* buffer ) = 0;
 
 
         /***
