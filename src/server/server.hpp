@@ -35,7 +35,7 @@
 #include <boost/bind.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/lexical_cast.hpp>
-#include "session.hpp"
+#include "public_user.hpp"
 #include "../common/packets/packets.hpp"
 
 using boost::asio::ip::tcp;
@@ -55,7 +55,7 @@ class Server
         boost::asio::io_service::work work_;
 
         // Sessions vector.
-        std::vector< SessionPtr > sessions_;
+        std::vector< PublicUserPtr > users_;
 
         // Number of worker threads in the server.
         const unsigned int N_THREADS;
@@ -81,6 +81,10 @@ class Server
         // Server's port.
         unsigned int port_;
 
+        // Historic of commands performed on the scene.
+        CommandsList commandsHistoric_;
+
+
     public:
         /***
          * 1. Initialization and destruction
@@ -89,7 +93,13 @@ class Server
 
 
         /***
-         * 2. Main loop
+         * 2. Getters
+         ***/
+        const CommandsList* getCommandsHistoric() const ;
+
+
+        /***
+         * 3. Main loop
          ***/
         void run();
 
@@ -107,9 +117,17 @@ class Server
 
 
         /***
-         * 5. Auxiliar methods
+         * 5. Commands historic management.
          ***/
-        void deleteSession( unsigned int id );
+        void addCommand( SceneCommandConstPtr sceneCommand );
+        //SceneUpdate getNextSceneUpdate( const CommandsList::const_iterator& firstCommand,
+        //                                const unsigned int nCommands );
+
+
+        /***
+         * 6. Auxiliar methods
+         ***/
+        void deleteUser( unsigned int id );
     private:
         std::string getCurrentDayTime() const ;
         void workerThread();

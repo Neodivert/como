@@ -93,17 +93,50 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
     if( errorCode ){
         throw std::runtime_error( std::string( "ERROR when receiving USER_ACCEPTED package from server (" ) + errorCode.message() + ")" );
     }
+
+    listenerThread = new std::thread( std::bind( &ServerInterface::listen, this ) );
 }
 
 
 void ServerInterface::disconnect()
 {
+    delete listenerThread;
+
     // Close the socket to the server if it's open.
     if( socket_.is_open() ){
         std::cout << "Closing socket to server" << std::endl;
         socket_.close();
     }
     std::cout << "Disconnected from server" << std::endl;
+}
+
+
+void ServerInterface::listen()
+{
+    char buffer[256];
+    SceneUpdate p;
+    const UserConnected* userConnectedCommand;
+    boost::system::error_code errorCode;
+
+
+    std::cout << "Listening" << std::endl;
+
+    boost::asio::read( socket_, boost::asio::buffer( buffer, 82 ), errorCode );
+
+    p.unpack( buffer );
+
+    if( errorCode ){
+        std::cout << "ERROR when listening (" << errorCode.message() << std::endl;
+    }else{
+        std::cout << "Listened 82 bytes" << std::endl;
+        std::cout << "commands: " << p.getCommands() << std::endl
+                  << "nCommands: " << p.getCommands()->size() << std::endl;
+
+        userConnectedCommand = dynamic_cast< const UserConnected* >( ( (*( p.getCommands() ) )[0] ).get() );
+
+        std::cout << "First command of type USER_CONNECTED: " << userConnectedCommand << std::endl;
+        std::cout << "User connected: [" << userConnectedCommand->getName() << "]" << std::endl;
+    }
 }
 
 } // namespace como

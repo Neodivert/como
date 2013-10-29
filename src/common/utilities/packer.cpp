@@ -95,6 +95,8 @@ void unpack( std::uint32_t& value, const char*& buffer )
 void unpack( char* str, const char*& buffer, const unsigned int n )
 {
     memcpy( str, buffer, n );
+
+    buffer += n;
 }
 
 

@@ -17,31 +17,26 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SCENE_COMMAND_HPP
-#define SCENE_COMMAND_HPP
+#ifndef USER_CONNECTED_HPP
+#define USER_CONNECTED_HPP
 
-#include "../packable.hpp"
-#include <memory>
+#include "scene_command.hpp"
+#include "../user_accepted.hpp"
 
 namespace como {
 
-enum class SceneCommandType : std::uint8_t
-{
-    USER_CONNECTED = 0
-};
-
-
-class SceneCommand : public Packable
+class UserConnected : public SceneCommand
 {
     private:
-        SceneCommandType type_;
-        ID userID_;
+        char name_[NAME_SIZE];
+        std::uint8_t selectionColor_[4];
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        SceneCommand( SceneCommandType type );
+        UserConnected();
+        UserConnected( const UserAccepted& userAcceptedPacket );
 
 
         /***
@@ -55,20 +50,17 @@ class SceneCommand : public Packable
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const ;
-        SceneCommandType getType() const ;
-        static SceneCommandType getType( const char* buffer );
-        ID getUserID() const ;
+        const char* getName() const ;
+        const std::uint8_t* getSelectionColor() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setUserID( const ID& userID );
+        void setName( const char* name );
+        void setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a );
 };
-
-typedef std::shared_ptr< SceneCommand > SceneCommandPtr;
-typedef std::shared_ptr< const SceneCommand > SceneCommandConstPtr;
 
 } // namespace como
 
-#endif // SCENE_COMMAND_HPP
+#endif // USER_CONNECTED_HPP

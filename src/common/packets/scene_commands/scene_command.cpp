@@ -25,9 +25,9 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-SceneCommand::SceneCommand( SceneCommandType type, std::uint32_t userID ) :
+SceneCommand::SceneCommand( SceneCommandType type ) :
     type_( type ),
-    userID_( userID )
+    userID_( 0 )
 {
 }
 
@@ -68,6 +68,34 @@ const char* SceneCommand::unpack( const char* buffer )
 std::uint16_t SceneCommand::getPacketSize() const
 {
     return sizeof( type_ ) + sizeof( userID_ );
+}
+
+
+SceneCommandType SceneCommand::getType() const
+{
+    return type_;
+}
+
+
+SceneCommandType SceneCommand::getType( const char* buffer )
+{
+    return *( reinterpret_cast< const SceneCommandType* >( buffer ) );
+}
+
+
+ID SceneCommand::getUserID() const
+{
+    return userID_;
+}
+
+
+/***
+ * 4. Setters
+ ***/
+
+void SceneCommand::setUserID( const ID& userID )
+{
+    userID_ = userID;
 }
 
 } // namespace como

@@ -17,23 +17,27 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SESSION_HPP
-#define SESSION_HPP
+#ifndef PUBLIC_USER_HPP
+#define PUBLIC_USER_HPP
 
 #include <memory>
 #include <boost/asio.hpp>
 #include <iostream>
 #include <boost/bind.hpp>
 #include <functional>
+#include "../common/packets/packets.hpp"
+#include <list>
 
 namespace como {
+
+const unsigned int MAX_COMMANDS_PER_PACKET = 4;
 
 const unsigned int BUFFER_SIZE = 1024;
 
 typedef boost::asio::ip::tcp::socket Socket;
 typedef std::shared_ptr< Socket > SocketPtr;
 
-class Session : public std::enable_shared_from_this<Session>
+class PublicUser : public std::enable_shared_from_this<PublicUser>
 {
     private:
         unsigned int id_;
@@ -42,14 +46,19 @@ class Session : public std::enable_shared_from_this<Session>
         char name_[64];
         char buffer_[BUFFER_SIZE];
 
+        char outBuffer_[BUFFER_SIZE];
+
         std::function<void (unsigned int)> removeUserCallback_;
+
+        std::uint8_t nextCommand_;
+        std::uint8_t nCommandsInLastPacket_;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        Session( unsigned int id, const char* name, Socket socket, std::function<void (unsigned int)> removeUserCallback );
-        ~Session();
+        PublicUser( unsigned int id, const char* name, Socket socket, std::function<void (unsigned int)> removeUserCallback );
+        ~PublicUser();
 
 
         /***
@@ -60,15 +69,28 @@ class Session : public std::enable_shared_from_this<Session>
 
 
         /***
-         * 3. Socket reading
+         * 3. Setters
+         ***/
+
+
+        /***
+         * 4. Socket reading
          ***/
         void read();
         void onRead( const boost::system::error_code& errorCode, std::size_t length );
+
+
+        /***
+         * 5. Socket writing
+         ***/
+        bool needsSceneUpdate( const CommandsList* commandsHistoric ) const ;
+        void sendNextSceneUpdate( const CommandsList* commandsHistoric );
+        void onWrite( const boost::system::error_code& errorCode, std::size_t length );
 };
 
 
-typedef std::shared_ptr< Session > SessionPtr;
+typedef std::shared_ptr< PublicUser > PublicUserPtr;
 
 } // namespace como
 
-#endif // SESSION_HPP
+#endif // PUBLIC_USER_HPP

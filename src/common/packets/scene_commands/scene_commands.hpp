@@ -21,5 +21,6 @@
 #define SCENE_COMMANDS_HPP
 
 #include "scene_command.hpp"
+#include "user_connected.hpp"
 
 #endif // SCENE_COMMANDS_HPP

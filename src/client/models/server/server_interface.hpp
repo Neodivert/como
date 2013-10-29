@@ -22,6 +22,7 @@
 
 #include "../../../common/packets/packets.hpp"
 #include <boost/asio.hpp>
+#include <thread>
 
 namespace como {
 
@@ -30,6 +31,8 @@ class ServerInterface
     private:
         boost::asio::io_service io_service_;
         boost::asio::ip::tcp::socket socket_;
+
+        std::thread* listenerThread;
 
     public:
         /***
@@ -44,6 +47,9 @@ class ServerInterface
          ***/
         void connect( const char* host, const char* port, const char* userName );
         void disconnect();
+
+    private:
+        void listen();
 };
 
 } // namespace como

@@ -21,36 +21,50 @@
 #define SCENE_UPDATE_HPP
 
 #include "packet.hpp"
+#include "scene_commands/scene_commands.hpp"
+#include <vector>
+#include <list>
 
 namespace como {
+
+typedef std::list< SceneCommandConstPtr > CommandsList;
 
 class SceneUpdate : public Packet
 {
     private:
         std::uint32_t lastCommandSent_;
-        std::uint32_t lastCommandConfirmed_;
-        std::uint32_t nUnsyncCommands;
-        //std::vector< SceneCommand > sceneCommands;
+        std::uint32_t nUnsyncCommands_;
+        std::vector< SceneCommandConstPtr > commands_;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        SceneUpdate( PacketType type );
+        SceneUpdate();
 
 
         /***
          * 2. Packing and unpacking
          ***/
-        virtual char* pack( char* buffer ) const = 0;
-        virtual const char* unpack( const char* buffer ) = 0;
+        virtual char* pack( char* buffer ) const ;
+        virtual const char* unpack( const char* buffer );
 
 
         /***
          * 3. Getters
          ***/
-        //static std::uint16_t getType( const char* buffer ) ;
-        //virtual std::uint16_t getPacketSize() const ;
+        virtual std::uint16_t getPacketSize() const ;
+        std::uint32_t getLasCommandSent() const ;
+        std::uint32_t getUnsyncCommands() const ;
+        const std::vector< SceneCommandConstPtr >* getCommands();
+
+
+        /***
+         * 4. Setters
+         ***/
+        void addCommands( const CommandsList* commandsHistoric,
+                          const std::uint32_t& firstCommand,
+                          const std::uint8_t& maxCommands );
 };
 
 } // namespace como

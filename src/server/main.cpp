@@ -25,11 +25,37 @@ int main( int argc, char* argv[] )
 {
     try {
         /*
+        unsigned int i = 0;
+        como::UserConnected p1, p2;
+
+        char buffer[256];
+        const std::uint8_t* selectionColor;
+
+        p1.setUserID( 5 );
+        p1.setName( "Neodivert" );
+        p1.setSelectionColor( 255, 150, 123, 35 );
+        p1.pack( buffer );
+
+        p2.unpack( buffer );
+        std::cout << "P2" << std::endl
+                  << "--------------------------" << std::endl
+                  << "ID: " << p2.getUserID() << std::endl
+                  << "Name: " << p2.getName() << std::endl
+                  << "SelectionColor: ";
+        selectionColor = p2.getSelectionColor();
+        for( ; i<4; i++ ){
+            std::cout << (unsigned int)selectionColor[i] << ", ";
+        }
+        std::cout << "--------------------------" << std::endl;
+
+
         std::uint32_t value = 0x01000000;
 
         std::cout << "LITTLE_ENDIAN: " << value << std::endl
-                  << "BIG_ENDIAN: " << como::translateToNetworkOrder( value ) << std::endl;
-        char buffer[256];
+                  << "BIG_ENDIAN: " << como::packer::translateToNetworkOrder( value ) << std::endl;
+        //char buffer[256];
+        */
+        /*
 
         como::UserAccepted p;
         p.id = 32;

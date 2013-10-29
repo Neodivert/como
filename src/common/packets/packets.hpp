@@ -22,5 +22,7 @@
 
 #include "new_user.hpp"
 #include "user_accepted.hpp"
+#include "scene_update.hpp"
+#include "scene_commands/scene_commands.hpp"
 
 #endif // PACKETS_HPP

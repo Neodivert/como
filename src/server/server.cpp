@@ -1,4 +1,4 @@
-﻿/***
+/***
  * Copyright 2013 Moises J. Bonilla Caraballo (Neodivert)
  *
  * This file is part of COMO.
@@ -41,7 +41,18 @@ Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThre
 
 
 /***
- * 2. Main loop
+ * 2. Getters
+ ***/
+
+
+const CommandsList* Server::getCommandsHistoric() const
+{
+    return &commandsHistoric_;
+}
+
+
+/***
+ * 4. Main loop
  ***/
 
 void Server::run()
@@ -92,7 +103,7 @@ void Server::run()
 
 
 /***
- * 3. Listeners
+ * 5. Listeners
  ***/
 
 void Server::listen()
@@ -107,7 +118,7 @@ void Server::listen()
 
 
 /***
- * 4. Handlers
+ * 6. Handlers
  ***/
 
 void Server::onAccept( const boost::system::error_code& errorCode )
@@ -159,17 +170,25 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         userAcceptedPacket.pack( buffer );
         boost::asio::write( newSocket_, boost::asio::buffer( buffer ), readingErrorCode );
 
-        // Add the new user to the sessions vector.
-        sessions_.push_back( std::make_shared<Session>( newId_, userAcceptedPacket.getName(), std::move( newSocket_ ), std::bind( &Server::deleteSession, this, std::placeholders::_1 ) ) );
+        // Add the new user to the user vector.
+        users_.push_back( std::make_shared<PublicUser>( newId_, userAcceptedPacket.getName(), std::move( newSocket_ ), std::bind( &Server::deleteUser, this, std::placeholders::_1 ) ) );
+
+        // Add an USER_CONNECTED scene command to the server historic.
+        addCommand( SceneCommandConstPtr( new UserConnected( userAcceptedPacket ) ) );
+
+        // FIXME: Remove in future versions.
+        for( unsigned int i=0; i<users_.size(); i++ ){
+            users_[i]->sendNextSceneUpdate( getCommandsHistoric() );
+        }
 
         // Increment the "new id" for the next user.
         newId_++;
 
         coutMutex_.lock();
-        std::cout << "New sessions: (" << sessions_.back()->getId() << ") - total sessions: " << sessions_.size() << std::endl;
+        std::cout << "New sessions: (" << users_.back()->getId() << ") - total sessions: " << users_.size() << std::endl;
         coutMutex_.unlock();
 
-        if( sessions_.size() < MAX_SESSIONS ){
+        if( users_.size() < MAX_SESSIONS ){
             // There is room for more users, wait for a new connection.
             listen();
         }else{
@@ -187,25 +206,35 @@ void Server::onAccept( const boost::system::error_code& errorCode )
 
 
 /***
- * 5. Auxiliar methods
+ * 7. Commands historic management.
  ***/
 
-void Server::deleteSession( unsigned int id )
+void Server::addCommand( SceneCommandConstPtr sceneCommand )
+{
+    commandsHistoric_.push_back( sceneCommand );
+}
+
+
+/***
+ * 8. Auxiliar methods
+ ***/
+
+void Server::deleteUser( unsigned int id )
 {
     unsigned int i = 0;
-    std::cout << "Server::deleteSession(" << id << ")" << std::endl;
+    std::cout << "Server::deleteUser(" << id << ")" << std::endl;
 
-    while( ( i < sessions_.size() ) &&
-           ( id != sessions_[i]->getId() ) ){
+    while( ( i < users_.size() ) &&
+           ( id != users_[i]->getId() ) ){
         i++;
     }
 
-    if( i < sessions_.size() ){
+    if( i < users_.size() ){
         std::cout << "Erasing (id: " << id << ") - (id: " << id << ")" << std::endl;
-        sessions_.erase( sessions_.begin() + i );
+        users_.erase( users_.begin() + i );
     }
 
-    if( sessions_.size() == (MAX_SESSIONS - 1) ){
+    if( users_.size() == (MAX_SESSIONS - 1) ){
         // If the server was full before this user got out, that means the acceptor wasn't
         // listening for new connections. Start listening now that there is room again.
 
@@ -285,8 +314,8 @@ bool Server::nameInUse( const char* newName ) const
 {
     unsigned int i = 0;
 
-    for( ; i<sessions_.size(); i++ ){
-        if( !strcmp( newName, sessions_[i]->getName() ) ){
+    for( ; i<users_.size(); i++ ){
+        if( !strcmp( newName, users_[i]->getName() ) ){
             return true;
         }
     }
