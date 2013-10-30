@@ -23,6 +23,7 @@
 #include "packable.hpp"
 #include "../utilities/packer.hpp"
 #include <stdexcept>
+#include <boost/asio.hpp>
 
 namespace como {
 
@@ -37,6 +38,8 @@ class Packet : public Packable
 {
     private:
         PacketType type_;
+    protected:
+        std::uint16_t bodySize_;
 
     public:
         /***
@@ -46,17 +49,30 @@ class Packet : public Packable
 
 
         /***
+         * 2. Socket communication
+         ***/
+        void send( boost::asio::ip::tcp::socket& socket );
+        void recv( boost::asio::ip::tcp::socket& socket );
+
+
+        /***
          * 2. Packing and unpacking
          ***/
-        virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer );
+        char* pack( char* buffer ) const ;
+        const char* unpack( const char* buffer );
+        char* packHeader( char* buffer ) const ;
+        const char* unpackHeader( const char* buffer );
+        virtual char* packBody( char* buffer ) const = 0;
+        virtual const char* unpackBody( const char* buffer ) = 0;
 
 
         /***
          * 3. Getters
          ***/
         PacketType getType() const ;
-        //static std::uint16_t getType( const char* buffer ) ;
+        std::uint16_t getBodySize() const ;
+        virtual bool expectedType() const = 0;
+        static std::uint8_t getHeaderSize();
         virtual std::uint16_t getPacketSize() const ;
 };
 

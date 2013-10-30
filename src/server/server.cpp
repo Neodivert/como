@@ -124,7 +124,6 @@ void Server::listen()
 void Server::onAccept( const boost::system::error_code& errorCode )
 {
     boost::system::error_code closingErrorCode;
-    boost::system::error_code readingErrorCode;
 
     como::NewUser newUserPacket;
     como::UserAccepted userAcceptedPacket;
@@ -136,13 +135,9 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         coutMutex_.unlock();
     }else{
         // Connection established. Wait synchronously for a NEW_USER package.
-        boost::asio::read( newSocket_, boost::asio::buffer( buffer ), readingErrorCode );
+        newUserPacket.recv( newSocket_ );
 
-        // Unpack the received NEW_USER package and prompt the new user's name.
-        newUserPacket.unpack( buffer );
         coutMutex_.lock();
-        std::cout << "Package received [type: " << (int)( newUserPacket.getType() ) << "]" << std::endl
-                  << "\tName: " << newUserPacket.getName() << std::endl;
 
         std::cout << "[" << newUserPacket.getName() << "] (" << boost::this_thread::get_id() << "): Connected!" << std::endl;
         coutMutex_.unlock();
@@ -167,8 +162,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         userAcceptedPacket.setSelectionColor( 255, 0, 0, 255 );
 
         // Pack the network package and send it synchronously to the client.
-        userAcceptedPacket.pack( buffer );
-        boost::asio::write( newSocket_, boost::asio::buffer( buffer ), readingErrorCode );
+        userAcceptedPacket.send( newSocket_ );
 
         // Add the new user to the user vector.
         users_.push_back( std::make_shared<PublicUser>( newId_, userAcceptedPacket.getName(), std::move( newSocket_ ), std::bind( &Server::deleteUser, this, std::placeholders::_1 ) ) );

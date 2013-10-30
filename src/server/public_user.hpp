@@ -76,8 +76,6 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
         /***
          * 4. Socket reading
          ***/
-        void read();
-        void onRead( const boost::system::error_code& errorCode, std::size_t length );
 
 
         /***
@@ -85,7 +83,6 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
          ***/
         bool needsSceneUpdate( const CommandsList* commandsHistoric ) const ;
         void sendNextSceneUpdate( const CommandsList* commandsHistoric );
-        void onWrite( const boost::system::error_code& errorCode, std::size_t length );
 };
 
 

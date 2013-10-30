@@ -31,6 +31,10 @@ SceneUpdate::SceneUpdate() :
     lastCommandSent_( 0 ),
     nUnsyncCommands_( 0 )
 {
+    bodySize_ =
+            sizeof( lastCommandSent_ ) +
+            sizeof( nUnsyncCommands_ ) +
+            sizeof( std::uint8_t ); // The number of commands in the packet is encoded as a uint8.
 }
 
 
@@ -38,12 +42,9 @@ SceneUpdate::SceneUpdate() :
  * 2. Packing and unpacking
  ***/
 
-char* SceneUpdate::pack( char* buffer ) const
+char* SceneUpdate::packBody( char* buffer ) const
 {
     unsigned int i = 0;
-
-    // Pack the packet's header.
-    buffer = Packet::pack( buffer );
 
     // Pack the packet's body.
     packer::pack( lastCommandSent_, buffer );
@@ -58,14 +59,11 @@ char* SceneUpdate::pack( char* buffer ) const
 }
 
 
-const char* SceneUpdate::unpack( const char* buffer )
+const char* SceneUpdate::unpackBody( const char* buffer )
 {
     unsigned int i = 0;
     std::uint8_t nCommands = 0;
     SceneCommandPtr sceneCommandPtr;
-
-    // Unpack the packet's header.
-    buffer = Packet::unpack( buffer );
 
     // Pack the packet's body.
     packer::unpack( lastCommandSent_, buffer );
@@ -80,7 +78,6 @@ const char* SceneUpdate::unpack( const char* buffer )
                 sceneCommandPtr =  SceneCommandPtr( new UserConnected );
             break;
         }
-        std::cout << "Unpacking command" << std::endl << std::endl << std::endl;
         sceneCommandPtr->unpack( buffer );
         commands_.push_back( sceneCommandPtr );
     }
@@ -130,6 +127,12 @@ const std::vector< SceneCommandConstPtr >* SceneUpdate::getCommands()
 }
 
 
+bool SceneUpdate::expectedType() const
+{
+    return ( Packet::getType() == PacketType::SCENE_UPDATE );
+}
+
+
 /***
  * 4. Setters
  ***/
@@ -151,6 +154,7 @@ void SceneUpdate::addCommands(
 
     while( ( i < maxCommands ) && ( it != commandsHistoric->end() ) ){
         commands_.push_back( *it );
+        bodySize_ += (*it)->getPacketSize();
 
         it++;
         i++;
@@ -159,6 +163,16 @@ void SceneUpdate::addCommands(
     // Update the SCENE_UPDATE packet's header.
     lastCommandSent_ = firstCommand + maxCommands - 1;
     nUnsyncCommands_ = commandsHistoric->size() - (lastCommandSent_ + 1);
+}
+
+
+void SceneUpdate::clear()
+{
+    commands_.clear();
+    bodySize_ =
+            sizeof( lastCommandSent_ ) +
+            sizeof( nUnsyncCommands_ ) +
+            sizeof( std::uint8_t ); // The number of commands in the packet is encoded as a uint8.
 }
 
 } // namespace como

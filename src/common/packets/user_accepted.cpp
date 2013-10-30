@@ -29,6 +29,8 @@ UserAccepted::UserAccepted() :
     Packet( PacketType::USER_ACCEPTED ),
     id_( 0 )
 {
+    bodySize_ = sizeof( id_ ) + NAME_SIZE + 4;
+
     unsigned int i = 0;
 
     strcpy( name_, "Unnamed" );
@@ -42,6 +44,8 @@ UserAccepted::UserAccepted() :
 UserAccepted::UserAccepted( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor ) :
     Packet( PacketType::USER_ACCEPTED )
 {
+    bodySize_ = sizeof( id_ ) + NAME_SIZE + 4;
+
     setData( id, name, selectionColor );
 }
 
@@ -62,12 +66,9 @@ void UserAccepted::setData( const std::uint32_t& id, const char* name, const std
  * 2. Packing and unpacking
  ***/
 
-char* UserAccepted::pack( char* buffer ) const
+char* UserAccepted::packBody( char* buffer ) const
 {
     unsigned int i = 0;
-
-    // Place the packet's header at the beginning of the buffer.
-    buffer = Packet::pack( buffer );
 
     // Place the user's id into the buffer.
     packer::pack( id_, buffer );
@@ -85,17 +86,9 @@ char* UserAccepted::pack( char* buffer ) const
 }
 
 
-const char* UserAccepted::unpack( const char* buffer )
+const char* UserAccepted::unpackBody( const char* buffer )
 {
     unsigned int i = 0;
-
-    // Unpack the packet's header.
-    buffer = Packet::unpack( buffer );
-
-    // Check if the packet's type is the expected one.
-    if( getType() != PacketType::USER_ACCEPTED ){
-        throw std::runtime_error( std::string( "Unexpected packet" ) );
-    }
 
     // Get the user's id.
     packer::unpack( id_, buffer );
@@ -117,12 +110,6 @@ const char* UserAccepted::unpack( const char* buffer )
  * 3. Getters
  ***/
 
-std::uint16_t UserAccepted::getPacketSize() const
-{
-    return Packet::getPacketSize() + sizeof( id_ ) + sizeof( char ) * NAME_SIZE + sizeof( uint8_t ) * 4;
-}
-
-
 std::uint32_t UserAccepted::getId() const
 {
     return id_;
@@ -138,6 +125,12 @@ const char* UserAccepted::getName() const
 const std::uint8_t* UserAccepted::getSelectionColor() const
 {
     return selectionColor_;
+}
+
+
+bool UserAccepted::expectedType() const
+{
+    return ( Packet::getType() == PacketType::USER_ACCEPTED );
 }
 
 

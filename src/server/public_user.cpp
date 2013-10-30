@@ -34,7 +34,6 @@ PublicUser::PublicUser( unsigned int id, const char* name, Socket socket, std::f
 {
     strncpy( name_, name, 64 );
     std::cout << "Session created (id: " << id_ << ")" << std::endl;
-    read();
 }
 
 
@@ -73,37 +72,9 @@ const char* PublicUser::getName()
  ***/
 
 
-void PublicUser::read()
-{
-    socket_.async_read_some( boost::asio::buffer( buffer_, BUFFER_SIZE ), boost::bind( &PublicUser::onRead, this, _1, _2 ) );
-}
-
-
-void PublicUser::onRead( const boost::system::error_code& errorCode, std::size_t length )
-{
-    if( errorCode ){
-        if( errorCode == boost::asio::error::eof ){
-            std::cout << "User disconnected" << std::endl;
-        }else{
-            std::cout << "onRead - ERROR: " << errorCode.message() << std::endl;
-        }
-        removeUserCallback_( id_ );
-    }else{
-        std::cout << "Client " << id_ << " : ";
-        std::cout.write( buffer_, length );
-
-        read();
-    }
-}
-
-
 /***
  * 5. Socket writing
  ***/
-/*
-boost::asio::async_read(socket_,
-        boost::asio::buffer(read_msg_.data(), chat_message::header_length),
-*/
 
 bool PublicUser::needsSceneUpdate( const CommandsList* commandsHistoric ) const
 {
@@ -121,22 +92,10 @@ void PublicUser::sendNextSceneUpdate( const CommandsList* commandsHistoric )
     nCommandsInLastPacket_ = (std::uint8_t)( sceneUpdatePacket.getCommands()->size() );
 
     // Pack the previous packet and send it to the client.
-    sceneUpdatePacket.pack( outBuffer_ );
-    std::cout << "Sending " << (int)nCommandsInLastPacket_ << " commands to client [" << name_ << "]" << std::endl;
-    boost::asio::async_write( socket_,
-                              boost::asio::buffer( outBuffer_, sceneUpdatePacket.getPacketSize() ),
-                              boost::bind( &PublicUser::onWrite, this, _1, _2 ) );
-}
+    sceneUpdatePacket.send( socket_ );
 
-
-void PublicUser::onWrite( const boost::system::error_code& errorCode, std::size_t length )
-{
-    if( errorCode ){
-        std::cout << "ERROR Writing to socket" << std::endl;
-    }else{
-        std::cout << "PERFECT! (" << length << ") bytes wrote to socket (" << (int)nCommandsInLastPacket_ << " commands in packet)" << std::endl;
-        nextCommand_ += nCommandsInLastPacket_;
-    }
+    // Update the nextCommand_ index for the next SCENE_UPDATE packet.
+    nextCommand_ += nCommandsInLastPacket_;
 }
 
 } // namespace como

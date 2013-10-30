@@ -47,7 +47,6 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
     boost::system::error_code errorCode;
     como::NewUser newUserPacket;
     como::UserAccepted userAcceptedPacket;
-    char buffer[128];
     const std::uint8_t* selectionColor;
 
     // Create the TCP resolver and query needed for connecting to the server.
@@ -70,16 +69,14 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
     // Prepare a NEW_USER network package with the user name, and send it to
     // the server.
     newUserPacket.setName( userName );
-    newUserPacket.pack( buffer );
-    boost::asio::write( socket_, boost::asio::buffer( buffer ), errorCode );
+    newUserPacket.send( socket_ );
 
-    if( errorCode ){
-        throw std::runtime_error( std::string( "ERROR when sending NEW_USER package to server (" ) + errorCode.message() + ")" );
-    }
+    std::cout << "NEW_USER packet sent" << std::endl;
 
     // Read from the server an USER_ACCEPTED network package and unpack it.
-    boost::asio::read( socket_, boost::asio::buffer( buffer ), errorCode );
-    userAcceptedPacket.unpack( buffer );
+    userAcceptedPacket.recv( socket_ );
+
+    std::cout << "USER_ACCEPTED packet received" << std::endl;
 
     selectionColor = userAcceptedPacket.getSelectionColor();
     std::cout << "User accepted: " << std::endl
@@ -113,22 +110,16 @@ void ServerInterface::disconnect()
 
 void ServerInterface::listen()
 {
-    char buffer[256];
     SceneUpdate p;
+
     const UserConnected* userConnectedCommand;
-    boost::system::error_code errorCode;
 
+    while( true ){
+        std::cout << "Listening" << std::endl;
 
-    std::cout << "Listening" << std::endl;
+        p.clear();
+        p.recv( socket_ );
 
-    boost::asio::read( socket_, boost::asio::buffer( buffer, 82 ), errorCode );
-
-    p.unpack( buffer );
-
-    if( errorCode ){
-        std::cout << "ERROR when listening (" << errorCode.message() << std::endl;
-    }else{
-        std::cout << "Listened 82 bytes" << std::endl;
         std::cout << "commands: " << p.getCommands() << std::endl
                   << "nCommands: " << p.getCommands()->size() << std::endl;
 

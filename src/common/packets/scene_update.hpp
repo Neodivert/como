@@ -46,8 +46,8 @@ class SceneUpdate : public Packet
         /***
          * 2. Packing and unpacking
          ***/
-        virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer );
+        virtual char* packBody( char* buffer ) const ;
+        virtual const char* unpackBody( const char* buffer );
 
 
         /***
@@ -57,6 +57,7 @@ class SceneUpdate : public Packet
         std::uint32_t getLasCommandSent() const ;
         std::uint32_t getUnsyncCommands() const ;
         const std::vector< SceneCommandConstPtr >* getCommands();
+        virtual bool expectedType() const ;
 
 
         /***
@@ -65,6 +66,7 @@ class SceneUpdate : public Packet
         void addCommands( const CommandsList* commandsHistoric,
                           const std::uint32_t& firstCommand,
                           const std::uint8_t& maxCommands );
+        void clear();
 };
 
 } // namespace como

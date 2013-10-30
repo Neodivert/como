@@ -120,8 +120,6 @@ class Server
          * 5. Commands historic management.
          ***/
         void addCommand( SceneCommandConstPtr sceneCommand );
-        //SceneUpdate getNextSceneUpdate( const CommandsList::const_iterator& firstCommand,
-        //                                const unsigned int nCommands );
 
 
         /***

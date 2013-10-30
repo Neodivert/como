@@ -45,17 +45,17 @@ class UserAccepted : public Packet
         /***
          * 2. Packing and unpacking
          ***/
-        virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer );
+        virtual char* packBody( char* buffer ) const ;
+        virtual const char* unpackBody( const char* buffer );
 
 
         /***
          * 3. Getters
          ***/
-        virtual std::uint16_t getPacketSize() const ;
         std::uint32_t getId() const ;
         const char* getName() const ;
         const std::uint8_t* getSelectionColor() const ;
+        virtual bool expectedType() const ;
 
 
         /***

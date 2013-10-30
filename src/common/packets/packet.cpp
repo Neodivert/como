@@ -27,8 +27,68 @@ namespace como {
  ***/
 
 Packet::Packet( PacketType type ) :
-    type_( type )
+    type_( type ),
+    bodySize_( 0 )
 {
+}
+
+
+/***
+ * 2. Socket communication
+ ***/
+
+void Packet::send( boost::asio::ip::tcp::socket& socket )
+{
+    char buffer[256];
+    boost::system::error_code errorCode;
+
+    // Pack the packet's header into the buffer.
+    packHeader( buffer );
+
+    // Write synchronously the packet's header to the socket.
+    boost::asio::write( socket, boost::asio::buffer( buffer, (int)getHeaderSize() ), errorCode );
+    if( errorCode ){
+        throw std::runtime_error( std::string( "ERROR when sending packet header' (" ) + errorCode.message() + ")" );
+    }
+
+    // Pack the packet's body into the buffer.
+    packBody( buffer );
+
+    // Write synchronously the packet's body to the socket.
+    boost::asio::write( socket, boost::asio::buffer( buffer, (int)bodySize_ ), errorCode );
+    if( errorCode ){
+        throw std::runtime_error( std::string( "ERROR when sending packet body' (" ) + errorCode.message() + ")" );
+    }
+}
+
+
+void Packet::recv( boost::asio::ip::tcp::socket& socket )
+{
+    char buffer[256];
+    boost::system::error_code errorCode;
+
+    // Read synchronously the packet's header from the socket.
+    boost::asio::read( socket, boost::asio::buffer( buffer, (int)getHeaderSize() ), errorCode );
+
+    if( errorCode ){
+        throw std::runtime_error( std::string( "ERROR when receiving packet header' (" ) + errorCode.message() + ")" );
+    }
+
+    // Unpack the packet's header from the buffer and check its type.
+    unpackHeader( buffer );
+    if( !expectedType() ){
+        throw std::runtime_error( std::string( "ERROR: Received an unexpected packet" ) );
+    }
+
+    // Read synchronously the packet's body from the socket.
+    boost::asio::read( socket, boost::asio::buffer( buffer, (int)bodySize_ ), errorCode );
+
+    if( errorCode ){
+        throw std::runtime_error( std::string( "ERROR when receiving packet body' (" ) + errorCode.message() + ")" );
+    }
+
+    // Unpack the packet's body.
+    unpackBody( buffer );
 }
 
 
@@ -38,15 +98,38 @@ Packet::Packet( PacketType type ) :
 
 char* Packet::pack( char* buffer ) const
 {
-    // Pack the packet's type.
-    packer::pack( static_cast< std::uint8_t >( type_ ), buffer );
+    // Pack the packet's header.
+    buffer = packHeader( buffer );
 
-    // Return the updated pointer (the packing updates it).
-    return buffer;
+    // Pack the packet's body and return the updated buffer pointer (the
+    // packing updates it).
+    return packBody( buffer );
 }
 
 
 const char* Packet::unpack( const char* buffer )
+{
+    // Unpack the packet's header.
+    buffer = unpackHeader( buffer );
+
+    // Unpack the packet's body and return the updated buffer pointer (the
+    // unpacking updates it).
+    return unpackBody( buffer );
+}
+
+
+char* Packet::packHeader( char* buffer ) const
+{
+    // Pack the packet's type.
+    packer::pack( static_cast< std::uint8_t >( type_ ), buffer );
+
+    // Pack the body's size.
+    packer::pack( bodySize_, buffer );
+
+    return buffer;
+}
+
+const char* Packet::unpackHeader( const char* buffer )
 {
     std::uint8_t type;
 
@@ -54,7 +137,9 @@ const char* Packet::unpack( const char* buffer )
     packer::unpack( type, buffer );
     type_ = static_cast< PacketType >( type );
 
-    // Return the updated pointer (the unpacking updates it).
+    // Unpack the body's size.
+    packer::unpack( bodySize_, buffer );
+
     return buffer;
 }
 
@@ -69,10 +154,23 @@ PacketType Packet::getType() const
 }
 
 
+std::uint16_t Packet::getBodySize() const
+{
+    return bodySize_;
+}
+
+
+std::uint8_t Packet::getHeaderSize()
+{
+    return sizeof( type_ ) + sizeof( bodySize_ );
+}
+
+
 std::uint16_t Packet::getPacketSize() const
 {
-    return sizeof( type_ );
+    return getHeaderSize() + getBodySize();
 }
+
 
 } // namespace como
 

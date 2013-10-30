@@ -40,14 +40,14 @@ class NewUser : public Packet
         /***
          * 2. Packing and unpacking
          ***/
-        virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer );
+        virtual char* packBody( char* buffer ) const ;
+        virtual const char* unpackBody( const char* buffer );
 
 
         /***
          * 3. Getters
          ***/
-        virtual std::uint16_t getPacketSize() const ;
+        virtual bool expectedType() const;
         const char* getName() const ;
 
 
