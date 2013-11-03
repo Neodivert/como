@@ -20,6 +20,7 @@
 #include "main_window.hpp"
 #include "render_panel.hpp"
 #include "tools_menu.hpp"
+#include "connection_wizard/connection_wizard.hpp"
 
 namespace como {
 
@@ -59,6 +60,9 @@ MainWindow::MainWindow( QWidget* parent ) :
     layout->addWidget( renderPanel );
 
     centralWidget()->setLayout( layout );
+
+    ConnectionWizard connectionWizard( comoApp->getScene(), this );
+    connectionWizard.exec();
 }
 
 

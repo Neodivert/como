@@ -25,8 +25,8 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-ConnectServerPage::ConnectServerPage( std::shared_ptr< ServerInterface > serverInterface ) :
-    serverInterface_( serverInterface ),
+ConnectServerPage::ConnectServerPage( ScenePtr scene ) :
+    scene_( scene ),
     ipInput_( nullptr ),
     portInput_( nullptr )
 {
@@ -78,7 +78,7 @@ bool ConnectServerPage::validatePage()
         }
 
         std::cout << "Connecting to (" << ipInput_->text().toLocal8Bit().data() << ":" << portInput_->text().toLocal8Bit().data() << ")..." << std::endl;
-        serverInterface_->connect( ipInput_->text().toLocal8Bit().data(),       // Server IP
+        scene_->connect( ipInput_->text().toLocal8Bit().data(),       // Server IP
                                    portInput_->text().toLocal8Bit().data(),     // Server port
                                    userName.c_str()                             // User name
                                  );

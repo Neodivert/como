@@ -125,7 +125,7 @@ class ComoApp : public QObject {
         TransformationType getTransformationType() const ;
         TransformationMode getTransformationMode() const ;
         PivotPointMode getPivotPointMode() const;
-        shared_ptr< Scene > getScene() const ;
+        ScenePtr getScene() const ;
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
 
 

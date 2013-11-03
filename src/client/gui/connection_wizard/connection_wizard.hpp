@@ -22,7 +22,7 @@
 
 #include <QWizard>
 #include <QWizardPage>
-#include "../../models/server/server_interface.hpp"
+#include "../../managers/scene.hpp"
 
 
 namespace como {
@@ -35,7 +35,7 @@ class ConnectionWizard : public QWizard
         /***
          * 1. Initialization and destruction
          ***/
-        ConnectionWizard( std::shared_ptr< ServerInterface > serverInterface );
+        ConnectionWizard( ScenePtr scene, QWidget* parent = nullptr );
 };
 
 }

@@ -27,7 +27,8 @@ namespace como {
  ***/
 
 ServerInterface::ServerInterface() :
-    socket_( io_service_ )
+    socket_( SocketPtr( new boost::asio::ip::tcp::socket( io_service_ ) ) ),
+    closeConnection_( false )
 {
 }
 
@@ -58,7 +59,7 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
 
     // Connect to the server.
     std::cout << "Connecting ..." << std::endl;
-    socket_.connect( *endpoint_iterator, errorCode );
+    socket_->connect( *endpoint_iterator, errorCode );
 
     if( errorCode ){
         throw std::runtime_error( std::string( "ERROR: Couldn't connect to server (" ) + errorCode.message() + ")" );
@@ -74,7 +75,7 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
     std::cout << "NEW_USER packet sent" << std::endl;
 
     // Read from the server an USER_ACCEPTED network package and unpack it.
-    userAcceptedPacket.recv( socket_ );
+    userAcceptedPacket.recv( *socket_ );
 
     std::cout << "USER_ACCEPTED packet received" << std::endl;
 
@@ -97,14 +98,39 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
 
 void ServerInterface::disconnect()
 {
-    delete listenerThread;
+    boost::system::error_code errorCode;
 
+    io_service_.stop();
     // Close the socket to the server if it's open.
-    if( socket_.is_open() ){
+    if( socket_->is_open() ){
         std::cout << "Closing socket to server" << std::endl;
-        socket_.close();
+        socket_->shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
+        socket_->close();
     }
+
+
+    std::cout << "ServerInterface::DISCONNECTING 1" << std::endl;
+    closeConnectionMutex_.lock();
+    closeConnection_ = true;
+    closeConnectionMutex_.unlock();
+    std::cout << "ServerInterface::DISCONNECTING 2" << std::endl;
+
+    listenerThread->join();
+    std::cout << "ServerInterface::DISCONNECTING 3" << std::endl;
+    delete listenerThread;
+    std::cout << "ServerInterface::DISCONNECTING 4" << std::endl;
+
     std::cout << "Disconnected from server" << std::endl;
+}
+
+
+/***
+ * 3. Handlers
+ ***/
+
+void ServerInterface::onNewUserPacketSent( PacketPtr )
+{
+
 }
 
 
@@ -114,19 +140,34 @@ void ServerInterface::listen()
 
     const UserConnected* userConnectedCommand;
 
-    while( true ){
-        std::cout << "Listening" << std::endl;
+    try{
+        closeConnectionMutex_.lock();
+        while( !closeConnection_ ){
+            closeConnectionMutex_.unlock();
 
-        p.clear();
-        p.recv( socket_ );
+                std::cout << "Listening" << std::endl;
 
-        std::cout << "commands: " << p.getCommands() << std::endl
-                  << "nCommands: " << p.getCommands()->size() << std::endl;
+                p.clear();
+                p.recv( *socket_ );
 
-        userConnectedCommand = dynamic_cast< const UserConnected* >( ( (*( p.getCommands() ) )[0] ).get() );
+                std::cout << "commands: " << p.getCommands() << std::endl
+                          << "nCommands: " << p.getCommands()->size() << std::endl;
 
-        std::cout << "First command of type USER_CONNECTED: " << userConnectedCommand << std::endl;
-        std::cout << "User connected: [" << userConnectedCommand->getName() << "]" << std::endl;
+                userConnectedCommand = dynamic_cast< const UserConnected* >( ( (*( p.getCommands() ) )[0] ).get() );
+
+                std::cout << "First command of type USER_CONNECTED: " << userConnectedCommand << std::endl;
+                std::cout << "User connected: [" << userConnectedCommand->getName() << "]" << std::endl;
+
+        }
+        closeConnectionMutex_.unlock();
+    }catch( std::exception ex ){
+        closeConnectionMutex_.lock();
+        if( closeConnection_ ){
+            std::cout << "ERROR but closing" << std::endl;
+        }else{
+            throw ex;
+        }
+        closeConnectionMutex_.unlock();
     }
 }
 

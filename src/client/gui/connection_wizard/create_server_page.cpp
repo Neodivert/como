@@ -28,8 +28,8 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-CreateServerPage::CreateServerPage( std::shared_ptr< ServerInterface > serverInterface ) :
-    serverInterface_( serverInterface ),
+CreateServerPage::CreateServerPage( ScenePtr scene ) :
+    scene_( scene ),
     portInput_( nullptr ),
     maxUsersInput_( nullptr ),
     userNameInput_( nullptr )
@@ -102,7 +102,7 @@ bool CreateServerPage::validatePage()
         // FIXME: Maybe there is something more elegant?
         system( "sleep 1" );
         std::cout << "Connecting to (127.0.0.1:" << portInput_->text().toLocal8Bit().data() << ")..." << std::endl;
-        serverInterface_->connect( "127.0.0.1",                                 // Server IP
+        scene_->connect( "127.0.0.1",                                 // Server IP
                                    portInput_->text().toLocal8Bit().data(),     // Server port
                                    userName.c_str()                             // User name
                                  );

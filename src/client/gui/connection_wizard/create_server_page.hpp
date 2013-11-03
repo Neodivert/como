@@ -20,7 +20,7 @@
 #ifndef CREATE_SERVER_PAGE_HPP
 #define CREATE_SERVER_PAGE_HPP
 
-#include "../../models/server/server_interface.hpp"
+#include "../../managers/scene.hpp"
 #include <QWizardPage>
 #include <QLineEdit>
 #include <QLabel>
@@ -35,7 +35,7 @@ class CreateServerPage : public QWizardPage
     Q_OBJECT
 
     private:
-        std::shared_ptr< ServerInterface > serverInterface_;
+        ScenePtr scene_;
         QLineEdit* portInput_;
         QLineEdit* maxUsersInput_;
         QLineEdit* userNameInput_;
@@ -44,7 +44,7 @@ class CreateServerPage : public QWizardPage
         /***
          * 1. Initialization and destruction
          ***/
-        CreateServerPage( std::shared_ptr< ServerInterface > serverInterface );
+        CreateServerPage( ScenePtr scene );
 
 
         /***

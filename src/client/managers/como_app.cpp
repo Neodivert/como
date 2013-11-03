@@ -143,7 +143,7 @@ PivotPointMode ComoApp::getPivotPointMode() const
     return pivotPointMode;
 }
 
-shared_ptr< Scene > ComoApp::getScene() const
+ScenePtr ComoApp::getScene() const
 {
     return scene;
 }

@@ -24,6 +24,15 @@
 #include "../utilities/packer.hpp"
 #include <stdexcept>
 #include <boost/asio.hpp>
+#include <functional>
+#include <boost/bind.hpp>
+
+class Packet;
+
+typedef boost::asio::ip::tcp::socket Socket;
+typedef std::shared_ptr< Socket > SocketPtr;
+typedef std::shared_ptr< Packet > PacketPtr;
+typedef std::shared_ptr< std::function<void(PacketPtr)> > PacketHandlerPtr;
 
 namespace como {
 
@@ -41,6 +50,10 @@ class Packet : public Packable
     protected:
         std::uint16_t bodySize_;
 
+        char buffer_[256];
+
+        PacketHandlerPtr packetSendHandler_;
+
     public:
         /***
          * 1. Initialization and destruction
@@ -51,8 +64,13 @@ class Packet : public Packable
         /***
          * 2. Socket communication
          ***/
-        void send( boost::asio::ip::tcp::socket& socket );
+        void send( SocketPtr socket );
+
+        void asyncSend( SocketPtr socket, PacketHandlerPtr packetHandler );
         void recv( boost::asio::ip::tcp::socket& socket );
+    private:
+        void asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket/*, PacketHandlerPtr packetHandler*/ );
+    public:
 
 
         /***
@@ -75,6 +93,8 @@ class Packet : public Packable
         static std::uint8_t getHeaderSize();
         virtual std::uint16_t getPacketSize() const ;
 };
+
+
 
 } // namespace como
 

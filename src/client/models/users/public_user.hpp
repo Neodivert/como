@@ -17,8 +17,8 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef USER_HPP
-#define USER_HPP
+#ifndef PUBLIC_USER_HPP
+#define PUBLIC_USER_HPP
 
 #include "../3d/drawable.hpp"
 
@@ -27,12 +27,13 @@ namespace como {
 typedef shared_ptr<Drawable> DrawablePtr;
 typedef std::list< std::shared_ptr< Drawable > > DrawablesList;
 
-struct User
+struct PublicUser
 {
+    std::string name;
     GLfloat color[4];
     DrawablesList selection;
 };
 
 } // namespace como
 
-#endif // USER_HPP
+#endif // PUBLIC_USER_HPP

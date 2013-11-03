@@ -65,11 +65,11 @@ Scene::Scene()
     setBackgroundColor( 0.9f, 0.9f, 0.9f, 0.9f );
 
     // Insert the local user as the first one in the users list.
-    addUser( 0.0f, 0.0f, 1.0f );
+    // addUser( 0.0f, 0.0f, 1.0f );
 
     // TODO: delete
-    addUser( 1.0f, 0.0f, 0.0f );
-    addUser( 0.0f, 1.0f, 0.0f );
+    //addUser( 1.0f, 0.0f, 0.0f );
+    //addUser( 0.0f, 1.0f, 0.0f );
 }
 
 
@@ -161,23 +161,41 @@ void Scene::initLinesBuffer()
 }
 
 
+void Scene::connect( const char* host, const char* port, const char* userName )
+{
+    try{
+        // Insert the local user in the users vector.
+        addUser( userName, 1.0f, 0.0f, 0.0f );
+
+        // Try to connect to the server. If there is any error, the method
+        // ServerInterface::connect() throws an exception.
+        server_.connect( host, port, userName );
+    }catch( std::exception& ex ){
+        throw ex;
+    }
+}
+
+
 /***
  * 2. Users administration
  ***/
 
-void Scene::addUser( const float& r, const float& g, const float& b )
+void Scene::addUser( const char* name, const float& r, const float& g, const float& b )
 {
     // Create user struct.
-    User user;
+    PublicUser user;
 
-    // Initialize user
+    // Initialize user name.
+    user.name = name;
+
+    // Initialize user selection color.
     user.color[0] = r;
     user.color[1] = g;
     user.color[2] = b;
     user.color[3] = 1.0f;
 
     // Insert user in user's vector.
-    users.push_back( user );
+    users_.push_back( user );
 }
 
 
@@ -272,7 +290,7 @@ void Scene::selectDrawable( const unsigned int& index, const unsigned int& userI
     std::advance( it, index );
 
     cout << "Selecting drawable(userId: " << userId << ")" << endl;
-    DrawablesList& userSelection = users[userId].selection;
+    DrawablesList& userSelection = users_[userId].selection;
     userSelection.splice( userSelection.end(), nonSelectedDrawables, it );
 
     updateSelectionCentroid();
@@ -293,7 +311,7 @@ void Scene::selectAll()
 
 void Scene::unselectAll( const unsigned int& userId )
 {
-    DrawablesList& userSelection = users[userId].selection;
+    DrawablesList& userSelection = users_[userId].selection;
 
     nonSelectedDrawables.splice( nonSelectedDrawables.end(), userSelection );
 
@@ -311,7 +329,7 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
     unsigned int currentObject = 0;
     unsigned int closestObject = -1;
 
-    DrawablesList& userSelection = users[userId].selection;
+    DrawablesList& userSelection = users_[userId].selection;
 
     r1 = glm::normalize( r1 );
 
@@ -382,7 +400,7 @@ glm::vec4 Scene::getSelectionCentroid() const
 
 void Scene::translateSelection( const glm::vec3& direction, const unsigned int& userId )
 {
-    DrawablesList& userSelection = users[userId].selection;
+    DrawablesList& userSelection = users_[userId].selection;
     DrawablesList::iterator it = userSelection.begin();
 
     for( ; it != userSelection.end(); it++ )
@@ -398,7 +416,7 @@ void Scene::translateSelection( const glm::vec3& direction, const unsigned int& 
 
 void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode, const unsigned int& userId )
 {
-    DrawablesList& userSelection = users[userId].selection;
+    DrawablesList& userSelection = users_[userId].selection;
     DrawablesList::iterator it = userSelection.begin();
 
     switch( pivotPointMode ){
@@ -427,7 +445,7 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const 
 
 void Scene::scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode, const unsigned int& userId )
 {
-    DrawablesList& userSelection = users[userId].selection;
+    DrawablesList& userSelection = users_[userId].selection;
     DrawablesList::iterator it = userSelection.begin();
 
     switch( pivotPointMode ){
@@ -467,7 +485,7 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const 
 */
 void Scene::deleteSelection( const unsigned int& userId )
 {
-    DrawablesList& userSelection = users[userId].selection;
+    DrawablesList& userSelection = users_[userId].selection;
 
     // Delete selected drawables.
     userSelection.clear();
@@ -482,7 +500,7 @@ void Scene::deleteSelection( const unsigned int& userId )
 
 void Scene::updateSelectionCentroid( const unsigned int& userId )
 {
-    DrawablesList& userSelection = users[userId].selection;
+    DrawablesList& userSelection = users_[userId].selection;
     DrawablesList::const_iterator it = userSelection.begin();
     //GLfloat* selectionCentroidBuffer = nullptr;
     selectionCentroid = glm::vec4( 0.0f );
@@ -527,11 +545,11 @@ void Scene::draw( const int& drawGuideRect ) const
     {
         (*it)->draw( defaultContourColor );
     }
-    for( user = 0; user < users.size(); user++  ){
-        userSelection = users[user].selection;
+    for( user = 0; user < users_.size(); user++  ){
+        userSelection = users_[user].selection;
 
         for( it = userSelection.begin(); it != userSelection.end(); it++ ){
-            (*it)->draw( users[user].color );
+            (*it)->draw( users_[user].color );
         }
     }
 

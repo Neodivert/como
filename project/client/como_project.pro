@@ -38,7 +38,6 @@ HEADERS += \
     ../../src/client/models/3d/drawable.hpp \
     ../../src/client/models/3d/cube.hpp \
     ../../src/client/models/3d/camera.hpp \
-    ../../src/client/models/users/user.hpp \
     ../../src/client/models/utilities/msl/src/shader_loader.hpp \
     ../../src/client/models/server/server_interface.hpp \
     ../../src/client/gui/connection_wizard/connection_wizard.hpp \
@@ -55,7 +54,8 @@ HEADERS += \
     ../../src/common/packets/scene_update.hpp \
     ../../src/common/packets/scene_commands/user_connected.hpp \
     ../../src/common/packets/scene_commands/scene_commands.hpp \
-    ../../src/common/packets/scene_commands/scene_command.hpp
+    ../../src/common/packets/scene_commands/scene_command.hpp \
+    ../../src/client/models/users/public_user.hpp
 
 SOURCES += \
     ../../src/client/gui/viewport.cpp \

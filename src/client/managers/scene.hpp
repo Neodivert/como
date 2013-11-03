@@ -23,8 +23,8 @@
 #include <list>
 #include "../models/3d/cube.hpp"
 #include "../models/3d/camera.hpp"
-#include "../models/users/user.hpp"
-
+#include "../models/users/public_user.hpp"
+#include "../models/server/server_interface.hpp"
 
 namespace como {
 
@@ -74,7 +74,7 @@ class Scene : public QObject
         DrawablesList nonSelectedDrawables;
 
         // Users sharing this scene.
-        std::vector< User > users;
+        std::vector< PublicUser > users_;
 
         // Lines VAO, VBO and offsets.
         GLuint linesVAO;
@@ -86,6 +86,9 @@ class Scene : public QObject
 
         GLfloat defaultContourColor[4];
 
+        // Interface with the server.
+        ServerInterface server_;
+
     public:
         /***
          * 1. Initialization and destruction
@@ -94,12 +97,13 @@ class Scene : public QObject
         ~Scene();
 
         void initLinesBuffer();
+        void connect( const char* host, const char* port, const char* userName );
 
 
         /***
          * 2. Users administration
          ***/
-        void addUser( const float& r, const float& g, const float& b );
+        void addUser( const char* name, const float& r, const float& g, const float& b );
 
 
         /***
@@ -162,6 +166,8 @@ class Scene : public QObject
     signals:
         void renderNeeded();
 };
+
+typedef std::shared_ptr< Scene > ScenePtr;
 
 } // namespace como
 

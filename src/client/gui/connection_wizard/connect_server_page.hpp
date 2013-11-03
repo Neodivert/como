@@ -27,14 +27,14 @@
 #include <QLineEdit>
 #include <QFormLayout>
 #include <QRegExpValidator>
-#include "../../models/server/server_interface.hpp"
+#include "../../managers/scene.hpp"
 
 namespace como {
 
 class ConnectServerPage : public QWizardPage
 {
     private:
-        std::shared_ptr< ServerInterface > serverInterface_;
+        ScenePtr scene_;
         QLineEdit* ipInput_;
         QLineEdit* portInput_;
         QLineEdit* userNameInput_;
@@ -43,7 +43,7 @@ class ConnectServerPage : public QWizardPage
         /***
          * 1. Initialization and destruction
          ***/
-        ConnectServerPage( std::shared_ptr< ServerInterface > serverInterface );
+        ConnectServerPage( ScenePtr scene );
 
 
         /***

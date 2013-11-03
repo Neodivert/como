@@ -30,9 +30,13 @@ class ServerInterface
 {
     private:
         boost::asio::io_service io_service_;
-        boost::asio::ip::tcp::socket socket_;
+
+        SocketPtr socket_;
 
         std::thread* listenerThread;
+
+        std::mutex closeConnectionMutex_;
+        bool closeConnection_;
 
     public:
         /***
@@ -48,9 +52,18 @@ class ServerInterface
         void connect( const char* host, const char* port, const char* userName );
         void disconnect();
 
+        /***
+         * 3. Handlers
+         ***/
+    private:
+        void onNewUserPacketSent( PacketPtr );
+
+
     private:
         void listen();
 };
+
+typedef std::shared_ptr<ServerInterface> ServerInterfacePtr;
 
 } // namespace como
 
