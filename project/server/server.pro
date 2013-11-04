@@ -14,8 +14,7 @@ SOURCES += \
     ../../src/common/packets/scene_commands/scene_command.cpp \
     ../../src/common/utilities/packer.cpp \
     ../../src/common/packets/scene_commands/user_connected.cpp \
-    ../../src/server/public_user.cpp \
-    ../../src/common/packets/packet_communication.cpp
+    ../../src/server/public_user.cpp
 
 LIBS += -lpthread
 
@@ -31,8 +30,7 @@ HEADERS += \
     ../../src/common/packets/scene_commands/scene_commands.hpp \
     ../../src/common/utilities/packer.hpp \
     ../../src/common/packets/scene_commands/user_connected.hpp \
-    ../../src/server/public_user.hpp \
-    ../../src/common/packets/packet_communication.hpp
+    ../../src/server/public_user.hpp
 
 # Link boost libraries
 unix|win32: LIBS += -lboost_system
