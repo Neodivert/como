@@ -20,6 +20,7 @@
 #ifndef PACKETS_HPP
 #define PACKETS_HPP
 
+#include "packet_communication.hpp"
 #include "new_user.hpp"
 #include "user_accepted.hpp"
 #include "scene_update.hpp"

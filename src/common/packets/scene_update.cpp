@@ -38,6 +38,20 @@ SceneUpdate::SceneUpdate() :
 }
 
 
+SceneUpdate::SceneUpdate( const SceneUpdate& b ) :
+    Packet( b ),
+    lastCommandSent_( b.lastCommandSent_ ),
+    nUnsyncCommands_( b.nUnsyncCommands_ ),
+    commands_( b.commands_ ) // Is this legal?
+{
+}
+
+
+Packet* SceneUpdate::clone() const
+{
+    return new SceneUpdate( *this );
+}
+
 /***
  * 2. Packing and unpacking
  ***/
@@ -50,6 +64,7 @@ char* SceneUpdate::packBody( char* buffer ) const
     packer::pack( lastCommandSent_, buffer );
     packer::pack( nUnsyncCommands_, buffer );
     packer::pack( (std::uint8_t)( commands_.size() ), buffer );
+
     for( ; i<commands_.size(); i++ ){
         buffer = commands_[i]->pack( buffer );
     }
@@ -91,24 +106,6 @@ const char* SceneUpdate::unpackBody( const char* buffer )
  * 3. Getters
  ***/
 
-std::uint16_t SceneUpdate::getPacketSize() const
-{
-    unsigned int i = 0;
-    std::uint16_t packetSize = 0;
-
-    packetSize += sizeof( lastCommandSent_ );
-    packetSize += sizeof( nUnsyncCommands_ );
-    packetSize += sizeof( std::uint8_t ); // commands_.size() is packed as a std::uint8_t.
-
-    for( i=0; i<commands_.size(); i++ )
-    {
-        packetSize += commands_[i]->getPacketSize();
-    }
-
-    return packetSize;
-}
-
-
 std::uint32_t SceneUpdate::getLasCommandSent() const
 {
     return lastCommandSent_;
@@ -129,6 +126,7 @@ const std::vector< SceneCommandConstPtr >* SceneUpdate::getCommands()
 
 bool SceneUpdate::expectedType() const
 {
+    std::cout << "SceneUpdate::expectedType" << std::endl;
     return ( Packet::getType() == PacketType::SCENE_UPDATE );
 }
 

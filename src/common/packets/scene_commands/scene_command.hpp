@@ -42,6 +42,7 @@ class SceneCommand : public Packable
          * 1. Initialization and destruction
          ***/
         SceneCommand( SceneCommandType type );
+        SceneCommand( const SceneCommand& b );
 
 
         /***

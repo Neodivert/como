@@ -98,9 +98,6 @@ class ComoApp : public QObject {
         // Current pivot point mode.
         PivotPointMode pivotPointMode;
 
-        // Singlenton class instance.
-        static ComoApp* singlentonInstance;
-
         // Current OpenGL context.
         shared_ptr< QOpenGLContext > oglContext;
 
@@ -111,7 +108,8 @@ class ComoApp : public QObject {
          * 1. Initialization and destruction
          ***/
     public:
-        ComoApp();
+        ComoApp( QWidget* parent );
+        ~ComoApp();
         /*
         static ComoApp* getInstance();
         static void destroy();

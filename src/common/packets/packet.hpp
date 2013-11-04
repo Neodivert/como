@@ -27,14 +27,14 @@
 #include <functional>
 #include <boost/bind.hpp>
 
+namespace como {
+
 class Packet;
 
 typedef boost::asio::ip::tcp::socket Socket;
 typedef std::shared_ptr< Socket > SocketPtr;
 typedef std::shared_ptr< Packet > PacketPtr;
-typedef std::shared_ptr< std::function<void(PacketPtr)> > PacketHandlerPtr;
-
-namespace como {
+typedef std::function<void(PacketPtr)> PacketHandler;
 
 enum class PacketType : std::int8_t
 {
@@ -52,24 +52,28 @@ class Packet : public Packable
 
         char buffer_[256];
 
-        PacketHandlerPtr packetSendHandler_;
-
     public:
         /***
          * 1. Initialization and destruction
          ***/
         Packet( PacketType type );
+        Packet( const Packet& b );
+        virtual Packet* clone() const = 0;
 
 
         /***
          * 2. Socket communication
          ***/
-        void send( SocketPtr socket );
+        void send( boost::asio::ip::tcp::socket& socket );
+        void asyncSend( SocketPtr socket, PacketHandler packetHandler );
 
-        void asyncSend( SocketPtr socket, PacketHandlerPtr packetHandler );
         void recv( boost::asio::ip::tcp::socket& socket );
+        void asyncRecv( SocketPtr socket, PacketHandler packetHandler );
+
     private:
-        void asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket/*, PacketHandlerPtr packetHandler*/ );
+        void asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
+        void asyncRecvBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
+        void onPacketRecv( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler );
     public:
 
 
@@ -93,8 +97,6 @@ class Packet : public Packable
         static std::uint8_t getHeaderSize();
         virtual std::uint16_t getPacketSize() const ;
 };
-
-
 
 } // namespace como
 

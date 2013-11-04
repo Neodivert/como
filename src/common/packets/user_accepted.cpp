@@ -62,6 +62,19 @@ void UserAccepted::setData( const std::uint32_t& id, const char* name, const std
 }
 
 
+UserAccepted::UserAccepted( const UserAccepted& b ) :
+    Packet( b )
+{
+    setData( b.id_, b.name_, b.selectionColor_ );
+}
+
+
+Packet* UserAccepted::clone() const
+{
+    return new UserAccepted( *this );
+}
+
+
 /***
  * 2. Packing and unpacking
  ***/

@@ -41,6 +41,8 @@ class SceneUpdate : public Packet
          * 1. Initialization and destruction
          ***/
         SceneUpdate();
+        SceneUpdate( const SceneUpdate& b );
+        virtual Packet* clone() const ;
 
 
         /***
@@ -53,7 +55,6 @@ class SceneUpdate : public Packet
         /***
          * 3. Getters
          ***/
-        virtual std::uint16_t getPacketSize() const ;
         std::uint32_t getLasCommandSent() const ;
         std::uint32_t getUnsyncCommands() const ;
         const std::vector< SceneCommandConstPtr >* getCommands();

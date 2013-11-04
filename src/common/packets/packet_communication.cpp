@@ -17,22 +17,10 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "server.hpp"
-#include "../common/packets/packets.hpp"
-#include <endian.h>
+#include "packet_communication.hpp"
 
-int main( int argc, char* argv[] )
-{
-    try {
-        if( argc < 3 ){
-            std::cerr << "Usage: server <port> <max_users>" << std::endl;
-            exit( -1 );
-        }
-
-        como::Server server( atoi( argv[1] ), atoi( argv[2] ), 1 );
-        server.run();
-    }catch (std::exception& e){
-        std::cerr << e.what() << std::endl;
-    }
-}
-
+/*
+void asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
+void asyncRecvBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
+void onPacketRecv( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler );
+*/

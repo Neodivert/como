@@ -28,7 +28,7 @@ namespace como {
 
 PublicUser::PublicUser( unsigned int id, const char* name, Socket socket, std::function<void (unsigned int)> removeUserCallback ) :
     id_( id ),
-    socket_( std::move( socket ) ),
+    socket_( SocketPtr( new Socket( std::move( socket ) ) ) ),
     removeUserCallback_( removeUserCallback ),
     nextCommand_( 0 )
 {
@@ -85,16 +85,19 @@ bool PublicUser::needsSceneUpdate( const CommandsList* commandsHistoric ) const
 void PublicUser::sendNextSceneUpdate( const CommandsList* commandsHistoric )
 {
     // Create and prepare a SCENE_UPDATE packet.
-    SceneUpdate sceneUpdatePacket;
-    sceneUpdatePacket.addCommands( commandsHistoric, nextCommand_, MAX_COMMANDS_PER_PACKET );
+    outSceneUpdatePacket_.clear();
+    outSceneUpdatePacket_.addCommands( commandsHistoric, nextCommand_, MAX_COMMANDS_PER_PACKET );
+
+    std::cout << "PublicUser::sendNextSceneUpdate 1 - bodySize: (" << outSceneUpdatePacket_.getBodySize() << ")" << std::endl;
 
     // Get the number of commands in the packet.
-    nCommandsInLastPacket_ = (std::uint8_t)( sceneUpdatePacket.getCommands()->size() );
+    nCommandsInLastPacket_ = (std::uint8_t)( outSceneUpdatePacket_.getCommands()->size() );
 
     // Pack the previous packet and send it to the client.
-    sceneUpdatePacket.send( socket_ );
+    outSceneUpdatePacket_.asyncSend( socket_, nullptr );
 
     // Update the nextCommand_ index for the next SCENE_UPDATE packet.
+    // TODO: Move this to a callback (async send).
     nextCommand_ += nCommandsInLastPacket_;
 }
 

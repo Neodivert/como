@@ -17,22 +17,20 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "server.hpp"
-#include "../common/packets/packets.hpp"
-#include <endian.h>
+#ifndef PACKET_COMMUNICATION_HPP
+#define PACKET_COMMUNICATION_HPP
 
-int main( int argc, char* argv[] )
-{
-    try {
-        if( argc < 3 ){
-            std::cerr << "Usage: server <port> <max_users>" << std::endl;
-            exit( -1 );
-        }
+#include "packet.hpp"
 
-        como::Server server( atoi( argv[1] ), atoi( argv[2] ), 1 );
-        server.run();
-    }catch (std::exception& e){
-        std::cerr << e.what() << std::endl;
-    }
-}
+namespace como {
 
+/***
+ * 1. Async communication
+ ***/
+
+//void asyncSend( PacketPtr packet, SocketPtr socket, PacketHandler packetHandler );
+//void asyncRecv( PacketPtr packet, SocketPtr socket, PacketHandler packetHandler );
+
+} // a
+
+#endif // PACKET_COMMUNICATION_HPP

@@ -53,6 +53,22 @@ UserConnected::UserConnected( const UserAccepted& userAcceptedPacket ) :
                        selectionColor[3] );
 }
 
+
+UserConnected::UserConnected( const UserConnected& b ) :
+    SceneCommand( b )
+{
+    const std::uint8_t* selectionColor = nullptr;
+    std::cout << "User connected - Copy constructor" << std::endl;
+    setUserID( b.getUserID() );
+    setName( b.getName() );
+
+    selectionColor = b.getSelectionColor();
+    setSelectionColor( selectionColor[0],
+                       selectionColor[1],
+                       selectionColor[2],
+                       selectionColor[3] );
+}
+
 /***
  * 2. Packing and unpacking
  ***/

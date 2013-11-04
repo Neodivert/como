@@ -35,6 +35,8 @@ class NewUser : public Packet
          ***/
         NewUser();
         NewUser( const char* name );
+        NewUser( const NewUser& b );
+        virtual Packet* clone() const ;
 
 
         /***

@@ -75,6 +75,8 @@ Scene::Scene()
 
 Scene::~Scene()
 {
+    std::cout << "Scene destructor" << std::endl;
+
     // Tell OpenGL we are done with allocated buffer objects and
     // vertex attribute arrays.
     glDeleteBuffers( 1, &linesVBO );

@@ -32,13 +32,19 @@ Packet::Packet( PacketType type ) :
 {
 }
 
+Packet::Packet( const Packet& b ) :
+    type_( b.type_ ),
+    bodySize_( b.bodySize_ )
+{
+}
+
 
 /***
  * 2. Socket communication
  ***/
 
 
-void Packet::send( SocketPtr socket )
+void Packet::send( boost::asio::ip::tcp::socket& socket )
 {
     char buffer[256];
     boost::system::error_code errorCode;
@@ -47,7 +53,7 @@ void Packet::send( SocketPtr socket )
     packHeader( buffer );
 
     // Write synchronously the packet's header to the socket.
-    boost::asio::write( *socket, boost::asio::buffer( buffer, (int)getHeaderSize() ), errorCode );
+    boost::asio::write( socket, boost::asio::buffer( buffer, (int)getHeaderSize() ), errorCode );
     if( errorCode ){
         throw std::runtime_error( std::string( "ERROR when sending packet header' (" ) + errorCode.message() + ")" );
     }
@@ -56,41 +62,37 @@ void Packet::send( SocketPtr socket )
     packBody( buffer );
 
     // Write synchronously the packet's body to the socket.
-    boost::asio::write( *socket, boost::asio::buffer( buffer, (int)bodySize_ ), errorCode );
+    boost::asio::write( socket, boost::asio::buffer( buffer, (int)bodySize_ ), errorCode );
     if( errorCode ){
         throw std::runtime_error( std::string( "ERROR when sending packet body' (" ) + errorCode.message() + ")" );
     }
 }
 
 
-void Packet::asyncSend( SocketPtr socket, PacketHandlerPtr packetHandler )
+void Packet::asyncSend( SocketPtr socket, PacketHandler packetHandler )
 {
     // Pack the packet's header into the buffer.
     packHeader( buffer_ );
-
-    packetSendHandler_ = packetHandler;
 
     // Write asynchronously the packet's header to the socket.
     boost::asio::async_write(
                 *socket,
                 boost::asio::buffer( buffer_, (int)getHeaderSize() ),
-                boost::bind( &Packet::asyncSendBody, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred, socket/*, packetHandler*/ )
+                boost::bind( &Packet::asyncSendBody, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred, socket, packetHandler )
                 );
-
-    //boost::asio::write( socket, boost::asio::buffer( buffer, (int)getHeaderSize() ), errorCode );
 }
 
-void Packet::asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket/*, PacketHandlerPtr packetHandler*/ )
+
+void Packet::asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler )
 {
     if( headerErrorCode ){
-        throw std::runtime_error( std::string( "ERROR when sending packet header' (" ) + headerErrorCode.message() + ")" );
+        return;
     }
 
     // Pack the packet's body into the buffer.
     packBody( buffer_ );
 
-    // Write synchronously the packet's body to the socket.
-    // Write asynchronously the packet's header to the socket.
+    // Write asynchronously the packet's body to the socket.
     boost::asio::async_write(
                 *socket,
                 boost::asio::buffer( buffer_, (int)bodySize_ ),
@@ -98,7 +100,10 @@ void Packet::asyncSendBody( const boost::system::error_code& headerErrorCode, st
                     if( ec ){
                         throw std::runtime_error( std::string( "ERROR when sending packet body' (" ) + ec.message() + ")" );
                     }
-                    //(*packetHandler)( std::make_shared( *this ) );
+
+                    if( packetHandler != nullptr ){
+                        packetHandler( PacketPtr( clone() ) );
+                    }
     });
 }
 
@@ -130,6 +135,56 @@ void Packet::recv( boost::asio::ip::tcp::socket& socket )
 
     // Unpack the packet's body.
     unpackBody( buffer );
+}
+
+
+void Packet::asyncRecv( SocketPtr socket, PacketHandler packetHandler )
+{
+    // Read asynchronously the packet's header from the socket.
+    boost::asio::async_read(
+                *socket,
+                boost::asio::buffer( buffer_, (int)getHeaderSize() ),
+                boost::bind( &Packet::asyncRecvBody, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred, socket, packetHandler )
+                );
+}
+
+
+void Packet::asyncRecvBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler )
+{
+    if( headerErrorCode ){
+        return;
+        //throw std::runtime_error( std::string( "ERROR when receiving packet header' (" ) + headerErrorCode.message() + ")" );
+    }
+
+    // Unpack the packet's header from the buffer.
+    unpackHeader( buffer_ );
+
+    // FIXME: If I descomment this, the program abruptly exits
+    if( !expectedType() ){
+        throw std::runtime_error( std::string( "ERROR: Unexpected packet" ) );
+    }
+
+    // Write synchronously the packet's body to the socket.
+    // Write asynchronously the packet's header to the socket.
+    boost::asio::async_read(
+                *socket,
+                boost::asio::buffer( buffer_, (int)bodySize_ ),
+                boost::bind( &Packet::onPacketRecv, this, _1, _2, packetHandler ) );
+}
+
+
+void Packet::onPacketRecv( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler )
+{
+    if( errorCode ){
+        return;
+        //throw std::runtime_error( std::string( "ERROR when receiving packet body' (" ) + errorCode.message() + ")" );
+    }
+
+    // Unpack the packet's body from the buffer.
+    unpackBody( buffer_ );
+
+    // Call the packet handler.
+    packetHandler( PacketPtr( clone() ) );
 }
 
 

@@ -39,7 +39,7 @@ MainWindow::MainWindow( QWidget* parent ) :
     RenderPanel* renderPanel;
 
     // Create a instance of singlenton class ComoApp.
-    comoApp = shared_ptr< ComoApp >( new ComoApp /*::getInstance()*/ );
+    comoApp = shared_ptr< ComoApp >( new ComoApp( this ) );
 
     // Set a QFrame as the central widget. This frame will hold all others widgets.
     setCentralWidget( new QFrame );
@@ -68,6 +68,7 @@ MainWindow::MainWindow( QWidget* parent ) :
 
 MainWindow::~MainWindow()
 {
+    std::cout << "Main window - destructor" << std::endl;
     delete ui;
 }
 

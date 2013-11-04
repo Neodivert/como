@@ -41,17 +41,16 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
 {
     private:
         unsigned int id_;
-        Socket socket_;
+        SocketPtr socket_;
 
         char name_[64];
-        char buffer_[BUFFER_SIZE];
-
-        char outBuffer_[BUFFER_SIZE];
 
         std::function<void (unsigned int)> removeUserCallback_;
 
         std::uint8_t nextCommand_;
         std::uint8_t nCommandsInLastPacket_;
+
+        SceneUpdate outSceneUpdatePacket_;
 
     public:
         /***

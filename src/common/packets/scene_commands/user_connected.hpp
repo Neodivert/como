@@ -37,6 +37,7 @@ class UserConnected : public SceneCommand
          ***/
         UserConnected();
         UserConnected( const UserAccepted& userAcceptedPacket );
+        UserConnected( const UserConnected& b );
 
 
         /***

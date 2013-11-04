@@ -45,6 +45,19 @@ NewUser::NewUser( const char* name ) :
 }
 
 
+NewUser::NewUser( const NewUser& b ) :
+    Packet( b )
+{
+    strncpy( name_, b.name_, NAME_SIZE );
+}
+
+
+Packet* NewUser::clone() const
+{
+    return new NewUser( *this );
+}
+
+
 /***
  * 2. Packing and unpacking
  ***/

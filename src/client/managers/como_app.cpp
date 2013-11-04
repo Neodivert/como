@@ -25,8 +25,6 @@ using namespace std;
 
 namespace como {
 
-ComoApp* ComoApp::singlentonInstance = nullptr;
-
 AppModes appModes =
 {{
     AppMode::OBJECT,
@@ -68,7 +66,8 @@ std::array< QString, N_TRANSFORMATION_MODES > transformationModeStrings =
  * 1. Initialization and destruction
  ***/
 
-ComoApp::ComoApp()
+ComoApp::ComoApp( QWidget* parent ) :
+    QObject( parent )
 {
     // Create an OpenGL engine (used for creating and initializing
     // an OpenGL context and a scene.
@@ -97,6 +96,11 @@ ComoApp::ComoApp()
 
     cout << "End of ComoApp constructor" << endl;
     showError();
+}
+
+ComoApp::~ComoApp()
+{
+    std::cout << "COMO APP - Destructor" << std::endl;
 }
 
 /*

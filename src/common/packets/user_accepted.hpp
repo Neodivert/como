@@ -40,6 +40,8 @@ class UserAccepted : public Packet
         UserAccepted();
         UserAccepted( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor );
         void setData( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor );
+        UserAccepted( const UserAccepted& b );
+        virtual Packet* clone() const ;
 
 
         /***

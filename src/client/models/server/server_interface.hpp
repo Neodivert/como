@@ -22,6 +22,7 @@
 
 #include "../../../common/packets/packets.hpp"
 #include <boost/asio.hpp>
+#include <boost/thread.hpp>
 #include <thread>
 
 namespace como {
@@ -30,13 +31,17 @@ class ServerInterface
 {
     private:
         boost::asio::io_service io_service_;
+        std::shared_ptr< boost::asio::io_service::work > work_;
 
         SocketPtr socket_;
 
-        std::thread* listenerThread;
+        boost::thread_group workerThreads_;
 
-        std::mutex closeConnectionMutex_;
-        bool closeConnection_;
+        std::vector<ID> localToRemoteUserID_;
+
+        SceneUpdate sceneUpdatePacketFromServer_;
+
+        std::mutex consoleMutex;
 
     public:
         /***
@@ -56,11 +61,12 @@ class ServerInterface
          * 3. Handlers
          ***/
     private:
-        void onNewUserPacketSent( PacketPtr );
+        void onSceneUpdateReceived( PacketPtr packet );
 
 
     private:
         void listen();
+        void work();
 };
 
 typedef std::shared_ptr<ServerInterface> ServerInterfacePtr;

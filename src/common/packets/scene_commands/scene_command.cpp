@@ -32,6 +32,13 @@ SceneCommand::SceneCommand( SceneCommandType type ) :
 }
 
 
+SceneCommand::SceneCommand( const SceneCommand& b ) :
+    type_( b.type_ ),
+    userID_( b.userID_ )
+{
+}
+
+
 /***
  * 2. Packing and unpacking
  ***/
