@@ -22,7 +22,6 @@
 
 #include "packet.hpp"
 #include <cstring>
-#include <iostream>
 
 namespace como {
 

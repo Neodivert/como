@@ -18,7 +18,6 @@
 ***/
 
 #include "scene_update.hpp"
-#include <iostream>
 
 namespace como {
 
@@ -126,7 +125,6 @@ const std::vector< SceneCommandConstPtr >* SceneUpdate::getCommands()
 
 bool SceneUpdate::expectedType() const
 {
-    std::cout << "SceneUpdate::expectedType" << std::endl;
     return ( Packet::getType() == PacketType::SCENE_UPDATE );
 }
 

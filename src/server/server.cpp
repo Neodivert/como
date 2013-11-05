@@ -37,6 +37,9 @@ Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThre
     for( i=0; i<N_THREADS; i++ ){
         threads_.create_thread( boost::bind( &Server::workerThread, this ) );
     }
+
+    // Initialize the log
+    log_ = LogPtr( new Log );
 }
 
 
@@ -63,9 +66,7 @@ void Server::run()
     boost::asio::ip::tcp::resolver::query query( "localhost", boost::lexical_cast< std::string >( port_ ) );
 
     try{
-        coutMutex_.lock();
-        std::cout << "Press any key to exit" << std::endl;
-        coutMutex_.unlock();
+        log_->write( "Press any key to exit\n" );
 
         // Resolve the query to localhost:port and get its TCP end point.
         boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve( query );
@@ -95,9 +96,7 @@ void Server::run()
         // Wait for the server's threads to finish.
         threads_.join_all();
     }catch( std::exception& ex ){
-        coutMutex_.lock();
-        std::cout << "Exception: " << ex.what() << std::endl;
-        coutMutex_.unlock();
+        log_->write( "Exception: ", ex.what(), "\n" );
     }
 }
 
@@ -108,9 +107,7 @@ void Server::run()
 
 void Server::listen()
 {
-    coutMutex_.lock();
-    std::cout << "Listening on port (" << port_ << ")" << std::endl;
-    coutMutex_.unlock();
+    log_->write( "Listening on port (", port_, ")\n" );
 
     // Wait for a new user connection.
     acceptor_.async_accept( newSocket_, boost::bind( &Server::onAccept, this, _1 ) );
@@ -130,17 +127,11 @@ void Server::onAccept( const boost::system::error_code& errorCode )
     char buffer[128];
 
     if( errorCode ){
-        coutMutex_.lock();
-        std::cout << "[" << boost::this_thread::get_id() << "]: ERROR(" << errorCode.message() << ")" << std::endl;
-        coutMutex_.unlock();
+        log_->write( "[", boost::this_thread::get_id(), "]: ERROR(", errorCode.message(), ")\n" );
     }else{
         // Connection established. Wait synchronously for a NEW_USER package.
         newUserPacket.recv( newSocket_ );
-
-        coutMutex_.lock();
-
-        std::cout << "[" << newUserPacket.getName() << "] (" << boost::this_thread::get_id() << "): Connected!" << std::endl;
-        coutMutex_.unlock();
+        log_->write( "[", newUserPacket.getName(), "] (", boost::this_thread::get_id(), "): Connected!\n" );
 
         /*** Prepare an USER_ACCEPTED package in respond to the previous NEW_USER one ***/
 
@@ -165,7 +156,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         userAcceptedPacket.send( newSocket_ );
 
         // Add the new user to the user vector.
-        users_.push_back( std::make_shared<PublicUser>( newId_, userAcceptedPacket.getName(), std::move( newSocket_ ), std::bind( &Server::deleteUser, this, std::placeholders::_1 ) ) );
+        users_.push_back( std::make_shared<PublicUser>( newId_, userAcceptedPacket.getName(), std::move( newSocket_ ), std::bind( &Server::deleteUser, this, std::placeholders::_1 ), log_ ) );
 
         // Add an USER_CONNECTED scene command to the server historic.
         addCommand( SceneCommandConstPtr( new UserConnected( userAcceptedPacket ) ) );
@@ -178,9 +169,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         // Increment the "new id" for the next user.
         newId_++;
 
-        coutMutex_.lock();
-        std::cout << "New sessions: (" << users_.back()->getId() << ") - total sessions: " << users_.size() << std::endl;
-        coutMutex_.unlock();
+        log_->write( "New sessions: (", users_.back()->getId(), ") - total sessions: ", users_.size(), "\n" );
 
         if( users_.size() < MAX_SESSIONS ){
             // There is room for more users, wait for a new connection.
@@ -190,10 +179,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
             acceptor_.close( closingErrorCode );
             //acceptor_.cancel();
 
-            coutMutex_.lock();
-            std::cout << "Server is full (MAX_SESSIONS: " << MAX_SESSIONS << ")" << std::endl;
-            //std::cout << "acceptor_.close() : " << closingErrorCode << std::endl;
-            coutMutex_.unlock();
+            log_->write( "Server is full (MAX_SESSIONS: ", MAX_SESSIONS, ")\n" );
         }
     }
 }
@@ -216,7 +202,8 @@ void Server::addCommand( SceneCommandConstPtr sceneCommand )
 void Server::deleteUser( unsigned int id )
 {
     unsigned int i = 0;
-    std::cout << "Server::deleteUser(" << id << ")" << std::endl;
+
+    log_->write( "Server::deleteUser(", id, ")\n" );
 
     while( ( i < users_.size() ) &&
            ( id != users_[i]->getId() ) ){
@@ -224,7 +211,6 @@ void Server::deleteUser( unsigned int id )
     }
 
     if( i < users_.size() ){
-        std::cout << "Erasing (id: " << id << ") - (id: " << id << ")" << std::endl;
         users_.erase( users_.begin() + i );
     }
 
@@ -254,10 +240,7 @@ std::string Server::getCurrentDayTime() const
 
 void Server::workerThread()
 {
-    coutMutex_.lock();
-    std::cout << "[" << boost::this_thread::get_id()
-        << "] Thread Start" << std::endl;
-    coutMutex_.unlock();
+    log_->write( "[", boost::this_thread::get_id(), "] Thread Start\n" );
 
     while( true )
     {
@@ -267,26 +250,17 @@ void Server::workerThread()
             io_service_.run( ec );
             if( ec )
             {
-                coutMutex_.lock();
-                std::cout << "[" << boost::this_thread::get_id()
-                    << "] Error: " << ec.message() << std::endl;
-                coutMutex_.unlock();
+                log_->write( "[", boost::this_thread::get_id(), "] Error: ", ec.message(), "\n" );
             }
             break;
         }
         catch( std::exception & ex )
         {
-            coutMutex_.lock();
-            std::cout << "[" << boost::this_thread::get_id()
-                << "] Exception: " << ex.what() << std::endl;
-            coutMutex_.unlock();
+            log_->write( "[", boost::this_thread::get_id(), "] Exception: ", ex.what(), "\n" );
         }
     }
 
-    coutMutex_.lock();
-    std::cout << "[" << boost::this_thread::get_id()
-        << "] Thread Finish" << std::endl;
-    coutMutex_.unlock();
+    log_->write( "[", boost::this_thread::get_id(), "] Thread finish\n" );
 }
 
 

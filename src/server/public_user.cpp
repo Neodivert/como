@@ -26,20 +26,21 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-PublicUser::PublicUser( unsigned int id, const char* name, Socket socket, std::function<void (unsigned int)> removeUserCallback ) :
+PublicUser::PublicUser( unsigned int id, const char* name, Socket socket, std::function<void (unsigned int)> removeUserCallback, LogPtr log ) :
     id_( id ),
     socket_( SocketPtr( new Socket( std::move( socket ) ) ) ),
     removeUserCallback_( removeUserCallback ),
-    nextCommand_( 0 )
+    nextCommand_( 0 ),
+    log_( log )
 {
     strncpy( name_, name, 64 );
-    std::cout << "Session created (id: " << id_ << ")" << std::endl;
+    log_->write( "Session (", id_, ") created\n" );
 }
 
 
 PublicUser::~PublicUser()
 {
-    std::cout << "Session (" << id_ << ") destroyed" << std::endl;
+    log_->write( "Session (", id_, ") destroyed\n" );
 }
 
 
@@ -88,7 +89,7 @@ void PublicUser::sendNextSceneUpdate( const CommandsList* commandsHistoric )
     outSceneUpdatePacket_.clear();
     outSceneUpdatePacket_.addCommands( commandsHistoric, nextCommand_, MAX_COMMANDS_PER_PACKET );
 
-    std::cout << "PublicUser::sendNextSceneUpdate 1 - bodySize: (" << outSceneUpdatePacket_.getBodySize() << ")" << std::endl;
+    log_->write( "PublicUser::sendNextSceneUpdate 1 - bodySize: (", outSceneUpdatePacket_.getBodySize(), ")\n" );
 
     // Get the number of commands in the packet.
     nCommandsInLastPacket_ = (std::uint8_t)( outSceneUpdatePacket_.getCommands()->size() );

@@ -22,10 +22,10 @@
 
 #include <memory>
 #include <boost/asio.hpp>
-#include <iostream>
 #include <boost/bind.hpp>
 #include <functional>
 #include "../common/packets/packets.hpp"
+#include "../common/utilities/log.hpp"
 #include <list>
 
 namespace como {
@@ -52,11 +52,13 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
 
         SceneUpdate outSceneUpdatePacket_;
 
+        LogPtr log_;
+
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        PublicUser( unsigned int id, const char* name, Socket socket, std::function<void (unsigned int)> removeUserCallback );
+        PublicUser( unsigned int id, const char* name, Socket socket, std::function<void (unsigned int)> removeUserCallback, LogPtr log );
         ~PublicUser();
 
 

@@ -28,7 +28,6 @@
 #define SERVER_HPP
 
 #include <ctime>
-#include <iostream>
 #include <string>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
@@ -37,6 +36,7 @@
 #include <boost/lexical_cast.hpp>
 #include "public_user.hpp"
 #include "../common/packets/packets.hpp"
+#include "../common/utilities/log.hpp"
 
 using boost::asio::ip::tcp;
 
@@ -84,6 +84,8 @@ class Server
         // Historic of commands performed on the scene.
         CommandsList commandsHistoric_;
 
+        // Log
+        LogPtr log_;
 
     public:
         /***

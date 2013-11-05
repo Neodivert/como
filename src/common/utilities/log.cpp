@@ -17,22 +17,8 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "server.hpp"
-#include "../common/packets/packets.hpp"
-#include <endian.h>
-#include "../common/utilities/log.hpp"
+#include "log.hpp"
 
-int main( int argc, char* argv[] )
-{
-    try {
-        if( argc < 3 ){
-            std::cerr << "Usage: server <port> <max_users>" << std::endl;
-            exit( -1 );
-        }
+namespace como {
 
-        como::Server server( atoi( argv[1] ), atoi( argv[2] ), 1 );
-        server.run();
-    }catch (std::exception& e){
-        std::cerr << e.what() << std::endl;
-    }
-}
+} // namespace como

@@ -58,7 +58,6 @@ UserConnected::UserConnected( const UserConnected& b ) :
     SceneCommand( b )
 {
     const std::uint8_t* selectionColor = nullptr;
-    std::cout << "User connected - Copy constructor" << std::endl;
     setUserID( b.getUserID() );
     setName( b.getName() );
 
