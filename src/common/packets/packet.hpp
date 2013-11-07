@@ -34,7 +34,7 @@ class Packet;
 typedef boost::asio::ip::tcp::socket Socket;
 typedef std::shared_ptr< Socket > SocketPtr;
 typedef std::shared_ptr< Packet > PacketPtr;
-typedef std::function<void(PacketPtr)> PacketHandler;
+typedef std::function<void( const boost::system::error_code& errorCode, PacketPtr)> PacketHandler;
 
 enum class PacketType : std::int8_t
 {
@@ -74,6 +74,7 @@ class Packet : public Packable
         void asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
         void asyncRecvBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
         void onPacketRecv( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler );
+        void onPacketSend( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler );
     public:
 
 

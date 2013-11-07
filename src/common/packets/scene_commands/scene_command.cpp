@@ -32,6 +32,13 @@ SceneCommand::SceneCommand( SceneCommandType type ) :
 }
 
 
+SceneCommand::SceneCommand( SceneCommandType type, ID userID ) :
+    type_( type ),
+    userID_( userID )
+{
+}
+
+
 SceneCommand::SceneCommand( const SceneCommand& b ) :
     type_( b.type_ ),
     userID_( b.userID_ )

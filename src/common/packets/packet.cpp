@@ -86,6 +86,7 @@ void Packet::asyncSend( SocketPtr socket, PacketHandler packetHandler )
 void Packet::asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler )
 {
     if( headerErrorCode ){
+        packetHandler( headerErrorCode, PacketPtr( clone() ) );
         return;
     }
 
@@ -96,15 +97,15 @@ void Packet::asyncSendBody( const boost::system::error_code& headerErrorCode, st
     boost::asio::async_write(
                 *socket,
                 boost::asio::buffer( buffer_, (int)bodySize_ ),
-                [&,this]( boost::system::error_code ec, std::size_t ){
-                    if( ec ){
-                        throw std::runtime_error( std::string( "ERROR when sending packet body' (" ) + ec.message() + ")" );
-                    }
+                boost::bind( &Packet::onPacketSend, this, _1, _2, packetHandler )
+                );
+}
 
-                    if( packetHandler != nullptr ){
-                        packetHandler( PacketPtr( clone() ) );
-                    }
-    });
+void Packet::onPacketSend( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler )
+{
+    // Call the packet handler.
+    // FIXME: Is there any way to allow only not null PacketHandlers?
+    packetHandler( errorCode, PacketPtr( clone() ) );
 }
 
 
@@ -152,8 +153,8 @@ void Packet::asyncRecv( SocketPtr socket, PacketHandler packetHandler )
 void Packet::asyncRecvBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler )
 {
     if( headerErrorCode ){
+        packetHandler( headerErrorCode, PacketPtr( clone() ) );
         return;
-        //throw std::runtime_error( std::string( "ERROR when receiving packet header' (" ) + headerErrorCode.message() + ")" );
     }
 
     // Unpack the packet's header from the buffer.
@@ -175,16 +176,13 @@ void Packet::asyncRecvBody( const boost::system::error_code& headerErrorCode, st
 
 void Packet::onPacketRecv( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler )
 {
-    if( errorCode ){
-        return;
-        //throw std::runtime_error( std::string( "ERROR when receiving packet body' (" ) + errorCode.message() + ")" );
+    if( !errorCode ){
+        // Unpack the packet's body from the buffer.
+        unpackBody( buffer_ );
     }
 
-    // Unpack the packet's body from the buffer.
-    unpackBody( buffer_ );
-
     // Call the packet handler.
-    packetHandler( PacketPtr( clone() ) );
+    packetHandler( errorCode, PacketPtr( clone() ) );
 }
 
 

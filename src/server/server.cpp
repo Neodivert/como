@@ -205,28 +205,34 @@ void Server::deleteUser( unsigned int id )
 
     log_->write( "Server::deleteUser(", id, ")\n" );
 
+    // Search the requested id.
     while( ( i < users_.size() ) &&
            ( id != users_[i]->getId() ) ){
         i++;
     }
 
+    // If found, delete the requested user.
     if( i < users_.size() ){
         users_.erase( users_.begin() + i );
-    }
 
-    if( users_.size() == (MAX_SESSIONS - 1) ){
-        // If the server was full before this user got out, that means the acceptor wasn't
-        // listening for new connections. Start listening now that there is room again.
+        // Add a SceneCommand to the historic informing about the user
+        // disconnection.
+        addCommand( SceneCommandConstPtr( new SceneCommand( SceneCommandType::USER_DISCONNECTED, id ) ) );
 
-        //acceptor_.open( endPoint_.protocol() );
-        //acceptor_.listen( 0 );
-        openAcceptor();
+        if( users_.size() == (MAX_SESSIONS - 1) ){
+            // If the server was full before this user got out, that means the acceptor wasn't
+            // listening for new connections. Start listening now that there is room again.
 
-        // Start listening.
-        // FIXME: Sometimes I get an exception "bind address already in use" when is
-        // the server who closes the connections.
+            //acceptor_.open( endPoint_.protocol() );
+            //acceptor_.listen( 0 );
+            openAcceptor();
 
-        listen();
+            // Start listening.
+            // FIXME: Sometimes I get an exception "bind address already in use" when is
+            // the server who closes the connections.
+            listen();
+        }
+
     }
 }
 

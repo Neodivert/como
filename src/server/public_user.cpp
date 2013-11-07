@@ -35,6 +35,8 @@ PublicUser::PublicUser( unsigned int id, const char* name, Socket socket, std::f
 {
     strncpy( name_, name, 64 );
     log_->write( "Session (", id_, ") created\n" );
+
+    readSceneUpdate();
 }
 
 
@@ -60,8 +62,6 @@ const char* PublicUser::getName()
 }
 
 
-
-
 /***
  * 3. Setters
  ***/
@@ -71,6 +71,25 @@ const char* PublicUser::getName()
 /***
  * 4. Socket reading
  ***/
+
+void PublicUser::readSceneUpdate()
+{
+    log_->write( "Waiting for SCENE_UPDATE from user (", id_, ")\n"  );
+    sceneUpdatePacketFromUser_.asyncRecv( socket_, boost::bind( &PublicUser::onReadSceneUpdate, this, _1, _2 ) );
+}
+
+
+void PublicUser::onReadSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet )
+{
+    if( errorCode ){
+        log_->write( "ERROR reading SCENE_UPDATE packet: ", errorCode.message(), "\n" );
+        removeUserCallback_( id_ );
+    }else{
+        // FIXME: Make use of the packet.
+        log_->write( "SCENE_UPDATE received\n" );
+        readSceneUpdate();
+    }
+}
 
 
 /***
@@ -89,17 +108,27 @@ void PublicUser::sendNextSceneUpdate( const CommandsList* commandsHistoric )
     outSceneUpdatePacket_.clear();
     outSceneUpdatePacket_.addCommands( commandsHistoric, nextCommand_, MAX_COMMANDS_PER_PACKET );
 
-    log_->write( "PublicUser::sendNextSceneUpdate 1 - bodySize: (", outSceneUpdatePacket_.getBodySize(), ")\n" );
-
     // Get the number of commands in the packet.
     nCommandsInLastPacket_ = (std::uint8_t)( outSceneUpdatePacket_.getCommands()->size() );
 
     // Pack the previous packet and send it to the client.
-    outSceneUpdatePacket_.asyncSend( socket_, nullptr );
+    outSceneUpdatePacket_.asyncSend( socket_, boost::bind( &PublicUser::onWriteSceneUpdate, this, _1, _2 ) );
+}
 
-    // Update the nextCommand_ index for the next SCENE_UPDATE packet.
-    // TODO: Move this to a callback (async send).
-    nextCommand_ += nCommandsInLastPacket_;
+
+void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet )
+{
+    if( errorCode ){
+        // FIXME: If there are an async read and an async write on the socket
+        // at the same time, could it lead to errors (like deleting the user twice)?.
+        log_->write( "ERROR writting SCENE_UPDATE packet: ", errorCode.message(), "\n" );
+        removeUserCallback_( id_ );
+    }else{
+        // FIXME: Make use of the packet?.
+        log_->write( "SCENE_UPDATE sended\n" );
+        // Update the nextCommand_ index for the next SCENE_UPDATE packet.
+        nextCommand_ += nCommandsInLastPacket_;
+    }
 }
 
 } // namespace como

@@ -27,7 +27,8 @@ namespace como {
 
 enum class SceneCommandType : std::uint8_t
 {
-    USER_CONNECTED = 0
+    USER_CONNECTED = 0,
+    USER_DISCONNECTED = 1
 };
 
 
@@ -42,6 +43,7 @@ class SceneCommand : public Packable
          * 1. Initialization and destruction
          ***/
         SceneCommand( SceneCommandType type );
+        SceneCommand( SceneCommandType type, ID userID );
         SceneCommand( const SceneCommand& b );
 
 

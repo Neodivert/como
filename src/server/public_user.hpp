@@ -50,6 +50,7 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
         std::uint8_t nextCommand_;
         std::uint8_t nCommandsInLastPacket_;
 
+        SceneUpdate sceneUpdatePacketFromUser_;
         SceneUpdate outSceneUpdatePacket_;
 
         LogPtr log_;
@@ -77,6 +78,8 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
         /***
          * 4. Socket reading
          ***/
+        void readSceneUpdate();
+        void onReadSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet );
 
 
         /***
@@ -84,6 +87,7 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
          ***/
         bool needsSceneUpdate( const CommandsList* commandsHistoric ) const ;
         void sendNextSceneUpdate( const CommandsList* commandsHistoric );
+        void onWriteSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet );
 };
 
 
