@@ -91,6 +91,9 @@ const char* SceneUpdate::unpackBody( const char* buffer )
             case SceneCommandType::USER_CONNECTED:
                 sceneCommandPtr =  SceneCommandPtr( new UserConnected );
             break;
+            case SceneCommandType::USER_DISCONNECTED:
+                sceneCommandPtr =  SceneCommandPtr( new SceneCommand( SceneCommandType::USER_DISCONNECTED ) );
+            break;
         }
         sceneCommandPtr->unpack( buffer );
         commands_.push_back( sceneCommandPtr );

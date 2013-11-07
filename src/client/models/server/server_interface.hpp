@@ -61,7 +61,7 @@ class ServerInterface
          * 3. Handlers
          ***/
     private:
-        void onSceneUpdateReceived( PacketPtr packet );
+        void onSceneUpdateReceived( const boost::system::error_code& errorCode, PacketPtr packet );
 
 
     private:

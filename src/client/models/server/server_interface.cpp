@@ -152,14 +152,20 @@ void ServerInterface::disconnect()
  * 3. Handlers
  ***/
 
-void ServerInterface::onSceneUpdateReceived( PacketPtr packet )
+void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& errorCode, PacketPtr packet )
 {
+    // FIXME: Make use of the errorCode variable.
+    std::cout << errorCode.message() << std::endl;
+
+    unsigned int i;
+    const std::vector< SceneCommandConstPtr >* sceneCommands = nullptr;
+
     consoleMutex.lock();
     std::cout << "Packet received" << std::endl;
     consoleMutex.unlock();
 
     SceneUpdate* sceneUpdate = dynamic_cast< SceneUpdate *>( packet.get() );
-    const UserConnected* userConnectedCommand = nullptr;
+    //const UserConnected* userConnectedCommand = nullptr;
 
     if( !sceneUpdate ){
         throw std::runtime_error( std::string( "ERROR in \"onSceneUpdateReceived\": not a SCENE_UPDATE packet" ) );
@@ -169,10 +175,27 @@ void ServerInterface::onSceneUpdateReceived( PacketPtr packet )
     std::cout << "commands: " << sceneUpdate->getCommands() << std::endl
               << "nCommands: " << sceneUpdate->getCommands()->size() << std::endl;
 
-    userConnectedCommand = dynamic_cast< const UserConnected* >( ( (*( sceneUpdate->getCommands() ) )[0] ).get() );
+
+    sceneCommands = sceneUpdate->getCommands();
+    for( i=0; i<sceneCommands->size(); i++ ){
+        std::cout << "\tCommand[" << i << "]: ";
+        switch( ( ( *sceneCommands )[i] )->getType() ){
+            case SceneCommandType::USER_CONNECTED:
+                std::cout << "USER_CONNECTED" << std::endl;
+            break;
+            case SceneCommandType::USER_DISCONNECTED:
+                std::cout << "USER_DISCONNECTED" << std::endl;
+            break;
+        }
+    }
+
+
+    /*userConnectedCommand = dynamic_cast< const UserConnected* >( ( (*( sceneUpdate->getCommands() ) )[0] ).get() );
 
     std::cout << "First command of type USER_CONNECTED: " << userConnectedCommand << std::endl;
     std::cout << "User connected: [" << userConnectedCommand->getName() << "]" << std::endl;
+    */
+
     consoleMutex.unlock();
 
     listen();
@@ -185,7 +208,7 @@ void ServerInterface::listen()
     std::cout << "Listening for new scene updates from server ..." << std::endl;
     consoleMutex.unlock();
 
-    sceneUpdatePacketFromServer_.asyncRecv( socket_, std::bind( &ServerInterface::onSceneUpdateReceived, this, std::placeholders::_1 ) );
+    sceneUpdatePacketFromServer_.asyncRecv( socket_, std::bind( &ServerInterface::onSceneUpdateReceived, this, std::placeholders::_1, std::placeholders::_2 ) );
 }
 
 
