@@ -125,9 +125,11 @@ void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode,
         removeUserCallback_( id_ );
     }else{
         // FIXME: Make use of the packet?.
-        log_->write( "SCENE_UPDATE sended\n" );
+
         // Update the nextCommand_ index for the next SCENE_UPDATE packet.
         nextCommand_ += nCommandsInLastPacket_;
+
+        log_->write( "SCENE_UPDATE sended (nextCommand_: ", (int)nextCommand_, "\n" );
     }
 }
 

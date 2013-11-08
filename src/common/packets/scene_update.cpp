@@ -65,6 +65,14 @@ char* SceneUpdate::packBody( char* buffer ) const
     packer::pack( (std::uint8_t)( commands_.size() ), buffer );
 
     for( ; i<commands_.size(); i++ ){
+        switch( commands_[i]->getType() ){
+            case SceneCommandType::USER_CONNECTED:
+                std::cout << "Packing USER_CONNECTED" << std::endl;
+            break;
+            case SceneCommandType::USER_DISCONNECTED:
+                std::cout << "Packing USER_DISCONNECTED" << std::endl;
+            break;
+        }
         buffer = commands_[i]->pack( buffer );
     }
 
@@ -89,9 +97,11 @@ const char* SceneUpdate::unpackBody( const char* buffer )
     for( ; i<nCommands; i++ ){
         switch( SceneCommand::getType( buffer ) ){
             case SceneCommandType::USER_CONNECTED:
+                std::cout << "Unpaking USER_CONNECTED" << std::endl;
                 sceneCommandPtr =  SceneCommandPtr( new UserConnected );
             break;
             case SceneCommandType::USER_DISCONNECTED:
+                std::cout << "Unpaking USER_DISCONNECTED" << std::endl;
                 sceneCommandPtr =  SceneCommandPtr( new SceneCommand( SceneCommandType::USER_DISCONNECTED ) );
             break;
         }
@@ -152,6 +162,7 @@ void SceneUpdate::addCommands(
 
 
     while( ( i < maxCommands ) && ( it != commandsHistoric->end() ) ){
+        std::cout << "Adding command [" << (firstCommand + i) << " (" << static_cast< int >( (*it)->getType() ) << ")] to SCENE_UPDATE packet" << std::endl;
         commands_.push_back( *it );
         bodySize_ += (*it)->getPacketSize();
 

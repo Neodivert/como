@@ -91,7 +91,7 @@ class Server
         /***
          * 1. Initialization and destruction
          ***/
-        Server( unsigned int port_, unsigned int maxSessions, unsigned int nThreads = 1 );
+        Server( unsigned int port_, unsigned int maxSessions, unsigned int nThreads = 3 );
 
 
         /***

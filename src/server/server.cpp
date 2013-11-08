@@ -82,12 +82,11 @@ void Server::run()
         // User only needs to press any key to stop the server.
         std::cin.get();
 
-        boost::system::error_code errorCode;
-
         // Stop the I/O processing.
         io_service_.stop();
 
         // TODO: Are these methods called in their corresponding destructors?
+        // boost::system::error_code errorCode;
         //newSocket_.shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
         //newSocket_.close( errorCode );
 
@@ -192,7 +191,58 @@ void Server::onAccept( const boost::system::error_code& errorCode )
 
 void Server::addCommand( SceneCommandConstPtr sceneCommand )
 {
+    unsigned int i = 0;
+
+    CommandsList::const_iterator it = commandsHistoric_.begin();
+
+    /*
+    log_->write( "Historic before insertion: \n" );
+    for( ; it != commandsHistoric_.end(); it++ ){
+        log_->write( "Command [", i, "]: " );
+
+        switch( (*it)->getType() ){
+            case SceneCommandType::USER_CONNECTED:
+                log_->write( "USER_CONNECTED" );
+            break;
+            case SceneCommandType::USER_DISCONNECTED:
+                log_->write( "USER_DISCONNECTED" );
+            break;
+        }
+        log_->write( "\n" );
+        i++;
+    }
+    */
+
     commandsHistoric_.push_back( sceneCommand );
+
+    log_->write( "Command added to historic [" );
+
+    switch( sceneCommand->getType() ){
+        case SceneCommandType::USER_CONNECTED:
+            log_->write( "USER_CONNECTED" );
+        break;
+        case SceneCommandType::USER_DISCONNECTED:
+            log_->write( "USER_DISCONNECTED" );
+        break;
+    }
+    log_->write( "]\n" );
+
+    i = 0;
+    log_->write( "Historic after insertion: \n" );
+    for( it = commandsHistoric_.begin() ; it != commandsHistoric_.end(); it++ ){
+        log_->write( "Command [", i, "]: " );
+
+        switch( (*it)->getType() ){
+            case SceneCommandType::USER_CONNECTED:
+                log_->write( "USER_CONNECTED" );
+            break;
+            case SceneCommandType::USER_DISCONNECTED:
+                log_->write( "USER_DISCONNECTED" );
+            break;
+        }
+        log_->write( "\n" );
+        i++;
+    }
 }
 
 

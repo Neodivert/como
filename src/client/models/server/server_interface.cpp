@@ -154,8 +154,12 @@ void ServerInterface::disconnect()
 
 void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& errorCode, PacketPtr packet )
 {
-    // FIXME: Make use of the errorCode variable.
-    std::cout << errorCode.message() << std::endl;
+    if( errorCode ){
+        consoleMutex.lock();
+        std::cout << "Error when receiving packet: " << errorCode.message() << std::endl;
+        consoleMutex.unlock();
+        return;
+    }
 
     unsigned int i;
     const std::vector< SceneCommandConstPtr >* sceneCommands = nullptr;
