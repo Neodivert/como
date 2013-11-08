@@ -176,9 +176,7 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
     }
 
     consoleMutex.lock();
-    std::cout << "commands: " << sceneUpdate->getCommands() << std::endl
-              << "nCommands: " << sceneUpdate->getCommands()->size() << std::endl;
-
+    std::cout << "nCommands: " << sceneUpdate->getCommands()->size() << std::endl;
 
     sceneCommands = sceneUpdate->getCommands();
     for( i=0; i<sceneCommands->size(); i++ ){

@@ -21,7 +21,6 @@
 
 namespace como {
 
-
 /***
  * 1. Initialization and destruction
  ***/
@@ -129,7 +128,7 @@ void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode,
         // Update the nextCommand_ index for the next SCENE_UPDATE packet.
         nextCommand_ += nCommandsInLastPacket_;
 
-        log_->write( "SCENE_UPDATE sended (nextCommand_: ", (int)nextCommand_, "\n" );
+        log_->write( "SCENE_UPDATE sended (nextCommand_: ", (int)nextCommand_, ")\n" );
     }
 }
 

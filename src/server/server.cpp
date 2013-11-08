@@ -195,24 +195,6 @@ void Server::addCommand( SceneCommandConstPtr sceneCommand )
 
     CommandsList::const_iterator it = commandsHistoric_.begin();
 
-    /*
-    log_->write( "Historic before insertion: \n" );
-    for( ; it != commandsHistoric_.end(); it++ ){
-        log_->write( "Command [", i, "]: " );
-
-        switch( (*it)->getType() ){
-            case SceneCommandType::USER_CONNECTED:
-                log_->write( "USER_CONNECTED" );
-            break;
-            case SceneCommandType::USER_DISCONNECTED:
-                log_->write( "USER_DISCONNECTED" );
-            break;
-        }
-        log_->write( "\n" );
-        i++;
-    }
-    */
-
     commandsHistoric_.push_back( sceneCommand );
 
     log_->write( "Command added to historic [" );
@@ -227,6 +209,7 @@ void Server::addCommand( SceneCommandConstPtr sceneCommand )
     }
     log_->write( "]\n" );
 
+    /*
     i = 0;
     log_->write( "Historic after insertion: \n" );
     for( it = commandsHistoric_.begin() ; it != commandsHistoric_.end(); it++ ){
@@ -243,6 +226,7 @@ void Server::addCommand( SceneCommandConstPtr sceneCommand )
         log_->write( "\n" );
         i++;
     }
+    */
 }
 
 

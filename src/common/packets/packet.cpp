@@ -36,6 +36,8 @@ Packet::Packet( const Packet& b ) :
     type_( b.type_ ),
     bodySize_( b.bodySize_ )
 {
+    std::cout << "Packet copy constructor" << std::endl;
+    strncpy( buffer_, b.buffer_, PACKET_BUFFER_SIZE );
 }
 
 
@@ -175,7 +177,7 @@ void Packet::asyncRecvBody( const boost::system::error_code& headerErrorCode, st
 
 
 void Packet::onPacketRecv( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler )
-{
+{   
     if( !errorCode ){
         // Unpack the packet's body from the buffer.
         unpackBody( buffer_ );

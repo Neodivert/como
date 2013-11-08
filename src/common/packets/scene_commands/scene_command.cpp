@@ -18,6 +18,7 @@
 ***/
 
 #include "scene_command.hpp"
+#include <iostream>
 
 namespace como {
 
@@ -93,7 +94,7 @@ SceneCommandType SceneCommand::getType() const
 
 SceneCommandType SceneCommand::getType( const char* buffer )
 {
-    return *( reinterpret_cast< const SceneCommandType* >( buffer ) );
+    return static_cast< const SceneCommandType >(*buffer); //*( reinterpret_cast< const SceneCommandType* >( buffer ) );
 }
 
 

@@ -43,6 +43,8 @@ enum class PacketType : std::int8_t
     SCENE_UPDATE = 2
 };
 
+const unsigned int PACKET_BUFFER_SIZE = 512;
+
 class Packet : public Packable
 {
     private:
@@ -50,7 +52,7 @@ class Packet : public Packable
     protected:
         std::uint16_t bodySize_;
 
-        char buffer_[256];
+        char buffer_[PACKET_BUFFER_SIZE];
 
     public:
         /***
@@ -59,6 +61,8 @@ class Packet : public Packable
         Packet( PacketType type );
         Packet( const Packet& b );
         virtual Packet* clone() const = 0;
+
+        const char* getBuffer() const { return buffer_; }
 
 
         /***

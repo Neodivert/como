@@ -81,7 +81,7 @@ char* UserConnected::pack( char* buffer ) const
 
     // Pack the command's body.
     packer::pack( name_, buffer, NAME_SIZE );
-    for( ; i<4; i++ ){
+    for( i=0; i<4; i++ ){
         packer::pack( selectionColor_[i], buffer );
     }
 
@@ -99,7 +99,7 @@ const char* UserConnected::unpack( const char* buffer )
 
     // Unpack the command's body.
     packer::unpack( name_, buffer, NAME_SIZE );
-    for( ; i<4; i++ ){
+    for( i=0; i<4; i++ ){
         packer::unpack( selectionColor_[i], buffer );
     }
 
