@@ -21,6 +21,7 @@
 #define SERVER_INTERFACE_HPP
 
 #include "../../../common/packets/packets.hpp"
+#include "../../../common/utilities/log.hpp"
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 #include <thread>
@@ -41,13 +42,16 @@ class ServerInterface
 
         SceneUpdate sceneUpdatePacketFromServer_;
 
+        // Log
+        LogPtr log_;
+
         std::mutex consoleMutex;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        ServerInterface();
+        ServerInterface( LogPtr log );
         ~ServerInterface();
 
 

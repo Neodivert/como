@@ -55,17 +55,17 @@ int main( int argc, char *argv[] )
 
 
 
-
+/*
 using boost::asio::ip::tcp;
 
 void connect( const char* server )
 {
-    /*
+    *
      * This code was created from the following example:
      *
      * Daytime.1 - A synchronous TCP daytime client
      * http://www.boost.org/doc/libs/1_54_0/doc/html/boost_asio/tutorial/tutdaytime1.html
-     */
+     *
 
     try
     {
@@ -118,3 +118,4 @@ void connect( const char* server )
         std::cerr << e.what() << std::endl;
     }
 }
+*/

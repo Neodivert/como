@@ -25,6 +25,7 @@
 #include "../models/3d/camera.hpp"
 #include "../models/users/public_user.hpp"
 #include "../models/server/server_interface.hpp"
+#include "../../common/utilities/log.hpp"
 
 namespace como {
 
@@ -86,6 +87,11 @@ class Scene : public QObject
 
         GLfloat defaultContourColor[4];
 
+
+
+        // Log
+        LogPtr log_;
+
         // Interface with the server.
         ServerInterface server_;
 
@@ -93,7 +99,7 @@ class Scene : public QObject
         /***
          * 1. Initialization and destruction
          ***/
-        Scene();
+        Scene( LogPtr log );
         ~Scene();
 
         void initLinesBuffer();

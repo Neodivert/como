@@ -27,11 +27,15 @@ namespace como {
 
 class OpenGLEngine : public QOffscreenSurface
 {
+    private:
+        // Log
+        LogPtr log_;
+
     public:
         /***
          * 1. Initialization
          ***/
-        OpenGLEngine();
+        OpenGLEngine( LogPtr log );
 
         /***
          * 2. Getters

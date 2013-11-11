@@ -26,9 +26,10 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-ServerInterface::ServerInterface() :
+ServerInterface::ServerInterface( LogPtr log ) :
     work_( std::shared_ptr< boost::asio::io_service::work >( new boost::asio::io_service::work( io_service_ ) ) ),
-    socket_( SocketPtr( new boost::asio::ip::tcp::socket( io_service_ ) ) )
+    socket_( SocketPtr( new boost::asio::ip::tcp::socket( io_service_ ) ) ),
+    log_( log )
 {   
     for( unsigned int i=0; i<2; i++ ){
         workerThreads_.create_thread( boost::bind( &ServerInterface::work, this ) );
@@ -61,18 +62,14 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
     boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve( query );
 
     // Connect to the server.
-    consoleMutex.lock();
-    std::cout << "Connecting to the server..." << std::endl;
-    consoleMutex.unlock();
+    log_->debug( "Connecting to the server...\n" );
     socket_->connect( *endpoint_iterator, errorCode );
 
     if( errorCode ){
         throw std::runtime_error( std::string( "ERROR: Couldn't connect to server (" ) + errorCode.message() + ")" );
     }
 
-    consoleMutex.lock();
-    std::cout << "Connecting to the server...OK" << std::endl;
-    consoleMutex.unlock();
+    log_->debug( "Connecting to the server...OK\n" );
 
     // Prepare a NEW_USER network package with the user name, and send it to
     // the server.
@@ -82,16 +79,14 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
     // Read from the server an USER_ACCEPTED network package and unpack it.
     userAcceptedPacket.recv( *socket_ );
 
-    consoleMutex.lock();
     selectionColor = userAcceptedPacket.getSelectionColor();
-    std::cout << "User accepted: " << std::endl
-              << "\tID: [" << userAcceptedPacket.getId() << "]" << std::endl
-              << "\tName: [" << userAcceptedPacket.getName() << "]" << std::endl
-              << "\tSelection color: [" << (int)selectionColor[0] << ", "
-              << (int)selectionColor[1] << ", "
-              << (int)selectionColor[2] << ", "
-              << (int)selectionColor[3] << ")" << std::endl << std::endl;
-    consoleMutex.unlock();
+    log_->debug( "User accepted: \n",
+                 "\tID: [", userAcceptedPacket.getId(), "]\n",
+                 "\tName: [", userAcceptedPacket.getName(), "]\n",
+                 "\tSelection color: [", (int)selectionColor[0], ", ",
+                 (int)selectionColor[1], ", ",
+                 (int)selectionColor[2], ", ",
+                 (int)selectionColor[3], ")\n\n" );
 
     if( errorCode ){
         throw std::runtime_error( std::string( "ERROR when receiving USER_ACCEPTED package from server (" ) + errorCode.message() + ")" );
@@ -110,41 +105,29 @@ void ServerInterface::disconnect()
 {
     boost::system::error_code errorCode;
 
-    consoleMutex.lock();
-    std::cout << "Disconnecting from server ..." << std::endl;
-    consoleMutex.unlock();
+    log_->debug( "Disconnecting from server ...\n" );
 
     // Close the socket to the server if it's open.
     if( socket_->is_open() ){
-        consoleMutex.lock();
-        std::cout << "Closing socket to server" << std::endl;
-        consoleMutex.unlock();
+        log_->debug( "Closing socket to server\n" );
 
         socket_->shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
         socket_->close();
-        consoleMutex.lock();
-        std::cout << "Closing socket to server... OK" << std::endl;
-        consoleMutex.unlock();
+        log_->debug( "Closing socket to server... OK\n" );
     }
 
     // Stop the IO service and join the threads group.
     work_.reset();
     io_service_.stop();
 
-    consoleMutex.lock();
-    std::cout << "Waiting for working threads to finish ..." << std::endl;
-    consoleMutex.unlock();
+    log_->debug( "Waiting for working threads to finish ...\n" );
     workerThreads_.join_all();
-    consoleMutex.lock();
-    std::cout << "Waiting for working threads to finish ...OK" << std::endl;
-    consoleMutex.unlock();
+    log_->debug( "Waiting for working threads to finish ...OK\n" );
 
     // Clear the vector of translations from local user IDs to remote ones.
     localToRemoteUserID_.clear();
 
-    consoleMutex.lock();
-    std::cout << "Disconnecting from server ...OK" << std::endl;
-    consoleMutex.unlock();
+    log_->debug( "Disconnecting from server ...OK\n" );
 }
 
 
@@ -155,18 +138,16 @@ void ServerInterface::disconnect()
 void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& errorCode, PacketPtr packet )
 {
     if( errorCode ){
-        consoleMutex.lock();
-        std::cout << "Error when receiving packet: " << errorCode.message() << std::endl;
-        consoleMutex.unlock();
+        log_->error( "Error when receiving packet: ", errorCode.message(), "\n" );
         return;
     }
 
     unsigned int i;
     const std::vector< SceneCommandConstPtr >* sceneCommands = nullptr;
 
-    consoleMutex.lock();
-    std::cout << "Packet received" << std::endl;
-    consoleMutex.unlock();
+    log_->lock();
+
+    log_->debug( "Packet received\n" );
 
     SceneUpdate* sceneUpdate = dynamic_cast< SceneUpdate *>( packet.get() );
     //const UserConnected* userConnectedCommand = nullptr;
@@ -176,29 +157,22 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
     }
 
     consoleMutex.lock();
-    std::cout << "nCommands: " << sceneUpdate->getCommands()->size() << std::endl;
+
+    log_->debug( "nCommands: ", sceneUpdate->getCommands()->size(), "\n" );
 
     sceneCommands = sceneUpdate->getCommands();
     for( i=0; i<sceneCommands->size(); i++ ){
-        std::cout << "\tCommand[" << i << "]: ";
         switch( ( ( *sceneCommands )[i] )->getType() ){
             case SceneCommandType::USER_CONNECTED:
-                std::cout << "USER_CONNECTED" << std::endl;
+                log_->debug( "\tCommand[", i, "]: USER_CONNECTED\n" );
             break;
             case SceneCommandType::USER_DISCONNECTED:
-                std::cout << "USER_DISCONNECTED" << std::endl;
+                log_->debug( "\tCommand[", i, "]: USER_DISCONNECTED\n" );
             break;
         }
     }
 
-
-    /*userConnectedCommand = dynamic_cast< const UserConnected* >( ( (*( sceneUpdate->getCommands() ) )[0] ).get() );
-
-    std::cout << "First command of type USER_CONNECTED: " << userConnectedCommand << std::endl;
-    std::cout << "User connected: [" << userConnectedCommand->getName() << "]" << std::endl;
-    */
-
-    consoleMutex.unlock();
+    log_->unlock();
 
     listen();
 }
@@ -206,9 +180,7 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
 
 void ServerInterface::listen()
 {   
-    consoleMutex.lock();
-    std::cout << "Listening for new scene updates from server ..." << std::endl;
-    consoleMutex.unlock();
+    log_->debug( "Listening for new scene updates from server ...\n" );
 
     sceneUpdatePacketFromServer_.asyncRecv( socket_, std::bind( &ServerInterface::onSceneUpdateReceived, this, std::placeholders::_1, std::placeholders::_2 ) );
 }
@@ -219,23 +191,15 @@ void ServerInterface::work()
     boost::system::error_code errorCode;
     bool exit = false;
 
-    consoleMutex.lock();
-    std::cout << "[" << boost::this_thread::get_id() << "] thread start" << std::endl;
-    consoleMutex.unlock();
+    log_->debug( "[", boost::this_thread::get_id(), "] thread start\n" );
 
     while( !exit ){
         try{
-            consoleMutex.lock();
-            std::cout << "[" << boost::this_thread::get_id() << "] io_service::run() ... " << std::endl;
-            consoleMutex.unlock();
+            log_->debug( "[", boost::this_thread::get_id(), "] io_service::run() ... \n" );
             io_service_.run( errorCode );
-            consoleMutex.lock();
-            std::cout << "[" << boost::this_thread::get_id() << "] io_service::run() ...OK" << std::endl;
-            consoleMutex.unlock();
+            log_->debug( "[", boost::this_thread::get_id(), "] io_service::run() ...OK\n" );
             if( errorCode ){
-                consoleMutex.lock();
-                std::cout << "[" << boost::this_thread::get_id() << "] Error: " << errorCode.message() << std::endl;
-                consoleMutex.unlock();
+                log_->error( "[", boost::this_thread::get_id(), "] Error: ", errorCode.message(), "\n" );
             }
             exit = true;
         }catch( std::exception& ex ){
@@ -244,9 +208,7 @@ void ServerInterface::work()
         }
     }
 
-    consoleMutex.lock();
-    std::cout << "[" << boost::this_thread::get_id() << "] thread end" << std::endl;
-    consoleMutex.unlock();
+    log_->debug( "[", boost::this_thread::get_id(), "] thread end\n" );
 }
 
 } // namespace como

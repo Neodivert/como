@@ -66,12 +66,13 @@ std::array< QString, N_TRANSFORMATION_MODES > transformationModeStrings =
  * 1. Initialization and destruction
  ***/
 
-ComoApp::ComoApp( QWidget* parent ) :
-    QObject( parent )
+ComoApp::ComoApp( QWidget* parent, LogPtr log ) :
+    QObject( parent ),
+    log_( log )
 {
     // Create an OpenGL engine (used for creating and initializing
     // an OpenGL context and a scene.
-    OpenGLEngine openGLEngine;
+    OpenGLEngine openGLEngine( log );
 
     // Set default app mode.
     appMode = AppMode::OBJECT;
@@ -85,8 +86,7 @@ ComoApp::ComoApp( QWidget* parent ) :
     // Set default pivot point mode.
     pivotPointMode = PivotPointMode::MEDIAN_POINT;
 
-    cout << "ComoApp::ComoApp() 0" << endl;
-    showError();
+    checkOpenGL( "ComoApp constructor - before creating OpenGL context and scene" );
 
     // Set default OpenGL context.
     oglContext = openGLEngine.createOpenGLContext();
@@ -94,13 +94,13 @@ ComoApp::ComoApp( QWidget* parent ) :
     // Set default scene.
     scene = openGLEngine.createScene( oglContext.get() );
 
-    cout << "End of ComoApp constructor" << endl;
-    showError();
+    checkOpenGL( "ComoApp constructor - after creating OpenGL context and scene" );
 }
+
 
 ComoApp::~ComoApp()
 {
-    std::cout << "COMO APP - Destructor" << std::endl;
+    log_->debug( "Destroying instance of ComoApp\n" );
 }
 
 /*
@@ -157,6 +157,11 @@ shared_ptr< QOpenGLContext > ComoApp::getOpenGLContext() const
     return oglContext;
 }
 
+LogPtr ComoApp::getLog() const
+{
+    return log_;
+}
+
 
 /***
  * 3. Setters (slots)
@@ -184,7 +189,7 @@ void ComoApp::setTransformationMode( TransformationMode transformationMode )
     TransformationModes::iterator it;
 
     // Change the transformation mode.
-    cout << "Changin transformation mode" << endl;
+    log_->debug( "Changin transformation mode\n" );
     this->transformationMode = transformationMode;
 
     // Emit signal.

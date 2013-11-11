@@ -67,7 +67,7 @@ void Server::run()
     boost::asio::ip::tcp::resolver::query query( "localhost", boost::lexical_cast< std::string >( port_ ) );
 
     try{
-        log_->write( "Press any key to exit\n" );
+        log_->debug( "Press any key to exit\n" );
 
         // Resolve the query to localhost:port and get its TCP end point.
         boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve( query );
@@ -96,7 +96,7 @@ void Server::run()
         // Wait for the server's threads to finish.
         threads_.join_all();
     }catch( std::exception& ex ){
-        log_->write( "Exception: ", ex.what(), "\n" );
+        log_->error( "Exception: ", ex.what(), "\n" );
     }
 }
 
@@ -107,7 +107,7 @@ void Server::run()
 
 void Server::listen()
 {
-    log_->write( "Listening on port (", port_, ")\n" );
+    log_->debug( "Listening on port (", port_, ")\n" );
 
     // Wait for a new user connection.
     acceptor_.async_accept( newSocket_, boost::bind( &Server::onAccept, this, _1 ) );
@@ -127,11 +127,11 @@ void Server::onAccept( const boost::system::error_code& errorCode )
     char buffer[128];
 
     if( errorCode ){
-        log_->write( "[", boost::this_thread::get_id(), "]: ERROR(", errorCode.message(), ")\n" );
+        log_->error( "[", boost::this_thread::get_id(), "]: ERROR(", errorCode.message(), ")\n" );
     }else{
         // Connection established. Wait synchronously for a NEW_USER package.
         newUserPacket.recv( newSocket_ );
-        log_->write( "[", newUserPacket.getName(), "] (", boost::this_thread::get_id(), "): Connected!\n" );
+        log_->debug( "[", newUserPacket.getName(), "] (", boost::this_thread::get_id(), "): Connected!\n" );
 
         /*** Prepare an USER_ACCEPTED package in respond to the previous NEW_USER one ***/
 
@@ -169,7 +169,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         // Increment the "new id" for the next user.
         newId_++;
 
-        log_->write( "New sessions: (", users_.back()->getId(), ") - total sessions: ", users_.size(), "\n" );
+        log_->debug( "New sessions: (", users_.back()->getId(), ") - total sessions: ", users_.size(), "\n" );
 
         if( users_.size() < MAX_SESSIONS ){
             // There is room for more users, wait for a new connection.
@@ -179,7 +179,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
             acceptor_.close( closingErrorCode );
             //acceptor_.cancel();
 
-            log_->write( "Server is full (MAX_SESSIONS: ", MAX_SESSIONS, ")\n" );
+            log_->debug( "Server is full (MAX_SESSIONS: ", MAX_SESSIONS, ")\n" );
         }
     }
 }
@@ -191,42 +191,41 @@ void Server::onAccept( const boost::system::error_code& errorCode )
 
 void Server::addCommand( SceneCommandConstPtr sceneCommand )
 {
-    unsigned int i = 0;
-
-    CommandsList::const_iterator it = commandsHistoric_.begin();
-
+    // Add the command to the historic.
     commandsHistoric_.push_back( sceneCommand );
 
-    log_->write( "Command added to historic [" );
-
+    // Write the full historic in the log.
+    log_->lock();
     switch( sceneCommand->getType() ){
         case SceneCommandType::USER_CONNECTED:
-            log_->write( "USER_CONNECTED" );
+            log_->debug( "Command added to historic [USER_CONNECTED]\n" );
         break;
         case SceneCommandType::USER_DISCONNECTED:
-            log_->write( "USER_DISCONNECTED" );
+            log_->debug( "Command added to historic [USER_DISCONNECTED]\n" );
         break;
     }
-    log_->write( "]\n" );
+
 
     /*
     i = 0;
-    log_->write( "Historic after insertion: \n" );
+    log_->debug( "Historic after insertion: \n" );
     for( it = commandsHistoric_.begin() ; it != commandsHistoric_.end(); it++ ){
-        log_->write( "Command [", i, "]: " );
+        log_->debug( "Command [", i, "]: " );
 
         switch( (*it)->getType() ){
             case SceneCommandType::USER_CONNECTED:
-                log_->write( "USER_CONNECTED" );
+                log_->debug( "USER_CONNECTED" );
             break;
             case SceneCommandType::USER_DISCONNECTED:
-                log_->write( "USER_DISCONNECTED" );
+                log_->debug( "USER_DISCONNECTED" );
             break;
         }
-        log_->write( "\n" );
+        log_->debug( "\n" );
         i++;
     }
     */
+
+    log_->unlock();
 }
 
 
@@ -238,7 +237,7 @@ void Server::deleteUser( unsigned int id )
 {
     unsigned int i = 0;
 
-    log_->write( "Server::deleteUser(", id, ")\n" );
+    log_->debug( "Server::deleteUser(", id, ")\n" );
 
     // Search the requested id.
     while( ( i < users_.size() ) &&
@@ -281,7 +280,7 @@ std::string Server::getCurrentDayTime() const
 
 void Server::workerThread()
 {
-    log_->write( "[", boost::this_thread::get_id(), "] Thread Start\n" );
+    log_->debug( "[", boost::this_thread::get_id(), "] Thread Start\n" );
 
     while( true )
     {
@@ -291,17 +290,17 @@ void Server::workerThread()
             io_service_.run( ec );
             if( ec )
             {
-                log_->write( "[", boost::this_thread::get_id(), "] Error: ", ec.message(), "\n" );
+                log_->error( "[", boost::this_thread::get_id(), "] Error: ", ec.message(), "\n" );
             }
             break;
         }
         catch( std::exception & ex )
         {
-            log_->write( "[", boost::this_thread::get_id(), "] Exception: ", ex.what(), "\n" );
+            log_->error( "[", boost::this_thread::get_id(), "] Exception: ", ex.what(), "\n" );
         }
     }
 
-    log_->write( "[", boost::this_thread::get_id(), "] Thread finish\n" );
+    log_->debug( "[", boost::this_thread::get_id(), "] Thread finish\n" );
 }
 
 

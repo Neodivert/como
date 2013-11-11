@@ -18,6 +18,7 @@
 ***/
 
 #include "drawable.hpp"
+#include <stdexcept>
 
 /***
  * 1. Initialization
@@ -25,14 +26,19 @@
 
 namespace como {
 
-void showError(){
+
+void checkOpenGL( const char* str )
+{
     GLenum errCode;
     if ((errCode = glGetError()) != GL_NO_ERROR)
     {
-        cout << "ERROR: " << gluErrorString(errCode) << endl;
-    }/*else{
-        cout << "NO ERROR" << endl;
-    }*/
+        throw std::runtime_error( std::string( "OpenGL ERROR at [" ) +
+                                  std::string( str ) +
+                                  std::string( "]: " ) +
+                                  std::string( reinterpret_cast< const char* >( gluErrorString( errCode ) ) ) +
+                                  std::string( "\n" )
+                                  );
+    }
 }
 
 

@@ -40,11 +40,14 @@ class CreateServerPage : public QWizardPage
         QLineEdit* maxUsersInput_;
         QLineEdit* userNameInput_;
 
+        // Log
+        LogPtr log_;
+
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        CreateServerPage( ScenePtr scene );
+        CreateServerPage( ScenePtr scene, LogPtr log );
 
 
         /***

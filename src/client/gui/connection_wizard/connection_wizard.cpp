@@ -36,12 +36,12 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-ConnectionWizard::ConnectionWizard( ScenePtr scene, QWidget* parent ) :
+ConnectionWizard::ConnectionWizard( ScenePtr scene, LogPtr log, QWidget* parent ) :
     QWizard( parent )
 {
     setPage( PAGE_INTRO, new IntroPage );
-    setPage( PAGE_CONNECT_SERVER, new ConnectServerPage( scene ) );
-    setPage( PAGE_CREATE_SERVER, new CreateServerPage( scene ) );
+    setPage( PAGE_CONNECT_SERVER, new ConnectServerPage( scene, log ) );
+    setPage( PAGE_CREATE_SERVER, new CreateServerPage( scene, log ) );
 
     setStartId( PAGE_INTRO );
 }

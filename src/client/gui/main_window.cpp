@@ -38,8 +38,11 @@ MainWindow::MainWindow( QWidget* parent ) :
     ToolsMenu* toolsMenu;
     RenderPanel* renderPanel;
 
-    // Create a instance of singlenton class ComoApp.
-    comoApp = shared_ptr< ComoApp >( new ComoApp( this ) );
+    // Create a instance of Log.
+    log_ = LogPtr( new Log );
+
+    // Create a instance of ComoApp.
+    comoApp = shared_ptr< ComoApp >( new ComoApp( this, log_ ) );
 
     // Set a QFrame as the central widget. This frame will hold all others widgets.
     setCentralWidget( new QFrame );
@@ -61,14 +64,14 @@ MainWindow::MainWindow( QWidget* parent ) :
 
     centralWidget()->setLayout( layout );
 
-    ConnectionWizard connectionWizard( comoApp->getScene(), this );
+    ConnectionWizard connectionWizard( comoApp->getScene(), log_, this );
     connectionWizard.exec();
 }
 
 
 MainWindow::~MainWindow()
 {
-    std::cout << "Main window - destructor" << std::endl;
+    log_->debug( "Main window - destructor\n" );
     delete ui;
 }
 

@@ -28,7 +28,8 @@ Tester* Tester::instance = nullptr;
  * 1. Initialization and destruction
  ***/
 
-Tester::Tester()
+Tester::Tester( LogPtr log ) :
+    log_( log )
 {
     // Create a surface format for OpenGL 4.2 Core.
     // http://stackoverflow.com/questions/11000014/cant-set-desired-opengl-version-in-qglwidget
@@ -69,10 +70,10 @@ Tester::~Tester()
     delete oglContext;
 }
 
-Tester* Tester::getInstance()
+Tester* Tester::getInstance( LogPtr log )
 {
     if( instance == nullptr ){
-        instance = new Tester;
+        instance = new Tester( log );
     }
     return instance;
 }
@@ -105,7 +106,7 @@ void Tester::testMeshTranslations() const
     GLfloat originalVertexData[N_TRIANGLES*3*3];
     GLfloat transformedVertexData[N_TRIANGLES*3*3];
 
-    std::cout << "Running test [Mesh Translations - Number of tests: " << N_TESTS << ")] ..." << std::endl;
+    log_->debug( "Running test [Mesh Translations - Number of tests: ", N_TESTS, ")] ...\n" );
 
     Mesh* mesh = generateRandomMesh( N_TRIANGLES );
     mesh->getTransformedVertices( n, originalVertexData );
@@ -115,7 +116,8 @@ void Tester::testMeshTranslations() const
         translation.y = generateRandomFloat( MIN_FLOAT, MAX_FLOAT );
         translation.z = generateRandomFloat( MIN_FLOAT, MAX_FLOAT );
 
-        std::cout << "translation: (" << translation.x << ", " << translation.y << ", " << translation.z << ")" << std::endl;
+
+        log_->debug( "translation: (", translation.x, ", ", translation.y, ", ", translation.z, ")\n" );
         acumTranslation += translation;
 
         mesh->translate( translation );
@@ -130,7 +132,7 @@ void Tester::testMeshTranslations() const
     }
 
     delete mesh;
-    std::cout << "Running test [Mesh Translations] ...OK" << std::endl;
+    log_->debug( "Running test [Mesh Translations] ...OK\n" );
 }
 
 

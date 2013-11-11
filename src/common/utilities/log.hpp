@@ -30,6 +30,13 @@
 
 namespace como {
 
+enum class LogMessageType {
+    DEBUG = 0,
+    WARNING,
+    ERROR
+};
+
+
 class Log
 {
     private:
@@ -37,15 +44,66 @@ class Log
         std::ostream& out_;
 
     public:
+        /***
+         * 1. Initialization
+         ***/
         Log() : out_( std::cout ) {}
 
+
+        /***
+         * 2. Mutex locking and unlocking
+         ***/
+        void lock(){ mutex_.lock(); }
+        void unlock(){ mutex_.unlock(); }
+
+
+    private:
+        /***
+         * 3. Main writting methods
+         ***/
         template< class T >
         void write( T value );
 
         template< class T, class... Args >
         void write( T value, Args... args );
+
+    public:
+        /***
+         * 4. Writting methods (debug)
+         ***/
+        template< class T >
+        void debug( T value );
+
+        template< class T, class... Args >
+        void debug( T value, Args... args );
+
+
+        /***
+         * 5. Writting methods (warnings)
+         ***/
+        template< class T >
+        void warning( T value );
+
+        template< class T, class... Args >
+        void warning( T value, Args... args );
+
+
+        /***
+         * 6. Writting methods (errors)
+         ***/
+        template< class T >
+        void error( T value );
+
+        template< class T, class... Args >
+        void error( T value, Args... args );
 };
 
+typedef std::shared_ptr< Log > LogPtr;
+
+
+/***
+ * 3. Main writting methods
+ ***/
 
 template< class T>
 void Log::write( T value )
@@ -63,28 +121,62 @@ void Log::write( T value, Args... args )
     out_ << value;
     write( args... );
     mutex_.unlock();
-
-    /*7
-    while( *str ){
-        if( *str == '%' ){
-            if( *( str + 1 ) == '%' ){
-                ++str;
-            }else{
-                out_ << value;
-                write( str + 2, args... );
-                mutex_.unlock();
-                return;
-            }
-        }
-        out_ << *str;
-        str++;
-    }
-    mutex_.unlock();
-    throw std::logic_error( "ERROR in Log::write - extra arguments provided" );
-    */
 }
 
-typedef std::shared_ptr< Log > LogPtr;
+
+/***
+ * 4. Writting methods (debug)
+ ***/
+
+template< class T>
+void Log::debug( T value )
+{
+    write( "[DEBUG] ", value );
+}
+
+
+template< class T, class... Args >
+void Log::debug( T value, Args... args )
+{
+    write( "[DEBUG] ", value, args... );
+}
+
+
+/***
+ * 5. Writting methods (warnings)
+ ***/
+
+template< class T>
+void Log::warning( T value )
+{
+    write( "[WARNING] ", value );
+}
+
+
+template< class T, class... Args >
+void Log::warning( T value, Args... args )
+{
+    write( "[WARNING] ", value, args... );
+}
+
+
+/***
+ * 6. Writting methods (errors)
+ ***/
+
+template< class T >
+void Log::error( T value )
+{
+    write( "[ERROR] ", value );
+}
+
+
+template< class T, class... Args >
+void Log::error( T value, Args... args )
+{
+    write( "[ERROR] ", value, args... );
+}
+
 
 } // namespace como
 

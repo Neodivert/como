@@ -27,7 +27,8 @@ namespace como {
  * 1. Initialization
  ***/
 
-OpenGLEngine::OpenGLEngine()
+OpenGLEngine::OpenGLEngine( LogPtr log ) :
+    log_( log )
 {
     // Create a surface format for OpenGL 4.2 Core.
     // http://stackoverflow.com/questions/11000014/cant-set-desired-opengl-version-in-qglwidget
@@ -87,7 +88,7 @@ shared_ptr< Scene > OpenGLEngine::createScene( QOpenGLContext* oglContext )
     oglContext->makeCurrent( this );
 
     // Create an empty scene.
-    shared_ptr< Scene > scene = shared_ptr<Scene>( new Scene );
+    shared_ptr< Scene > scene = shared_ptr<Scene>( new Scene( log_ ) );
 
     return scene;
 }

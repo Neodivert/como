@@ -23,6 +23,7 @@
 #include <QWizard>
 #include <QWizardPage>
 #include "../../managers/scene.hpp"
+#include "../../../common/utilities/log.hpp"
 
 
 namespace como {
@@ -35,7 +36,7 @@ class ConnectionWizard : public QWizard
         /***
          * 1. Initialization and destruction
          ***/
-        ConnectionWizard( ScenePtr scene, QWidget* parent = nullptr );
+        ConnectionWizard( ScenePtr scene, LogPtr log, QWidget* parent = nullptr );
 };
 
 }

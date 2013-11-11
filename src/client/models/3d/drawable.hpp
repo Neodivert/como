@@ -40,7 +40,7 @@ enum COORDINATES
  * Main file class
  ***/
 
-void showError();
+void checkOpenGL( const char* str );
 
 class Drawable
 {

@@ -50,7 +50,9 @@ PivotPointModeStrings pivotPointModeStrings =
  * 1. Initialization and destruction
  ***/
 
-Scene::Scene()
+Scene::Scene( LogPtr log ) :
+    log_( log ),
+    server_( log_ )
 {
     initLinesBuffer();
 
@@ -75,7 +77,7 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-    std::cout << "Scene destructor" << std::endl;
+    log_->debug( "Destroying scene\n" );
 
     // Tell OpenGL we are done with allocated buffer objects and
     // vertex attribute arrays.
@@ -139,13 +141,13 @@ void Scene::initLinesBuffer()
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
     vPosition = glGetAttribLocation( currentShaderProgram, "vPosition" );
     if( vPosition == GL_INVALID_OPERATION ){
-        cout << "Error getting layout of \"position\"" << endl;
+        log_->error( "Error getting layout of \"position\"\n" );
     }else{
-        cout << "vPosition: (" << vPosition << ")" << endl;
+        log_->debug( "vPosition: (", vPosition, ")\n" );
     }
     // Get location of uniform shader variable "color".
     uniformColorLocation = glGetUniformLocation( currentShaderProgram, "color" );
-    cout << "Scene: uniform color location initialized to (" << uniformColorLocation << ")" << endl;
+    log_->debug( "Scene: uniform color location initialized to (", uniformColorLocation, ")\n" );
 
     // Set a VBO for the world axis rects.
     glGenBuffers( 1, &linesVBO );
@@ -171,6 +173,7 @@ void Scene::connect( const char* host, const char* port, const char* userName )
 
         // Try to connect to the server. If there is any error, the method
         // ServerInterface::connect() throws an exception.
+        log_->debug( "Connecting to (", host, ":", port, ") with name [", userName, "]...\n" );
         server_.connect( host, port, userName );
     }catch( std::exception& ex ){
         throw ex;
@@ -291,7 +294,7 @@ void Scene::selectDrawable( const unsigned int& index, const unsigned int& userI
     DrawablesList::iterator it = nonSelectedDrawables.begin();
     std::advance( it, index );
 
-    cout << "Selecting drawable(userId: " << userId << ")" << endl;
+    log_->debug( "Selecting drawable(userId: ", userId, ")\n" );
     DrawablesList& userSelection = users_[userId].selection;
     userSelection.splice( userSelection.end(), nonSelectedDrawables, it );
 
@@ -335,10 +338,9 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
 
     r1 = glm::normalize( r1 );
 
-    cout << "Scene::selectDrawableByRayPicking" << endl
-         << "\tr0 : (" << r0.x << ", " << r0.y << ", " << r0.z << ")" << endl
-         << "\tr1 : (" << r1.x << ", " << r1.y << ", " << r1.z << ")" << endl;
-
+    log_->debug( "Scene::selectDrawableByRayPicking\n",
+                 "\tr0 : (", r0.x, ", ", r0.y, ", ", r0.z, ")\n",
+                 "\tr1 : (", r1.x, ", ", r1.y, ", ", r1.z, ")\n" );
 
     // Does the user want to keep the actual set of selected objects and simply add
     // a new one? If that's NOT the case, we need to clear the set of selected drawables
@@ -367,7 +369,7 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
             // New closest object, get its index and distance.
             closestObject = currentObject;
             minT = t;
-            cout << "RETURN 0" << endl;
+            log_->debug( "RETURN 0\n" );
             emit renderNeeded();
             return 0;
         }
@@ -375,12 +377,12 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
 
     // If there were intersections, select the closest one.
     if( minT < MAX_T ){
-        cout << "FINAL CLOSEST OBJECT: " << closestObject << endl
-             << "\t min t: " << minT << ")" << endl
-             << "\t min distance: " << glm::distance( glm::vec3( 0.0f, 0.0f, 0.0f ), r1 * t ) << endl;
+        log_->debug( "FINAL CLOSEST OBJECT: ", closestObject, "\n",
+                     "\t min t: ", minT, ")\n",
+                     "\t min distance: ", glm::distance( glm::vec3( 0.0f, 0.0f, 0.0f ), r1 * t ), "\n" );
         selectDrawable( closestObject );
     }else{
-        cout << "NO CLOSEST OBJECT. Unselecting all" << endl;
+        log_->debug( "NO CLOSEST OBJECT. Unselecting all\n" );
         unselectAll( userId );
     }
 

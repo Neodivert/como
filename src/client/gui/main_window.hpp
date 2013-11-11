@@ -40,6 +40,10 @@ class MainWindow : public QMainWindow
         // App's singlenton instance.
         shared_ptr< ComoApp > comoApp;
 
+        // Log
+        LogPtr log_;
+
+
     public:
         /***
          * 1. Initialization and destruction

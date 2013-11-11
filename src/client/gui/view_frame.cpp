@@ -31,14 +31,11 @@ ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     QFrame* header;
     QHBoxLayout* headerLayout;
 
-    cout << "ViewFrame 1" << endl;
-    showError();
-
-    // Create a OpenGL viewport.
+    // Create a OpenGL viewport and check OpenGL state.
+    checkOpenGL( "ViewFrame constructor, before creating viewport" );
     viewport = new Viewport( comoApp );
+    checkOpenGL( "ViewFrame constructor, after creating viewport" );
 
-    cout << "ViewFrame 2" << endl;
-    showError();
 
     // The viewport inherits from QWindow. In order to allow it to live inside a QWidget-based
     // application, we need to create a QWidget wrapper.

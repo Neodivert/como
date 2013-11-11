@@ -33,7 +33,7 @@ PublicUser::PublicUser( unsigned int id, const char* name, Socket socket, std::f
     log_( log )
 {
     strncpy( name_, name, 64 );
-    log_->write( "Session (", id_, ") created\n" );
+    log_->debug( "Session (", id_, ") created\n" );
 
     readSceneUpdate();
 }
@@ -41,7 +41,7 @@ PublicUser::PublicUser( unsigned int id, const char* name, Socket socket, std::f
 
 PublicUser::~PublicUser()
 {
-    log_->write( "Session (", id_, ") destroyed\n" );
+    log_->debug( "Session (", id_, ") destroyed\n" );
 }
 
 
@@ -73,7 +73,7 @@ const char* PublicUser::getName()
 
 void PublicUser::readSceneUpdate()
 {
-    log_->write( "Waiting for SCENE_UPDATE from user (", id_, ")\n"  );
+    log_->debug( "Waiting for SCENE_UPDATE from user (", id_, ")\n"  );
     sceneUpdatePacketFromUser_.asyncRecv( socket_, boost::bind( &PublicUser::onReadSceneUpdate, this, _1, _2 ) );
 }
 
@@ -81,11 +81,11 @@ void PublicUser::readSceneUpdate()
 void PublicUser::onReadSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet )
 {
     if( errorCode ){
-        log_->write( "ERROR reading SCENE_UPDATE packet: ", errorCode.message(), "\n" );
+        log_->error( "ERROR reading SCENE_UPDATE packet: ", errorCode.message(), "\n" );
         removeUserCallback_( id_ );
     }else{
         // FIXME: Make use of the packet.
-        log_->write( "SCENE_UPDATE received\n" );
+        log_->debug( "SCENE_UPDATE received\n" );
         readSceneUpdate();
     }
 }
@@ -120,7 +120,7 @@ void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode,
     if( errorCode ){
         // FIXME: If there are an async read and an async write on the socket
         // at the same time, could it lead to errors (like deleting the user twice)?.
-        log_->write( "ERROR writting SCENE_UPDATE packet: ", errorCode.message(), "\n" );
+        log_->error( "ERROR writting SCENE_UPDATE packet: ", errorCode.message(), "\n" );
         removeUserCallback_( id_ );
     }else{
         // FIXME: Make use of the packet?.
@@ -128,7 +128,7 @@ void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode,
         // Update the nextCommand_ index for the next SCENE_UPDATE packet.
         nextCommand_ += nCommandsInLastPacket_;
 
-        log_->write( "SCENE_UPDATE sended (nextCommand_: ", (int)nextCommand_, ")\n" );
+        log_->debug( "SCENE_UPDATE sended (nextCommand_: ", (int)nextCommand_, ")\n" );
     }
 }
 

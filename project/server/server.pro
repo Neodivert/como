@@ -14,8 +14,7 @@ SOURCES += \
     ../../src/common/packets/scene_commands/scene_command.cpp \
     ../../src/common/utilities/packer.cpp \
     ../../src/common/packets/scene_commands/user_connected.cpp \
-    ../../src/server/public_user.cpp \
-    ../../src/common/utilities/log.cpp
+    ../../src/server/public_user.cpp
 
 LIBS += -lpthread
 

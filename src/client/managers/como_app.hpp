@@ -26,6 +26,7 @@
 #include <QObject>
 #include <map>
 #include <array>
+#include "../../common/utilities/log.hpp"
 
 namespace como {
 
@@ -104,11 +105,15 @@ class ComoApp : public QObject {
         // Curren scene.
         shared_ptr< Scene > scene;
 
+        // Log
+        LogPtr log_;
+
+
         /***
          * 1. Initialization and destruction
          ***/
     public:
-        ComoApp( QWidget* parent );
+        ComoApp( QWidget* parent, LogPtr log );
         ~ComoApp();
         /*
         static ComoApp* getInstance();
@@ -125,6 +130,7 @@ class ComoApp : public QObject {
         PivotPointMode getPivotPointMode() const;
         ScenePtr getScene() const ;
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
+        LogPtr getLog() const ;
 
 
         /***

@@ -48,46 +48,47 @@ GLint Viewport::viewProjectionMatrixLocation = -1;
 Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
     QWindow()
 {
-    GLint currentShaderProgram;
+    try {
+        GLint currentShaderProgram;
 
-    // Make this canvas share the given app's state.
-    this->comoApp = comoApp;
+        // Make this canvas share the given app's state.
+        this->comoApp = comoApp;
 
-    // We will render using OpenGL.
-    setSurfaceType( QWindow::OpenGLSurface );
+        // We will render using OpenGL.
+        setSurfaceType( QWindow::OpenGLSurface );
 
-    // Set this surface to the same format used by the app's shared OpenGL context.
-    setFormat( comoApp->getOpenGLContext()->format() );
-    destroy();
-    create();
+        // Set this surface to the same format used by the app's shared OpenGL context.
+        setFormat( comoApp->getOpenGLContext()->format() );
+        destroy();
+        create();
 
-    comoApp->getOpenGLContext()->makeCurrent( this );
+        comoApp->getOpenGLContext()->makeCurrent( this );
 
-    cout << "Viewport 0" << endl;
-    showError();
+        checkOpenGL( "Viewport constructor, before computing dimension inverses" );
 
-    // Compute dimensions' inverses.
-    if( width() ){
-        widthInverse = 1.0f / width();
+        // Compute dimensions' inverses.
+        if( width() ){
+            widthInverse = 1.0f / width();
+        }
+        if( height() ){
+            heightInverse = 1.0f / height();
+        }
+
+        checkOpenGL( "Viewport constructor, after computing dimension inverses" );
+
+        // Get location of uniform shader modelview matrix.
+        if( viewProjectionMatrixLocation == -1 ){
+            // Get current shader program id.
+            glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+
+            viewProjectionMatrixLocation = glGetUniformLocation( currentShaderProgram, "viewProjectionMatrix" );
+        }
+
+        // Set default projection.
+        setProjection( Projection::ORTHO );
+    }catch( std::exception& ex ){
+        comoApp->getLog()->error( ex.what() );
     }
-    if( height() ){
-        heightInverse = 1.0f / height();
-    }
-
-    cout << "Viewport 1" << endl;
-    showError();
-
-    // Get location of uniform shader modelview matrix.
-    if( viewProjectionMatrixLocation == -1 ){
-        // Get current shader program id.
-        glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
-
-        viewProjectionMatrixLocation = glGetUniformLocation( currentShaderProgram, "viewProjectionMatrix" );
-        cout << "viewProjectionMatrixLocation: (" << viewProjectionMatrixLocation << ")" << endl;
-    }
-
-    // Set default projection.
-    setProjection( Projection::ORTHO );
 }
 
 
@@ -233,7 +234,6 @@ void Viewport::keyPressEvent( QKeyEvent *e )
             setView( View::TOP );
         break;
         default:
-          cout << "Unknown key (" << e->key() << ")" << endl;
         break;
     }
 }

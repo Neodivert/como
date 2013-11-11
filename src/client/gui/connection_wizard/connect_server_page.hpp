@@ -39,11 +39,14 @@ class ConnectServerPage : public QWizardPage
         QLineEdit* portInput_;
         QLineEdit* userNameInput_;
 
+        // Log
+        LogPtr log_;
+
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        ConnectServerPage( ScenePtr scene );
+        ConnectServerPage( ScenePtr scene, LogPtr log );
 
 
         /***

@@ -22,6 +22,7 @@
 
 #include "../models/3d/mesh.hpp"
 #include "../models/utilities/msl/src/shader_loader.hpp"
+#include "../../common/utilities/log.hpp"
 
 namespace como {
 
@@ -34,15 +35,18 @@ class Tester : public QOffscreenSurface
         static Tester* instance;
         QOpenGLContext* oglContext;
 
+        // Log
+        LogPtr log_;
+
 
         /***
          * 1. Initialization and destruction
          ***/
     public:
-        Tester();
+        Tester( LogPtr log );
         ~Tester();
 
-        static Tester* getInstance();
+        static Tester* getInstance( LogPtr log );
         void destroy();
 
 

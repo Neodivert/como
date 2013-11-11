@@ -25,10 +25,11 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-ConnectServerPage::ConnectServerPage( ScenePtr scene ) :
+ConnectServerPage::ConnectServerPage( ScenePtr scene, LogPtr log ) :
     scene_( scene ),
     ipInput_( nullptr ),
-    portInput_( nullptr )
+    portInput_( nullptr ),
+    log_( log )
 {
     QFormLayout* layout = nullptr;
 
@@ -68,23 +69,24 @@ bool ConnectServerPage::validatePage()
     try{
         std::string userName = userNameInput_->text().toLocal8Bit().data();
         if( !userName.size() ){
-            std::cerr << "ERROR: User name can't be empty" << std::endl;
+            log_->error( "ERROR: User name can't be empty\n" );
             return false;
         }
         if( ( userName.find( '(' ) != std::string::npos ) ||
             ( userName.find( ')' ) != std::string::npos ) ){
-            std::cerr << "ERROR: User name can't contain parenthesis" << std::endl;
+            log_->error( "ERROR: User name can't contain parenthesis\n" );
             return false;
         }
 
-        std::cout << "Connecting to (" << ipInput_->text().toLocal8Bit().data() << ":" << portInput_->text().toLocal8Bit().data() << ")..." << std::endl;
+        // Try to connect to the server scene. The method Scene::connect()
+        // throws an exception in case of error.
         scene_->connect( ipInput_->text().toLocal8Bit().data(),       // Server IP
-                                   portInput_->text().toLocal8Bit().data(),     // Server port
-                                   userName.c_str()                             // User name
-                                 );
+                         portInput_->text().toLocal8Bit().data(),     // Server port
+                         userName.c_str()                             // User name
+                        );
         return true;
     }catch( std::runtime_error& ex ){
-        std::cerr << ex.what() << std::endl;
+        log_->error( ex.what(), "\n" );
         return false;
     }
 }

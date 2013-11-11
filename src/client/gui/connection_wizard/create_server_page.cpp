@@ -28,11 +28,12 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-CreateServerPage::CreateServerPage( ScenePtr scene ) :
+CreateServerPage::CreateServerPage( ScenePtr scene, LogPtr log ) :
     scene_( scene ),
     portInput_( nullptr ),
     maxUsersInput_( nullptr ),
-    userNameInput_( nullptr )
+    userNameInput_( nullptr ),
+    log_( log )
 {
     QFormLayout* layout = nullptr;
 
@@ -75,16 +76,16 @@ bool CreateServerPage::validatePage()
     try{
         std::string userName = userNameInput_->text().toLocal8Bit().data();
         if( !userName.size() ){
-            std::cerr << "ERROR: User name can't be empty" << std::endl;
+            log_->error( "ERROR: User name can't be empty\n" );
             return false;
         }
         if( ( userName.find( '(' ) != std::string::npos ) ||
             ( userName.find( ')' ) != std::string::npos ) ){
-            std::cerr << "ERROR: User name can't contain parenthesis" << std::endl;
+            log_->error( "ERROR: User name can't contain parenthesis\n" );
             return false;
         }
 
-        std::cout << "Creating server with port(" << portInput_->text().toLocal8Bit().data() << ") and maxUsers(" << maxUsersInput_->text().toLocal8Bit().data() << ")" << std::endl;
+        log_->debug( "Creating server with port(", portInput_->text().toLocal8Bit().data(), ") and maxUsers(", maxUsersInput_->text().toLocal8Bit().data(), ")\n" );
 
         pid = fork();
         if( pid == 0 ){
@@ -94,21 +95,23 @@ bool CreateServerPage::validatePage()
                                                 atoi( portInput_->text().toLocal8Bit().data() ),    // Port.
                                                 atoi( maxUsersInput_->text().toLocal8Bit().data() ) // Max. users.
                      );
-            std::cout << "system: [" << serverCommand << "]" << std::endl;
-            std::cout << "system: [" << system( serverCommand ) << std::endl;
+            log_->debug( "Server command: [", serverCommand, "]\n",
+                         "\tReturn value: ", system( serverCommand ), "\n" );
             exit( 0 );
         }
 
         // FIXME: Maybe there is something more elegant?
         system( "sleep 1" );
-        std::cout << "Connecting to (127.0.0.1:" << portInput_->text().toLocal8Bit().data() << ")..." << std::endl;
+
+        // Try to connect to the Server scene. In case of error, the method
+        // Scene::connect() throws an error.
         scene_->connect( "127.0.0.1",                                 // Server IP
-                                   portInput_->text().toLocal8Bit().data(),     // Server port
-                                   userName.c_str()                             // User name
-                                 );
+                         portInput_->text().toLocal8Bit().data(),     // Server port
+                         userName.c_str()                             // User name
+                       );
         return true;
     }catch( std::runtime_error& ex ){
-        std::cerr << ex.what() << std::endl;
+        log_->error( ex.what(), "\n" );
         return false;
     }
 }

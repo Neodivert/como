@@ -36,7 +36,6 @@ Packet::Packet( const Packet& b ) :
     type_( b.type_ ),
     bodySize_( b.bodySize_ )
 {
-    std::cout << "Packet copy constructor" << std::endl;
     strncpy( buffer_, b.buffer_, PACKET_BUFFER_SIZE );
 }
 

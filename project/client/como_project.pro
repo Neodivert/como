@@ -86,5 +86,4 @@ SOURCES += \
     ../../src/common/utilities/packer.cpp \
     ../../src/common/packets/scene_update.cpp \
     ../../src/common/packets/scene_commands/user_connected.cpp \
-    ../../src/common/packets/scene_commands/scene_command.cpp \
-    ../../src/common/utilities/log.cpp
+    ../../src/common/packets/scene_commands/scene_command.cpp
