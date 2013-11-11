@@ -156,8 +156,6 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
         throw std::runtime_error( std::string( "ERROR in \"onSceneUpdateReceived\": not a SCENE_UPDATE packet" ) );
     }
 
-    consoleMutex.lock();
-
     log_->debug( "nCommands: ", sceneUpdate->getCommands()->size(), "\n" );
 
     sceneCommands = sceneUpdate->getCommands();

@@ -45,8 +45,6 @@ class ServerInterface
         // Log
         LogPtr log_;
 
-        std::mutex consoleMutex;
-
     public:
         /***
          * 1. Initialization and destruction
