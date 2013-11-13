@@ -52,10 +52,12 @@ class Drawable
 
     public:
         /***
-         * 1. Initialization
+         * 1. Initialization and destruction
          ***/
         // Constructor. Initialize transformation matrix to identity matrix.
         Drawable();
+
+        virtual ~Drawable(){}
 
         /***
          * 2. Setters and getters

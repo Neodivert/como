@@ -31,14 +31,20 @@ class Packable
 {
     public:
         /***
-         * 1. Packing and unpacking
+         * 1. Initialization and destruction
+         ***/
+        virtual ~Packable(){}
+
+
+        /***
+         * 2. Packing and unpacking
          ***/
         virtual char* pack( char* buffer ) const = 0;
         virtual const char* unpack( const char* buffer ) = 0;
 
 
         /***
-         * 2. Getters
+         * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const = 0;
 };

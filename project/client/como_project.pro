@@ -81,7 +81,6 @@ SOURCES += \
     ../../src/client/gui/connection_wizard/intro_page.cpp \
     ../../src/common/packets/user_accepted.cpp \
     ../../src/common/packets/packet.cpp \
-    ../../src/common/packets/packable.cpp \
     ../../src/common/packets/new_user.cpp \
     ../../src/common/utilities/packer.cpp \
     ../../src/common/packets/scene_update.cpp \

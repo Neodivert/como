@@ -46,6 +46,8 @@ class SceneCommand : public Packable
         SceneCommand( SceneCommandType type, ID userID );
         SceneCommand( const SceneCommand& b );
 
+        virtual ~SceneCommand(){}
+
 
         /***
          * 2. Packing and unpacking

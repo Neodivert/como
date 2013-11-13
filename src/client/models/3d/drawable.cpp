@@ -20,12 +20,7 @@
 #include "drawable.hpp"
 #include <stdexcept>
 
-/***
- * 1. Initialization
- ***/
-
 namespace como {
-
 
 void checkOpenGL( const char* str )
 {
@@ -41,6 +36,10 @@ void checkOpenGL( const char* str )
     }
 }
 
+
+/***
+ * 1. Initialization and destruction
+ ***/
 
 Drawable::Drawable()
 {

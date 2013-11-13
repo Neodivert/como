@@ -8,7 +8,6 @@ SOURCES += \
     ../../src/server/server.cpp \
     ../../src/common/packets/user_accepted.cpp \
     ../../src/common/packets/packet.cpp \
-    ../../src/common/packets/packable.cpp \
     ../../src/common/packets/new_user.cpp \
     ../../src/common/packets/scene_update.cpp \
     ../../src/common/packets/scene_commands/scene_command.cpp \
