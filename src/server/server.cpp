@@ -44,19 +44,9 @@ Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThre
 }
 
 
-/***
- * 2. Getters
- ***/
-
-
-const CommandsList* Server::getCommandsHistoric() const
-{
-    return &commandsHistoric_;
-}
-
 
 /***
- * 4. Main loop
+ * 3. Main loop
  ***/
 
 void Server::run()
@@ -99,6 +89,15 @@ void Server::run()
         log_->error( "Exception: ", ex.what(), "\n" );
     }
 }
+
+
+void Server::broadcast()
+{
+    for( unsigned int i=0; i<users_.size(); i++ ){
+        users_[i]->sendNextSceneUpdate( &commandsHistoric_ );
+    }
+}
+
 
 
 /***
@@ -162,9 +161,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         addCommand( SceneCommandConstPtr( new UserConnected( userAcceptedPacket ) ) );
 
         // FIXME: Remove in future versions.
-        for( unsigned int i=0; i<users_.size(); i++ ){
-            users_[i]->sendNextSceneUpdate( getCommandsHistoric() );
-        }
+        broadcast();
 
         // Increment the "new id" for the next user.
         newId_++;
@@ -192,7 +189,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
 void Server::addCommand( SceneCommandConstPtr sceneCommand )
 {
     // Add the command to the historic.
-    commandsHistoric_.push_back( sceneCommand );
+    commandsHistoric_.addCommand( sceneCommand );
 
     // Write the full historic in the log.
     log_->lock();
@@ -239,6 +236,7 @@ void Server::deleteUser( unsigned int id )
 
     log_->debug( "Server::deleteUser(", id, ")\n" );
 
+
     // Search the requested id.
     while( ( i < users_.size() ) &&
            ( id != users_[i]->getId() ) ){
@@ -260,6 +258,9 @@ void Server::deleteUser( unsigned int id )
             //acceptor_.open( endPoint_.protocol() );
             //acceptor_.listen( 0 );
             openAcceptor();
+
+            // TODO: Remove in future versions.
+            broadcast();
 
             // Start listening.
             // FIXME: Sometimes I get an exception "bind address already in use" when is

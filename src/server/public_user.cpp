@@ -19,6 +19,7 @@
 
 #include "public_user.hpp"
 
+
 namespace como {
 
 /***
@@ -95,17 +96,19 @@ void PublicUser::onReadSceneUpdate( const boost::system::error_code& errorCode, 
  * 5. Socket writing
  ***/
 
-bool PublicUser::needsSceneUpdate( const CommandsList* commandsHistoric ) const
+bool PublicUser::needsSceneUpdate( const CommandsHistoric* commandsHistoric ) const
 {
-    return ( nextCommand_ < commandsHistoric->size() );
+    return ( nextCommand_ < commandsHistoric->getSize() );
 }
 
 
-void PublicUser::sendNextSceneUpdate( const CommandsList* commandsHistoric )
+void PublicUser::sendNextSceneUpdate( const CommandsHistoric* commandsHistoric )
 {
     // Create and prepare a SCENE_UPDATE packet.
     outSceneUpdatePacket_.clear();
-    outSceneUpdatePacket_.addCommands( commandsHistoric, nextCommand_, MAX_COMMANDS_PER_PACKET );
+    commandsHistoric->fillSceneUpdatePacket( outSceneUpdatePacket_, nextCommand_, MAX_COMMANDS_PER_PACKET );
+
+    //outSceneUpdatePacket_.addCommands( commandsHistoric, nextCommand_, MAX_COMMANDS_PER_PACKET );
 
     // Get the number of commands in the packet.
     nCommandsInLastPacket_ = (std::uint8_t)( outSceneUpdatePacket_.getCommands()->size() );

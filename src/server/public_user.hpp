@@ -27,6 +27,7 @@
 #include "../common/packets/packets.hpp"
 #include "../common/utilities/log.hpp"
 #include <list>
+#include "commands_historic.hpp"
 
 namespace como {
 
@@ -85,8 +86,8 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
         /***
          * 5. Socket writing
          ***/
-        bool needsSceneUpdate( const CommandsList* commandsHistoric ) const ;
-        void sendNextSceneUpdate( const CommandsList* commandsHistoric );
+        bool needsSceneUpdate( const CommandsHistoric* commandsHistoric ) const ;
+        void sendNextSceneUpdate( const CommandsHistoric* commandsHistoric );
         void onWriteSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet );
 };
 

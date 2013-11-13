@@ -37,6 +37,7 @@
 #include "public_user.hpp"
 #include "../common/packets/packets.hpp"
 #include "../common/utilities/log.hpp"
+#include "commands_historic.hpp"
 
 using boost::asio::ip::tcp;
 
@@ -82,7 +83,9 @@ class Server
         unsigned int port_;
 
         // Historic of commands performed on the scene.
-        CommandsList commandsHistoric_;
+        CommandsHistoric commandsHistoric_;
+
+        //CommandsList commandsHistoric_;
 
         // Log
         LogPtr log_;
@@ -95,15 +98,10 @@ class Server
 
 
         /***
-         * 2. Getters
-         ***/
-        const CommandsList* getCommandsHistoric() const ;
-
-
-        /***
          * 3. Main loop
          ***/
         void run();
+        void broadcast();
 
 
         /***

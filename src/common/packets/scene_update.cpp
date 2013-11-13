@@ -151,6 +151,20 @@ bool SceneUpdate::expectedType() const
  * 4. Setters
  ***/
 
+void SceneUpdate::addCommand( SceneCommandConstPtr command,
+                              const std::uint32_t& commandIndex,
+                              const std::uint32_t& historicSize )
+{
+    // Push back the given command.
+    commands_.push_back( command );
+
+    // Update the SCENE_UPDATE packet's header.
+    bodySize_ += command->getPacketSize();
+    lastCommandSent_ = commandIndex;
+    nUnsyncCommands_ = historicSize - (commandIndex + 1);
+}
+
+/*
 void SceneUpdate::addCommands(
                             const CommandsList* commandsHistoric,
                             const std::uint32_t& firstCommand,
@@ -176,10 +190,10 @@ void SceneUpdate::addCommands(
     }
 
     // Update the SCENE_UPDATE packet's header.
-    lastCommandSent_ = firstCommand + maxCommands - 1;
-    nUnsyncCommands_ = commandsHistoric->size() - (lastCommandSent_ + 1);
+    lastCommandSent_ = commandIndex;
+    nUnsyncCommands_ = commandsHistoric->size() - (commandIndex + 1);
 }
-
+*/
 
 void SceneUpdate::clear()
 {
