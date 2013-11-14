@@ -62,6 +62,9 @@ class CommandsHistoric
                                     const unsigned int nCommands ) const ;
 };
 
+typedef std::shared_ptr< CommandsHistoric > CommandsHistoricPtr;
+typedef std::shared_ptr< const CommandsHistoric > CommandsHistoricConstPtr;
+
 }
 
 #endif // COMMANDS_HISTORIC_HPP

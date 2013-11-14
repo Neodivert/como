@@ -39,6 +39,9 @@ Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThre
         threads_.create_thread( boost::bind( &Server::workerThread, this ) );
     }
 
+    // Initialize the commands historic.
+    commandsHistoric_ = CommandsHistoricPtr( new CommandsHistoric );
+
     // Initialize the log
     log_ = LogPtr( new Log );
 }
@@ -94,7 +97,7 @@ void Server::run()
 void Server::broadcast()
 {
     for( unsigned int i=0; i<users_.size(); i++ ){
-        users_[i]->sendNextSceneUpdate( &commandsHistoric_ );
+        users_[i]->sendNextSceneUpdate();
     }
 }
 
@@ -155,7 +158,16 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         userAcceptedPacket.send( newSocket_ );
 
         // Add the new user to the user vector.
-        users_.push_back( std::make_shared<PublicUser>( newId_, userAcceptedPacket.getName(), std::move( newSocket_ ), std::bind( &Server::deleteUser, this, std::placeholders::_1 ), log_ ) );
+        users_.push_back(
+                    std::make_shared<PublicUser>(
+                        newId_,
+                        userAcceptedPacket.getName(),
+                        std::move( newSocket_ ),
+                        std::bind( &Server::deleteUser, this, std::placeholders::_1 ),
+                        commandsHistoric_,
+                        log_
+                    )
+            );
 
         // Add an USER_CONNECTED scene command to the server historic.
         addCommand( SceneCommandConstPtr( new UserConnected( userAcceptedPacket ) ) );
@@ -189,7 +201,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
 void Server::addCommand( SceneCommandConstPtr sceneCommand )
 {
     // Add the command to the historic.
-    commandsHistoric_.addCommand( sceneCommand );
+    commandsHistoric_->addCommand( sceneCommand );
 
     // Write the full historic in the log.
     log_->lock();

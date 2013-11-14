@@ -26,11 +26,16 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-PublicUser::PublicUser( unsigned int id, const char* name, Socket socket, std::function<void (unsigned int)> removeUserCallback, LogPtr log ) :
+PublicUser::PublicUser( unsigned int id, const char* name, Socket socket,
+            std::function<void (unsigned int)> removeUserCallback,
+            CommandsHistoricConstPtr commandsHistoric,
+            LogPtr log ) :
     id_( id ),
     socket_( SocketPtr( new Socket( std::move( socket ) ) ) ),
     removeUserCallback_( removeUserCallback ),
     nextCommand_( 0 ),
+    synchronizing_( false ),
+    commandsHistoric_( commandsHistoric ),
     log_( log )
 {
     strncpy( name_, name, 64 );
@@ -96,17 +101,17 @@ void PublicUser::onReadSceneUpdate( const boost::system::error_code& errorCode, 
  * 5. Socket writing
  ***/
 
-bool PublicUser::needsSceneUpdate( const CommandsHistoric* commandsHistoric ) const
+bool PublicUser::needsSceneUpdate() const
 {
-    return ( nextCommand_ < commandsHistoric->getSize() );
+    return ( nextCommand_ < commandsHistoric_->getSize() );
 }
 
 
-void PublicUser::sendNextSceneUpdate( const CommandsHistoric* commandsHistoric )
+void PublicUser::sendNextSceneUpdate()
 {
     // Create and prepare a SCENE_UPDATE packet.
     outSceneUpdatePacket_.clear();
-    commandsHistoric->fillSceneUpdatePacket( outSceneUpdatePacket_, nextCommand_, MAX_COMMANDS_PER_PACKET );
+    commandsHistoric_->fillSceneUpdatePacket( outSceneUpdatePacket_, nextCommand_, MAX_COMMANDS_PER_PACKET );
 
     //outSceneUpdatePacket_.addCommands( commandsHistoric, nextCommand_, MAX_COMMANDS_PER_PACKET );
 
@@ -115,6 +120,8 @@ void PublicUser::sendNextSceneUpdate( const CommandsHistoric* commandsHistoric )
 
     // Pack the previous packet and send it to the client.
     outSceneUpdatePacket_.asyncSend( socket_, boost::bind( &PublicUser::onWriteSceneUpdate, this, _1, _2 ) );
+
+    //synchronizing_ = true;
 }
 
 

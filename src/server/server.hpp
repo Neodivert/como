@@ -83,7 +83,7 @@ class Server
         unsigned int port_;
 
         // Historic of commands performed on the scene.
-        CommandsHistoric commandsHistoric_;
+        CommandsHistoricPtr commandsHistoric_;
 
         //CommandsList commandsHistoric_;
 

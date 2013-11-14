@@ -54,13 +54,22 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
         SceneUpdate sceneUpdatePacketFromUser_;
         SceneUpdate outSceneUpdatePacket_;
 
+        std::mutex syncMutex_;
+        bool synchronizing_;
+
+
+        CommandsHistoricConstPtr commandsHistoric_;
+
         LogPtr log_;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        PublicUser( unsigned int id, const char* name, Socket socket, std::function<void (unsigned int)> removeUserCallback, LogPtr log );
+        PublicUser( unsigned int id, const char* name, Socket socket,
+                    std::function<void (unsigned int)> removeUserCallback,
+                    CommandsHistoricConstPtr commandsHistoric,
+                    LogPtr log );
         ~PublicUser();
 
 
@@ -86,8 +95,8 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
         /***
          * 5. Socket writing
          ***/
-        bool needsSceneUpdate( const CommandsHistoric* commandsHistoric ) const ;
-        void sendNextSceneUpdate( const CommandsHistoric* commandsHistoric );
+        bool needsSceneUpdate() const ;
+        void sendNextSceneUpdate();
         void onWriteSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet );
 };
 
