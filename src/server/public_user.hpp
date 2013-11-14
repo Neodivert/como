@@ -54,7 +54,7 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
         SceneUpdate sceneUpdatePacketFromUser_;
         SceneUpdate outSceneUpdatePacket_;
 
-        std::mutex syncMutex_;
+        mutable std::recursive_mutex mutex_;
         bool synchronizing_;
 
 
@@ -86,14 +86,22 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
 
 
         /***
-         * 4. Socket reading
+         * 4.
+         ***/
+        // TODO: Change to a better name, with a "Send" or "Write" somewhere.
+        void sync();
+
+
+
+        /***
+         * 5. Socket reading
          ***/
         void readSceneUpdate();
         void onReadSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet );
 
 
         /***
-         * 5. Socket writing
+         * 6. Socket writing
          ***/
         bool needsSceneUpdate() const ;
         void sendNextSceneUpdate();

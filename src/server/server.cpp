@@ -97,7 +97,7 @@ void Server::run()
 void Server::broadcast()
 {
     for( unsigned int i=0; i<users_.size(); i++ ){
-        users_[i]->sendNextSceneUpdate();
+        users_[i]->sync();
     }
 }
 
@@ -172,9 +172,6 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         // Add an USER_CONNECTED scene command to the server historic.
         addCommand( SceneCommandConstPtr( new UserConnected( userAcceptedPacket ) ) );
 
-        // FIXME: Remove in future versions.
-        broadcast();
-
         // Increment the "new id" for the next user.
         newId_++;
 
@@ -202,6 +199,10 @@ void Server::addCommand( SceneCommandConstPtr sceneCommand )
 {
     // Add the command to the historic.
     commandsHistoric_->addCommand( sceneCommand );
+
+    // A new command has been added to the historic. Broadcast a signal
+    // informing about it to all the users.
+    broadcast();
 
     // Write the full historic in the log.
     log_->lock();
@@ -270,9 +271,6 @@ void Server::deleteUser( unsigned int id )
             //acceptor_.open( endPoint_.protocol() );
             //acceptor_.listen( 0 );
             openAcceptor();
-
-            // TODO: Remove in future versions.
-            broadcast();
 
             // Start listening.
             // FIXME: Sometimes I get an exception "bind address already in use" when is

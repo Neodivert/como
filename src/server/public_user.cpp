@@ -42,6 +42,8 @@ PublicUser::PublicUser( unsigned int id, const char* name, Socket socket,
     log_->debug( "Session (", id_, ") created\n" );
 
     readSceneUpdate();
+
+    sync();
 }
 
 
@@ -57,13 +59,25 @@ PublicUser::~PublicUser()
 
 unsigned int PublicUser::getId()
 {
-    return id_;
+    unsigned int id;
+
+    mutex_.lock();
+    id = id_;
+    mutex_.unlock();
+
+    return id;
 }
 
 
 const char* PublicUser::getName()
 {
-    return name_;
+    const char* name;
+
+    mutex_.lock();
+    name = name_;
+    mutex_.unlock();
+
+    return name;
 }
 
 
@@ -72,20 +86,36 @@ const char* PublicUser::getName()
  ***/
 
 
+/***
+ * 4.
+ ***/
+
+void PublicUser::sync()
+{
+    mutex_.lock();
+    if( !synchronizing_ && needsSceneUpdate() ){
+        sendNextSceneUpdate();
+    }
+    mutex_.unlock();
+}
+
 
 /***
- * 4. Socket reading
+ * 5. Socket reading
  ***/
 
 void PublicUser::readSceneUpdate()
 {
+    mutex_.lock();
     log_->debug( "Waiting for SCENE_UPDATE from user (", id_, ")\n"  );
     sceneUpdatePacketFromUser_.asyncRecv( socket_, boost::bind( &PublicUser::onReadSceneUpdate, this, _1, _2 ) );
+    mutex_.unlock();
 }
 
 
 void PublicUser::onReadSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet )
 {
+    mutex_.lock();
     if( errorCode ){
         log_->error( "ERROR reading SCENE_UPDATE packet: ", errorCode.message(), "\n" );
         removeUserCallback_( id_ );
@@ -94,21 +124,30 @@ void PublicUser::onReadSceneUpdate( const boost::system::error_code& errorCode, 
         log_->debug( "SCENE_UPDATE received\n" );
         readSceneUpdate();
     }
+    mutex_.unlock();
 }
 
 
 /***
- * 5. Socket writing
+ * 6. Socket writing
  ***/
 
 bool PublicUser::needsSceneUpdate() const
 {
-    return ( nextCommand_ < commandsHistoric_->getSize() );
+    bool res;
+
+    mutex_.lock();
+    res = ( nextCommand_ < commandsHistoric_->getSize() );
+    mutex_.unlock();
+
+    return res;
 }
 
 
 void PublicUser::sendNextSceneUpdate()
 {
+    mutex_.lock();
+
     // Create and prepare a SCENE_UPDATE packet.
     outSceneUpdatePacket_.clear();
     commandsHistoric_->fillSceneUpdatePacket( outSceneUpdatePacket_, nextCommand_, MAX_COMMANDS_PER_PACKET );
@@ -121,12 +160,17 @@ void PublicUser::sendNextSceneUpdate()
     // Pack the previous packet and send it to the client.
     outSceneUpdatePacket_.asyncSend( socket_, boost::bind( &PublicUser::onWriteSceneUpdate, this, _1, _2 ) );
 
-    //synchronizing_ = true;
+    // Signal that the user is being synchronized (permorming an async send).
+    synchronizing_ = true;
+
+    mutex_.unlock();
 }
 
 
 void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet )
 {
+    mutex_.lock();
+
     if( errorCode ){
         // FIXME: If there are an async read and an async write on the socket
         // at the same time, could it lead to errors (like deleting the user twice)?.
@@ -139,7 +183,15 @@ void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode,
         nextCommand_ += nCommandsInLastPacket_;
 
         log_->debug( "SCENE_UPDATE sended (nextCommand_: ", (int)nextCommand_, ")\n" );
+
+        if( needsSceneUpdate() ){
+            sendNextSceneUpdate();
+        }else{
+            synchronizing_ = false;
+        }
     }
+
+    mutex_.unlock();
 }
 
 } // namespace como
