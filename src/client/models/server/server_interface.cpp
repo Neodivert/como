@@ -26,9 +26,10 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-ServerInterface::ServerInterface( LogPtr log ) :
+ServerInterface::ServerInterface( std::function< int(const SceneCommand*) > executeRemoteCommand, LogPtr log ) :
     work_( std::shared_ptr< boost::asio::io_service::work >( new boost::asio::io_service::work( io_service_ ) ) ),
     socket_( SocketPtr( new boost::asio::ip::tcp::socket( io_service_ ) ) ),
+    executeRemoteCommand_( executeRemoteCommand ),
     log_( log )
 {   
     for( unsigned int i=0; i<2; i++ ){
@@ -158,6 +159,8 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
 
     log_->debug( "nCommands: ", sceneUpdate->getCommands()->size(), "\n" );
 
+    log_->unlock();
+
     sceneCommands = sceneUpdate->getCommands();
     for( i=0; i<sceneCommands->size(); i++ ){
         switch( ( ( *sceneCommands )[i] )->getType() ){
@@ -168,9 +171,10 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
                 log_->debug( "\tCommand[", i, "]: USER_DISCONNECTED\n" );
             break;
         }
-    }
 
-    log_->unlock();
+        log_->debug( "Executing remote command\n" );
+        executeRemoteCommand_( ( ( *sceneCommands )[i] ).get() );
+    }
 
     listen();
 }

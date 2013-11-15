@@ -52,7 +52,7 @@ PivotPointModeStrings pivotPointModeStrings =
 
 Scene::Scene( LogPtr log ) :
     log_( log ),
-    server_( log_ )
+    server_( std::bind( &Scene::executeRemoteCommand, this, std::placeholders::_1 ), log_ )
 {
     initLinesBuffer();
 
@@ -168,8 +168,12 @@ void Scene::initLinesBuffer()
 void Scene::connect( const char* host, const char* port, const char* userName )
 {
     try{
+        const std::uint8_t LOCAL_USER_DEFAULT_SELECTION_COLOR[4] = {
+            255, 0, 0, 255
+        };
+
         // Insert the local user in the users vector.
-        addUser( userName, 1.0f, 0.0f, 0.0f );
+        addUser( userName, LOCAL_USER_DEFAULT_SELECTION_COLOR );
 
         // Try to connect to the server. If there is any error, the method
         // ServerInterface::connect() throws an exception.
@@ -185,8 +189,10 @@ void Scene::connect( const char* host, const char* port, const char* userName )
  * 2. Users administration
  ***/
 
-void Scene::addUser( const char* name, const float& r, const float& g, const float& b )
+int Scene::addUser( const char* name, const std::uint8_t* selectionColor )
 {
+    unsigned int i;
+
     // Create user struct.
     PublicUser user;
 
@@ -194,13 +200,14 @@ void Scene::addUser( const char* name, const float& r, const float& g, const flo
     user.name = name;
 
     // Initialize user selection color.
-    user.color[0] = r;
-    user.color[1] = g;
-    user.color[2] = b;
-    user.color[3] = 1.0f;
+    for( i=0; i<4; i++ ){
+        user.color[i] = selectionColor[i] / 255.0f;
+    }
 
     // Insert user in user's vector.
     users_.push_back( user );
+
+    return static_cast< int >( users_.size() );
 }
 
 
@@ -495,6 +502,23 @@ void Scene::deleteSelection( const unsigned int& userId )
     userSelection.clear();
 
     emit renderNeeded();
+}
+
+
+int Scene::executeRemoteCommand( const SceneCommand* command )
+{
+    const UserConnected* userConnected = nullptr;
+
+    switch( command->getType() ){
+        case SceneCommandType::USER_CONNECTED:
+            userConnected = dynamic_cast< const UserConnected* >( command );
+            log_->debug( "Adding user to scene [", userConnected->getName(), "]\n" );
+            return addUser( userConnected->getName(), userConnected->getSelectionColor() );
+        break;
+        default:
+            return 0;
+        break;
+    }
 }
 
 

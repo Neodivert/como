@@ -26,6 +26,7 @@
 #include "../models/users/public_user.hpp"
 #include "../models/server/server_interface.hpp"
 #include "../../common/utilities/log.hpp"
+#include "../../common/packets/scene_commands/scene_commands.hpp"
 
 namespace como {
 
@@ -87,8 +88,6 @@ class Scene : public QObject
 
         GLfloat defaultContourColor[4];
 
-
-
         // Log
         LogPtr log_;
 
@@ -109,7 +108,7 @@ class Scene : public QObject
         /***
          * 2. Users administration
          ***/
-        void addUser( const char* name, const float& r, const float& g, const float& b );
+        int addUser( const char* name, const std::uint8_t* selectionColor );
 
 
         /***
@@ -151,6 +150,8 @@ class Scene : public QObject
 
         void deleteSelection( const unsigned int& userId = 0 );
 
+        int executeRemoteCommand( const SceneCommand* command );
+
 
         /***
          * 7. Updating
@@ -171,6 +172,7 @@ class Scene : public QObject
          ***/
     signals:
         void renderNeeded();
+        void userConnected( ID userID );
 };
 
 typedef std::shared_ptr< Scene > ScenePtr;

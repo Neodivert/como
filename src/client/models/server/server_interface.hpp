@@ -21,10 +21,12 @@
 #define SERVER_INTERFACE_HPP
 
 #include "../../../common/packets/packets.hpp"
+#include "../../../common/packets/scene_commands/scene_commands.hpp"
 #include "../../../common/utilities/log.hpp"
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 #include <thread>
+#include <functional>
 
 namespace como {
 
@@ -42,6 +44,8 @@ class ServerInterface
 
         SceneUpdate sceneUpdatePacketFromServer_;
 
+        std::function< int(const SceneCommand*) > executeRemoteCommand_;
+
         // Log
         LogPtr log_;
 
@@ -49,7 +53,7 @@ class ServerInterface
         /***
          * 1. Initialization and destruction
          ***/
-        ServerInterface( LogPtr log );
+        ServerInterface( std::function< int(const SceneCommand*) > executeRemoteCommand, LogPtr log );
         ~ServerInterface();
 
 
