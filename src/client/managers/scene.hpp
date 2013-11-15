@@ -108,7 +108,7 @@ class Scene : public QObject
         /***
          * 2. Users administration
          ***/
-        int addUser( const char* name, const std::uint8_t* selectionColor );
+        int addUser( const UserConnected* userConnectedCommand );
 
 
         /***

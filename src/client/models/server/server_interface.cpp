@@ -93,9 +93,6 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
         throw std::runtime_error( std::string( "ERROR when receiving USER_ACCEPTED package from server (" ) + errorCode.message() + ")" );
     }
 
-    // Initialize the vector of translations from local User IDs to remote
-    // ones with the remote ID given to the user by the server.
-    localToRemoteUserID_.push_back( userAcceptedPacket.getId() );
 
     //listenerThread = new std::thread( std::bind( &ServerInterface::listen, this ) );
     listen();
@@ -124,9 +121,6 @@ void ServerInterface::disconnect()
     log_->debug( "Waiting for working threads to finish ...\n" );
     workerThreads_.join_all();
     log_->debug( "Waiting for working threads to finish ...OK\n" );
-
-    // Clear the vector of translations from local user IDs to remote ones.
-    localToRemoteUserID_.clear();
 
     log_->debug( "Disconnecting from server ...OK\n" );
 }
@@ -163,6 +157,9 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
 
     sceneCommands = sceneUpdate->getCommands();
     for( i=0; i<sceneCommands->size(); i++ ){
+        log_->debug( "Executing remote command\n" );
+        executeRemoteCommand_( ( ( *sceneCommands )[i] ).get() );
+
         switch( ( ( *sceneCommands )[i] )->getType() ){
             case SceneCommandType::USER_CONNECTED:
                 log_->debug( "\tCommand[", i, "]: USER_CONNECTED\n" );
@@ -171,9 +168,6 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
                 log_->debug( "\tCommand[", i, "]: USER_DISCONNECTED\n" );
             break;
         }
-
-        log_->debug( "Executing remote command\n" );
-        executeRemoteCommand_( ( ( *sceneCommands )[i] ).get() );
     }
 
     listen();

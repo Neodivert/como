@@ -27,6 +27,7 @@
 #include <boost/thread.hpp>
 #include <thread>
 #include <functional>
+#include <map>
 
 namespace como {
 
@@ -39,8 +40,6 @@ class ServerInterface
         SocketPtr socket_;
 
         boost::thread_group workerThreads_;
-
-        std::vector<ID> localToRemoteUserID_;
 
         SceneUpdate sceneUpdatePacketFromServer_;
 

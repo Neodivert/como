@@ -168,12 +168,12 @@ void Scene::initLinesBuffer()
 void Scene::connect( const char* host, const char* port, const char* userName )
 {
     try{
-        const std::uint8_t LOCAL_USER_DEFAULT_SELECTION_COLOR[4] = {
-            255, 0, 0, 255
-        };
+        //const std::uint8_t LOCAL_USER_DEFAULT_SELECTION_COLOR[4] = {
+        //    255, 0, 0, 255
+        //};
 
         // Insert the local user in the users vector.
-        addUser( userName, LOCAL_USER_DEFAULT_SELECTION_COLOR );
+        //addUser( userName, LOCAL_USER_DEFAULT_SELECTION_COLOR );
 
         // Try to connect to the server. If there is any error, the method
         // ServerInterface::connect() throws an exception.
@@ -189,23 +189,10 @@ void Scene::connect( const char* host, const char* port, const char* userName )
  * 2. Users administration
  ***/
 
-int Scene::addUser( const char* name, const std::uint8_t* selectionColor )
+int Scene::addUser( const UserConnected* userConnectedCommand )
 {
-    unsigned int i;
-
-    // Create user struct.
-    PublicUser user;
-
-    // Initialize user name.
-    user.name = name;
-
-    // Initialize user selection color.
-    for( i=0; i<4; i++ ){
-        user.color[i] = selectionColor[i] / 255.0f;
-    }
-
-    // Insert user in user's vector.
-    users_.push_back( user );
+    // Create the new user from the given USER_CONNECTED command.
+    users_.emplace_back( userConnectedCommand );
 
     return static_cast< int >( users_.size() );
 }
@@ -513,7 +500,7 @@ int Scene::executeRemoteCommand( const SceneCommand* command )
         case SceneCommandType::USER_CONNECTED:
             userConnected = dynamic_cast< const UserConnected* >( command );
             log_->debug( "Adding user to scene [", userConnected->getName(), "]\n" );
-            return addUser( userConnected->getName(), userConnected->getSelectionColor() );
+            return addUser( userConnected );
         break;
         default:
             return 0;

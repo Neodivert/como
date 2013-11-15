@@ -17,32 +17,26 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PUBLIC_USER_HPP
-#define PUBLIC_USER_HPP
-
-#include "../3d/drawable.hpp"
-#include "../../../common/packets/scene_commands/scene_commands.hpp"
+#include "public_user.hpp"
 
 namespace como {
 
-typedef shared_ptr<Drawable> DrawablePtr;
-typedef std::list< std::shared_ptr< Drawable > > DrawablesList;
+/***
+ * 1. Initialization and destruction
+ ***/
 
-class PublicUser
+PublicUser::PublicUser( const UserConnected* userConnectedPacket )
 {
-    public:
-        ID id;
-        std::string name;
-        GLfloat color[4];
-        DrawablesList selection;
+    unsigned int i = 0;
 
+    // Retrieve user's ID and name.
+    id = userConnectedPacket->getUserID();
+    name = userConnectedPacket->getName();
 
-        /***
-         * 1. Initialization and destruction
-         ***/
-        PublicUser( const UserConnected* userConnectedPacket );
-};
+    // Retrieve user's selection color.
+    for( i=0; i<4; i++ ){
+        color[i] = ( userConnectedPacket->getSelectionColor() ) [i] / 255.0f;
+    }
+}
 
 } // namespace como
-
-#endif // PUBLIC_USER_HPP
