@@ -21,6 +21,7 @@
 #include "render_panel.hpp"
 #include "tools_menu.hpp"
 #include "connection_wizard/connection_wizard.hpp"
+#include "users_list.hpp"
 
 namespace como {
 
@@ -37,6 +38,7 @@ MainWindow::MainWindow( QWidget* parent ) :
 
     ToolsMenu* toolsMenu;
     RenderPanel* renderPanel;
+    UsersList* usersList;
 
     // Create a instance of Log.
     log_ = LogPtr( new Log );
@@ -53,14 +55,30 @@ MainWindow::MainWindow( QWidget* parent ) :
 
     // Create a render panel (set of four OpenGL canvas).
     renderPanel = new RenderPanel( comoApp );
-
     renderPanel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
+
+    // Create the user's list.
+    usersList = new UsersList( this, log_ );
+
+    // FIXME: Study why this is necessary.
+    qRegisterMetaType< UserConnectedConstPtr >();
+    qRegisterMetaType< UserConnectedConstPtr >( "UserConnectedConstPtr" );
+    qRegisterMetaType< ID >( "ID" );
+
+    // Signal / slot: when an user connects to the scene, add it to the GUI
+    // user's list.
+    connect( comoApp->getScene().get(), &Scene::userConnected, usersList, &UsersList::addUser );
+
+    // Signal / slot: when an user disconnects from the scene, remove it from
+    // the GUI user's list.
+    connect( comoApp->getScene().get(), &Scene::userDisconnected, usersList, &UsersList::removeUser );
 
     // Set window layout.
     QHBoxLayout *layout = new QHBoxLayout;
 
     layout->addWidget( toolsMenu );
     layout->addWidget( renderPanel );
+    layout->addWidget( usersList );
 
     centralWidget()->setLayout( layout );
 

@@ -43,7 +43,7 @@ class ServerInterface
 
         SceneUpdate sceneUpdatePacketFromServer_;
 
-        std::function< int(const SceneCommand*) > executeRemoteCommand_;
+        std::function< void (const SceneCommand*) > executeRemoteCommand_;
 
         // Log
         LogPtr log_;
@@ -52,7 +52,7 @@ class ServerInterface
         /***
          * 1. Initialization and destruction
          ***/
-        ServerInterface( std::function< int(const SceneCommand*) > executeRemoteCommand, LogPtr log );
+        ServerInterface( std::function< void (const SceneCommand*) > executeRemoteCommand, LogPtr log );
         ~ServerInterface();
 
 

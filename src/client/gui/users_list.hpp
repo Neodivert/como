@@ -17,46 +17,41 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef MAIN_WINDOW_HPP
-#define MAIN_WINDOW_HPP
+#ifndef USERS_LIST_HPP
+#define USERS_LIST_HPP
 
-#include <QMainWindow>
-#include "ui_main_window.h"
-#include "../managers/como_app.hpp"
-#include <QTypeInfo>
-
-namespace Ui {
-    class MainWindow;
-}
-
-Q_DECLARE_METATYPE( como::UserConnectedConstPtr )
+#include "../../common/packets/scene_commands/scene_commands.hpp"
+#include "../../common/utilities/log.hpp"
+#include <QListWidget>
+#include <map>
 
 namespace como {
 
-//Q_DECLARE_METATYPE( std::shared_ptr< const como::UserConnected > )
-
-class MainWindow : public QMainWindow
+class UsersList : public QListWidget
 {
     Q_OBJECT
-    
-    private:
-        Ui::MainWindow *ui;
 
-        // App's singlenton instance.
-        shared_ptr< ComoApp > comoApp;
+    private:
+        std::map< ID, std::string > userIDToName_;
 
         // Log
         LogPtr log_;
-
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        explicit MainWindow( QWidget* parent = 0 );
-        ~MainWindow();
+        UsersList( QWidget* parent, LogPtr log );
+
+
+        /***
+         * 2. Users insertion / deletion
+         ***/
+    public slots:
+        void addUser( UserConnectedConstPtr userConnectedPacket );
+        void removeUser( ID userID );
 };
 
 } // namespace como
 
-#endif // MAIN_WINDOW_HPP
+#endif // USERS_LIST_HPP

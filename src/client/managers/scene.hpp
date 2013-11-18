@@ -108,7 +108,8 @@ class Scene : public QObject
         /***
          * 2. Users administration
          ***/
-        int addUser( const UserConnected* userConnectedCommand );
+        void addUser( std::shared_ptr< const UserConnected > userConnectedCommand );
+        void removeUser( ID userID );
 
 
         /***
@@ -150,7 +151,7 @@ class Scene : public QObject
 
         void deleteSelection( const unsigned int& userId = 0 );
 
-        int executeRemoteCommand( const SceneCommand* command );
+        void executeRemoteCommand( const SceneCommand* command );
 
 
         /***
@@ -172,7 +173,8 @@ class Scene : public QObject
          ***/
     signals:
         void renderNeeded();
-        void userConnected( ID userID );
+        void userConnected( UserConnectedConstPtr command );
+        void userDisconnected( ID userID );
 };
 
 typedef std::shared_ptr< Scene > ScenePtr;

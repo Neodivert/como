@@ -26,7 +26,7 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-ServerInterface::ServerInterface( std::function< int(const SceneCommand*) > executeRemoteCommand, LogPtr log ) :
+ServerInterface::ServerInterface( std::function< void (const SceneCommand*) > executeRemoteCommand, LogPtr log ) :
     work_( std::shared_ptr< boost::asio::io_service::work >( new boost::asio::io_service::work( io_service_ ) ) ),
     socket_( SocketPtr( new boost::asio::ip::tcp::socket( io_service_ ) ) ),
     executeRemoteCommand_( executeRemoteCommand ),

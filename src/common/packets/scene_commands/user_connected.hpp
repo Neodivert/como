@@ -62,6 +62,8 @@ class UserConnected : public SceneCommand
         void setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a );
 };
 
+typedef std::shared_ptr< const UserConnected > UserConnectedConstPtr;
+
 } // namespace como
 
 #endif // USER_CONNECTED_HPP

@@ -189,12 +189,30 @@ void Scene::connect( const char* host, const char* port, const char* userName )
  * 2. Users administration
  ***/
 
-int Scene::addUser( const UserConnected* userConnectedCommand )
+void Scene::addUser( std::shared_ptr< const UserConnected > userConnectedCommand )
 {
     // Create the new user from the given USER_CONNECTED command.
-    users_.emplace_back( userConnectedCommand );
+    users_.emplace_back( userConnectedCommand.get() );
 
-    return static_cast< int >( users_.size() );
+    // Emit a UserConnected signal.
+    emit userConnected( userConnectedCommand );
+}
+
+
+void Scene::removeUser( ID userID )
+{
+    std::vector< PublicUser >::iterator it;
+
+    it = users_.begin();
+    while( ( it != users_.end() ) && ( it->id != userID ) ){
+        it++;
+    }
+
+    if( it != users_.end() ){
+        users_.erase( it );
+
+        emit userDisconnected( userID );
+    }
 }
 
 
@@ -492,18 +510,22 @@ void Scene::deleteSelection( const unsigned int& userId )
 }
 
 
-int Scene::executeRemoteCommand( const SceneCommand* command )
+void Scene::executeRemoteCommand( const SceneCommand* command )
 {
     const UserConnected* userConnected = nullptr;
 
+    log_->debug( "Scene::executeRemoteCommand(", command, ")\n" );
+
     switch( command->getType() ){
         case SceneCommandType::USER_CONNECTED:
+            log_->debug( "\tCasting to USER_CONNECTED command\n" );
             userConnected = dynamic_cast< const UserConnected* >( command );
             log_->debug( "Adding user to scene [", userConnected->getName(), "]\n" );
-            return addUser( userConnected );
+            addUser( std::shared_ptr< const UserConnected>( new UserConnected( *userConnected ) ) );
         break;
         default:
-            return 0;
+            log_->debug( "Removing user from scene [", users_[command->getUserID()].name, "]\n" );
+            removeUser( command->getUserID() );
         break;
     }
 }
@@ -628,5 +650,6 @@ void Scene::drawTransformGuideLine() const
     glDrawArrays( GL_LINES, linesBufferOffsets[TRANSFORM_GUIDE_LINE], 2 );
     glEnable( GL_DEPTH_TEST );
 }
+
 
 } // namespace como

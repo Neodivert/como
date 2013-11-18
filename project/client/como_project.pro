@@ -56,7 +56,8 @@ HEADERS += \
     ../../src/common/packets/scene_commands/scene_commands.hpp \
     ../../src/common/packets/scene_commands/scene_command.hpp \
     ../../src/client/models/users/public_user.hpp \
-    ../../src/common/utilities/log.hpp
+    ../../src/common/utilities/log.hpp \
+    ../../src/client/gui/users_list.hpp
 
 SOURCES += \
     ../../src/client/gui/viewport.cpp \
@@ -86,4 +87,5 @@ SOURCES += \
     ../../src/common/packets/scene_update.cpp \
     ../../src/common/packets/scene_commands/user_connected.cpp \
     ../../src/common/packets/scene_commands/scene_command.cpp \
-    ../../src/client/models/users/public_user.cpp
+    ../../src/client/models/users/public_user.cpp \
+    ../../src/client/gui/users_list.cpp
