@@ -53,7 +53,7 @@ void UsersList::addUser( UserConnectedConstPtr userConnectedPacket )
 }
 
 
-void UsersList::removeUser( ID userID )
+void UsersList::removeUser( UserID userID )
 {
     QListWidgetItem* userToBeDeleted = nullptr;
     QList<QListWidgetItem *> users;

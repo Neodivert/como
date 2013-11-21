@@ -17,41 +17,29 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef USERS_LIST_HPP
-#define USERS_LIST_HPP
+#ifndef IDS_HPP
+#define IDS_HPP
 
-#include "../../common/packets/scene_commands/scene_commands.hpp"
-#include "../../common/utilities/log.hpp"
-#include <QListWidget>
-#include <map>
+#include <cstdint>
 
 namespace como {
 
-class UsersList : public QListWidget
-{
-    Q_OBJECT
-
-    private:
-        std::map< UserID, std::string > userIDToName_;
-
-        // Log
-        LogPtr log_;
-
-    public:
-        /***
-         * 1. Initialization and destruction
-         ***/
-        UsersList( QWidget* parent, LogPtr log );
+typedef std::uint16_t UserID;
+typedef std::uint32_t DrawableIndex;
 
 
-        /***
-         * 2. Users insertion / deletion
-         ***/
-    public slots:
-        void addUser( UserConnectedConstPtr userConnectedPacket );
-        void removeUser( UserID userID );
+/*
+ * A drawable is uniquely identified by a pair of values:
+ * - The ID of the user who created it.
+ * - A index to differ the drawable from others created by the same user.
+ */
+
+struct DrawableID {
+    UserID creatorID;
+    DrawableIndex drawableIndex;
 };
 
 } // namespace como
 
-#endif // USERS_LIST_HPP
+
+#endif // IDS_HPP

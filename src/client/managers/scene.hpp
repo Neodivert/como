@@ -109,7 +109,7 @@ class Scene : public QObject
          * 2. Users administration
          ***/
         void addUser( std::shared_ptr< const UserConnected > userConnectedCommand );
-        void removeUser( ID userID );
+        void removeUser( UserID userID );
 
 
         /***
@@ -174,7 +174,7 @@ class Scene : public QObject
     signals:
         void renderNeeded();
         void userConnected( UserConnectedConstPtr command );
-        void userDisconnected( ID userID );
+        void userDisconnected( UserID userID );
 };
 
 typedef std::shared_ptr< Scene > ScenePtr;

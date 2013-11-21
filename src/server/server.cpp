@@ -29,7 +29,7 @@ Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThre
     N_THREADS( nThreads ),
     MAX_SESSIONS( maxSessions ),
     newSocket_( io_service_ ),
-    newId_( 0 ),
+    newId_( 1 ),
     port_( port_ )
 {
     unsigned int i;
@@ -243,7 +243,7 @@ void Server::addCommand( SceneCommandConstPtr sceneCommand )
  * 8. Auxiliar methods
  ***/
 
-void Server::deleteUser( unsigned int id )
+void Server::deleteUser( UserID id )
 {
     unsigned int i = 0;
 

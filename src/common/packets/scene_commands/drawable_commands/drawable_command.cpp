@@ -17,41 +17,14 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef USERS_LIST_HPP
-#define USERS_LIST_HPP
-
-#include "../../common/packets/scene_commands/scene_commands.hpp"
-#include "../../common/utilities/log.hpp"
-#include <QListWidget>
-#include <map>
+#include "drawable_command.hpp"
 
 namespace como {
 
-class UsersList : public QListWidget
+/*
+DrawableCommand::DrawableCommand()
 {
-    Q_OBJECT
-
-    private:
-        std::map< UserID, std::string > userIDToName_;
-
-        // Log
-        LogPtr log_;
-
-    public:
-        /***
-         * 1. Initialization and destruction
-         ***/
-        UsersList( QWidget* parent, LogPtr log );
-
-
-        /***
-         * 2. Users insertion / deletion
-         ***/
-    public slots:
-        void addUser( UserConnectedConstPtr userConnectedPacket );
-        void removeUser( UserID userID );
-};
+}
+*/
 
 } // namespace como
-
-#endif // USERS_LIST_HPP

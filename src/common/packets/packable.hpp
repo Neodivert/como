@@ -21,11 +21,11 @@
 #define PACKABLE_HPP
 
 #include "../utilities/packer.hpp"
+#include "../utilities/ids.hpp"
 
 namespace como {
 
 const unsigned int NAME_SIZE = 64;
-typedef std::uint32_t ID;
 
 class Packable
 {

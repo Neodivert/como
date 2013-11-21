@@ -31,7 +31,7 @@ typedef std::list< std::shared_ptr< Drawable > > DrawablesList;
 class PublicUser
 {
     public:
-        ID id;
+        UserID id;
         std::string name;
         GLfloat color[4];
         DrawablesList selection;

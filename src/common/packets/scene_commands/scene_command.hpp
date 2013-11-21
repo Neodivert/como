@@ -36,14 +36,14 @@ class SceneCommand : public Packable
 {
     private:
         SceneCommandType type_;
-        ID userID_;
+        UserID userID_;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
         SceneCommand( SceneCommandType type );
-        SceneCommand( SceneCommandType type, ID userID );
+        SceneCommand( SceneCommandType type, UserID userID );
         SceneCommand( const SceneCommand& b );
 
         virtual ~SceneCommand(){}
@@ -62,13 +62,13 @@ class SceneCommand : public Packable
         virtual std::uint16_t getPacketSize() const ;
         SceneCommandType getType() const ;
         static SceneCommandType getType( const char* buffer );
-        ID getUserID() const ;
+        UserID getUserID() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setUserID( const ID& userID );
+        void setUserID( const UserID& userID );
 };
 
 typedef std::shared_ptr< SceneCommand > SceneCommandPtr;

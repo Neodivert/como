@@ -41,12 +41,12 @@ typedef std::shared_ptr< Socket > SocketPtr;
 class PublicUser : public std::enable_shared_from_this<PublicUser>
 {
     private:
-        unsigned int id_;
+        UserID id_;
         SocketPtr socket_;
 
         char name_[64];
 
-        std::function<void (unsigned int)> removeUserCallback_;
+        std::function<void (UserID)> removeUserCallback_;
 
         std::uint8_t nextCommand_;
         std::uint8_t nCommandsInLastPacket_;
@@ -66,8 +66,8 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
         /***
          * 1. Initialization and destruction
          ***/
-        PublicUser( unsigned int id, const char* name, Socket socket,
-                    std::function<void (unsigned int)> removeUserCallback,
+        PublicUser( UserID id, const char* name, Socket socket,
+                    std::function<void (UserID)> removeUserCallback,
                     CommandsHistoricConstPtr commandsHistoric,
                     LogPtr log );
         ~PublicUser();
@@ -76,7 +76,7 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
         /***
          * 2. Getters
          ***/
-        unsigned int getId();
+        UserID getId();
         const char* getName();
 
 

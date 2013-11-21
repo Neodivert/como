@@ -33,7 +33,7 @@ SceneCommand::SceneCommand( SceneCommandType type ) :
 }
 
 
-SceneCommand::SceneCommand( SceneCommandType type, ID userID ) :
+SceneCommand::SceneCommand( SceneCommandType type, UserID userID ) :
     type_( type ),
     userID_( userID )
 {
@@ -98,7 +98,7 @@ SceneCommandType SceneCommand::getType( const char* buffer )
 }
 
 
-ID SceneCommand::getUserID() const
+UserID SceneCommand::getUserID() const
 {
     return userID_;
 }
@@ -108,7 +108,7 @@ ID SceneCommand::getUserID() const
  * 4. Setters
  ***/
 
-void SceneCommand::setUserID( const ID& userID )
+void SceneCommand::setUserID( const UserID& userID )
 {
     userID_ = userID;
 }

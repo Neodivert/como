@@ -63,7 +63,7 @@ MainWindow::MainWindow( QWidget* parent ) :
     // FIXME: Study why this is necessary.
     qRegisterMetaType< UserConnectedConstPtr >();
     qRegisterMetaType< UserConnectedConstPtr >( "UserConnectedConstPtr" );
-    qRegisterMetaType< ID >( "ID" );
+    qRegisterMetaType< UserID >( "UserID" );
 
     // Signal / slot: when an user connects to the scene, add it to the GUI
     // user's list.

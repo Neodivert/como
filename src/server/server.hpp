@@ -77,7 +77,7 @@ class Server
         Socket newSocket_;
 
         // When a new user connect to the server, this will be the id givent to him/her.
-        unsigned int newId_;
+        UserID newId_;
 
         // Server's port.
         unsigned int port_;
@@ -125,7 +125,7 @@ class Server
         /***
          * 6. Auxiliar methods
          ***/
-        void deleteUser( unsigned int id );
+        void deleteUser( UserID id );
     private:
         std::string getCurrentDayTime() const ;
         void workerThread();

@@ -199,7 +199,7 @@ void Scene::addUser( std::shared_ptr< const UserConnected > userConnectedCommand
 }
 
 
-void Scene::removeUser( ID userID )
+void Scene::removeUser( UserID userID )
 {
     std::vector< PublicUser >::iterator it;
 

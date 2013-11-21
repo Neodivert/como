@@ -22,5 +22,6 @@
 
 #include "scene_command.hpp"
 #include "user_connected.hpp"
+#include "drawable_commands/drawable_command.hpp"
 
 #endif // SCENE_COMMANDS_HPP

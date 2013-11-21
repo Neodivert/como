@@ -26,8 +26,8 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-PublicUser::PublicUser( unsigned int id, const char* name, Socket socket,
-            std::function<void (unsigned int)> removeUserCallback,
+PublicUser::PublicUser( UserID id, const char* name, Socket socket,
+            std::function<void (UserID)> removeUserCallback,
             CommandsHistoricConstPtr commandsHistoric,
             LogPtr log ) :
     id_( id ),
@@ -57,9 +57,9 @@ PublicUser::~PublicUser()
  * 2. Getters
  ***/
 
-unsigned int PublicUser::getId()
+UserID PublicUser::getId()
 {
-    unsigned int id;
+    UserID id;
 
     mutex_.lock();
     id = id_;
