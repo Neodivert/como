@@ -20,22 +20,18 @@
 #ifndef PUBLIC_USER_HPP
 #define PUBLIC_USER_HPP
 
-#include "../3d/drawable.hpp"
+#include "../3d/drawables_tree.hpp"
 #include "../../../common/packets/scene_commands/scene_commands.hpp"
 
 namespace como {
-
-typedef shared_ptr<Drawable> DrawablePtr;
-typedef std::list< std::shared_ptr< Drawable > > DrawablesList;
 
 class PublicUser
 {
     public:
         UserID id;
-        std::string name;
+        char name[NAME_SIZE];
         GLfloat color[4];
         DrawablesList selection;
-
 
         /***
          * 1. Initialization and destruction

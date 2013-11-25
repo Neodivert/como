@@ -32,7 +32,8 @@ HEADERS += \
     ../../src/common/packets/scene_commands/user_connected.hpp \
     ../../src/server/public_user.hpp \
     ../../src/common/utilities/log.hpp \
-    ../../src/server/commands_historic.hpp
+    ../../src/server/commands_historic.hpp \
+    ../../src/common/utilities/ids.hpp
 
 # Link boost libraries
 unix|win32: LIBS += -lboost_system

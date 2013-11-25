@@ -22,7 +22,7 @@
 
 #include <QWizard>
 #include <QWizardPage>
-#include "../../managers/scene.hpp"
+#include "../../managers/scene/scene.hpp"
 #include "../../../common/utilities/log.hpp"
 
 

@@ -32,11 +32,14 @@ ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     QHBoxLayout* headerLayout;
 
     // Create a OpenGL viewport and check OpenGL state.
+    comoApp->getLog()->debug( "ViewFrame constructor, before creating viewport\n" );
     checkOpenGL( "ViewFrame constructor, before creating viewport" );
     viewport = new Viewport( comoApp );
     checkOpenGL( "ViewFrame constructor, after creating viewport" );
+    comoApp->getLog()->debug( "ViewFrame constructor, after creating viewport\n" );
 
 
+    comoApp->getLog()->debug( "Viewframe - 1\n" );
     // The viewport inherits from QWindow. In order to allow it to live inside a QWidget-based
     // application, we need to create a QWidget wrapper.
     QWidget* viewportWidget = QWidget::createWindowContainer( viewport );
@@ -51,6 +54,7 @@ ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     QLabel* viewLabel = new QLabel( name );
     viewLabel->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
 
+    comoApp->getLog()->debug( "Viewframe - 2\n" );
     // Set a dropdown list for selecting the viewport's current view.
     viewSelector = new QComboBox;
     for( auto viewString : viewStrings ){
@@ -63,6 +67,7 @@ ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
         viewport->setView( views[index] );
     }  );
 
+    comoApp->getLog()->debug( "Viewframe - 3\n" );
     // When comoApp::setAppMode() be invoked, change appMode selector's index.
     connect( viewport, &Viewport::viewIndexChanged, viewSelector, &QComboBox::setCurrentIndex );
 
@@ -76,14 +81,17 @@ ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     headerLayout->addWidget( projectionModeSwitch );
     header->setLayout( headerLayout );
 
+    comoApp->getLog()->debug( "Viewframe - 4\n" );
     // Set the ViewFrame layout.
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget( header );
     layout->addWidget( viewportWidget );
     setLayout(layout);
 
+    comoApp->getLog()->debug( "Viewframe - 5\n" );
     // When a render is requested, render!
     QObject::connect( comoApp->getScene().get(), &Scene::renderNeeded, this, &ViewFrame::render  );
+    comoApp->getLog()->debug( "Viewframe - 6\n" );
 }
 
 
@@ -136,7 +144,9 @@ QGroupBox* ViewFrame::createProjectionSwitch()
 
 void ViewFrame::render()
 {
+    std::cout << "ViewFrame::render 1" << std::endl;
     viewport->render();
+    std::cout << "ViewFrame::render 2" << std::endl;
 }
 
 

@@ -21,6 +21,7 @@
 #include <cmath>
 #include <iostream>
 #include <glm/gtx/vector_angle.hpp>
+#include <iostream>
 using namespace std;
 
 namespace como {
@@ -54,6 +55,8 @@ Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
         // Make this canvas share the given app's state.
         this->comoApp = comoApp;
 
+        comoApp->getLog()->debug( "Viewport - 1\n" );
+
         // We will render using OpenGL.
         setSurfaceType( QWindow::OpenGLSurface );
 
@@ -64,7 +67,13 @@ Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
 
         comoApp->getOpenGLContext()->makeCurrent( this );
 
-        checkOpenGL( "Viewport constructor, before computing dimension inverses" );
+        comoApp->getLog()->debug( "Viewport - 2\n" );
+        // Create the camera.
+        camera = new Camera;
+
+        comoApp->getLog()->debug( "Viewport - 3\n" );
+
+        //checkOpenGL( "Viewport constructor, before computing dimension inverses" );
 
         // Compute dimensions' inverses.
         if( width() ){
@@ -74,7 +83,7 @@ Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
             heightInverse = 1.0f / height();
         }
 
-        checkOpenGL( "Viewport constructor, after computing dimension inverses" );
+        //checkOpenGL( "Viewport constructor, after computing dimension inverses" );
 
         // Get location of uniform shader modelview matrix.
         if( viewProjectionMatrixLocation == -1 ){
@@ -86,9 +95,22 @@ Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
 
         // Set default projection.
         setProjection( Projection::ORTHO );
+
+        // FIXME: This is to remove the "out of memory" error.
+        while( glGetError() != GL_NO_ERROR );
+
+        comoApp->getLog()->debug( "Viewport - 4\n" );
+        //glGetError();
+        //checkOpenGL( "Viewport constructor - end" );
     }catch( std::exception& ex ){
         comoApp->getLog()->error( ex.what() );
     }
+}
+
+
+Viewport::~Viewport()
+{
+    delete camera;
 }
 
 
@@ -152,16 +174,22 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
     glm::vec3 rayOrigin, rayDirection;
     bool addToSelection = false;
 
+    std::cout << "PressEvent - 1" << std::endl;
+
     // Do one thing or another depending on which transformation mode we are in.
     if( comoApp->getTransformationType() == TransformationType::NONE ){
         // We are not in transformation mode. This mouse press is for selecting
         // a drawable.
+
+        std::cout << "PressEvent - 2.1" << std::endl;
 
         // Record last mouse position.
         //recordLastMousePos( mousePressEvent->x(), mousePressEvent->y() );
         lastMousePos = getNormalizedMousePos( mousePressEvent->x(), mousePressEvent->y() );
 
         // http://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection
+
+        std::cout << "PressEvent - 2.2" << std::endl;
 
         // Tace a ray from pixel towards camera's center vector.
         traceRay( mousePressEvent->x(), height() - mousePressEvent->y() - 1, rayOrigin, rayDirection );
@@ -170,14 +198,21 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
         // selection. Otherwise, clear the current selection and select the new drawable.
         addToSelection = mousePressEvent->modifiers() & Qt::ControlModifier;
 
+        std::cout << "PressEvent - 2.3" << std::endl;
+
         // Do the ray picking.
+        std::cout << "comoApp->getScene(): " << comoApp->getScene() << std::endl;
         comoApp->getScene()->selectDrawableByRayPicking( rayOrigin,
                                                          rayDirection,
                                                          addToSelection );
+        std::cout << "PressEvent - 2.4" << std::endl;
     }else{
         // We were in transformation mode. This mouse press is for droping
         // the current selection.
+
+        std::cout << "PressEvent - 3.1" << std::endl;
         comoApp->setTransformationType( TransformationType::NONE );
+        std::cout << "PressEvent - 3.2" << std::endl;
     }
 }
 
@@ -246,11 +281,13 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
     const glm::vec3 zAxis( 0.0f, 0.0f, 1.0f );
 
+    comoApp->getLog()->debug( "mouseMoveEvent ...\n" );
+
     // Variables used for computing the magnitude of the transformation.
     glm::vec4 transformVector;
     float angle;
     // TODO: Not a complete conversion to screen coordinates.
-    glm::vec2 scenePivotPoint = glm::vec2( projectionMatrix * camera.getViewMatrix() * glm::vec4( comoApp->getScene()->getPivotPoint( comoApp->getPivotPointMode() ), 1.0f ) );
+    glm::vec2 scenePivotPoint = glm::vec2( projectionMatrix * camera->getViewMatrix() * glm::vec4( comoApp->getScene()->getPivotPoint( comoApp->getPivotPointMode() ), 1.0f ) );
     scenePivotPoint.x *= 0.5f;
     scenePivotPoint.y *= -0.5f;
 
@@ -270,7 +307,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
         switch( transformationType ){
             case TransformationType::TRANSLATION:
                 // Transform mouse move to a world space's translation vector.
-                transformVector = 2.0f * glm::inverse( projectionMatrix*camera.getViewMatrix() ) * glm::vec4( mousePos.x - lastMousePos.x, lastMousePos.y - mousePos.y, 0.0f, 1.0f );
+                transformVector = 2.0f * glm::inverse( projectionMatrix*camera->getViewMatrix() ) * glm::vec4( mousePos.x - lastMousePos.x, lastMousePos.y - mousePos.y, 0.0f, 1.0f );
 
                 // If requested, attach the translation vector to an axis.
                 switch( transformationMode ){
@@ -313,7 +350,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                         comoApp->getScene()->rotateSelection( angle, zAxis, comoApp->getPivotPointMode() );
                     break;
                     case TransformationMode::FREE:
-                        comoApp->getScene()->rotateSelection( angle, glm::vec3( -camera.getCenterVector() ), comoApp->getPivotPointMode() );
+                        comoApp->getScene()->rotateSelection( angle, glm::vec3( -camera->getCenterVector() ), comoApp->getPivotPointMode() );
                     break;
                 }
 
@@ -330,7 +367,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                                              1.0f );
 
                 // Transform the scale vector from window to world space.
-                transformVector = Drawable::transformScaleVector( transformVector, glm::inverse( projectionMatrix * camera.getViewMatrix() ) );
+                transformVector = Drawable::transformScaleVector( transformVector, glm::inverse( projectionMatrix * camera->getViewMatrix() ) );
 
                 // If requested, attach the tranformation vector to an axis.
                 switch( transformationMode ){
@@ -363,6 +400,8 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 
     // Record last mouse position.
     lastMousePos = mousePos;
+
+    comoApp->getLog()->debug( "mouseMoveEvent ...OK\n" );
 }
 
 
@@ -379,7 +418,7 @@ void Viewport::render()
 {
     TransformationModes::iterator it;
 
-    const glm::mat4 viewMatrix = camera.getViewMatrix();
+    const glm::mat4 viewMatrix = glm::mat4( 1.0f ); //camera->getViewMatrix();
 
     // Make shared OpenGL context current for this surface.
     comoApp->getOpenGLContext()->makeCurrent( this );
@@ -427,7 +466,9 @@ void Viewport::setView( View view )
 {
     Views::iterator viewsIterator;
 
-    camera.setView( view );
+    comoApp->getOpenGLContext()->makeCurrent( this );
+
+    camera->setView( view );
     comoApp->getScene()->renderNeeded();
 
     // Get the integer index of the current View on a array of views and return it
@@ -475,12 +516,12 @@ void Viewport::traceRay( const GLfloat& x, const GLfloat& y, glm::vec3& rayOrigi
     windowCoordinates = glm::vec3( x, y, 0.0f );
 
     // Get ray origin coordinates at clipping near plane by unproyecting the window's ones.
-    rayOrigin = glm::unProject( windowCoordinates, camera.getViewMatrix(), projectionMatrix, viewport );
+    rayOrigin = glm::unProject( windowCoordinates, camera->getViewMatrix(), projectionMatrix, viewport );
 
     // Get ray direction coordinates by unproyecting the window's ones to far plane and
     // then substracting the ray origin.
     windowCoordinates.z = 1.0f;
-    rayDirection = glm::unProject( windowCoordinates, camera.getViewMatrix(), projectionMatrix, viewport ) - rayOrigin;
+    rayDirection = glm::unProject( windowCoordinates, camera->getViewMatrix(), projectionMatrix, viewport ) - rayOrigin;
 }
 
 
@@ -495,9 +536,9 @@ void Viewport::updateTransformGuideLine( const GLfloat& x, const GLfloat& y )
 
     // Get the equation of a plane which contains the origin point and whose normal
     // is the opposite of the camera's center vector.
-    const GLfloat A = ( -camera.getCenterVector() ).x;
-    const GLfloat B = ( -camera.getCenterVector() ).y;
-    const GLfloat C = ( -camera.getCenterVector() ).z;
+    const GLfloat A = ( -camera->getCenterVector() ).x;
+    const GLfloat B = ( -camera->getCenterVector() ).y;
+    const GLfloat C = ( -camera->getCenterVector() ).z;
     const GLfloat D = -A * origin.x - B * origin.y - C * origin.z;
 
     // Trace a ray from pixel (x, y) towards camera center vector. Get the the ray's

@@ -32,7 +32,7 @@ HEADERS += \
     ../../src/client/gui/opengl_engine.hpp \
     ../../src/client/gui/main_window.hpp \
     ../../src/client/managers/tester.hpp \
-    ../../src/client/managers/scene.hpp \
+    ../../src/client/managers/scene/scene.hpp \
     ../../src/client/managers/como_app.hpp \
     ../../src/client/models/3d/mesh.hpp \
     ../../src/client/models/3d/drawable.hpp \
@@ -59,7 +59,9 @@ HEADERS += \
     ../../src/common/utilities/log.hpp \
     ../../src/client/gui/users_list.hpp \
     ../../src/common/packets/scene_commands/drawable_commands/drawable_command.hpp \
-    ../../src/common/utilities/ids.hpp
+    ../../src/common/utilities/ids.hpp \
+    ../../src/client/models/3d/drawables_tree.hpp \
+    ../../src/client/managers/scene/public_scene.hpp
 
 SOURCES += \
     ../../src/client/gui/viewport.cpp \
@@ -69,7 +71,7 @@ SOURCES += \
     ../../src/client/gui/opengl_engine.cpp \
     ../../src/client/gui/main_window.cpp \
     ../../src/client/managers/tester.cpp \
-    ../../src/client/managers/scene.cpp \
+    ../../src/client/managers/scene/scene.cpp \
     ../../src/client/managers/como_app.cpp \
     ../../src/client/models/3d/mesh.cpp \
     ../../src/client/models/3d/drawable.cpp \
@@ -91,4 +93,5 @@ SOURCES += \
     ../../src/common/packets/scene_commands/scene_command.cpp \
     ../../src/client/models/users/public_user.cpp \
     ../../src/client/gui/users_list.cpp \
-    ../../src/common/packets/scene_commands/drawable_commands/drawable_command.cpp
+    ../../src/common/packets/scene_commands/drawable_commands/drawable_command.cpp \
+    ../../src/client/managers/scene/public_scene.cpp

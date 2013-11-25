@@ -32,33 +32,47 @@ GLint Mesh::uniformColorLocation = -1;
 
 Mesh::Mesh()
 {   
+    checkOpenGL( "Mesh constructor - 1" );
     GLint currentShaderProgram;
 
     // Generate a VAO for the Mesh and bind it as the active one.
     glGenVertexArrays( 1, &vao );
     glBindVertexArray( vao );
 
+    checkOpenGL( "Mesh constructor - 2" );
+
     // Generate a VBO and bind it for holding vertex data.
     glGenBuffers( 1, &vbo );
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
+
+    checkOpenGL( "Mesh constructor - 3" );
 
     // Generate an EBO and bind it for holding vertex indices.
     glGenBuffers( 1, &ebo );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
 
+    checkOpenGL( "Mesh constructor - 4" );
+
     if( uniformColorLocation == -1 ){
+        checkOpenGL( "Mesh constructor - 4 b1" );
         // Location of uniform shader variable "color" hasn't been initialized yet.
 
         // Get current shader program id.
         glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
 
+        checkOpenGL( "Mesh constructor - 4 b2" );
+
         // Get location of uniform shader variable "color".
         uniformColorLocation = glGetUniformLocation( currentShaderProgram, "color" );
+
+        checkOpenGL( "Mesh constructor - 4 b3" );
     }
 
+    checkOpenGL( "Mesh constructor - 5" );
     // Set the mesh's color.
     setColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
 
+    checkOpenGL( "Mesh constructor - 6" );
     // Set both original and transformed centroids.
     originalCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
     transformedCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
@@ -77,6 +91,7 @@ Mesh::~Mesh()
 
 void Mesh::setVertices( const GLuint nVertices, const GLfloat* vertices )
 {
+    checkOpenGL( "Mesh constructor - Setting vertices" );
     // Copy given vertices to this mesh's original vertices. Also compute
     // the mesh's centroid.
     originalVertices.resize( nVertices );
@@ -90,6 +105,8 @@ void Mesh::setVertices( const GLuint nVertices, const GLfloat* vertices )
     }
     originalCentroid /= originalVertices.size();
     originalCentroid.w = 1.0f;
+
+    checkOpenGL( "Mesh constructor, before setting VBO vertex data" );
 
     // Allocate a VBO for transformed vertices.
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
@@ -249,8 +266,12 @@ void Mesh::update()
     GLfloat* transformedVertices = nullptr;
     glm::vec4 transformedVertex;
 
+    checkOpenGL( "Mesh::update() - 1" );
+
     // Update mesh's orientation.
     Drawable::update();
+
+    checkOpenGL( "Mesh::update() - 2" );
 
     // Update mesh's centroid.
     transformedCentroid = transformationMatrix * originalCentroid;
@@ -261,8 +282,11 @@ void Mesh::update()
     glBindVertexArray( vao );
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
 
+    checkOpenGL( "Mesh::update() - 3" );
     // Map the OpenGL's VBO for transformed vertices to client memory, so we can update it.
     transformedVertices = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
+
+    checkOpenGL( "Mesh::update() - 4" );
 
     // Recompute each transformed vertex by multiplying its corresponding original vertex
     // by transformation matrix.
@@ -273,8 +297,12 @@ void Mesh::update()
         transformedVertices[i*N_TRIANGLE_VERTICES+Y] = transformedVertex.y;
         transformedVertices[i*N_TRIANGLE_VERTICES+Z] = transformedVertex.z;
     }
+
+    checkOpenGL( "Mesh::update() - 5" );
     // We finished updating the VBO, unmap it so OpenGL can take control over it.
     glUnmapBuffer( GL_ARRAY_BUFFER );
+
+    checkOpenGL( "Mesh::update() - 6" );
 }
 
 void Mesh::draw( const GLfloat* contourColor ) const

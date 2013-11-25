@@ -17,30 +17,31 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef TOOLS_MENU_HPP
-#define TOOLS_MENU_HPP
+#ifndef PUBLIC_SCENE_HPP
+#define PUBLIC_SCENE_HPP
 
-#include <QFrame>
-#include "../managers/como_app.hpp"
+#include "scene.hpp"
 
 namespace como {
 
-class ToolsMenu : public QFrame
+class PublicScene : public Scene
 {
-    protected:
-        // Pointer to app's current state.
-        shared_ptr< ComoApp > comoApp;
+    Q_OBJECT
 
     public:
-        ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp );
+        /***
+         * 1. Initialization and destruction
+         ***/
+        PublicScene( LogPtr log );
+        virtual void connect( const char* host, const char* port, const char* userName );
 
-    protected:
-        QGroupBox* createPrimitiveCreationMenu();
-        QGroupBox* createPivotPointModeSelector();
 
-    signals:
+        /***
+         * 2. Users administration
+         ***/
+        virtual void addUser( std::shared_ptr< const UserConnected > userConnectedCommand );
 };
 
 } // namespace como
 
-#endif // TOOLS_MENU_HPP
+#endif // PUBLIC_SCENE_HPP

@@ -42,7 +42,7 @@ Camera::Camera() :
 
 glm::mat4 Camera::getViewMatrix() const
 {
-    return glm::inverse( transformationMatrix );
+    return viewMatrix;//glm::inverse( transformationMatrix );
 }
 /*
 void foo( char* str, glm::mat4 M )
@@ -63,6 +63,8 @@ void Camera::setView( View view )
 {
     const glm::vec3 X_AXIS = glm::vec3( 1.0f, 0.0f, 0.0f );
     const glm::vec3 Y_AXIS = glm::vec3( 0.0f, 1.0f, 0.0f );
+
+    checkOpenGL( "Camera::setView - 1" );
 
     switch( view ){
         case View::LEFT:
@@ -87,7 +89,10 @@ void Camera::setView( View view )
         break;
     }
 
+    checkOpenGL( "Camera::setView - 2" );
     update();
+
+    checkOpenGL( "Camera::setView - 3" );
 }
 
 
@@ -186,6 +191,8 @@ void Camera::update()
     transformedEye = transformationMatrix * originalEye;
     transformedUp = transformationMatrix * originalUp;
     transformedCenter = transformationMatrix * originalCenter;
+
+    viewMatrix = glm::inverse( transformationMatrix );
 }
 
 

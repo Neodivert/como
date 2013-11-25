@@ -22,7 +22,7 @@
 
 #include <QFrame>
 #include "viewport.hpp"
-#include "../managers/scene.hpp"
+#include "../managers/scene/scene.hpp"
 
 namespace como {
 

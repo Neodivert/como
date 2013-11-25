@@ -59,7 +59,7 @@ class ServerInterface
         /***
          * 2. Connection and disconnection
          ***/
-        void connect( const char* host, const char* port, const char* userName );
+        UserID connect( const char* host, const char* port, const char* userName );
         void disconnect();
 
         /***

@@ -22,7 +22,8 @@
 
 namespace como {
 
-ToolsMenu::ToolsMenu( shared_ptr< ComoApp > comoApp )
+ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
+    QFrame( parent )
 {
     QVBoxLayout* layout;
     QLabel* toolsMenuLabel;

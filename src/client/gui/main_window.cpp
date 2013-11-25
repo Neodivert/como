@@ -38,7 +38,7 @@ MainWindow::MainWindow( QWidget* parent ) :
 
     ToolsMenu* toolsMenu;
     RenderPanel* renderPanel;
-    UsersList* usersList;
+    //UsersList* usersList;
 
     // Create a instance of Log.
     log_ = LogPtr( new Log );
@@ -47,19 +47,20 @@ MainWindow::MainWindow( QWidget* parent ) :
     comoApp = shared_ptr< ComoApp >( new ComoApp( this, log_ ) );
 
     // Set a QFrame as the central widget. This frame will hold all others widgets.
-    setCentralWidget( new QFrame );
+    setCentralWidget( new QFrame( this ) );
 
     // Create a tools' menu.
-    toolsMenu = new ToolsMenu( comoApp );
+    toolsMenu = new ToolsMenu( this, comoApp );
     toolsMenu->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
 
     // Create a render panel (set of four OpenGL canvas).
-    renderPanel = new RenderPanel( comoApp );
+    renderPanel = new RenderPanel( this, comoApp );
     renderPanel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
     // Create the user's list.
-    usersList = new UsersList( this, log_ );
+    //usersList = new UsersList( this, log_ );
 
+    /*
     // FIXME: Study why this is necessary.
     qRegisterMetaType< UserConnectedConstPtr >();
     qRegisterMetaType< UserConnectedConstPtr >( "UserConnectedConstPtr" );
@@ -73,17 +74,21 @@ MainWindow::MainWindow( QWidget* parent ) :
     // the GUI user's list.
     connect( comoApp->getScene().get(), &Scene::userDisconnected, usersList, &UsersList::removeUser );
 
+    */
+
     // Set window layout.
     QHBoxLayout *layout = new QHBoxLayout;
 
     layout->addWidget( toolsMenu );
     layout->addWidget( renderPanel );
-    layout->addWidget( usersList );
+    //layout->addWidget( usersList );
 
     centralWidget()->setLayout( layout );
 
     ConnectionWizard connectionWizard( comoApp->getScene(), log_, this );
     connectionWizard.exec();
+
+    log_->debug( "Main window - constructor\n" );
 }
 
 

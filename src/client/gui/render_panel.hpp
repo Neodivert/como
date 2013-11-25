@@ -41,7 +41,7 @@ class RenderPanel : public QFrame
         /***
          * 1. Initialization
          ***/
-        explicit RenderPanel( shared_ptr< ComoApp > comoApp, QWidget *parent = 0 );
+        explicit RenderPanel( QWidget *parent, shared_ptr< ComoApp > comoApp );
 
     signals:
 

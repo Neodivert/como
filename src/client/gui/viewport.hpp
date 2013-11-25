@@ -57,7 +57,7 @@ class Viewport : public QWindow
         shared_ptr< ComoApp > comoApp;
 
         // Camera associated with the OpenGL canvas.
-        Camera camera;
+        Camera* camera;
 
         // Location for shader uniform variables.
         static GLint viewProjectionMatrixLocation;
@@ -78,6 +78,7 @@ class Viewport : public QWindow
          * 1. Initialization and destruction
          ***/
         Viewport( shared_ptr< ComoApp > comoApp );
+        ~Viewport();
 
         /***
          * 2. Events

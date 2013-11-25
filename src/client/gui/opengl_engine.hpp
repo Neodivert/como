@@ -21,7 +21,7 @@
 #define OPENGL_INITIALIZER_HPP
 
 #include <QOpenGLContext>
-#include "../managers/scene.hpp"
+#include "../managers/scene/public_scene.hpp"
 
 namespace como {
 
@@ -41,7 +41,7 @@ class OpenGLEngine : public QOffscreenSurface
          * 2. Getters
          ***/
         shared_ptr< QOpenGLContext > createOpenGLContext();
-        shared_ptr< Scene > createScene( QOpenGLContext* oglContext );
+        shared_ptr< Scene > createPublicScene( QOpenGLContext* oglContext );
 };
 
 } // namespace como

@@ -17,30 +17,18 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef TOOLS_MENU_HPP
-#define TOOLS_MENU_HPP
+#ifndef DRAWABLES_TREE_HPP
+#define DRAWABLES_TREE_HPP
 
-#include <QFrame>
-#include "../managers/como_app.hpp"
+#include "drawable.hpp"
+#include "../../../common/utilities/ids.hpp"
+#include <map>
 
 namespace como {
 
-class ToolsMenu : public QFrame
-{
-    protected:
-        // Pointer to app's current state.
-        shared_ptr< ComoApp > comoApp;
-
-    public:
-        ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp );
-
-    protected:
-        QGroupBox* createPrimitiveCreationMenu();
-        QGroupBox* createPivotPointModeSelector();
-
-    signals:
-};
+typedef std::list< DrawablePtr > DrawablesList;
+typedef std::map< UserID, std::map< DrawableIndex, DrawableConstPtr > > DrawablesTree;
 
 } // namespace como
 
-#endif // TOOLS_MENU_HPP
+#endif // DRAWABLES_TREE_HPP

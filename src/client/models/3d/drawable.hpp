@@ -101,6 +101,9 @@ class Drawable
         static glm::vec4 transformScaleVector( glm::vec4 scaleVector, const glm::mat4& transformMatrix );
 };
 
+typedef std::shared_ptr< Drawable > DrawablePtr;
+typedef std::shared_ptr< const Drawable > DrawableConstPtr;
+
 } // namespace como
 
 #endif // DRAWABLE_ENTITY_HPP

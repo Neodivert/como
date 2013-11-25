@@ -31,7 +31,7 @@ PublicUser::PublicUser( const UserConnected* userConnectedPacket )
 
     // Retrieve user's ID and name.
     id = userConnectedPacket->getUserID();
-    name = userConnectedPacket->getName();
+    strncpy( name, userConnectedPacket->getName(), NAME_SIZE );
 
     // Retrieve user's selection color.
     for( i=0; i<4; i++ ){

@@ -27,7 +27,7 @@
 #include <QLineEdit>
 #include <QFormLayout>
 #include <QRegExpValidator>
-#include "../../managers/scene.hpp"
+#include "../../managers/scene/scene.hpp"
 
 namespace como {
 

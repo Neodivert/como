@@ -72,6 +72,11 @@ Scene::Scene( LogPtr log ) :
     // TODO: delete
     //addUser( 1.0f, 0.0f, 0.0f );
     //addUser( 0.0f, 1.0f, 0.0f );
+
+    // TODO: Change : Get the real local user ID.
+    localUserID_ = 1;
+
+    checkOpenGL( "Scene - constructor\n" );
 }
 
 
@@ -165,52 +170,13 @@ void Scene::initLinesBuffer()
 }
 
 
-void Scene::connect( const char* host, const char* port, const char* userName )
-{
-    try{
-        //const std::uint8_t LOCAL_USER_DEFAULT_SELECTION_COLOR[4] = {
-        //    255, 0, 0, 255
-        //};
-
-        // Insert the local user in the users vector.
-        //addUser( userName, LOCAL_USER_DEFAULT_SELECTION_COLOR );
-
-        // Try to connect to the server. If there is any error, the method
-        // ServerInterface::connect() throws an exception.
-        log_->debug( "Connecting to (", host, ":", port, ") with name [", userName, "]...\n" );
-        server_.connect( host, port, userName );
-    }catch( std::exception& ex ){
-        throw ex;
-    }
-}
-
-
 /***
  * 2. Users administration
  ***/
 
-void Scene::addUser( std::shared_ptr< const UserConnected > userConnectedCommand )
-{
-    // Create the new user from the given USER_CONNECTED command.
-    users_.emplace_back( userConnectedCommand.get() );
-
-    // Emit a UserConnected signal.
-    emit userConnected( userConnectedCommand );
-}
-
-
 void Scene::removeUser( UserID userID )
 {
-    std::vector< PublicUser >::iterator it;
-
-    it = users_.begin();
-    while( ( it != users_.end() ) && ( it->id != userID ) ){
-        it++;
-    }
-
-    if( it != users_.end() ){
-        users_.erase( it );
-
+    if( users_.erase( userID ) ){
         emit userDisconnected( userID );
     }
 }
@@ -263,21 +229,17 @@ glm::vec3 Scene::getPivotPoint( const PivotPointMode& pivotPointMode )
  * 4. Drawables administration
  ***/
 
-void Scene::addDrawable( shared_ptr<Drawable> drawable )
+void Scene::addDrawable( DrawablePtr drawable )
 {
     //unselectAll();
 
+    log_->debug( "Scene - Pushing back non selected drawable 1\n" );
+    checkOpenGL( "Scene::addDrawable" );
     nonSelectedDrawables.push_back( drawable );
 
     emit renderNeeded();
 }
 
-void Scene::addCube( Cube* cube )
-{
-    DrawablePtr cubePtr( cube );
-
-    addDrawable( cubePtr );
-}
 
 void Scene::addDrawable( DrawableType drawableType )
 {
@@ -299,6 +261,12 @@ void Scene::addDrawable( DrawableType drawableType )
  * 5. Drawables selection
  ***/
 
+void Scene::selectDrawable( const unsigned int& index )
+{
+    selectDrawable( index, localUserID_ );
+}
+
+
 void Scene::selectDrawable( const unsigned int& index, const unsigned int& userId )
 {
     // TODO: In future versions, set a global unique id for each drawables,
@@ -307,10 +275,10 @@ void Scene::selectDrawable( const unsigned int& index, const unsigned int& userI
     std::advance( it, index );
 
     log_->debug( "Selecting drawable(userId: ", userId, ")\n" );
-    DrawablesList& userSelection = users_[userId].selection;
+    DrawablesList& userSelection = users_.at( userId ).selection;
     userSelection.splice( userSelection.end(), nonSelectedDrawables, it );
 
-    updateSelectionCentroid();
+    updateSelectionCentroid( userId );
 
     emit renderNeeded();
 }
@@ -326,27 +294,41 @@ void Scene::selectAll()
 }
 */
 
+void Scene::unselectAll()
+{
+    unselectAll( localUserID_ );
+}
+
+
 void Scene::unselectAll( const unsigned int& userId )
 {
-    DrawablesList& userSelection = users_[userId].selection;
+    DrawablesList& userSelection = users_.at( userId ).selection;
 
     nonSelectedDrawables.splice( nonSelectedDrawables.end(), userSelection );
 
-    updateSelectionCentroid();
+    updateSelectionCentroid( userId );
 
     emit renderNeeded();
 }
 
 
+int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection )
+{
+    return selectDrawableByRayPicking( r0, r1, addToSelection, localUserID_ );
+}
+
+
 int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, const unsigned int& userId )
 {
+    log_->debug( "Scene::selectDrawableByRayPicking - UserID: (", userId, ")\n" );
+
     const float MAX_T = 9999999.0f;
     float minT = MAX_T;
     float t = MAX_T;
     unsigned int currentObject = 0;
     unsigned int closestObject = -1;
 
-    DrawablesList& userSelection = users_[userId].selection;
+    DrawablesList& userSelection = users_.at( userId ).selection;
 
     r1 = glm::normalize( r1 );
 
@@ -414,9 +396,15 @@ glm::vec4 Scene::getSelectionCentroid() const
  * 6. Transformations
  ***/
 
+void Scene::translateSelection( const glm::vec3& direction )
+{
+    translateSelection( direction, localUserID_ );
+}
+
+
 void Scene::translateSelection( const glm::vec3& direction, const unsigned int& userId )
 {
-    DrawablesList& userSelection = users_[userId].selection;
+    DrawablesList& userSelection = users_.at( userId ).selection;
     DrawablesList::iterator it = userSelection.begin();
 
     for( ; it != userSelection.end(); it++ )
@@ -424,15 +412,21 @@ void Scene::translateSelection( const glm::vec3& direction, const unsigned int& 
         (*it)->translate( direction );
     }
 
-    updateSelectionCentroid();
+    updateSelectionCentroid( userId );
 
     emit renderNeeded();
 }
 
 
+void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode )
+{
+    rotateSelection( angle, axis, pivotPointMode );
+}
+
+
 void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode, const unsigned int& userId )
 {
-    DrawablesList& userSelection = users_[userId].selection;
+    DrawablesList& userSelection = users_.at( userId ).selection;
     DrawablesList::iterator it = userSelection.begin();
 
     switch( pivotPointMode ){
@@ -453,15 +447,21 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const 
         break;
     }
 
-    updateSelectionCentroid();
+    updateSelectionCentroid( userId );
 
     emit renderNeeded();
 }
 
 
+void Scene::scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode )
+{
+    scaleSelection( scaleFactors, pivotPointMode );
+}
+
+
 void Scene::scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode, const unsigned int& userId )
 {
-    DrawablesList& userSelection = users_[userId].selection;
+    DrawablesList& userSelection = users_.at( userId ).selection;
     DrawablesList::iterator it = userSelection.begin();
 
     switch( pivotPointMode ){
@@ -482,10 +482,11 @@ void Scene::scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode&
         break;
     }
 
-    updateSelectionCentroid();
+    updateSelectionCentroid( userId );
 
     emit renderNeeded();
 }
+
 
 /*
 void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot )
@@ -499,9 +500,16 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const 
     emit renderNeeded();
 }
 */
+
+void Scene::deleteSelection()
+{
+    deleteSelection( localUserID_ );
+}
+
+
 void Scene::deleteSelection( const unsigned int& userId )
 {
-    DrawablesList& userSelection = users_[userId].selection;
+    DrawablesList& userSelection = users_.at( userId ).selection;
 
     // Delete selected drawables.
     userSelection.clear();
@@ -520,11 +528,12 @@ void Scene::executeRemoteCommand( const SceneCommand* command )
         case SceneCommandType::USER_CONNECTED:
             log_->debug( "\tCasting to USER_CONNECTED command\n" );
             userConnected = dynamic_cast< const UserConnected* >( command );
-            log_->debug( "Adding user to scene [", userConnected->getName(), "]\n" );
+            log_->debug( "Adding user to scene [", userConnected->getName(), "] ...\n" );
             addUser( std::shared_ptr< const UserConnected>( new UserConnected( *userConnected ) ) );
+            log_->debug( "Adding user to scene [", userConnected->getName(), "] ...OK\n" );
         break;
         default:
-            log_->debug( "Removing user from scene [", users_[command->getUserID()].name, "]\n" );
+            log_->debug( "Removing user from scene [", users_.at( command->getUserID() ).name, "]\n" );
             removeUser( command->getUserID() );
         break;
     }
@@ -537,7 +546,7 @@ void Scene::executeRemoteCommand( const SceneCommand* command )
 
 void Scene::updateSelectionCentroid( const unsigned int& userId )
 {
-    DrawablesList& userSelection = users_[userId].selection;
+    DrawablesList& userSelection = users_.at( userId ).selection;
     DrawablesList::const_iterator it = userSelection.begin();
     //GLfloat* selectionCentroidBuffer = nullptr;
     selectionCentroid = glm::vec4( 0.0f );
@@ -573,20 +582,24 @@ void Scene::updateSelectionCentroid( const unsigned int& userId )
 void Scene::draw( const int& drawGuideRect ) const
 {
     GLfloat WHITE_COLOR[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    unsigned int user = 0;
 
     DrawablesList::const_iterator it = nonSelectedDrawables.begin();
+    UsersMap::const_iterator usersIterator = users_.begin();
+
     DrawablesList userSelection;
 
+    checkOpenGL( "Scene::draw 1" );
     for( ; it != nonSelectedDrawables.end(); it++ )
     {
         (*it)->draw( defaultContourColor );
     }
-    for( user = 0; user < users_.size(); user++  ){
-        userSelection = users_[user].selection;
+    log_->debug( "Drawing (", nonSelectedDrawables.size(), ") non selected drawables ...OK\n" );
+    checkOpenGL( "Scene::draw 2" );
+    for( ; usersIterator != users_.end(); usersIterator++  ){
+        userSelection = (usersIterator->second).selection;
 
         for( it = userSelection.begin(); it != userSelection.end(); it++ ){
-            (*it)->draw( users_[user].color );
+            (*it)->draw( (usersIterator->second).color );
         }
     }
 

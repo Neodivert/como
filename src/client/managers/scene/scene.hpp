@@ -20,13 +20,14 @@
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
+#include <map>
 #include <list>
-#include "../models/3d/cube.hpp"
-#include "../models/3d/camera.hpp"
-#include "../models/users/public_user.hpp"
-#include "../models/server/server_interface.hpp"
-#include "../../common/utilities/log.hpp"
-#include "../../common/packets/scene_commands/scene_commands.hpp"
+#include "../../models/3d/cube.hpp"
+#include "../../models/3d/camera.hpp"
+#include "../../models/users/public_user.hpp"
+#include "../../models/server/server_interface.hpp"
+#include "../../../common/utilities/log.hpp"
+#include "../../../common/packets/scene_commands/scene_commands.hpp"
 
 namespace como {
 
@@ -67,16 +68,28 @@ enum LinesBufferOffset {
     N_LINES_BUFFER_OFFSETS
 };
 
+typedef std::map< UserID, PublicUser > UsersMap;
+
 class Scene : public QObject
 {
     Q_OBJECT
 
+    protected:
+        // Users sharing this scene.
+        UsersMap users_;
+
+        // Log
+        LogPtr log_;
+
+        // Interface with the server.
+        ServerInterface server_;
+
+        // Local user's ID.
+        UserID localUserID_;
+
     private:
         // Scene's non selected drawables.
         DrawablesList nonSelectedDrawables;
-
-        // Users sharing this scene.
-        std::vector< PublicUser > users_;
 
         // Lines VAO, VBO and offsets.
         GLuint linesVAO;
@@ -88,12 +101,6 @@ class Scene : public QObject
 
         GLfloat defaultContourColor[4];
 
-        // Log
-        LogPtr log_;
-
-        // Interface with the server.
-        ServerInterface server_;
-
     public:
         /***
          * 1. Initialization and destruction
@@ -101,14 +108,15 @@ class Scene : public QObject
         Scene( LogPtr log );
         ~Scene();
 
+        virtual void connect( const char* host, const char* port, const char* userName ) = 0;
+
         void initLinesBuffer();
-        void connect( const char* host, const char* port, const char* userName );
 
 
         /***
          * 2. Users administration
          ***/
-        void addUser( std::shared_ptr< const UserConnected > userConnectedCommand );
+        virtual void addUser( std::shared_ptr< const UserConnected > userConnectedCommand ) = 0;
         void removeUser( UserID userID );
 
 
@@ -123,7 +131,7 @@ class Scene : public QObject
         /***
          * 4. Drawables administration
          ***/
-        void addDrawable( shared_ptr<Drawable> drawable );
+        void addDrawable( DrawablePtr drawable );
         void addCube( Cube* cube );
         void addDrawable( DrawableType drawableType );
 
@@ -132,11 +140,15 @@ class Scene : public QObject
          * 5. Drawables selection.
          ***/
     public:
-        void selectDrawable( const unsigned int& index, const unsigned int& userId = 0 );
-        void selectAll();
+        void selectDrawable( const unsigned int& index );
+        void selectDrawable( const unsigned int& index, const unsigned int& userId );
+        //void selectAll();
+
+        void unselectAll();
         void unselectAll( const unsigned int& userId );
 
-        int selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection = false, const unsigned int& userId = 0 );
+        int selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection = false );
+        int selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, const unsigned int& userId );
 
         glm::vec4 getSelectionCentroid() const ;
 
@@ -144,12 +156,18 @@ class Scene : public QObject
         /***
          * 6. Transformations
          ***/
-        void translateSelection( const glm::vec3& direction, const unsigned int& userId = 0 );
-        void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode, const unsigned int& userId = 0 );
-        void scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode, const unsigned int& userId = 0 );
+        void translateSelection( const glm::vec3& direction );
+        void translateSelection( const glm::vec3& direction, const unsigned int& userId );
+
+        void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode );
+        void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode, const unsigned int& userId );
+
+        void scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode );
+        void scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode, const unsigned int& userId );
         //void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
 
-        void deleteSelection( const unsigned int& userId = 0 );
+        void deleteSelection();
+        void deleteSelection( const unsigned int& userId );
 
         void executeRemoteCommand( const SceneCommand* command );
 
@@ -157,7 +175,7 @@ class Scene : public QObject
         /***
          * 7. Updating
          ***/
-        void updateSelectionCentroid( const unsigned int& userId = 0 );
+        void updateSelectionCentroid( const unsigned int& userId );
 
 
         /***

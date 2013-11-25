@@ -92,7 +92,7 @@ ComoApp::ComoApp( QWidget* parent, LogPtr log ) :
     oglContext = openGLEngine.createOpenGLContext();
 
     // Set default scene.
-    scene = openGLEngine.createScene( oglContext.get() );
+    scene = openGLEngine.createPublicScene( oglContext.get() );
 
     checkOpenGL( "ComoApp constructor - after creating OpenGL context and scene" );
 }
