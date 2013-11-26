@@ -26,8 +26,7 @@
 
 namespace como {
 
-typedef std::list< DrawablePtr > DrawablesList;
-typedef std::map< UserID, std::map< DrawableIndex, DrawableConstPtr > > DrawablesTree;
+typedef std::map< DrawableID, DrawablePtr > DrawablesSelection;
 
 } // namespace como
 

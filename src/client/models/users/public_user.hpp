@@ -20,7 +20,7 @@
 #ifndef PUBLIC_USER_HPP
 #define PUBLIC_USER_HPP
 
-#include "../3d/drawables_tree.hpp"
+#include "../3d/drawables_selection.hpp"
 #include "../../../common/packets/scene_commands/scene_commands.hpp"
 
 namespace como {
@@ -31,7 +31,7 @@ class PublicUser
         UserID id;
         char name[NAME_SIZE];
         GLfloat color[4];
-        DrawablesList selection;
+        DrawablesSelection selection;
 
         /***
          * 1. Initialization and destruction

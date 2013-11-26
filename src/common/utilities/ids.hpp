@@ -37,7 +37,19 @@ typedef std::uint32_t DrawableIndex;
 struct DrawableID {
     UserID creatorID;
     DrawableIndex drawableIndex;
+
+    bool operator < ( const DrawableID& b ) const {
+        return ( ( creatorID < b.creatorID ) ||
+                 ( (creatorID == b.creatorID) && (drawableIndex < b.drawableIndex) ) );
+    }
+
+    bool operator == ( const DrawableID& b ) const {
+        return ( ( creatorID == b.creatorID ) &&
+                 (drawableIndex == b.drawableIndex ) );
+    }
 };
+
+const DrawableID NULL_DRAWABLE_ID = { 0, 0 };
 
 } // namespace como
 

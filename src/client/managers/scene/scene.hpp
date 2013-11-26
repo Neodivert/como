@@ -86,10 +86,11 @@ class Scene : public QObject
 
         // Local user's ID.
         UserID localUserID_;
+        DrawableIndex localUserNextDrawableIndex_;
 
     private:
         // Scene's non selected drawables.
-        DrawablesList nonSelectedDrawables;
+        DrawablesSelection nonSelectedDrawables;
 
         // Lines VAO, VBO and offsets.
         GLuint linesVAO;
@@ -100,6 +101,7 @@ class Scene : public QObject
         glm::vec4 selectionCentroid;
 
         GLfloat defaultContourColor[4];
+
 
     public:
         /***
@@ -131,24 +133,25 @@ class Scene : public QObject
         /***
          * 4. Drawables administration
          ***/
-        void addDrawable( DrawablePtr drawable );
-        void addCube( Cube* cube );
+    private:
+        void addDrawable( DrawablePtr drawable, DrawableID drawableID );
+    public:
         void addDrawable( DrawableType drawableType );
+        void addDrawable( DrawableType drawableType, DrawableID drawableID );
 
 
         /***
          * 5. Drawables selection.
          ***/
     public:
-        void selectDrawable( const unsigned int& index );
-        void selectDrawable( const unsigned int& index, const unsigned int& userId );
+        void selectDrawable( DrawableID drawableID );
+        void selectDrawable( DrawableID drawableID, UserID userID );
         //void selectAll();
 
         void unselectAll();
         void unselectAll( const unsigned int& userId );
 
-        int selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection = false );
-        int selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, const unsigned int& userId );
+        DrawableID selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection );
 
         glm::vec4 getSelectionCentroid() const ;
 

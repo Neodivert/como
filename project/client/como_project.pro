@@ -60,8 +60,8 @@ HEADERS += \
     ../../src/client/gui/users_list.hpp \
     ../../src/common/packets/scene_commands/drawable_commands/drawable_command.hpp \
     ../../src/common/utilities/ids.hpp \
-    ../../src/client/models/3d/drawables_tree.hpp \
-    ../../src/client/managers/scene/public_scene.hpp
+    ../../src/client/managers/scene/public_scene.hpp \
+    ../../src/client/models/3d/drawables_selection.hpp
 
 SOURCES += \
     ../../src/client/gui/viewport.cpp \

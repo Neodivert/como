@@ -52,7 +52,8 @@ PivotPointModeStrings pivotPointModeStrings =
 
 Scene::Scene( LogPtr log ) :
     log_( log ),
-    server_( std::bind( &Scene::executeRemoteCommand, this, std::placeholders::_1 ), log_ )
+    server_( std::bind( &Scene::executeRemoteCommand, this, std::placeholders::_1 ), log_ ),
+    localUserNextDrawableIndex_( 0 )
 {
     initLinesBuffer();
 
@@ -230,16 +231,36 @@ glm::vec3 Scene::getPivotPoint( const PivotPointMode& pivotPointMode )
  * 4. Drawables administration
  ***/
 
-void Scene::addDrawable( DrawablePtr drawable )
+void Scene::addDrawable( DrawablePtr drawable, DrawableID drawableID )
 {
     //unselectAll();
-    nonSelectedDrawables.push_back( drawable );
+    // Create an unique ID for the new drawable.
+    log_->debug( "Adding drawable to scene - ID: (", drawableID.creatorID,
+                 ", ", drawableID.drawableIndex, ")\n" );
+
+    // Autoincrement the drawable index for the next drawable created by the use.
+    nonSelectedDrawables[drawableID] = drawable;
 
     emit renderNeeded();
 }
 
 
 void Scene::addDrawable( DrawableType drawableType )
+{
+    DrawableID drawableID;
+
+    // Give a unique ID to the new drawable (bind it to the local user).
+    drawableID.creatorID = localUserID_;
+    drawableID.drawableIndex = localUserNextDrawableIndex_;
+
+    // Increment the index for the next local user's drawable.
+    localUserNextDrawableIndex_++;
+
+    // Add the drawable to the scene.
+    addDrawable( drawableType, drawableID );
+}
+
+void Scene::addDrawable( DrawableType drawableType, DrawableID drawableID )
 {
     DrawablePtr drawable;
     Cube* cube;
@@ -251,7 +272,7 @@ void Scene::addDrawable( DrawableType drawableType )
         break;
     }
 
-    addDrawable( drawable );
+    addDrawable( drawable, drawableID );
 }
 
 
@@ -259,23 +280,22 @@ void Scene::addDrawable( DrawableType drawableType )
  * 5. Drawables selection
  ***/
 
-void Scene::selectDrawable( const unsigned int& index )
+void Scene::selectDrawable( DrawableID drawableID )
 {
-    selectDrawable( index, localUserID_ );
+    selectDrawable( drawableID, localUserID_ );
 }
 
-
-void Scene::selectDrawable( const unsigned int& index, const unsigned int& userId )
+void Scene::selectDrawable( DrawableID drawableID, UserID userID )
 {
-    // TODO: In future versions, set a global unique id for each drawables,
-    // whether they are selected or not.
-    DrawablesList::iterator it = nonSelectedDrawables.begin();
-    std::advance( it, index );
+    // Retrieve user's selection.
+    DrawablesSelection& userSelection = users_.at( userID ).selection;
 
-    DrawablesList& userSelection = users_.at( userId ).selection;
-    userSelection.splice( userSelection.end(), nonSelectedDrawables, it );
+    // Move the selected drawable from non selected ones to
+    // user's selection.
+    userSelection[drawableID] = nonSelectedDrawables[drawableID];
 
-    updateSelectionCentroid( userId );
+    // Update the selection centroid.
+    updateSelectionCentroid( userID );
 
     emit renderNeeded();
 }
@@ -299,9 +319,11 @@ void Scene::unselectAll()
 
 void Scene::unselectAll( const unsigned int& userId )
 {
-    DrawablesList& userSelection = users_.at( userId ).selection;
+    DrawablesSelection& userSelection = users_.at( userId ).selection;
 
-    nonSelectedDrawables.splice( nonSelectedDrawables.end(), userSelection );
+    // Move all drawables from user selection to non selected set.
+    nonSelectedDrawables.insert( userSelection.begin(), userSelection.end() );
+    userSelection.clear();
 
     updateSelectionCentroid( userId );
 
@@ -309,23 +331,15 @@ void Scene::unselectAll( const unsigned int& userId )
 }
 
 
-int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection )
+
+DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection )
 {
-    return selectDrawableByRayPicking( r0, r1, addToSelection, localUserID_ );
-}
-
-
-int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, const unsigned int& userId )
-{
-    log_->debug( "Scene::selectDrawableByRayPicking - UserID: (", userId, ")\n" );
-
     const float MAX_T = 9999999.0f;
     float minT = MAX_T;
     float t = MAX_T;
-    unsigned int currentObject = 0;
-    unsigned int closestObject = -1;
+    DrawableID closestObject;
 
-    DrawablesList& userSelection = users_.at( userId ).selection;
+    DrawablesSelection& userSelection = users_.at( localUserID_ ).selection;
 
     r1 = glm::normalize( r1 );
 
@@ -337,44 +351,44 @@ int Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSel
     // a new one? If that's NOT the case, we need to clear the set of selected drawables
     // first.
     if( !addToSelection ){
-        nonSelectedDrawables.splice( nonSelectedDrawables.end(), userSelection );
+        unselectAll( localUserID_ );
     }
 
     // Iterate over all non selected drawables and check if the given ray intersects
     // them or not. Get the closest object.
-    DrawablesList::iterator it;
-    for( it = nonSelectedDrawables.begin(); it != nonSelectedDrawables.end(); it++, currentObject++ ){
-        (*it)->intersects( r0, r1, t );
+    DrawablesSelection::iterator it;
+    for( it = nonSelectedDrawables.begin(); it != nonSelectedDrawables.end(); it++ ){
+        it->second->intersects( r0, r1, t );
         if( ( t >= 0.0f ) && (t < minT ) ){
-            // New closest object, get its index and distance.
-            closestObject = currentObject;
+            // New closest object, get its ID and distance.
+            closestObject = it->first;
             minT = t;
         }
     }
 
     // Iterate over all non selected drawables and check if the given ray intersects
     // them or not. Get the closest object.
-    for( it = userSelection.begin(); it != userSelection.end(); it++, currentObject++ ){
-        (*it)->intersects( r0, r1, t );
+    for( it = userSelection.begin(); it != userSelection.end(); it++ ){
+        it->second->intersects( r0, r1, t );
         if( ( t > 0.0f ) && (t < minT ) ){
             // New closest object, get its index and distance.
-            closestObject = currentObject;
+            closestObject = it->first;
             minT = t;
             log_->debug( "RETURN 0\n" );
             emit renderNeeded();
-            return 0;
+            return NULL_DRAWABLE_ID;
         }
     }
 
     // If there were intersections, select the closest one.
     if( minT < MAX_T ){
-        log_->debug( "FINAL CLOSEST OBJECT: ", closestObject, "\n",
+        log_->debug( "FINAL CLOSEST OBJECT: (", closestObject.creatorID, ", ", closestObject.drawableIndex, ")\n",
                      "\t min t: ", minT, ")\n",
                      "\t min distance: ", glm::distance( glm::vec3( 0.0f, 0.0f, 0.0f ), r1 * t ), "\n" );
         selectDrawable( closestObject );
     }else{
         log_->debug( "NO CLOSEST OBJECT. Unselecting all\n" );
-        unselectAll( userId );
+        unselectAll( localUserID_ );
     }
 
     emit renderNeeded();
@@ -401,12 +415,12 @@ void Scene::translateSelection( const glm::vec3& direction )
 
 void Scene::translateSelection( const glm::vec3& direction, const unsigned int& userId )
 {
-    DrawablesList& userSelection = users_.at( userId ).selection;
-    DrawablesList::iterator it = userSelection.begin();
+    DrawablesSelection& userSelection = users_.at( userId ).selection;
+    DrawablesSelection::iterator it = userSelection.begin();
 
     for( ; it != userSelection.end(); it++ )
     {
-        (*it)->translate( direction );
+        it->second->translate( direction );
     }
 
     updateSelectionCentroid( userId );
@@ -423,23 +437,23 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const 
 
 void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode, const unsigned int& userId )
 {
-    DrawablesList& userSelection = users_.at( userId ).selection;
-    DrawablesList::iterator it = userSelection.begin();
+    DrawablesSelection& userSelection = users_.at( userId ).selection;
+    DrawablesSelection::iterator it = userSelection.begin();
 
     switch( pivotPointMode ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
             for( ; it != userSelection.end(); it++ ){
-                (*it)->rotate( angle, axis, glm::vec3( (*it)->getCentroid() ) );
+                it->second->rotate( angle, axis, glm::vec3( it->second->getCentroid() ) );
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
             for( ; it != userSelection.end(); it++ ){
-                (*it)->rotate( angle, axis, glm::vec3( selectionCentroid ) );
+                it->second->rotate( angle, axis, glm::vec3( selectionCentroid ) );
             }
         break;
         case PivotPointMode::WORLD_ORIGIN:
             for( ; it != userSelection.end(); it++ ){
-                (*it)->rotate( angle, axis );
+                it->second->rotate( angle, axis );
             }
         break;
     }
@@ -458,23 +472,23 @@ void Scene::scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode&
 
 void Scene::scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode, const unsigned int& userId )
 {
-    DrawablesList& userSelection = users_.at( userId ).selection;
-    DrawablesList::iterator it = userSelection.begin();
+    DrawablesSelection& userSelection = users_.at( userId ).selection;
+    DrawablesSelection::iterator it = userSelection.begin();
 
     switch( pivotPointMode ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
             for( ; it != userSelection.end(); it++ ){
-                (*it)->scale( scaleFactors, glm::vec3( (*it)->getCentroid() ) );
+                it->second->scale( scaleFactors, glm::vec3( it->second->getCentroid() ) );
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
             for( ; it != userSelection.end(); it++ ){
-                (*it)->scale( scaleFactors, glm::vec3( selectionCentroid ) );
+                it->second->scale( scaleFactors, glm::vec3( selectionCentroid ) );
             }
         break;
         case PivotPointMode::WORLD_ORIGIN:
             for( ; it != userSelection.end(); it++ ){
-                (*it)->scale( scaleFactors );
+                it->second->scale( scaleFactors );
             }
         break;
     }
@@ -488,7 +502,7 @@ void Scene::scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode&
 /*
 void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot )
 {
-    DrawablesList::iterator it = selectedDrawables.begin();
+    DrawablesSelection::iterator it = selectedDrawables.begin();
 
     for( ; it != selectedDrawables.end(); it++ )
     {
@@ -506,7 +520,7 @@ void Scene::deleteSelection()
 
 void Scene::deleteSelection( const unsigned int& userId )
 {
-    DrawablesList& userSelection = users_.at( userId ).selection;
+    DrawablesSelection& userSelection = users_.at( userId ).selection;
 
     // Delete selected drawables.
     userSelection.clear();
@@ -543,15 +557,15 @@ void Scene::executeRemoteCommand( const SceneCommand* command )
 
 void Scene::updateSelectionCentroid( const unsigned int& userId )
 {
-    DrawablesList& userSelection = users_.at( userId ).selection;
-    DrawablesList::const_iterator it = userSelection.begin();
+    DrawablesSelection& userSelection = users_.at( userId ).selection;
+    DrawablesSelection::const_iterator it = userSelection.begin();
     //GLfloat* selectionCentroidBuffer = nullptr;
     selectionCentroid = glm::vec4( 0.0f );
 
     // Update scene selection centroid.
     if( userSelection.size() ){
         for( ; it != userSelection.end(); it++ ){
-            selectionCentroid += (*it)->getCentroid();
+            selectionCentroid += it->second->getCentroid();
         }
         selectionCentroid /= userSelection.size();
         selectionCentroid.w = 1.0f;
@@ -580,15 +594,15 @@ void Scene::draw( const int& drawGuideRect ) const
 {
     GLfloat WHITE_COLOR[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-    DrawablesList::const_iterator it = nonSelectedDrawables.begin();
+    DrawablesSelection::const_iterator it = nonSelectedDrawables.begin();
     UsersMap::const_iterator usersIterator = users_.begin();
 
-    DrawablesList userSelection;
+    DrawablesSelection userSelection;
 
     checkOpenGL( "Scene::draw 1" );
     for( ; it != nonSelectedDrawables.end(); it++ )
     {
-        (*it)->draw( defaultContourColor );
+        it->second->draw( defaultContourColor );
     }
     //log_->debug( "Drawing (", nonSelectedDrawables.size(), ") non selected drawables ...OK\n" );
     checkOpenGL( "Scene::draw 2" );
@@ -596,7 +610,7 @@ void Scene::draw( const int& drawGuideRect ) const
         userSelection = (usersIterator->second).selection;
 
         for( it = userSelection.begin(); it != userSelection.end(); it++ ){
-            (*it)->draw( (usersIterator->second).color );
+            it->second->draw( (usersIterator->second).color );
         }
     }
 
