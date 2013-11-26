@@ -48,7 +48,7 @@ ServerInterface::~ServerInterface()
  * 2. Connection and disconnection
  ***/
 
-UserID ServerInterface::connect( const char* host, const char* port, const char* userName )
+std::shared_ptr< const UserAccepted > ServerInterface::connect( const char* host, const char* port, const char* userName )
 {
     boost::system::error_code errorCode;
     como::NewUser newUserPacket;
@@ -97,7 +97,7 @@ UserID ServerInterface::connect( const char* host, const char* port, const char*
     //listenerThread = new std::thread( std::bind( &ServerInterface::listen, this ) );
     listen();
 
-    return userAcceptedPacket.getId();
+    return std::shared_ptr< const UserAccepted >( dynamic_cast< const UserAccepted* >( userAcceptedPacket.clone() ) );
 }
 
 

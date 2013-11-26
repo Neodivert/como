@@ -87,11 +87,8 @@ shared_ptr< Scene > OpenGLEngine::createPublicScene( QOpenGLContext* oglContext 
     // Make the given OpenGL context current for this surface.
     oglContext->makeCurrent( this );
 
-    // Create an empty scene.
+    // Create and return an empty scene.
     shared_ptr< Scene > scene = shared_ptr<Scene>( new PublicScene( log_ ) );
-
-    log_->debug( "OpenGLEngine::createPublicScene: ", scene, "\n" );
-
     return scene;
 }
 

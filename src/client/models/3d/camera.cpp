@@ -26,6 +26,7 @@ ViewStrings viewStrings =
 
 
 Camera::Camera() :
+    Mesh(),
     originalEye     ( 0.0f, 0.0f, 0.0f, 1.0f ),
     originalUp      ( 0.0f, 1.0f, 0.0f, 1.0f ),
     originalCenter  ( 0.0f, 0.0f, -1.0f, 1.0f )
@@ -42,7 +43,7 @@ Camera::Camera() :
 
 glm::mat4 Camera::getViewMatrix() const
 {
-    return viewMatrix;//glm::inverse( transformationMatrix );
+    return viewMatrix;
 }
 /*
 void foo( char* str, glm::mat4 M )
@@ -185,13 +186,15 @@ int Camera::setPerspective( float fovy, float aspect,
 void Camera::update()
 {
     // Update camera's mesh.
-    Mesh::update();
+    // FIXME: What mesh? I didn't define camera's vertex data yet.
+    //Mesh::update();
 
     // Update transformed camera position and orientation.
     transformedEye = transformationMatrix * originalEye;
     transformedUp = transformationMatrix * originalUp;
     transformedCenter = transformationMatrix * originalCenter;
 
+    // Update view matrix.
     viewMatrix = glm::inverse( transformationMatrix );
 }
 

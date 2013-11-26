@@ -59,7 +59,7 @@ class ServerInterface
         /***
          * 2. Connection and disconnection
          ***/
-        UserID connect( const char* host, const char* port, const char* userName );
+        std::shared_ptr< const UserAccepted > connect( const char* host, const char* port, const char* userName );
         void disconnect();
 
         /***

@@ -55,8 +55,6 @@ Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
         // Make this canvas share the given app's state.
         this->comoApp = comoApp;
 
-        comoApp->getLog()->debug( "Viewport - 1\n" );
-
         // We will render using OpenGL.
         setSurfaceType( QWindow::OpenGLSurface );
 
@@ -67,11 +65,20 @@ Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
 
         comoApp->getOpenGLContext()->makeCurrent( this );
 
-        comoApp->getLog()->debug( "Viewport - 2\n" );
+        checkOpenGL( "Viewport constructor, before creating the camera" );
+
+        // Get location of uniform shader modelview matrix.
+        if( viewProjectionMatrixLocation == -1 ){
+            // Get current shader program id.
+            glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+
+            viewProjectionMatrixLocation = glGetUniformLocation( currentShaderProgram, "viewProjectionMatrix" );
+        }
+
         // Create the camera.
         camera = new Camera;
 
-        comoApp->getLog()->debug( "Viewport - 3\n" );
+        checkOpenGL( "Viewport constructor, after creating the camera" );
 
         //checkOpenGL( "Viewport constructor, before computing dimension inverses" );
 
@@ -83,27 +90,13 @@ Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
             heightInverse = 1.0f / height();
         }
 
-        //checkOpenGL( "Viewport constructor, after computing dimension inverses" );
-
-        // Get location of uniform shader modelview matrix.
-        if( viewProjectionMatrixLocation == -1 ){
-            // Get current shader program id.
-            glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
-
-            viewProjectionMatrixLocation = glGetUniformLocation( currentShaderProgram, "viewProjectionMatrix" );
-        }
-
         // Set default projection.
         setProjection( Projection::ORTHO );
 
-        // FIXME: This is to remove the "out of memory" error.
-        while( glGetError() != GL_NO_ERROR );
-
-        comoApp->getLog()->debug( "Viewport - 4\n" );
-        //glGetError();
-        //checkOpenGL( "Viewport constructor - end" );
+        checkOpenGL( "Viewport constructor - end" );
     }catch( std::exception& ex ){
         comoApp->getLog()->error( ex.what() );
+        throw ex;
     }
 }
 
@@ -174,23 +167,16 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
     glm::vec3 rayOrigin, rayDirection;
     bool addToSelection = false;
 
-    std::cout << "PressEvent - 1" << std::endl;
-
     // Do one thing or another depending on which transformation mode we are in.
     if( comoApp->getTransformationType() == TransformationType::NONE ){
         // We are not in transformation mode. This mouse press is for selecting
         // a drawable.
-
-        std::cout << "PressEvent - 2.1" << std::endl;
 
         // Record last mouse position.
         //recordLastMousePos( mousePressEvent->x(), mousePressEvent->y() );
         lastMousePos = getNormalizedMousePos( mousePressEvent->x(), mousePressEvent->y() );
 
         // http://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection
-
-        std::cout << "PressEvent - 2.2" << std::endl;
-
         // Tace a ray from pixel towards camera's center vector.
         traceRay( mousePressEvent->x(), height() - mousePressEvent->y() - 1, rayOrigin, rayDirection );
 
@@ -198,21 +184,14 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
         // selection. Otherwise, clear the current selection and select the new drawable.
         addToSelection = mousePressEvent->modifiers() & Qt::ControlModifier;
 
-        std::cout << "PressEvent - 2.3" << std::endl;
-
         // Do the ray picking.
-        std::cout << "comoApp->getScene(): " << comoApp->getScene() << std::endl;
         comoApp->getScene()->selectDrawableByRayPicking( rayOrigin,
                                                          rayDirection,
                                                          addToSelection );
-        std::cout << "PressEvent - 2.4" << std::endl;
     }else{
         // We were in transformation mode. This mouse press is for droping
         // the current selection.
-
-        std::cout << "PressEvent - 3.1" << std::endl;
         comoApp->setTransformationType( TransformationType::NONE );
-        std::cout << "PressEvent - 3.2" << std::endl;
     }
 }
 
@@ -281,7 +260,9 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
     const glm::vec3 zAxis( 0.0f, 0.0f, 1.0f );
 
-    comoApp->getLog()->debug( "mouseMoveEvent ...\n" );
+    if( comoApp->getTransformationType() == TransformationType::NONE ){
+        return;
+    }
 
     // Variables used for computing the magnitude of the transformation.
     glm::vec4 transformVector;
@@ -354,7 +335,6 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                     break;
                 }
 
-
             break;
             case TransformationType::SCALE:
                 // Compute the scale magnitud.
@@ -400,8 +380,6 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 
     // Record last mouse position.
     lastMousePos = mousePos;
-
-    comoApp->getLog()->debug( "mouseMoveEvent ...OK\n" );
 }
 
 
@@ -418,7 +396,7 @@ void Viewport::render()
 {
     TransformationModes::iterator it;
 
-    const glm::mat4 viewMatrix = glm::mat4( 1.0f ); //camera->getViewMatrix();
+    const glm::mat4 viewMatrix = camera->getViewMatrix();
 
     // Make shared OpenGL context current for this surface.
     comoApp->getOpenGLContext()->makeCurrent( this );

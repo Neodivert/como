@@ -94,6 +94,7 @@ ComoApp::ComoApp( QWidget* parent, LogPtr log ) :
     // Set default scene.
     scene = openGLEngine.createPublicScene( oglContext.get() );
 
+    log_->debug( "OpenGL context is valid?: ", oglContext->isValid(), "\n" );
     checkOpenGL( "ComoApp constructor - after creating OpenGL context and scene" );
 }
 
@@ -189,7 +190,6 @@ void ComoApp::setTransformationMode( TransformationMode transformationMode )
     TransformationModes::iterator it;
 
     // Change the transformation mode.
-    log_->debug( "Changin transformation mode\n" );
     this->transformationMode = transformationMode;
 
     // Emit signal.

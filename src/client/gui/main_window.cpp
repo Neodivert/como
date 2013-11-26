@@ -38,7 +38,7 @@ MainWindow::MainWindow( QWidget* parent ) :
 
     ToolsMenu* toolsMenu;
     RenderPanel* renderPanel;
-    //UsersList* usersList;
+    UsersList* usersList;
 
     // Create a instance of Log.
     log_ = LogPtr( new Log );
@@ -58,9 +58,8 @@ MainWindow::MainWindow( QWidget* parent ) :
     renderPanel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
     // Create the user's list.
-    //usersList = new UsersList( this, log_ );
+    usersList = new UsersList( this, log_ );
 
-    /*
     // FIXME: Study why this is necessary.
     qRegisterMetaType< UserConnectedConstPtr >();
     qRegisterMetaType< UserConnectedConstPtr >( "UserConnectedConstPtr" );
@@ -74,21 +73,17 @@ MainWindow::MainWindow( QWidget* parent ) :
     // the GUI user's list.
     connect( comoApp->getScene().get(), &Scene::userDisconnected, usersList, &UsersList::removeUser );
 
-    */
-
     // Set window layout.
     QHBoxLayout *layout = new QHBoxLayout;
 
     layout->addWidget( toolsMenu );
     layout->addWidget( renderPanel );
-    //layout->addWidget( usersList );
+    layout->addWidget( usersList );
 
     centralWidget()->setLayout( layout );
 
     ConnectionWizard connectionWizard( comoApp->getScene(), log_, this );
     connectionWizard.exec();
-
-    log_->debug( "Main window - constructor\n" );
 }
 
 

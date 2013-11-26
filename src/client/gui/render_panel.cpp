@@ -41,8 +41,6 @@ RenderPanel::RenderPanel( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     h1Splitter = new QSplitter;
     h2Splitter = new QSplitter;
 
-    comoApp->getLog()->debug( "RenderPanel - Constructor 1" );
-
     // Create the splitters hierarchy.
     vSplitter->setOrientation( Qt::Vertical );
     vSplitter->addWidget( h1Splitter );
@@ -60,18 +58,14 @@ RenderPanel::RenderPanel( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     viewFrame = new ViewFrame( "Bottom left view", comoApp );
     h2Splitter->addWidget( viewFrame );
 
-    // Create the Bottom right ViewFrame.comoApp->getLog()->debug( "Viewframe - 5\n" );
+    // Create the Bottom right ViewFrame.
     viewFrame = new ViewFrame( "Bottom right view", comoApp );
     h2Splitter->addWidget( viewFrame );
-
-    comoApp->getLog()->debug( "RenderPanel - Constructor 2" );
 
     // Set the render panel layout by using previous splitters.
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addWidget( vSplitter );
     setLayout( layout );
-
-    comoApp->getLog()->debug( "RenderPanel - Constructor 3" );
 }
 
 } // namespace como

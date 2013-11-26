@@ -34,17 +34,16 @@ PublicScene::PublicScene( LogPtr log ) :
 void PublicScene::connect( const char* host, const char* port, const char* userName )
 {
     try{
-        //const std::uint8_t LOCAL_USER_DEFAULT_SELECTION_COLOR[4] = {
-        //    255, 0, 0, 255
-        //};
-
-        // Insert the local user in the users vector.
-        //addUser( userName, LOCAL_USER_DEFAULT_SELECTION_COLOR );
+        std::shared_ptr< const UserAccepted > userConnectedPacket;
 
         // Try to connect to the server. If there is any error, the method
         // ServerInterface::connect() throws an exception.
         log_->debug( "Connecting to (", host, ":", port, ") with name [", userName, "]...\n" );
-        localUserID_ = server_.connect( host, port, userName );
+        userConnectedPacket = server_.connect( host, port, userName );
+
+        // Add the local user to the scene and retrieve its ID.
+        addUser( std::shared_ptr< const UserConnected >( new UserConnected( *userConnectedPacket ) ) );
+        localUserID_ = userConnectedPacket->getId();
     }catch( std::exception& ex ){
         throw ex;
     }
@@ -57,11 +56,9 @@ void PublicScene::connect( const char* host, const char* port, const char* userN
 
 void PublicScene::addUser( std::shared_ptr< const UserConnected > userConnectedCommand )
 {
-    log_->debug( "PublicScene::addUser - 1 (id: ", userConnectedCommand->getUserID(), ")\n" );
     // Create the new user from the given USER_CONNECTED command.
     users_.insert( std::pair< unsigned int, PublicUser >( userConnectedCommand->getUserID(), *( new  PublicUser( userConnectedCommand.get() ) ) ) );
     //users_[ userConnectedCommand->getUserID() ] = *( new  PublicUser( userConnectedCommand.get() ) );
-    log_->debug( "PublicScene::addUser - 2 (id: ", userConnectedCommand->getUserID(), ")\n" );
 
     // Emit a UserConnected signal.
     emit userConnected( userConnectedCommand );

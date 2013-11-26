@@ -59,7 +59,7 @@ class Camera : public Mesh
         glm::vec4 transformedUp;
         glm::vec4 transformedCenter;
 
-
+        // View matrix.
         glm::mat4 viewMatrix;
 
     public:

@@ -199,6 +199,7 @@ void Scene::setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny )
 
     glBindBuffer( GL_ARRAY_BUFFER, linesVBO );
     guideRectsBuffer = (GLfloat *)glMapBufferRange( GL_ARRAY_BUFFER, linesBufferOffsets[TRANSFORM_GUIDE_LINE]*3*sizeof( GLfloat ), 6*sizeof( GLfloat ), GL_MAP_WRITE_BIT );
+    checkOpenGL( "Scene::setTransformGuideLine" );
 
     for( ; i<3; i++ ){
         guideRectsBuffer[i] = origin[i];
@@ -232,9 +233,6 @@ glm::vec3 Scene::getPivotPoint( const PivotPointMode& pivotPointMode )
 void Scene::addDrawable( DrawablePtr drawable )
 {
     //unselectAll();
-
-    log_->debug( "Scene - Pushing back non selected drawable 1\n" );
-    checkOpenGL( "Scene::addDrawable" );
     nonSelectedDrawables.push_back( drawable );
 
     emit renderNeeded();
@@ -274,7 +272,6 @@ void Scene::selectDrawable( const unsigned int& index, const unsigned int& userI
     DrawablesList::iterator it = nonSelectedDrawables.begin();
     std::advance( it, index );
 
-    log_->debug( "Selecting drawable(userId: ", userId, ")\n" );
     DrawablesList& userSelection = users_.at( userId ).selection;
     userSelection.splice( userSelection.end(), nonSelectedDrawables, it );
 
@@ -420,7 +417,7 @@ void Scene::translateSelection( const glm::vec3& direction, const unsigned int& 
 
 void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode )
 {
-    rotateSelection( angle, axis, pivotPointMode );
+    rotateSelection( angle, axis, pivotPointMode, localUserID_ );
 }
 
 
@@ -455,7 +452,7 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const 
 
 void Scene::scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode )
 {
-    scaleSelection( scaleFactors, pivotPointMode );
+    scaleSelection( scaleFactors, pivotPointMode, localUserID_ );
 }
 
 
@@ -593,7 +590,7 @@ void Scene::draw( const int& drawGuideRect ) const
     {
         (*it)->draw( defaultContourColor );
     }
-    log_->debug( "Drawing (", nonSelectedDrawables.size(), ") non selected drawables ...OK\n" );
+    //log_->debug( "Drawing (", nonSelectedDrawables.size(), ") non selected drawables ...OK\n" );
     checkOpenGL( "Scene::draw 2" );
     for( ; usersIterator != users_.end(); usersIterator++  ){
         userSelection = (usersIterator->second).selection;
