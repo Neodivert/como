@@ -28,6 +28,7 @@
 #include "../common/utilities/log.hpp"
 #include <list>
 #include "commands_historic.hpp"
+#include "../common/users/basic_user.hpp"
 
 namespace como {
 
@@ -38,13 +39,10 @@ const unsigned int BUFFER_SIZE = 1024;
 typedef boost::asio::ip::tcp::socket Socket;
 typedef std::shared_ptr< Socket > SocketPtr;
 
-class PublicUser : public std::enable_shared_from_this<PublicUser>
+class PublicUser : public BasicUser
 {
     private:
-        UserID id_;
         SocketPtr socket_;
-
-        char name_[64];
 
         std::function<void (UserID)> removeUserCallback_;
 
@@ -75,34 +73,21 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
 
 
         /***
-         * 2. Getters
-         ***/
-        UserID getId();
-        const char* getName();
-
-
-        /***
-         * 3. Setters
-         ***/
-
-
-        /***
-         * 4.
+         * 2.
          ***/
         // TODO: Change to a better name, with a "Send" or "Write" somewhere.
         void sync();
 
 
-
         /***
-         * 5. Socket reading
+         * 3. Socket reading
          ***/
         void readSceneUpdate();
         void onReadSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet );
 
 
         /***
-         * 6. Socket writing
+         * 4. Socket writing
          ***/
         bool needsSceneUpdate() const ;
         void sendNextSceneUpdate();

@@ -175,7 +175,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         // Increment the "new id" for the next user.
         newId_++;
 
-        log_->debug( "New sessions: (", users_.back()->getId(), ") - total sessions: ", users_.size(), "\n" );
+        log_->debug( "New sessions: (", users_.back()->getID(), ") - total sessions: ", users_.size(), "\n" );
 
         if( users_.size() < MAX_SESSIONS ){
             // There is room for more users, wait for a new connection.
@@ -252,7 +252,7 @@ void Server::deleteUser( UserID id )
 
     // Search the requested id.
     while( ( i < users_.size() ) &&
-           ( id != users_[i]->getId() ) ){
+           ( id != users_[i]->getID() ) ){
         i++;
     }
 

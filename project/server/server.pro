@@ -14,7 +14,8 @@ SOURCES += \
     ../../src/common/utilities/packer.cpp \
     ../../src/common/packets/scene_commands/user_connected.cpp \
     ../../src/server/public_user.cpp \
-    ../../src/server/commands_historic.cpp
+    ../../src/server/commands_historic.cpp \
+    ../../src/common/users/basic_user.cpp
 
 LIBS += -lpthread
 
@@ -33,7 +34,8 @@ HEADERS += \
     ../../src/server/public_user.hpp \
     ../../src/common/utilities/log.hpp \
     ../../src/server/commands_historic.hpp \
-    ../../src/common/utilities/ids.hpp
+    ../../src/common/utilities/ids.hpp \
+    ../../src/common/users/basic_user.hpp
 
 # Link boost libraries
 unix|win32: LIBS += -lboost_system

@@ -17,7 +17,9 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "public_user.hpp"
+#include "basic_user.hpp"
+#include "../packets/packets.hpp"
+#include <cstring>
 
 namespace como {
 
@@ -25,15 +27,38 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-PublicUser::PublicUser( const UserConnected* userConnectedPacket ) :
-    BasicUser( userConnectedPacket->getUserID(), userConnectedPacket->getName() )
+BasicUser::BasicUser( UserID id, const char* name ) :
+    id_( id )
 {
-    unsigned int i = 0;
+    strncpy( name_, name, NAME_SIZE );
+}
 
-    // Retrieve user's selection color.
-    for( i=0; i<4; i++ ){
-        color[i] = ( userConnectedPacket->getSelectionColor() ) [i] / 255.0f;
-    }
+
+/***
+ * 2. Getters
+ ***/
+
+UserID BasicUser::getID() const
+{
+    UserID id;
+
+    //mutex_.lock();
+    id = id_;
+    //mutex_.unlock();
+
+    return id;
+}
+
+
+const char* BasicUser::getName() const
+{
+    const char* name;
+
+    //mutex_.lock();
+    name = name_;
+    //mutex_.unlock();
+
+    return name;
 }
 
 } // namespace como

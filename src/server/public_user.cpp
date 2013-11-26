@@ -30,7 +30,7 @@ PublicUser::PublicUser( UserID id, const char* name, Socket socket,
             std::function<void (UserID)> removeUserCallback,
             CommandsHistoricConstPtr commandsHistoric,
             LogPtr log ) :
-    id_( id ),
+    BasicUser( id, name ),
     socket_( SocketPtr( new Socket( std::move( socket ) ) ) ),
     removeUserCallback_( removeUserCallback ),
     nextCommand_( 0 ),
@@ -38,8 +38,7 @@ PublicUser::PublicUser( UserID id, const char* name, Socket socket,
     commandsHistoric_( commandsHistoric ),
     log_( log )
 {
-    strncpy( name_, name, 64 );
-    log_->debug( "Session (", id_, ") created\n" );
+    log_->debug( "Session (", getID(), ") created\n" );
 
     readSceneUpdate();
 
@@ -49,45 +48,12 @@ PublicUser::PublicUser( UserID id, const char* name, Socket socket,
 
 PublicUser::~PublicUser()
 {
-    log_->debug( "Session (", id_, ") destroyed\n" );
+    log_->debug( "Session (", getID(), ") destroyed\n" );
 }
 
 
 /***
- * 2. Getters
- ***/
-
-UserID PublicUser::getId()
-{
-    UserID id;
-
-    mutex_.lock();
-    id = id_;
-    mutex_.unlock();
-
-    return id;
-}
-
-
-const char* PublicUser::getName()
-{
-    const char* name;
-
-    mutex_.lock();
-    name = name_;
-    mutex_.unlock();
-
-    return name;
-}
-
-
-/***
- * 3. Setters
- ***/
-
-
-/***
- * 4.
+ * 2.
  ***/
 
 void PublicUser::sync()
@@ -101,13 +67,13 @@ void PublicUser::sync()
 
 
 /***
- * 5. Socket reading
+ * 3. Socket reading
  ***/
 
 void PublicUser::readSceneUpdate()
 {
     mutex_.lock();
-    log_->debug( "Waiting for SCENE_UPDATE from user (", id_, ")\n"  );
+    log_->debug( "Waiting for SCENE_UPDATE from user (", getID(), ")\n"  );
     sceneUpdatePacketFromUser_.asyncRecv( socket_, boost::bind( &PublicUser::onReadSceneUpdate, this, _1, _2 ) );
     mutex_.unlock();
 }
@@ -118,7 +84,7 @@ void PublicUser::onReadSceneUpdate( const boost::system::error_code& errorCode, 
     mutex_.lock();
     if( errorCode ){
         log_->error( "ERROR reading SCENE_UPDATE packet: ", errorCode.message(), "\n" );
-        removeUserCallback_( id_ );
+        removeUserCallback_( getID() );
     }else{
         // FIXME: Make use of the packet.
         log_->debug( "SCENE_UPDATE received\n" );
@@ -129,7 +95,7 @@ void PublicUser::onReadSceneUpdate( const boost::system::error_code& errorCode, 
 
 
 /***
- * 6. Socket writing
+ * 4. Socket writing
  ***/
 
 bool PublicUser::needsSceneUpdate() const
@@ -150,7 +116,7 @@ void PublicUser::sendNextSceneUpdate()
 
     // Create and prepare a SCENE_UPDATE packet.
     outSceneUpdatePacket_.clear();
-    nextCommand_ = commandsHistoric_->fillSceneUpdatePacket( outSceneUpdatePacket_, nextCommand_, MAX_COMMANDS_PER_PACKET, id_ );
+    nextCommand_ = commandsHistoric_->fillSceneUpdatePacket( outSceneUpdatePacket_, nextCommand_, MAX_COMMANDS_PER_PACKET, getID() );
     log_->debug( "Sending scene update - nextCommand: (", (int)nextCommand_, ")\n" );
 
     //outSceneUpdatePacket_.addCommands( commandsHistoric, nextCommand_, MAX_COMMANDS_PER_PACKET );
@@ -176,7 +142,7 @@ void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode,
         // FIXME: If there are an async read and an async write on the socket
         // at the same time, could it lead to errors (like deleting the user twice)?.
         log_->error( "ERROR writting SCENE_UPDATE packet: ", errorCode.message(), "\n" );
-        removeUserCallback_( id_ );
+        removeUserCallback_( getID() );
     }else{
         // FIXME: Make use of the packet?.
 

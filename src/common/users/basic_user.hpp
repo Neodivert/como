@@ -17,23 +17,35 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "public_user.hpp"
+#ifndef BASIC_USER_HPP
+#define BASIC_USER_HPP
+
+#include "../utilities/ids.hpp"
+#include <memory>
 
 namespace como {
 
-/***
- * 1. Initialization and destruction
- ***/
-
-PublicUser::PublicUser( const UserConnected* userConnectedPacket ) :
-    BasicUser( userConnectedPacket->getUserID(), userConnectedPacket->getName() )
+class BasicUser : public std::enable_shared_from_this< BasicUser >
 {
-    unsigned int i = 0;
+    private:
+        // User's id and name.
+        UserID id_;
+        char name_[64];
 
-    // Retrieve user's selection color.
-    for( i=0; i<4; i++ ){
-        color[i] = ( userConnectedPacket->getSelectionColor() ) [i] / 255.0f;
-    }
-}
+    public:
+        /***
+         * 1. Initialization and destruction
+         ***/
+        BasicUser( UserID id, const char* name );
+
+
+        /***
+         * 2. Getters
+         ***/
+        UserID getID() const ;
+        const char* getName() const ;
+};
 
 } // namespace como
+
+#endif // BASIC_USER_HPP

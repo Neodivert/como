@@ -22,14 +22,14 @@
 
 #include "../3d/drawables_selection.hpp"
 #include "../../../common/packets/scene_commands/scene_commands.hpp"
+#include "../../../common/users/basic_user.hpp"
 
 namespace como {
 
-class PublicUser
+class PublicUser : public BasicUser
 {
+    // TODO: Change to private and implement getters and setters.
     public:
-        UserID id;
-        char name[NAME_SIZE];
         GLfloat color[4];
         DrawablesSelection selection;
 

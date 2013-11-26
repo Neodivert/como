@@ -61,7 +61,8 @@ HEADERS += \
     ../../src/common/packets/scene_commands/drawable_commands/drawable_command.hpp \
     ../../src/common/utilities/ids.hpp \
     ../../src/client/managers/scene/public_scene.hpp \
-    ../../src/client/models/3d/drawables_selection.hpp
+    ../../src/client/models/3d/drawables_selection.hpp \
+    ../../src/common/users/basic_user.hpp
 
 SOURCES += \
     ../../src/client/gui/viewport.cpp \
@@ -94,4 +95,5 @@ SOURCES += \
     ../../src/client/models/users/public_user.cpp \
     ../../src/client/gui/users_list.cpp \
     ../../src/common/packets/scene_commands/drawable_commands/drawable_command.cpp \
-    ../../src/client/managers/scene/public_scene.cpp
+    ../../src/client/managers/scene/public_scene.cpp \
+    ../../src/common/users/basic_user.cpp

@@ -544,7 +544,7 @@ void Scene::executeRemoteCommand( const SceneCommand* command )
             log_->debug( "Adding user to scene [", userConnected->getName(), "] ...OK\n" );
         break;
         default:
-            log_->debug( "Removing user from scene [", users_.at( command->getUserID() ).name, "]\n" );
+            log_->debug( "Removing user from scene [", users_.at( command->getUserID() ).getName(), "]\n" );
             removeUser( command->getUserID() );
         break;
     }
