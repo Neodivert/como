@@ -50,6 +50,7 @@ class PublicUser : public std::enable_shared_from_this<PublicUser>
 
         std::uint8_t nextCommand_;
         std::uint8_t nCommandsInLastPacket_;
+        std::uint32_t lastCommandSent_;
 
         SceneUpdate sceneUpdatePacketFromUser_;
         SceneUpdate outSceneUpdatePacket_;

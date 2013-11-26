@@ -57,9 +57,10 @@ class CommandsHistoric
         /***
          * 4. Auxiliar methods
          ***/
-        bool fillSceneUpdatePacket( SceneUpdate& packet,
-                                    const unsigned int firstCommand,
-                                    const unsigned int nCommands ) const ;
+        std::uint32_t fillSceneUpdatePacket( SceneUpdate& packet,
+                                             const unsigned int firstCommand,
+                                             const unsigned int nCommands,
+                                             UserID userID ) const ;
 };
 
 typedef std::shared_ptr< CommandsHistoric > CommandsHistoricPtr;

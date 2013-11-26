@@ -150,7 +150,8 @@ void PublicUser::sendNextSceneUpdate()
 
     // Create and prepare a SCENE_UPDATE packet.
     outSceneUpdatePacket_.clear();
-    commandsHistoric_->fillSceneUpdatePacket( outSceneUpdatePacket_, nextCommand_, MAX_COMMANDS_PER_PACKET );
+    nextCommand_ = commandsHistoric_->fillSceneUpdatePacket( outSceneUpdatePacket_, nextCommand_, MAX_COMMANDS_PER_PACKET, id_ );
+    log_->debug( "Sending scene update - nextCommand: (", (int)nextCommand_, ")\n" );
 
     //outSceneUpdatePacket_.addCommands( commandsHistoric, nextCommand_, MAX_COMMANDS_PER_PACKET );
 
@@ -180,7 +181,7 @@ void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode,
         // FIXME: Make use of the packet?.
 
         // Update the nextCommand_ index for the next SCENE_UPDATE packet.
-        nextCommand_ += nCommandsInLastPacket_;
+        //nextCommand_ = outSceneUpdatePacket_.getLasCommandSent() + 1;
 
         log_->debug( "SCENE_UPDATE sended (nextCommand_: ", (int)nextCommand_, ")\n" );
 

@@ -57,17 +57,20 @@ void CommandsHistoric::addCommand( SceneCommandConstPtr command )
  * 3. Auxiliar methods
  ***/
 
-bool CommandsHistoric::fillSceneUpdatePacket( SceneUpdate& packet,
-                                              const unsigned int firstCommand,
-                                              const unsigned int nCommands ) const
+std::uint32_t CommandsHistoric::fillSceneUpdatePacket( SceneUpdate& packet,
+                                                       const unsigned int firstCommand,
+                                                       const unsigned int nCommands,
+                                                       UserID userID ) const
 {
     commandsMutex_.lock();
 
+    /*
     // Validity check: maxCommands can't be zero.
     if( !nCommands ){
         commandsMutex_.unlock();
         return false;
     }
+    */
 
     // Go to the first desired command in the commands historic.
     CommandsList::const_iterator it = commands_.begin();
@@ -75,16 +78,21 @@ bool CommandsHistoric::fillSceneUpdatePacket( SceneUpdate& packet,
 
     // Keep adding commands to the SCENE_UPDATE packet until the  packet is
     // full, or until we reach the commands historic end.
-    unsigned int i = 0;
+    uint32_t i = 0;
+    uint32_t nextCommand = firstCommand;
     while( ( i < nCommands ) && ( it != commands_.end() ) ){
-        packet.addCommand( *it, firstCommand + i, commands_.size() );
-
+        // Don't send to the user its own commands.
+        // TODO: Substract this commands from unsyncCommands field.
+        if( (*it)->getUserID() != userID ){
+            packet.addCommand( *it, firstCommand + i, commands_.size() );
+            i++;
+        }
+        nextCommand++;
         it++;
-        i++;
     }
     commandsMutex_.unlock();
 
-    return true;
+    return nextCommand;
 }
 
 } // namespace como
