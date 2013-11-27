@@ -23,6 +23,7 @@
 #include "managers/tester.hpp"
 #include "models/server/server_interface.hpp"
 #include "gui/connection_wizard/connection_wizard.hpp"
+#include "managers/como_app.hpp"
 
 //#define TESTING_MODE 1
 
@@ -30,12 +31,11 @@
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 
-void connect( const char* server );
-
 int main( int argc, char *argv[] )
 {
     // Create a Qt application.
     QApplication app( argc, argv );
+    int dialogCode;
 
 #ifdef TESTING_MODE
     // Run tests.
@@ -43,12 +43,26 @@ int main( int argc, char *argv[] )
     tester->testMeshes();
     tester->destroy();
 #else
-    // Create a Qt window and show it.
-    como::MainWindow window;
-    window.show();
+    // Create the COMO app.
+    std::shared_ptr< como::ComoApp > comoApp( new como::ComoApp );
 
-    // Run Qt application.
-    return app.exec();
+    // Create the main window.
+    como::MainWindow window( nullptr, comoApp );
+
+    // Create a wizzard for creating a scene or connecting to a created one.
+    como::ConnectionWizard connectionWizard( comoApp->getScene(), comoApp->getLog(), &window );
+
+    // Execute the connection wizard, then show the main window.
+    dialogCode = connectionWizard.exec();
+
+    // If the user doesn't reject the connection wizard, show the main window
+    // and run the app.
+    if( dialogCode != QDialog::Rejected ){
+        window.show();
+
+        // Run Qt application.
+        return app.exec();
+    }
 #endif
 }
 

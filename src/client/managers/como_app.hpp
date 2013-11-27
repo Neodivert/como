@@ -113,7 +113,7 @@ class ComoApp : public QObject {
          * 1. Initialization and destruction
          ***/
     public:
-        ComoApp( QWidget* parent, LogPtr log );
+        ComoApp();
         ~ComoApp();
         /*
         static ComoApp* getInstance();

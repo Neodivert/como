@@ -66,13 +66,14 @@ std::array< QString, N_TRANSFORMATION_MODES > transformationModeStrings =
  * 1. Initialization and destruction
  ***/
 
-ComoApp::ComoApp( QWidget* parent, LogPtr log ) :
-    QObject( parent ),
-    log_( log )
+ComoApp::ComoApp()
 {
+    // Create a log
+    log_ = LogPtr( new Log );
+
     // Create an OpenGL engine (used for creating and initializing
     // an OpenGL context and a scene.
-    OpenGLEngine openGLEngine( log );
+    OpenGLEngine openGLEngine( log_ );
 
     // Set default app mode.
     appMode = AppMode::OBJECT;
@@ -93,6 +94,7 @@ ComoApp::ComoApp( QWidget* parent, LogPtr log ) :
 
     // Set default scene.
     scene = openGLEngine.createPublicScene( oglContext.get() );
+
 
     log_->debug( "OpenGL context is valid?: ", oglContext->isValid(), "\n" );
     checkOpenGL( "ComoApp constructor - after creating OpenGL context and scene" );
