@@ -53,13 +53,13 @@ ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     // Set a dropdown list for selecting the viewport's current view.
     viewSelector = new QComboBox;
     for( auto viewString : viewStrings ){
-        viewSelector->addItem( viewString );
+        viewSelector->addItem( tr( viewString ) );
     }
 
     // When user change view in selector, call Viewport::setView().
     void (QComboBox::*signal)( int ) = &QComboBox::activated;
     connect( viewSelector, signal, [=]( int index ) {
-        viewport->setView( views[index] );
+        viewport->setView( static_cast< View >( index ) );
     }  );
 
     // When comoApp::setAppMode() be invoked, change appMode selector's index.
@@ -106,8 +106,8 @@ QGroupBox* ViewFrame::createProjectionSwitch()
 
     // Create a QRadioButton for each projection mode in the app. Copy the button
     // to the previous QGroupBox and QButtonGroup.
-    for( unsigned int i = 0; i < projectionModeStrings.size(); i++ ){
-        projectionModeRadioButton = new QRadioButton( projectionModeStrings[i] );
+    for( unsigned int i = 0; i < N_PROJECTIONS; i++ ){
+        projectionModeRadioButton = new QRadioButton( tr( projectionModeStrings[i] ) );
         projectionModeButtonGroup->addButton( projectionModeRadioButton, i );
         projectionModeGroupBoxLayout->addWidget( projectionModeRadioButton );
     }
@@ -119,7 +119,7 @@ QGroupBox* ViewFrame::createProjectionSwitch()
     // Change current projection mode when user select it in the GUI.
     void (QButtonGroup::*buttonClicked)( int ) = &QButtonGroup::buttonClicked;
     connect( projectionModeButtonGroup, buttonClicked, [=]( int index ) {
-        viewport->setProjection( projectionModes[index] );
+        viewport->setProjection( static_cast< Projection >( index ) );
     } );
 
     // Update the current checked button when the user change the current

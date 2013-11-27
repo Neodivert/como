@@ -30,29 +30,37 @@
 
 namespace como {
 
+// Available app modes.
 enum class AppMode {
     OBJECT = 0,
     EDITION
 };
 const unsigned int N_APP_MODES = 2;
 
-// Array with all the possible app mode values (for conversion between
-// AppMode and int).
-typedef std::array< AppMode, N_APP_MODES > AppModes;
-extern AppModes appModes;
+// Available app modes (strings for GUI output).
+const char appModeStrings[N_APP_MODES][32] =
+{
+    "Object mode",
+    "Edition mode"
+};
 
-// Array with a string for each app mode value (for output in GUI).
-extern std::array< QString, N_APP_MODES > appModeStrings;
-
-
+// Available edition scopes.
 enum class EditionScope
 {
     GLOBAL = 0,
     LOCAL
 };
+const unsigned int N_EDITION_SCOPES = 2;
 
-extern std::map<EditionScope, std::string> editionScopeStrings;
+// Available edition scopes (strings for GUI output).
+const char editionScopeStrings[N_EDITION_SCOPES][16] =
+{
+    "Local",
+    "Global"
+};
 
+
+// Available transformation types.
 enum class TransformationType
 {
     NONE = 0,
@@ -60,8 +68,18 @@ enum class TransformationType
     ROTATION,
     SCALE
 };
+const unsigned int N_TRANSFORMATION_TYPES = 4;
 
+// Available transformation types (strings for GUI output).
+const char transformationTypeStrings[N_TRANSFORMATION_TYPES][16] =
+{
+    "None",
+    "Translation",
+    "Rotation",
+    "Scale"
+};
 
+// Available transformation modes.
 enum class TransformationMode
 {
     FREE = 0,
@@ -71,13 +89,14 @@ enum class TransformationMode
 };
 const unsigned int N_TRANSFORMATION_MODES = 4;
 
-// Array with all the possible transformation modes.
-typedef std::array< TransformationMode, N_TRANSFORMATION_MODES > TransformationModes;
-extern TransformationModes transformationModes;
-
-// Array with a string for each transformation mode value (for output in GUI).
-extern std::array< QString, N_TRANSFORMATION_MODES > transformationModeStrings;
-
+// Available transformation modes (strings for GUI output).
+const char transformationModeStrings[N_TRANSFORMATION_MODES][16] =
+{
+    "Free",
+    "Fixed to X axis",
+    "Fixed to Y axis",
+    "Fixed to Z axis"
+};
 
 class ComoApp : public QObject {
     Q_OBJECT

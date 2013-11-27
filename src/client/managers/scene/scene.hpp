@@ -31,18 +31,20 @@
 
 namespace como {
 
+// Available drawable types.
 enum class DrawableType
 {
     CUBE = 0
 };
 const unsigned int N_DRAWABLE_TYPES = 1;
 
-typedef std::array< DrawableType, N_DRAWABLE_TYPES > DrawableTypes;
-extern DrawableTypes drawableTypes;
+// Available drawable types (strings for GUI output).
+const char drawableTypeStrings[N_DRAWABLE_TYPES][16] =
+{
+    "Cube"
+};
 
-typedef std::array< QString, N_DRAWABLE_TYPES > DrawableTypeStrings;
-extern DrawableTypeStrings drawableTypeStrings;
-
+// Available pivot point modes.
 enum class PivotPointMode
 {
     MEDIAN_POINT = 0,
@@ -51,14 +53,13 @@ enum class PivotPointMode
 };
 const unsigned int N_PIVOT_POINT_MODES = 3;
 
-// Array with all the possible pivot point modes (for conversion between
-// PivotPointMode and int).
-typedef std::array< PivotPointMode, N_PIVOT_POINT_MODES > PivotPointModes;
-extern PivotPointModes pivotPointModes;
-
-// Array with a string for each app mode value (for output in GUI).
-typedef std::array< QString, N_PIVOT_POINT_MODES > PivotPointModeStrings;
-extern PivotPointModeStrings pivotPointModeStrings;
+// Available pivot point modes (strings for GUI output).
+const char pivotPointModeStrings[N_PIVOT_POINT_MODES][32] =
+{
+     "Median Point",
+     "Individual Centroid",
+     "World origin"
+};
 
 enum LinesBufferOffset {
     WORLD_AXIS = 0,

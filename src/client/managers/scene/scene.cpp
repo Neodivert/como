@@ -21,31 +21,6 @@
 
 namespace como {
 
-DrawableTypes drawableTypes =
-{{
-    DrawableType::CUBE
-}};
-
-DrawableTypeStrings drawableTypeStrings =
-{{
-    QString::fromUtf8( "Cube" )
-}};
-
-PivotPointModes pivotPointModes =
-{{
-    PivotPointMode::MEDIAN_POINT,
-    PivotPointMode::INDIVIDUAL_CENTROIDS,
-    PivotPointMode::WORLD_ORIGIN
-}};
-
-// Array with a string for each pivot point mode value (for output in GUI).
-PivotPointModeStrings pivotPointModeStrings =
-{{
-     QString::fromUtf8( "Median Point" ),
-     QString::fromUtf8( "Individual Centroid" ),
-     QString::fromUtf8( "World origin" )
-}};
-
 /***
  * 1. Initialization and destruction
  ***/

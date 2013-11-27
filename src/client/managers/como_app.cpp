@@ -25,42 +25,6 @@ using namespace std;
 
 namespace como {
 
-AppModes appModes =
-{{
-    AppMode::OBJECT,
-    AppMode::EDITION
-}};
-
-std::array< QString, N_APP_MODES > appModeStrings =
-{{
-    QString::fromUtf8( "Object mode" ),
-    QString::fromUtf8( "Edition mode" )
-}};
-
-std::map<EditionScope, std::string> editionScopeStrings =
-{{
-    { EditionScope::LOCAL, "Local" },
-    { EditionScope::GLOBAL, "Global" }
-}};
-
-// Array will all the possible transformation modes.
-TransformationModes transformationModes =
-{{
-    TransformationMode::FREE,
-    TransformationMode::FIXED_X,
-    TransformationMode::FIXED_Y,
-    TransformationMode::FIXED_Z
-}};
-
-// Array with a string for each transformation mode value (for output in GUI).
-std::array< QString, N_TRANSFORMATION_MODES > transformationModeStrings =
-{{
-    QString::fromUtf8( "Free" ),
-    QString::fromUtf8( "Fixed to X axis" ),
-    QString::fromUtf8( "Fixed to Y axis" ),
-    QString::fromUtf8( "Fixed to Z axis" )
-}};
-
 
 /***
  * 1. Initialization and destruction
@@ -172,32 +136,23 @@ LogPtr ComoApp::getLog() const
 
 void ComoApp::setAppMode( AppMode appMode )
 {
-    AppModes::iterator it;
-
     // Change the app mode.
     this->appMode = appMode;
 
     transformationType = TransformationType::NONE;
 
-    // Get the integer index of the current appMode on a array of app modes and return it
-    // in a signal. This index is used in GUI appMode dropdown lists for updating its
-    // current value.
-    it = find( appModes.begin(), appModes.end(), appMode );
-    emit appModeIndexChanged( std::distance( appModes.begin(), it ) );
+    // Emit a signal with the index of the new app mode.
+    emit appModeIndexChanged( static_cast< int >( appMode ) );
 }
 
 
 void ComoApp::setTransformationMode( TransformationMode transformationMode )
 {
-    TransformationModes::iterator it;
-
     // Change the transformation mode.
     this->transformationMode = transformationMode;
 
     // Emit signal.
-    it = find( transformationModes.begin(), transformationModes.end(), transformationMode );
-    emit transformationModeIndexChanged( std::distance( transformationModes.begin(), it ) );
-
+    emit transformationModeIndexChanged( static_cast< int >( transformationMode ) );
 
     scene->renderNeeded();
 }

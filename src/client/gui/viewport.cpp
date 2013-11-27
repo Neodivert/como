@@ -26,18 +26,6 @@ using namespace std;
 
 namespace como {
 
-ProjectionModes projectionModes =
-{{
-    Projection::ORTHO,
-    Projection::PERSPECTIVE
-}};
-
-ProjectionModeStrings projectionModeStrings =
-{{
-    QString::fromUtf8( "Ortho" ),
-    QString::fromUtf8( "Perspective" )
-}};
-
 
 GLint Viewport::viewProjectionMatrixLocation = -1;
 
@@ -394,8 +382,6 @@ void Viewport::sendViewProjectionMatrixToShader( const glm::mat4& vpMatrix ) con
 
 void Viewport::render()
 {
-    TransformationModes::iterator it;
-
     const glm::mat4 viewMatrix = camera->getViewMatrix();
 
     // Make shared OpenGL context current for this surface.
@@ -413,8 +399,7 @@ void Viewport::render()
     // Draw scene.
     // TODO: move the find call to RenderPanel::render(). All the viewports will share
     // the result.
-    it = find( transformationModes.begin(), transformationModes.end(), comoApp->getTransformationMode() );
-    comoApp->getScene()->draw( std::distance( transformationModes.begin(), it ) - 1 );
+    comoApp->getScene()->draw( static_cast< int >( comoApp->getTransformationMode() ) - 1 );
 
     // Draw guide rect
     if( ( comoApp->getTransformationType() == TransformationType::ROTATION ) ||
@@ -442,17 +427,14 @@ void Viewport::render()
 
 void Viewport::setView( View view )
 {
-    Views::iterator viewsIterator;
-
     comoApp->getOpenGLContext()->makeCurrent( this );
 
     camera->setView( view );
     comoApp->getScene()->renderNeeded();
 
-    // Get the integer index of the current View on a array of views and return it
+    // Get the integer index of the current View and return it
     // in a signal.
-    viewsIterator = find( views.begin(), views.end(), view );
-    emit viewIndexChanged( std::distance( views.begin(), viewsIterator ) );
+    emit viewIndexChanged( static_cast< int >( view ) );
 }
 
 

@@ -24,6 +24,7 @@
 
 namespace como {
 
+// Available views.
 enum class View {
     FRONT,
     BACK,
@@ -35,16 +36,17 @@ enum class View {
 };
 const unsigned int N_VIEWS = 7;
 
-// Array with all the possible app mode values (for conversion between
-// View and int).
-typedef std::array< View, N_VIEWS > Views;
-extern Views views;
-
-// Array with a string for each view value (for output in GUI).
-typedef std::array< QString, N_VIEWS > ViewStrings;
-extern ViewStrings viewStrings;
-
-
+// Available views (strings for GUI output).
+const char viewStrings [N_VIEWS][16] =
+{
+    "Front view",
+    "Back view",
+    "Left view",
+    "Right view",
+    "Top view",
+    "Bottom view",
+    "Camera view"
+};
 
 class Camera : public Mesh
 {

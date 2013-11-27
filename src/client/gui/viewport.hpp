@@ -31,17 +31,20 @@
 
 namespace como {
 
+// Available projections.
 enum class Projection {
    ORTHO,
    PERSPECTIVE
 };
 const unsigned int N_PROJECTIONS = 2;
 
-typedef std::array< Projection, N_PROJECTIONS > ProjectionModes;
-extern ProjectionModes projectionModes;
 
-typedef std::array< QString, N_PROJECTIONS > ProjectionModeStrings;
-extern ProjectionModeStrings projectionModeStrings;
+// Available projections (strings for GUI output).
+const char projectionModeStrings[N_PROJECTIONS][16] =
+{
+    "Ortho",
+    "Perspective"
+};
 
 
 /***
