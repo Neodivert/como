@@ -24,13 +24,42 @@
 
 namespace como {
 
-/*
 class DrawableCommand : public SceneCommand
 {
     private:
-        UserID creatorID_;
         DrawableID drawableID_;
-*/
+
+    public:
+        /***
+         * 1. Initialization and destruction
+         ***/
+        DrawableCommand( DrawableID drawableID, SceneCommandType sceneCommandType );
+        DrawableCommand( const DrawableCommand& b );
+
+        virtual ~DrawableCommand(){}
+
+
+        /***
+         * 2. Packing and unpacking
+         ***/
+        virtual char* pack( char* buffer ) const ;
+        virtual const char* unpack( const char* buffer ) ;
+
+
+        /***
+         * 3. Getters
+         ***/
+        virtual std::uint16_t getPacketSize() const ;
+        virtual SceneCommandType getType() const = 0;
+        //static SceneCommandType getType( const char* buffer );
+        DrawableID getDrawableID() const ;
+
+
+        /***
+         * 4. Setters
+         ***/
+        void setDrawableID( const DrawableID& drawableID );
+};
 
 } // namespace como
 
