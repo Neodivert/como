@@ -28,6 +28,7 @@
 #include <thread>
 #include <functional>
 #include <map>
+#include <queue>
 
 namespace como {
 
@@ -42,9 +43,15 @@ class ServerInterface
         boost::thread_group workerThreads_;
 
         SceneUpdate sceneUpdatePacketFromServer_;
+        SceneUpdate sceneUpdatePacketToServer_;
 
         std::function< void (const SceneCommand*) > executeRemoteCommand_;
 
+        // Queue with scene commands to be sended to the server.
+        std::queue< SceneCommandConstPtr > sceneCommandsToServer_;
+
+
+        boost::asio::deadline_timer timer_;
 
         // Log
         LogPtr log_;
@@ -68,7 +75,17 @@ class ServerInterface
          ***/
     private:
         void onSceneUpdateReceived( const boost::system::error_code& errorCode, PacketPtr packet );
+        void onSceneUpdateSended( const boost::system::error_code& errorCode, PacketPtr packet );
 
+
+        /***
+         * 4. Server communication
+         ***/
+    public:
+        void sendCommand( SceneCommandConstPtr sceneCommand );
+    private:
+        void sendPendingCommands();
+        void setTimer();
 
     private:
         void listen();

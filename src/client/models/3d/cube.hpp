@@ -32,7 +32,7 @@ class Cube : public Mesh
         /***
          * 1. Initialization
          ***/
-        Cube();
+        Cube( const std::uint8_t* color = nullptr );
 };
 
 

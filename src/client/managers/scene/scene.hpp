@@ -137,8 +137,11 @@ class Scene : public QObject
     private:
         void addDrawable( DrawablePtr drawable, DrawableID drawableID );
     public:
-        void addDrawable( DrawableType drawableType );
-        void addDrawable( DrawableType drawableType, DrawableID drawableID );
+        void addCube( const std::uint8_t* color );
+        void addCube( const std::uint8_t* color, DrawableID drawableID );
+
+        //void addDrawable( DrawableType drawableType );
+        //void addDrawable( DrawableType drawableType, DrawableID drawableID );
 
 
         /***

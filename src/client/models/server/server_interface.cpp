@@ -30,6 +30,7 @@ ServerInterface::ServerInterface( std::function< void (const SceneCommand*) > ex
     work_( std::shared_ptr< boost::asio::io_service::work >( new boost::asio::io_service::work( io_service_ ) ) ),
     socket_( SocketPtr( new boost::asio::ip::tcp::socket( io_service_ ) ) ),
     executeRemoteCommand_( executeRemoteCommand ),
+    timer_( io_service_ ),
     log_( log )
 {   
     for( unsigned int i=0; i<2; i++ ){
@@ -96,6 +97,8 @@ std::shared_ptr< const UserAccepted > ServerInterface::connect( const char* host
 
     //listenerThread = new std::thread( std::bind( &ServerInterface::listen, this ) );
     listen();
+
+    setTimer();
 
     return std::shared_ptr< const UserAccepted >( dynamic_cast< const UserAccepted* >( userAcceptedPacket.clone() ) );
 }
@@ -179,6 +182,75 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
 }
 
 
+void ServerInterface::onSceneUpdateSended( const boost::system::error_code& errorCode, PacketPtr packet )
+{
+    if( errorCode ){
+        log_->error( "Error when sending packet: ", errorCode.message(), "\n" );
+        return;
+    }
+
+
+
+    log_->debug( "SCENE_UPDATE sent to the server - nCommands ", packet, "\n" );
+
+    //log_->debug( "SCENE_UPDATE sent to the server - nCommands: (",
+    //             ( ( dynamic_cast< SceneUpdate* >( packet.get() ) )->getCommands() )->size(),
+    //             ")\n" );
+
+    setTimer();
+}
+
+
+/***
+ * 4. Server communication
+ ***/
+
+void ServerInterface::sendCommand( SceneCommandConstPtr sceneCommand )
+{
+    // Queue the new scene command.
+    sceneCommandsToServer_.push( sceneCommand );
+}
+
+
+void ServerInterface::sendPendingCommands()
+{
+    unsigned int nCommands = 0;
+
+    // TODO: Change 4 by MAX_COMMANDS_PER_PACKET.
+    // Move commands from the queue to the SCENE_UPDATE packet.
+    while( ( nCommands < 4 ) && !sceneCommandsToServer_.empty() ){
+        log_->debug( "Adding command to SCENE_UPDATE packet to server - 1\n" );
+        // TODO: Delete the second argument is not necessary in a SCENE_UPDATE
+        // packet sent from client to server.
+        sceneUpdatePacketToServer_.addCommand( sceneCommandsToServer_.front(), 0, 0 );
+        log_->debug( "Adding command to SCENE_UPDATE packet to server - 2\n" );
+        sceneCommandsToServer_.pop();
+        log_->debug( "Adding command to SCENE_UPDATE packet to server - 3\n" );
+
+        nCommands++;
+    }
+
+    // If there in the packet, send it to the server. Otherwise, set a timer
+    // to call this method again.
+    if( nCommands ){
+        log_->debug( "Sending SCENE_UPDATE packet to the server - 1\n" );
+        sceneUpdatePacketToServer_.asyncSend( socket_, std::bind( &ServerInterface::onSceneUpdateSended, this, std::placeholders::_1, std::placeholders::_2 ) );
+        log_->debug( "Sending SCENE_UPDATE packet to the server - 2\n" );
+    }else{
+        //log_->debug( "No commands to send to the server\n" );
+        setTimer();
+    }
+}
+
+
+void ServerInterface::setTimer()
+{
+    // Set a timer for sending pending commands to the server.
+    timer_.expires_from_now( boost::posix_time::milliseconds( 2000 ) );
+    timer_.async_wait( boost::bind( &ServerInterface::sendPendingCommands, this ) );
+}
+
+
 void ServerInterface::listen()
 {   
     log_->debug( "Listening for new scene updates from server ...\n" );
@@ -211,5 +283,8 @@ void ServerInterface::work()
 
     log_->debug( "[", boost::this_thread::get_id(), "] thread end\n" );
 }
+
+
+
 
 } // namespace como

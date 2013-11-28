@@ -26,7 +26,8 @@ namespace como {
  * 1. Initialization
  ***/
 
-Cube::Cube()
+Cube::Cube( const std::uint8_t* color ) :
+    Mesh( color )
 {
     // The cube has its center in the origin.
     const GLfloat halfWidth = 0.5f;

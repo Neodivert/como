@@ -134,11 +134,24 @@ QGroupBox* ToolsMenu::createPrimitiveCreationMenu()
     }
 
 
+
+    // TODO: Make this more general (to primitives and colors).
     // Change current transformation mode when user select it in the GUI.
+    void (QButtonGroup::*buttonClicked)( int ) = &QButtonGroup::buttonClicked;
+    connect( primitiveCreationButtonGroup, buttonClicked, [=]( int index ) {
+        Q_UNUSED( index );
+
+        const std::uint8_t COLOR[4] = { 255, 0, 0, 255 };
+
+        comoApp->getScene()->addCube( COLOR );
+    } );
+
+    /*
     void (QButtonGroup::*buttonClicked)( int ) = &QButtonGroup::buttonClicked;
     connect( primitiveCreationButtonGroup, buttonClicked, [=]( int index ) {
         comoApp->getScene()->addDrawable( static_cast< DrawableType >( index ) );
     } );
+    */
 
     /*
     // Update the current checked button when the user change the current

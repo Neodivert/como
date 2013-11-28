@@ -30,7 +30,7 @@ GLint Mesh::uniformColorLocation = -1;
  * 1. Initialization and destruction
  ***/
 
-Mesh::Mesh()
+Mesh::Mesh( const std::uint8_t* color )
 {   
     checkOpenGL( "Mesh constructor - 1" );
     GLint currentShaderProgram;
@@ -70,7 +70,11 @@ Mesh::Mesh()
 
     checkOpenGL( "Mesh constructor - 5" );
     // Set the mesh's color.
-    setColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
+    if( color ){
+        setColor( color[0]/255.0f, color[1]/255.0f, color[2]/255.0f, 1.0f );
+    }else{
+        setColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
+    }
 
     checkOpenGL( "Mesh constructor - 6" );
     // Set both original and transformed centroids.

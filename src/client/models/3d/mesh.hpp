@@ -72,7 +72,7 @@ class Mesh : public Drawable
         /***
          * 1. Initialization and destruction
          ***/
-        Mesh();
+        Mesh( const std::uint8_t* color = nullptr );
         ~Mesh();
 
         virtual void setVertices( const GLuint nVertices, const GLfloat* vertices );

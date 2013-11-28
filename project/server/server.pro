@@ -15,7 +15,9 @@ SOURCES += \
     ../../src/common/packets/scene_commands/user_connected.cpp \
     ../../src/server/public_user.cpp \
     ../../src/server/commands_historic.cpp \
-    ../../src/common/users/basic_user.cpp
+    ../../src/common/users/basic_user.cpp \
+    ../../src/common/packets/scene_commands/drawable_commands/drawable_command.cpp \
+    ../../src/common/packets/scene_commands/drawable_commands/create_cube.cpp
 
 LIBS += -lpthread
 
@@ -35,7 +37,9 @@ HEADERS += \
     ../../src/common/utilities/log.hpp \
     ../../src/server/commands_historic.hpp \
     ../../src/common/utilities/ids.hpp \
-    ../../src/common/users/basic_user.hpp
+    ../../src/common/users/basic_user.hpp \
+    ../../src/common/packets/scene_commands/drawable_commands/drawable_command.hpp \
+    ../../src/common/packets/scene_commands/drawable_commands/create_cube.hpp
 
 # Link boost libraries
 unix|win32: LIBS += -lboost_system

@@ -28,7 +28,7 @@ namespace como {
 Scene::Scene( LogPtr log ) :
     log_( log ),
     server_( std::bind( &Scene::executeRemoteCommand, this, std::placeholders::_1 ), log_ ),
-    localUserNextDrawableIndex_( 0 )
+    localUserNextDrawableIndex_( 1 )
 {
     initLinesBuffer();
 
@@ -220,6 +220,36 @@ void Scene::addDrawable( DrawablePtr drawable, DrawableID drawableID )
 }
 
 
+void Scene::addCube( const std::uint8_t* color )
+{
+    DrawableID drawableID;
+
+    // Give a unique ID to the new drawable (bind it to the local user).
+    drawableID.creatorID = localUserID_;
+    drawableID.drawableIndex = localUserNextDrawableIndex_;
+
+    // Increment the index for the next local user's drawable.
+    localUserNextDrawableIndex_++;
+
+    // Create the cube and add it to the scene.
+    addCube( color, drawableID );
+
+    // Send the command to the server.
+    server_.sendCommand( SceneCommandConstPtr( new CreateCube( drawableID, color ) ) );
+}
+
+
+void Scene::addCube( const std::uint8_t* color, DrawableID drawableID )
+{
+    // Create the cube.
+    DrawablePtr drawable = DrawablePtr( new Cube( color ) );
+
+    // Add the cube to the scene.
+    addDrawable( drawable, drawableID );
+}
+
+
+/*
 void Scene::addDrawable( DrawableType drawableType )
 {
     DrawableID drawableID;
@@ -233,6 +263,12 @@ void Scene::addDrawable( DrawableType drawableType )
 
     // Add the drawable to the scene.
     addDrawable( drawableType, drawableID );
+
+    switch( drawableType ){
+        case DrawableType::CUBE:
+            server_.sendCommand( SceneCommandConstPtr( new CreateCube ) );
+        break;
+    }
 }
 
 void Scene::addDrawable( DrawableType drawableType, DrawableID drawableID )
@@ -249,7 +285,7 @@ void Scene::addDrawable( DrawableType drawableType, DrawableID drawableID )
 
     addDrawable( drawable, drawableID );
 }
-
+*/
 
 /***
  * 5. Drawables selection
