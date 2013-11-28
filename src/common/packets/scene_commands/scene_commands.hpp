@@ -23,5 +23,6 @@
 #include "scene_command.hpp"
 #include "user_connected.hpp"
 #include "drawable_commands/drawable_command.hpp"
+#include "drawable_commands/create_cube.hpp"
 
 #endif // SCENE_COMMANDS_HPP

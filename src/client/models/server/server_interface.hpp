@@ -45,6 +45,7 @@ class ServerInterface
 
         std::function< void (const SceneCommand*) > executeRemoteCommand_;
 
+
         // Log
         LogPtr log_;
 

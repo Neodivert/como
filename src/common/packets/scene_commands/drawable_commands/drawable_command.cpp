@@ -25,6 +25,13 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
+
+DrawableCommand::DrawableCommand( SceneCommandType sceneCommandType ) :
+    SceneCommand( sceneCommandType )
+{
+}
+
+
 DrawableCommand::DrawableCommand( DrawableID drawableID, SceneCommandType sceneCommandType ) :
     SceneCommand( sceneCommandType ),
     drawableID_( drawableID )
@@ -77,7 +84,9 @@ const char* DrawableCommand::unpack( const char* buffer )
 
 std::uint16_t DrawableCommand::getPacketSize() const
 {
-    return ( sizeof( drawableID_.creatorID ) + sizeof( drawableID_.drawableIndex ) );
+    return ( SceneCommand::getPacketSize() +
+             sizeof( drawableID_.creatorID ) +
+             sizeof( drawableID_.drawableIndex ) );
 }
 
 

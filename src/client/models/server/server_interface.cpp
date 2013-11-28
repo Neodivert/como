@@ -169,6 +169,9 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
             case SceneCommandType::USER_DISCONNECTED:
                 log_->debug( "\tCommand[", i, "]: USER_DISCONNECTED\n" );
             break;
+            case SceneCommandType::CREATE_CUBE:
+                log_->debug( "\tCommand[", i, "]: CREATE_CUBE" );
+            break;
         }
     }
 

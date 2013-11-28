@@ -33,6 +33,7 @@ class DrawableCommand : public SceneCommand
         /***
          * 1. Initialization and destruction
          ***/
+        DrawableCommand( SceneCommandType sceneCommandType );
         DrawableCommand( DrawableID drawableID, SceneCommandType sceneCommandType );
         DrawableCommand( const DrawableCommand& b );
 

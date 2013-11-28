@@ -38,6 +38,11 @@ struct DrawableID {
     UserID creatorID;
     DrawableIndex drawableIndex;
 
+    DrawableID() :
+        creatorID( 0 ),
+        drawableIndex( 0 )
+    {}
+
     bool operator < ( const DrawableID& b ) const {
         return ( ( creatorID < b.creatorID ) ||
                  ( (creatorID == b.creatorID) && (drawableIndex < b.drawableIndex) ) );
@@ -49,7 +54,7 @@ struct DrawableID {
     }
 };
 
-const DrawableID NULL_DRAWABLE_ID = { 0, 0 };
+const DrawableID NULL_DRAWABLE_ID;
 
 } // namespace como
 

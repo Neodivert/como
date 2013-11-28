@@ -109,6 +109,9 @@ const char* SceneUpdate::unpackBody( const char* buffer )
             case SceneCommandType::USER_DISCONNECTED:
                 sceneCommandPtr =  SceneCommandPtr( new SceneCommand( SceneCommandType::USER_DISCONNECTED ) );
             break;
+            case SceneCommandType::CREATE_CUBE:
+                sceneCommandPtr =  SceneCommandPtr( new CreateCube );
+            break;
         }
         buffer = sceneCommandPtr->unpack( buffer );
         commands_.push_back( sceneCommandPtr );

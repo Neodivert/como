@@ -17,37 +17,28 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SCENE_COMMAND_HPP
-#define SCENE_COMMAND_HPP
+#ifndef CREATE_CUBE_HPP
+#define CREATE_CUBE_HPP
 
-#include "../packable.hpp"
-#include <memory>
+#include "drawable_command.hpp"
 
 namespace como {
 
-enum class SceneCommandType : std::uint8_t
-{
-    USER_CONNECTED = 0,
-    USER_DISCONNECTED ,
-    CREATE_CUBE
-};
-
-
-class SceneCommand : public Packable
+class CreateCube : public DrawableCommand
 {
     private:
-        SceneCommandType type_;
-        UserID userID_;
+        // Mesh color.
+        std::uint8_t color_[4];
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        SceneCommand( SceneCommandType type );
-        SceneCommand( SceneCommandType type, UserID userID );
-        SceneCommand( const SceneCommand& b );
+        CreateCube();
+        CreateCube( DrawableID drawableID, const std::uint8_t* color );
+        CreateCube( const CreateCube& b );
 
-        virtual ~SceneCommand(){}
+        virtual ~CreateCube(){}
 
 
         /***
@@ -61,20 +52,16 @@ class SceneCommand : public Packable
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const ;
-        SceneCommandType getType() const ;
-        static SceneCommandType getType( const char* buffer );
-        UserID getUserID() const ;
+        virtual SceneCommandType getType() const ;
+        const std::uint8_t* getColor() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setUserID( const UserID& userID );
+        void setColor( const std::uint8_t* color );
 };
-
-typedef std::shared_ptr< SceneCommand > SceneCommandPtr;
-typedef std::shared_ptr< const SceneCommand > SceneCommandConstPtr;
 
 } // namespace como
 
-#endif // SCENE_COMMAND_HPP
+#endif // CREATE_CUBE_HPP
