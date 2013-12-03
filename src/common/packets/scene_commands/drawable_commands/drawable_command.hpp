@@ -21,6 +21,7 @@
 #define DRAWABLE_COMMAND_HPP
 
 #include "../scene_command.hpp"
+#include <iostream>
 
 namespace como {
 
@@ -34,7 +35,7 @@ class DrawableCommand : public SceneCommand
          * 1. Initialization and destruction
          ***/
         DrawableCommand( SceneCommandType sceneCommandType );
-        DrawableCommand( DrawableID drawableID, SceneCommandType sceneCommandType );
+        DrawableCommand( UserID userID, DrawableID drawableID, SceneCommandType sceneCommandType );
         DrawableCommand( const DrawableCommand& b );
 
         virtual ~DrawableCommand(){}

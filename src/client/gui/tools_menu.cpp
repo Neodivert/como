@@ -133,12 +133,10 @@ QGroupBox* ToolsMenu::createPrimitiveCreationMenu()
         primitiveCreationButtonGroup->addButton( primitiveCreationButton, i );
     }
 
-
-
     // TODO: Make this more general (to primitives and colors).
     // Change current transformation mode when user select it in the GUI.
     void (QButtonGroup::*buttonClicked)( int ) = &QButtonGroup::buttonClicked;
-    connect( primitiveCreationButtonGroup, buttonClicked, [=]( int index ) {
+    connect( primitiveCreationButtonGroup, buttonClicked, [this]( int index ) {
         Q_UNUSED( index );
 
         const std::uint8_t COLOR[4] = { 255, 0, 0, 255 };

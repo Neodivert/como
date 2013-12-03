@@ -21,7 +21,6 @@
 #include "gui/main_window.hpp"
 #include <glm/gtx/vector_angle.hpp>
 #include "managers/tester.hpp"
-#include "models/server/server_interface.hpp"
 #include "gui/connection_wizard/connection_wizard.hpp"
 #include "managers/como_app.hpp"
 

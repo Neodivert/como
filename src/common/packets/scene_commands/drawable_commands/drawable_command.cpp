@@ -32,8 +32,8 @@ DrawableCommand::DrawableCommand( SceneCommandType sceneCommandType ) :
 }
 
 
-DrawableCommand::DrawableCommand( DrawableID drawableID, SceneCommandType sceneCommandType ) :
-    SceneCommand( sceneCommandType ),
+DrawableCommand::DrawableCommand( UserID userID, DrawableID drawableID, SceneCommandType sceneCommandType ) :
+    SceneCommand( sceneCommandType, userID ),
     drawableID_( drawableID )
 {
 }

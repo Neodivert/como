@@ -29,11 +29,14 @@
 #include <functional>
 #include <map>
 #include <queue>
+#include <QObject>
 
 namespace como {
 
-class ServerInterface
+class ServerInterface : public QObject
 {
+    Q_OBJECT
+
     private:
         boost::asio::io_service io_service_;
         std::shared_ptr< boost::asio::io_service::work > work_;
@@ -45,11 +48,8 @@ class ServerInterface
         SceneUpdate sceneUpdatePacketFromServer_;
         SceneUpdate sceneUpdatePacketToServer_;
 
-        std::function< void (const SceneCommand*) > executeRemoteCommand_;
-
         // Queue with scene commands to be sended to the server.
         std::queue< SceneCommandConstPtr > sceneCommandsToServer_;
-
 
         boost::asio::deadline_timer timer_;
 
@@ -60,7 +60,7 @@ class ServerInterface
         /***
          * 1. Initialization and destruction
          ***/
-        ServerInterface( std::function< void (const SceneCommand*) > executeRemoteCommand, LogPtr log );
+        ServerInterface( LogPtr log );
         ~ServerInterface();
 
 
@@ -90,6 +90,12 @@ class ServerInterface
     private:
         void listen();
         void work();
+
+        /***
+         * 5. Signals
+         ***/
+    signals:
+        void commandReceived( SceneCommandConstPtr command );
 };
 
 typedef std::shared_ptr<ServerInterface> ServerInterfacePtr;

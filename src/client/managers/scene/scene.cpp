@@ -27,9 +27,11 @@ namespace como {
 
 Scene::Scene( LogPtr log ) :
     log_( log ),
-    server_( std::bind( &Scene::executeRemoteCommand, this, std::placeholders::_1 ), log_ ),
+    server_( log_ ),
     localUserNextDrawableIndex_( 1 )
 {
+    initOpenGL();
+
     initLinesBuffer();
 
     // Set the default contour color for those drawable that are
@@ -52,6 +54,14 @@ Scene::Scene( LogPtr log ) :
     // TODO: Change : Get the real local user ID.
     localUserID_ = 1;
 
+    // FIXME: Study why this is necessary.
+    qRegisterMetaType< SceneCommandConstPtr >();
+    qRegisterMetaType< SceneCommandConstPtr >( "SceneCommandConstPtr" );
+
+    // Signal / slot: when a command is received from server, execute it on
+    // the local scene.
+    QObject::connect( &server_, &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
+
     checkOpenGL( "Scene - constructor\n" );
 }
 
@@ -64,6 +74,49 @@ Scene::~Scene()
     // vertex attribute arrays.
     glDeleteBuffers( 1, &linesVBO );
     glDeleteVertexArrays( 1, &linesVAO );
+}
+
+
+void Scene::initOpenGL()
+{
+    // Create a surface format for OpenGL 4.2 Core.
+    // http://stackoverflow.com/questions/11000014/cant-set-desired-opengl-version-in-qglwidget
+    QSurfaceFormat format;
+    format.setMajorVersion( 4 );
+    format.setMinorVersion( 2 );
+    format.setProfile( QSurfaceFormat::CoreProfile );
+
+    // Initialize this offscreen surface with previous format.
+    setFormat( format );
+    create();
+
+    // Create an empty OpenGL context and make it use this surface's format.
+    oglContext_ = shared_ptr< QOpenGLContext >( new QOpenGLContext );
+    oglContext_->setFormat( format );
+
+    // Initialize the OpenGL context and make it the current one.
+    oglContext_->create();
+    oglContext_->makeCurrent( this );
+
+    // Obtain a functions object and resolve all entry points
+    QAbstractOpenGLFunctions* oglFunctions = oglContext_->versionFunctions();
+    if ( !oglFunctions ) {
+        qWarning( "Could not obtain OpenGL versions object" );
+        exit( 1 );
+    }
+    oglFunctions->initializeOpenGLFunctions();
+
+    // Load shaders
+    msl::ShaderLoader* shaderLoader = msl::ShaderLoader::getInstance();
+    shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
+    shaderLoader->destroy();
+
+    // Set clear color.
+    glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+
+    // Set OpenGL depth test.
+    glEnable( GL_DEPTH_TEST );
+    glDepthFunc( GL_LEQUAL );
 }
 
 
@@ -202,12 +255,19 @@ glm::vec3 Scene::getPivotPoint( const PivotPointMode& pivotPointMode )
 }
 
 
+shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
+{
+    return oglContext_;
+}
+
 /***
  * 4. Drawables administration
  ***/
 
 void Scene::addDrawable( DrawablePtr drawable, DrawableID drawableID )
 {
+    takeOpenGLContext();
+
     //unselectAll();
     // Create an unique ID for the new drawable.
     log_->debug( "Adding drawable to scene - ID: (", drawableID.creatorID,
@@ -217,6 +277,12 @@ void Scene::addDrawable( DrawablePtr drawable, DrawableID drawableID )
     nonSelectedDrawables[drawableID] = drawable;
 
     emit renderNeeded();
+}
+
+
+void Scene::takeOpenGLContext()
+{
+    oglContext_->makeCurrent( this );
 }
 
 
@@ -235,17 +301,26 @@ void Scene::addCube( const std::uint8_t* color )
     addCube( color, drawableID );
 
     // Send the command to the server.
-    server_.sendCommand( SceneCommandConstPtr( new CreateCube( drawableID, color ) ) );
+    server_.sendCommand( SceneCommandConstPtr( new CreateCube( localUserID_, drawableID, color ) ) );
 }
 
 
 void Scene::addCube( const std::uint8_t* color, DrawableID drawableID )
 {
-    // Create the cube.
-    DrawablePtr drawable = DrawablePtr( new Cube( color ) );
+    try {
+        takeOpenGLContext();
 
-    // Add the cube to the scene.
-    addDrawable( drawable, drawableID );
+        // Create the cube.
+        log_->debug( "S1, color: ", (unsigned int*)color, "\n" );
+        DrawablePtr drawable = DrawablePtr( new Cube( color ) );
+        log_->debug( "S2\n" );
+        // Add the cube to the scene.
+        addDrawable( drawable, drawableID );
+        log_->debug( "S3\n" );
+    }catch( std::exception& ex ){
+        std::cerr << ex.what() << std::endl;
+        throw;
+    }
 }
 
 
@@ -540,28 +615,6 @@ void Scene::deleteSelection( const unsigned int& userId )
 }
 
 
-void Scene::executeRemoteCommand( const SceneCommand* command )
-{
-    const UserConnected* userConnected = nullptr;
-
-    log_->debug( "Scene::executeRemoteCommand(", command, ")\n" );
-
-    switch( command->getType() ){
-        case SceneCommandType::USER_CONNECTED:
-            log_->debug( "\tCasting to USER_CONNECTED command\n" );
-            userConnected = dynamic_cast< const UserConnected* >( command );
-            log_->debug( "Adding user to scene [", userConnected->getName(), "] ...\n" );
-            addUser( std::shared_ptr< const UserConnected>( new UserConnected( *userConnected ) ) );
-            log_->debug( "Adding user to scene [", userConnected->getName(), "] ...OK\n" );
-        break;
-        default:
-            log_->debug( "Removing user from scene [", users_.at( command->getUserID() ).getName(), "]\n" );
-            removeUser( command->getUserID() );
-        break;
-    }
-}
-
-
 /***
  * 7. Updating
  ***/
@@ -686,5 +739,41 @@ void Scene::drawTransformGuideLine() const
     glEnable( GL_DEPTH_TEST );
 }
 
+
+/***
+ * 10. Slots
+ ***/
+
+void Scene::executeRemoteCommand( SceneCommandConstPtr command )
+{
+    const UserConnected* userConnected = nullptr;
+    const CreateCube* createCube = nullptr;
+
+    log_->debug( "Scene::executeRemoteCommand(", command, ")\n" );
+
+    switch( command->getType() ){
+        case SceneCommandType::USER_CONNECTED:
+            log_->debug( "\tCasting to USER_CONNECTED command\n" );
+            userConnected = dynamic_cast< const UserConnected* >( command.get() );
+            log_->debug( "Adding user to scene [", userConnected->getName(), "] ...\n" );
+            addUser( std::shared_ptr< const UserConnected>( new UserConnected( *userConnected ) ) );
+            log_->debug( "Adding user to scene [", userConnected->getName(), "] ...OK\n" );
+        break;
+        case SceneCommandType::USER_DISCONNECTED:
+            log_->debug( "Removing user from scene [", users_.at( command->getUserID() ).getName(), "]\n" );
+            removeUser( command->getUserID() );
+        break;
+        case SceneCommandType::CREATE_CUBE:
+            log_->debug( "Adding cube to the scene ...1\n" );
+            createCube = dynamic_cast< const CreateCube* >( command.get() );
+            log_->debug( "Adding cube to the scene ...2 (", createCube, ")\n" );
+            log_->debug( "\tAdding cube to the scene ...3 (color: ", createCube->getColor(), ")\n" );
+            log_->debug( "\tAdding cube to the scene ...4 (Creator ID: ", createCube->getDrawableID().creatorID, ")\n" );
+
+            addCube( createCube->getColor(), createCube->getDrawableID() );
+            log_->debug( "Adding cube to the scene ...OK\n" );
+        break;
+    }
+}
 
 } // namespace como

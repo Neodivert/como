@@ -25,9 +25,12 @@
 #include "../../models/3d/cube.hpp"
 #include "../../models/3d/camera.hpp"
 #include "../../models/users/public_user.hpp"
-#include "../../models/server/server_interface.hpp"
 #include "../../../common/utilities/log.hpp"
 #include "../../../common/packets/scene_commands/scene_commands.hpp"
+#include "../server_interface/server_interface.hpp"
+#include "../../models/utilities/msl/src/shader_loader.hpp"
+
+Q_DECLARE_METATYPE( como::SceneCommandConstPtr )
 
 namespace como {
 
@@ -36,6 +39,7 @@ enum class DrawableType
 {
     CUBE = 0
 };
+
 const unsigned int N_DRAWABLE_TYPES = 1;
 
 // Available drawable types (strings for GUI output).
@@ -71,7 +75,7 @@ enum LinesBufferOffset {
 
 typedef std::map< UserID, PublicUser > UsersMap;
 
-class Scene : public QObject
+class Scene : public QOffscreenSurface
 {
     Q_OBJECT
 
@@ -89,6 +93,7 @@ class Scene : public QObject
         UserID localUserID_;
         DrawableIndex localUserNextDrawableIndex_;
 
+        shared_ptr< QOpenGLContext > oglContext_;
     private:
         // Scene's non selected drawables.
         DrawablesSelection nonSelectedDrawables;
@@ -111,6 +116,8 @@ class Scene : public QObject
         Scene( LogPtr log );
         ~Scene();
 
+        void initOpenGL();
+
         virtual void connect( const char* host, const char* port, const char* userName ) = 0;
 
         void initLinesBuffer();
@@ -129,6 +136,7 @@ class Scene : public QObject
         void setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a );
         void setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny );
         glm::vec3 getPivotPoint( const PivotPointMode& pivotPointMode );
+        shared_ptr< QOpenGLContext > getOpenGLContext() const ;
 
 
         /***
@@ -136,6 +144,7 @@ class Scene : public QObject
          ***/
     private:
         void addDrawable( DrawablePtr drawable, DrawableID drawableID );
+        void takeOpenGLContext();
     public:
         void addCube( const std::uint8_t* color );
         void addCube( const std::uint8_t* color, DrawableID drawableID );
@@ -176,7 +185,7 @@ class Scene : public QObject
         void deleteSelection();
         void deleteSelection( const unsigned int& userId );
 
-        void executeRemoteCommand( const SceneCommand* command );
+
 
 
         /***
@@ -200,6 +209,12 @@ class Scene : public QObject
         void renderNeeded();
         void userConnected( UserConnectedConstPtr command );
         void userDisconnected( UserID userID );
+
+        /***
+         * 10. Slots
+         ***/
+    public slots:
+        void executeRemoteCommand( SceneCommandConstPtr command );
 };
 
 typedef std::shared_ptr< Scene > ScenePtr;

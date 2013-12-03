@@ -47,11 +47,11 @@ Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
         setSurfaceType( QWindow::OpenGLSurface );
 
         // Set this surface to the same format used by the app's shared OpenGL context.
-        setFormat( comoApp->getOpenGLContext()->format() );
+        setFormat( comoApp->getScene()->getOpenGLContext()->format() );
         destroy();
         create();
 
-        comoApp->getOpenGLContext()->makeCurrent( this );
+        comoApp->getScene()->getOpenGLContext()->makeCurrent( this );
 
         checkOpenGL( "Viewport constructor, before creating the camera" );
 
@@ -385,7 +385,7 @@ void Viewport::render()
     const glm::mat4 viewMatrix = camera->getViewMatrix();
 
     // Make shared OpenGL context current for this surface.
-    comoApp->getOpenGLContext()->makeCurrent( this );
+    comoApp->getScene()->getOpenGLContext()->makeCurrent( this );
 
     // Make viewport occuppy the full canvas.
     glViewport( 0, 0, width(), height() );
@@ -417,7 +417,7 @@ void Viewport::render()
     glEnable( GL_DEPTH_TEST );
 
     // Swap buffers.
-    comoApp->getOpenGLContext()->swapBuffers( this );
+    comoApp->getScene()->getOpenGLContext()->swapBuffers( this );
 }
 
 
@@ -427,7 +427,7 @@ void Viewport::render()
 
 void Viewport::setView( View view )
 {
-    comoApp->getOpenGLContext()->makeCurrent( this );
+    comoApp->getScene()->getOpenGLContext()->makeCurrent( this );
 
     camera->setView( view );
     comoApp->getScene()->renderNeeded();

@@ -28,8 +28,8 @@ namespace como {
 enum class SceneCommandType : std::uint8_t
 {
     USER_CONNECTED = 0,
-    USER_DISCONNECTED ,
-    CREATE_CUBE
+    USER_DISCONNECTED = 1,
+    CREATE_CUBE = 2
 };
 
 

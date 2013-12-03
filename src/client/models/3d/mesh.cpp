@@ -32,26 +32,26 @@ GLint Mesh::uniformColorLocation = -1;
 
 Mesh::Mesh( const std::uint8_t* color )
 {   
-    checkOpenGL( "Mesh constructor - 1" );
+    //checkOpenGL( "Mesh constructor - 1" );
     GLint currentShaderProgram;
 
     // Generate a VAO for the Mesh and bind it as the active one.
     glGenVertexArrays( 1, &vao );
     glBindVertexArray( vao );
 
-    checkOpenGL( "Mesh constructor - 2" );
+    //checkOpenGL( "Mesh constructor - 2" );
 
     // Generate a VBO and bind it for holding vertex data.
     glGenBuffers( 1, &vbo );
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
 
-    checkOpenGL( "Mesh constructor - 3" );
+    //checkOpenGL( "Mesh constructor - 3" );
 
     // Generate an EBO and bind it for holding vertex indices.
     glGenBuffers( 1, &ebo );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
 
-    checkOpenGL( "Mesh constructor - 4" );
+    //checkOpenGL( "Mesh constructor - 4" );
 
     if( uniformColorLocation == -1 ){
         checkOpenGL( "Mesh constructor - 4 b1" );
@@ -60,23 +60,23 @@ Mesh::Mesh( const std::uint8_t* color )
         // Get current shader program id.
         glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
 
-        checkOpenGL( "Mesh constructor - 4 b2" );
+        //checkOpenGL( "Mesh constructor - 4 b2" );
 
         // Get location of uniform shader variable "color".
         uniformColorLocation = glGetUniformLocation( currentShaderProgram, "color" );
 
-        checkOpenGL( "Mesh constructor - 4 b3" );
+        //checkOpenGL( "Mesh constructor - 4 b3" );
     }
 
-    checkOpenGL( "Mesh constructor - 5" );
+    //checkOpenGL( "Mesh constructor - 5" );
     // Set the mesh's color.
     if( color ){
-        setColor( color[0]/255.0f, color[1]/255.0f, color[2]/255.0f, 1.0f );
+        setColor( color[0] / 255.0f, color[1] / 255.0f, color[2] / 255.0f, 1.0f );
     }else{
         setColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
     }
 
-    checkOpenGL( "Mesh constructor - 6" );
+    //checkOpenGL( "Mesh constructor - 6" );
     // Set both original and transformed centroids.
     originalCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
     transformedCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );

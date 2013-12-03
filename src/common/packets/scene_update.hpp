@@ -57,7 +57,7 @@ class SceneUpdate : public Packet
          ***/
         std::uint32_t getLasCommandSent() const ;
         std::uint32_t getUnsyncCommands() const ;
-        const std::vector< SceneCommandConstPtr >* getCommands();
+        const std::vector< SceneCommandConstPtr >* getCommands() const ;
         virtual bool expectedType() const ;
 
 

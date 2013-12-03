@@ -39,7 +39,6 @@ HEADERS += \
     ../../src/client/models/3d/cube.hpp \
     ../../src/client/models/3d/camera.hpp \
     ../../src/client/models/utilities/msl/src/shader_loader.hpp \
-    ../../src/client/models/server/server_interface.hpp \
     ../../src/client/gui/connection_wizard/connection_wizard.hpp \
     ../../src/client/gui/connection_wizard/connect_server_page.hpp \
     ../../src/client/gui/connection_wizard/create_server_page.hpp \
@@ -63,7 +62,8 @@ HEADERS += \
     ../../src/client/managers/scene/public_scene.hpp \
     ../../src/client/models/3d/drawables_selection.hpp \
     ../../src/common/users/basic_user.hpp \
-    ../../src/common/packets/scene_commands/drawable_commands/create_cube.hpp
+    ../../src/common/packets/scene_commands/drawable_commands/create_cube.hpp \
+    ../../src/client/managers/server_interface/server_interface.hpp
 
 SOURCES += \
     ../../src/client/gui/viewport.cpp \
@@ -81,7 +81,6 @@ SOURCES += \
     ../../src/client/models/3d/camera.cpp \
     ../../src/client/models/utilities/msl/src/shader_loader.cpp \
     ../../src/client/main.cpp \
-    ../../src/client/models/server/server_interface.cpp \
     ../../src/client/gui/connection_wizard/connection_wizard.cpp \
     ../../src/client/gui/connection_wizard/connect_server_page.cpp \
     ../../src/client/gui/connection_wizard/create_server_page.cpp \
@@ -98,4 +97,5 @@ SOURCES += \
     ../../src/common/packets/scene_commands/drawable_commands/drawable_command.cpp \
     ../../src/client/managers/scene/public_scene.cpp \
     ../../src/common/users/basic_user.cpp \
-    ../../src/common/packets/scene_commands/drawable_commands/create_cube.cpp
+    ../../src/common/packets/scene_commands/drawable_commands/create_cube.cpp \
+    ../../src/client/managers/server_interface/server_interface.cpp

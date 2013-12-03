@@ -37,7 +37,7 @@ ComoApp::ComoApp()
 
     // Create an OpenGL engine (used for creating and initializing
     // an OpenGL context and a scene.
-    OpenGLEngine openGLEngine( log_ );
+    //OpenGLEngine openGLEngine( log_ );
 
     // Set default app mode.
     appMode = AppMode::OBJECT;
@@ -54,13 +54,12 @@ ComoApp::ComoApp()
     checkOpenGL( "ComoApp constructor - before creating OpenGL context and scene" );
 
     // Set default OpenGL context.
-    oglContext = openGLEngine.createOpenGLContext();
+    //oglContext = openGLEngine.createOpenGLContext();
 
     // Set default scene.
-    scene = openGLEngine.createPublicScene( oglContext.get() );
+    scene = ScenePtr( new PublicScene( log_ ) );
 
-
-    log_->debug( "OpenGL context is valid?: ", oglContext->isValid(), "\n" );
+    log_->debug( "OpenGL context is valid?: ", getScene()->getOpenGLContext()->isValid(), "\n" );
     checkOpenGL( "ComoApp constructor - after creating OpenGL context and scene" );
 }
 
@@ -117,11 +116,6 @@ PivotPointMode ComoApp::getPivotPointMode() const
 ScenePtr ComoApp::getScene() const
 {
     return scene;
-}
-
-shared_ptr< QOpenGLContext > ComoApp::getOpenGLContext() const
-{
-    return oglContext;
 }
 
 LogPtr ComoApp::getLog() const

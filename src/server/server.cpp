@@ -164,6 +164,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
                         userAcceptedPacket.getName(),
                         std::move( newSocket_ ),
                         std::bind( &Server::deleteUser, this, std::placeholders::_1 ),
+                        std::bind( &Server::broadcast, this ),
                         commandsHistoric_,
                         log_
                     )
@@ -212,6 +213,9 @@ void Server::addCommand( SceneCommandConstPtr sceneCommand )
         break;
         case SceneCommandType::USER_DISCONNECTED:
             log_->debug( "Command added to historic [USER_DISCONNECTED]\n" );
+        break;
+        case SceneCommandType::CREATE_CUBE:
+            log_->debug( "Command added to historic [CREATE_CUBE]\n" );
         break;
     }
 

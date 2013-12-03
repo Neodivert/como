@@ -45,6 +45,7 @@ class PublicUser : public BasicUser
         SocketPtr socket_;
 
         std::function<void (UserID)> removeUserCallback_;
+        std::function<void ()> broadcastCallback_;
 
         std::uint8_t nextCommand_;
         std::uint8_t nCommandsInLastPacket_;
@@ -57,7 +58,7 @@ class PublicUser : public BasicUser
         bool synchronizing_;
 
 
-        CommandsHistoricConstPtr commandsHistoric_;
+        CommandsHistoricPtr commandsHistoric_;
 
         LogPtr log_;
 
@@ -67,7 +68,8 @@ class PublicUser : public BasicUser
          ***/
         PublicUser( UserID id, const char* name, Socket socket,
                     std::function<void (UserID)> removeUserCallback,
-                    CommandsHistoricConstPtr commandsHistoric,
+                    std::function<void ()> broadcastCallback,
+                    CommandsHistoricPtr commandsHistoric,
                     LogPtr log );
         ~PublicUser();
 

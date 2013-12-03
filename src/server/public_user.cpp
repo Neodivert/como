@@ -28,11 +28,13 @@ namespace como {
 
 PublicUser::PublicUser( UserID id, const char* name, Socket socket,
             std::function<void (UserID)> removeUserCallback,
-            CommandsHistoricConstPtr commandsHistoric,
+            std::function<void ()> broadcastCallback,
+            CommandsHistoricPtr commandsHistoric,
             LogPtr log ) :
     BasicUser( id, name ),
     socket_( SocketPtr( new Socket( std::move( socket ) ) ) ),
     removeUserCallback_( removeUserCallback ),
+    broadcastCallback_( broadcastCallback ),
     nextCommand_( 0 ),
     synchronizing_( false ),
     commandsHistoric_( commandsHistoric ),
@@ -73,24 +75,44 @@ void PublicUser::sync()
 void PublicUser::readSceneUpdate()
 {
     mutex_.lock();
-    log_->debug( "Waiting for SCENE_UPDATE from user (", getID(), ")\n"  );
+    log_->debug( "Waiting for SCENE_UPDATE from user (", getID(), ") - 1 ...\n"  );
     sceneUpdatePacketFromUser_.asyncRecv( socket_, boost::bind( &PublicUser::onReadSceneUpdate, this, _1, _2 ) );
+    log_->debug( "Waiting for SCENE_UPDATE from user (", getID(), ") - 2 ...\n"  );
     mutex_.unlock();
 }
 
 
 void PublicUser::onReadSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet )
 {
+    unsigned int i;
+    const std::vector< SceneCommandConstPtr >* commands = nullptr;
+
     mutex_.lock();
     if( errorCode ){
         log_->error( "ERROR reading SCENE_UPDATE packet: ", errorCode.message(), "\n" );
         removeUserCallback_( getID() );
+
+        mutex_.unlock();
     }else{
         // FIXME: Make use of the packet.
-        log_->debug( "SCENE_UPDATE received\n" );
+
+        // Get the commands from the packet.
+        commands = ( dynamic_cast< const SceneUpdate *>( packet.get() ) )->getCommands();
+
+        log_->debug( "SCENE_UPDATE received with (", commands->size(), ") commands\n" );
+
+        // Add the commands to the historic.
+        for( i=0; i<commands->size(); i++ ){
+            log_->debug( "SCENE_UPDATE received with (", commands->size(), ") commands - adding command to historic [", i, "] ...\n" );
+            commandsHistoric_->addCommand( (*commands)[i] );
+            log_->debug( "SCENE_UPDATE received with (", commands->size(), ") commands - adding command to historic [", i, "] ...OK\n" );
+        }
+
+        mutex_.unlock();
+
+        broadcastCallback_();
         readSceneUpdate();
     }
-    mutex_.unlock();
 }
 
 

@@ -94,6 +94,7 @@ const char* SceneUpdate::unpackBody( const char* buffer )
     std::uint8_t nCommands = 0;
     SceneCommandPtr sceneCommandPtr;
 
+
     // Pack the packet's body.
     packer::unpack( lastCommandSent_, buffer );
     packer::unpack( nUnsyncCommands_, buffer );
@@ -101,7 +102,10 @@ const char* SceneUpdate::unpackBody( const char* buffer )
     commands_.clear();
     commands_.reserve( nCommands );
 
+    std::cout << "Unpacking (" << (unsigned int)nCommands << ") commands ..." << std::endl;
+
     for( i=0; i<nCommands; i++ ){
+        std::cout << "Unpacking command [" << i << "] ..." << std::endl;
         switch( SceneCommand::getType( buffer ) ){
             case SceneCommandType::USER_CONNECTED:
                 sceneCommandPtr =  SceneCommandPtr( new UserConnected );
@@ -110,13 +114,18 @@ const char* SceneUpdate::unpackBody( const char* buffer )
                 sceneCommandPtr =  SceneCommandPtr( new SceneCommand( SceneCommandType::USER_DISCONNECTED ) );
             break;
             case SceneCommandType::CREATE_CUBE:
+                std::cout << "CREATE_CUBE" << std::endl;
                 sceneCommandPtr =  SceneCommandPtr( new CreateCube );
+            break;
+            default:
+                std::cout << "WTF? (" << static_cast< unsigned int >( SceneCommand::getType( buffer ) ) << ")" << std::endl;
             break;
         }
         buffer = sceneCommandPtr->unpack( buffer );
         commands_.push_back( sceneCommandPtr );
     }
 
+    std::cout << "Unpacking (" << nCommands << ") ...OK" << std::endl;
     // Return the updated buffer ptr.
     return buffer;
 }
@@ -138,7 +147,7 @@ std::uint32_t SceneUpdate::getUnsyncCommands() const
 }
 
 
-const std::vector< SceneCommandConstPtr >* SceneUpdate::getCommands()
+const std::vector< SceneCommandConstPtr >* SceneUpdate::getCommands() const
 {
     return &commands_;
 }

@@ -26,10 +26,9 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-ServerInterface::ServerInterface( std::function< void (const SceneCommand*) > executeRemoteCommand, LogPtr log ) :
+ServerInterface::ServerInterface( LogPtr log ) :
     work_( std::shared_ptr< boost::asio::io_service::work >( new boost::asio::io_service::work( io_service_ ) ) ),
     socket_( SocketPtr( new boost::asio::ip::tcp::socket( io_service_ ) ) ),
-    executeRemoteCommand_( executeRemoteCommand ),
     timer_( io_service_ ),
     log_( log )
 {   
@@ -163,7 +162,8 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
     sceneCommands = sceneUpdate->getCommands();
     for( i=0; i<sceneCommands->size(); i++ ){
         log_->debug( "Executing remote command\n" );
-        executeRemoteCommand_( ( ( *sceneCommands )[i] ).get() );
+        // TODO: Make thread-safe.
+        emit commandReceived( ( *sceneCommands )[i] );
 
         switch( ( ( *sceneCommands )[i] )->getType() ){
             case SceneCommandType::USER_CONNECTED:
@@ -188,8 +188,6 @@ void ServerInterface::onSceneUpdateSended( const boost::system::error_code& erro
         log_->error( "Error when sending packet: ", errorCode.message(), "\n" );
         return;
     }
-
-
 
     log_->debug( "SCENE_UPDATE sent to the server - nCommands ", packet, "\n" );
 
@@ -283,8 +281,5 @@ void ServerInterface::work()
 
     log_->debug( "[", boost::this_thread::get_id(), "] thread end\n" );
 }
-
-
-
 
 } // namespace como

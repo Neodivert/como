@@ -35,7 +35,7 @@ class CreateCube : public DrawableCommand
          * 1. Initialization and destruction
          ***/
         CreateCube();
-        CreateCube( DrawableID drawableID, const std::uint8_t* color );
+        CreateCube( UserID userID, DrawableID drawableID, const std::uint8_t* color );
         CreateCube( const CreateCube& b );
 
         virtual ~CreateCube(){}
