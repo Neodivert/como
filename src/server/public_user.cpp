@@ -26,25 +26,31 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-PublicUser::PublicUser( UserID id, const char* name, Socket socket,
+PublicUser::PublicUser( UserID id, const char* name,
+            std::shared_ptr< boost::asio::io_service > io_service,
+            Socket socket,
             std::function<void (UserID)> removeUserCallback,
             std::function<void ()> broadcastCallback,
             CommandsHistoricPtr commandsHistoric,
             LogPtr log ) :
     BasicUser( id, name ),
+    io_service_( io_service ),
     socket_( SocketPtr( new Socket( std::move( socket ) ) ) ),
     removeUserCallback_( removeUserCallback ),
     broadcastCallback_( broadcastCallback ),
     nextCommand_( 0 ),
     synchronizing_( false ),
     commandsHistoric_( commandsHistoric ),
-    log_( log )
+    log_( log ),
+    updateRequested_( false )
 {
     log_->debug( "Session (", getID(), ") created\n" );
 
     readSceneUpdate();
 
-    sync();
+    //sync();
+
+    requestUpdate();
 }
 
 
@@ -55,10 +61,28 @@ PublicUser::~PublicUser()
 
 
 /***
- * 2.
+ * 2. User updating
  ***/
 
-void PublicUser::sync()
+void PublicUser::requestUpdate()
+{
+    mutex_.lock();
+
+    log_->debug( "PublicUser (", getID(), ") - Requesting update\n" );
+
+    if( !updateRequested_ && needsSceneUpdate() ){
+        updateRequested_ = true;
+        io_service_->post( std::bind( &PublicUser::sendNextSceneUpdate, this ) );
+        log_->debug( "PublicUser (", getID(), ") - Update requested\n" );
+    }else{
+        log_->debug( "PublicUser (", getID(), ") - Updated not needed (", updateRequested_, ", ", needsSceneUpdate(), "\n" );
+    }
+
+    mutex_.unlock();
+}
+
+/*
+void PublicUser::update()
 {
     mutex_.lock();
     if( !synchronizing_ && needsSceneUpdate() ){
@@ -66,6 +90,7 @@ void PublicUser::sync()
     }
     mutex_.unlock();
 }
+*/
 
 
 /***
@@ -110,7 +135,7 @@ void PublicUser::onReadSceneUpdate( const boost::system::error_code& errorCode, 
 
         mutex_.unlock();
 
-        broadcastCallback_();
+        //broadcastCallback_();
         readSceneUpdate();
     }
 }
@@ -136,6 +161,8 @@ void PublicUser::sendNextSceneUpdate()
 {
     mutex_.lock();
 
+    updateRequested_ = false;
+
     // Create and prepare a SCENE_UPDATE packet.
     outSceneUpdatePacket_.clear();
     nextCommand_ = commandsHistoric_->fillSceneUpdatePacket( outSceneUpdatePacket_, nextCommand_, MAX_COMMANDS_PER_PACKET, getID() );
@@ -146,11 +173,13 @@ void PublicUser::sendNextSceneUpdate()
     // Get the number of commands in the packet.
     nCommandsInLastPacket_ = (std::uint8_t)( outSceneUpdatePacket_.getCommands()->size() );
 
-    // Pack the previous packet and send it to the client.
-    outSceneUpdatePacket_.asyncSend( socket_, boost::bind( &PublicUser::onWriteSceneUpdate, this, _1, _2 ) );
+    if( nCommandsInLastPacket_ ){
+        // Pack the previous packet and send it to the client.
+        outSceneUpdatePacket_.asyncSend( socket_, boost::bind( &PublicUser::onWriteSceneUpdate, this, _1, _2 ) );
 
-    // Signal that the user is being synchronized (permorming an async send).
-    synchronizing_ = true;
+        // Signal that the user is being synchronized (permorming an async send).
+        synchronizing_ = true;
+    }
 
     mutex_.unlock();
 }
@@ -174,8 +203,10 @@ void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode,
         log_->debug( "SCENE_UPDATE sended (nextCommand_: ", (int)nextCommand_, ")\n" );
 
         if( needsSceneUpdate() ){
-            sendNextSceneUpdate();
+            requestUpdate();
+            //sendNextSceneUpdate();
         }else{
+            updateRequested_ = false;
             synchronizing_ = false;
         }
     }

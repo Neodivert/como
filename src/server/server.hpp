@@ -47,7 +47,7 @@ class Server
 {
     private:
         // I/O service.
-        boost::asio::io_service io_service_;
+        std::shared_ptr< boost::asio::io_service > io_service_;
 
         // Aceptor
         boost::asio::ip::tcp::acceptor acceptor_;

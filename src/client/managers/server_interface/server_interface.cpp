@@ -244,7 +244,7 @@ void ServerInterface::sendPendingCommands()
 void ServerInterface::setTimer()
 {
     // Set a timer for sending pending commands to the server.
-    timer_.expires_from_now( boost::posix_time::milliseconds( 2000 ) );
+    timer_.expires_from_now( boost::posix_time::milliseconds( 100 ) );
     timer_.async_wait( boost::bind( &ServerInterface::sendPendingCommands, this ) );
 }
 

@@ -24,11 +24,12 @@ namespace como {
 
 Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThreads ) :
     // Initialize the server parameters.
-    acceptor_( io_service_ ),
-    work_( io_service_ ),
+    io_service_( std::shared_ptr< boost::asio::io_service >( new boost::asio::io_service ) ),
+    acceptor_( *io_service_ ),
+    work_( *io_service_ ),
     N_THREADS( nThreads ),
     MAX_SESSIONS( maxSessions ),
-    newSocket_( io_service_ ),
+    newSocket_( *io_service_ ),
     newId_( 1 ),
     port_( port_ )
 {
@@ -40,7 +41,7 @@ Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThre
     }
 
     // Initialize the commands historic.
-    commandsHistoric_ = CommandsHistoricPtr( new CommandsHistoric );
+    commandsHistoric_ = CommandsHistoricPtr( new CommandsHistoric( std::bind( &Server::broadcast, this ) ) );
 
     // Initialize the log
     log_ = LogPtr( new Log );
@@ -56,7 +57,7 @@ void Server::run()
 {
     // Create a TCP resolver and a query for getting the endpoint the server
     // must listen to.
-    boost::asio::ip::tcp::resolver resolver( io_service_ );
+    boost::asio::ip::tcp::resolver resolver( *io_service_ );
     boost::asio::ip::tcp::resolver::query query( "localhost", boost::lexical_cast< std::string >( port_ ) );
 
     try{
@@ -76,7 +77,7 @@ void Server::run()
         std::cin.get();
 
         // Stop the I/O processing.
-        io_service_.stop();
+        io_service_->stop();
 
         // TODO: Are these methods called in their corresponding destructors?
         // boost::system::error_code errorCode;
@@ -96,8 +97,9 @@ void Server::run()
 
 void Server::broadcast()
 {
+    log_->debug( "Server - broadcasting\n" );
     for( unsigned int i=0; i<users_.size(); i++ ){
-        users_[i]->sync();
+        users_[i]->requestUpdate();
     }
 }
 
@@ -162,6 +164,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
                     std::make_shared<PublicUser>(
                         newId_,
                         userAcceptedPacket.getName(),
+                        io_service_,
                         std::move( newSocket_ ),
                         std::bind( &Server::deleteUser, this, std::placeholders::_1 ),
                         std::bind( &Server::broadcast, this ),
@@ -203,7 +206,7 @@ void Server::addCommand( SceneCommandConstPtr sceneCommand )
 
     // A new command has been added to the historic. Broadcast a signal
     // informing about it to all the users.
-    broadcast();
+    //broadcast();
 
     // Write the full historic in the log.
     log_->lock();
@@ -302,7 +305,7 @@ void Server::workerThread()
         try
         {
             boost::system::error_code ec;
-            io_service_.run( ec );
+            io_service_->run( ec );
             if( ec )
             {
                 log_->error( "[", boost::this_thread::get_id(), "] Error: ", ec.message(), "\n" );

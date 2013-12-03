@@ -52,23 +52,13 @@ char* CreateCube::pack( char* buffer ) const
 {
     unsigned int i;
 
-    char* auxBuffer = buffer;
-
     // Pack the DrawableCommand struct fields.
     buffer = DrawableCommand::pack( buffer );
 
     // Pack the color.
     for( i = 0; i < 4; i++ ){
         packer::pack( color_[i], buffer );
-        std::cout << (int)(color_[i]) << ":(" << (int)(*(buffer - 1)) << ")" << std::endl;
     }
-
-
-    std::cout << "(CREATE_CUBE) - auxBuffer: ";
-    for( unsigned int i = 0; i < getPacketSize(); i++ ){
-        std::cout << (int)(auxBuffer[i]) << ", ";
-    }
-    std::cout << std::endl;
 
     // Return the updated buffer pointer.
     return buffer;
@@ -79,19 +69,12 @@ const char* CreateCube::CreateCube::unpack( const char* buffer )
 {
     unsigned int i;
 
-    std::cout << "(CREATE_CUBE) - buffer: ";
-    for( unsigned int i = 0; i < getPacketSize(); i++ ){
-        std::cout << (int)(buffer[i]) << ", ";
-    }
-    std::cout << std::endl;
-
     // Unpack the DrawableCommand struct fields.
     buffer = DrawableCommand::unpack( buffer );
 
     // Unpak the color.
     for( i = 0; i < 4; i++ ){
         packer::unpack( color_[i], buffer );
-        std::cout << (int)( color_[i] ) << ":(" << (int)(*(buffer - 1)) << ")" << std::endl;
     }
 
     // Return the updated buffer pointer.

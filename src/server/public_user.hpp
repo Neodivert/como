@@ -42,6 +42,9 @@ typedef std::shared_ptr< Socket > SocketPtr;
 class PublicUser : public BasicUser
 {
     private:
+        // I/O service.
+        std::shared_ptr< boost::asio::io_service > io_service_;
+
         SocketPtr socket_;
 
         std::function<void (UserID)> removeUserCallback_;
@@ -62,11 +65,17 @@ class PublicUser : public BasicUser
 
         LogPtr log_;
 
+        bool updateRequested_;
+
+
+
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        PublicUser( UserID id, const char* name, Socket socket,
+        PublicUser( UserID id, const char* name,
+                    std::shared_ptr< boost::asio::io_service > io_service,
+                    Socket socket,
                     std::function<void (UserID)> removeUserCallback,
                     std::function<void ()> broadcastCallback,
                     CommandsHistoricPtr commandsHistoric,
@@ -75,11 +84,12 @@ class PublicUser : public BasicUser
 
 
         /***
-         * 2.
+         * 2. User updating
          ***/
-        // TODO: Change to a better name, with a "Send" or "Write" somewhere.
-        void sync();
-
+        void requestUpdate();
+    //private:
+        //void sync();
+    public:
 
         /***
          * 3. Socket reading

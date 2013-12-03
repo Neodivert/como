@@ -34,6 +34,9 @@ class CommandsHistoric
         // List of commands in the historic.
         CommandsList commands_;
 
+        // Function to be called when a command is added to the historic.
+        std::function< void () > broadcastCallback_;
+
         // Mutex for exclusive access to the previous list of commands.
         // The mutable keyword allow us to modify the mutex (by calling lock()
         // and unlock()) while preserving the logical constness of a given
@@ -41,7 +44,14 @@ class CommandsHistoric
         // http://stackoverflow.com/questions/105014/does-the-mutable-keyword-have-any-purpose-other-than-allowing-the-variable-to
         mutable std::mutex commandsMutex_;
 
+
     public:
+        /***
+         * 1. Initialization
+         ***/
+        CommandsHistoric( std::function< void () > broadcastCallback );
+
+
         /***
          * 2. Getters
          ***/
