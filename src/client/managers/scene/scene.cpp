@@ -373,12 +373,37 @@ void Scene::selectDrawable( DrawableID drawableID )
 
 void Scene::selectDrawable( DrawableID drawableID, UserID userID )
 {
+    bool drawableFound = false;
+    UsersMap::iterator currentUser;
+
     // Retrieve user's selection.
     DrawablesSelection& userSelection = users_.at( userID ).selection;
 
-    // Move the selected drawable from non selected ones to
-    // user's selection.
-    userSelection[drawableID] = nonSelectedDrawables[drawableID];
+    // Check if the desired drawable is among the non selected ones, and move
+    // it to the user's selection in that case.
+    if( nonSelectedDrawables.count( drawableID ) ){
+        userSelection[drawableID] = nonSelectedDrawables[drawableID];
+        nonSelectedDrawables.erase( drawableID );
+
+        drawableFound = true;
+    }
+
+    // If not found, search the desired drawable among the user's selections.
+    if( !drawableFound ){
+        currentUser = users_.begin();
+        while( !drawableFound && ( currentUser != users_.end()) ){
+            if( currentUser->second.selection.count( drawableID ) ){
+                userSelection[drawableID] = currentUser->second.selection.at( drawableID );
+                currentUser->second.selection.erase( drawableID );
+
+                drawableFound = true;
+            }
+        }
+    }
+
+    if( !drawableFound ){
+        throw std::runtime_error( "ERROR when selecting drawable. Drawable not found" );
+    }
 
     // Update the selection centroid.
     updateSelectionCentroid( userID );
@@ -471,7 +496,17 @@ DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool a
         log_->debug( "FINAL CLOSEST OBJECT: (", closestObject.creatorID, ", ", closestObject.drawableIndex, ")\n",
                      "\t min t: ", minT, ")\n",
                      "\t min distance: ", glm::distance( glm::vec3( 0.0f, 0.0f, 0.0f ), r1 * t ), "\n" );
-        selectDrawable( closestObject );
+
+        // Send a SELECT_DRAWABLE command to the server.
+        server_.sendCommand( SceneCommandConstPtr(
+                                 new SelectDrawable( localUserID_,
+                                                     closestObject,
+                                                     addToSelection ) ) );
+
+        // Insert the selected drawable's ID in a queue of pending selections.
+        localUserPendingSelections_.push( closestObject );
+
+        //selectDrawable( closestObject );
     }else{
         log_->debug( "NO CLOSEST OBJECT. Unselecting all\n" );
         unselectAll( localUserID_ );
@@ -750,6 +785,9 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
     const CreateCube* createCube = nullptr;
     const SelectionResponse* selectionResponse = nullptr;
     const SelectDrawable* selectDrawable = nullptr;
+
+    DrawableID pendingSelection;
+
     unsigned int i;
     bool selectionConfirmed;
 
@@ -788,8 +826,11 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
                 selectionConfirmed = selectionResponse->getSelectionConfirmed() & (1 << i);
                 log_->debug( (int)( selectionConfirmed ) );
                 if( selectionConfirmed ){
+                    pendingSelection = localUserPendingSelections_.front();
+                    this->selectDrawable( pendingSelection );
                     //selectDrawable( selectDrawable->getDrawableID() );
                 }
+                localUserPendingSelections_.pop();
             }
             log_->debug( ")\n" );
             log_->unlock();

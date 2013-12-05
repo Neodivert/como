@@ -68,7 +68,6 @@ class PublicUser : public BasicUser
         bool updateRequested_;
 
 
-
     public:
         /***
          * 1. Initialization and destruction

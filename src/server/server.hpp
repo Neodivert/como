@@ -38,10 +38,13 @@
 #include "../common/packets/packets.hpp"
 #include "../common/utilities/log.hpp"
 #include "commands_historic.hpp"
+#include <map>
 
 using boost::asio::ip::tcp;
 
 namespace como {
+
+typedef std::map< DrawableID, UserID > DrawableOwners;
 
 class Server
 {
@@ -85,7 +88,7 @@ class Server
         // Historic of commands performed on the scene.
         CommandsHistoricPtr commandsHistoric_;
 
-        //CommandsList commandsHistoric_;
+        DrawableOwners drawableOwners_;
 
         // Log
         LogPtr log_;

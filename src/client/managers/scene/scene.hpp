@@ -29,6 +29,7 @@
 #include "../../../common/packets/scene_commands/scene_commands.hpp"
 #include "../server_interface/server_interface.hpp"
 #include "../../models/utilities/msl/src/shader_loader.hpp"
+#include <queue>
 
 Q_DECLARE_METATYPE( como::SceneCommandConstPtr )
 
@@ -92,6 +93,8 @@ class Scene : public QOffscreenSurface
         // Local user's ID.
         UserID localUserID_;
         DrawableIndex localUserNextDrawableIndex_;
+
+        std::queue< DrawableID > localUserPendingSelections_;
 
         shared_ptr< QOpenGLContext > oglContext_;
     private:
