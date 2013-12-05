@@ -178,6 +178,9 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
             case SceneCommandType::SELECTION_RESPONSE:
                 log_->debug( "\tCommand[", i, "]: SELECTION_RESPONSE" );
             break;
+            case SceneCommandType::SELECT_DRAWABLE:
+                log_->debug( "\tCommand[", i, "]: SELECT_DRAWABLE" );
+            break;
         }
     }
 

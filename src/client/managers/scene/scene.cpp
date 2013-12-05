@@ -749,7 +749,9 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
     const UserConnected* userConnected = nullptr;
     const CreateCube* createCube = nullptr;
     const SelectionResponse* selectionResponse = nullptr;
+    const SelectDrawable* selectDrawable = nullptr;
     unsigned int i;
+    bool selectionConfirmed;
 
     log_->debug( "Scene::executeRemoteCommand(", command, ")\n" );
 
@@ -783,10 +785,21 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
                          selectionResponse->getNSelections(),
                          "), selectionConfirmed_(" );
             for( i = 0; i < selectionResponse->getNSelections(); i++ ){
-                log_->debug( (int)( selectionResponse->getSelectionConfirmed() & (1 << i) ) );
+                selectionConfirmed = selectionResponse->getSelectionConfirmed() & (1 << i);
+                log_->debug( (int)( selectionConfirmed ) );
+                if( selectionConfirmed ){
+                    //selectDrawable( selectDrawable->getDrawableID() );
+                }
             }
             log_->debug( ")\n" );
             log_->unlock();
+        break;
+        case SceneCommandType::SELECT_DRAWABLE:
+            selectDrawable = dynamic_cast< const SelectDrawable* >( command.get() );
+
+            log_->debug( "Select drawable" );
+
+            this->selectDrawable( selectDrawable->getDrawableID(), selectDrawable->getUserID() );
         break;
     }
 }

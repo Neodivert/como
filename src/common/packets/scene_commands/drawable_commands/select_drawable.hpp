@@ -17,39 +17,26 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SCENE_COMMAND_HPP
-#define SCENE_COMMAND_HPP
+#ifndef SELECT_DRAWABLE_HPP
+#define SELECT_DRAWABLE_HPP
 
-#include "../packable.hpp"
-#include <memory>
+#include "drawable_command.hpp"
 
 namespace como {
 
-enum class SceneCommandType : std::uint8_t
-{
-    USER_CONNECTED = 0,
-    USER_DISCONNECTED = 1,
-    CREATE_CUBE = 2,
-    SELECTION_RESPONSE = 3,
-    SELECT_DRAWABLE = 4
-};
-
-
-class SceneCommand : public Packable
+class SelectDrawable : public DrawableCommand
 {
     private:
-        SceneCommandType type_;
-        UserID userID_;
+        std::uint8_t addToSelection_;
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Initialization and destruction.
          ***/
-        SceneCommand( SceneCommandType type );
-        SceneCommand( SceneCommandType type, UserID userID );
-        SceneCommand( const SceneCommand& b );
+        SelectDrawable( UserID userID, DrawableID drawableID, bool addToSelection );
+        SelectDrawable( const SelectDrawable& b );
 
-        virtual ~SceneCommand(){}
+        virtual ~SelectDrawable(){}
 
 
         /***
@@ -63,20 +50,16 @@ class SceneCommand : public Packable
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const ;
-        SceneCommandType getType() const ;
-        static SceneCommandType getType( const char* buffer );
-        UserID getUserID() const ;
+        virtual SceneCommandType getType() const ;
+        std::uint8_t getAddToSelection() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setUserID( const UserID& userID );
+        void setAddToSelection( std::uint8_t addToSelection );
 };
-
-typedef std::shared_ptr< SceneCommand > SceneCommandPtr;
-typedef std::shared_ptr< const SceneCommand > SceneCommandConstPtr;
 
 } // namespace como
 
-#endif // SCENE_COMMAND_HPP
+#endif // SELECT_DRAWABLE_HPP

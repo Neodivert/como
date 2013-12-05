@@ -64,7 +64,8 @@ HEADERS += \
     ../../src/common/users/basic_user.hpp \
     ../../src/common/packets/scene_commands/drawable_commands/create_cube.hpp \
     ../../src/client/managers/server_interface/server_interface.hpp \
-    ../../src/common/packets/scene_commands/selection_response.hpp
+    ../../src/common/packets/scene_commands/selection_response.hpp \
+    ../../src/common/packets/scene_commands/drawable_commands/select_drawable.hpp
 
 SOURCES += \
     ../../src/client/gui/viewport.cpp \
@@ -100,4 +101,5 @@ SOURCES += \
     ../../src/common/users/basic_user.cpp \
     ../../src/common/packets/scene_commands/drawable_commands/create_cube.cpp \
     ../../src/client/managers/server_interface/server_interface.cpp \
-    ../../src/common/packets/scene_commands/selection_response.cpp
+    ../../src/common/packets/scene_commands/selection_response.cpp \
+    ../../src/common/packets/scene_commands/drawable_commands/select_drawable.cpp
