@@ -220,6 +220,8 @@ void Server::addCommand( SceneCommandConstPtr sceneCommand )
         case SceneCommandType::CREATE_CUBE:
             log_->debug( "Command added to historic [CREATE_CUBE]\n" );
         break;
+        case SceneCommandType::SELECTION_RESPONSE:
+        break;
     }
 
 

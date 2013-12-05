@@ -175,6 +175,9 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
             case SceneCommandType::CREATE_CUBE:
                 log_->debug( "\tCommand[", i, "]: CREATE_CUBE" );
             break;
+            case SceneCommandType::SELECTION_RESPONSE:
+                log_->debug( "\tCommand[", i, "]: SELECTION_RESPONSE" );
+            break;
         }
     }
 

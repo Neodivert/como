@@ -748,6 +748,8 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
 {
     const UserConnected* userConnected = nullptr;
     const CreateCube* createCube = nullptr;
+    const SelectionResponse* selectionResponse = nullptr;
+    unsigned int i;
 
     log_->debug( "Scene::executeRemoteCommand(", command, ")\n" );
 
@@ -772,6 +774,19 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
 
             addCube( createCube->getColor(), createCube->getDrawableID() );
             log_->debug( "Adding cube to the scene ...OK\n" );
+        break;
+        case SceneCommandType::SELECTION_RESPONSE:
+            selectionResponse = dynamic_cast< const SelectionResponse* >( command.get() );
+
+            log_->lock();
+            log_->debug( "Selection response received from server - nSelections(",
+                         selectionResponse->getNSelections(),
+                         "), selectionConfirmed_(" );
+            for( i = 0; i < selectionResponse->getNSelections(); i++ ){
+                log_->debug( (int)( selectionResponse->getSelectionConfirmed() & (1 << i) ) );
+            }
+            log_->debug( ")\n" );
+            log_->unlock();
         break;
     }
 }

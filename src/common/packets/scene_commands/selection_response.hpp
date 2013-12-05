@@ -17,38 +17,33 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SCENE_COMMAND_HPP
-#define SCENE_COMMAND_HPP
+#ifndef SELECTION_RESPONSE_HPP
+#define SELECTION_RESPONSE_HPP
 
-#include "../packable.hpp"
-#include <memory>
+#include "scene_command.hpp"
 
 namespace como {
 
-enum class SceneCommandType : std::uint8_t
-{
-    USER_CONNECTED = 0,
-    USER_DISCONNECTED = 1,
-    CREATE_CUBE = 2,
-    SELECTION_RESPONSE = 3
-};
+const std::uint8_t MAX_SELECTION_CONFIRMATIONS = 32;
 
-
-class SceneCommand : public Packable
+class SelectionResponse : public SceneCommand
 {
     private:
-        SceneCommandType type_;
-        UserID userID_;
+        std::uint8_t nSelections_;
+
+        // Bits flag: the i-th bit indicates whether the i-th selection sent
+        // by the client is confirmed (1) or denied (0).
+        std::uint32_t selectionConfirmed_;
+
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        SceneCommand( SceneCommandType type );
-        SceneCommand( SceneCommandType type, UserID userID );
-        SceneCommand( const SceneCommand& b );
+        SelectionResponse();
+        SelectionResponse( const SelectionResponse& b );
 
-        virtual ~SceneCommand(){}
+        virtual ~SelectionResponse(){}
 
 
         /***
@@ -63,19 +58,19 @@ class SceneCommand : public Packable
          ***/
         virtual std::uint16_t getPacketSize() const ;
         SceneCommandType getType() const ;
-        static SceneCommandType getType( const char* buffer );
-        UserID getUserID() const ;
+        std::uint8_t getNSelections() const ;
+        std::uint32_t getSelectionConfirmed() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setUserID( const UserID& userID );
+        void addSelectionConfirmation( bool confirmed );
 };
 
-typedef std::shared_ptr< SceneCommand > SceneCommandPtr;
-typedef std::shared_ptr< const SceneCommand > SceneCommandConstPtr;
+typedef std::shared_ptr< SelectionResponse > SelectionResponsePtr;
+typedef std::shared_ptr< const SelectionResponse > SelectionResponseConstPtr;
 
 } // namespace como
 
-#endif // SCENE_COMMAND_HPP
+#endif // SELECTION_RESPONSE_HPP
