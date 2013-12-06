@@ -29,15 +29,15 @@ namespace como {
 PublicUser::PublicUser( UserID id, const char* name,
             std::shared_ptr< boost::asio::io_service > io_service,
             Socket socket,
+            ProcessSceneUpdateCallback processSceneUpdateCallback,
             std::function<void (UserID)> removeUserCallback,
-            std::function<void ()> broadcastCallback,
             CommandsHistoricPtr commandsHistoric,
             LogPtr log ) :
     BasicUser( id, name ),
     io_service_( io_service ),
     socket_( SocketPtr( new Socket( std::move( socket ) ) ) ),
+    processSceneUpdateCallback_( processSceneUpdateCallback ),
     removeUserCallback_( removeUserCallback ),
-    broadcastCallback_( broadcastCallback ),
     nextCommand_( 0 ),
     synchronizing_( false ),
     commandsHistoric_( commandsHistoric ),
@@ -109,35 +109,8 @@ void PublicUser::readSceneUpdate()
 
 void PublicUser::onReadSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet )
 {
-    unsigned int i;
-    const std::vector< SceneCommandConstPtr >* commands = nullptr;
-
-    mutex_.lock();
-    if( errorCode ){
-        log_->error( "ERROR reading SCENE_UPDATE packet: ", errorCode.message(), "\n" );
-        removeUserCallback_( getID() );
-
-        mutex_.unlock();
-    }else{
-        // FIXME: Make use of the packet.
-
-        // Get the commands from the packet.
-        commands = ( dynamic_cast< const SceneUpdate *>( packet.get() ) )->getCommands();
-
-        log_->debug( "SCENE_UPDATE received with (", commands->size(), ") commands\n" );
-
-        // Add the commands to the historic.
-        for( i=0; i<commands->size(); i++ ){
-            log_->debug( "SCENE_UPDATE received with (", commands->size(), ") commands - adding command to historic [", i, "] ...\n" );
-            commandsHistoric_->addCommand( (*commands)[i] );
-            log_->debug( "SCENE_UPDATE received with (", commands->size(), ") commands - adding command to historic [", i, "] ...OK\n" );
-        }
-
-        mutex_.unlock();
-
-        //broadcastCallback_();
-        readSceneUpdate();
-    }
+    // Call to the processing callback in the server.
+    processSceneUpdateCallback_( errorCode, getID(), std::dynamic_pointer_cast<const SceneUpdate>( packet ) );
 }
 
 

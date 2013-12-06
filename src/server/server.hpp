@@ -45,6 +45,7 @@ using boost::asio::ip::tcp;
 namespace como {
 
 typedef std::map< DrawableID, UserID > DrawableOwners;
+typedef std::map< UserID, PublicUserPtr > UsersMap;
 
 class Server
 {
@@ -58,8 +59,8 @@ class Server
         // Work object.
         boost::asio::io_service::work work_;
 
-        // Sessions vector.
-        std::vector< PublicUserPtr > users_;
+        // Users map.
+        UsersMap users_;
 
         // Number of worker threads in the server.
         const unsigned int N_THREADS;
@@ -93,6 +94,8 @@ class Server
         // Log
         LogPtr log_;
 
+        mutable std::recursive_mutex mutex_;
+
     public:
         /***
          * 1. Initialization and destruction
@@ -117,6 +120,12 @@ class Server
          * 4. Handlers
          ***/
         void onAccept( const boost::system::error_code& errorCode );
+
+        void processSceneUpdate( const boost::system::error_code& errorCode,
+                                 UserID userID,
+                                 SceneUpdateConstPtr sceneUpdate );
+        void processSceneCommand( UserID userID,
+                                  SceneCommandConstPtr sceneCommand );
 
 
         /***

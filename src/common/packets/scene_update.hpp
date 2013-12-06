@@ -74,6 +74,9 @@ class SceneUpdate : public Packet
         void clear();
 };
 
+typedef std::shared_ptr< SceneUpdate > SceneUpdatePtr;
+typedef std::shared_ptr< const SceneUpdate > SceneUpdateConstPtr;
+
 } // namespace como
 
 #endif // SCENE_UPDATE_HPP

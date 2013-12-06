@@ -98,8 +98,10 @@ void Server::run()
 void Server::broadcast()
 {
     log_->debug( "Server - broadcasting\n" );
-    for( unsigned int i=0; i<users_.size(); i++ ){
-        users_[i]->requestUpdate();
+    UsersMap::iterator user;
+
+    for( user = users_.begin(); user != users_.end(); user++ ){
+        user->second->requestUpdate();
     }
 }
 
@@ -119,7 +121,7 @@ void Server::listen()
 
 
 /***
- * 6. Handlers
+ * 4. Handlers
  ***/
 
 void Server::onAccept( const boost::system::error_code& errorCode )
@@ -159,27 +161,26 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         // Pack the network package and send it synchronously to the client.
         userAcceptedPacket.send( newSocket_ );
 
-        // Add the new user to the user vector.
-        users_.push_back(
-                    std::make_shared<PublicUser>(
+        // Add the new user to the users map.
+        users_[newId_] =
+                std::make_shared<PublicUser>(
                         newId_,
                         userAcceptedPacket.getName(),
                         io_service_,
                         std::move( newSocket_ ),
+                        std::bind( &Server::processSceneUpdate, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3 ),
                         std::bind( &Server::deleteUser, this, std::placeholders::_1 ),
-                        std::bind( &Server::broadcast, this ),
                         commandsHistoric_,
                         log_
-                    )
-            );
+                    );
 
         // Add an USER_CONNECTED scene command to the server historic.
         addCommand( SceneCommandConstPtr( new UserConnected( userAcceptedPacket ) ) );
 
+        log_->debug( "New sessions: (", newId_, ") - total sessions: ", users_.size(), "\n" );
+
         // Increment the "new id" for the next user.
         newId_++;
-
-        log_->debug( "New sessions: (", users_.back()->getID(), ") - total sessions: ", users_.size(), "\n" );
 
         if( users_.size() < MAX_SESSIONS ){
             // There is room for more users, wait for a new connection.
@@ -192,6 +193,47 @@ void Server::onAccept( const boost::system::error_code& errorCode )
             log_->debug( "Server is full (MAX_SESSIONS: ", MAX_SESSIONS, ")\n" );
         }
     }
+}
+
+
+void Server::processSceneUpdate( const boost::system::error_code& errorCode,
+                                 UserID userID,
+                                 SceneUpdateConstPtr sceneUpdate )
+{
+    unsigned int i;
+    const std::vector< SceneCommandConstPtr >* commands = nullptr;
+
+    mutex_.lock();
+    if( errorCode ){
+        log_->error( "ERROR reading SCENE_UPDATE packet from [", users_.at(userID)->getName(), "] : ", errorCode.message(), "\n" );
+        deleteUser( userID );
+
+        mutex_.unlock();
+    }else{
+        // FIXME: Make use of the packet.
+
+        // Get the commands from the packet.
+        commands = sceneUpdate->getCommands();
+
+        log_->debug( "SCENE_UPDATE received from [", users_.at( userID )->getName(), "] with (", commands->size(), ") commands\n" );
+
+        // Add the commands to the historic.
+        for( i=0; i<commands->size(); i++ ){
+            processSceneCommand( userID, (*commands)[i] );
+
+        }
+
+        mutex_.unlock();
+
+        //broadcastCallback_();
+        users_.at( userID )->readSceneUpdate();
+    }
+}
+
+void Server::processSceneCommand( UserID userID,
+                                  SceneCommandConstPtr sceneCommand )
+{
+    commandsHistoric_->addCommand( sceneCommand );
 }
 
 
@@ -254,39 +296,27 @@ void Server::addCommand( SceneCommandConstPtr sceneCommand )
 
 void Server::deleteUser( UserID id )
 {
-    unsigned int i = 0;
-
     log_->debug( "Server::deleteUser(", id, ")\n" );
 
+    // Delete the requested user.
+    users_.erase( id );
 
-    // Search the requested id.
-    while( ( i < users_.size() ) &&
-           ( id != users_[i]->getID() ) ){
-        i++;
-    }
+    // Add a SceneCommand to the historic informing about the user
+    // disconnection.
+    addCommand( SceneCommandConstPtr( new SceneCommand( SceneCommandType::USER_DISCONNECTED, id ) ) );
 
-    // If found, delete the requested user.
-    if( i < users_.size() ){
-        users_.erase( users_.begin() + i );
+    if( users_.size() == (MAX_SESSIONS - 1) ){
+        // If the server was full before this user got out, that means the acceptor wasn't
+        // listening for new connections. Start listening now that there is room again.
 
-        // Add a SceneCommand to the historic informing about the user
-        // disconnection.
-        addCommand( SceneCommandConstPtr( new SceneCommand( SceneCommandType::USER_DISCONNECTED, id ) ) );
+        //acceptor_.open( endPoint_.protocol() );
+        //acceptor_.listen( 0 );
+        openAcceptor();
 
-        if( users_.size() == (MAX_SESSIONS - 1) ){
-            // If the server was full before this user got out, that means the acceptor wasn't
-            // listening for new connections. Start listening now that there is room again.
-
-            //acceptor_.open( endPoint_.protocol() );
-            //acceptor_.listen( 0 );
-            openAcceptor();
-
-            // Start listening.
-            // FIXME: Sometimes I get an exception "bind address already in use" when is
-            // the server who closes the connections.
-            listen();
-        }
-
+        // Start listening.
+        // FIXME: Sometimes I get an exception "bind address already in use" when is
+        // the server who closes the connections.
+        listen();
     }
 }
 
@@ -340,10 +370,10 @@ void Server::openAcceptor()
 
 bool Server::nameInUse( const char* newName ) const
 {
-    unsigned int i = 0;
+    UsersMap::const_iterator user;
 
-    for( ; i<users_.size(); i++ ){
-        if( !strcmp( newName, users_[i]->getName() ) ){
+    for( user = users_.begin(); user != users_.end(); user++ ){
+        if( !strcmp( newName, user->second->getName() ) ){
             return true;
         }
     }

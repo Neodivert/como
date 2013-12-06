@@ -39,6 +39,10 @@ const unsigned int BUFFER_SIZE = 1024;
 typedef boost::asio::ip::tcp::socket Socket;
 typedef std::shared_ptr< Socket > SocketPtr;
 
+typedef std::function< void (const boost::system::error_code& errorCode,
+                             UserID userID,
+                             SceneUpdateConstPtr sceneUpdate) > ProcessSceneUpdateCallback;
+
 class PublicUser : public BasicUser
 {
     private:
@@ -47,8 +51,10 @@ class PublicUser : public BasicUser
 
         SocketPtr socket_;
 
+        ProcessSceneUpdateCallback processSceneUpdateCallback_;
         std::function<void (UserID)> removeUserCallback_;
-        std::function<void ()> broadcastCallback_;
+
+        //std::function<void ()> broadcastCallback_;
 
         std::uint8_t nextCommand_;
         std::uint8_t nCommandsInLastPacket_;
@@ -75,8 +81,8 @@ class PublicUser : public BasicUser
         PublicUser( UserID id, const char* name,
                     std::shared_ptr< boost::asio::io_service > io_service,
                     Socket socket,
+                    ProcessSceneUpdateCallback processSceneUpdateCallback,
                     std::function<void (UserID)> removeUserCallback,
-                    std::function<void ()> broadcastCallback,
                     CommandsHistoricPtr commandsHistoric,
                     LogPtr log );
         ~PublicUser();
