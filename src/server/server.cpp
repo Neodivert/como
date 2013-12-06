@@ -233,6 +233,35 @@ void Server::processSceneUpdate( const boost::system::error_code& errorCode,
 void Server::processSceneCommand( UserID userID,
                                   SceneCommandConstPtr sceneCommand )
 {
+    const CreateCube* createCube = nullptr;
+    const SelectDrawable* selectDrawable = nullptr;
+
+    switch( sceneCommand->getType() ){
+        case SceneCommandType::CREATE_CUBE:
+            // CREATE_CUBE command received, cast its pointer.
+            createCube = dynamic_cast< const CreateCube* >( sceneCommand.get() );
+
+            // Add a node to the Drawable Owners map for the recently added
+            // cube. Mark it with a 0 (no owner).
+            drawableOwners_[createCube->getDrawableID()] = 0;
+
+            log_->debug( "Cube added! (", (int)( createCube->getDrawableID().creatorID ), ", ", (int)( createCube->getDrawableID().drawableIndex ), ")\n" );
+        break;
+        case SceneCommandType::SELECT_DRAWABLE:
+            // SELECT_DRAWABLE command received, cast its pointer.
+            selectDrawable = dynamic_cast< const SelectDrawable* >( sceneCommand.get() );
+
+            // Give an affirmative response to the user's selection if the
+            // desired drawable isn't selected by anyone (User ID = 0).
+            log_->debug( "S1\n" );
+            users_.at( userID );
+            log_->debug( "Selecting drawable (", (int)( selectDrawable->getDrawableID().creatorID ), ", ", (int)( selectDrawable->getDrawableID().drawableIndex ), ")\n" );
+            users_.at( userID )->addSelectionResponse( drawableOwners_.at( selectDrawable->getDrawableID() ) == 0 );
+            log_->debug( "S3\n" );
+        break;
+    }
+
+    // Add the command to the historic.
     commandsHistoric_->addCommand( sceneCommand );
 }
 

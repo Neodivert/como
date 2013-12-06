@@ -123,6 +123,15 @@ void SelectionResponse::addSelectionConfirmation( bool confirmed )
     // Add the confirmation flag to the bits flag.
     confirmationFlag <<= nSelections_;
     selectionConfirmed_ |= confirmationFlag;
+
+    nSelections_++;
+}
+
+
+void SelectionResponse::clear()
+{
+    nSelections_ = 0;
+    selectionConfirmed_ = 0;
 }
 
 } // namespace como

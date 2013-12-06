@@ -46,6 +46,8 @@ PublicUser::PublicUser( UserID id, const char* name,
 {
     log_->debug( "Session (", getID(), ") created\n" );
 
+    selectionResponse_ = SelectionResponsePtr( new SelectionResponse );
+
     readSceneUpdate();
 
     //sync();
@@ -123,7 +125,8 @@ bool PublicUser::needsSceneUpdate() const
     bool res;
 
     mutex_.lock();
-    res = ( nextCommand_ < commandsHistoric_->getSize() );
+    res = ( nextCommand_ < commandsHistoric_->getSize() ) ||
+            ( selectionResponse_->getNSelections() );
     mutex_.unlock();
 
     return res;
@@ -138,6 +141,13 @@ void PublicUser::sendNextSceneUpdate()
 
     // Create and prepare a SCENE_UPDATE packet.
     outSceneUpdatePacket_.clear();
+
+    // If there is selection responses to be sent to the user, add it to the
+    // scene update packet.
+    if( selectionResponse_->getNSelections() ){
+        outSceneUpdatePacket_.addCommand( selectionResponse_ );
+    }
+
     nextCommand_ = commandsHistoric_->fillSceneUpdatePacket( outSceneUpdatePacket_, nextCommand_, MAX_COMMANDS_PER_PACKET, getID() );
     log_->debug( "Sending scene update - nextCommand: (", (int)nextCommand_, ")\n" );
 
@@ -153,7 +163,7 @@ void PublicUser::sendNextSceneUpdate()
         // Signal that the user is being synchronized (permorming an async send).
         synchronizing_ = true;
     }
-
+//std::dynamic_pointer_cast<const SceneUpdate>( packet )
     mutex_.unlock();
 }
 
@@ -173,6 +183,8 @@ void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode,
         // Update the nextCommand_ index for the next SCENE_UPDATE packet.
         //nextCommand_ = outSceneUpdatePacket_.getLasCommandSent() + 1;
 
+        selectionResponse_->clear();
+
         log_->debug( "SCENE_UPDATE sended (nextCommand_: ", (int)nextCommand_, ")\n" );
 
         if( needsSceneUpdate() ){
@@ -183,6 +195,22 @@ void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode,
             synchronizing_ = false;
         }
     }
+
+    mutex_.unlock();
+}
+
+
+/***
+ * 5. Selection responses
+ ***/
+
+void PublicUser::addSelectionResponse( bool selectionResponse )
+{
+    mutex_.lock();
+
+    selectionResponse_->addSelectionConfirmation( selectionResponse );
+
+    requestUpdate();
 
     mutex_.unlock();
 }

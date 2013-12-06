@@ -64,6 +64,7 @@ class SceneUpdate : public Packet
         /***
          * 4. Setters
          ***/
+        void addCommand( SceneCommandConstPtr command );
         void addCommand( SceneCommandConstPtr command,
                          const std::uint32_t& commandIndex,
                          const std::uint32_t& historicSize );

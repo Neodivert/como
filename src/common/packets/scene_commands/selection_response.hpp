@@ -66,6 +66,7 @@ class SelectionResponse : public SceneCommand
          * 4. Setters
          ***/
         void addSelectionConfirmation( bool confirmed );
+        void clear();
 };
 
 typedef std::shared_ptr< SelectionResponse > SelectionResponsePtr;

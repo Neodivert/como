@@ -820,11 +820,11 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
 
             log_->lock();
             log_->debug( "Selection response received from server - nSelections(",
-                         selectionResponse->getNSelections(),
-                         "), selectionConfirmed_(" );
+                         (int)( selectionResponse->getNSelections() ),
+                         "), selectionConfirmed_(\n" );
             for( i = 0; i < selectionResponse->getNSelections(); i++ ){
                 selectionConfirmed = selectionResponse->getSelectionConfirmed() & (1 << i);
-                log_->debug( (int)( selectionConfirmed ) );
+                log_->debug( (int)( selectionConfirmed ), "\n" );
                 if( selectionConfirmed ){
                     pendingSelection = localUserPendingSelections_.front();
                     this->selectDrawable( pendingSelection );
@@ -841,6 +841,9 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
             log_->debug( "Select drawable" );
 
             this->selectDrawable( selectDrawable->getDrawableID(), selectDrawable->getUserID() );
+        break;
+        case SceneCommandType::UNSELECT_ALL:
+            // TODO: Complete.
         break;
     }
 }

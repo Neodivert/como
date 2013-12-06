@@ -113,6 +113,12 @@ const char* SceneUpdate::unpackBody( const char* buffer )
             case SceneCommandType::CREATE_CUBE:
                 sceneCommandPtr =  SceneCommandPtr( new CreateCube );
             break;
+            case SceneCommandType::SELECT_DRAWABLE:
+                sceneCommandPtr = SceneCommandPtr( new SelectDrawable );
+            break;
+            case SceneCommandType::SELECTION_RESPONSE:
+                sceneCommandPtr =  SceneCommandPtr( new SelectionResponse );
+            break;
             default:
                 throw std::runtime_error( "ERROR: Unknown command found while unpackin SCENE_UPDATE packet" );
             break;
@@ -157,6 +163,16 @@ bool SceneUpdate::expectedType() const
 /***
  * 4. Setters
  ***/
+
+void SceneUpdate::addCommand( SceneCommandConstPtr command )
+{
+    // Push back the given command.
+    commands_.push_back( command );
+
+    // Update the SCENE_UPDATE packet's header.
+    bodySize_ += command->getPacketSize();
+}
+
 
 void SceneUpdate::addCommand( SceneCommandConstPtr command,
                               const std::uint32_t& commandIndex,

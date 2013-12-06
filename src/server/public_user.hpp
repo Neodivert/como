@@ -73,6 +73,7 @@ class PublicUser : public BasicUser
 
         bool updateRequested_;
 
+        SelectionResponsePtr selectionResponse_;
 
     public:
         /***
@@ -92,6 +93,7 @@ class PublicUser : public BasicUser
          * 2. User updating
          ***/
         void requestUpdate();
+
     //private:
         //void sync();
     public:
@@ -109,6 +111,12 @@ class PublicUser : public BasicUser
         bool needsSceneUpdate() const ;
         void sendNextSceneUpdate();
         void onWriteSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet );
+
+
+        /***
+         * 5. Selection responses
+         ***/
+        void addSelectionResponse( bool selectionResponse );
 };
 
 

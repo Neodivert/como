@@ -181,6 +181,9 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
             case SceneCommandType::SELECT_DRAWABLE:
                 log_->debug( "\tCommand[", i, "]: SELECT_DRAWABLE" );
             break;
+            case SceneCommandType::UNSELECT_ALL:
+                log_->debug( "\tCommand[", i, "]: UNSELECT_ALL" );
+            break;
         }
     }
 

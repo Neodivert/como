@@ -28,10 +28,11 @@ namespace como {
 enum class SceneCommandType : std::uint8_t
 {
     USER_CONNECTED = 0,
-    USER_DISCONNECTED = 1,
-    CREATE_CUBE = 2,
-    SELECTION_RESPONSE = 3,
-    SELECT_DRAWABLE = 4
+    USER_DISCONNECTED,
+    CREATE_CUBE,
+    SELECTION_RESPONSE,
+    SELECT_DRAWABLE,
+    UNSELECT_ALL
 };
 
 
@@ -40,6 +41,7 @@ class SceneCommand : public Packable
     private:
         SceneCommandType type_;
         UserID userID_;
+
 
     public:
         /***

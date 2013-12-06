@@ -33,6 +33,7 @@ class SelectDrawable : public DrawableCommand
         /***
          * 1. Initialization and destruction.
          ***/
+        SelectDrawable();
         SelectDrawable( UserID userID, DrawableID drawableID, bool addToSelection );
         SelectDrawable( const SelectDrawable& b );
 

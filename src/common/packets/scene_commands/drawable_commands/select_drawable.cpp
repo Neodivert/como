@@ -25,6 +25,13 @@ namespace como {
  * 1. Initialization and destruction.
  ***/
 
+SelectDrawable::SelectDrawable() :
+    DrawableCommand( SceneCommandType::SELECT_DRAWABLE ),
+    addToSelection_( false )
+{
+}
+
+
 SelectDrawable::SelectDrawable( UserID userID, DrawableID drawableID, bool addToSelection ) :
     DrawableCommand( userID, drawableID, SceneCommandType::SELECT_DRAWABLE ),
     addToSelection_( addToSelection == true )
@@ -75,7 +82,7 @@ const char* SelectDrawable::unpack( const char* buffer )
 
 std::uint16_t SelectDrawable::getPacketSize() const
 {
-    return SceneCommand::getPacketSize() +
+    return DrawableCommand::getPacketSize() +
             sizeof( addToSelection_ );
 }
 
