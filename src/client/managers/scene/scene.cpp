@@ -28,6 +28,7 @@ namespace como {
 Scene::Scene( LogPtr log ) :
     log_( log ),
     server_( log_ ),
+    localUserID_( 1 ), // Will be updated to its final value in Scene::connect().
     localUserNextDrawableIndex_( 1 )
 {
     initOpenGL();
@@ -43,16 +44,6 @@ Scene::Scene( LogPtr log ) :
 
     // Set the background color.
     setBackgroundColor( 0.9f, 0.9f, 0.9f, 0.9f );
-
-    // Insert the local user as the first one in the users list.
-    // addUser( 0.0f, 0.0f, 1.0f );
-
-    // TODO: delete
-    //addUser( 1.0f, 0.0f, 0.0f );
-    //addUser( 0.0f, 1.0f, 0.0f );
-
-    // TODO: Change : Get the real local user ID.
-    localUserID_ = 1;
 
     // FIXME: Study why this is necessary.
     qRegisterMetaType< SceneCommandConstPtr >();

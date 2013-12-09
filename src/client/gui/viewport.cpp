@@ -397,8 +397,6 @@ void Viewport::render()
     sendViewProjectionMatrixToShader( projectionMatrix*viewMatrix );
 
     // Draw scene.
-    // TODO: move the find call to RenderPanel::render(). All the viewports will share
-    // the result.
     comoApp->getScene()->draw( static_cast< int >( comoApp->getTransformationMode() ) - 1 );
 
     // Draw guide rect
