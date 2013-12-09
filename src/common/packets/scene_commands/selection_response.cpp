@@ -90,12 +90,6 @@ std::uint16_t SelectionResponse::getPacketSize() const
 }
 
 
-SceneCommandType SelectionResponse::getType() const
-{
-    return SceneCommandType::SELECTION_RESPONSE;
-}
-
-
 std::uint8_t SelectionResponse::getNSelections() const
 {
     return nSelections_;

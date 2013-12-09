@@ -39,17 +39,10 @@ UsersList::UsersList( QWidget* parent, LogPtr log ) :
 void UsersList::addUser( UserConnectedConstPtr userConnectedPacket )
 {
     // Add the new User-ID-to-list-index translation to the map.
-    log_->debug( "GUI users list - adding user [userID: ",
-                 userConnectedPacket->getUserID(), "] = [name: ", userConnectedPacket->getName(),
-                 "] ...\n" );
     userIDToName_[ userConnectedPacket->getUserID() ] = userConnectedPacket->getName();
 
     // Add the user's name to the list.
     addItem( tr( userConnectedPacket->getName() ) );
-
-    log_->debug( "GUI users list - adding user [userID: ",
-                 userConnectedPacket->getUserID(), "] = [index: ", userConnectedPacket->getName(),
-                 "] ...OK\n" );
 }
 
 
@@ -60,7 +53,6 @@ void UsersList::removeUser( UserID userID )
     QList<QListWidgetItem *>::iterator currentUser;
 
     log_->lock();
-    log_->debug( "GUI users list - removing user [", ( userIDToName_[ userID ] ).c_str(), "] (id: ", userID, ") ...\n" );
 
     // Get a list with all the items in the users list.
     users = findItems( "*", Qt::MatchWildcard );
@@ -80,8 +72,6 @@ void UsersList::removeUser( UserID userID )
     if( currentUser != users.end() ){
         userToBeDeleted = takeItem( row( *currentUser ) );
         delete userToBeDeleted;
-
-        log_->debug( "GUI users list - removing user [", ( userIDToName_[ userID ] ).c_str(), "] (id: ", userID, ") ...OK\n" );
     }else{
         log_->error( "GUI users list - removing user [", ( userIDToName_[ userID ] ).c_str(), "] (id: ", userID, ") ...USER NOT FOUND\n" );
     }

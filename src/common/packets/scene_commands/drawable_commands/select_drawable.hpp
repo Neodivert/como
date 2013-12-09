@@ -51,7 +51,6 @@ class SelectDrawable : public DrawableCommand
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const ;
-        virtual SceneCommandType getType() const ;
         std::uint8_t getAddToSelection() const ;
 
 

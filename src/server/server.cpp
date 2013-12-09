@@ -177,8 +177,6 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         // Add an USER_CONNECTED scene command to the server historic.
         addCommand( SceneCommandConstPtr( new UserConnected( userAcceptedPacket ) ) );
 
-        log_->debug( "New sessions: (", newId_, ") - total sessions: ", users_.size(), "\n" );
-
         // Increment the "new id" for the next user.
         newId_++;
 
@@ -253,11 +251,13 @@ void Server::processSceneCommand( UserID userID,
 
             // Give an affirmative response to the user's selection if the
             // desired drawable isn't selected by anyone (User ID = 0).
-            log_->debug( "S1\n" );
             users_.at( userID );
             log_->debug( "Selecting drawable (", (int)( selectDrawable->getDrawableID().creatorID ), ", ", (int)( selectDrawable->getDrawableID().drawableIndex ), ")\n" );
             users_.at( userID )->addSelectionResponse( drawableOwners_.at( selectDrawable->getDrawableID() ) == 0 );
-            log_->debug( "S3\n" );
+        break;
+        case SceneCommandType::UNSELECT_ALL:
+            // Unselect all.
+            unselectAll( sceneCommand->getUserID() );
         break;
     }
 
@@ -346,6 +346,20 @@ void Server::deleteUser( UserID id )
         // FIXME: Sometimes I get an exception "bind address already in use" when is
         // the server who closes the connections.
         listen();
+    }
+}
+
+
+void Server::unselectAll( UserID userID )
+{
+    DrawableOwners::iterator drawableOwner;
+
+    // Iterate over the map of drawable owners and change those entries
+    // associated with the current user to zero (no user).
+    for( drawableOwner = drawableOwners_.begin(); drawableOwner != drawableOwners_.end(); drawableOwner++ ){
+        if( drawableOwner->second == userID ){
+            drawableOwner->second = 0;
+        }
     }
 }
 

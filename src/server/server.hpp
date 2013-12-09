@@ -138,6 +138,7 @@ class Server
          * 6. Auxiliar methods
          ***/
         void deleteUser( UserID id );
+        void unselectAll( UserID userID );
     private:
         std::string getCurrentDayTime() const ;
         void workerThread();

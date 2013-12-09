@@ -144,10 +144,6 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
     unsigned int i;
     const std::vector< SceneCommandConstPtr >* sceneCommands = nullptr;
 
-    log_->lock();
-
-    log_->debug( "Packet received\n" );
-
     SceneUpdate* sceneUpdate = dynamic_cast< SceneUpdate *>( packet.get() );
     //const UserConnected* userConnectedCommand = nullptr;
 
@@ -155,9 +151,7 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
         throw std::runtime_error( std::string( "ERROR in \"onSceneUpdateReceived\": not a SCENE_UPDATE packet" ) );
     }
 
-    log_->debug( "nCommands: ", sceneUpdate->getCommands()->size(), "\n" );
-
-    log_->unlock();
+    log_->debug( "Scene update received with nCommands: ", sceneUpdate->getCommands()->size(), "\n" );
 
     sceneCommands = sceneUpdate->getCommands();
     for( i=0; i<sceneCommands->size(); i++ ){
@@ -198,11 +192,7 @@ void ServerInterface::onSceneUpdateSended( const boost::system::error_code& erro
         return;
     }
 
-    log_->debug( "SCENE_UPDATE sent to the server - nCommands ", packet, "\n" );
-
-    //log_->debug( "SCENE_UPDATE sent to the server - nCommands: (",
-    //             ( ( dynamic_cast< SceneUpdate* >( packet.get() ) )->getCommands() )->size(),
-    //             ")\n" );
+    log_->debug( "SCENE_UPDATE sent to the server - nCommands ", ( dynamic_cast< const SceneUpdate* >( packet.get() ) )->getCommands()->size(), "\n" );
 
     setTimer();
 }
@@ -223,16 +213,15 @@ void ServerInterface::sendPendingCommands()
 {
     unsigned int nCommands = 0;
 
+    sceneUpdatePacketToServer_.clear();
+
     // TODO: Change 4 by MAX_COMMANDS_PER_PACKET.
     // Move commands from the queue to the SCENE_UPDATE packet.
     while( ( nCommands < 4 ) && !sceneCommandsToServer_.empty() ){
-        log_->debug( "Adding command to SCENE_UPDATE packet to server - 1\n" );
         // TODO: Delete the second argument is not necessary in a SCENE_UPDATE
         // packet sent from client to server.
         sceneUpdatePacketToServer_.addCommand( sceneCommandsToServer_.front(), 0, 0 );
-        log_->debug( "Adding command to SCENE_UPDATE packet to server - 2\n" );
         sceneCommandsToServer_.pop();
-        log_->debug( "Adding command to SCENE_UPDATE packet to server - 3\n" );
 
         nCommands++;
     }
@@ -240,9 +229,8 @@ void ServerInterface::sendPendingCommands()
     // If there in the packet, send it to the server. Otherwise, set a timer
     // to call this method again.
     if( nCommands ){
-        log_->debug( "Sending SCENE_UPDATE packet to the server - 1\n" );
+        log_->debug( "Sending SCENE_UPDATE packet to the server\n" );
         sceneUpdatePacketToServer_.asyncSend( socket_, std::bind( &ServerInterface::onSceneUpdateSended, this, std::placeholders::_1, std::placeholders::_2 ) );
-        log_->debug( "Sending SCENE_UPDATE packet to the server - 2\n" );
     }else{
         //log_->debug( "No commands to send to the server\n" );
         setTimer();
@@ -262,6 +250,7 @@ void ServerInterface::listen()
 {   
     log_->debug( "Listening for new scene updates from server ...\n" );
 
+    sceneUpdatePacketFromServer_.clear();
     sceneUpdatePacketFromServer_.asyncRecv( socket_, std::bind( &ServerInterface::onSceneUpdateReceived, this, std::placeholders::_1, std::placeholders::_2 ) );
 }
 

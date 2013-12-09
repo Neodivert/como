@@ -70,14 +70,9 @@ void PublicUser::requestUpdate()
 {
     mutex_.lock();
 
-    log_->debug( "PublicUser (", getID(), ") - Requesting update\n" );
-
     if( !updateRequested_ && needsSceneUpdate() ){
         updateRequested_ = true;
         io_service_->post( std::bind( &PublicUser::sendNextSceneUpdate, this ) );
-        log_->debug( "PublicUser (", getID(), ") - Update requested\n" );
-    }else{
-        log_->debug( "PublicUser (", getID(), ") - Updated not needed (", updateRequested_, ", ", needsSceneUpdate(), "\n" );
     }
 
     mutex_.unlock();
@@ -102,9 +97,9 @@ void PublicUser::update()
 void PublicUser::readSceneUpdate()
 {
     mutex_.lock();
-    log_->debug( "Waiting for SCENE_UPDATE from user (", getID(), ") - 1 ...\n"  );
+    log_->debug( "Waiting for SCENE_UPDATE from user (", getID(), ")\n"  );
+    sceneUpdatePacketFromUser_.clear();
     sceneUpdatePacketFromUser_.asyncRecv( socket_, boost::bind( &PublicUser::onReadSceneUpdate, this, _1, _2 ) );
-    log_->debug( "Waiting for SCENE_UPDATE from user (", getID(), ") - 2 ...\n"  );
     mutex_.unlock();
 }
 

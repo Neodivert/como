@@ -87,12 +87,6 @@ std::uint16_t SelectDrawable::getPacketSize() const
 }
 
 
-SceneCommandType SelectDrawable::getType() const
-{
-    return SceneCommandType::SELECT_DRAWABLE;
-}
-
-
 std::uint8_t SelectDrawable::getAddToSelection() const
 {
     return addToSelection_;

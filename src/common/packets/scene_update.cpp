@@ -119,6 +119,9 @@ const char* SceneUpdate::unpackBody( const char* buffer )
             case SceneCommandType::SELECTION_RESPONSE:
                 sceneCommandPtr =  SceneCommandPtr( new SelectionResponse );
             break;
+            case SceneCommandType::UNSELECT_ALL:
+                sceneCommandPtr =  SceneCommandPtr( new SceneCommand( SceneCommandType::UNSELECT_ALL ) );
+            break;
             default:
                 throw std::runtime_error( "ERROR: Unknown command found while unpackin SCENE_UPDATE packet" );
             break;

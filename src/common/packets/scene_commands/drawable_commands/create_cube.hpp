@@ -52,7 +52,6 @@ class CreateCube : public DrawableCommand
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const ;
-        virtual SceneCommandType getType() const ;
         const std::uint8_t* getColor() const ;
 
 

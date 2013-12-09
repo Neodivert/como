@@ -167,12 +167,9 @@ void Scene::initLinesBuffer()
     vPosition = glGetAttribLocation( currentShaderProgram, "vPosition" );
     if( vPosition == GL_INVALID_OPERATION ){
         log_->error( "Error getting layout of \"position\"\n" );
-    }else{
-        log_->debug( "vPosition: (", vPosition, ")\n" );
     }
     // Get location of uniform shader variable "color".
     uniformColorLocation = glGetUniformLocation( currentShaderProgram, "color" );
-    log_->debug( "Scene: uniform color location initialized to (", uniformColorLocation, ")\n" );
 
     // Set a VBO for the world axis rects.
     glGenBuffers( 1, &linesVBO );
@@ -196,6 +193,10 @@ void Scene::initLinesBuffer()
 
 void Scene::removeUser( UserID userID )
 {
+    // Unselect all drawables selected by user.
+    unselectAll( userID );
+
+    // Remove user from scene.
     if( users_.erase( userID ) ){
         emit userDisconnected( userID );
     }
@@ -302,12 +303,10 @@ void Scene::addCube( const std::uint8_t* color, DrawableID drawableID )
         takeOpenGLContext();
 
         // Create the cube.
-        log_->debug( "S1, color: ", (unsigned int*)color, "\n" );
         DrawablePtr drawable = DrawablePtr( new Cube( color ) );
-        log_->debug( "S2\n" );
+
         // Add the cube to the scene.
         addDrawable( drawable, drawableID );
-        log_->debug( "S3\n" );
     }catch( std::exception& ex ){
         std::cerr << ex.what() << std::endl;
         throw;
@@ -416,6 +415,9 @@ void Scene::selectAll()
 void Scene::unselectAll()
 {
     unselectAll( localUserID_ );
+
+    // Send command to the server.
+    server_.sendCommand( SceneCommandConstPtr( new SceneCommand( SceneCommandType::UNSELECT_ALL, localUserID_ ) ) );
 }
 
 
@@ -453,7 +455,7 @@ DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool a
     // a new one? If that's NOT the case, we need to clear the set of selected drawables
     // first.
     if( !addToSelection ){
-        unselectAll( localUserID_ );
+        unselectAll();
     }
 
     // Iterate over all non selected drawables and check if the given ray intersects
@@ -468,17 +470,19 @@ DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool a
         }
     }
 
-    // Iterate over all non selected drawables and check if the given ray intersects
-    // them or not. Get the closest object.
-    for( it = userSelection.begin(); it != userSelection.end(); it++ ){
-        it->second->intersects( r0, r1, t );
-        if( ( t > 0.0f ) && (t < minT ) ){
-            // New closest object, get its index and distance.
-            closestObject = it->first;
-            minT = t;
-            log_->debug( "RETURN 0\n" );
-            emit renderNeeded();
-            return NULL_DRAWABLE_ID;
+    // If user dind't selected any non-selected drawable, check if he / she
+    // clicked on an already selected one.
+    if( minT == MAX_T ){
+        for( it = userSelection.begin(); it != userSelection.end(); it++ ){
+            it->second->intersects( r0, r1, t );
+            if( ( t > 0.0f ) && (t < minT ) ){
+                // New closest object, get its index and distance.
+                closestObject = it->first;
+                minT = t;
+                log_->debug( "RETURN 0\n" );
+                emit renderNeeded();
+                return NULL_DRAWABLE_ID;
+            }
         }
     }
 
@@ -500,7 +504,7 @@ DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool a
         //selectDrawable( closestObject );
     }else{
         log_->debug( "NO CLOSEST OBJECT. Unselecting all\n" );
-        unselectAll( localUserID_ );
+        unselectAll();
     }
 
     emit renderNeeded();
@@ -689,13 +693,12 @@ void Scene::draw( const int& drawGuideRect ) const
 
     DrawablesSelection userSelection;
 
-    checkOpenGL( "Scene::draw 1" );
+
     for( ; it != nonSelectedDrawables.end(); it++ )
     {
         it->second->draw( defaultContourColor );
     }
-    //log_->debug( "Drawing (", nonSelectedDrawables.size(), ") non selected drawables ...OK\n" );
-    checkOpenGL( "Scene::draw 2" );
+
     for( ; usersIterator != users_.end(); usersIterator++  ){
         userSelection = (usersIterator->second).selection;
 
@@ -716,6 +719,8 @@ void Scene::draw( const int& drawGuideRect ) const
         // Draw the guide rect.
         glDrawArrays( GL_LINES, linesBufferOffsets[GUIDE_AXIS] + (drawGuideRect << 1), 2 );
     }
+
+    checkOpenGL( "Scene::draw" );
 }
 
 
@@ -786,27 +791,28 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
 
     switch( command->getType() ){
         case SceneCommandType::USER_CONNECTED:
-            log_->debug( "\tCasting to USER_CONNECTED command\n" );
+            // Cast to an USER_CONNECTED command.
             userConnected = dynamic_cast< const UserConnected* >( command.get() );
-            log_->debug( "Adding user to scene [", userConnected->getName(), "] ...\n" );
+
+            // Add user to the scene.
             addUser( std::shared_ptr< const UserConnected>( new UserConnected( *userConnected ) ) );
-            log_->debug( "Adding user to scene [", userConnected->getName(), "] ...OK\n" );
+            log_->debug( "User [", userConnected->getName(), "] added to the scene\n" );
         break;
         case SceneCommandType::USER_DISCONNECTED:
-            log_->debug( "Removing user from scene [", users_.at( command->getUserID() ).getName(), "]\n" );
+            // Remove user from the scene.
+            log_->debug( "User [", users_.at( command->getUserID() ).getName(), "] removed from scene\n" );
             removeUser( command->getUserID() );
         break;
         case SceneCommandType::CREATE_CUBE:
-            log_->debug( "Adding cube to the scene ...1\n" );
+            // Cast to a CREATE_CUBE command.
             createCube = dynamic_cast< const CreateCube* >( command.get() );
-            log_->debug( "Adding cube to the scene ...2 (", createCube, ")\n" );
-            log_->debug( "\tAdding cube to the scene ...3 (color: ", createCube->getColor(), ")\n" );
-            log_->debug( "\tAdding cube to the scene ...4 (Creator ID: ", createCube->getDrawableID().creatorID, ")\n" );
 
+            // Add cube to the scene.
             addCube( createCube->getColor(), createCube->getDrawableID() );
-            log_->debug( "Adding cube to the scene ...OK\n" );
+            log_->debug( "Cube added to the scene\n" );
         break;
         case SceneCommandType::SELECTION_RESPONSE:
+            // Cast to a SELECTION_RESPONSE command.
             selectionResponse = dynamic_cast< const SelectionResponse* >( command.get() );
 
             log_->lock();
@@ -827,14 +833,17 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
             log_->unlock();
         break;
         case SceneCommandType::SELECT_DRAWABLE:
+            // Cast to a SELECT_DRAWABLE command.
             selectDrawable = dynamic_cast< const SelectDrawable* >( command.get() );
 
-            log_->debug( "Select drawable" );
-
+            // Select drawable.
             this->selectDrawable( selectDrawable->getDrawableID(), selectDrawable->getUserID() );
+            log_->debug( "Selecting drawable\n" );
         break;
         case SceneCommandType::UNSELECT_ALL:
-            // TODO: Complete.
+            // Unselect all.
+            unselectAll( command->getUserID() );
+            log_->debug( "All unselected\n" );
         break;
     }
 }

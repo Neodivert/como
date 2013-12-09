@@ -93,12 +93,6 @@ std::uint16_t CreateCube::getPacketSize() const
 }
 
 
-SceneCommandType CreateCube::getType() const
-{
-    return SceneCommandType::CREATE_CUBE;
-}
-
-
 const std::uint8_t* CreateCube::getColor() const
 {
     return color_;

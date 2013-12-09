@@ -52,7 +52,6 @@ class DrawableCommand : public SceneCommand
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const ;
-        virtual SceneCommandType getType() const = 0;
         //static SceneCommandType getType( const char* buffer );
         DrawableID getDrawableID() const ;
 
