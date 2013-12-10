@@ -156,7 +156,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         // Assign the new user a fixed selectionColor.
         // TODO: In future versions with multiple writers, change this so
         // every user receives a different color.
-        userAcceptedPacket.setSelectionColor( 255, 0, 0, 255 );
+        userAcceptedPacket.setSelectionColor( rand()%255, rand()%255, rand()%255, 255 );
 
         // Pack the network package and send it synchronously to the client.
         userAcceptedPacket.send( newSocket_ );
