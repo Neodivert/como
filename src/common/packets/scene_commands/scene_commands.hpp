@@ -26,5 +26,6 @@
 #include "drawable_commands/create_cube.hpp"
 #include "selection_response.hpp"
 #include "drawable_commands/select_drawable.hpp"
+#include "selection_transformation.hpp"
 
 #endif // SCENE_COMMANDS_HPP

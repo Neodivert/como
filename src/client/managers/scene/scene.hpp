@@ -175,7 +175,7 @@ class Scene : public QOffscreenSurface
         /***
          * 6. Transformations
          ***/
-        void translateSelection( const glm::vec3& direction );
+        void translateSelection( glm::vec3 direction );
         void translateSelection( const glm::vec3& direction, const unsigned int& userId );
 
         void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode );

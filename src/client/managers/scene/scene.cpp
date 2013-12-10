@@ -523,9 +523,22 @@ glm::vec4 Scene::getSelectionCentroid() const
  * 6. Transformations
  ***/
 
-void Scene::translateSelection( const glm::vec3& direction )
+void Scene::translateSelection( glm::vec3 direction )
 {
+    unsigned int i;
+
+    // Little artifice so the translation magnitude has the same precision
+    // in both local and remote translations.
+    for( i=0; i<3; i++ ){
+        direction[i] = ( (int)( direction[i] * FLOAT_TO_INT_FACTOR ) ) * INT_TO_FLOAT_FACTOR;
+    }
+    log_->debug( "Scene::translateSelection(", direction[0], ", ", direction[1], ", ", direction[2], ")\n" );
+
+    // Translate selection.
     translateSelection( direction, localUserID_ );
+
+    // Send command to the server.
+    server_.sendCommand( SceneCommandConstPtr( new SelectionTransformation( localUserID_, SelectionTransformationType::TRANSLATION, &direction[0] ) ) );
 }
 
 
@@ -781,6 +794,7 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
     const CreateCube* createCube = nullptr;
     const SelectionResponse* selectionResponse = nullptr;
     const SelectDrawable* selectDrawable = nullptr;
+    const SelectionTransformation* selectionTrasformation = nullptr;
 
     DrawableID pendingSelection;
 
@@ -844,6 +858,16 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
             // Unselect all.
             unselectAll( command->getUserID() );
             log_->debug( "All unselected\n" );
+        break;
+        case SceneCommandType::SELECTION_TRANSFORMATION:
+            // Cast to a SELECTION_TRANSFORMATION command.
+            selectionTrasformation = dynamic_cast< const SelectionTransformation* >( command.get() );
+
+            // Transform the user's selection.
+            const float* transf = selectionTrasformation->getTransformationMagnitude();
+            log_->debug( "Scene - remote translation (", transf[0], ", ", transf[1], ", ", transf[2], ")\n" );
+            translateSelection( glm::vec3( transf[0], transf[1], transf[2] ),
+                                selectionTrasformation->getUserID() );
         break;
     }
 }

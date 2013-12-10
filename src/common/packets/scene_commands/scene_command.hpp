@@ -32,7 +32,8 @@ enum class SceneCommandType : std::uint8_t
     CREATE_CUBE,
     SELECTION_RESPONSE,
     SELECT_DRAWABLE,
-    UNSELECT_ALL
+    UNSELECT_ALL,
+    SELECTION_TRANSFORMATION
 };
 
 

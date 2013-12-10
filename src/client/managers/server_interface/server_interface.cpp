@@ -167,16 +167,19 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
                 log_->debug( "\tCommand[", i, "]: USER_DISCONNECTED\n" );
             break;
             case SceneCommandType::CREATE_CUBE:
-                log_->debug( "\tCommand[", i, "]: CREATE_CUBE" );
+                log_->debug( "\tCommand[", i, "]: CREATE_CUBE\n" );
             break;
             case SceneCommandType::SELECTION_RESPONSE:
-                log_->debug( "\tCommand[", i, "]: SELECTION_RESPONSE" );
+                log_->debug( "\tCommand[", i, "]: SELECTION_RESPONSE\n" );
             break;
             case SceneCommandType::SELECT_DRAWABLE:
-                log_->debug( "\tCommand[", i, "]: SELECT_DRAWABLE" );
+                log_->debug( "\tCommand[", i, "]: SELECT_DRAWABLE\n" );
             break;
             case SceneCommandType::UNSELECT_ALL:
-                log_->debug( "\tCommand[", i, "]: UNSELECT_ALL" );
+                log_->debug( "\tCommand[", i, "]: UNSELECT_ALL\n" );
+            break;
+            case SceneCommandType::SELECTION_TRANSFORMATION:
+                log_->debug( "\tCommand[", i, "]: SELECTION_TRANSFORMATION\n" );
             break;
         }
     }
