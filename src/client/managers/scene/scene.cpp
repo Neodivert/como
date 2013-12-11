@@ -527,10 +527,11 @@ void Scene::translateSelection( glm::vec3 direction )
 {
     unsigned int i;
 
-    // Little artifice so the translation magnitude has the same precision
-    // in both local and remote translations.
+    // Round transformation magnitude to 3 decimal places.
+    // http://stackoverflow.com/questions/1343890/rounding-number-to-2-decimal-places-in-c
     for( i=0; i<3; i++ ){
-        direction[i] = ( (int)( direction[i] * FLOAT_TO_INT_FACTOR ) ) * INT_TO_FLOAT_FACTOR;
+        // TODO: Why the 0.5?
+        direction[i] = floorf( direction[i] * 1000 + 0.5) / 1000;
     }
     log_->debug( "Scene::translateSelection(", direction[0], ", ", direction[1], ", ", direction[2], ")\n" );
 
@@ -546,6 +547,8 @@ void Scene::translateSelection( const glm::vec3& direction, const unsigned int& 
 {
     DrawablesSelection& userSelection = users_.at( userId ).selection;
     DrawablesSelection::iterator it = userSelection.begin();
+
+    log_->debug( "Scene::translateSelection(", direction[0], ", ", direction[1], ", ", direction[2], ")\n" );
 
     for( ; it != userSelection.end(); it++ )
     {

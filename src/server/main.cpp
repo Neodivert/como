@@ -21,6 +21,7 @@
 #include "../common/packets/packets.hpp"
 #include <endian.h>
 #include "../common/utilities/log.hpp"
+#include <clocale>
 
 int main( int argc, char* argv[] )
 {

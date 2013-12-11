@@ -38,6 +38,8 @@ enum class SelectionTransformationType
 const float FLOAT_TO_INT_FACTOR = 100.0f;
 const float INT_TO_FLOAT_FACTOR = 1.0f / FLOAT_TO_INT_FACTOR;
 
+const unsigned int TRANSFORMATION_MAGNITUDE_STR_SIZE = 32;
+
 
 class SelectionTransformation : public SceneCommand
 {
@@ -48,6 +50,9 @@ class SelectionTransformation : public SceneCommand
         // Transformation magnitude (in every axis).
         float transformationMagnitude_[3];
 
+        // Transformation magnitude (in string format for network
+        // communication).
+        char transformationMagnitudeStr_[TRANSFORMATION_MAGNITUDE_STR_SIZE];
 
     public:
         /***
