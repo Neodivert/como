@@ -149,6 +149,7 @@ class Scene : public QOffscreenSurface
         void addDrawable( DrawablePtr drawable, DrawableID drawableID );
         void takeOpenGLContext();
     public:
+        void addCube( QColor color );
         void addCube( const std::uint8_t* color );
         void addCube( const std::uint8_t* color, DrawableID drawableID );
 
@@ -187,8 +188,6 @@ class Scene : public QOffscreenSurface
 
         void deleteSelection();
         void deleteSelection( const unsigned int& userId );
-
-
 
 
         /***

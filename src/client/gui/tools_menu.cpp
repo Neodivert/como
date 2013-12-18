@@ -22,8 +22,14 @@
 
 namespace como {
 
+
+/***
+ * 1. Initialization and destruction
+ ***/
+
 ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
-    QFrame( parent )
+    QFrame( parent ),
+    currentColor_( 255, 0, 0, 255 )
 {
     QVBoxLayout* layout;
     QLabel* toolsMenuLabel;
@@ -109,6 +115,7 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     layout->addWidget( transformationModeGroupBox );
     layout->addWidget( createPivotPointModeSelector() );
     layout->addWidget( createPrimitiveCreationMenu() );
+    layout->addWidget( createColorSelector() );
     setLayout( layout );
 }
 
@@ -133,15 +140,19 @@ QGroupBox* ToolsMenu::createPrimitiveCreationMenu()
         primitiveCreationButtonGroup->addButton( primitiveCreationButton, i );
     }
 
-    // TODO: Make this more general (to primitives and colors).
-    // Change current transformation mode when user select it in the GUI.
+    // Signal / Slot connection: when one of the creation buttons is pressed,
+    // create a drawable of the chosen type.
     void (QButtonGroup::*buttonClicked)( int ) = &QButtonGroup::buttonClicked;
     connect( primitiveCreationButtonGroup, buttonClicked, [this]( int index ) {
         Q_UNUSED( index );
 
-        const std::uint8_t COLOR[4] = { 255, 0, 0, 255 };
-
-        comoApp->getScene()->addCube( COLOR );
+        // Add one type of drawable or another to the scene according to the
+        // button pressed by user.
+        switch( static_cast< DrawableType >( index ) ){
+            case DrawableType::CUBE:
+                comoApp->getScene()->addCube( getCurrentColor() );
+            break;
+        }
     } );
 
     /*
@@ -196,5 +207,70 @@ QGroupBox* ToolsMenu::createPivotPointModeSelector()
     return pivotPointModeGroupBox;
 }
 
+
+QFrame* ToolsMenu::createColorSelector()
+{
+    QPushButton* selectColorButton = nullptr;
+    QFrame* colorSelectorFrame = nullptr;
+    QVBoxLayout* layout = nullptr;
+
+    // Create the frame that whill hold the color's button and label.
+    colorSelectorFrame = new QFrame( this );
+
+    // Create a label showing the current selected color. The color name will
+    // be colored in that color.
+    currentColorLabel_ = new QLabel( "Current color: <font color=\"" + currentColor_.name() + "\">" + currentColor_.name() + "</font>" );
+
+    // Signal / Slot connection. When the current color changes, change the
+    // previous label's text accordingly.
+    QObject::connect( this, &ToolsMenu::currentColorChanged, [this]( QColor newColor ){
+        currentColorLabel_->setText( "Current color: <font color=\"" + newColor.name() + "\">" + newColor.name() + "</font>" );
+    });
+
+    // Create a button for changing the current color.
+    selectColorButton = new QPushButton( tr( "Select color" ) );
+
+    // Signal / Slot connection. When previous button is clicked, we invoke the
+    // changeCurrentColor method.
+    QObject::connect( selectColorButton, &QPushButton::clicked, this, &ToolsMenu::changeCurrentColor );
+
+    // Set the frame's layout.
+    layout = new QVBoxLayout;
+    layout->addWidget( currentColorLabel_ );
+    layout->addWidget( selectColorButton );
+    colorSelectorFrame->setLayout( layout );
+
+    // Return the frame.
+    return colorSelectorFrame;
+}
+
+
+/***
+ * 2. Getters
+ ***/
+
+QColor ToolsMenu::getCurrentColor() const
+{
+    return currentColor_;
+}
+
+
+/***
+ * 3. Auxiliar methods
+ ***/
+
+void ToolsMenu::changeCurrentColor()
+{
+    // Open a dialog for selecting a new color.
+    currentColor_ = QColorDialog::getColor( currentColor_ );
+
+    // If the selected color is not valid, change it to red.
+    if( !( currentColor_.isValid() ) ){
+        currentColor_.setRgb( 255, 0, 0 );
+    }
+
+    // Emit a signal indicating that the current color has changed.
+    emit currentColorChanged( currentColor_ );
+}
 
 } // namespace como

@@ -278,6 +278,25 @@ void Scene::takeOpenGLContext()
 }
 
 
+void Scene::addCube( QColor color )
+{
+    std::uint8_t color8[4];
+    int r, g, b;
+
+    // Get the RGB components (int) of the color.
+    color.getRgb( &r, &g, &b );
+
+    // Turn the previous RGB components into a UINT8 vector.
+    color8[0] = static_cast< std::uint8_t >( r );
+    color8[1] = static_cast< std::uint8_t >( g );
+    color8[2] = static_cast< std::uint8_t >( b );
+    color8[3] = 255;
+
+    // Add the cube to the scene.
+    addCube( color8 );
+}
+
+
 void Scene::addCube( const std::uint8_t* color )
 {
     DrawableID drawableID;

@@ -21,24 +21,52 @@
 #define TOOLS_MENU_HPP
 
 #include <QFrame>
+#include <QColorDialog>
 #include "../managers/como_app.hpp"
 
 namespace como {
 
 class ToolsMenu : public QFrame
 {
+    Q_OBJECT
+
     protected:
         // Pointer to app's current state.
         shared_ptr< ComoApp > comoApp;
 
+        // Current color (used when creating new drawables)
+        QColor currentColor_;
+
+        // Label indicating the current color.
+        QLabel* currentColorLabel_;
+
+        /***
+         * 1. Initialization and destruction
+         ***/
     public:
         ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp );
 
     protected:
         QGroupBox* createPrimitiveCreationMenu();
         QGroupBox* createPivotPointModeSelector();
+        QFrame* createColorSelector();
+
+
+        /***
+         * 2. Getters
+         ***/
+    public:
+        QColor getCurrentColor() const ;
+
+
+        /***
+         * 3. Auxiliar methods
+         ***/
+    protected:
+        void changeCurrentColor();
 
     signals:
+        void currentColorChanged( QColor newColor );
 };
 
 } // namespace como
