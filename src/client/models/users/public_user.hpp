@@ -37,7 +37,7 @@ class PublicUser : public BasicUser
         /***
          * 1. Initialization and destruction
          ***/
-        PublicUser( const UserConnected* userConnectedPacket, NotificationCallback notificationCallback );
+        PublicUser( const UserConnected* userConnectedPacket );
 };
 
 } // namespace como

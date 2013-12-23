@@ -59,41 +59,46 @@ class DrawablesSelection
         // Selection's centroid.
         glm::vec4 centroid_;
 
-        // Notification callback (this function is called when the selection
-        // is updated).
-        NotificationCallback notificationCallback_;
-
+        // Selection's pivot point mode.
+        PivotPointMode pivotPointMode_;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        DrawablesSelection( NotificationCallback notificationCallback );
+        DrawablesSelection();
 
 
         /***
          * 2. Getters
          ***/
         glm::vec4 getCentroid() const ;
+        PivotPointMode getPivotPointMode() const ;
 
 
         /***
-         * 3. Transformations
+         * 3. Setters
+         ***/
+        void setPivotPointMode( PivotPointMode pivotPointMode );
+
+
+        /***
+         * 4. Transformations
          ***/
         virtual void translate( glm::vec3 direction );
-        virtual void rotate( GLfloat angle, glm::vec3 axis, PivotPointMode pivotPointMode );
-        virtual void scale( glm::vec3 scaleFactors, PivotPointMode pivotPointMode );
+        virtual void rotate( GLfloat angle, glm::vec3 axis );
+        virtual void scale( glm::vec3 scaleFactors );
 
 
         /***
-         * 4. Centroid updating
+         * 5. Centroid updating
          ***/
     private:
         void updateSelectionCentroid();
 
 
         /***
-         * 5. Drawables management
+         * 6. Drawables management
          ***/
     public:
         void addDrawable( DrawableID drawableID, DrawablePtr drawable );
@@ -103,13 +108,13 @@ class DrawablesSelection
 
 
         /***
-         * 6. Ray picking
+         * 7. Ray picking
          ***/
         bool intersect( glm::vec3 r0, glm::vec3 r1, DrawableID& closestDrawable, float& minT ) const ;
 
 
         /***
-         * 7. Drawing
+         * 8. Drawing
          ***/
         void draw( const GLfloat* contourColor = nullptr ) const ;
 };

@@ -192,7 +192,7 @@ QGroupBox* ToolsMenu::createPivotPointModeSelector()
     // When user change pivot point mode in selector, call ComoApp::setPivotPoint().
     void (QComboBox::*signal)( int ) = &QComboBox::activated;
     connect( pivotPointModeSelector, signal, [=]( int index ) {
-        comoApp->setPivotPointMode( static_cast< PivotPointMode >( index ) );
+        comoApp->getScene()->setPivotPointMode( static_cast< PivotPointMode >( index ) );
     }  );
 
     // Set pivot point mode frame layout.

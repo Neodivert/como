@@ -26,9 +26,9 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-DrawablesSelection::DrawablesSelection( NotificationCallback notificationCallback ) :
+DrawablesSelection::DrawablesSelection() :
     centroid_( 0.0f, 0.0f, 0.0f, 1.0f ),
-    notificationCallback_( notificationCallback )
+    pivotPointMode_( PivotPointMode::MEDIAN_POINT )
 {
 }
 
@@ -43,8 +43,24 @@ glm::vec4 DrawablesSelection::getCentroid() const
 }
 
 
+PivotPointMode DrawablesSelection::getPivotPointMode() const
+{
+    return pivotPointMode_;
+}
+
+
 /***
- * 3. Transformations
+ * 3. Setters
+ ***/
+
+void DrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
+{
+    pivotPointMode_ = pivotPointMode;
+}
+
+
+/***
+ * 4. Transformations
  ***/
 
 void DrawablesSelection::translate( glm::vec3 direction )
@@ -61,13 +77,13 @@ void DrawablesSelection::translate( glm::vec3 direction )
 }
 
 
-void DrawablesSelection::rotate( GLfloat angle, glm::vec3 axis, PivotPointMode pivotPointMode )
+void DrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
 {
     DrawablesMap::iterator drawable;
 
     // Rotate every drawable in the selection according to the selected
     // pivot point mode.
-    switch( pivotPointMode ){
+    switch( pivotPointMode_ ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
             for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
                 drawable->second->rotate( angle, axis, glm::vec3( drawable->second->getCentroid() ) );
@@ -90,13 +106,13 @@ void DrawablesSelection::rotate( GLfloat angle, glm::vec3 axis, PivotPointMode p
 }
 
 
-void DrawablesSelection::scale( glm::vec3 scaleFactors, PivotPointMode pivotPointMode)
+void DrawablesSelection::scale( glm::vec3 scaleFactors )
 {
     DrawablesMap::iterator drawable;
 
     // Scale every drawable in the selection according to the selected
     // pivot point mode.
-    switch( pivotPointMode ){
+    switch( pivotPointMode_ ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
             for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
                 drawable->second->scale( scaleFactors, glm::vec3( drawable->second->getCentroid() ) );
@@ -120,7 +136,7 @@ void DrawablesSelection::scale( glm::vec3 scaleFactors, PivotPointMode pivotPoin
 
 
 /***
- * 4. Centroid updating
+ * 5. Centroid updating
  ***/
 
 void DrawablesSelection::updateSelectionCentroid()
@@ -139,9 +155,6 @@ void DrawablesSelection::updateSelectionCentroid()
     centroid_ /= drawables_.size();
     centroid_.w = 1.0f;
 
-    // Notify the selection's updating.
-    notificationCallback_();
-
     /*
     // Map the pivot point VBO to client memory and update the selection centroid
     // coordinates (for drawing).
@@ -158,7 +171,7 @@ void DrawablesSelection::updateSelectionCentroid()
 
 
 /***
- * 5. Drawables management
+ * 6. Drawables management
  ***/
 
 
@@ -216,7 +229,7 @@ void DrawablesSelection::clear()
 
 
 /***
- * 6. Ray picking
+ * 7. Ray picking
  ***/
 
 bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, DrawableID& closestDrawable, float& minT ) const
@@ -243,7 +256,7 @@ bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, DrawableID& clos
 
 
 /***
- * 7. Drawing
+ * 8. Drawing
  ***/
 
 void DrawablesSelection::draw( const GLfloat* contourColor ) const

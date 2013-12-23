@@ -29,8 +29,7 @@ Scene::Scene( LogPtr log ) :
     log_( log ),
     server_( log_ ),
     localUserID_( 1 ), // Will be updated to its final value in Scene::connect().
-    localUserNextDrawableIndex_( 1 ),
-    nonSelectedDrawables( std::bind( &Scene::emitRenderNeeded, this ) )
+    localUserNextDrawableIndex_( 1 )
 {
     initOpenGL();
 
@@ -205,7 +204,62 @@ void Scene::removeUser( UserID userID )
 
 
 /***
- * 3. Getters and setters
+ * 3. Getters
+ ***/
+
+glm::vec3 Scene::getPivotPoint() const
+{
+    return getPivotPoint( localUserID_ );
+}
+
+
+glm::vec3 Scene::getPivotPoint( UserID userID ) const
+{
+    switch( getUserSelection( userID )->getPivotPointMode() ){
+        case PivotPointMode::INDIVIDUAL_CENTROIDS:
+        case PivotPointMode::MEDIAN_POINT:
+            return glm::vec3( getUserSelection( userID )->getCentroid() );
+        break;
+        default:
+            return glm::vec3( 0.0f, 0.0f, 0.0f );
+        break;
+    }
+}
+
+
+shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
+{
+    return oglContext_;
+}
+
+
+DrawablesSelection* Scene::getUserSelection()
+{
+    return getUserSelection( localUserID_ );
+}
+
+
+DrawablesSelection* Scene::getUserSelection( UserID userID )
+{
+    return &( users_.at( userID ).selection );
+}
+
+
+const DrawablesSelection* Scene::getUserSelection() const
+{
+    return getUserSelection( localUserID_ );
+}
+
+
+const DrawablesSelection* Scene::getUserSelection( UserID userID ) const
+{
+    return &( users_.at( userID ).selection );
+}
+
+
+
+/***
+ * 4. Setters
  ***/
 
 void Scene::setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a )
@@ -234,40 +288,20 @@ void Scene::setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny )
 }
 
 
-glm::vec3 Scene::getPivotPoint( const PivotPointMode& pivotPointMode )
+void Scene::setPivotPointMode( PivotPointMode pivotPointMode )
 {
-    switch( pivotPointMode ){
-        case PivotPointMode::INDIVIDUAL_CENTROIDS:
-        case PivotPointMode::MEDIAN_POINT:
-            return glm::vec3( selectionCentroid );
-        break;
-        default:
-            return glm::vec3( 0.0f, 0.0f, 0.0f );
-        break;
-    }
+    setPivotPointMode( pivotPointMode, localUserID_ );
 }
 
 
-shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
+void Scene::setPivotPointMode( PivotPointMode pivotPointMode, UserID userID )
 {
-    return oglContext_;
-}
-
-
-DrawablesSelection* Scene::getUserSelection()
-{
-    return getUserSelection( localUserID_ );
-}
-
-
-DrawablesSelection* Scene::getUserSelection( UserID userID )
-{
-    return &( users_.at( userID ).selection );
+    getUserSelection( userID )->setPivotPointMode( pivotPointMode );
 }
 
 
 /***
- * 4. Drawables administration
+ * 5. Drawables administration
  ***/
 
 void Scene::addDrawable( DrawablePtr drawable, DrawableID drawableID )
@@ -388,7 +422,7 @@ void Scene::addDrawable( DrawableType drawableType, DrawableID drawableID )
 */
 
 /***
- * 5. Drawables selection
+ * 6. Drawables selection
  ***/
 
 void Scene::selectDrawable( DrawableID drawableID )
@@ -569,7 +603,7 @@ DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool a
 
 
 /***
- * 6. Transformations
+ * 7. Transformations
  ***/
 
 void Scene::translateSelection( glm::vec3 direction )
@@ -592,12 +626,12 @@ void Scene::translateSelection( glm::vec3 direction )
 }
 
 
-void Scene::translateSelection( const glm::vec3& direction, UserID userId )
+void Scene::translateSelection( const glm::vec3& direction, UserID userID )
 {
     log_->debug( "Scene::translateSelection(", direction[0], ", ", direction[1], ", ", direction[2], ")\n" );
 
     // Get the user's selection and translate it.
-    getUserSelection( userId )->translate( direction );
+    getUserSelection( userID )->translate( direction );
 
     // Emit a signal indicating that the scene has been changed and so it needs
     // a render.
@@ -605,17 +639,17 @@ void Scene::translateSelection( const glm::vec3& direction, UserID userId )
 }
 
 
-void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode )
+void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis )
 {
     // Rotate locally (client).
-    rotateSelection( angle, axis, pivotPointMode, localUserID_ );
+    rotateSelection( angle, axis, localUserID_ );
 }
 
 
-void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode, UserID userId )
+void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, UserID userID )
 {
     // Get the user's selection and rotate it.
-    getUserSelection( userId )->rotate( angle, axis, pivotPointMode );
+    getUserSelection( userID )->rotate( angle, axis );
 
     // Emit a signal indicating that the scene has been changed and so it needs
     // a render.
@@ -623,17 +657,17 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const 
 }
 
 
-void Scene::scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode )
+void Scene::scaleSelection( const glm::vec3& scaleFactors )
 {
     // Scale locally (client).
-    scaleSelection( scaleFactors, pivotPointMode, localUserID_ );
+    scaleSelection( scaleFactors, localUserID_ );
 }
 
 
-void Scene::scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode, UserID userId )
+void Scene::scaleSelection( const glm::vec3& scaleFactors, UserID userID )
 {
     // Get the user's selection and scale it.
-    getUserSelection( userId )->scale( scaleFactors, pivotPointMode );
+    getUserSelection( userID )->scale( scaleFactors );
 
     // Emit a signal indicating that the scene has been changed and so it needs
     // a render.

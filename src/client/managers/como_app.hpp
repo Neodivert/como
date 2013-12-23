@@ -115,12 +115,6 @@ class ComoApp : public QObject {
         // Current transformation type.
         TransformationType transformationType;
 
-        // Current pivot point mode.
-        PivotPointMode pivotPointMode;
-
-        // Current OpenGL context.
-        //shared_ptr< QOpenGLContext > oglContext;
-
         // Curren scene.
         shared_ptr< Scene > scene;
 
@@ -146,7 +140,6 @@ class ComoApp : public QObject {
         EditionScope getEditionScope() const ;
         TransformationType getTransformationType() const ;
         TransformationMode getTransformationMode() const ;
-        PivotPointMode getPivotPointMode() const;
         ScenePtr getScene() const ;
         LogPtr getLog() const ;
 
@@ -160,8 +153,6 @@ class ComoApp : public QObject {
 
         void setEditionScope( EditionScope editionScope );
         void setTransformationType( TransformationType transformationType );
-
-        void setPivotPointMode( PivotPointMode pivotPointMode );
 
     signals:
         void appModeIndexChanged( int index );

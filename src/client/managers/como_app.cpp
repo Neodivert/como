@@ -18,13 +18,8 @@
 ***/
 
 #include "como_app.hpp"
-#include "../gui/opengl_engine.hpp"
-
-#include <iostream>
-using namespace std;
 
 namespace como {
-
 
 /***
  * 1. Initialization and destruction
@@ -35,10 +30,6 @@ ComoApp::ComoApp()
     // Create a log
     log_ = LogPtr( new Log );
 
-    // Create an OpenGL engine (used for creating and initializing
-    // an OpenGL context and a scene.
-    //OpenGLEngine openGLEngine( log_ );
-
     // Set default app mode.
     appMode = AppMode::OBJECT;
 
@@ -47,9 +38,6 @@ ComoApp::ComoApp()
 
     // Set default transformation type.
     transformationType = TransformationType::NONE;
-
-    // Set default pivot point mode.
-    pivotPointMode = PivotPointMode::MEDIAN_POINT;
 
     checkOpenGL( "ComoApp constructor - before creating OpenGL context and scene" );
 
@@ -93,30 +81,30 @@ AppMode ComoApp::getAppMode() const
     return appMode;
 }
 
+
 EditionScope ComoApp::getEditionScope() const
 {
     return editionScope;
 }
+
 
 TransformationMode ComoApp::getTransformationMode() const
 {
     return transformationMode;
 }
 
+
 TransformationType ComoApp::getTransformationType() const
 {
     return transformationType;
 }
 
-PivotPointMode ComoApp::getPivotPointMode() const
-{
-    return pivotPointMode;
-}
 
 ScenePtr ComoApp::getScene() const
 {
     return scene;
 }
+
 
 LogPtr ComoApp::getLog() const
 {
@@ -152,23 +140,15 @@ void ComoApp::setTransformationMode( TransformationMode transformationMode )
 }
 
 
-
 void ComoApp::setEditionScope( EditionScope editionScope )
 {
     this->editionScope = editionScope;
 }
 
 
-
 void ComoApp::setTransformationType( TransformationType transformationType )
 {
     this->transformationType = transformationType;
-}
-
-
-void ComoApp::setPivotPointMode( PivotPointMode pivotPointMode )
-{
-    this->pivotPointMode = pivotPointMode;
 }
 
 } // namespace como

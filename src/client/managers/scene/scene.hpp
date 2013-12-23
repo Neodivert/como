@@ -92,8 +92,6 @@ class Scene : public QOffscreenSurface
         GLuint linesBufferOffsets[N_LINES_BUFFER_OFFSETS];
 
         GLuint uniformColorLocation;
-        glm::vec4 selectionCentroid;
-
         GLfloat defaultContourColor[4];
 
 
@@ -119,20 +117,30 @@ class Scene : public QOffscreenSurface
 
 
         /***
-         * 3. Getters and setters
+         * 3. Getters
          ***/
-        void setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a );
-        void setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny );
-        glm::vec3 getPivotPoint( const PivotPointMode& pivotPointMode );
+        glm::vec3 getPivotPoint() const ;
+        glm::vec3 getPivotPoint( UserID userID ) const ;
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
-
     private:
         DrawablesSelection* getUserSelection();
         DrawablesSelection* getUserSelection( UserID userID );
+        const DrawablesSelection* getUserSelection() const ;
+        const DrawablesSelection* getUserSelection( UserID userID ) const ;
 
 
         /***
-         * 4. Drawables administration
+         * 4. Setters
+         ***/
+    public:
+        void setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a );
+        void setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny );
+        void setPivotPointMode( PivotPointMode pivotPointMode );
+        void setPivotPointMode( PivotPointMode pivotPointMode, UserID userID );
+
+
+        /***
+         * 5. Drawables administration
          ***/
     private:
         void addDrawable( DrawablePtr drawable, DrawableID drawableID );
@@ -147,7 +155,7 @@ class Scene : public QOffscreenSurface
 
 
         /***
-         * 5. Drawables selection.
+         * 6. Drawables selection.
          ***/
     public:
         void selectDrawable( DrawableID drawableID );
@@ -161,16 +169,16 @@ class Scene : public QOffscreenSurface
 
 
         /***
-         * 6. Transformations
+         * 7. Transformations
          ***/
         void translateSelection( glm::vec3 direction );
-        void translateSelection( const glm::vec3& direction, UserID userId );
+        void translateSelection( const glm::vec3& direction, UserID userID );
 
-        void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode );
-        void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode, UserID );
+        void rotateSelection( const GLfloat& angle, const glm::vec3& axis );
+        void rotateSelection( const GLfloat& angle, const glm::vec3& axis, UserID userID );
 
-        void scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode );
-        void scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode, UserID );
+        void scaleSelection( const glm::vec3& scaleFactors );
+        void scaleSelection( const glm::vec3& scaleFactors, UserID userID );
         //void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
 
         void deleteSelection();
