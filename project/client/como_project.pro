@@ -29,7 +29,6 @@ HEADERS += \
     ../../src/client/gui/view_frame.hpp \
     ../../src/client/gui/tools_menu.hpp \
     ../../src/client/gui/render_panel.hpp \
-    ../../src/client/gui/opengl_engine.hpp \
     ../../src/client/gui/main_window.hpp \
     ../../src/client/managers/tester.hpp \
     ../../src/client/managers/scene/scene.hpp \
@@ -73,7 +72,6 @@ SOURCES += \
     ../../src/client/gui/view_frame.cpp \
     ../../src/client/gui/tools_menu.cpp \
     ../../src/client/gui/render_panel.cpp \
-    ../../src/client/gui/opengl_engine.cpp \
     ../../src/client/gui/main_window.cpp \
     ../../src/client/managers/tester.cpp \
     ../../src/client/managers/scene/scene.cpp \
