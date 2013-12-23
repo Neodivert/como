@@ -18,7 +18,6 @@
 ***/
 
 #include "scene_command.hpp"
-#include <iostream>
 
 namespace como {
 

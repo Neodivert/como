@@ -41,23 +41,8 @@ SceneUpdate::SceneUpdate( const SceneUpdate& b ) :
     Packet( b ),
     lastCommandSent_( b.lastCommandSent_ ),
     nUnsyncCommands_( b.nUnsyncCommands_ ),
-    commands_( b.commands_ ) // Is this legal?
+    commands_( b.commands_ )
 {
-    /*
-    std::cout << "Clonning SCENE UPDATE" << std::endl;
-    for( unsigned int i = 0; i<b.commands_.size(); i++ ){
-        switch( b.commands_[i]->getType() ){
-            case SceneCommandType::USER_CONNECTED:
-                std::cout << "Clonning USER_CONNECTED" << std::endl;
-                commands_.push_back( SceneCommandConstPtr( new UserConnected( *( dynamic_cast< const UserConnected* >( ( b.commands_[i] ).get() ) ) ) ) );
-            break;
-            case SceneCommandType::USER_DISCONNECTED:
-                std::cout << "Clonning USER_DISCONNECTED" << std::endl;
-                commands_.push_back( SceneCommandConstPtr( new SceneCommand( *( b.commands_[i] ) ) ) );
-            break;
-        }
-    }
-    */
 }
 
 

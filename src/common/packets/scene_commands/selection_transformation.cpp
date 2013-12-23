@@ -19,9 +19,6 @@
 
 #include "selection_transformation.hpp"
 #include <cstdio>
-
-// TODO: Remove.
-#include <iostream>
 #include <stdexcept>
 
 namespace como {
@@ -142,12 +139,6 @@ const char* SelectionTransformation::unpack( const char* buffer )
                                 &( transformationMagnitude_[2] )
                                 );
 
-    std::cout << "Unpacking [" << transformationMagnitudeStr_ << "]" << std::endl
-              << "[0]: " << transformationMagnitude_[0] << std::endl
-              << "[1]: " << transformationMagnitude_[1] << std::endl
-              << "[2]: " << transformationMagnitude_[2] << std::endl;
-
-    std::cout << "sscanfReturnValue: " << sscanfReturnValue << std::endl;
     if( ( sscanfReturnValue < 3 ) || ( sscanfReturnValue == EOF ) ){
         throw std::runtime_error( std::string( "ERROR when unpacking transformation magnitude by sscanf: return value(" ) +
                                   std::to_string( sscanfReturnValue ) +

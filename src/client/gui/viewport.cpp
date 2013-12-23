@@ -19,10 +19,7 @@
 
 #include "viewport.hpp"
 #include <cmath>
-#include <iostream>
 #include <glm/gtx/vector_angle.hpp>
-#include <iostream>
-using namespace std;
 
 namespace como {
 

@@ -26,7 +26,6 @@
 
 //#define TESTING_MODE 1
 
-#include <iostream>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 
@@ -34,9 +33,6 @@
 
 int main( int argc, char *argv[] )
 {
-    std::lconv* lConv = localeconv();
-    std::cout << "Decimal point: (" << lConv->decimal_point << ")" << std::endl;
-
     // Create a Qt application.
     QApplication app( argc, argv );
     int dialogCode;
@@ -67,7 +63,5 @@ int main( int argc, char *argv[] )
         // Run Qt application.
         return app.exec();
     }
-    lConv = localeconv();
-    std::cout << "Decimal point: (" << lConv->decimal_point << ")" << std::endl;
 #endif
 }
