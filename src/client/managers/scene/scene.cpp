@@ -29,7 +29,8 @@ Scene::Scene( LogPtr log ) :
     log_( log ),
     server_( log_ ),
     localUserID_( 1 ), // Will be updated to its final value in Scene::connect().
-    localUserNextDrawableIndex_( 1 )
+    localUserNextDrawableIndex_( 1 ),
+    nonSelectedDrawables( std::bind( &Scene::emitRenderNeeded, this ) )
 {
     initOpenGL();
 
@@ -252,6 +253,19 @@ shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
     return oglContext_;
 }
 
+
+DrawablesSelection* Scene::getUserSelection()
+{
+    return getUserSelection( localUserID_ );
+}
+
+
+DrawablesSelection* Scene::getUserSelection( UserID userID )
+{
+    return &( users_.at( userID ).selection );
+}
+
+
 /***
  * 4. Drawables administration
  ***/
@@ -266,7 +280,9 @@ void Scene::addDrawable( DrawablePtr drawable, DrawableID drawableID )
                  ", ", drawableID.drawableIndex, ")\n" );
 
     // Autoincrement the drawable index for the next drawable created by the use.
-    nonSelectedDrawables[drawableID] = drawable;
+
+
+    nonSelectedDrawables.addDrawable( drawableID, drawable );
 
     emit renderNeeded();
 }
@@ -390,32 +406,20 @@ void Scene::selectDrawable( DrawableID drawableID, UserID userID )
 
     // Check if the desired drawable is among the non selected ones, and move
     // it to the user's selection in that case.
-    if( nonSelectedDrawables.count( drawableID ) ){
-        userSelection[drawableID] = nonSelectedDrawables[drawableID];
-        nonSelectedDrawables.erase( drawableID );
+    drawableFound = nonSelectedDrawables.moveDrawable( drawableID, userSelection );
 
-        drawableFound = true;
-    }
 
     // If not found, search the desired drawable among the user's selections.
     if( !drawableFound ){
         currentUser = users_.begin();
         while( !drawableFound && ( currentUser != users_.end()) ){
-            if( currentUser->second.selection.count( drawableID ) ){
-                userSelection[drawableID] = currentUser->second.selection.at( drawableID );
-                currentUser->second.selection.erase( drawableID );
-
-                drawableFound = true;
-            }
+            drawableFound = currentUser->second.selection.moveDrawable( drawableID, userSelection );
         }
     }
 
     if( !drawableFound ){
         throw std::runtime_error( "ERROR when selecting drawable. Drawable not found" );
     }
-
-    // Update the selection centroid.
-    updateSelectionCentroid( userID );
 
     emit renderNeeded();
 }
@@ -445,10 +449,7 @@ void Scene::unselectAll( const unsigned int& userId )
     DrawablesSelection& userSelection = users_.at( userId ).selection;
 
     // Move all drawables from user selection to non selected set.
-    nonSelectedDrawables.insert( userSelection.begin(), userSelection.end() );
-    userSelection.clear();
-
-    updateSelectionCentroid( userId );
+    userSelection.moveAll( nonSelectedDrawables );
 
     emit renderNeeded();
 }
@@ -477,6 +478,38 @@ DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool a
         unselectAll();
     }
 
+
+    // Check if the given ray intersect any of the non selected drawables.
+    if( nonSelectedDrawables.intersect( r0, r1, closestObject, minT ) ){
+        // A non selected drawable has been intersected.
+        log_->debug( "FINAL CLOSEST OBJECT: (", closestObject.creatorID, ", ", closestObject.drawableIndex, ")\n",
+                     "\t min t: ", minT, ")\n",
+                     "\t min distance: ", glm::distance( glm::vec3( 0.0f, 0.0f, 0.0f ), r1 * t ), "\n" );
+
+        // Send a SELECT_DRAWABLE command to the server.
+        server_.sendCommand( SceneCommandConstPtr(
+                                 new SelectDrawable( localUserID_,
+                                                     closestObject,
+                                                     addToSelection ) ) );
+
+        // Insert the selected drawable's ID in a queue of pending selections.
+        localUserPendingSelections_.push( closestObject );
+    }else{
+        // If user dind't selected any non-selected drawable, check if he / she
+        // clicked on an already selected one.
+        if( userSelection.intersect( r0, r1, closestObject, minT ) ){
+            log_->debug( "RETURN 0\n" );
+            emit renderNeeded();
+            return NULL_DRAWABLE_ID;
+        }else{
+            log_->debug( "NO CLOSEST OBJECT. Unselecting all\n" );
+            unselectAll();
+        }
+    }
+
+
+
+    /*
     // Iterate over all non selected drawables and check if the given ray intersects
     // them or not. Get the closest object.
     DrawablesSelection::iterator it;
@@ -505,6 +538,8 @@ DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool a
         }
     }
 
+
+
     // If there were intersections, select the closest one.
     if( minT < MAX_T ){
         log_->debug( "FINAL CLOSEST OBJECT: (", closestObject.creatorID, ", ", closestObject.drawableIndex, ")\n",
@@ -525,16 +560,11 @@ DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool a
         log_->debug( "NO CLOSEST OBJECT. Unselecting all\n" );
         unselectAll();
     }
+    */
 
     emit renderNeeded();
 
     return closestObject;
-}
-
-
-glm::vec4 Scene::getSelectionCentroid() const
-{
-    return selectionCentroid;
 }
 
 
@@ -554,7 +584,7 @@ void Scene::translateSelection( glm::vec3 direction )
     }
     log_->debug( "Scene::translateSelection(", direction[0], ", ", direction[1], ", ", direction[2], ")\n" );
 
-    // Translate selection.
+    // Translate locally (client).
     translateSelection( direction, localUserID_ );
 
     // Send command to the server.
@@ -562,93 +592,53 @@ void Scene::translateSelection( glm::vec3 direction )
 }
 
 
-void Scene::translateSelection( const glm::vec3& direction, const unsigned int& userId )
+void Scene::translateSelection( const glm::vec3& direction, UserID userId )
 {
-    DrawablesSelection& userSelection = users_.at( userId ).selection;
-    DrawablesSelection::iterator it = userSelection.begin();
-
     log_->debug( "Scene::translateSelection(", direction[0], ", ", direction[1], ", ", direction[2], ")\n" );
 
-    for( ; it != userSelection.end(); it++ )
-    {
-        it->second->translate( direction );
-    }
+    // Get the user's selection and translate it.
+    getUserSelection( userId )->translate( direction );
 
-    updateSelectionCentroid( userId );
-
+    // Emit a signal indicating that the scene has been changed and so it needs
+    // a render.
     emit renderNeeded();
 }
 
 
 void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode )
 {
+    // Rotate locally (client).
     rotateSelection( angle, axis, pivotPointMode, localUserID_ );
 }
 
 
-void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode, const unsigned int& userId )
+void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode, UserID userId )
 {
-    DrawablesSelection& userSelection = users_.at( userId ).selection;
-    DrawablesSelection::iterator it = userSelection.begin();
+    // Get the user's selection and rotate it.
+    getUserSelection( userId )->rotate( angle, axis, pivotPointMode );
 
-    switch( pivotPointMode ){
-        case PivotPointMode::INDIVIDUAL_CENTROIDS:
-            for( ; it != userSelection.end(); it++ ){
-                it->second->rotate( angle, axis, glm::vec3( it->second->getCentroid() ) );
-            }
-        break;
-        case PivotPointMode::MEDIAN_POINT:
-            for( ; it != userSelection.end(); it++ ){
-                it->second->rotate( angle, axis, glm::vec3( selectionCentroid ) );
-            }
-        break;
-        case PivotPointMode::WORLD_ORIGIN:
-            for( ; it != userSelection.end(); it++ ){
-                it->second->rotate( angle, axis );
-            }
-        break;
-    }
-
-    updateSelectionCentroid( userId );
-
+    // Emit a signal indicating that the scene has been changed and so it needs
+    // a render.
     emit renderNeeded();
 }
 
 
 void Scene::scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode )
 {
+    // Scale locally (client).
     scaleSelection( scaleFactors, pivotPointMode, localUserID_ );
 }
 
 
-void Scene::scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode, const unsigned int& userId )
+void Scene::scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode, UserID userId )
 {
-    DrawablesSelection& userSelection = users_.at( userId ).selection;
-    DrawablesSelection::iterator it = userSelection.begin();
+    // Get the user's selection and scale it.
+    getUserSelection( userId )->scale( scaleFactors, pivotPointMode );
 
-    switch( pivotPointMode ){
-        case PivotPointMode::INDIVIDUAL_CENTROIDS:
-            for( ; it != userSelection.end(); it++ ){
-                it->second->scale( scaleFactors, glm::vec3( it->second->getCentroid() ) );
-            }
-        break;
-        case PivotPointMode::MEDIAN_POINT:
-            for( ; it != userSelection.end(); it++ ){
-                it->second->scale( scaleFactors, glm::vec3( selectionCentroid ) );
-            }
-        break;
-        case PivotPointMode::WORLD_ORIGIN:
-            for( ; it != userSelection.end(); it++ ){
-                it->second->scale( scaleFactors );
-            }
-        break;
-    }
-
-    updateSelectionCentroid( userId );
-
+    // Emit a signal indicating that the scene has been changed and so it needs
+    // a render.
     emit renderNeeded();
 }
-
 
 /*
 void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot )
@@ -671,47 +661,9 @@ void Scene::deleteSelection()
 
 void Scene::deleteSelection( const unsigned int& userId )
 {
-    DrawablesSelection& userSelection = users_.at( userId ).selection;
-
-    // Delete selected drawables.
-    userSelection.clear();
+    getUserSelection( userId )->clear();
 
     emit renderNeeded();
-}
-
-
-/***
- * 7. Updating
- ***/
-
-void Scene::updateSelectionCentroid( const unsigned int& userId )
-{
-    DrawablesSelection& userSelection = users_.at( userId ).selection;
-    DrawablesSelection::const_iterator it = userSelection.begin();
-    //GLfloat* selectionCentroidBuffer = nullptr;
-    selectionCentroid = glm::vec4( 0.0f );
-
-    // Update scene selection centroid.
-    if( userSelection.size() ){
-        for( ; it != userSelection.end(); it++ ){
-            selectionCentroid += it->second->getCentroid();
-        }
-        selectionCentroid /= userSelection.size();
-        selectionCentroid.w = 1.0f;
-    }
-
-    /*
-    // Map the pivot point VBO to client memory and update the selection centroid
-    // coordinates (for drawing).
-    glBindBuffer( GL_ARRAY_BUFFER, selectionCentroidVBO );
-    selectionCentroidBuffer = (GLfloat *)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
-
-    for( unsigned int i=0; i<3; i++ ){
-        selectionCentroidBuffer[i] = selectionCentroid[i];
-    }
-
-    glUnmapBuffer( GL_ARRAY_BUFFER );
-    */
 }
 
 
@@ -723,23 +675,14 @@ void Scene::draw( const int& drawGuideRect ) const
 {
     GLfloat WHITE_COLOR[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-    DrawablesSelection::const_iterator it = nonSelectedDrawables.begin();
     UsersMap::const_iterator usersIterator = users_.begin();
 
-    DrawablesSelection userSelection;
+    // Draw the non selected drawables.
+    nonSelectedDrawables.draw( defaultContourColor );
 
-
-    for( ; it != nonSelectedDrawables.end(); it++ )
-    {
-        it->second->draw( defaultContourColor );
-    }
-
+    // Draw the user's selections.
     for( ; usersIterator != users_.end(); usersIterator++  ){
-        userSelection = (usersIterator->second).selection;
-
-        for( it = userSelection.begin(); it != userSelection.end(); it++ ){
-            it->second->draw( (usersIterator->second).color );
-        }
+        (usersIterator->second).selection.draw( (usersIterator->second).color );
     }
 
     // Draw a guide rect if asked.
@@ -803,6 +746,12 @@ void Scene::drawTransformGuideLine() const
     glPointSize( 1.0f );
     glDrawArrays( GL_LINES, linesBufferOffsets[TRANSFORM_GUIDE_LINE], 2 );
     glEnable( GL_DEPTH_TEST );
+}
+
+
+void Scene::emitRenderNeeded()
+{
+    emit renderNeeded();
 }
 
 
@@ -888,8 +837,8 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
             // Transform the user's selection.
             const float* transf = selectionTrasformation->getTransformationMagnitude();
             log_->debug( "Scene - remote translation (", transf[0], ", ", transf[1], ", ", transf[2], ")\n" );
-            translateSelection( glm::vec3( transf[0], transf[1], transf[2] ),
-                                selectionTrasformation->getUserID() );
+
+            translateSelection( glm::vec3( transf[0], transf[1], transf[2] ), selectionTrasformation->getUserID() );
         break;
     }
 }

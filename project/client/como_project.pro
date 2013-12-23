@@ -60,13 +60,13 @@ HEADERS += \
     ../../src/common/packets/scene_commands/drawable_commands/drawable_command.hpp \
     ../../src/common/utilities/ids.hpp \
     ../../src/client/managers/scene/public_scene.hpp \
-    ../../src/client/models/3d/drawables_selection.hpp \
     ../../src/common/users/basic_user.hpp \
     ../../src/common/packets/scene_commands/drawable_commands/create_cube.hpp \
     ../../src/client/managers/server_interface/server_interface.hpp \
     ../../src/common/packets/scene_commands/selection_response.hpp \
     ../../src/common/packets/scene_commands/drawable_commands/select_drawable.hpp \
-    ../../src/common/packets/scene_commands/selection_transformation.hpp
+    ../../src/common/packets/scene_commands/selection_transformation.hpp \
+    ../../src/client/models/3d/drawables_selection.hpp
 
 SOURCES += \
     ../../src/client/gui/viewport.cpp \
@@ -104,4 +104,5 @@ SOURCES += \
     ../../src/client/managers/server_interface/server_interface.cpp \
     ../../src/common/packets/scene_commands/selection_response.cpp \
     ../../src/common/packets/scene_commands/drawable_commands/select_drawable.cpp \
-    ../../src/common/packets/scene_commands/selection_transformation.cpp
+    ../../src/common/packets/scene_commands/selection_transformation.cpp \
+    ../../src/client/models/3d/drawables_selection.cpp

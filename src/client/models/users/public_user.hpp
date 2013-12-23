@@ -33,10 +33,11 @@ class PublicUser : public BasicUser
         GLfloat color[4];
         DrawablesSelection selection;
 
+
         /***
          * 1. Initialization and destruction
          ***/
-        PublicUser( const UserConnected* userConnectedPacket );
+        PublicUser( const UserConnected* userConnectedPacket, NotificationCallback notificationCallback );
 };
 
 } // namespace como

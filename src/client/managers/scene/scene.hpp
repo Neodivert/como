@@ -29,6 +29,7 @@
 #include "../../../common/packets/scene_commands/scene_commands.hpp"
 #include "../server_interface/server_interface.hpp"
 #include "../../models/utilities/msl/src/shader_loader.hpp"
+#include "../../models/3d/drawables_selection.hpp"
 #include <queue>
 
 Q_DECLARE_METATYPE( como::SceneCommandConstPtr )
@@ -49,22 +50,6 @@ const char drawableTypeStrings[N_DRAWABLE_TYPES][16] =
     "Cube"
 };
 
-// Available pivot point modes.
-enum class PivotPointMode
-{
-    MEDIAN_POINT = 0,
-    INDIVIDUAL_CENTROIDS,
-    WORLD_ORIGIN
-};
-const unsigned int N_PIVOT_POINT_MODES = 3;
-
-// Available pivot point modes (strings for GUI output).
-const char pivotPointModeStrings[N_PIVOT_POINT_MODES][32] =
-{
-     "Median Point",
-     "Individual Centroid",
-     "World origin"
-};
 
 enum LinesBufferOffset {
     WORLD_AXIS = 0,
@@ -141,6 +126,10 @@ class Scene : public QOffscreenSurface
         glm::vec3 getPivotPoint( const PivotPointMode& pivotPointMode );
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
 
+    private:
+        DrawablesSelection* getUserSelection();
+        DrawablesSelection* getUserSelection( UserID userID );
+
 
         /***
          * 4. Drawables administration
@@ -170,30 +159,22 @@ class Scene : public QOffscreenSurface
 
         DrawableID selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection );
 
-        glm::vec4 getSelectionCentroid() const ;
-
 
         /***
          * 6. Transformations
          ***/
         void translateSelection( glm::vec3 direction );
-        void translateSelection( const glm::vec3& direction, const unsigned int& userId );
+        void translateSelection( const glm::vec3& direction, UserID userId );
 
         void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode );
-        void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode, const unsigned int& userId );
+        void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const PivotPointMode& pivotPointMode, UserID );
 
         void scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode );
-        void scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode, const unsigned int& userId );
+        void scaleSelection( const glm::vec3& scaleFactors, const PivotPointMode& pivotPointMode, UserID );
         //void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
 
         void deleteSelection();
         void deleteSelection( const unsigned int& userId );
-
-
-        /***
-         * 7. Updating
-         ***/
-        void updateSelectionCentroid( const unsigned int& userId );
 
 
         /***
@@ -207,6 +188,7 @@ class Scene : public QOffscreenSurface
         /***
          * 9. Signals
          ***/
+        void emitRenderNeeded();
     signals:
         void renderNeeded();
         void userConnected( UserConnectedConstPtr command );

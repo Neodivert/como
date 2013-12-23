@@ -57,7 +57,7 @@ void PublicScene::connect( const char* host, const char* port, const char* userN
 void PublicScene::addUser( std::shared_ptr< const UserConnected > userConnectedCommand )
 {
     // Create the new user from the given USER_CONNECTED command.
-    users_.insert( std::pair< unsigned int, PublicUser >( userConnectedCommand->getUserID(), *( new  PublicUser( userConnectedCommand.get() ) ) ) );
+    users_.insert( std::pair< unsigned int, PublicUser >( userConnectedCommand->getUserID(), *( new  PublicUser( userConnectedCommand.get(), std::bind( &Scene::emitRenderNeeded, this ) ) ) ) );
     //users_[ userConnectedCommand->getUserID() ] = *( new  PublicUser( userConnectedCommand.get() ) );
 
     // Emit a UserConnected signal.
