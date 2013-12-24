@@ -24,8 +24,8 @@
 namespace como {
 
 //const char FLOAT_TO_STRING_FORMAT[32] = "%.3f#%.3f#%.3f";
-const char FLOAT_TO_STRING_FORMAT[32] = "%f#%f#%f";
-const char STRING_TO_FLOAT_FORMAT[32] = "%f#%f#%f";
+const char FLOAT_TO_STRING_FORMAT[32] = "%f#%f#%f#%f";
+const char STRING_TO_FLOAT_FORMAT[32] = "%f#%f#%f#%f";
 
 
 void replaceChacacter( char* str, char oldChar, char newChar )
@@ -47,26 +47,15 @@ SelectionTransformation::SelectionTransformation() :
     SceneCommand( SceneCommandType::SELECTION_TRANSFORMATION, 0 ),
     transformationType_( SelectionTransformationType::TRANSLATION )
 {
-    setTransformationMagnitude( 0.0f, 0.0f, 0.0f );
+    setTransformationMagnitude( 0.0f, 0.0f, 0.0f, 0.0f );
 }
 
 
-SelectionTransformation::SelectionTransformation( UserID userID,
-                                                  SelectionTransformationType transformationType ) :
+SelectionTransformation::SelectionTransformation( UserID userID ) :
     SceneCommand( SceneCommandType::SELECTION_TRANSFORMATION, userID ),
-    transformationType_( transformationType )
+    transformationType_( SelectionTransformationType::TRANSLATION  )
 {
-    setTransformationMagnitude( 0.0f, 0.0f, 0.0f );
-}
-
-
-SelectionTransformation::SelectionTransformation( UserID userID,
-                                                  SelectionTransformationType transformationType,
-                                                  const float* transformationMagnitude ) :
-    SceneCommand( SceneCommandType::SELECTION_TRANSFORMATION, userID ),
-    transformationType_( transformationType )
-{
-    setTransformationMagnitude( transformationMagnitude );
+    setTransformationMagnitude( 0.0f, 0.0f, 0.0f, 0.0f );
 }
 
 
@@ -74,7 +63,10 @@ SelectionTransformation::SelectionTransformation( const SelectionTransformation&
     SceneCommand( b ),
     transformationType_( b.transformationType_ )
 {
-    setTransformationMagnitude( b.transformationMagnitude_ );
+    setTransformationMagnitude( b.angle_,
+                                b.transformationMagnitude_[0],
+                                b.transformationMagnitude_[1],
+                                b.transformationMagnitude_[2] );
 }
 
 
@@ -134,12 +126,13 @@ const char* SelectionTransformation::unpack( const char* buffer )
     // float one.
     sscanfReturnValue = sscanf( transformationMagnitudeStr_,
                                 STRING_TO_FLOAT_FORMAT,
+                                &angle_,
                                 &( transformationMagnitude_[0] ),
                                 &( transformationMagnitude_[1] ),
                                 &( transformationMagnitude_[2] )
                                 );
 
-    if( ( sscanfReturnValue < 3 ) || ( sscanfReturnValue == EOF ) ){
+    if( ( sscanfReturnValue < 4 ) || ( sscanfReturnValue == EOF ) ){
         throw std::runtime_error( std::string( "ERROR when unpacking transformation magnitude by sscanf: return value(" ) +
                                   std::to_string( sscanfReturnValue ) +
                                   std::string( ")" ) );
@@ -175,6 +168,12 @@ const float* SelectionTransformation::getTransformationMagnitude() const
 }
 
 
+float SelectionTransformation::getAngle() const
+{
+    return angle_;
+}
+
+
 /***
  * 4. Setters
  ***/
@@ -186,46 +185,95 @@ void SelectionTransformation::setTransformationType( SelectionTransformationType
 }
 
 
-void SelectionTransformation::setTransformationMagnitude( const float* transformationMagnitude )
+void SelectionTransformation::setTranslation( float tx, float ty, float tz )
 {
-    unsigned int i;
+    // We are doing a translation.
+    transformationType_ = SelectionTransformationType::TRANSLATION;
 
-    // Copy the transformation magnitude.
-    for( i=0; i<3; i++ ){
-        transformationMagnitude_[i] = transformationMagnitude[i];
-    }
-
-    // Create the string representation of the transformation magnitude.
-    snprintf( transformationMagnitudeStr_,
-              TRANSFORMATION_MAGNITUDE_STR_SIZE,
-              FLOAT_TO_STRING_FORMAT,
-              transformationMagnitude_[0],
-              transformationMagnitude_[1],
-              transformationMagnitude_[2] );
-
-    // The string representation of the float values may have a different
-    // decimal separator between machines. Replace it with a dot for
-    // network transfer.
-    replaceChacacter( transformationMagnitudeStr_,
-                      ( localeconv() )->decimal_point[0],
-                      '.' );
+    // Set the transformation magnitude.
+    setTransformationMagnitude( 0.0f, tx, ty, tz );
 }
 
 
-void SelectionTransformation::setTransformationMagnitude( const float& xTransf, const float& yTransf, const float& zTransf )
+void SelectionTransformation::setTranslation( const float* direction )
 {
-    // Copy the transformation magnitude.
-    transformationMagnitude_[0] = xTransf;
-    transformationMagnitude_[1] = yTransf;
-    transformationMagnitude_[2] = zTransf;
+    // We are doing a translation.
+    transformationType_ = SelectionTransformationType::TRANSLATION;
 
-    // Create the string representation of the transformation magnitude.
+    // Set the transformation magnitude.
+    setTransformationMagnitude( 0.0f,
+                                direction[0],
+                                direction[1],
+                                direction[2] );
+}
+
+
+void SelectionTransformation::setRotation( float angle, float vx, float vy, float vz )
+{
+    // We are doing a rotation.
+    transformationType_ = SelectionTransformationType::ROTATION;
+
+    // Set the transformation magnitude.
+    setTransformationMagnitude( angle, vx, vy, vz );
+}
+
+
+void SelectionTransformation::setRotation( float angle, const float* axis )
+{
+    // We are doing a rotation.
+    transformationType_ = SelectionTransformationType::ROTATION;
+
+    // Set the transformation magnitude.
+    setTransformationMagnitude(
+            angle,
+            axis[0],
+            axis[1],
+            axis[2] );
+}
+
+
+void SelectionTransformation::setScale( float sx, float sy, float sz )
+{
+    // We are doing a scale.
+    transformationType_ = SelectionTransformationType::SCALE;
+
+    // Set the transformation magnitude.
+    setTransformationMagnitude( 0.0f, sx, sy, sz );
+}
+
+
+void SelectionTransformation::setScale( const float* magnitude )
+{
+    // We are doing a scale.
+    transformationType_ = SelectionTransformationType::SCALE;
+
+    // Set the transformation magnitude.
+    setTransformationMagnitude(
+            0.0f,
+            magnitude[0],
+            magnitude[1],
+            magnitude[2] );
+}
+
+
+void SelectionTransformation::setTransformationMagnitude( float angle, float x, float y, float z )
+{
+    // Copy the angle.
+    angle_ = angle;
+
+    // Copy the transformation magnitude.
+    transformationMagnitude_[0] = x;
+    transformationMagnitude_[1] = y;
+    transformationMagnitude_[2] = z;
+
+    // Create the string representation of the transformation angle and vector.
     snprintf( transformationMagnitudeStr_,
               TRANSFORMATION_MAGNITUDE_STR_SIZE,
               FLOAT_TO_STRING_FORMAT,
-              xTransf,
-              yTransf,
-              zTransf );
+              angle,
+              x,
+              y,
+              z );
 
     // The string representation of the float values may have a different
     // decimal separator between machines. Replace it with a dot for

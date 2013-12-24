@@ -172,13 +172,13 @@ class Scene : public QOffscreenSurface
          * 7. Transformations
          ***/
         void translateSelection( glm::vec3 direction );
-        void translateSelection( const glm::vec3& direction, UserID userID );
+        void translateSelection( glm::vec3 direction, UserID userID );
 
-        void rotateSelection( const GLfloat& angle, const glm::vec3& axis );
-        void rotateSelection( const GLfloat& angle, const glm::vec3& axis, UserID userID );
+        void rotateSelection( GLfloat angle, glm::vec3 axis );
+        void rotateSelection( GLfloat angle, glm::vec3 axis, UserID userID );
 
-        void scaleSelection( const glm::vec3& scaleFactors );
-        void scaleSelection( const glm::vec3& scaleFactors, UserID userID );
+        void scaleSelection( glm::vec3 scaleFactors );
+        void scaleSelection( glm::vec3 scaleFactors, UserID userID );
         //void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
 
         void deleteSelection();
@@ -202,11 +202,20 @@ class Scene : public QOffscreenSurface
         void userConnected( UserConnectedConstPtr command );
         void userDisconnected( UserID userID );
 
+
         /***
          * 10. Slots
          ***/
     public slots:
         void executeRemoteCommand( SceneCommandConstPtr command );
+
+
+        /***
+         * 11. Auxiliar methods
+         ***/
+    public:
+        void roundTransformationMagnitude( float& vx, float& vy, float& vz );
+        void roundTransformationMagnitude( float& angle, float& vx, float& vy, float& vz );
 };
 
 typedef std::shared_ptr< Scene > ScenePtr;

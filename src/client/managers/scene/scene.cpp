@@ -608,25 +608,23 @@ DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool a
 
 void Scene::translateSelection( glm::vec3 direction )
 {
-    unsigned int i;
+    SceneCommandPtr translationCommand( new SelectionTransformation( localUserID_ ) );
 
     // Round transformation magnitude to 3 decimal places.
-    // http://stackoverflow.com/questions/1343890/rounding-number-to-2-decimal-places-in-c
-    for( i=0; i<3; i++ ){
-        // TODO: Why the 0.5?
-        direction[i] = floorf( direction[i] * 1000 + 0.5) / 1000;
-    }
+    roundTransformationMagnitude( direction[0], direction[1], direction[2] );
+
     log_->debug( "Scene::translateSelection(", direction[0], ", ", direction[1], ", ", direction[2], ")\n" );
 
     // Translate locally (client).
     translateSelection( direction, localUserID_ );
 
     // Send command to the server.
-    server_.sendCommand( SceneCommandConstPtr( new SelectionTransformation( localUserID_, SelectionTransformationType::TRANSLATION, &direction[0] ) ) );
+    ( dynamic_cast< SelectionTransformation* >( translationCommand.get() ) )->setTranslation( &direction[0] );
+    server_.sendCommand( translationCommand );
 }
 
 
-void Scene::translateSelection( const glm::vec3& direction, UserID userID )
+void Scene::translateSelection( glm::vec3 direction, UserID userID )
 {
     log_->debug( "Scene::translateSelection(", direction[0], ", ", direction[1], ", ", direction[2], ")\n" );
 
@@ -639,14 +637,23 @@ void Scene::translateSelection( const glm::vec3& direction, UserID userID )
 }
 
 
-void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis )
+void Scene::rotateSelection( GLfloat angle, glm::vec3 axis )
 {
+    SceneCommandPtr rotationCommand( new SelectionTransformation( localUserID_ ) );
+
+    // Round transformation magnitude to 3 decimal places.
+    roundTransformationMagnitude( angle, axis[0], axis[1], axis[2] );
+
     // Rotate locally (client).
     rotateSelection( angle, axis, localUserID_ );
+
+    // Send command to the server.
+    ( dynamic_cast< SelectionTransformation* >( rotationCommand.get() ) )->setRotation( angle, &axis[0] );
+    server_.sendCommand( rotationCommand );
 }
 
 
-void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, UserID userID )
+void Scene::rotateSelection( GLfloat angle, glm::vec3 axis, UserID userID )
 {
     // Get the user's selection and rotate it.
     getUserSelection( userID )->rotate( angle, axis );
@@ -657,14 +664,23 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, UserID
 }
 
 
-void Scene::scaleSelection( const glm::vec3& scaleFactors )
+void Scene::scaleSelection( glm::vec3 scaleFactors )
 {
+    SceneCommandPtr scaleCommand( new SelectionTransformation( localUserID_ ) );
+
+    // Round transformation magnitude to 3 decimal places.
+    roundTransformationMagnitude( scaleFactors[0], scaleFactors[1], scaleFactors[2] );
+
     // Scale locally (client).
     scaleSelection( scaleFactors, localUserID_ );
+
+    // Send command to the server.
+    ( dynamic_cast< SelectionTransformation* >( scaleCommand.get() ) )->setScale( &scaleFactors[0] );
+    server_.sendCommand( scaleCommand );
 }
 
 
-void Scene::scaleSelection( const glm::vec3& scaleFactors, UserID userID )
+void Scene::scaleSelection( glm::vec3 scaleFactors, UserID userID )
 {
     // Get the user's selection and scale it.
     getUserSelection( userID )->scale( scaleFactors );
@@ -799,7 +815,7 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
     const CreateCube* createCube = nullptr;
     const SelectionResponse* selectionResponse = nullptr;
     const SelectDrawable* selectDrawable = nullptr;
-    const SelectionTransformation* selectionTrasformation = nullptr;
+    const SelectionTransformation* selectionTransformation = nullptr;
 
     DrawableID pendingSelection;
 
@@ -866,15 +882,61 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
         break;
         case SceneCommandType::SELECTION_TRANSFORMATION:
             // Cast to a SELECTION_TRANSFORMATION command.
-            selectionTrasformation = dynamic_cast< const SelectionTransformation* >( command.get() );
+            selectionTransformation = dynamic_cast< const SelectionTransformation* >( command.get() );
 
             // Transform the user's selection.
-            const float* transf = selectionTrasformation->getTransformationMagnitude();
-            log_->debug( "Scene - remote translation (", transf[0], ", ", transf[1], ", ", transf[2], ")\n" );
+            const float* transf = selectionTransformation->getTransformationMagnitude();
 
-            translateSelection( glm::vec3( transf[0], transf[1], transf[2] ), selectionTrasformation->getUserID() );
+            // Execute one transformation or another according to the requested
+            // type.
+            switch( selectionTransformation->getTransformationType() ){
+                case SelectionTransformationType::TRANSLATION:
+                    log_->debug( "Scene - remote translation (", transf[0], ", ", transf[1], ", ", transf[2], ")\n" );
+
+                    translateSelection( glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
+                break;
+                case SelectionTransformationType::ROTATION:
+                    log_->debug( "Scene - remote rotation angle(", selectionTransformation->getAngle(), " axis(", transf[0], ", ", transf[1], ", ", transf[2], ")\n" );
+
+                    rotateSelection( selectionTransformation->getAngle(), glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
+                break;
+                case SelectionTransformationType::SCALE:
+                    log_->debug( "Scene - remote scale (", transf[0], ", ", transf[1], ", ", transf[2], ")\n" );
+
+                    scaleSelection( glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
+                break;
+            }
+
         break;
     }
 }
+
+
+/***
+ * 11. Auxiliar methods
+ ***/
+
+void Scene::roundTransformationMagnitude( float& vx, float& vy, float& vz )
+{
+    // Round transformation magnitude to 3 decimal places.
+    // http://stackoverflow.com/questions/1343890/rounding-number-to-2-decimal-places-in-c
+    // TODO: Why the 0.5?
+    vx = floorf( vx * 1000 + 0.5) / 1000;
+    vy = floorf( vy * 1000 + 0.5) / 1000;
+    vz = floorf( vz * 1000 + 0.5) / 1000;
+}
+
+
+void Scene::roundTransformationMagnitude( float& angle, float& vx, float& vy, float& vz )
+{
+    // Round transformation magnitude to 3 decimal places.
+    // http://stackoverflow.com/questions/1343890/rounding-number-to-2-decimal-places-in-c
+    // TODO: Why the 0.5?
+    angle = floorf( angle * 1000 + 0.5) / 1000;
+    vx = floorf( vx * 1000 + 0.5) / 1000;
+    vy = floorf( vy * 1000 + 0.5) / 1000;
+    vz = floorf( vz * 1000 + 0.5) / 1000;
+}
+
 
 } // namespace como

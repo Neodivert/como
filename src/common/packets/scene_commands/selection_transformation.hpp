@@ -47,6 +47,9 @@ class SelectionTransformation : public SceneCommand
         // Transformation type.
         SelectionTransformationType transformationType_;
 
+        // Angle (for rotations).
+        float angle_;
+
         // Transformation magnitude (in every axis).
         float transformationMagnitude_[3];
 
@@ -59,8 +62,7 @@ class SelectionTransformation : public SceneCommand
          * 1. Initialization and destruction
          ***/
         SelectionTransformation();
-        SelectionTransformation( UserID userID, SelectionTransformationType transformationType );
-        SelectionTransformation( UserID userID, SelectionTransformationType transformationType, const float* transformationMagnitude );
+        SelectionTransformation( UserID userID );
         SelectionTransformation( const SelectionTransformation& b );
 
         virtual ~SelectionTransformation(){}
@@ -79,14 +81,25 @@ class SelectionTransformation : public SceneCommand
         virtual std::uint16_t getPacketSize() const ;
         SelectionTransformationType getTransformationType() const ;
         const float* getTransformationMagnitude() const ;
+        float getAngle() const ;
 
 
         /***
          * 4. Setters
          ***/
         void setTransformationType( SelectionTransformationType transformationType );
-        void setTransformationMagnitude( const float* transformationMagnitude );
-        void setTransformationMagnitude( const float& xTransf, const float& yTransf, const float& zTransf );
+
+        void setTranslation( float tx, float ty, float tz );
+        void setTranslation( const float* direction );
+
+        void setRotation( float angle, float vx, float vy, float vz );
+        void setRotation( float angle, const float* axis );
+
+        void setScale( float sx, float sy, float sz );
+        void setScale( const float* magnitude );
+
+    private:
+        void setTransformationMagnitude( float angle, float x, float y, float z );
 };
 
 } // namespace como
