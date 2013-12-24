@@ -17,43 +17,47 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SCENE_COMMAND_HPP
-#define SCENE_COMMAND_HPP
+#ifndef CHANGE_PARAMETER_HPP
+#define CHANGE_PARAMETER_HPP
 
-#include "../packable.hpp"
-#include <memory>
+#include "scene_command.hpp"
 
 namespace como {
 
-enum class SceneCommandType : std::uint8_t
+// Available pivot point modes.
+enum class PivotPointMode
 {
-    USER_CONNECTED = 0,
-    USER_DISCONNECTED,
-    CREATE_CUBE,
-    SELECTION_RESPONSE,
-    SELECT_DRAWABLE,
-    UNSELECT_ALL,
-    SELECTION_TRANSFORMATION,
-    CHANGE_PARAMETER
+    MEDIAN_POINT = 0,
+    INDIVIDUAL_CENTROIDS,
+    WORLD_ORIGIN
+};
+
+enum class ParameterType
+{
+    PIVOT_POINT_MODE
 };
 
 
-class SceneCommand : public Packable
+class ChangeParameter : public SceneCommand
 {
     private:
-        SceneCommandType type_;
-        UserID userID_;
+        ParameterType parameterType_;
+
+        union ParameterValue {
+            PivotPointMode pivotPointMode_;
+        } value_;
 
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        SceneCommand( SceneCommandType type );
-        SceneCommand( SceneCommandType type, UserID userID );
-        SceneCommand( const SceneCommand& b );
+        ChangeParameter();
+        ChangeParameter( UserID userID );
+        ChangeParameter( UserID userID, PivotPointMode pivotPointMode );
+        ChangeParameter( const ChangeParameter& b );
 
-        virtual ~SceneCommand(){}
+        virtual ~ChangeParameter(){}
 
 
         /***
@@ -67,20 +71,16 @@ class SceneCommand : public Packable
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const ;
-        SceneCommandType getType() const ;
-        static SceneCommandType getType( const char* buffer );
-        UserID getUserID() const ;
+        ParameterType getParameterType() const ;
+        PivotPointMode getPivotPointMode() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setUserID( const UserID& userID );
+        void setPivotPointMode( PivotPointMode pivotPointMode );
 };
-
-typedef std::shared_ptr< SceneCommand > SceneCommandPtr;
-typedef std::shared_ptr< const SceneCommand > SceneCommandConstPtr;
 
 } // namespace como
 
-#endif // SCENE_COMMAND_HPP
+#endif // CHANGE_PARAMETER_HPP

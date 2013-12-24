@@ -110,6 +110,9 @@ const char* SceneUpdate::unpackBody( const char* buffer )
             case SceneCommandType::SELECTION_TRANSFORMATION:
                 sceneCommandPtr = SceneCommandPtr( new SelectionTransformation );
             break;
+            case SceneCommandType::CHANGE_PARAMETER:
+                sceneCommandPtr = SceneCommandPtr( new ChangeParameter );
+            break;
             default:
                 throw std::runtime_error( "ERROR: Unknown command found while unpackin SCENE_UPDATE packet" );
             break;

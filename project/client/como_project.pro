@@ -65,7 +65,8 @@ HEADERS += \
     ../../src/common/packets/scene_commands/selection_response.hpp \
     ../../src/common/packets/scene_commands/drawable_commands/select_drawable.hpp \
     ../../src/common/packets/scene_commands/selection_transformation.hpp \
-    ../../src/client/models/3d/drawables_selection.hpp
+    ../../src/client/models/3d/drawables_selection.hpp \
+    ../../src/common/packets/scene_commands/change_parameter.hpp
 
 SOURCES += \
     ../../src/client/gui/viewport.cpp \
@@ -103,4 +104,5 @@ SOURCES += \
     ../../src/common/packets/scene_commands/selection_response.cpp \
     ../../src/common/packets/scene_commands/drawable_commands/select_drawable.cpp \
     ../../src/common/packets/scene_commands/selection_transformation.cpp \
-    ../../src/client/models/3d/drawables_selection.cpp
+    ../../src/client/models/3d/drawables_selection.cpp \
+    ../../src/common/packets/scene_commands/change_parameter.cpp

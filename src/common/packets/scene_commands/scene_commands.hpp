@@ -27,5 +27,6 @@
 #include "selection_response.hpp"
 #include "drawable_commands/select_drawable.hpp"
 #include "selection_transformation.hpp"
+#include "change_parameter.hpp"
 
 #endif // SCENE_COMMANDS_HPP

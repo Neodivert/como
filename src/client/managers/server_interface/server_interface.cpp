@@ -181,6 +181,9 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
             case SceneCommandType::SELECTION_TRANSFORMATION:
                 log_->debug( "\tCommand[", i, "]: SELECTION_TRANSFORMATION\n" );
             break;
+            case SceneCommandType::CHANGE_PARAMETER:
+                log_->debug( "\tCommand[", i, "]: CHANGE_PARAMETER\n" );
+            break;
         }
     }
 

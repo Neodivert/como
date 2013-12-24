@@ -22,6 +22,7 @@
 
 #include "drawable.hpp"
 #include "../../../common/utilities/ids.hpp"
+#include "../../../common/packets/scene_commands/change_parameter.hpp" // For PivotPointMode type.
 #include <map>
 #include <functional>
 
@@ -31,14 +32,6 @@ typedef std::map< DrawableID, DrawablePtr > DrawablesMap;
 
 typedef std::function<void (void)> NotificationCallback;
 
-
-// Available pivot point modes.
-enum class PivotPointMode
-{
-    MEDIAN_POINT = 0,
-    INDIVIDUAL_CENTROIDS,
-    WORLD_ORIGIN
-};
 const unsigned int N_PIVOT_POINT_MODES = 3;
 
 // Available pivot point modes (strings for GUI output).

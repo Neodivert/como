@@ -290,7 +290,11 @@ void Scene::setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny )
 
 void Scene::setPivotPointMode( PivotPointMode pivotPointMode )
 {
+    // Set user's pivot point mode.
     setPivotPointMode( pivotPointMode, localUserID_ );
+
+    // Send the command to the server.
+    server_.sendCommand( SceneCommandConstPtr( new ChangeParameter( localUserID_, pivotPointMode ) ) );
 }
 
 
@@ -816,6 +820,9 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
     const SelectionResponse* selectionResponse = nullptr;
     const SelectDrawable* selectDrawable = nullptr;
     const SelectionTransformation* selectionTransformation = nullptr;
+    const ChangeParameter* changeParameter = nullptr;
+
+    const float* transf = nullptr;
 
     DrawableID pendingSelection;
 
@@ -885,7 +892,7 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
             selectionTransformation = dynamic_cast< const SelectionTransformation* >( command.get() );
 
             // Transform the user's selection.
-            const float* transf = selectionTransformation->getTransformationMagnitude();
+            transf = selectionTransformation->getTransformationMagnitude();
 
             // Execute one transformation or another according to the requested
             // type.
@@ -906,7 +913,17 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
                     scaleSelection( glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
                 break;
             }
+        break;
+        case SceneCommandType::CHANGE_PARAMETER:
+            // Cast to a CHANGE_PARAMETER command.
+            changeParameter = dynamic_cast< const ChangeParameter* >( command.get() );
 
+            // Change parameter.
+            switch( changeParameter->getParameterType() ){
+                case ParameterType::PIVOT_POINT_MODE:
+                    setPivotPointMode( changeParameter->getPivotPointMode(), changeParameter->getUserID() );
+                break;
+            }
         break;
     }
 }

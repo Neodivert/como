@@ -20,9 +20,10 @@ SOURCES += \
     ../../src/common/packets/scene_commands/drawable_commands/create_cube.cpp \
     ../../src/common/packets/scene_commands/selection_response.cpp \
     ../../src/common/packets/scene_commands/drawable_commands/select_drawable.cpp \
-    ../../src/common/packets/scene_commands/selection_transformation.cpp
+    ../../src/common/packets/scene_commands/selection_transformation.cpp \
+    ../../src/common/packets/scene_commands/change_parameter.cpp
 
-LIBS += -lpthread
+LIBS += -lpthread -lGLEW -lGL
 
 HEADERS += \
     ../../src/server/server.hpp \
@@ -45,7 +46,8 @@ HEADERS += \
     ../../src/common/packets/scene_commands/drawable_commands/create_cube.hpp \
     ../../src/common/packets/scene_commands/selection_response.hpp \
     ../../src/common/packets/scene_commands/drawable_commands/select_drawable.hpp \
-    ../../src/common/packets/scene_commands/selection_transformation.hpp
+    ../../src/common/packets/scene_commands/selection_transformation.hpp \
+    ../../src/common/packets/scene_commands/change_parameter.hpp
 
 # Link boost libraries
 unix|win32: LIBS += -lboost_system
