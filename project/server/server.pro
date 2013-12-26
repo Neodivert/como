@@ -55,3 +55,6 @@ unix|win32: LIBS += -lboost_thread
 
 # http://qt-project.org/forums/viewthread/19989
 CONFIG += c++11
+
+# http://stackoverflow.com/questions/1119881/how-do-i-specifiy-an-object-directory-in-a-qt-project-file
+OBJECTS_DIR = ../../bin-debug/server/obj/
