@@ -56,7 +56,7 @@ class PublicUser : public BasicUser
 
         //std::function<void ()> broadcastCallback_;
 
-        std::uint8_t nextCommand_;
+        std::uint32_t nextCommand_;
         std::uint8_t nCommandsInLastPacket_;
         std::uint32_t lastCommandSent_;
 
