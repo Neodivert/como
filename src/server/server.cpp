@@ -259,6 +259,9 @@ void Server::processSceneCommand( UserID userID,
             // Unselect all.
             unselectAll( sceneCommand->getUserID() );
         break;
+        default:
+            // No processing needed.
+        break;
     }
 
     // Add the command to the historic.
@@ -274,48 +277,6 @@ void Server::addCommand( SceneCommandConstPtr sceneCommand )
 {
     // Add the command to the historic.
     commandsHistoric_->addCommand( sceneCommand );
-
-    // A new command has been added to the historic. Broadcast a signal
-    // informing about it to all the users.
-    //broadcast();
-
-    // Write the full historic in the log.
-    log_->lock();
-    switch( sceneCommand->getType() ){
-        case SceneCommandType::USER_CONNECTED:
-            log_->debug( "Command added to historic [USER_CONNECTED]\n" );
-        break;
-        case SceneCommandType::USER_DISCONNECTED:
-            log_->debug( "Command added to historic [USER_DISCONNECTED]\n" );
-        break;
-        case SceneCommandType::CREATE_CUBE:
-            log_->debug( "Command added to historic [CREATE_CUBE]\n" );
-        break;
-        case SceneCommandType::SELECTION_RESPONSE:
-        break;
-    }
-
-
-    /*
-    i = 0;
-    log_->debug( "Historic after insertion: \n" );
-    for( it = commandsHistoric_.begin() ; it != commandsHistoric_.end(); it++ ){
-        log_->debug( "Command [", i, "]: " );
-
-        switch( (*it)->getType() ){
-            case SceneCommandType::USER_CONNECTED:
-                log_->debug( "USER_CONNECTED" );
-            break;
-            case SceneCommandType::USER_DISCONNECTED:
-                log_->debug( "USER_DISCONNECTED" );
-            break;
-        }
-        log_->debug( "\n" );
-        i++;
-    }
-    */
-
-    log_->unlock();
 }
 
 

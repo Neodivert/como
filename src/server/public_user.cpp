@@ -180,7 +180,10 @@ void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode,
 
         selectionResponse_->clear();
 
-        log_->debug( "SCENE_UPDATE sended (nextCommand_: ", (int)nextCommand_, ")\n" );
+        log_->debug( "SCENE_UPDATE sent - commands(",
+                     dynamic_cast< const SceneUpdate* >( packet.get() )->getCommands()->size(),
+                     ") - nextCommand_(",
+                     (int)nextCommand_, ")\n" );
 
         if( needsSceneUpdate() ){
             requestUpdate();

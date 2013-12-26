@@ -56,5 +56,17 @@ unix|win32: LIBS += -lboost_thread
 # http://qt-project.org/forums/viewthread/19989
 CONFIG += c++11
 
+QMAKE_CXXFLAGS_WARN_ON += -Wall -Werror
+QMAKE_CXXFLAGS += -pedantic-errors
+
 # http://stackoverflow.com/questions/1119881/how-do-i-specifiy-an-object-directory-in-a-qt-project-file
-OBJECTS_DIR = ../../bin-debug/server/obj/
+# http://stackoverflow.com/questions/2580934/how-to-specify-different-debug-release-output-directories-in-qmake-pro-file
+# http://qt-project.org/doc/qt-4.8/qmake-project-files.html#variables
+# release: DESTDIR = build/release
+debug:   DESTDIR = ../../bin-debug/server
+
+BUILD_DATA_DIR = $$DESTDIR/.build_data
+OBJECTS_DIR = $$BUILD_DATA_DIR/obj
+MOC_DIR = $$BUILD_DATA_DIR/moc
+RCC_DIR = $$BUILD_DATA_DIR/qrc
+UI_DIR = $$BUILD_DATA_DIR/ui
