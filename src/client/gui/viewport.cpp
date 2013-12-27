@@ -299,25 +299,31 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
             case TransformationType::ROTATION:
                 // Compute the angle between the vectors.
                 pivotPointToMousePosVector = glm::normalize( mousePos - scenePivotPoint );
-                lastPivotPointToMousePosVector = glm::normalize( lastMousePos - scenePivotPoint );
+                lastPivotPointToMousePosVector = lastMousePos - scenePivotPoint;
 
-                angle = glm::orientedAngle( pivotPointToMousePosVector, lastPivotPointToMousePosVector );
+                // Error checking : if lastPivotPointToMousePosVector's lenght
+                // would be zero, we would have a NaN when normalizing it.
+                if( glm::length( lastPivotPointToMousePosVector ) != 0.0f ){
+                    lastPivotPointToMousePosVector = glm::normalize( lastPivotPointToMousePosVector );
 
-                // Make the rotation about an axis or another depending on the current
-                // transformationMode.
-                switch( transformationMode ){
-                    case TransformationMode::FIXED_X:
-                        comoApp->getScene()->rotateSelection( angle, xAxis );
-                    break;
-                    case TransformationMode::FIXED_Y:
-                        comoApp->getScene()->rotateSelection( angle, yAxis );
-                    break;
-                    case TransformationMode::FIXED_Z:
-                        comoApp->getScene()->rotateSelection( angle, zAxis );
-                    break;
-                    case TransformationMode::FREE:
-                        comoApp->getScene()->rotateSelection( angle, glm::vec3( -camera->getCenterVector() ) );
-                    break;
+                    angle = glm::orientedAngle( pivotPointToMousePosVector, lastPivotPointToMousePosVector );
+
+                    // Make the rotation about an axis or another depending on the current
+                    // transformationMode.
+                    switch( transformationMode ){
+                        case TransformationMode::FIXED_X:
+                            comoApp->getScene()->rotateSelection( angle, xAxis );
+                        break;
+                        case TransformationMode::FIXED_Y:
+                            comoApp->getScene()->rotateSelection( angle, yAxis );
+                        break;
+                        case TransformationMode::FIXED_Z:
+                            comoApp->getScene()->rotateSelection( angle, zAxis );
+                        break;
+                        case TransformationMode::FREE:
+                            comoApp->getScene()->rotateSelection( angle, glm::vec3( -camera->getCenterVector() ) );
+                        break;
+                    }
                 }
 
             break;
@@ -326,34 +332,40 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 pivotPointToMousePosVector = mousePos - scenePivotPoint;
                 lastPivotPointToMousePosVector = lastMousePos - scenePivotPoint;
 
-                transformVector = glm::vec4( pivotPointToMousePosVector.x / lastPivotPointToMousePosVector.x,
-                                             pivotPointToMousePosVector.y / lastPivotPointToMousePosVector.y,
-                                             1.0f,
-                                             1.0f );
+                // Error checking : if lastPivotPointToMousePosVector's
+                // components would be zero, we would have a NaN when
+                // dividing by it.
+                if( lastPivotPointToMousePosVector.x != 0.0f &&
+                    lastPivotPointToMousePosVector.y != 0.0f ){
+                    transformVector = glm::vec4( pivotPointToMousePosVector.x / lastPivotPointToMousePosVector.x,
+                                                 pivotPointToMousePosVector.y / lastPivotPointToMousePosVector.y,
+                                                 1.0f,
+                                                 1.0f );
 
-                // Transform the scale vector from window to world space.
-                transformVector = Drawable::transformScaleVector( transformVector, glm::inverse( projectionMatrix * camera->getViewMatrix() ) );
+                    // Transform the scale vector from window to world space.
+                    transformVector = Drawable::transformScaleVector( transformVector, glm::inverse( projectionMatrix * camera->getViewMatrix() ) );
 
-                // If requested, attach the tranformation vector to an axis.
-                switch( transformationMode ){
-                    case TransformationMode::FIXED_X:
-                        transformVector.y = 1.0f;
-                        transformVector.z = 1.0f;
-                    break;
-                    case TransformationMode::FIXED_Y:
-                        transformVector.x = 1.0f;
-                        transformVector.z = 1.0f;
-                    break;
-                    case TransformationMode::FIXED_Z:
-                        transformVector.x = 1.0f;
-                        transformVector.y = 1.0f;
-                    break;
-                    default:
-                    break;
+                    // If requested, attach the tranformation vector to an axis.
+                    switch( transformationMode ){
+                        case TransformationMode::FIXED_X:
+                            transformVector.y = 1.0f;
+                            transformVector.z = 1.0f;
+                        break;
+                        case TransformationMode::FIXED_Y:
+                            transformVector.x = 1.0f;
+                            transformVector.z = 1.0f;
+                        break;
+                        case TransformationMode::FIXED_Z:
+                            transformVector.x = 1.0f;
+                            transformVector.y = 1.0f;
+                        break;
+                        default:
+                        break;
+                    }
+
+                    // Do the scale.
+                    comoApp->getScene()->scaleSelection( glm::vec3( transformVector ) );
                 }
-
-                // Do the scale.
-                comoApp->getScene()->scaleSelection( glm::vec3( transformVector ) );
             break;
             default:
             break;
