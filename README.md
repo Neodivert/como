@@ -10,26 +10,29 @@ COMO is a project which aims to create a Cooperative Modeller, where users could
 The proyect will be developed through prototypes.
 
 ### Current status
-By now, COMO is only a local modeller of cubes :). The user can:
-* Create cubes.
-* Delete cubes.
-* View the scene through 4 viewports, whose cameras can be set to six predefined views: left, right, top, bottom, front and back. 
-* Transform cubes (translations, rotations and scales). The rotations and scales can be made relative to three different pivot points: selection centroid, individual origins and world origin.
+By now, COMO allows users to have fun with cubes :). Each user can do the following things and the others will see it:
+* Creating cubes.
+* Deleting cubes.
+* Selecting multiple cubes.
+* Translating, rotating and scalling selections of cubes. The rotations and scales can be made relative to three different pivot points: selection centroid, individual origins and world origin.
 
-### Next steps
-Currently, I'm designing the online component: thinking how the scenes will be shared, how the synchronization between clients will be done, etc.
+## Dependencies
+COMO makes use of the following APIs and libraries:
+* Qt 5.2.
+* OpenGL 4.3 and GLSL.
+* GLM.
 
 ## Instalation
 * Clone this repository in local:
 
 ```
-	git clone git@github.com:Neodivert/como directory
+	git clone git@github.com:Neodivert/como <directory>
 ```
 
 * Enter in the previous local directory.
 
 ```
-	cd directory
+	cd <directory>
 ```
 
 * Initialize and update the repository's submodules:
@@ -38,3 +41,7 @@ Currently, I'm designing the online component: thinking how the scenes will be s
 	git submodules init  
 	git submodules update  
 ```
+
+* For compiling the client: enter into "bin-debug/client" subdirectory and execute make.
+
+* For compiling the server: enter into "bin-debug/server" subdirectory and execute make.
