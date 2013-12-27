@@ -363,8 +363,14 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                         break;
                     }
 
-                    // Do the scale.
-                    comoApp->getScene()->scaleSelection( glm::vec3( transformVector ) );
+                    // Do the scale only if none of the scaling factors is
+                    // zero.
+                    if( transformVector.x != 0.0f &&
+                        transformVector.y != 0.0f &&
+                        transformVector.z != 0.0f ){
+                        // Do the scale.
+                        comoApp->getScene()->scaleSelection( glm::vec3( transformVector ) );
+                    }
                 }
             break;
             default:
