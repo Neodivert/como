@@ -1,5 +1,5 @@
 /***
- * Copyright 2013 Moises J. Bonilla Caraballo (Neodivert)
+ * Copyright 2013, 2014 Moises J. Bonilla Caraballo (Neodivert)
  *
  * This file is part of COMO.
  *
