@@ -1,0 +1,3 @@
+[submodule "src/client/models/utilities/msl"]
+	path = src/client/models/utilities/msl
+	url = git@github.com:Neodivert/msl
