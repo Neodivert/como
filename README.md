@@ -16,13 +16,18 @@ By now, COMO allows users to have fun with cubes :). Each user can do the follow
 * Selecting multiple cubes.
 * Translating, rotating and scalling selections of cubes. The rotations and scales can be made relative to three different pivot points: selection centroid, individual origins and world origin.
 
-## Dependencies
+
+## Instalation
+
+### Dependencies
 COMO makes use of the following APIs and libraries:
 * Qt 5.2.
 * OpenGL 4.3 and GLSL.
 * GLM.
 
-## Instalation
+
+### Steps
+
 * Clone this repository in local:
 
 ```
