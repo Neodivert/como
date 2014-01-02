@@ -15,6 +15,8 @@ FORMS    += main_window.ui
 
 LIBS += -lGLEW -lGLU
 
+# /usr/bin/x86_64-w64-mingw32-g++
+
 # http://qt-project.org/forums/viewthread/19989
 CONFIG += c++11
 

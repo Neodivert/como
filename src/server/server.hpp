@@ -17,13 +17,6 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-/*
- * The server code was created thanks to the following tutorial:
- *
- * A guide to getting started with boost::asio
- * http://www.gamedev.net/blog/950/entry-2249317-a-guide-to-getting-started-with-boostasio/
- */
-
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
@@ -47,19 +40,20 @@ namespace como {
 typedef std::map< DrawableID, UserID > DrawableOwners;
 typedef std::map< UserID, PublicUserPtr > UsersMap;
 
+/*! Main server manager */
 class Server
 {
     private:
         // I/O service.
         std::shared_ptr< boost::asio::io_service > io_service_;
 
-        // Aceptor
+        // Acceptor for new TCP connections
         boost::asio::ip::tcp::acceptor acceptor_;
 
         // Work object.
         boost::asio::io_service::work work_;
 
-        // Users map.
+        // Users map (ID, user).
         UsersMap users_;
 
         // Number of worker threads in the server.
@@ -89,6 +83,7 @@ class Server
         // Historic of commands performed on the scene.
         CommandsHistoricPtr commandsHistoric_;
 
+        // A map that relates each drawable in the scene with its owner.
         DrawableOwners drawableOwners_;
 
         // Log
@@ -100,30 +95,51 @@ class Server
         /***
          * 1. Initialization and destruction
          ***/
+
+        /*! \brief Initialize a server.
+         * \param port_ port the server will be listening to.
+         * \param maxSessions maximum number of allowed simultaneous clients.
+         * \param nThreads number of threads used during server execution.
+         */
         Server( unsigned int port_, unsigned int maxSessions, unsigned int nThreads = 3 );
 
 
         /***
-         * 3. Main loop
+         * 2. Main loop
          ***/
+        /*! \brief Start the server's main loop. */
         void run();
-        void broadcast();
 
+    private:
+        /*! \brief Notify to all the users that there is new commands to synchronize. */
+        void broadcast();
 
         /***
          * 3. Listeners
          ***/
+        /*! \brief Listen for a new connection */
         void listen();
 
 
         /***
          * 4. Handlers
          ***/
+        /*! \brief Handler for a new connection */
         void onAccept( const boost::system::error_code& errorCode );
 
+        /*! \brief Process a SCENE_UPDATE packet received from client
+         * \param errorCode Error code associated with the packet reception.
+         * \param userID ID of the user who sent the packet.
+         * \param sceneUpdate SCENE_UPDATE packet received from client.
+        */
         void processSceneUpdate( const boost::system::error_code& errorCode,
                                  UserID userID,
                                  SceneUpdateConstPtr sceneUpdate );
+
+        /*! \brief Process a scene command.
+         * \param userID ID of the user who sent the command.
+         * \param sceneCommand Scene command.
+         */
         void processSceneCommand( UserID userID,
                                   SceneCommandConstPtr sceneCommand );
 
@@ -131,6 +147,7 @@ class Server
         /***
          * 5. Commands historic management.
          ***/
+        /*! \brief Add a command to the historic. */
         void addCommand( SceneCommandConstPtr sceneCommand );
 
 

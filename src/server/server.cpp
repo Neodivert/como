@@ -22,6 +22,10 @@
 namespace como {
 
 
+/***
+ * 1. Initialization and destruction
+ ***/
+
 Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThreads ) :
     // Initialize the server parameters.
     io_service_( std::shared_ptr< boost::asio::io_service >( new boost::asio::io_service ) ),
@@ -50,7 +54,7 @@ Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThre
 
 
 /***
- * 3. Main loop
+ * 2. Main loop
  ***/
 
 void Server::run()
