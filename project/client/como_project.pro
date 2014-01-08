@@ -23,11 +23,11 @@ CONFIG += c++11
 # http://stackoverflow.com/questions/2580934/how-to-specify-different-debug-release-output-directories-in-qmake-pro-file
 # IMPORTANT: The "debug_linux_64" is passed to CONFIG variable through
 # qmake's additional arguments (project options).
-debug_linux_64 {
+debug:linux_64 {
     TARGET = client_debug_linux_64
 
     DESTDIR = .
-    BUILD_DATA_DIR = $$DESTDIR/.build_data/debug-linux-64
+    BUILD_DATA_DIR = $$DESTDIR/.build_data/debug_linux_64
 }
 
 OBJECTS_DIR = $$BUILD_DATA_DIR/obj
