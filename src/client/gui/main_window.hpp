@@ -21,13 +21,9 @@
 #define MAIN_WINDOW_HPP
 
 #include <QMainWindow>
-#include "ui_main_window.h"
 #include "../managers/como_app.hpp"
 #include <QTypeInfo>
 
-namespace Ui {
-    class MainWindow;
-}
 
 Q_DECLARE_METATYPE( como::UserConnectedConstPtr )
 
@@ -40,8 +36,6 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
     private:
-        Ui::MainWindow *ui;
-
         // App's singlenton instance.
         shared_ptr< ComoApp > comoApp;
 

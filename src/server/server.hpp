@@ -135,6 +135,7 @@ class Server
         void processSceneUpdate( const boost::system::error_code& errorCode,
                                  UserID userID,
                                  SceneUpdateConstPtr sceneUpdate );
+        // TODO: The userID is already in sceneUpdate!
 
         /*! \brief Process a scene command.
          * \param userID ID of the user who sent the command.
@@ -142,6 +143,7 @@ class Server
          */
         void processSceneCommand( UserID userID,
                                   SceneCommandConstPtr sceneCommand );
+        // TODO: The userID is already in sceneCommand!
 
 
         /***

@@ -30,15 +30,18 @@ namespace como {
  ***/
 
 MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
-    QMainWindow( parent ),
-    ui(new Ui::MainWindow)
+    QMainWindow( parent )
 {
-    ui->setupUi(this);
-    setStyleSheet( "background-color: #F3E2A9;" );
+    ToolsMenu* toolsMenu = nullptr;
+    RenderPanel* renderPanel = nullptr;
+    UsersList* usersList = nullptr;
 
-    ToolsMenu* toolsMenu;
-    RenderPanel* renderPanel;
-    UsersList* usersList;
+    // Set window's title and dimensions.
+    setWindowTitle( tr( "Cooperative Modeller" ) );
+    setFixedSize( 1024, 768 );
+
+    // Set background color.
+    setStyleSheet( "background-color: #F3E2A9;" );
 
     // Create a instance of Log.
     log_ = LogPtr( new Log );
@@ -87,7 +90,6 @@ MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
 MainWindow::~MainWindow()
 {
     log_->debug( "Main window - destructor\n" );
-    delete ui;
 }
 
 

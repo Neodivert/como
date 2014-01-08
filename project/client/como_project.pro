@@ -4,40 +4,42 @@
 #
 #-------------------------------------------------
 
+# Qt modules
 QT       += core gui opengl
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = como_project
+# Template
 TEMPLATE = app
 
-FORMS    += main_window.ui
-
+# Libraries
 LIBS += -lGLEW -lGLU
+unix|win32: LIBS += -lboost_system
+unix|win32: LIBS += -lboost_thread
 
-# /usr/bin/x86_64-w64-mingw32-g++
-
-# http://qt-project.org/forums/viewthread/19989
+# C++11 support (http://qt-project.org/forums/viewthread/19989)
 CONFIG += c++11
 
-# http://stackoverflow.com/questions/1119881/how-do-i-specifiy-an-object-directory-in-a-qt-project-file
+# Set the target and the destination dir according to the current build in use.
 # http://stackoverflow.com/questions/2580934/how-to-specify-different-debug-release-output-directories-in-qmake-pro-file
-# http://qt-project.org/doc/qt-4.8/qmake-project-files.html#variables
-# release: DESTDIR = build/release
-debug:   DESTDIR = ../../bin-debug/client
+# IMPORTANT: The "debug_linux_64" is passed to CONFIG variable through
+# qmake's additional arguments (project options).
+debug_linux_64 {
+    TARGET = client_debug_linux_64
 
-BUILD_DATA_DIR = $$DESTDIR/.build_data
+    DESTDIR = .
+    BUILD_DATA_DIR = $$DESTDIR/.build_data/debug-linux-64
+}
+
 OBJECTS_DIR = $$BUILD_DATA_DIR/obj
 MOC_DIR = $$BUILD_DATA_DIR/moc
 RCC_DIR = $$BUILD_DATA_DIR/qrc
 UI_DIR = $$BUILD_DATA_DIR/ui
 
+# C++ flags
 QMAKE_CXXFLAGS_WARN_ON += -Wall -Werror
 QMAKE_CXXFLAGS += -pedantic-errors
 
-unix|win32: LIBS += -lboost_system
-unix|win32: LIBS += -lboost_thread
-
+# Code headers
 HEADERS += \
     ../../src/client/gui/viewport.hpp \
     ../../src/client/gui/view_frame.hpp \
@@ -82,6 +84,7 @@ HEADERS += \
     ../../src/client/models/3d/drawables_selection.hpp \
     ../../src/common/packets/scene_commands/change_parameter.hpp
 
+# Code sources
 SOURCES += \
     ../../src/client/gui/viewport.cpp \
     ../../src/client/gui/view_frame.cpp \
