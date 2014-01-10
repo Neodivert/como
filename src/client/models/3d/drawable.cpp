@@ -25,12 +25,21 @@ namespace como {
 void checkOpenGL( const char* str )
 {
     GLenum errCode;
+    char errCodeStr[16];
+
     if ((errCode = glGetError()) != GL_NO_ERROR)
     {
+        sprintf( errCodeStr, "%i", errCode );
+
+        // TODO: Implement an imitation of gluErrorString() and use it here.
+        // Reason: gluErrorString() is the only thing I use from GLU, if I
+        // use an alternate version I don't have to worry about building and
+        // linking GLU for cross compiling.
         throw std::runtime_error( std::string( "OpenGL ERROR at [" ) +
                                   std::string( str ) +
                                   std::string( "]: " ) +
-                                  std::string( reinterpret_cast< const char* >( gluErrorString( errCode ) ) ) +
+                                  std::string( errCodeStr ) +
+                                  /* std::string( reinterpret_cast< const char* >( gluErrorString( errCode ) ) ) + */
                                   std::string( "\n" )
                                   );
     }

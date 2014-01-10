@@ -11,8 +11,13 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 # Template
 TEMPLATE = app
 
+# Libraries path (GNU/Linux 32 bits).
+debug_linux_32 {
+    INCLUDEPATH = /opt/boost32/include/
+    LIBS = -L/opt/boost32/lib/
+}
+
 # Libraries
-LIBS += -lGLEW -lGLU
 unix|win32: LIBS += -lboost_system
 unix|win32: LIBS += -lboost_thread
 
@@ -23,11 +28,17 @@ CONFIG += c++11
 # http://stackoverflow.com/questions/2580934/how-to-specify-different-debug-release-output-directories-in-qmake-pro-file
 # IMPORTANT: The "debug_linux_64" is passed to CONFIG variable through
 # qmake's additional arguments (project options).
-debug:linux_64 {
+debug_linux_64 {
     TARGET = client_debug_linux_64
 
     DESTDIR = .
     BUILD_DATA_DIR = $$DESTDIR/.build_data/debug_linux_64
+}
+debug_linux_32 {
+    TARGET = client_debug_linux_32
+
+    DESTDIR = .
+    BUILD_DATA_DIR = $$DESTDIR/.build_data/debug_linux_32
 }
 
 OBJECTS_DIR = $$BUILD_DATA_DIR/obj
