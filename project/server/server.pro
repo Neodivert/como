@@ -3,6 +3,10 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
+# TODO: Remove
+INCLUDEPATH += /opt/boost/include/
+LIBS += -L/opt/boost/lib/
+
 SOURCES += \
     ../../src/server/main.cpp \
     ../../src/server/server.cpp \
@@ -23,7 +27,7 @@ SOURCES += \
     ../../src/common/packets/scene_commands/selection_transformation.cpp \
     ../../src/common/packets/scene_commands/change_parameter.cpp
 
-LIBS += -lpthread -lGLEW -lGL
+LIBS += -lpthread -lGL
 
 HEADERS += \
     ../../src/server/server.hpp \
@@ -63,7 +67,7 @@ QMAKE_CXXFLAGS += -pedantic-errors
 # http://stackoverflow.com/questions/2580934/how-to-specify-different-debug-release-output-directories-in-qmake-pro-file
 # http://qt-project.org/doc/qt-4.8/qmake-project-files.html#variables
 # release: DESTDIR = build/release
-debug:   DESTDIR = ../../bin-debug/server
+debug:   DESTDIR = ../../bin/server
 
 BUILD_DATA_DIR = $$DESTDIR/.build_data
 OBJECTS_DIR = $$BUILD_DATA_DIR/obj
