@@ -29,7 +29,7 @@ namespace como {
 Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThreads ) :
     // Initialize the server parameters.
     io_service_( std::shared_ptr< boost::asio::io_service >( new boost::asio::io_service ) ),
-    acceptor_( *io_service_ ),
+    acceptor_( *io_service_, tcp::endpoint( tcp::v4(), port_ ) ),
     work_( *io_service_ ),
     N_THREADS( nThreads ),
     MAX_SESSIONS( maxSessions ),
@@ -61,15 +61,15 @@ void Server::run()
 {
     // Create a TCP resolver and a query for getting the endpoint the server
     // must listen to.
-    boost::asio::ip::tcp::resolver resolver( *io_service_ );
-    boost::asio::ip::tcp::resolver::query query( "localhost", boost::lexical_cast< std::string >( port_ ) );
+    //boost::asio::ip::tcp::resolver resolver( *io_service_ );
+    //boost::asio::ip::tcp::resolver::query query( "localhost", boost::lexical_cast< std::string >( port_ ) );
 
     try{
         log_->debug( "Press any key to exit\n" );
 
         // Resolve the query to localhost:port and get its TCP end point.
-        boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve( query );
-        endPoint_ = *iterator;
+        //boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve( query );
+        //endPoint_ = *iterator;
 
         // Open the acceptor.
         openAcceptor();
@@ -118,6 +118,9 @@ void Server::broadcast()
 void Server::listen()
 {
     log_->debug( "Listening on port (", port_, ")\n" );
+
+    //tcp::acceptor acceptor(io_service, );
+
 
     // Wait for a new user connection.
     acceptor_.async_accept( newSocket_, boost::bind( &Server::onAccept, this, _1 ) );
