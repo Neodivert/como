@@ -37,8 +37,6 @@ int main( int argc, char *argv[] )
     QApplication app( argc, argv );
     int dialogCode;
 
-    std::cout << "Platform of " << ( sizeof( long int ) * 8 ) << " bits" << std::endl;
-
 #ifdef TESTING_MODE
     // Run tests.
     como::Tester* tester = como::Tester::getInstance();

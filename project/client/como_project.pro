@@ -17,6 +17,10 @@ debug_linux_32 {
     LIBS = -L/opt/boost32/lib/
 }
 
+# TODO: Remove
+INCLUDEPATH += /opt/boost/include/
+LIBS += -L/opt/boost/lib/
+
 # Libraries
 unix|win32: LIBS += -lboost_system
 unix|win32: LIBS += -lboost_thread

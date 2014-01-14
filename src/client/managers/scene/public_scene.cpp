@@ -45,6 +45,7 @@ void PublicScene::connect( const char* host, const char* port, const char* userN
         addUser( std::shared_ptr< const UserConnected >( new UserConnected( *userConnectedPacket ) ) );
         localUserID_ = userConnectedPacket->getId();
     }catch( std::exception& ex ){
+        std::cerr << ex.what() << std::endl;
         throw ex;
     }
 }

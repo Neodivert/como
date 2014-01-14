@@ -22,7 +22,8 @@ By now, COMO allows users to have fun with cubes :). Each user can do the follow
 ### Dependencies
 COMO makes use of the following APIs and libraries:
 * Qt 5.2.
-* OpenGL 4.3 and GLSL.
+* Boost 1.55 (boost_system and boost_thread).
+* OpenGL 4.2 and GLSL.
 * GLM.
 
 
@@ -43,10 +44,10 @@ COMO makes use of the following APIs and libraries:
 * Initialize and update the repository's submodules:
 
 ```
-	git submodules init  
-	git submodules update  
+	git submodule init  
+	git submodule update  
 ```
 
-* For compiling the client: enter into "bin-debug/client" subdirectory and execute make.
+* For compiling the client: enter into "project/client" subdirectory and compile project "como_project.pro" (Qt creator). The binary will be placed in "bin/client" directory.
 
-* For compiling the server: enter into "bin-debug/server" subdirectory and execute make.
+* For compiling the server: enter into "project/server" subdirectory and compile project "server.pro" (Qt creator). The binary will appear in "bin/server" directory.
