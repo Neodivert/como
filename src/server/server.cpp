@@ -368,13 +368,13 @@ void Server::workerThread()
 void Server::openAcceptor()
 {
     // Set the acceptor parameters.
-    acceptor_.open( endPoint_.protocol() );
+    acceptor_.open( tcp::v4() );
     acceptor_.set_option( boost::asio::ip::tcp::acceptor::reuse_address( true ) );
 
     // Start listening.
     // FIXME: Sometimes I get an exception "bind address already in use" when is
     // the server who closes the connections.
-    acceptor_.bind( endPoint_ );
+    acceptor_.bind( tcp::endpoint( tcp::v4(), port_ ) );
     acceptor_.listen( 0 );
 }
 

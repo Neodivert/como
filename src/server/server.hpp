@@ -62,9 +62,6 @@ class Server
         // Maximum number of sessions (users) allowed in the server.
         const unsigned int MAX_SESSIONS;
 
-        // End point the acceptor listens to.
-        boost::asio::ip::tcp::endpoint endPoint_;
-
         // Threads pool
         boost::thread_group threads_;
 
