@@ -39,7 +39,7 @@ ComoApp::ComoApp()
     // Set default transformation type.
     transformationType = TransformationType::NONE;
 
-    checkOpenGL( "ComoApp constructor - before creating OpenGL context and scene" );
+    //checkOpenGL( "ComoApp constructor - before creating OpenGL context and scene" );
 
     // Set default OpenGL context.
     //oglContext = openGLEngine.createOpenGLContext();

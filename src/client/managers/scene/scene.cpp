@@ -76,9 +76,11 @@ void Scene::initOpenGL()
     format.setMajorVersion( 4 );
     format.setMinorVersion( 2 );
     format.setProfile( QSurfaceFormat::CoreProfile );
+    format.setRenderableType( QSurfaceFormat::OpenGL );
 
     // Initialize this offscreen surface with previous format.
     setFormat( format );
+    destroy();
     create();
 
     // Create an empty OpenGL context and make it use this surface's format.
