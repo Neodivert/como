@@ -32,12 +32,6 @@ enum class SelectionTransformationType
     SCALE
 };
 
-
-// TODO: This constants reduce the effective range for transformation
-// magnitudes. Make it clear somewhere.
-const float FLOAT_TO_INT_FACTOR = 100.0f;
-const float INT_TO_FLOAT_FACTOR = 1.0f / FLOAT_TO_INT_FACTOR;
-
 const unsigned int TRANSFORMATION_MAGNITUDE_STR_SIZE = 32;
 
 

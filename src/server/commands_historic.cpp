@@ -127,7 +127,7 @@ std::uint32_t CommandsHistoric::fillSceneUpdatePacket( SceneUpdate& packet,
     uint32_t nextCommand = firstCommand;
     while( ( i < nCommands ) && ( it != commands_.end() ) ){
         // Don't send to the user its own commands.
-        // TODO: Substract this commands from unsyncCommands field.
+        // TODO: Substract these commands from unsyncCommands field.
         if( (*it)->getUserID() != userID ){
             packet.addCommand( *it, firstCommand + i, commands_.size() );
             i++;

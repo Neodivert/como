@@ -3,10 +3,6 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-# TODO: Remove
-INCLUDEPATH += /opt/boost/include/
-LIBS += -L/opt/boost/lib/
-
 SOURCES += \
     ../../src/server/main.cpp \
     ../../src/server/server.cpp \

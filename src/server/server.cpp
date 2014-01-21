@@ -215,7 +215,7 @@ void Server::processSceneUpdate( const boost::system::error_code& errorCode,
 
         // Add the commands to the historic.
         for( i=0; i<commands->size(); i++ ){
-            processSceneCommand( userID, (*commands)[i] );
+            processSceneCommand( (*commands)[i] );
 
         }
 
@@ -226,8 +226,7 @@ void Server::processSceneUpdate( const boost::system::error_code& errorCode,
     }
 }
 
-void Server::processSceneCommand( UserID userID,
-                                  SceneCommandConstPtr sceneCommand )
+void Server::processSceneCommand( SceneCommandConstPtr sceneCommand )
 {
     const CreateCube* createCube = nullptr;
     const SelectDrawable* selectDrawable = nullptr;
@@ -249,9 +248,9 @@ void Server::processSceneCommand( UserID userID,
 
             // Give an affirmative response to the user's selection if the
             // desired drawable isn't selected by anyone (User ID = 0).
-            users_.at( userID );
+            users_.at( sceneCommand->getUserID() );
             log_->debug( "Selecting drawable (", (int)( selectDrawable->getDrawableID().creatorID ), ", ", (int)( selectDrawable->getDrawableID().drawableIndex ), ")\n" );
-            users_.at( userID )->addSelectionResponse( drawableOwners_.at( selectDrawable->getDrawableID() ) == 0 );
+            users_.at( sceneCommand->getUserID() )->addSelectionResponse( drawableOwners_.at( selectDrawable->getDrawableID() ) == 0 );
         break;
         case SceneCommandType::UNSELECT_ALL:
             // Unselect all.
