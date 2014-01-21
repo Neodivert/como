@@ -397,6 +397,12 @@ void Viewport::sendViewProjectionMatrixToShader( const glm::mat4& vpMatrix ) con
 
 void Viewport::render()
 {
+    // Don't render if surface is not exposed.
+    if( !isExposed() ){
+        return;
+    }
+
+    // Get camera's view matrix.
     const glm::mat4 viewMatrix = camera->getViewMatrix();
 
     // Make shared OpenGL context current for this surface.
