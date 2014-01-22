@@ -245,10 +245,6 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
     const glm::vec3 zAxis( 0.0f, 0.0f, 1.0f );
 
-    //if( comoApp->getTransformationType() == TransformationType::NONE ){
-    //    return;
-    //}
-
     // Variables used for computing the magnitude of the transformation.
     glm::vec4 transformVector;
     float angle;
@@ -423,7 +419,6 @@ void Viewport::render()
     // Draw guide rect
     if( ( comoApp->getTransformationType() == TransformationType::ROTATION ) ||
         ( comoApp->getTransformationType() == TransformationType::SCALE ) ){
-        // TODO: Draw only if we have mouse focus.
         comoApp->getScene()->drawTransformGuideLine();
     }
 

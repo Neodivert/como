@@ -152,8 +152,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         }
 
         // Assign the new user a fixed selectionColor.
-        // TODO: In future versions with multiple writers, change this so
-        // every user receives a different color.
+        // Change this so every user receives a DIFFERENT color.
         userAcceptedPacket.setSelectionColor( rand()%255, rand()%255, rand()%255, 255 );
 
         // Pack the network package and send it synchronously to the client.
@@ -206,8 +205,6 @@ void Server::processSceneUpdate( const boost::system::error_code& errorCode,
 
         mutex_.unlock();
     }else{
-        // FIXME: Make use of the packet.
-
         // Get the commands from the packet.
         commands = sceneUpdate->getCommands();
 

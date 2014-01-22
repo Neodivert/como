@@ -33,6 +33,8 @@
 
 namespace como {
 
+const unsigned int MAX_COMMANDS_PER_SCENE_UPDATE = 4;
+
 class ServerInterface : public QObject
 {
     Q_OBJECT

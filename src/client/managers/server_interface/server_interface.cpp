@@ -156,7 +156,6 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
     sceneCommands = sceneUpdate->getCommands();
     for( i=0; i<sceneCommands->size(); i++ ){
         log_->debug( "Executing remote command\n" );
-        // TODO: Make thread-safe.
         emit commandReceived( ( *sceneCommands )[i] );
 
         switch( ( ( *sceneCommands )[i] )->getType() ){
@@ -221,9 +220,8 @@ void ServerInterface::sendPendingCommands()
 
     sceneUpdatePacketToServer_.clear();
 
-    // TODO: Change 4 by MAX_COMMANDS_PER_PACKET.
     // Move commands from the queue to the SCENE_UPDATE packet.
-    while( ( nCommands < 4 ) && !sceneCommandsToServer_.empty() ){
+    while( ( nCommands < MAX_COMMANDS_PER_SCENE_UPDATE ) && !sceneCommandsToServer_.empty() ){
         // TODO: Delete the second argument is not necessary in a SCENE_UPDATE
         // packet sent from client to server.
         sceneUpdatePacketToServer_.addCommand( sceneCommandsToServer_.front(), 0, 0 );

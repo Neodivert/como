@@ -12,14 +12,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TEMPLATE = app
 
 # Libraries path (GNU/Linux 32 bits).
+# TODO: Remove
 debug_linux_32 {
     INCLUDEPATH = /opt/boost32/include/
     LIBS = -L/opt/boost32/lib/
 }
-
-# TODO: Remove
-INCLUDEPATH += /opt/boost/include/
-LIBS += -L/opt/boost/lib/
 
 # Libraries
 unix|win32: LIBS += -lboost_system

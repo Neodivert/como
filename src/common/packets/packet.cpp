@@ -161,7 +161,7 @@ void Packet::asyncRecvBody( const boost::system::error_code& headerErrorCode, st
     // Unpack the packet's header from the buffer.
     unpackHeader( buffer_ );
 
-    // FIXME: If I descomment this, the program abruptly exits
+    // Check that the packet received has the expected type.
     if( !expectedType() ){
         throw std::runtime_error( std::string( "ERROR: Unexpected packet" ) );
     }
