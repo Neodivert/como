@@ -40,6 +40,7 @@ enum COORDINATES
  * Main file class
  ***/
 
+std::string getOpenGLErrorString( GLenum errorCode );
 void checkOpenGL( const char* str );
 
 class Drawable

@@ -22,24 +22,49 @@
 
 namespace como {
 
+std::string getOpenGLErrorString( GLenum errorCode )
+{
+    switch( errorCode ){
+        case GL_NO_ERROR:
+            return std::string( "No error" );
+        break;
+        case GL_INVALID_ENUM:
+            return std::string( "Invalid enum" );
+        break;
+        case GL_INVALID_VALUE:
+            return std::string( "Invalid value" );
+        break;
+        case GL_INVALID_OPERATION:
+            return std::string( "Invalid operation" );
+        break;
+        case GL_INVALID_FRAMEBUFFER_OPERATION:
+            return std::string( "Invalid framebuffer operation" );
+        break;
+        case GL_OUT_OF_MEMORY:
+            return std::string( "Out of memory" );
+        break;
+        case GL_STACK_UNDERFLOW:
+            return std::string( "Stack underflow" );
+        break;
+        case GL_STACK_OVERFLOW:
+            return std::string( "Stack overflow" );
+        break;
+        default:
+            return std::string( "Unknown error" );
+        break;
+    }
+}
+
+
 void checkOpenGL( const char* str )
 {
-    GLenum errCode;
-    char errCodeStr[16];
+    GLenum errorCode = glGetError();
 
-    if ((errCode = glGetError()) != GL_NO_ERROR)
-    {
-        sprintf( errCodeStr, "%i", errCode );
-
-        // TODO: Implement an imitation of gluErrorString() and use it here.
-        // Reason: gluErrorString() is the only thing I use from GLU, if I
-        // use an alternate version I don't have to worry about building and
-        // linking GLU for cross compiling.
+    if( errorCode != GL_NO_ERROR ){
         throw std::runtime_error( std::string( "OpenGL ERROR at [" ) +
                                   std::string( str ) +
                                   std::string( "]: " ) +
-                                  std::string( errCodeStr ) +
-                                  /* std::string( reinterpret_cast< const char* >( gluErrorString( errCode ) ) ) + */
+                                  getOpenGLErrorString( errorCode ) +
                                   std::string( "\n" )
                                   );
     }
