@@ -8,15 +8,14 @@
 QT       += core gui opengl
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+# TODO: Remove
+LIBS += -lpthread
+INCLUDEPATH += /opt/boost/include
+LIBS += -L/opt/boost/lib
+LIBS += -L/usr/lib/fglrx
+
 # Template
 TEMPLATE = app
-
-# Libraries path (GNU/Linux 32 bits).
-# TODO: Remove
-debug_linux_32 {
-    INCLUDEPATH = /opt/boost32/include/
-    LIBS = -L/opt/boost32/lib/
-}
 
 # Libraries
 unix|win32: LIBS += -lboost_system
@@ -27,29 +26,26 @@ CONFIG += c++11
 
 # Set the target and the destination dir according to the current build in use.
 # http://stackoverflow.com/questions/2580934/how-to-specify-different-debug-release-output-directories-in-qmake-pro-file
-# IMPORTANT: The "debug_linux_64" is passed to CONFIG variable through
-# qmake's additional arguments (project options).
-debug_linux_64 {
-    TARGET = client_debug_linux_64
+DESTDIR = .
 
-    DESTDIR = .
-    BUILD_DATA_DIR = $$DESTDIR/.build_data/debug_linux_64
+CONFIG( debug, debug|release ) {
+    TARGET = client_debug
+} else {
+    TARGET = client_release
 }
-debug_linux_32 {
-    TARGET = client_debug_linux_32
+message( Building target: $$TARGET )
 
-    DESTDIR = .
-    BUILD_DATA_DIR = $$DESTDIR/.build_data/debug_linux_32
-}
-
+BUILD_DATA_DIR = $$DESTDIR/.build_data/$$TARGET
 OBJECTS_DIR = $$BUILD_DATA_DIR/obj
 MOC_DIR = $$BUILD_DATA_DIR/moc
 RCC_DIR = $$BUILD_DATA_DIR/qrc
 UI_DIR = $$BUILD_DATA_DIR/ui
 
 # C++ flags
-QMAKE_CXXFLAGS_WARN_ON += -Wall -Werror
-QMAKE_CXXFLAGS += -pedantic-errors
+# TODO: The -Werror and -pedantic-errors flags are commented because of boost
+# giving warnings.
+QMAKE_CXXFLAGS_WARN_ON += -Wall # -Werror
+QMAKE_CXXFLAGS += -pthread #-pedantic-errors
 
 # Code headers
 HEADERS += \

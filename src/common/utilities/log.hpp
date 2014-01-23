@@ -26,6 +26,7 @@
 #define LOG_1_HPP
 
 #include <thread>
+#include <mutex>
 #include <iostream>
 
 namespace como {

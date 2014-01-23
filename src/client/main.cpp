@@ -37,12 +37,6 @@ int main( int argc, char *argv[] )
     QApplication app( argc, argv );
     int dialogCode;
 
-#ifdef TESTING_MODE
-    // Run tests.
-    como::Tester* tester = como::Tester::getInstance();
-    tester->testMeshes();
-    tester->destroy();
-#else
     // Create the COMO app.
     std::shared_ptr< como::ComoApp > comoApp( new como::ComoApp );
 
@@ -63,5 +57,4 @@ int main( int argc, char *argv[] )
         // Run Qt application.
         return app.exec();
     }
-#endif
 }
