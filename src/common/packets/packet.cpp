@@ -28,13 +28,15 @@ namespace como {
 
 Packet::Packet( PacketType type ) :
     type_( type ),
-    bodySize_( 0 )
+    bodySize_( 0 ),
+    buffer_{}
 {
 }
 
 Packet::Packet( const Packet& b ) :
     type_( b.type_ ),
-    bodySize_( b.bodySize_ )
+    bodySize_( b.bodySize_ ),
+    buffer_{}
 {
     strncpy( buffer_, b.buffer_, PACKET_BUFFER_SIZE );
 }
@@ -47,7 +49,7 @@ Packet::Packet( const Packet& b ) :
 
 void Packet::send( boost::asio::ip::tcp::socket& socket )
 {
-    char buffer[256];
+    char buffer[256] = {};
     boost::system::error_code errorCode;
 
     // Pack the packet's header into the buffer.

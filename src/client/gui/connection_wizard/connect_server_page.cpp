@@ -29,6 +29,7 @@ ConnectServerPage::ConnectServerPage( ScenePtr scene, LogPtr log ) :
     scene_( scene ),
     ipInput_( nullptr ),
     portInput_( nullptr ),
+    userNameInput_( nullptr ),
     log_( log )
 {
     QFormLayout* layout = nullptr;
@@ -40,7 +41,7 @@ ConnectServerPage::ConnectServerPage( ScenePtr scene, LogPtr log ) :
 
     // Create the port input.
     portInput_ = new QLineEdit;
-    portInput_->setValidator( new QIntValidator( 0, 65535 ) );
+    portInput_->setValidator( new QIntValidator( 0, 65535, portInput_ ) );
     portInput_->setText( tr( "7777") );
 
     // Create the user name input.
