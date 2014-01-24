@@ -107,6 +107,9 @@ const char* SceneUpdate::unpackBody( const char* buffer )
             case SceneCommandType::UNSELECT_ALL:
                 sceneCommandPtr =  SceneCommandPtr( new SceneCommand( SceneCommandType::UNSELECT_ALL ) );
             break;
+            case SceneCommandType::DELETE_SELECTION:
+                sceneCommandPtr = SceneCommandPtr( new SceneCommand( SceneCommandType::DELETE_SELECTION ) );
+            break;
             case SceneCommandType::SELECTION_TRANSFORMATION:
                 sceneCommandPtr = SceneCommandPtr( new SelectionTransformation );
             break;

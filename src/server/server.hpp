@@ -152,6 +152,7 @@ class Server
          ***/
         void deleteUser( UserID id );
         void unselectAll( UserID userID );
+        void deleteSelection( UserID userID );
     private:
         std::string getCurrentDayTime() const ;
         void workerThread();

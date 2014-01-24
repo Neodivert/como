@@ -177,6 +177,9 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
             case SceneCommandType::UNSELECT_ALL:
                 log_->debug( "\tCommand[", i, "]: UNSELECT_ALL\n" );
             break;
+            case SceneCommandType::DELETE_SELECTION:
+                log_->debug( "\tCommand[", i, "]: DELETE_SELECTION\n" );
+            break;
             case SceneCommandType::SELECTION_TRANSFORMATION:
                 log_->debug( "\tCommand[", i, "]: SELECTION_TRANSFORMATION\n" );
             break;

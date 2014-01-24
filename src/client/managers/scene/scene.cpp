@@ -712,11 +712,15 @@ void Scene::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const 
 void Scene::deleteSelection()
 {
     deleteSelection( localUserID_ );
+
+    // Send Command to the server.
+    SceneCommandPtr deleteSelectionCommand( new SceneCommand( SceneCommandType::DELETE_SELECTION, localUserID_ ) );
+    server_.sendCommand( deleteSelectionCommand );
 }
 
 
 void Scene::deleteSelection( const unsigned int& userId )
-{
+{   
     getUserSelection( userId )->clear();
 
     emit renderNeeded();
@@ -854,6 +858,11 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
             // Add cube to the scene.
             addCube( createCube->getColor(), createCube->getDrawableID() );
             log_->debug( "Cube added to the scene\n" );
+        break;
+        case SceneCommandType::DELETE_SELECTION:
+            // Delete user selection.
+            deleteSelection( command->getUserID() );
+            log_->debug( "Selection deleted by user (", command->getUserID(), ")\n" );
         break;
         case SceneCommandType::SELECTION_RESPONSE:
             // Cast to a SELECTION_RESPONSE command.
