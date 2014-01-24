@@ -40,12 +40,13 @@ CreateServerPage::CreateServerPage( ScenePtr scene, LogPtr log ) :
     // Create a port input.
     portInput_ = new QLineEdit;
     portInput_->setText( tr( "7777") );
-    portInput_->setValidator( new QIntValidator( 0, 65535 ) );
+    portInput_->setValidator( new QIntValidator( 0, 65535, portInput_ ) );
 
     // Create a max users input.
-    maxUsersInput_ = new QLineEdit;
-    maxUsersInput_->setText( tr( "5") );
-    maxUsersInput_->setValidator( new QIntValidator( 1, 16 ) );
+    maxUsersInput_ = new QSpinBox;
+    maxUsersInput_->setMinimum( 1 );
+    maxUsersInput_->setMaximum( 16 );
+    maxUsersInput_->setValue( 5 );
 
     // Create a user name input.
     userNameInput_ = new QLineEdit;
@@ -93,7 +94,7 @@ bool CreateServerPage::validatePage()
             sprintf( serverCommand, "gnome-terminal -e \"%s %d %d\"",
                                                 SERVER_PATH,                                        // Server bin.
                                                 atoi( portInput_->text().toLocal8Bit().data() ),    // Port.
-                                                atoi( maxUsersInput_->text().toLocal8Bit().data() ) // Max. users.
+                                                maxUsersInput_->value()                             // Max. users.
                      );
             log_->debug( "Server command: [", serverCommand, "]\n",
                          "\tReturn value: ", system( serverCommand ), "\n" );

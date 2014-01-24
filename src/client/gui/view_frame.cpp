@@ -28,6 +28,9 @@ namespace como {
 ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     QFrame()
 {
+    // TODO: Make use of argument or delete it.
+    Q_UNUSED( name );
+
     QFrame* header;
     QHBoxLayout* headerLayout;
 
@@ -45,10 +48,6 @@ ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
 
     // Make the viewport ocuppy the maximum available space.
     viewportWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
-
-    // Set a view label that takes the minimum space.
-    QLabel* viewLabel = new QLabel( name );
-    viewLabel->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
 
     // Set a dropdown list for selecting the viewport's current view.
     viewSelector = new QComboBox;
@@ -101,7 +100,7 @@ QGroupBox* ViewFrame::createProjectionSwitch()
     // 2 - In a QButtonGroup, for giving each button an unique id. This is used for signal
     // connecting.
     projectionModeGroupBox = new QGroupBox( tr( "Projection mode") );
-    projectionModeButtonGroup = new QButtonGroup;
+    projectionModeButtonGroup = new QButtonGroup( projectionModeGroupBox );
     projectionModeGroupBoxLayout = new QVBoxLayout;
 
     // Create a QRadioButton for each projection mode in the app. Copy the button

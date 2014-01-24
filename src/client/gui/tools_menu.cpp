@@ -81,7 +81,7 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     // 2 - In a QButtonGroup, for giving each button an unique id. This is used for signal
     // connecting.
     transformationModeGroupBox = new QGroupBox( tr( "Transformation mode") );
-    transformationModeButtonGroup = new QButtonGroup;
+    transformationModeButtonGroup = new QButtonGroup( transformationModeGroupBox );
     transformationModeGroupBoxLayout = new QVBoxLayout;
 
     // Create a QRadioButton for each transformation mode in the app. Copy the button
@@ -129,7 +129,7 @@ QGroupBox* ToolsMenu::createPrimitiveCreationMenu()
 
     // Create the containers and layouts.
     primitiveCreationGroupBox = new QGroupBox( QString::fromUtf8( "Create primitive" ) );
-    primitiveCreationButtonGroup = new QButtonGroup;
+    primitiveCreationButtonGroup = new QButtonGroup( primitiveCreationGroupBox );
     primitiveCreationGroupBoxLayout = new QVBoxLayout;
 
     // Add buttons to group box's layout and to buttons' group.
