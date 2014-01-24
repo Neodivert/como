@@ -29,6 +29,7 @@ ConnectServerPage::ConnectServerPage( ScenePtr scene, LogPtr log ) :
     scene_( scene ),
     ipInput_( nullptr ),
     portInput_( nullptr ),
+    userNameInput_( nullptr ),
     log_( log )
 {
     QFormLayout* layout = nullptr;

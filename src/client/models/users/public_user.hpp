@@ -40,6 +40,8 @@ class PublicUser : public BasicUser
         PublicUser( const UserConnected* userConnectedPacket );
 };
 
+typedef std::shared_ptr< PublicUser > PublicUserPtr;
+
 } // namespace como
 
 #endif // PUBLIC_USER_HPP

@@ -53,7 +53,7 @@ std::shared_ptr< const UserAccepted > ServerInterface::connect( const char* host
     boost::system::error_code errorCode;
     como::NewUser newUserPacket;
     como::UserAccepted userAcceptedPacket;
-    const std::uint8_t* selectionColor;
+    const std::uint8_t* selectionColor = nullptr;
 
     // Create the TCP resolver and query needed for connecting to the server.
     boost::asio::ip::tcp::resolver resolver( io_service_ );

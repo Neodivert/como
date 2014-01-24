@@ -243,7 +243,7 @@ DrawablesSelection* Scene::getUserSelection()
 
 DrawablesSelection* Scene::getUserSelection( UserID userID )
 {
-    return &( users_.at( userID ).selection );
+    return &( users_.at( userID )->selection );
 }
 
 
@@ -255,7 +255,7 @@ const DrawablesSelection* Scene::getUserSelection() const
 
 const DrawablesSelection* Scene::getUserSelection( UserID userID ) const
 {
-    return &( users_.at( userID ).selection );
+    return &( users_.at( userID )->selection );
 }
 
 
@@ -442,7 +442,7 @@ void Scene::selectDrawable( DrawableID drawableID, UserID userID )
     UsersMap::iterator currentUser;
 
     // Retrieve user's selection.
-    DrawablesSelection& userSelection = users_.at( userID ).selection;
+    DrawablesSelection& userSelection = users_.at( userID )->selection;
 
     // Check if the desired drawable is among the non selected ones, and move
     // it to the user's selection in that case.
@@ -453,7 +453,7 @@ void Scene::selectDrawable( DrawableID drawableID, UserID userID )
     if( !drawableFound ){
         currentUser = users_.begin();
         while( !drawableFound && ( currentUser != users_.end()) ){
-            drawableFound = currentUser->second.selection.moveDrawable( drawableID, userSelection );
+            drawableFound = currentUser->second->selection.moveDrawable( drawableID, userSelection );
         }
     }
 
@@ -486,7 +486,7 @@ void Scene::unselectAll()
 
 void Scene::unselectAll( const unsigned int& userId )
 {
-    DrawablesSelection& userSelection = users_.at( userId ).selection;
+    DrawablesSelection& userSelection = users_.at( userId )->selection;
 
     // Move all drawables from user selection to non selected set.
     userSelection.moveAll( nonSelectedDrawables );
@@ -503,7 +503,7 @@ DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool a
     float t = MAX_T;
     DrawableID closestObject;
 
-    DrawablesSelection& userSelection = users_.at( localUserID_ ).selection;
+    DrawablesSelection& userSelection = users_.at( localUserID_ )->selection;
 
     r1 = glm::normalize( r1 );
 
@@ -738,7 +738,7 @@ void Scene::draw( const int& drawGuideRect ) const
 
     // Draw the user's selections.
     for( ; usersIterator != users_.end(); usersIterator++  ){
-        (usersIterator->second).selection.draw( (usersIterator->second).color );
+        (usersIterator->second)->selection.draw( (usersIterator->second)->color );
     }
 
     // Draw a guide rect if asked.
@@ -844,7 +844,7 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
         break;
         case SceneCommandType::USER_DISCONNECTED:
             // Remove user from the scene.
-            log_->debug( "User [", users_.at( command->getUserID() ).getName(), "] removed from scene\n" );
+            log_->debug( "User [", users_.at( command->getUserID() )->getName(), "] removed from scene\n" );
             removeUser( command->getUserID() );
         break;
         case SceneCommandType::CREATE_CUBE:

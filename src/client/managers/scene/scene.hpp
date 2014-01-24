@@ -59,7 +59,7 @@ enum LinesBufferOffset {
     N_LINES_BUFFER_OFFSETS
 };
 
-typedef std::map< UserID, PublicUser > UsersMap;
+typedef std::map< UserID, PublicUserPtr > UsersMap;
 
 class Scene : public QOffscreenSurface
 {

@@ -28,7 +28,8 @@ namespace como {
  ***/
 
 NewUser::NewUser() :
-    Packet( PacketType::NEW_USER )
+    Packet( PacketType::NEW_USER ),
+    name_{ 0 }
 {
     bodySize_ += NAME_SIZE;
 
@@ -37,7 +38,8 @@ NewUser::NewUser() :
 
 
 NewUser::NewUser( const char* name ) :
-    Packet( PacketType::NEW_USER )
+    Packet( PacketType::NEW_USER ),
+    name_{ 0 }
 {
     bodySize_ += NAME_SIZE;
 
@@ -46,7 +48,8 @@ NewUser::NewUser( const char* name ) :
 
 
 NewUser::NewUser( const NewUser& b ) :
-    Packet( b )
+    Packet( b ),
+    name_{ 0 }
 {
     strncpy( name_, b.name_, NAME_SIZE );
 }
