@@ -52,8 +52,6 @@ void UsersList::removeUser( UserID userID )
     QList<QListWidgetItem *> users;
     QList<QListWidgetItem *>::iterator currentUser;
 
-    log_->lock();
-
     // Get a list with all the items in the users list.
     users = findItems( "*", Qt::MatchWildcard );
 
@@ -75,8 +73,6 @@ void UsersList::removeUser( UserID userID )
     }else{
         log_->error( "GUI users list - removing user [", ( userIDToName_[ userID ] ).c_str(), "] (id: ", userID, ") ...USER NOT FOUND\n" );
     }
-
-    log_->unlock();
 }
 
 } // namespace como

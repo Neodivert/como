@@ -27,9 +27,9 @@ namespace como {
 
 Scene::Scene( LogPtr log ) :
     log_( log ),
-    server_( log_ ),
     localUserID_( 1 ), // Will be updated to its final value in Scene::connect().
-    localUserNextDrawableIndex_( 1 )
+    localUserNextDrawableIndex_( 1 ),
+    server_( log_ )
 {
     initOpenGL();
 
@@ -859,7 +859,6 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
             // Cast to a SELECTION_RESPONSE command.
             selectionResponse = dynamic_cast< const SelectionResponse* >( command.get() );
 
-            log_->lock();
             log_->debug( "Selection response received from server - nSelections(",
                          (int)( selectionResponse->getNSelections() ),
                          "), selectionConfirmed_(\n" );
@@ -873,8 +872,6 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
                 }
                 localUserPendingSelections_.pop();
             }
-            log_->debug( ")\n" );
-            log_->unlock();
         break;
         case SceneCommandType::SELECT_DRAWABLE:
             // Cast to a SELECT_DRAWABLE command.

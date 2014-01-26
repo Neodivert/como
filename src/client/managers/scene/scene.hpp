@@ -72,9 +72,6 @@ class Scene : public QOffscreenSurface
         // Log
         LogPtr log_;
 
-        // Interface with the server.
-        ServerInterface server_;
-
         // Local user's ID.
         UserID localUserID_;
         DrawableIndex localUserNextDrawableIndex_;
@@ -82,6 +79,10 @@ class Scene : public QOffscreenSurface
         std::queue< DrawableID > localUserPendingSelections_;
 
         shared_ptr< QOpenGLContext > oglContext_;
+
+        // Interface with the server.
+        ServerInterface server_;
+
     private:
         // Scene's non selected drawables.
         DrawablesSelection nonSelectedDrawables;
