@@ -25,25 +25,6 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-// Current app mode.
-AppMode appMode;
-
-// This sets if the current user transformation is free or fixed to a axis.
-TransformationMode transformationMode;
-
-// When in edition mode, this sets whether editions are applied to drawables
-// in local (object) or global (world) coordinates.
-EditionScope editionScope;
-
-// Current transformation type.
-TransformationType transformationType;
-
-// Curren scene.
-shared_ptr< Scene > scene;
-
-// Log
-LogPtr log_;
-
 ComoApp::ComoApp() :
     appMode( AppMode::OBJECT ),
     transformationMode( TransformationMode::FREE ),

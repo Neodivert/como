@@ -45,8 +45,6 @@ class ServerInterface : public QObject
 
         SocketPtr socket_;
 
-        boost::thread_group workerThreads_;
-
         SceneUpdate sceneUpdatePacketFromServer_;
         SceneUpdate sceneUpdatePacketToServer_;
 
@@ -57,6 +55,8 @@ class ServerInterface : public QObject
 
         // Log
         LogPtr log_;
+
+        boost::thread_group workerThreads_;
 
     public:
         /***

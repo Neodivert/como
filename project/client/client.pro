@@ -12,7 +12,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 LIBS += -lpthread
 INCLUDEPATH += /opt/boost/include
 LIBS += -L/opt/boost/lib
-LIBS += -L/usr/lib/fglrx
+# LIBS += -L/usr/lib/fglrx
 
 # Template
 TEMPLATE = app

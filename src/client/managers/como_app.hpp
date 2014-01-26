@@ -115,12 +115,11 @@ class ComoApp : public QObject {
         // Current transformation type.
         TransformationType transformationType;
 
-        // Curren scene.
-        shared_ptr< Scene > scene;
-
         // Log
         LogPtr log_;
 
+        // Curren scene.
+        shared_ptr< Scene > scene;
 
         /***
          * 1. Initialization and destruction
