@@ -8,16 +8,17 @@
 QT       += core gui opengl
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-# TODO: Remove
-LIBS += -lpthread
-INCLUDEPATH += /opt/boost/include
-LIBS += -L/opt/boost/lib
-# LIBS += -L/usr/lib/fglrx
-
 # Template
 TEMPLATE = app
 
+# TODO: Remove
+LIBS += -L/opt/boost/lib
+
+# Include boost headers as system headers, so they don't produce warnings.
+QMAKE_CXXFLAGS += -isystem /opt/boost/include
+
 # Libraries
+LIBS += -lpthread
 unix|win32: LIBS += -lboost_system
 unix|win32: LIBS += -lboost_thread
 
@@ -42,10 +43,8 @@ RCC_DIR = $$BUILD_DATA_DIR/qrc
 UI_DIR = $$BUILD_DATA_DIR/ui
 
 # C++ flags
-# TODO: The -Werror and -pedantic-errors flags are commented because of boost
-# giving warnings.
-QMAKE_CXXFLAGS_WARN_ON += -Wall # -Werror
-QMAKE_CXXFLAGS += -pthread #-pedantic-errors
+QMAKE_CXXFLAGS_WARN_ON += -Wall -Werror
+QMAKE_CXXFLAGS += -pthread -pedantic-errors
 
 # Code headers
 HEADERS += \

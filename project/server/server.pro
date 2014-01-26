@@ -3,6 +3,33 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
+# Link boost libraries
+LIBS += -lpthread -lGL
+unix|win32: LIBS += -lboost_system
+unix|win32: LIBS += -lboost_thread
+
+# Include boost headers as system headers, so they don't produce warnings.
+QMAKE_CXXFLAGS += -isystem /opt/boost/include
+
+# http://qt-project.org/forums/viewthread/19989
+CONFIG += c++11
+
+# Compilation flags.
+QMAKE_CXXFLAGS_WARN_ON += -Wall -Werror
+QMAKE_CXXFLAGS += -pedantic-errors
+
+# http://stackoverflow.com/questions/1119881/how-do-i-specifiy-an-object-directory-in-a-qt-project-file
+# http://stackoverflow.com/questions/2580934/how-to-specify-different-debug-release-output-directories-in-qmake-pro-file
+# http://qt-project.org/doc/qt-4.8/qmake-project-files.html#variables
+# release: DESTDIR = build/release
+debug:   DESTDIR = ../../bin/server
+
+BUILD_DATA_DIR = $$DESTDIR/.build_data
+OBJECTS_DIR = $$BUILD_DATA_DIR/obj
+MOC_DIR = $$BUILD_DATA_DIR/moc
+RCC_DIR = $$BUILD_DATA_DIR/qrc
+UI_DIR = $$BUILD_DATA_DIR/ui
+
 SOURCES += \
     ../../src/server/main.cpp \
     ../../src/server/server.cpp \
@@ -22,8 +49,6 @@ SOURCES += \
     ../../src/common/packets/scene_commands/drawable_commands/select_drawable.cpp \
     ../../src/common/packets/scene_commands/selection_transformation.cpp \
     ../../src/common/packets/scene_commands/change_parameter.cpp
-
-LIBS += -lpthread -lGL
 
 HEADERS += \
     ../../src/server/server.hpp \
@@ -48,25 +73,3 @@ HEADERS += \
     ../../src/common/packets/scene_commands/drawable_commands/select_drawable.hpp \
     ../../src/common/packets/scene_commands/selection_transformation.hpp \
     ../../src/common/packets/scene_commands/change_parameter.hpp
-
-# Link boost libraries
-unix|win32: LIBS += -lboost_system
-unix|win32: LIBS += -lboost_thread
-
-# http://qt-project.org/forums/viewthread/19989
-CONFIG += c++11
-
-QMAKE_CXXFLAGS_WARN_ON += -Wall -Werror
-QMAKE_CXXFLAGS += -pedantic-errors
-
-# http://stackoverflow.com/questions/1119881/how-do-i-specifiy-an-object-directory-in-a-qt-project-file
-# http://stackoverflow.com/questions/2580934/how-to-specify-different-debug-release-output-directories-in-qmake-pro-file
-# http://qt-project.org/doc/qt-4.8/qmake-project-files.html#variables
-# release: DESTDIR = build/release
-debug:   DESTDIR = ../../bin/server
-
-BUILD_DATA_DIR = $$DESTDIR/.build_data
-OBJECTS_DIR = $$BUILD_DATA_DIR/obj
-MOC_DIR = $$BUILD_DATA_DIR/moc
-RCC_DIR = $$BUILD_DATA_DIR/qrc
-UI_DIR = $$BUILD_DATA_DIR/ui
