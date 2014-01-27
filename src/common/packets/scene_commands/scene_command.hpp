@@ -38,6 +38,18 @@ enum class SceneCommandType : std::uint8_t
     CHANGE_PARAMETER
 };
 
+const char sceneCommandStrings[][32]
+{
+    "USER_CONNECTED",
+    "USER_DISCONNECTED",
+    "CREATE_CUBE",
+    "SELECTION_RESPONSE",
+    "SELECT_DRAWABLE",
+    "UNSELECT_ALL",
+    "DELETE_SELECTION",
+    "SELECTION_TRANSFORMATION",
+    "CHANGE_PARAMETER"
+};
 
 class SceneCommand : public Packable
 {

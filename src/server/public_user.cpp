@@ -44,8 +44,6 @@ PublicUser::PublicUser( UserID id, const char* name,
     log_( log ),
     updateRequested_( false )
 {
-    log_->debug( "Session (", getID(), ") created\n" );
-
     selectionResponse_ = SelectionResponsePtr( new SelectionResponse );
 
     readSceneUpdate();
@@ -53,12 +51,6 @@ PublicUser::PublicUser( UserID id, const char* name,
     //sync();
 
     requestUpdate();
-}
-
-
-PublicUser::~PublicUser()
-{
-    log_->debug( "Session (", getID(), ") destroyed\n" );
 }
 
 
@@ -97,7 +89,6 @@ void PublicUser::update()
 void PublicUser::readSceneUpdate()
 {
     mutex_.lock();
-    log_->debug( "Waiting for SCENE_UPDATE from user (", getID(), ")\n"  );
     sceneUpdatePacketFromUser_.clear();
     sceneUpdatePacketFromUser_.asyncRecv( socket_, boost::bind( &PublicUser::onReadSceneUpdate, this, _1, _2 ) );
     mutex_.unlock();

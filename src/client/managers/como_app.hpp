@@ -126,11 +126,7 @@ class ComoApp : public QObject {
          ***/
     public:
         ComoApp();
-        ~ComoApp();
-        /*
-        static ComoApp* getInstance();
-        static void destroy();
-        */
+        ~ComoApp(){}
 
         /***
          * 2. Getters

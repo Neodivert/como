@@ -111,20 +111,14 @@ void ServerInterface::disconnect()
 
     // Close the socket to the server if it's open.
     if( socket_->is_open() ){
-        log_->debug( "Closing socket to server\n" );
-
         socket_->shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
         socket_->close();
-        log_->debug( "Closing socket to server... OK\n" );
     }
 
     // Stop the IO service and join the threads group.
     work_.reset();
     io_service_.stop();
-
-    log_->debug( "Waiting for working threads to finish ...\n" );
     workerThreads_.join_all();
-    log_->debug( "Waiting for working threads to finish ...OK\n" );
 
     log_->debug( "Disconnecting from server ...OK\n" );
 }
@@ -155,38 +149,7 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
 
     sceneCommands = sceneUpdate->getCommands();
     for( i=0; i<sceneCommands->size(); i++ ){
-        log_->debug( "Executing remote command\n" );
         emit commandReceived( ( *sceneCommands )[i] );
-
-        switch( ( ( *sceneCommands )[i] )->getType() ){
-            case SceneCommandType::USER_CONNECTED:
-                log_->debug( "\tCommand[", i, "]: USER_CONNECTED\n" );
-            break;
-            case SceneCommandType::USER_DISCONNECTED:
-                log_->debug( "\tCommand[", i, "]: USER_DISCONNECTED\n" );
-            break;
-            case SceneCommandType::CREATE_CUBE:
-                log_->debug( "\tCommand[", i, "]: CREATE_CUBE\n" );
-            break;
-            case SceneCommandType::SELECTION_RESPONSE:
-                log_->debug( "\tCommand[", i, "]: SELECTION_RESPONSE\n" );
-            break;
-            case SceneCommandType::SELECT_DRAWABLE:
-                log_->debug( "\tCommand[", i, "]: SELECT_DRAWABLE\n" );
-            break;
-            case SceneCommandType::UNSELECT_ALL:
-                log_->debug( "\tCommand[", i, "]: UNSELECT_ALL\n" );
-            break;
-            case SceneCommandType::DELETE_SELECTION:
-                log_->debug( "\tCommand[", i, "]: DELETE_SELECTION\n" );
-            break;
-            case SceneCommandType::SELECTION_TRANSFORMATION:
-                log_->debug( "\tCommand[", i, "]: SELECTION_TRANSFORMATION\n" );
-            break;
-            case SceneCommandType::CHANGE_PARAMETER:
-                log_->debug( "\tCommand[", i, "]: CHANGE_PARAMETER\n" );
-            break;
-        }
     }
 
     listen();
@@ -271,7 +234,6 @@ void ServerInterface::work()
 
     while( !exit ){
         try{
-            log_->debug( "[", boost::this_thread::get_id(), "] io_service::run() ... \n" );
             io_service_.run( errorCode );
             log_->debug( "[", boost::this_thread::get_id(), "] io_service::run() ...OK\n" );
             if( errorCode ){

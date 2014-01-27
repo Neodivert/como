@@ -41,12 +41,6 @@ ComoApp::ComoApp() :
     checkOpenGL( "ComoApp constructor - after creating OpenGL context and scene" );
 }
 
-
-ComoApp::~ComoApp()
-{
-    log_->debug( "Destroying instance of ComoApp\n" );
-}
-
 /*
 ComoApp* ComoApp::getInstance()
 {

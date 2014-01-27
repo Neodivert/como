@@ -86,7 +86,7 @@ class PublicUser : public BasicUser
                     std::function<void (UserID)> removeUserCallback,
                     CommandsHistoricPtr commandsHistoric,
                     LogPtr log );
-        ~PublicUser();
+        ~PublicUser(){}
 
 
         /***

@@ -38,7 +38,7 @@ MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
 
     // Set window's title and dimensions.
     setWindowTitle( tr( "Cooperative Modeller" ) );
-    setFixedSize( 1024, 768 );
+    setFixedSize( 800, 600 );
 
     // Set background color.
     setStyleSheet( "background-color: #F3E2A9;" );
@@ -85,12 +85,5 @@ MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
 
     centralWidget()->setLayout( layout );
 }
-
-
-MainWindow::~MainWindow()
-{
-    log_->debug( "Main window - destructor\n" );
-}
-
 
 } // namespace como
