@@ -80,7 +80,7 @@ class Viewport : public QWindow
         /***
          * 1. Initialization and destruction
          ***/
-        Viewport( shared_ptr< ComoApp > comoApp );
+        Viewport( View view, shared_ptr< ComoApp > comoApp );
         ~Viewport();
 
         /***

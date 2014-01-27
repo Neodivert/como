@@ -68,7 +68,7 @@ class Camera : public Mesh
         /***
          * 1. Initializations
          ***/
-        Camera();
+        Camera( View view = View::FRONT );
 
         /***
          * 2. Setters and getters

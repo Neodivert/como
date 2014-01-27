@@ -31,7 +31,7 @@ GLint Viewport::viewProjectionMatrixLocation = -1;
  * 1. Initialization and destruction
  ***/
 
-Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
+Viewport::Viewport( View view, shared_ptr< ComoApp > comoApp ) :
     QWindow()
 {
     try {
@@ -61,7 +61,7 @@ Viewport::Viewport( shared_ptr< ComoApp > comoApp ) :
         }
 
         // Create the camera.
-        camera = new Camera;
+        camera = new Camera( view );
 
         checkOpenGL( "Viewport constructor, after creating the camera" );
 
@@ -399,7 +399,7 @@ void Viewport::render()
     }
 
     // Get camera's view matrix.
-    const glm::mat4 viewMatrix = camera->getViewMatrix();
+    glm::mat4 viewMatrix = camera->getViewMatrix();
 
     // Make shared OpenGL context current for this surface.
     comoApp->getScene()->getOpenGLContext()->makeCurrent( this );

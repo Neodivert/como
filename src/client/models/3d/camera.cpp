@@ -2,14 +2,14 @@
 
 namespace como {
 
-Camera::Camera() :
+Camera::Camera( View view ) :
     Mesh(),
     originalEye     ( 0.0f, 0.0f, 0.0f, 1.0f ),
     originalUp      ( 0.0f, 1.0f, 0.0f, 1.0f ),
     originalCenter  ( 0.0f, 0.0f, -1.0f, 1.0f )
 {
-    // Update camera's vertices and orientation.
-    update();
+    // Set given view.
+    setView( view );
 }
 
 
@@ -46,16 +46,16 @@ void Camera::setView( View view )
 
     switch( view ){
         case View::LEFT:
-            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), -90.0f, Y_AXIS );
-        break;
-        case View::RIGHT:
             transformationMatrix = glm::rotate( glm::mat4( 1.0f ), 90.0f, Y_AXIS );
         break;
+        case View::RIGHT:
+            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), -90.0f, Y_AXIS );
+        break;
         case View::TOP:
-            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), -90.0f, X_AXIS );
+            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), 90.0f, X_AXIS );
         break;
         case View::BOTTOM:
-            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), 90.0f, X_AXIS );
+            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), -90.0f, X_AXIS );
         break;
         case View::FRONT:
             transformationMatrix = glm::mat4( 1.0f );

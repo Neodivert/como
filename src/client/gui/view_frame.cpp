@@ -25,17 +25,15 @@ namespace como {
  * 1. Initialization
  ***/
 
-ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
+ViewFrame::ViewFrame( View view, shared_ptr< ComoApp > comoApp ) :
     QFrame()
 {
-    // TODO: Make use of argument or delete it.
-    Q_UNUSED( name );
 
     QFrame* header;
     QHBoxLayout* headerLayout;
 
     // Create a OpenGL viewport and check OpenGL state.
-    viewport = new Viewport( comoApp );
+    viewport = new Viewport( view, comoApp );
 
     // The viewport inherits from QWindow. In order to allow it to live inside a QWidget-based
     // application, we need to create a QWidget wrapper.
@@ -52,6 +50,9 @@ ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     for( auto viewString : viewStrings ){
         viewSelector->addItem( tr( viewString ) );
     }
+
+    // Select the given view.
+    viewSelector->setCurrentIndex( static_cast< int >( view ) );
 
     // When user change view in selector, call Viewport::setView().
     void (QComboBox::*signal)( int ) = &QComboBox::activated;

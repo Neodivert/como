@@ -38,7 +38,7 @@ class ViewFrame : public QFrame
         /***
          * 1. Initialization
          ***/
-        ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp );
+        ViewFrame( View view, shared_ptr< ComoApp > comoApp );
         QGroupBox* createProjectionSwitch();
 
         /***

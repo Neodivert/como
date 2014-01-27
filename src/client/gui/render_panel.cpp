@@ -47,19 +47,19 @@ RenderPanel::RenderPanel( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     vSplitter->addWidget( h2Splitter );
 
     // Create the top left ViewFrame.
-    ViewFrame *viewFrame = new ViewFrame( "Top left view", comoApp );
+    ViewFrame *viewFrame = new ViewFrame( View::FRONT, comoApp );
     h1Splitter->addWidget( viewFrame );
 
     // Create the top right ViewFrame.
-    viewFrame = new ViewFrame( "Top right view", comoApp );
+    viewFrame = new ViewFrame( View::RIGHT, comoApp );
     h1Splitter->addWidget( viewFrame );
 
     // Create the bottom left ViewFrame.
-    viewFrame = new ViewFrame( "Bottom left view", comoApp );
+    viewFrame = new ViewFrame( View::TOP, comoApp );
     h2Splitter->addWidget( viewFrame );
 
     // Create the Bottom right ViewFrame.
-    viewFrame = new ViewFrame( "Bottom right view", comoApp );
+    viewFrame = new ViewFrame( View::FRONT, comoApp );
     h2Splitter->addWidget( viewFrame );
 
     // Set the render panel layout by using previous splitters.
