@@ -8,6 +8,9 @@ LIBS += -lpthread -lGL
 unix|win32: LIBS += -lboost_system
 unix|win32: LIBS += -lboost_thread
 
+# TODO: Remove
+LIBS += -L/opt/boost/lib
+
 # Include boost headers as system headers, so they don't produce warnings.
 QMAKE_CXXFLAGS += -isystem /opt/boost/include
 

@@ -19,8 +19,9 @@
 
 #ifndef COMMANDS_HISTORIC_HPP
 #define COMMANDS_HISTORIC_HPP
-
+#include <mutex>
 #include <thread>
+
 #include <list>
 #include "../common/packets/packets.hpp"
 

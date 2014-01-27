@@ -59,8 +59,6 @@ Scene::Scene( LogPtr log ) :
 
 Scene::~Scene()
 {
-    log_->debug( "Destroying scene\n" );
-
     // Tell OpenGL we are done with allocated buffer objects and
     // vertex attribute arrays.
     glDeleteBuffers( 1, &linesVBO );
@@ -314,14 +312,6 @@ void Scene::addDrawable( DrawablePtr drawable, DrawableID drawableID )
 {
     takeOpenGLContext();
 
-    //unselectAll();
-    // Create an unique ID for the new drawable.
-    log_->debug( "Adding drawable to scene - ID: (", drawableID.creatorID,
-                 ", ", drawableID.drawableIndex, ")\n" );
-
-    // Autoincrement the drawable index for the next drawable created by the use.
-
-
     nonSelectedDrawables.addDrawable( drawableID, drawable );
 
     emit renderNeeded();
@@ -500,16 +490,11 @@ DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool a
 {
     const float MAX_T = 9999999.0f;
     float minT = MAX_T;
-    float t = MAX_T;
     DrawableID closestObject;
 
     DrawablesSelection& userSelection = users_.at( localUserID_ )->selection;
 
     r1 = glm::normalize( r1 );
-
-    log_->debug( "Scene::selectDrawableByRayPicking\n",
-                 "\tr0 : (", r0.x, ", ", r0.y, ", ", r0.z, ")\n",
-                 "\tr1 : (", r1.x, ", ", r1.y, ", ", r1.z, ")\n" );
 
     // Does the user want to keep the actual set of selected objects and simply add
     // a new one? If that's NOT the case, we need to clear the set of selected drawables
@@ -522,9 +507,7 @@ DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool a
     // Check if the given ray intersect any of the non selected drawables.
     if( nonSelectedDrawables.intersect( r0, r1, closestObject, minT ) ){
         // A non selected drawable has been intersected.
-        log_->debug( "FINAL CLOSEST OBJECT: (", closestObject.creatorID, ", ", closestObject.drawableIndex, ")\n",
-                     "\t min t: ", minT, ")\n",
-                     "\t min distance: ", glm::distance( glm::vec3( 0.0f, 0.0f, 0.0f ), r1 * t ), "\n" );
+        log_->debug( "Object picked\n" );
 
         // Send a SELECT_DRAWABLE command to the server.
         server_.sendCommand( SceneCommandConstPtr(
@@ -619,8 +602,6 @@ void Scene::translateSelection( glm::vec3 direction )
     // Round transformation magnitude to 3 decimal places.
     roundTransformationMagnitude( direction[0], direction[1], direction[2] );
 
-    log_->debug( "Scene::translateSelection(", direction[0], ", ", direction[1], ", ", direction[2], ")\n" );
-
     // Translate locally (client).
     translateSelection( direction, localUserID_ );
 
@@ -632,8 +613,6 @@ void Scene::translateSelection( glm::vec3 direction )
 
 void Scene::translateSelection( glm::vec3 direction, UserID userID )
 {
-    log_->debug( "Scene::translateSelection(", direction[0], ", ", direction[1], ", ", direction[2], ")\n" );
-
     // Get the user's selection and translate it.
     getUserSelection( userID )->translate( direction );
 
@@ -835,7 +814,9 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
     unsigned int i;
     bool selectionConfirmed;
 
-    log_->debug( "Scene::executeRemoteCommand(", command, ")\n" );
+    log_->debug( "Scene - Executing remote command(",
+                 sceneCommandStrings[static_cast<unsigned int>( command->getType() )],
+                 ") ...\n" );
 
     switch( command->getType() ){
         case SceneCommandType::USER_CONNECTED:
@@ -844,11 +825,9 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
 
             // Add user to the scene.
             addUser( std::shared_ptr< const UserConnected>( new UserConnected( *userConnected ) ) );
-            log_->debug( "User [", userConnected->getName(), "] added to the scene\n" );
         break;
         case SceneCommandType::USER_DISCONNECTED:
             // Remove user from the scene.
-            log_->debug( "User [", users_.at( command->getUserID() )->getName(), "] removed from scene\n" );
             removeUser( command->getUserID() );
         break;
         case SceneCommandType::CREATE_CUBE:
@@ -857,23 +836,17 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
 
             // Add cube to the scene.
             addCube( createCube->getColor(), createCube->getDrawableID() );
-            log_->debug( "Cube added to the scene\n" );
         break;
         case SceneCommandType::DELETE_SELECTION:
             // Delete user selection.
             deleteSelection( command->getUserID() );
-            log_->debug( "Selection deleted by user (", command->getUserID(), ")\n" );
         break;
         case SceneCommandType::SELECTION_RESPONSE:
             // Cast to a SELECTION_RESPONSE command.
             selectionResponse = dynamic_cast< const SelectionResponse* >( command.get() );
 
-            log_->debug( "Selection response received from server - nSelections(",
-                         (int)( selectionResponse->getNSelections() ),
-                         "), selectionConfirmed_(\n" );
             for( i = 0; i < selectionResponse->getNSelections(); i++ ){
                 selectionConfirmed = selectionResponse->getSelectionConfirmed() & (1 << i);
-                log_->debug( (int)( selectionConfirmed ), "\n" );
                 if( selectionConfirmed ){
                     pendingSelection = localUserPendingSelections_.front();
                     this->selectDrawable( pendingSelection );
@@ -888,12 +861,10 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
 
             // Select drawable.
             this->selectDrawable( selectDrawable->getDrawableID(), selectDrawable->getUserID() );
-            log_->debug( "Selecting drawable\n" );
         break;
         case SceneCommandType::UNSELECT_ALL:
             // Unselect all.
             unselectAll( command->getUserID() );
-            log_->debug( "All unselected\n" );
         break;
         case SceneCommandType::SELECTION_TRANSFORMATION:
             // Cast to a SELECTION_TRANSFORMATION command.
@@ -906,18 +877,12 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
             // type.
             switch( selectionTransformation->getTransformationType() ){
                 case SelectionTransformationType::TRANSLATION:
-                    log_->debug( "Scene - remote translation (", transf[0], ", ", transf[1], ", ", transf[2], ")\n" );
-
                     translateSelection( glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
                 break;
                 case SelectionTransformationType::ROTATION:
-                    log_->debug( "Scene - remote rotation angle(", selectionTransformation->getAngle(), " axis(", transf[0], ", ", transf[1], ", ", transf[2], ")\n" );
-
                     rotateSelection( selectionTransformation->getAngle(), glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
                 break;
                 case SelectionTransformationType::SCALE:
-                    log_->debug( "Scene - remote scale (", transf[0], ", ", transf[1], ", ", transf[2], ")\n" );
-
                     scaleSelection( glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
                 break;
             }
@@ -934,6 +899,10 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
             }
         break;
     }
+
+    log_->debug( "Scene - Executing remote command(",
+                 sceneCommandStrings[static_cast<unsigned int>( command->getType() )],
+                 ") ...OK \n" );
 }
 
 

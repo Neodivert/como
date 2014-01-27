@@ -34,8 +34,6 @@ ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     QFrame* header;
     QHBoxLayout* headerLayout;
 
-    comoApp->getLog()->debug( "Viewframe - Constructor ...\n" );
-
     // Create a OpenGL viewport and check OpenGL state.
     viewport = new Viewport( comoApp );
 
@@ -83,7 +81,6 @@ ViewFrame::ViewFrame( const QString &name, shared_ptr< ComoApp > comoApp ) :
     // When a render is requested, render!
     checkOpenGL( "Viewframe - Constructor" );
     QObject::connect( comoApp->getScene().get(), &Scene::renderNeeded, this, &ViewFrame::render  );
-    comoApp->getLog()->debug( "Viewframe - Constructor ...OK\n" );
 }
 
 
