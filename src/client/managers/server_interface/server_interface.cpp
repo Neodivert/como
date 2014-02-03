@@ -57,7 +57,7 @@ std::shared_ptr< const UserAccepted > ServerInterface::connect( const char* host
 
     // Create the TCP resolver and query needed for connecting to the server.
     boost::asio::ip::tcp::resolver resolver( io_service_ );
-    boost::asio::ip::tcp::resolver::query query( host, port );
+    boost::asio::ip::tcp::resolver::query query( host, port, boost::asio::ip::resolver_query_base::numeric_service );
 
     // Get the list of TCP endpoints given by resolving the previous query.
     boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve( query );
