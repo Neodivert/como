@@ -33,7 +33,7 @@ UsersList::UsersList( QWidget* parent, LogPtr log ) :
 
 
 /***
- * 2. Users insertion / deletion
+ * 3. Users insertion / deletion
  ***/
 
 void UsersList::addUser( UserConnectedConstPtr userConnectedPacket )

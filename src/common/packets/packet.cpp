@@ -269,5 +269,21 @@ std::uint16_t Packet::getPacketSize() const
 }
 
 
+/***
+ * 4. Operators
+ ***/
+
+Packet& Packet::operator =( const Packet& b )
+{
+    if( this != &b ){
+        type_ = b.type_;
+        bodySize_ = b.bodySize_;
+        strncpy( buffer_, b.buffer_, PACKET_BUFFER_SIZE );
+    }
+
+    return *this;
+}
+
+
 } // namespace como
 

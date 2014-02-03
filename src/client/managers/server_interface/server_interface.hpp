@@ -62,7 +62,11 @@ class ServerInterface : public QObject
         /***
          * 1. Initialization and destruction
          ***/
+        ServerInterface() = delete;
+        ServerInterface( const ServerInterface& ) = delete;
+        ServerInterface( ServerInterface&& ) = delete;
         ServerInterface( LogPtr log );
+
         ~ServerInterface();
 
 
@@ -92,6 +96,15 @@ class ServerInterface : public QObject
     private:
         void listen();
         void work();
+
+
+        /***
+         * 5. Operators
+         ***/
+    public:
+        ServerInterface& operator=( const ServerInterface& ) = delete ;
+        ServerInterface& operator=( ServerInterface&& ) = delete;
+
 
         /***
          * 5. Signals

@@ -189,7 +189,7 @@ void Drawable::scale( glm::vec3 scaleFactors, const glm::vec3& pivotPoint )
 
 
 /***
- * 5. Updating and drawing
+ * 6. Updating and drawing
  ***/
 
 void Drawable::update()
@@ -203,7 +203,7 @@ void Drawable::update()
 
 
 /***
- * 6. Auxiliar methods
+ * 7. Auxiliar methods
  ***/
 
 glm::vec4 Drawable::transformScaleVector( glm::vec4 scaleVector, const glm::mat4& transformMatrix )

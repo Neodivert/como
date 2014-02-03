@@ -36,7 +36,19 @@ class ConnectionWizard : public QWizard
         /***
          * 1. Initialization and destruction
          ***/
+        ConnectionWizard() = delete ;
+        ConnectionWizard( const ConnectionWizard& ) = delete;
+        ConnectionWizard( ConnectionWizard&& ) = delete;
         ConnectionWizard( ScenePtr scene, LogPtr log, QWidget* parent = nullptr );
+
+        ~ConnectionWizard() = default;
+
+
+        /***
+         * 2. Operators
+         ***/
+        ConnectionWizard& operator = ( const ConnectionWizard& ) = delete;
+        ConnectionWizard& operator = ( ConnectionWizard&& ) = delete;
 };
 
 }

@@ -41,11 +41,23 @@ class UsersList : public QListWidget
         /***
          * 1. Initialization and destruction
          ***/
+        UsersList() = delete;
+        UsersList( const UsersList& ) = delete;
+        UsersList( UsersList&& ) = delete;
         UsersList( QWidget* parent, LogPtr log );
+
+        ~UsersList() = default;
 
 
         /***
-         * 2. Users insertion / deletion
+         * 2. Operators
+         ***/
+        UsersList& operator = ( const UsersList& ) = delete;
+        UsersList& operator = ( UsersList&& ) = delete;
+
+
+        /***
+         * 3. Users insertion / deletion
          ***/
     public slots:
         void addUser( UserConnectedConstPtr userConnectedPacket );

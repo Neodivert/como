@@ -97,7 +97,7 @@ LogPtr ComoApp::getLog() const
 
 
 /***
- * 3. Setters (slots)
+ * 4. Setters (slots)
  ***/
 
 void ComoApp::setAppMode( AppMode appMode )

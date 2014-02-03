@@ -47,7 +47,12 @@ class CreateServerPage : public QWizardPage
         /***
          * 1. Initialization and destruction
          ***/
+        CreateServerPage() = delete;
+        CreateServerPage( const CreateServerPage& ) = delete;
+        CreateServerPage( CreateServerPage&& ) = delete;
         CreateServerPage( ScenePtr scene, LogPtr log );
+
+        ~CreateServerPage() = default;
 
 
         /***
@@ -62,6 +67,13 @@ class CreateServerPage : public QWizardPage
          ***/
     public:
         virtual int nextId() const;
+
+
+        /***
+         * 4. Operators
+         ***/
+        CreateServerPage& operator = ( const CreateServerPage& ) = delete;
+        CreateServerPage& operator = ( CreateServerPage&& ) = delete;
 };
 
 } // namespace como

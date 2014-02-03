@@ -58,6 +58,7 @@ class Packet : public Packable
         /***
          * 1. Initialization and destruction
          ***/
+        Packet() = delete ;
         Packet( PacketType type );
         Packet( const Packet& b );
         virtual Packet* clone() const = 0;
@@ -101,6 +102,12 @@ class Packet : public Packable
         virtual bool expectedType() const = 0;
         static std::uint8_t getHeaderSize();
         virtual std::uint16_t getPacketSize() const ;
+
+
+        /***
+         * 4. Operators
+         ***/
+        Packet& operator =( const Packet& b );
 };
 
 } // namespace como

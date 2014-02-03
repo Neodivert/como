@@ -41,12 +41,23 @@ class IntroPage : public QWizardPage
          * 1. Initialization and destruction
          ***/
         IntroPage();
+        IntroPage( const IntroPage& ) = delete;
+        IntroPage( IntroPage&& ) = delete;
+
+        ~IntroPage() = default;
 
 
         /***
          * 2. Auxiliar methods
          ***/
         virtual int nextId() const;
+
+
+        /***
+         * 4. Operators
+         ***/
+        IntroPage& operator = ( const IntroPage& ) = delete;
+        IntroPage& operator = ( IntroPage&& ) = delete;
 };
 
 } // namespace como

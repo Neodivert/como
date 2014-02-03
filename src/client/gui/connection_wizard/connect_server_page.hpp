@@ -46,7 +46,12 @@ class ConnectServerPage : public QWizardPage
         /***
          * 1. Initialization and destruction
          ***/
+        ConnectServerPage() = delete ;
+        ConnectServerPage( const ConnectServerPage& ) = delete;
+        ConnectServerPage( ConnectServerPage&& ) = delete;
         ConnectServerPage( ScenePtr scene, LogPtr log );
+
+        ~ConnectServerPage() = default;
 
 
         /***
@@ -61,6 +66,14 @@ class ConnectServerPage : public QWizardPage
          ***/
     public:
         virtual int nextId() const ;
+
+
+        /***
+         * 4. Operators
+         ***/
+        // TODO: What whith the "&" before "= delete;" (I had to remove it)?
+        ConnectServerPage& operator = ( const ConnectServerPage& ) = delete;
+        ConnectServerPage& operator = ( ConnectServerPage&& ) = delete;
 };
 
 } // namespace como

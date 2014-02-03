@@ -73,6 +73,8 @@ class Mesh : public Drawable
          * 1. Initialization and destruction
          ***/
         Mesh( const std::uint8_t* color = nullptr );
+        Mesh( const Mesh& ) = delete;
+        Mesh( Mesh&& ) = delete;
         ~Mesh();
 
         virtual void setVertices( const GLuint nVertices, const GLfloat* vertices );
@@ -106,6 +108,13 @@ class Mesh : public Drawable
     public:
         // Send mesh to OpenGL server for rendering it.
         virtual void draw( const GLfloat* contourColor = nullptr ) const;
+
+
+        /***
+         * 6. Operators
+         ***/
+        Mesh& operator=( const Mesh& ) = delete ;
+        Mesh& operator=( Mesh&& ) = delete;
 };
 
 }

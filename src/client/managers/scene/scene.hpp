@@ -100,7 +100,11 @@ class Scene : public QOffscreenSurface
         /***
          * 1. Initialization and destruction
          ***/
+        Scene() = delete;
+        Scene( const Scene&  ) = delete;
+        Scene( Scene&& ) = delete;
         Scene( LogPtr log );
+
         ~Scene();
 
         void initOpenGL();
@@ -195,7 +199,14 @@ class Scene : public QOffscreenSurface
 
 
         /***
-         * 9. Signals
+         * 9. Operators
+         ***/
+        Scene& operator=( const Scene& ) = delete ;
+        Scene& operator=( Scene&& ) = delete;
+
+
+        /***
+         * 10. Signals
          ***/
         void emitRenderNeeded();
     signals:
@@ -205,14 +216,14 @@ class Scene : public QOffscreenSurface
 
 
         /***
-         * 10. Slots
+         * 11. Slots
          ***/
     public slots:
         void executeRemoteCommand( SceneCommandConstPtr command );
 
 
         /***
-         * 11. Auxiliar methods
+         * 12. Auxiliar methods
          ***/
     public:
         void roundTransformationMagnitude( float& vx, float& vy, float& vz );

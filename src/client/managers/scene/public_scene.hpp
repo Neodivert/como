@@ -32,14 +32,31 @@ class PublicScene : public Scene
         /***
          * 1. Initialization and destruction
          ***/
+        PublicScene() = delete;
+        PublicScene( const PublicScene& ) = delete;
+        PublicScene( PublicScene&& ) = delete ;
         PublicScene( LogPtr log );
+
+        ~PublicScene() = default;
+
+
+        /***
+         * 2. Server connection
+         ***/
         virtual void connect( const char* host, const char* port, const char* userName );
 
 
         /***
-         * 2. Users administration
+         * 3. Users administration
          ***/
         virtual void addUser( std::shared_ptr< const UserConnected > userConnectedCommand );
+
+
+        /***
+         * 4. Operators
+         ***/
+        PublicScene& operator=( const PublicScene& ) = delete ;
+        PublicScene& operator=( PublicScene&& ) = delete;
 };
 
 } // namespace como

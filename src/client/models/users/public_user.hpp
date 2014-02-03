@@ -37,7 +37,19 @@ class PublicUser : public BasicUser
         /***
          * 1. Initialization and destruction
          ***/
+        PublicUser() = delete;
+        PublicUser( const PublicUser& ) = delete;
+        PublicUser( PublicUser&& ) = delete;
         PublicUser( const UserConnected* userConnectedPacket );
+
+        ~PublicUser() = default;
+
+
+        /***
+         * 2. Operators
+         ***/
+        PublicUser& operator=( const PublicUser& ) = delete ;
+        PublicUser& operator=( PublicUser&& ) = delete;
 };
 
 typedef std::shared_ptr< PublicUser > PublicUserPtr;

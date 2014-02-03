@@ -23,7 +23,7 @@
 namespace como {
 
 /***
- * 1. Initialization
+ * 1. Initialization and destruction
  ***/
 
 Cube::Cube( const std::uint8_t* color ) :

@@ -157,7 +157,7 @@ int Camera::setPerspective( float fovy, float aspect,
 */
 
 /***
- * Updating and drawing
+ * 4. Updating and drawing
  ***/
 
 void Camera::update()

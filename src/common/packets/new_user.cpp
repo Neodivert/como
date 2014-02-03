@@ -107,7 +107,23 @@ bool NewUser::expectedType() const
 
 void NewUser::setName( const char* name )
 {
-    strcpy( name_, name );
+    strncpy( name_, name, NAME_SIZE );
+}
+
+
+/***
+ * 5. Operators
+ ***/
+
+NewUser& NewUser::operator = (const NewUser& b)
+{
+    if( this != &b ){
+        Packet::operator =( b );
+
+        strncpy( name_, b.name_, NAME_SIZE );
+    }
+
+    return *this;
 }
 
 } // namespace como

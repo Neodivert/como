@@ -38,11 +38,24 @@ class ViewFrame : public QFrame
         /***
          * 1. Initialization
          ***/
+        ViewFrame() = delete;
+        ViewFrame( const ViewFrame& ) = delete;
+        ViewFrame( ViewFrame&& ) = delete;
         ViewFrame( View view, shared_ptr< ComoApp > comoApp );
         QGroupBox* createProjectionSwitch();
 
+        ~ViewFrame() = default;
+
+
         /***
-         * 2. Updating and drawing
+         * 2. Operators
+         ***/
+        ViewFrame& operator = ( const ViewFrame& ) = delete;
+        ViewFrame& operator = ( ViewFrame&& ) = delete;
+
+
+        /***
+         * 3. Updating and drawing
          ***/
     public slots:
         virtual void render();

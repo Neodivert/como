@@ -436,7 +436,7 @@ void Viewport::render()
 
 
 /***
- * 5. Slots
+ * 6. Slots
  ***/
 
 void Viewport::setView( View view )
@@ -469,7 +469,7 @@ void Viewport::setProjection( Projection projection )
 
 
 /***
- * 6. Auxiliar methods
+ * 7. Auxiliar methods
  ***/
 
 glm::vec2 Viewport::getNormalizedMousePos( const int& x, const int& y ) const

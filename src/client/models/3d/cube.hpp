@@ -30,9 +30,21 @@ class Cube : public Mesh
 {
     public:
         /***
-         * 1. Initialization
+         * 1. Initialization and destruction
          ***/
+        Cube( const Cube& ) = delete;
+        Cube( Cube&& ) = delete;
         Cube( const std::uint8_t* color = nullptr );
+
+        // TODO: Is this problematic with Drawable's virtual destructor?
+        ~Cube() = default;
+
+
+        /***
+         * 2. Operators
+         ***/
+        Cube& operator=( const Cube& ) = delete ;
+        Cube& operator=( Cube&& ) = delete;
 };
 
 

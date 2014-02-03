@@ -60,6 +60,10 @@ class DrawablesSelection
          * 1. Initialization and destruction
          ***/
         DrawablesSelection();
+        DrawablesSelection( const DrawablesSelection& ) = delete;
+        DrawablesSelection( DrawablesSelection&& ) = delete;
+
+        ~DrawablesSelection() = default;
 
 
         /***
@@ -110,6 +114,14 @@ class DrawablesSelection
          * 8. Drawing
          ***/
         void draw( const GLfloat* contourColor = nullptr ) const ;
+
+
+        /***
+         * 9. Operators
+         ***/
+        DrawablesSelection& operator=( const DrawablesSelection& ) = delete ;
+        DrawablesSelection& operator=( DrawablesSelection&& ) = delete;
+
 };
 
 } // namespace como

@@ -129,7 +129,7 @@ QGroupBox* ViewFrame::createProjectionSwitch()
 }
 
 /***
- * 2. Updating and drawing
+ * 3. Updating and drawing
  ***/
 
 void ViewFrame::render()

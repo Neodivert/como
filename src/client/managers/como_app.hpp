@@ -126,7 +126,10 @@ class ComoApp : public QObject {
          ***/
     public:
         ComoApp();
-        ~ComoApp(){}
+        ComoApp( const ComoApp& ) = delete;
+        ComoApp( ComoApp&& ) = delete;
+
+        ~ComoApp() = default;
 
         /***
          * 2. Getters
@@ -140,7 +143,14 @@ class ComoApp : public QObject {
 
 
         /***
-         * 3. Setters (slots)
+         * 3. Operators
+         ***/
+        ComoApp& operator=( const ComoApp& ) = delete ;
+        ComoApp& operator=( ComoApp&& ) = delete;
+
+
+        /***
+         * 4. Setters (slots)
          ***/
     public slots:
         void setAppMode( AppMode appMode );

@@ -80,8 +80,13 @@ class Viewport : public QWindow
         /***
          * 1. Initialization and destruction
          ***/
+        Viewport() = delete;
+        Viewport( const Viewport& ) = delete;
+        Viewport( Viewport&& ) = delete;
         Viewport( View view, shared_ptr< ComoApp > comoApp );
+
         ~Viewport();
+
 
         /***
          * 2. Events
@@ -93,6 +98,7 @@ class Viewport : public QWindow
         virtual void mousePressEvent( QMouseEvent* mousePressEvent );
         void keyPressEvent( QKeyEvent *e );
 
+
         /***
          * 3. Updating and drawing
          ***/
@@ -100,21 +106,29 @@ class Viewport : public QWindow
         virtual void render();
         void renderGuideRect();
 
+
         /***
-         * 4. Signals
+         * 4. Operators
+         ***/
+        Viewport& operator=( const Viewport& ) = delete ;
+        Viewport& operator=( Viewport&& ) = delete;
+
+
+        /***
+         * 5. Signals
          ***/
     signals:
         void viewIndexChanged( int viewIndex );
 
         /***
-         * 5. Slots
+         * 6. Slots
          ***/
     public slots:
         void setView( View view );
         void setProjection( Projection projection );
 
         /***
-         * 6. Auxiliar methods
+         * 7. Auxiliar methods
          ***/
         glm::vec2 getNormalizedMousePos( const int& x, const int& y ) const ;
         void traceRay( const GLfloat& x, const GLfloat& y, glm::vec3& rayOrigin, glm::vec3& rayDirection ) const ;

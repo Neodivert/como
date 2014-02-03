@@ -44,7 +44,12 @@ class ToolsMenu : public QFrame
          * 1. Initialization and destruction
          ***/
     public:
+        ToolsMenu() = delete;
+        ToolsMenu( const ToolsMenu& ) = delete;
+        ToolsMenu( ToolsMenu&& ) = delete;
         ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp );
+
+        ~ToolsMenu() = default;
 
     protected:
         QGroupBox* createPrimitiveCreationMenu();
@@ -60,7 +65,14 @@ class ToolsMenu : public QFrame
 
 
         /***
-         * 3. Auxiliar methods
+         * 3. Operators
+         ***/
+        ToolsMenu& operator = ( const ToolsMenu& ) = delete;
+        ToolsMenu& operator = ( ToolsMenu&& ) = delete;
+
+
+        /***
+         * 4. Auxiliar methods
          ***/
     protected:
         void changeCurrentColor();

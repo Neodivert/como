@@ -31,6 +31,10 @@ PublicScene::PublicScene( LogPtr log ) :
 }
 
 
+/***
+ * 2. Server connection
+ ***/
+
 void PublicScene::connect( const char* host, const char* port, const char* userName )
 {
     try{
@@ -52,7 +56,7 @@ void PublicScene::connect( const char* host, const char* port, const char* userN
 
 
 /***
- * 2. Users administration
+ * 3. Users administration
  ***/
 
 void PublicScene::addUser( std::shared_ptr< const UserConnected > userConnectedCommand )

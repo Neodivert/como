@@ -47,8 +47,19 @@ class MainWindow : public QMainWindow
         /***
          * 1. Initialization and destruction
          ***/
+        MainWindow() = delete;
+        MainWindow( const MainWindow& ) = delete;
+        MainWindow( MainWindow&& ) = delete;
         explicit MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp );
-        ~MainWindow(){}
+
+        ~MainWindow() = default;
+
+
+        /***
+         * 2. Operators
+         ***/
+        MainWindow& operator = ( const MainWindow& ) = delete;
+        MainWindow& operator = ( MainWindow&& ) = delete;
 };
 
 } // namespace como

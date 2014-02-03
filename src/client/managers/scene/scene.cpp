@@ -795,7 +795,7 @@ void Scene::emitRenderNeeded()
 
 
 /***
- * 10. Slots
+ * 11. Slots
  ***/
 
 void Scene::executeRemoteCommand( SceneCommandConstPtr command )
@@ -907,7 +907,7 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
 
 
 /***
- * 11. Auxiliar methods
+ * 12. Auxiliar methods
  ***/
 
 void Scene::roundTransformationMagnitude( float& vx, float& vy, float& vz )

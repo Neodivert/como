@@ -256,7 +256,7 @@ QColor ToolsMenu::getCurrentColor() const
 
 
 /***
- * 3. Auxiliar methods
+ * 4. Auxiliar methods
  ***/
 
 void ToolsMenu::changeCurrentColor()

@@ -57,6 +57,12 @@ class NewUser : public Packet
          * 4. Setters
          ***/
         void setName( const char* name );
+
+
+        /***
+         * 5. Operators
+         ***/
+        NewUser& operator = (const NewUser& b);
 };
 
 } // namespace como

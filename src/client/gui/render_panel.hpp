@@ -41,12 +41,19 @@ class RenderPanel : public QFrame
         /***
          * 1. Initialization
          ***/
+        RenderPanel() = delete;
+        RenderPanel( const RenderPanel& ) = delete;
+        RenderPanel( RenderPanel&& ) = delete;
         explicit RenderPanel( QWidget *parent, shared_ptr< ComoApp > comoApp );
 
-    signals:
+        ~RenderPanel() = default;
 
-    public slots:
-    
+
+        /***
+         * 2. Operators
+         ***/
+        RenderPanel& operator = ( const RenderPanel& ) = delete;
+        RenderPanel& operator = ( RenderPanel&& ) = delete;
 };
 
 } // namespace como

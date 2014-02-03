@@ -65,6 +65,12 @@ class UserAccepted : public Packet
         void setId( const std::uint32_t& id );
         void setName( const char* name );
         void setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a );
+
+
+        /***
+         * 5. Operators
+         ***/
+        UserAccepted& operator = (const UserAccepted& b );
 };
 
 } // namespace como

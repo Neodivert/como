@@ -68,7 +68,12 @@ class Camera : public Mesh
         /***
          * 1. Initializations
          ***/
+        Camera( const Camera& ) = delete;
+        Camera( Camera&& ) = delete;
         Camera( View view = View::FRONT );
+
+        // TODO: Is this problematic with Drawable's virtual destructor?
+        ~Camera() = default;
 
         /***
          * 2. Setters and getters
@@ -77,9 +82,16 @@ class Camera : public Mesh
         void setView( View view );
         glm::vec4 getCenterVector() const ;
 
+
+        /***
+         * 3. Operators
+         ***/
+        Camera& operator=( const Camera& ) = delete ;
+        Camera& operator=( Camera&& ) = delete;
+
     protected:
         /***
-         * 3. Updating and drawing
+         * 4. Updating and drawing
          ***/
         virtual void update();
 };

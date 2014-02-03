@@ -160,7 +160,7 @@ void UserAccepted::setId( const std::uint32_t& id )
 
 void UserAccepted::setName( const char* name )
 {
-    strcpy( name_, name );
+    strncpy( name_, name, NAME_SIZE );
 }
 
 
@@ -171,5 +171,28 @@ void UserAccepted::setSelectionColor( const std::uint8_t& r, const std::uint8_t&
     selectionColor_[2] = b;
     selectionColor_[3] = a;
 }
+
+
+/***
+ * 5. Operators
+ ***/
+
+UserAccepted& UserAccepted::operator = (const UserAccepted& b )
+{
+    unsigned int i;
+
+    if( this != &b ){
+        Packet::operator =( b );
+
+        id_ = b.id_;
+        strncpy( name_, b.name_, NAME_SIZE );
+        for( i=0; i<4; i++ ){
+            selectionColor_[i] = b.selectionColor_[i];
+        }
+    }
+
+    return *this;
+}
+
 
 } // namespace como

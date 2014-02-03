@@ -43,7 +43,11 @@ class Tester : public QOffscreenSurface
          * 1. Initialization and destruction
          ***/
     public:
+        Tester() = delete;
+        Tester( const Tester& ) = delete;
+        Tester( Tester&& ) = delete;
         Tester( LogPtr log );
+
         ~Tester();
 
         static Tester* getInstance( LogPtr log );
@@ -66,6 +70,13 @@ class Tester : public QOffscreenSurface
          * 4. Auxiliar methods
          ***/
         Mesh* generateRandomMesh( const unsigned int& nTriangles ) const ;
+
+
+        /***
+         * 5. Operators
+         ***/
+        Tester& operator=( const Tester& ) = delete ;
+        Tester& operator=( Tester&& ) = delete;
 };
 
 
