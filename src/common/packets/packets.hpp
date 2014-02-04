@@ -20,9 +20,12 @@
 #ifndef PACKETS_HPP
 #define PACKETS_HPP
 
-#include "new_user.hpp"
-#include "user_accepted.hpp"
-#include "scene_update.hpp"
+// Packets
+#include "new_user_packet.hpp"
+#include "user_acceptance_packet.hpp"
+#include "scene_update_packet.hpp"
+
+// Scene commands
 #include "scene_commands/scene_commands.hpp"
 
 #endif // PACKETS_HPP

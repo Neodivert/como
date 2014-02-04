@@ -48,11 +48,11 @@ ServerInterface::~ServerInterface()
  * 2. Connection and disconnection
  ***/
 
-std::shared_ptr< const UserAccepted > ServerInterface::connect( const char* host, const char* port, const char* userName )
+std::shared_ptr< const UserAcceptancePacket > ServerInterface::connect( const char* host, const char* port, const char* userName )
 {
     boost::system::error_code errorCode;
-    como::NewUser newUserPacket;
-    como::UserAccepted userAcceptedPacket;
+    como::NewUserPacket newUserPacket;
+    como::UserAcceptancePacket userAcceptedPacket;
     const std::uint8_t* selectionColor = nullptr;
 
     // Create the TCP resolver and query needed for connecting to the server.
@@ -99,7 +99,7 @@ std::shared_ptr< const UserAccepted > ServerInterface::connect( const char* host
 
     setTimer();
 
-    return std::shared_ptr< const UserAccepted >( dynamic_cast< const UserAccepted* >( userAcceptedPacket.clone() ) );
+    return std::shared_ptr< const UserAcceptancePacket >( dynamic_cast< const UserAcceptancePacket* >( userAcceptedPacket.clone() ) );
 }
 
 
@@ -128,7 +128,7 @@ void ServerInterface::disconnect()
  * 3. Handlers
  ***/
 
-void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& errorCode, PacketPtr packet )
+void ServerInterface::onSceneUpdatePacketReceived( const boost::system::error_code& errorCode, PacketPtr packet )
 {
     if( errorCode ){
         log_->error( "Error when receiving packet: ", errorCode.message(), "\n" );
@@ -138,11 +138,11 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
     unsigned int i;
     const std::vector< SceneCommandConstPtr >* sceneCommands = nullptr;
 
-    SceneUpdate* sceneUpdate = dynamic_cast< SceneUpdate *>( packet.get() );
-    //const UserConnected* userConnectedCommand = nullptr;
+    SceneUpdatePacket* sceneUpdate = dynamic_cast< SceneUpdatePacket *>( packet.get() );
+    //const UserConnectionCommand* userConnectedCommand = nullptr;
 
     if( !sceneUpdate ){
-        throw std::runtime_error( std::string( "ERROR in \"onSceneUpdateReceived\": not a SCENE_UPDATE packet" ) );
+        throw std::runtime_error( std::string( "ERROR in \"onSceneUpdatePacketReceived\": not a SCENE_UPDATE packet" ) );
     }
 
     log_->debug( "Scene update received with nCommands: ", sceneUpdate->getCommands()->size(), "\n" );
@@ -156,14 +156,14 @@ void ServerInterface::onSceneUpdateReceived( const boost::system::error_code& er
 }
 
 
-void ServerInterface::onSceneUpdateSended( const boost::system::error_code& errorCode, PacketPtr packet )
+void ServerInterface::onSceneUpdatePacketSended( const boost::system::error_code& errorCode, PacketPtr packet )
 {
     if( errorCode ){
         log_->error( "Error when sending packet: ", errorCode.message(), "\n" );
         return;
     }
 
-    log_->debug( "SCENE_UPDATE sent to the server - nCommands ", ( dynamic_cast< const SceneUpdate* >( packet.get() ) )->getCommands()->size(), "\n" );
+    log_->debug( "SCENE_UPDATE sent to the server - nCommands ", ( dynamic_cast< const SceneUpdatePacket* >( packet.get() ) )->getCommands()->size(), "\n" );
 
     setTimer();
 }
@@ -200,7 +200,7 @@ void ServerInterface::sendPendingCommands()
     // to call this method again.
     if( nCommands ){
         log_->debug( "Sending SCENE_UPDATE packet to the server\n" );
-        sceneUpdatePacketToServer_.asyncSend( socket_, std::bind( &ServerInterface::onSceneUpdateSended, this, std::placeholders::_1, std::placeholders::_2 ) );
+        sceneUpdatePacketToServer_.asyncSend( socket_, std::bind( &ServerInterface::onSceneUpdatePacketSended, this, std::placeholders::_1, std::placeholders::_2 ) );
     }else{
         //log_->debug( "No commands to send to the server\n" );
         setTimer();
@@ -221,7 +221,7 @@ void ServerInterface::listen()
     log_->debug( "Listening for new scene updates from server ...\n" );
 
     sceneUpdatePacketFromServer_.clear();
-    sceneUpdatePacketFromServer_.asyncRecv( socket_, std::bind( &ServerInterface::onSceneUpdateReceived, this, std::placeholders::_1, std::placeholders::_2 ) );
+    sceneUpdatePacketFromServer_.asyncRecv( socket_, std::bind( &ServerInterface::onSceneUpdatePacketReceived, this, std::placeholders::_1, std::placeholders::_2 ) );
 }
 
 

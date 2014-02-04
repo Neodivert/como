@@ -17,7 +17,7 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "scene_update.hpp"
+#include "scene_update_packet.hpp"
 
 namespace como {
 
@@ -25,7 +25,8 @@ namespace como {
 /***
  * 1. Initialization and destruction
  ***/
-SceneUpdate::SceneUpdate() :
+
+SceneUpdatePacket::SceneUpdatePacket() :
     Packet( PacketType::SCENE_UPDATE ),
     lastCommandSent_( 0 ),
     nUnsyncCommands_( 0 )
@@ -37,7 +38,7 @@ SceneUpdate::SceneUpdate() :
 }
 
 
-SceneUpdate::SceneUpdate( const SceneUpdate& b ) :
+SceneUpdatePacket::SceneUpdatePacket( const SceneUpdatePacket& b ) :
     Packet( b ),
     lastCommandSent_( b.lastCommandSent_ ),
     nUnsyncCommands_( b.nUnsyncCommands_ ),
@@ -46,16 +47,16 @@ SceneUpdate::SceneUpdate( const SceneUpdate& b ) :
 }
 
 
-Packet* SceneUpdate::clone() const
+Packet* SceneUpdatePacket::clone() const
 {
-    return new SceneUpdate( *this );
+    return new SceneUpdatePacket( *this );
 }
 
 /***
  * 2. Packing and unpacking
  ***/
 
-char* SceneUpdate::packBody( char* buffer ) const
+char* SceneUpdatePacket::packBody( char* buffer ) const
 {
     unsigned int i = 0;
 
@@ -73,7 +74,7 @@ char* SceneUpdate::packBody( char* buffer ) const
 }
 
 
-const char* SceneUpdate::unpackBody( const char* buffer )
+const char* SceneUpdatePacket::unpackBody( const char* buffer )
 {
     unsigned int i = 0;
     std::uint8_t nCommands = 0;
@@ -89,32 +90,32 @@ const char* SceneUpdate::unpackBody( const char* buffer )
 
     for( i=0; i<nCommands; i++ ){
         switch( SceneCommand::getType( buffer ) ){
-            case SceneCommandType::USER_CONNECTED:
-                sceneCommandPtr =  SceneCommandPtr( new UserConnected );
+            case SceneCommandType::USER_CONNECTION:
+                sceneCommandPtr =  SceneCommandPtr( new UserConnectionCommand );
             break;
-            case SceneCommandType::USER_DISCONNECTED:
-                sceneCommandPtr =  SceneCommandPtr( new SceneCommand( SceneCommandType::USER_DISCONNECTED ) );
+            case SceneCommandType::USER_DISCONNECTION:
+                sceneCommandPtr =  SceneCommandPtr( new SceneCommand( SceneCommandType::USER_DISCONNECTION ) );
             break;
-            case SceneCommandType::CREATE_CUBE:
-                sceneCommandPtr =  SceneCommandPtr( new CreateCube );
+            case SceneCommandType::CUBE_CREATION:
+                sceneCommandPtr =  SceneCommandPtr( new CubeCreationCommand );
             break;
-            case SceneCommandType::SELECT_DRAWABLE:
-                sceneCommandPtr = SceneCommandPtr( new SelectDrawable );
+            case SceneCommandType::DRAWABLE_SELECTION:
+                sceneCommandPtr = SceneCommandPtr( new DrawableSelectionCommand );
             break;
             case SceneCommandType::SELECTION_RESPONSE:
-                sceneCommandPtr =  SceneCommandPtr( new SelectionResponse );
+                sceneCommandPtr =  SceneCommandPtr( new SelectionResponseCommand );
             break;
-            case SceneCommandType::UNSELECT_ALL:
-                sceneCommandPtr =  SceneCommandPtr( new SceneCommand( SceneCommandType::UNSELECT_ALL ) );
+            case SceneCommandType::FULL_DESELECTION:
+                sceneCommandPtr =  SceneCommandPtr( new SceneCommand( SceneCommandType::FULL_DESELECTION ) );
             break;
-            case SceneCommandType::DELETE_SELECTION:
-                sceneCommandPtr = SceneCommandPtr( new SceneCommand( SceneCommandType::DELETE_SELECTION ) );
+            case SceneCommandType::SELECTION_DELETION:
+                sceneCommandPtr = SceneCommandPtr( new SceneCommand( SceneCommandType::SELECTION_DELETION ) );
             break;
             case SceneCommandType::SELECTION_TRANSFORMATION:
-                sceneCommandPtr = SceneCommandPtr( new SelectionTransformation );
+                sceneCommandPtr = SceneCommandPtr( new SelectionTransformationCommand );
             break;
-            case SceneCommandType::CHANGE_PARAMETER:
-                sceneCommandPtr = SceneCommandPtr( new ChangeParameter );
+            case SceneCommandType::PARAMETER_CHANGE:
+                sceneCommandPtr = SceneCommandPtr( new ParameterChangeCommand );
             break;
             default:
                 throw std::runtime_error( "ERROR: Unknown command found while unpackin SCENE_UPDATE packet" );
@@ -133,25 +134,25 @@ const char* SceneUpdate::unpackBody( const char* buffer )
  * 3. Getters
  ***/
 
-std::uint32_t SceneUpdate::getLasCommandSent() const
+std::uint32_t SceneUpdatePacket::getLasCommandSent() const
 {
     return lastCommandSent_;
 }
 
 
-std::uint32_t SceneUpdate::getUnsyncCommands() const
+std::uint32_t SceneUpdatePacket::getUnsyncCommands() const
 {
     return nUnsyncCommands_;
 }
 
 
-const std::vector< SceneCommandConstPtr >* SceneUpdate::getCommands() const
+const std::vector< SceneCommandConstPtr >* SceneUpdatePacket::getCommands() const
 {
     return &commands_;
 }
 
 
-bool SceneUpdate::expectedType() const
+bool SceneUpdatePacket::expectedType() const
 {
     return ( Packet::getType() == PacketType::SCENE_UPDATE );
 }
@@ -161,7 +162,7 @@ bool SceneUpdate::expectedType() const
  * 4. Setters
  ***/
 
-void SceneUpdate::addCommand( SceneCommandConstPtr command )
+void SceneUpdatePacket::addCommand( SceneCommandConstPtr command )
 {
     // Push back the given command.
     commands_.push_back( command );
@@ -171,7 +172,7 @@ void SceneUpdate::addCommand( SceneCommandConstPtr command )
 }
 
 
-void SceneUpdate::addCommand( SceneCommandConstPtr command,
+void SceneUpdatePacket::addCommand( SceneCommandConstPtr command,
                               const std::uint32_t& commandIndex,
                               const std::uint32_t& historicSize )
 {
@@ -185,14 +186,14 @@ void SceneUpdate::addCommand( SceneCommandConstPtr command,
 }
 
 /*
-void SceneUpdate::addCommands(
+void SceneUpdatePacket::addCommands(
                             const CommandsList* commandsHistoric,
                             const std::uint32_t& firstCommand,
                             const std::uint8_t& maxCommands )
 {
     // Validity check: maxCommands can't be zero.
     if( !maxCommands ){
-        throw std::runtime_error( std::string( "ERROR at SceneUpdate::addCommands - maxCommands can't be zero" ) );
+        throw std::runtime_error( std::string( "ERROR at SceneUpdatePacket::addCommands - maxCommands can't be zero" ) );
     }
 
     std::list< SceneCommandConstPtr >::const_iterator it = commandsHistoric->begin();
@@ -215,7 +216,7 @@ void SceneUpdate::addCommands(
 }
 */
 
-void SceneUpdate::clear()
+void SceneUpdatePacket::clear()
 {
     commands_.clear();
     bodySize_ =

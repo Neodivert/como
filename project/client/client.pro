@@ -66,14 +66,10 @@ HEADERS += \
     ../../src/client/gui/connection_wizard/create_server_page.hpp \
     ../../src/client/gui/connection_wizard/intro_page.hpp \
     ../../src/client/gui/connection_wizard/page_ids.hpp \
-    ../../src/common/packets/user_accepted.hpp \
     ../../src/common/packets/packets.hpp \
     ../../src/common/packets/packet.hpp \
     ../../src/common/packets/packable.hpp \
-    ../../src/common/packets/new_user.hpp \
     ../../src/common/utilities/packer.hpp \
-    ../../src/common/packets/scene_update.hpp \
-    ../../src/common/packets/scene_commands/user_connected.hpp \
     ../../src/common/packets/scene_commands/scene_commands.hpp \
     ../../src/common/packets/scene_commands/scene_command.hpp \
     ../../src/client/models/users/public_user.hpp \
@@ -83,13 +79,17 @@ HEADERS += \
     ../../src/common/utilities/ids.hpp \
     ../../src/client/managers/scene/public_scene.hpp \
     ../../src/common/users/basic_user.hpp \
-    ../../src/common/packets/scene_commands/drawable_commands/create_cube.hpp \
     ../../src/client/managers/server_interface/server_interface.hpp \
-    ../../src/common/packets/scene_commands/selection_response.hpp \
-    ../../src/common/packets/scene_commands/drawable_commands/select_drawable.hpp \
-    ../../src/common/packets/scene_commands/selection_transformation.hpp \
     ../../src/client/models/3d/drawables_selection.hpp \
-    ../../src/common/packets/scene_commands/change_parameter.hpp
+    ../../src/common/packets/scene_commands/drawable_commands/cube_creation_command.hpp \
+    ../../src/common/packets/scene_commands/drawable_commands/drawable_selection_command.hpp \
+    ../../src/common/packets/scene_commands/parameter_change_command.hpp \
+    ../../src/common/packets/scene_commands/selection_response_command.hpp \
+    ../../src/common/packets/scene_commands/selection_transformation_command.hpp \
+    ../../src/common/packets/scene_commands/user_connection_command.hpp \
+    ../../src/common/packets/new_user_packet.hpp \
+    ../../src/common/packets/user_acceptance_packet.hpp \
+    ../../src/common/packets/scene_update_packet.hpp
 
 # Code sources
 SOURCES += \
@@ -111,23 +111,23 @@ SOURCES += \
     ../../src/client/gui/connection_wizard/connect_server_page.cpp \
     ../../src/client/gui/connection_wizard/create_server_page.cpp \
     ../../src/client/gui/connection_wizard/intro_page.cpp \
-    ../../src/common/packets/user_accepted.cpp \
     ../../src/common/packets/packet.cpp \
-    ../../src/common/packets/new_user.cpp \
     ../../src/common/utilities/packer.cpp \
-    ../../src/common/packets/scene_update.cpp \
-    ../../src/common/packets/scene_commands/user_connected.cpp \
     ../../src/common/packets/scene_commands/scene_command.cpp \
     ../../src/client/models/users/public_user.cpp \
     ../../src/client/gui/users_list.cpp \
     ../../src/common/packets/scene_commands/drawable_commands/drawable_command.cpp \
     ../../src/client/managers/scene/public_scene.cpp \
     ../../src/common/users/basic_user.cpp \
-    ../../src/common/packets/scene_commands/drawable_commands/create_cube.cpp \
     ../../src/client/managers/server_interface/server_interface.cpp \
-    ../../src/common/packets/scene_commands/selection_response.cpp \
-    ../../src/common/packets/scene_commands/drawable_commands/select_drawable.cpp \
-    ../../src/common/packets/scene_commands/selection_transformation.cpp \
     ../../src/client/models/3d/drawables_selection.cpp \
-    ../../src/common/packets/scene_commands/change_parameter.cpp \
-    ../../src/common/utilities/ids.cpp
+    ../../src/common/utilities/ids.cpp \
+    ../../src/common/packets/scene_commands/drawable_commands/cube_creation_command.cpp \
+    ../../src/common/packets/scene_commands/drawable_commands/drawable_selection_command.cpp \
+    ../../src/common/packets/scene_commands/parameter_change_command.cpp \
+    ../../src/common/packets/scene_commands/selection_response_command.cpp \
+    ../../src/common/packets/scene_commands/selection_transformation_command.cpp \
+    ../../src/common/packets/scene_commands/user_connection_command.cpp \
+    ../../src/common/packets/new_user_packet.cpp \
+    ../../src/common/packets/user_acceptance_packet.cpp \
+    ../../src/common/packets/scene_update_packet.cpp

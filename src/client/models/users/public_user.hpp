@@ -40,7 +40,7 @@ class PublicUser : public BasicUser
         PublicUser() = delete;
         PublicUser( const PublicUser& ) = delete;
         PublicUser( PublicUser&& ) = delete;
-        PublicUser( const UserConnected* userConnectedPacket );
+        PublicUser( const UserConnectionCommand* userConnectedPacket );
 
         ~PublicUser() = default;
 

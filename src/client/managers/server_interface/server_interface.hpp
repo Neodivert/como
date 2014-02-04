@@ -45,8 +45,8 @@ class ServerInterface : public QObject
 
         SocketPtr socket_;
 
-        SceneUpdate sceneUpdatePacketFromServer_;
-        SceneUpdate sceneUpdatePacketToServer_;
+        SceneUpdatePacket sceneUpdatePacketFromServer_;
+        SceneUpdatePacket sceneUpdatePacketToServer_;
 
         // Queue with scene commands to be sended to the server.
         std::queue< SceneCommandConstPtr > sceneCommandsToServer_;
@@ -73,15 +73,15 @@ class ServerInterface : public QObject
         /***
          * 2. Connection and disconnection
          ***/
-        std::shared_ptr< const UserAccepted > connect( const char* host, const char* port, const char* userName );
+        std::shared_ptr< const UserAcceptancePacket > connect( const char* host, const char* port, const char* userName );
         void disconnect();
 
         /***
          * 3. Handlers
          ***/
     private:
-        void onSceneUpdateReceived( const boost::system::error_code& errorCode, PacketPtr packet );
-        void onSceneUpdateSended( const boost::system::error_code& errorCode, PacketPtr packet );
+        void onSceneUpdatePacketReceived( const boost::system::error_code& errorCode, PacketPtr packet );
+        void onSceneUpdatePacketSended( const boost::system::error_code& errorCode, PacketPtr packet );
 
 
         /***

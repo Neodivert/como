@@ -49,7 +49,7 @@ class PublicScene : public Scene
         /***
          * 3. Users administration
          ***/
-        virtual void addUser( std::shared_ptr< const UserConnected > userConnectedCommand );
+        virtual void addUser( std::shared_ptr< const UserConnectionCommand > userConnectedCommand );
 
 
         /***

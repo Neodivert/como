@@ -25,7 +25,7 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-PublicUser::PublicUser( const UserConnected* userConnectedPacket ) :
+PublicUser::PublicUser( const UserConnectionCommand* userConnectedPacket ) :
     BasicUser( userConnectedPacket->getUserID(), userConnectedPacket->getName() )
 {
     unsigned int i = 0;

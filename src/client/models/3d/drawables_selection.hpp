@@ -22,7 +22,7 @@
 
 #include "drawable.hpp"
 #include "../../../common/utilities/ids.hpp"
-#include "../../../common/packets/scene_commands/change_parameter.hpp" // For PivotPointMode type.
+#include "../../../common/packets/scene_commands/parameter_change_command.hpp" // For PivotPointMode type.
 #include <map>
 #include <functional>
 

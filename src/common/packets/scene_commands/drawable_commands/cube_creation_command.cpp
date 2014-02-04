@@ -17,7 +17,7 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "create_cube.hpp"
+#include "cube_creation_command.hpp"
 
 namespace como {
 
@@ -25,19 +25,19 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-CreateCube::CreateCube() :
-    DrawableCommand( SceneCommandType::CREATE_CUBE )
+CubeCreationCommand::CubeCreationCommand() :
+    DrawableCommand( SceneCommandType::CUBE_CREATION )
 {
 }
 
 
-CreateCube::CreateCube( UserID userID, DrawableID drawableID, const std::uint8_t* color ) :
-    DrawableCommand( userID, drawableID, SceneCommandType::CREATE_CUBE )
+CubeCreationCommand::CubeCreationCommand( UserID userID, DrawableID drawableID, const std::uint8_t* color ) :
+    DrawableCommand( userID, drawableID, SceneCommandType::CUBE_CREATION )
 {
     setColor( color );
 }
 
-CreateCube::CreateCube( const CreateCube& b ) :
+CubeCreationCommand::CubeCreationCommand( const CubeCreationCommand& b ) :
     DrawableCommand( b )
 {
     setColor( b.color_ );
@@ -48,7 +48,7 @@ CreateCube::CreateCube( const CreateCube& b ) :
  * 2. Packing and unpacking
  ***/
 
-char* CreateCube::pack( char* buffer ) const
+char* CubeCreationCommand::pack( char* buffer ) const
 {
     unsigned int i;
 
@@ -65,7 +65,7 @@ char* CreateCube::pack( char* buffer ) const
 }
 
 
-const char* CreateCube::CreateCube::unpack( const char* buffer )
+const char* CubeCreationCommand::CubeCreationCommand::unpack( const char* buffer )
 {
     unsigned int i;
 
@@ -86,14 +86,14 @@ const char* CreateCube::CreateCube::unpack( const char* buffer )
  * 3. Getters
  ***/
 
-std::uint16_t CreateCube::getPacketSize() const
+std::uint16_t CubeCreationCommand::getPacketSize() const
 {
     return ( DrawableCommand::getPacketSize() +
              sizeof( color_[0] ) * 4 );
 }
 
 
-const std::uint8_t* CreateCube::getColor() const
+const std::uint8_t* CubeCreationCommand::getColor() const
 {
     return color_;
 }
@@ -103,7 +103,7 @@ const std::uint8_t* CreateCube::getColor() const
  * 4. Setters
  ***/
 
-void CreateCube::setColor( const std::uint8_t* color )
+void CubeCreationCommand::setColor( const std::uint8_t* color )
 {
     unsigned int i = 0;
     for( ; i < 4; i++ ){

@@ -117,7 +117,7 @@ class Scene : public QOffscreenSurface
         /***
          * 2. Users administration
          ***/
-        virtual void addUser( std::shared_ptr< const UserConnected > userConnectedCommand ) = 0;
+        virtual void addUser( std::shared_ptr< const UserConnectionCommand > userConnectedCommand ) = 0;
         void removeUser( UserID userID );
 
 
@@ -211,7 +211,7 @@ class Scene : public QOffscreenSurface
         void emitRenderNeeded();
     signals:
         void renderNeeded();
-        void userConnected( UserConnectedConstPtr command );
+        void userConnected( UserConnectionCommandConstPtr command );
         void userDisconnected( UserID userID );
 
 

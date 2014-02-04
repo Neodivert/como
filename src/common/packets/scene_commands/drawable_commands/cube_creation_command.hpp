@@ -17,48 +17,29 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef CHANGE_PARAMETER_HPP
-#define CHANGE_PARAMETER_HPP
+#ifndef CUBE_CREATION_COMMAND_HPP
+#define CUBE_CREATION_COMMAND_HPP
 
-#include "scene_command.hpp"
+#include "drawable_command.hpp"
 
 namespace como {
 
-// Available pivot point modes.
-enum class PivotPointMode
-{
-    MEDIAN_POINT = 0,
-    INDIVIDUAL_CENTROIDS,
-    WORLD_ORIGIN
-};
-
-enum class ParameterType
-{
-    PIVOT_POINT_MODE
-};
-
-
-class ChangeParameter : public SceneCommand
+class CubeCreationCommand : public DrawableCommand
 {
     private:
-        ParameterType parameterType_;
-
-        union ParameterValue {
-            PivotPointMode pivotPointMode_;
-        } value_;
-
+        // Mesh color.
+        std::uint8_t color_[4];
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        ChangeParameter();
-        ChangeParameter( UserID userID );
-        ChangeParameter( UserID userID, PivotPointMode pivotPointMode );
-        ChangeParameter( const ChangeParameter& b );
-        ChangeParameter( ChangeParameter&& ) = delete;
+        CubeCreationCommand();
+        CubeCreationCommand( UserID userID, DrawableID drawableID, const std::uint8_t* color );
+        CubeCreationCommand( const CubeCreationCommand& b );
+        CubeCreationCommand( CubeCreationCommand&& ) = delete;
 
-        ~ChangeParameter() = default;
+        ~CubeCreationCommand() = default;
 
 
         /***
@@ -72,23 +53,22 @@ class ChangeParameter : public SceneCommand
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const ;
-        ParameterType getParameterType() const ;
-        PivotPointMode getPivotPointMode() const ;
+        const std::uint8_t* getColor() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setPivotPointMode( PivotPointMode pivotPointMode );
+        void setColor( const std::uint8_t* color );
 
 
         /***
          * 5. Operators
          ***/
-        ChangeParameter& operator=( const ChangeParameter& ) = delete;
-        ChangeParameter& operator=( ChangeParameter&& ) = delete;
+        CubeCreationCommand& operator=( const CubeCreationCommand& ) = delete;
+        CubeCreationCommand& operator=( CubeCreationCommand&& ) = delete;
 };
 
 } // namespace como
 
-#endif // CHANGE_PARAMETER_HPP
+#endif // CUBE_CREATION_COMMAND_HPP

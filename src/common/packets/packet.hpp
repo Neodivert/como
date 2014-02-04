@@ -17,8 +17,8 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PACKAGE_HPP
-#define PACKAGE_HPP
+#ifndef PACKET_HPP
+#define PACKET_HPP
 
 #include "packable.hpp"
 #include "../utilities/packer.hpp"
@@ -116,4 +116,4 @@ class Packet : public Packable
 
 } // namespace como
 
-#endif // PACKAGE_HPP
+#endif // PACKET_HPP

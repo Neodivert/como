@@ -17,15 +17,15 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SELECTION_TRANSFORMATION_HPP
-#define SELECTION_TRANSFORMATION_HPP
+#ifndef SELECTION_TRANSFORMATION_COMMAND_HPP
+#define SELECTION_TRANSFORMATION_COMMAND_HPP
 
 #include "scene_command.hpp"
 
 namespace como {
 
 // Transformation types.
-enum class SelectionTransformationType
+enum class SelectionTransformationCommandType
 {
     TRANSLATION = 0,
     ROTATION,
@@ -35,11 +35,11 @@ enum class SelectionTransformationType
 const unsigned int TRANSFORMATION_MAGNITUDE_STR_SIZE = 32;
 
 
-class SelectionTransformation : public SceneCommand
+class SelectionTransformationCommand : public SceneCommand
 {
     private:
         // Transformation type.
-        SelectionTransformationType transformationType_;
+        SelectionTransformationCommandType transformationType_;
 
         // Angle (for rotations).
         float angle_;
@@ -55,12 +55,12 @@ class SelectionTransformation : public SceneCommand
         /***
          * 1. Initialization and destruction
          ***/
-        SelectionTransformation();
-        SelectionTransformation( UserID userID );
-        SelectionTransformation( const SelectionTransformation& b );
-        SelectionTransformation( SelectionTransformation&& ) = delete;
+        SelectionTransformationCommand();
+        SelectionTransformationCommand( UserID userID );
+        SelectionTransformationCommand( const SelectionTransformationCommand& b );
+        SelectionTransformationCommand( SelectionTransformationCommand&& ) = delete;
 
-        ~SelectionTransformation() = default;
+        ~SelectionTransformationCommand() = default;
 
 
         /***
@@ -74,7 +74,7 @@ class SelectionTransformation : public SceneCommand
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const ;
-        SelectionTransformationType getTransformationType() const ;
+        SelectionTransformationCommandType getTransformationType() const ;
         const float* getTransformationMagnitude() const ;
         float getAngle() const ;
 
@@ -82,7 +82,7 @@ class SelectionTransformation : public SceneCommand
         /***
          * 4. Setters
          ***/
-        void setTransformationType( SelectionTransformationType transformationType );
+        void setTransformationType( SelectionTransformationCommandType transformationType );
 
         void setTranslation( float tx, float ty, float tz );
         void setTranslation( const float* direction );
@@ -100,10 +100,10 @@ class SelectionTransformation : public SceneCommand
         /***
          * 5. Operators
          ***/
-        SelectionTransformation& operator=( const SelectionTransformation& ) = delete;
-        SelectionTransformation& operator=( SelectionTransformation&& ) = delete;
+        SelectionTransformationCommand& operator=( const SelectionTransformationCommand& ) = delete;
+        SelectionTransformationCommand& operator=( SelectionTransformationCommand&& ) = delete;
 };
 
 } // namespace como
 
-#endif // SELECTION_TRANSFORMATION_HPP
+#endif // SELECTION_TRANSFORMATION_COMMAND_HPP

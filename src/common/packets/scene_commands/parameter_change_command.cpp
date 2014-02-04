@@ -17,7 +17,7 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "change_parameter.hpp"
+#include "parameter_change_command.hpp"
 
 namespace como {
 
@@ -25,31 +25,31 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-ChangeParameter::ChangeParameter() :
-    SceneCommand( SceneCommandType::CHANGE_PARAMETER ),
+ParameterChangeCommand::ParameterChangeCommand() :
+    SceneCommand( SceneCommandType::PARAMETER_CHANGE ),
     parameterType_( ParameterType::PIVOT_POINT_MODE )
 {
     value_.pivotPointMode_ = PivotPointMode::MEDIAN_POINT;
 }
 
 
-ChangeParameter::ChangeParameter( UserID userID ) :
-    SceneCommand( SceneCommandType::CHANGE_PARAMETER, userID ),
+ParameterChangeCommand::ParameterChangeCommand( UserID userID ) :
+    SceneCommand( SceneCommandType::PARAMETER_CHANGE, userID ),
     parameterType_( ParameterType::PIVOT_POINT_MODE )
 {
     value_.pivotPointMode_ = PivotPointMode::MEDIAN_POINT;
 }
 
 
-ChangeParameter::ChangeParameter( UserID userID, PivotPointMode pivotPointMode ) :
-    SceneCommand( SceneCommandType::CHANGE_PARAMETER, userID ),
+ParameterChangeCommand::ParameterChangeCommand( UserID userID, PivotPointMode pivotPointMode ) :
+    SceneCommand( SceneCommandType::PARAMETER_CHANGE, userID ),
     parameterType_( ParameterType::PIVOT_POINT_MODE )
 {
     value_.pivotPointMode_ = pivotPointMode;
 }
 
 
-ChangeParameter::ChangeParameter( const ChangeParameter& b ) :
+ParameterChangeCommand::ParameterChangeCommand( const ParameterChangeCommand& b ) :
     SceneCommand( b ),
     parameterType_( b.parameterType_ )
 {
@@ -61,7 +61,7 @@ ChangeParameter::ChangeParameter( const ChangeParameter& b ) :
  * 2. Packing and unpacking
  ***/
 
-char* ChangeParameter::pack( char* buffer ) const
+char* ParameterChangeCommand::pack( char* buffer ) const
 {
     // Pack SceneCommand fields.
     buffer = SceneCommand::pack( buffer );
@@ -81,7 +81,7 @@ char* ChangeParameter::pack( char* buffer ) const
 }
 
 
-const char* ChangeParameter::unpack( const char* buffer )
+const char* ParameterChangeCommand::unpack( const char* buffer )
 {
     std::uint8_t castedValue;
 
@@ -109,7 +109,7 @@ const char* ChangeParameter::unpack( const char* buffer )
  * 3. Getters
  ***/
 
-std::uint16_t ChangeParameter::getPacketSize() const
+std::uint16_t ParameterChangeCommand::getPacketSize() const
 {
     uint16_t packetSize = SceneCommand::getPacketSize() +
             sizeof( parameterType_ );
@@ -124,13 +124,13 @@ std::uint16_t ChangeParameter::getPacketSize() const
 }
 
 
-ParameterType ChangeParameter::getParameterType() const
+ParameterType ParameterChangeCommand::getParameterType() const
 {
     return parameterType_;
 }
 
 
-PivotPointMode ChangeParameter::getPivotPointMode() const
+PivotPointMode ParameterChangeCommand::getPivotPointMode() const
 {
     return value_.pivotPointMode_;
 }
@@ -140,7 +140,7 @@ PivotPointMode ChangeParameter::getPivotPointMode() const
  * 4. Setters
  ***/
 
-void ChangeParameter::setPivotPointMode( PivotPointMode pivotPointMode )
+void ParameterChangeCommand::setPivotPointMode( PivotPointMode pivotPointMode )
 {
     // Set parameter type.
     parameterType_ = ParameterType::PIVOT_POINT_MODE;

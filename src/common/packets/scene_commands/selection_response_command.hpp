@@ -17,8 +17,8 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SELECTION_RESPONSE_HPP
-#define SELECTION_RESPONSE_HPP
+#ifndef SELECTION_RESPONSE_COMMAND_HPP
+#define SELECTION_RESPONSE_COMMAND_HPP
 
 #include "scene_command.hpp"
 
@@ -26,7 +26,7 @@ namespace como {
 
 const std::uint8_t MAX_SELECTION_CONFIRMATIONS = 32;
 
-class SelectionResponse : public SceneCommand
+class SelectionResponseCommand : public SceneCommand
 {
     private:
         std::uint8_t nSelections_;
@@ -40,11 +40,11 @@ class SelectionResponse : public SceneCommand
         /***
          * 1. Initialization and destruction
          ***/
-        SelectionResponse();
-        SelectionResponse( const SelectionResponse& b );
-        SelectionResponse( SelectionResponse&& ) = delete;
+        SelectionResponseCommand();
+        SelectionResponseCommand( const SelectionResponseCommand& b );
+        SelectionResponseCommand( SelectionResponseCommand&& ) = delete;
 
-        ~SelectionResponse() = default;
+        ~SelectionResponseCommand() = default;
 
 
         /***
@@ -72,13 +72,13 @@ class SelectionResponse : public SceneCommand
         /***
          * 5. Operators
          ***/
-        SelectionResponse& operator=( const SelectionResponse& ) = delete;
-        SelectionResponse& operator=( SelectionResponse&& ) = delete;
+        SelectionResponseCommand& operator=( const SelectionResponseCommand& ) = delete;
+        SelectionResponseCommand& operator=( SelectionResponseCommand&& ) = delete;
 };
 
-typedef std::shared_ptr< SelectionResponse > SelectionResponsePtr;
-typedef std::shared_ptr< const SelectionResponse > SelectionResponseConstPtr;
+typedef std::shared_ptr< SelectionResponseCommand > SelectionResponseCommandPtr;
+typedef std::shared_ptr< const SelectionResponseCommand > SelectionResponseCommandConstPtr;
 
 } // namespace como
 
-#endif // SELECTION_RESPONSE_HPP
+#endif // SELECTION_RESPONSE_COMMAND_HPP

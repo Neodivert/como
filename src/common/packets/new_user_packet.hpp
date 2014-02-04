@@ -17,57 +17,58 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SELECT_DRAWABLE_HPP
-#define SELECT_DRAWABLE_HPP
+#ifndef NEW_USER_PACKET_HPP
+#define NEW_USER_PACKET_HPP
 
-#include "drawable_command.hpp"
+#include "packet.hpp"
 
 namespace como {
 
-class SelectDrawable : public DrawableCommand
-{
-    private:
-        std::uint8_t addToSelection_;
+class NewUserPacket : public Packet
+{  
+    public:
+        char name_[NAME_SIZE];
 
     public:
         /***
-         * 1. Initialization and destruction.
+         * 1. Initialization and destruction
          ***/
-        SelectDrawable();
-        SelectDrawable( UserID userID, DrawableID drawableID, bool addToSelection );
-        SelectDrawable( const SelectDrawable& b );
-        SelectDrawable( SelectDrawable&& ) = delete;
+        NewUserPacket();
+        NewUserPacket( const char* name );
+        NewUserPacket( const NewUserPacket& b );
+        NewUserPacket( NewUserPacket&& ) = delete;
+        virtual Packet* clone() const ;
 
-        ~SelectDrawable() = default;
+        ~NewUserPacket() = default;
 
 
         /***
          * 2. Packing and unpacking
          ***/
-        virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer ) ;
+        virtual char* packBody( char* buffer ) const ;
+        virtual const char* unpackBody( const char* buffer );
 
 
         /***
          * 3. Getters
          ***/
-        virtual std::uint16_t getPacketSize() const ;
-        std::uint8_t getAddToSelection() const ;
+        virtual bool expectedType() const;
+        const char* getName() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setAddToSelection( std::uint8_t addToSelection );
+        void setName( const char* name );
 
 
         /***
          * 5. Operators
          ***/
-        SelectDrawable& operator=( const SelectDrawable& ) = delete;
-        SelectDrawable& operator=( SelectDrawable&& ) = delete;
+        NewUserPacket& operator = (const NewUserPacket& b);
+        NewUserPacket& operator = ( NewUserPacket&& ) = delete;
 };
 
 } // namespace como
 
-#endif // SELECT_DRAWABLE_HPP
+#endif // NEW_USER_PACKET_HPP

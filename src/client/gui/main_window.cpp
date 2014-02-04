@@ -64,8 +64,8 @@ MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     usersList = new UsersList( this, log_ );
 
     // FIXME: Study why this is necessary.
-    qRegisterMetaType< UserConnectedConstPtr >();
-    qRegisterMetaType< UserConnectedConstPtr >( "UserConnectedConstPtr" );
+    qRegisterMetaType< UserConnectionCommandConstPtr >();
+    qRegisterMetaType< UserConnectionCommandConstPtr >( "UserConnectionCommandConstPtr" );
     qRegisterMetaType< UserID >( "UserID" );
 
     // Signal / slot: when an user connects to the scene, add it to the GUI

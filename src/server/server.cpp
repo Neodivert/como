@@ -126,8 +126,8 @@ void Server::onAccept( const boost::system::error_code& errorCode )
 {
     boost::system::error_code closingErrorCode;
 
-    como::NewUser newUserPacket;
-    como::UserAccepted userAcceptedPacket;
+    como::NewUserPacket newUserPacket;
+    como::UserAcceptancePacket userAcceptedPacket;
     char buffer[128];
 
     if( errorCode ){
@@ -165,14 +165,14 @@ void Server::onAccept( const boost::system::error_code& errorCode )
                         userAcceptedPacket.getName(),
                         io_service_,
                         std::move( newSocket_ ),
-                        std::bind( &Server::processSceneUpdate, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3 ),
+                        std::bind( &Server::processSceneUpdatePacket, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3 ),
                         std::bind( &Server::deleteUser, this, std::placeholders::_1 ),
                         commandsHistoric_,
                         log_
                     );
 
-        // Add an USER_CONNECTED scene command to the server historic.
-        addCommand( SceneCommandConstPtr( new UserConnected( userAcceptedPacket ) ) );
+        // Add an USER_CONNECTION scene command to the server historic.
+        addCommand( SceneCommandConstPtr( new UserConnectionCommand( userAcceptedPacket ) ) );
 
         // Increment the "new id" for the next user.
         newId_++;
@@ -191,9 +191,9 @@ void Server::onAccept( const boost::system::error_code& errorCode )
 }
 
 
-void Server::processSceneUpdate( const boost::system::error_code& errorCode,
+void Server::processSceneUpdatePacket( const boost::system::error_code& errorCode,
                                  UserID userID,
-                                 SceneUpdateConstPtr sceneUpdate )
+                                 SceneUpdatePacketConstPtr sceneUpdate )
 {
     unsigned int i;
     const std::vector< SceneCommandConstPtr >* commands = nullptr;
@@ -219,19 +219,19 @@ void Server::processSceneUpdate( const boost::system::error_code& errorCode,
         mutex_.unlock();
 
         //broadcastCallback_();
-        users_.at( userID )->readSceneUpdate();
+        users_.at( userID )->readSceneUpdatePacket();
     }
 }
 
 void Server::processSceneCommand( SceneCommandConstPtr sceneCommand )
 {
-    const CreateCube* createCube = nullptr;
-    const SelectDrawable* selectDrawable = nullptr;
+    const CubeCreationCommand* createCube = nullptr;
+    const DrawableSelectionCommand* selectDrawable = nullptr;
 
     switch( sceneCommand->getType() ){
-        case SceneCommandType::CREATE_CUBE:
-            // CREATE_CUBE command received, cast its pointer.
-            createCube = dynamic_cast< const CreateCube* >( sceneCommand.get() );
+        case SceneCommandType::CUBE_CREATION:
+            // CUBE_CREATION command received, cast its pointer.
+            createCube = dynamic_cast< const CubeCreationCommand* >( sceneCommand.get() );
 
             // Add a node to the Drawable Owners map for the recently added
             // cube. Mark it with a 0 (no owner).
@@ -239,9 +239,9 @@ void Server::processSceneCommand( SceneCommandConstPtr sceneCommand )
 
             log_->debug( "Cube added! (", (int)( createCube->getDrawableID().creatorID ), ", ", (int)( createCube->getDrawableID().drawableIndex ), ")\n" );
         break;
-        case SceneCommandType::SELECT_DRAWABLE:
-            // SELECT_DRAWABLE command received, cast its pointer.
-            selectDrawable = dynamic_cast< const SelectDrawable* >( sceneCommand.get() );
+        case SceneCommandType::DRAWABLE_SELECTION:
+            // DRAWABLE_SELECTION command received, cast its pointer.
+            selectDrawable = dynamic_cast< const DrawableSelectionCommand* >( sceneCommand.get() );
 
             // Give an affirmative response to the user's selection if the
             // desired drawable isn't selected by anyone (User ID = 0).
@@ -249,7 +249,7 @@ void Server::processSceneCommand( SceneCommandConstPtr sceneCommand )
             log_->debug( "Selecting drawable (", (int)( selectDrawable->getDrawableID().creatorID ), ", ", (int)( selectDrawable->getDrawableID().drawableIndex ), ")\n" );
             users_.at( sceneCommand->getUserID() )->addSelectionResponse( drawableOwners_.at( selectDrawable->getDrawableID() ) == 0 );
         break;
-        case SceneCommandType::UNSELECT_ALL:
+        case SceneCommandType::FULL_DESELECTION:
             // Unselect all.
             unselectAll( sceneCommand->getUserID() );
         break;
@@ -287,7 +287,7 @@ void Server::deleteUser( UserID id )
 
     // Add a SceneCommand to the historic informing about the user
     // disconnection.
-    addCommand( SceneCommandConstPtr( new SceneCommand( SceneCommandType::USER_DISCONNECTED, id ) ) );
+    addCommand( SceneCommandConstPtr( new SceneCommand( SceneCommandType::USER_DISCONNECTION, id ) ) );
 
     if( users_.size() == (MAX_SESSIONS - 1) ){
         // If the server was full before this user got out, that means the acceptor wasn't

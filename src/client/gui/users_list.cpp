@@ -36,7 +36,7 @@ UsersList::UsersList( QWidget* parent, LogPtr log ) :
  * 3. Users insertion / deletion
  ***/
 
-void UsersList::addUser( UserConnectedConstPtr userConnectedPacket )
+void UsersList::addUser( UserConnectionCommandConstPtr userConnectedPacket )
 {
     // Add the new User-ID-to-list-index translation to the map.
     userIDToName_[ userConnectedPacket->getUserID() ] = userConnectedPacket->getName();

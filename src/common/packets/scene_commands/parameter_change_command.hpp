@@ -17,30 +17,48 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef USER_CONNECTED_HPP
-#define USER_CONNECTED_HPP
+#ifndef PARAMETER_CHANGE_COMMAND_HPP
+#define PARAMETER_CHANGE_COMMAND_HPP
 
 #include "scene_command.hpp"
-#include "../user_accepted.hpp"
 
 namespace como {
 
-class UserConnected : public SceneCommand
+// Available pivot point modes.
+enum class PivotPointMode
+{
+    MEDIAN_POINT = 0,
+    INDIVIDUAL_CENTROIDS,
+    WORLD_ORIGIN
+};
+
+enum class ParameterType
+{
+    PIVOT_POINT_MODE
+};
+
+
+class ParameterChangeCommand : public SceneCommand
 {
     private:
-        char name_[NAME_SIZE];
-        std::uint8_t selectionColor_[4];
+        ParameterType parameterType_;
+
+        union ParameterValue {
+            PivotPointMode pivotPointMode_;
+        } value_;
+
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        UserConnected();
-        UserConnected( const UserAccepted& userAcceptedPacket );
-        UserConnected( const UserConnected& b );
-        UserConnected( UserConnected&& ) = delete;
+        ParameterChangeCommand();
+        ParameterChangeCommand( UserID userID );
+        ParameterChangeCommand( UserID userID, PivotPointMode pivotPointMode );
+        ParameterChangeCommand( const ParameterChangeCommand& b );
+        ParameterChangeCommand( ParameterChangeCommand&& ) = delete;
 
-        ~UserConnected() = default;
+        ~ParameterChangeCommand() = default;
 
 
         /***
@@ -54,26 +72,23 @@ class UserConnected : public SceneCommand
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const ;
-        const char* getName() const ;
-        const std::uint8_t* getSelectionColor() const ;
+        ParameterType getParameterType() const ;
+        PivotPointMode getPivotPointMode() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setName( const char* name );
-        void setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a );
+        void setPivotPointMode( PivotPointMode pivotPointMode );
 
 
         /***
          * 5. Operators
          ***/
-        UserConnected& operator=( const UserConnected& ) = delete;
-        UserConnected& operator=( UserConnected&& ) = delete;
+        ParameterChangeCommand& operator=( const ParameterChangeCommand& ) = delete;
+        ParameterChangeCommand& operator=( ParameterChangeCommand&& ) = delete;
 };
-
-typedef std::shared_ptr< const UserConnected > UserConnectedConstPtr;
 
 } // namespace como
 
-#endif // USER_CONNECTED_HPP
+#endif // PARAMETER_CHANGE_COMMAND_HPP

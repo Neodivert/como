@@ -41,7 +41,7 @@ typedef std::shared_ptr< Socket > SocketPtr;
 
 typedef std::function< void (const boost::system::error_code& errorCode,
                              UserID userID,
-                             SceneUpdateConstPtr sceneUpdate) > ProcessSceneUpdateCallback;
+                             SceneUpdatePacketConstPtr sceneUpdate) > ProcessSceneUpdatePacketCallback;
 
 class PublicUser : public BasicUser
 {
@@ -51,7 +51,7 @@ class PublicUser : public BasicUser
 
         SocketPtr socket_;
 
-        ProcessSceneUpdateCallback processSceneUpdateCallback_;
+        ProcessSceneUpdatePacketCallback processSceneUpdatePacketCallback_;
         std::function<void (UserID)> removeUserCallback_;
 
         //std::function<void ()> broadcastCallback_;
@@ -60,8 +60,8 @@ class PublicUser : public BasicUser
         std::uint8_t nCommandsInLastPacket_;
         std::uint32_t lastCommandSent_;
 
-        SceneUpdate sceneUpdatePacketFromUser_;
-        SceneUpdate outSceneUpdatePacket_;
+        SceneUpdatePacket sceneUpdatePacketFromUser_;
+        SceneUpdatePacket outSceneUpdatePacketPacket_;
 
         mutable std::recursive_mutex mutex_;
         bool synchronizing_;
@@ -73,7 +73,7 @@ class PublicUser : public BasicUser
 
         bool updateRequested_;
 
-        SelectionResponsePtr selectionResponse_;
+        SelectionResponseCommandPtr selectionResponse_;
 
     public:
         /***
@@ -85,7 +85,7 @@ class PublicUser : public BasicUser
         PublicUser( UserID id, const char* name,
                     std::shared_ptr< boost::asio::io_service > io_service,
                     Socket socket,
-                    ProcessSceneUpdateCallback processSceneUpdateCallback,
+                    ProcessSceneUpdatePacketCallback processSceneUpdatePacketCallback,
                     std::function<void (UserID)> removeUserCallback,
                     CommandsHistoricPtr commandsHistoric,
                     LogPtr log );
@@ -109,16 +109,16 @@ class PublicUser : public BasicUser
         /***
          * 4. Socket reading
          ***/
-        void readSceneUpdate();
-        void onReadSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet );
+        void readSceneUpdatePacket();
+        void onReadSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet );
 
 
         /***
          * 5. Socket writing
          ***/
-        bool needsSceneUpdate() const ;
-        void sendNextSceneUpdate();
-        void onWriteSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet );
+        bool needsSceneUpdatePacket() const ;
+        void sendNextSceneUpdatePacket();
+        void onWriteSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet );
 
 
         /***

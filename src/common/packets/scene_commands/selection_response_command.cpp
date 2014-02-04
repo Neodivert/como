@@ -17,7 +17,7 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "selection_response.hpp"
+#include "selection_response_command.hpp"
 #include <stdexcept>
 
 namespace como {
@@ -26,7 +26,7 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-SelectionResponse::SelectionResponse() :
+SelectionResponseCommand::SelectionResponseCommand() :
     SceneCommand( SceneCommandType::SELECTION_RESPONSE, 0 ), // UserID: 0 - Server
     nSelections_( 0 ),
     selectionConfirmed_( 0 )
@@ -34,7 +34,7 @@ SelectionResponse::SelectionResponse() :
 }
 
 
-SelectionResponse::SelectionResponse( const SelectionResponse& b ) :
+SelectionResponseCommand::SelectionResponseCommand( const SelectionResponseCommand& b ) :
     SceneCommand( b ),
     nSelections_( b.nSelections_ ),
     selectionConfirmed_( b.selectionConfirmed_ )
@@ -46,7 +46,7 @@ SelectionResponse::SelectionResponse( const SelectionResponse& b ) :
  * 2. Packing and unpacking
  ***/
 
-char* SelectionResponse::pack( char* buffer ) const
+char* SelectionResponseCommand::pack( char* buffer ) const
 {
     // Pack the ScemeCommand fields.
     buffer = SceneCommand::pack( buffer );
@@ -62,7 +62,7 @@ char* SelectionResponse::pack( char* buffer ) const
 }
 
 
-const char* SelectionResponse::unpack( const char* buffer )
+const char* SelectionResponseCommand::unpack( const char* buffer )
 {
     // Unpack the ScemeCommand fields.
     buffer = SceneCommand::unpack( buffer );
@@ -82,7 +82,7 @@ const char* SelectionResponse::unpack( const char* buffer )
  * 3. Getters
  ***/
 
-std::uint16_t SelectionResponse::getPacketSize() const
+std::uint16_t SelectionResponseCommand::getPacketSize() const
 {
     return SceneCommand::getPacketSize() +
             sizeof( nSelections_ ) +
@@ -90,13 +90,13 @@ std::uint16_t SelectionResponse::getPacketSize() const
 }
 
 
-std::uint8_t SelectionResponse::getNSelections() const
+std::uint8_t SelectionResponseCommand::getNSelections() const
 {
     return nSelections_;
 }
 
 
-std::uint32_t SelectionResponse::getSelectionConfirmed() const
+std::uint32_t SelectionResponseCommand::getSelectionConfirmed() const
 {
     return selectionConfirmed_;
 }
@@ -106,7 +106,7 @@ std::uint32_t SelectionResponse::getSelectionConfirmed() const
  * 4. Setters
  ***/
 
-void SelectionResponse::addSelectionConfirmation( bool confirmed )
+void SelectionResponseCommand::addSelectionConfirmation( bool confirmed )
 {
     std::uint8_t confirmationFlag = confirmed ? 1 : 0;
 
@@ -122,7 +122,7 @@ void SelectionResponse::addSelectionConfirmation( bool confirmed )
 }
 
 
-void SelectionResponse::clear()
+void SelectionResponseCommand::clear()
 {
     nSelections_ = 0;
     selectionConfirmed_ = 0;

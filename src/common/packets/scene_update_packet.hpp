@@ -17,8 +17,8 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SCENE_UPDATE_HPP
-#define SCENE_UPDATE_HPP
+#ifndef SCENE_UPDATE_PACKET_HPP
+#define SCENE_UPDATE_PACKET_HPP
 
 #include "packet.hpp"
 #include "scene_commands/scene_commands.hpp"
@@ -29,7 +29,7 @@ namespace como {
 
 typedef std::list< SceneCommandConstPtr > CommandsList;
 
-class SceneUpdate : public Packet
+class SceneUpdatePacket : public Packet
 {
     private:
         std::uint32_t lastCommandSent_;
@@ -40,12 +40,12 @@ class SceneUpdate : public Packet
         /***
          * 1. Initialization and destruction
          ***/
-        SceneUpdate();
-        SceneUpdate( const SceneUpdate& b );
-        SceneUpdate( SceneUpdate&& ) = delete;
+        SceneUpdatePacket();
+        SceneUpdatePacket( const SceneUpdatePacket& b );
+        SceneUpdatePacket( SceneUpdatePacket&& ) = delete;
         virtual Packet* clone() const ;
 
-        ~SceneUpdate() = default;
+        ~SceneUpdatePacket() = default;
 
 
         /***
@@ -81,13 +81,13 @@ class SceneUpdate : public Packet
         /***
          * 5. Operators
          ***/
-        SceneUpdate& operator = (const SceneUpdate& b) = delete;
-        SceneUpdate& operator = ( SceneUpdate&& ) = delete;
+        SceneUpdatePacket& operator = (const SceneUpdatePacket& b) = delete;
+        SceneUpdatePacket& operator = ( SceneUpdatePacket&& ) = delete;
 };
 
-typedef std::shared_ptr< SceneUpdate > SceneUpdatePtr;
-typedef std::shared_ptr< const SceneUpdate > SceneUpdateConstPtr;
+typedef std::shared_ptr< SceneUpdatePacket > SceneUpdatePacketPtr;
+typedef std::shared_ptr< const SceneUpdatePacket > SceneUpdatePacketConstPtr;
 
 } // namespace como
 
-#endif // SCENE_UPDATE_HPP
+#endif // SCENE_UPDATE_PACKET_HPP

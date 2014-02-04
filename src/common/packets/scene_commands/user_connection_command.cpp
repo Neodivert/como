@@ -17,7 +17,7 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "user_connected.hpp"
+#include "user_connection_command.hpp"
 #include <cstring>
 
 namespace como {
@@ -26,8 +26,8 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-UserConnected::UserConnected() :
-    SceneCommand( SceneCommandType::USER_CONNECTED )
+UserConnectionCommand::UserConnectionCommand() :
+    SceneCommand( SceneCommandType::USER_CONNECTION )
 {
     unsigned int i = 0;
 
@@ -38,8 +38,8 @@ UserConnected::UserConnected() :
 }
 
 
-UserConnected::UserConnected( const UserAccepted& userAcceptedPacket ) :
-    SceneCommand( SceneCommandType::USER_CONNECTED )
+UserConnectionCommand::UserConnectionCommand( const UserAcceptancePacket& userAcceptedPacket ) :
+    SceneCommand( SceneCommandType::USER_CONNECTION )
 {
     const std::uint8_t* selectionColor;
 
@@ -54,7 +54,7 @@ UserConnected::UserConnected( const UserAccepted& userAcceptedPacket ) :
 }
 
 
-UserConnected::UserConnected( const UserConnected& b ) :
+UserConnectionCommand::UserConnectionCommand( const UserConnectionCommand& b ) :
     SceneCommand( b )
 {
     const std::uint8_t* selectionColor = nullptr;
@@ -72,7 +72,7 @@ UserConnected::UserConnected( const UserConnected& b ) :
  * 2. Packing and unpacking
  ***/
 
-char* UserConnected::pack( char* buffer ) const
+char* UserConnectionCommand::pack( char* buffer ) const
 {
     unsigned int i = 0;
 
@@ -90,7 +90,7 @@ char* UserConnected::pack( char* buffer ) const
 }
 
 
-const char* UserConnected::unpack( const char* buffer )
+const char* UserConnectionCommand::unpack( const char* buffer )
 {
     unsigned int i = 0;
 
@@ -112,19 +112,19 @@ const char* UserConnected::unpack( const char* buffer )
  * 3. Getters
  ***/
 
-std::uint16_t UserConnected::getPacketSize() const
+std::uint16_t UserConnectionCommand::getPacketSize() const
 {
     return SceneCommand::getPacketSize() + NAME_SIZE + 4;
 }
 
 
-const char* UserConnected::getName() const
+const char* UserConnectionCommand::getName() const
 {
     return name_;
 }
 
 
-const std::uint8_t* UserConnected::getSelectionColor() const
+const std::uint8_t* UserConnectionCommand::getSelectionColor() const
 {
     return selectionColor_;
 }
@@ -134,13 +134,13 @@ const std::uint8_t* UserConnected::getSelectionColor() const
  * 4. Setters
  ***/
 
-void UserConnected::setName( const char* name )
+void UserConnectionCommand::setName( const char* name )
 {
     strncpy( name_, name, NAME_SIZE );
 }
 
 
-void UserConnected::setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a )
+void UserConnectionCommand::setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a )
 {
     selectionColor_[0] = r;
     selectionColor_[1] = g;

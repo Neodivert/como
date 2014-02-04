@@ -17,7 +17,7 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "selection_transformation.hpp"
+#include "selection_transformation_command.hpp"
 #include <cstdio>
 #include <stdexcept>
 
@@ -43,23 +43,23 @@ void replaceChacacter( char* str, char oldChar, char newChar )
  * 1. Initialization and destruction
  ***/
 
-SelectionTransformation::SelectionTransformation() :
+SelectionTransformationCommand::SelectionTransformationCommand() :
     SceneCommand( SceneCommandType::SELECTION_TRANSFORMATION, 0 ),
-    transformationType_( SelectionTransformationType::TRANSLATION )
+    transformationType_( SelectionTransformationCommandType::TRANSLATION )
 {
     setTransformationMagnitude( 0.0f, 0.0f, 0.0f, 0.0f );
 }
 
 
-SelectionTransformation::SelectionTransformation( UserID userID ) :
+SelectionTransformationCommand::SelectionTransformationCommand( UserID userID ) :
     SceneCommand( SceneCommandType::SELECTION_TRANSFORMATION, userID ),
-    transformationType_( SelectionTransformationType::TRANSLATION  )
+    transformationType_( SelectionTransformationCommandType::TRANSLATION  )
 {
     setTransformationMagnitude( 0.0f, 0.0f, 0.0f, 0.0f );
 }
 
 
-SelectionTransformation::SelectionTransformation( const SelectionTransformation& b ) :
+SelectionTransformationCommand::SelectionTransformationCommand( const SelectionTransformationCommand& b ) :
     SceneCommand( b ),
     transformationType_( b.transformationType_ )
 {
@@ -74,7 +74,7 @@ SelectionTransformation::SelectionTransformation( const SelectionTransformation&
  * 2. Packing and unpacking
  ***/
 
-char* SelectionTransformation::pack( char* buffer ) const
+char* SelectionTransformationCommand::pack( char* buffer ) const
 {
     // Pack the SceneCommand fields.
     buffer = SceneCommand::pack( buffer );
@@ -90,7 +90,7 @@ char* SelectionTransformation::pack( char* buffer ) const
 }
 
 
-const char* SelectionTransformation::unpack( const char* buffer )
+const char* SelectionTransformationCommand::unpack( const char* buffer )
 {
     std::uint8_t transformationType;
     int sscanfReturnValue = 0;
@@ -100,7 +100,7 @@ const char* SelectionTransformation::unpack( const char* buffer )
 
     // Unpack the transformation type.
     packer::unpack( transformationType, buffer );
-    transformationType_ = static_cast< SelectionTransformationType >( transformationType );
+    transformationType_ = static_cast< SelectionTransformationCommandType >( transformationType );
 
     // Unpack the transformation magnitude (string format).
     packer::unpack( transformationMagnitudeStr_, buffer, TRANSFORMATION_MAGNITUDE_STR_SIZE );
@@ -148,7 +148,7 @@ const char* SelectionTransformation::unpack( const char* buffer )
  ***/
 
 
-std::uint16_t SelectionTransformation::getPacketSize() const
+std::uint16_t SelectionTransformationCommand::getPacketSize() const
 {
     return SceneCommand::getPacketSize() +
             sizeof( transformationType_ ) +
@@ -156,19 +156,19 @@ std::uint16_t SelectionTransformation::getPacketSize() const
 }
 
 
-SelectionTransformationType SelectionTransformation::getTransformationType() const
+SelectionTransformationCommandType SelectionTransformationCommand::getTransformationType() const
 {
     return transformationType_;
 }
 
 
-const float* SelectionTransformation::getTransformationMagnitude() const
+const float* SelectionTransformationCommand::getTransformationMagnitude() const
 {
     return transformationMagnitude_;
 }
 
 
-float SelectionTransformation::getAngle() const
+float SelectionTransformationCommand::getAngle() const
 {
     return angle_;
 }
@@ -179,26 +179,26 @@ float SelectionTransformation::getAngle() const
  ***/
 
 
-void SelectionTransformation::setTransformationType( SelectionTransformationType transformationType )
+void SelectionTransformationCommand::setTransformationType( SelectionTransformationCommandType transformationType )
 {
     transformationType_ = transformationType;
 }
 
 
-void SelectionTransformation::setTranslation( float tx, float ty, float tz )
+void SelectionTransformationCommand::setTranslation( float tx, float ty, float tz )
 {
     // We are doing a translation.
-    transformationType_ = SelectionTransformationType::TRANSLATION;
+    transformationType_ = SelectionTransformationCommandType::TRANSLATION;
 
     // Set the transformation magnitude.
     setTransformationMagnitude( 0.0f, tx, ty, tz );
 }
 
 
-void SelectionTransformation::setTranslation( const float* direction )
+void SelectionTransformationCommand::setTranslation( const float* direction )
 {
     // We are doing a translation.
-    transformationType_ = SelectionTransformationType::TRANSLATION;
+    transformationType_ = SelectionTransformationCommandType::TRANSLATION;
 
     // Set the transformation magnitude.
     setTransformationMagnitude( 0.0f,
@@ -208,20 +208,20 @@ void SelectionTransformation::setTranslation( const float* direction )
 }
 
 
-void SelectionTransformation::setRotation( float angle, float vx, float vy, float vz )
+void SelectionTransformationCommand::setRotation( float angle, float vx, float vy, float vz )
 {
     // We are doing a rotation.
-    transformationType_ = SelectionTransformationType::ROTATION;
+    transformationType_ = SelectionTransformationCommandType::ROTATION;
 
     // Set the transformation magnitude.
     setTransformationMagnitude( angle, vx, vy, vz );
 }
 
 
-void SelectionTransformation::setRotation( float angle, const float* axis )
+void SelectionTransformationCommand::setRotation( float angle, const float* axis )
 {
     // We are doing a rotation.
-    transformationType_ = SelectionTransformationType::ROTATION;
+    transformationType_ = SelectionTransformationCommandType::ROTATION;
 
     // Set the transformation magnitude.
     setTransformationMagnitude(
@@ -232,20 +232,20 @@ void SelectionTransformation::setRotation( float angle, const float* axis )
 }
 
 
-void SelectionTransformation::setScale( float sx, float sy, float sz )
+void SelectionTransformationCommand::setScale( float sx, float sy, float sz )
 {
     // We are doing a scale.
-    transformationType_ = SelectionTransformationType::SCALE;
+    transformationType_ = SelectionTransformationCommandType::SCALE;
 
     // Set the transformation magnitude.
     setTransformationMagnitude( 0.0f, sx, sy, sz );
 }
 
 
-void SelectionTransformation::setScale( const float* magnitude )
+void SelectionTransformationCommand::setScale( const float* magnitude )
 {
     // We are doing a scale.
-    transformationType_ = SelectionTransformationType::SCALE;
+    transformationType_ = SelectionTransformationCommandType::SCALE;
 
     // Set the transformation magnitude.
     setTransformationMagnitude(
@@ -256,7 +256,7 @@ void SelectionTransformation::setScale( const float* magnitude )
 }
 
 
-void SelectionTransformation::setTransformationMagnitude( float angle, float x, float y, float z )
+void SelectionTransformationCommand::setTransformationMagnitude( float angle, float x, float y, float z )
 {
     // Copy the angle.
     angle_ = angle;

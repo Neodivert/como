@@ -21,12 +21,12 @@
 #define SCENE_COMMANDS_HPP
 
 #include "scene_command.hpp"
-#include "user_connected.hpp"
+#include "user_connection_command.hpp"
 #include "drawable_commands/drawable_command.hpp"
-#include "drawable_commands/create_cube.hpp"
-#include "selection_response.hpp"
-#include "drawable_commands/select_drawable.hpp"
-#include "selection_transformation.hpp"
-#include "change_parameter.hpp"
+#include "drawable_commands/cube_creation_command.hpp"
+#include "selection_response_command.hpp"
+#include "drawable_commands/drawable_selection_command.hpp"
+#include "selection_transformation_command.hpp"
+#include "parameter_change_command.hpp"
 
 #endif // SCENE_COMMANDS_HPP

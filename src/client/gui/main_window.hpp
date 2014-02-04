@@ -25,11 +25,11 @@
 #include <QTypeInfo>
 
 
-Q_DECLARE_METATYPE( como::UserConnectedConstPtr )
+Q_DECLARE_METATYPE( como::UserConnectionCommandConstPtr )
 
 namespace como {
 
-//Q_DECLARE_METATYPE( std::shared_ptr< const como::UserConnected > )
+//Q_DECLARE_METATYPE( std::shared_ptr< const como::UserConnectionCommand > )
 
 class MainWindow : public QMainWindow
 {

@@ -38,7 +38,7 @@ PublicScene::PublicScene( LogPtr log ) :
 void PublicScene::connect( const char* host, const char* port, const char* userName )
 {
     try{
-        std::shared_ptr< const UserAccepted > userConnectedPacket;
+        std::shared_ptr< const UserAcceptancePacket > userConnectedPacket;
 
         // Try to connect to the server. If there is any error, the method
         // ServerInterface::connect() throws an exception.
@@ -46,7 +46,7 @@ void PublicScene::connect( const char* host, const char* port, const char* userN
         userConnectedPacket = server_.connect( host, port, userName );
 
         // Add the local user to the scene and retrieve its ID.
-        addUser( std::shared_ptr< const UserConnected >( new UserConnected( *userConnectedPacket ) ) );
+        addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( *userConnectedPacket ) ) );
         localUserID_ = userConnectedPacket->getId();
     }catch( std::exception& ex ){
         std::cerr << ex.what() << std::endl;
@@ -59,15 +59,15 @@ void PublicScene::connect( const char* host, const char* port, const char* userN
  * 3. Users administration
  ***/
 
-void PublicScene::addUser( std::shared_ptr< const UserConnected > userConnectedCommand )
+void PublicScene::addUser( std::shared_ptr< const UserConnectionCommand > userConnectedCommand )
 {
-    // Create the new user from the given USER_CONNECTED command.
+    // Create the new user from the given USER_CONNECTION command.
     PublicUserPtr newUser( new  PublicUser( userConnectedCommand.get() ) );
 
     // Insert the new user in the users vector.
     users_.insert( std::pair< unsigned int, PublicUserPtr >( userConnectedCommand->getUserID(), newUser ) );
 
-    // Emit a UserConnected signal.
+    // Emit a UserConnectionCommand signal.
     emit userConnected( userConnectedCommand );
 }
 

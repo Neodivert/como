@@ -17,7 +17,7 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "user_accepted.hpp"
+#include "user_acceptance_packet.hpp"
 
 namespace como {
 
@@ -25,7 +25,7 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-UserAccepted::UserAccepted() :
+UserAcceptancePacket::UserAcceptancePacket() :
     Packet( PacketType::USER_ACCEPTED ),
     id_( 0 )
 {
@@ -41,7 +41,7 @@ UserAccepted::UserAccepted() :
 }
 
 
-UserAccepted::UserAccepted( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor ) :
+UserAcceptancePacket::UserAcceptancePacket( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor ) :
     Packet( PacketType::USER_ACCEPTED )
 {
     bodySize_ = sizeof( id_ ) + NAME_SIZE + 4;
@@ -50,7 +50,7 @@ UserAccepted::UserAccepted( const std::uint32_t& id, const char* name, const std
 }
 
 
-void UserAccepted::setData( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor )
+void UserAcceptancePacket::setData( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor )
 {
     unsigned int i = 0;
 
@@ -62,16 +62,16 @@ void UserAccepted::setData( const std::uint32_t& id, const char* name, const std
 }
 
 
-UserAccepted::UserAccepted( const UserAccepted& b ) :
+UserAcceptancePacket::UserAcceptancePacket( const UserAcceptancePacket& b ) :
     Packet( b )
 {
     setData( b.id_, b.name_, b.selectionColor_ );
 }
 
 
-Packet* UserAccepted::clone() const
+Packet* UserAcceptancePacket::clone() const
 {
-    return new UserAccepted( *this );
+    return new UserAcceptancePacket( *this );
 }
 
 
@@ -79,7 +79,7 @@ Packet* UserAccepted::clone() const
  * 2. Packing and unpacking
  ***/
 
-char* UserAccepted::packBody( char* buffer ) const
+char* UserAcceptancePacket::packBody( char* buffer ) const
 {
     unsigned int i = 0;
 
@@ -99,7 +99,7 @@ char* UserAccepted::packBody( char* buffer ) const
 }
 
 
-const char* UserAccepted::unpackBody( const char* buffer )
+const char* UserAcceptancePacket::unpackBody( const char* buffer )
 {
     unsigned int i = 0;
 
@@ -123,25 +123,25 @@ const char* UserAccepted::unpackBody( const char* buffer )
  * 3. Getters
  ***/
 
-std::uint32_t UserAccepted::getId() const
+std::uint32_t UserAcceptancePacket::getId() const
 {
     return id_;
 }
 
 
-const char* UserAccepted::getName() const
+const char* UserAcceptancePacket::getName() const
 {
     return name_;
 }
 
 
-const std::uint8_t* UserAccepted::getSelectionColor() const
+const std::uint8_t* UserAcceptancePacket::getSelectionColor() const
 {
     return selectionColor_;
 }
 
 
-bool UserAccepted::expectedType() const
+bool UserAcceptancePacket::expectedType() const
 {
     return ( Packet::getType() == PacketType::USER_ACCEPTED );
 }
@@ -152,19 +152,19 @@ bool UserAccepted::expectedType() const
  ***/
 
 
-void UserAccepted::setId( const std::uint32_t& id )
+void UserAcceptancePacket::setId( const std::uint32_t& id )
 {
     id_ = id;
 }
 
 
-void UserAccepted::setName( const char* name )
+void UserAcceptancePacket::setName( const char* name )
 {
     strncpy( name_, name, NAME_SIZE );
 }
 
 
-void UserAccepted::setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a )
+void UserAcceptancePacket::setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a )
 {
     selectionColor_[0] = r;
     selectionColor_[1] = g;
@@ -177,7 +177,7 @@ void UserAccepted::setSelectionColor( const std::uint8_t& r, const std::uint8_t&
  * 5. Operators
  ***/
 
-UserAccepted& UserAccepted::operator = (const UserAccepted& b )
+UserAcceptancePacket& UserAcceptancePacket::operator = (const UserAcceptancePacket& b )
 {
     unsigned int i;
 

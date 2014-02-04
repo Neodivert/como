@@ -17,7 +17,7 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "select_drawable.hpp"
+#include "drawable_selection_command.hpp"
 
 namespace como {
 
@@ -25,21 +25,21 @@ namespace como {
  * 1. Initialization and destruction.
  ***/
 
-SelectDrawable::SelectDrawable() :
-    DrawableCommand( SceneCommandType::SELECT_DRAWABLE ),
+DrawableSelectionCommand::DrawableSelectionCommand() :
+    DrawableCommand( SceneCommandType::DRAWABLE_SELECTION ),
     addToSelection_( false )
 {
 }
 
 
-SelectDrawable::SelectDrawable( UserID userID, DrawableID drawableID, bool addToSelection ) :
-    DrawableCommand( userID, drawableID, SceneCommandType::SELECT_DRAWABLE ),
+DrawableSelectionCommand::DrawableSelectionCommand( UserID userID, DrawableID drawableID, bool addToSelection ) :
+    DrawableCommand( userID, drawableID, SceneCommandType::DRAWABLE_SELECTION ),
     addToSelection_( addToSelection == true )
 {
 }
 
 
-SelectDrawable::SelectDrawable( const SelectDrawable& b ) :
+DrawableSelectionCommand::DrawableSelectionCommand( const DrawableSelectionCommand& b ) :
     DrawableCommand( b ),
     addToSelection_( b.addToSelection_ )
 {
@@ -50,7 +50,7 @@ SelectDrawable::SelectDrawable( const SelectDrawable& b ) :
  * 2. Packing and unpacking
  ***/
 
-char* SelectDrawable::pack( char* buffer ) const
+char* DrawableSelectionCommand::pack( char* buffer ) const
 {
     // Pack the Drawable command fields.
     buffer = DrawableCommand::pack( buffer );
@@ -63,7 +63,7 @@ char* SelectDrawable::pack( char* buffer ) const
 }
 
 
-const char* SelectDrawable::unpack( const char* buffer )
+const char* DrawableSelectionCommand::unpack( const char* buffer )
 {
     // Unpack the Drawable command fields.
     buffer = DrawableCommand::unpack( buffer );
@@ -80,14 +80,14 @@ const char* SelectDrawable::unpack( const char* buffer )
  * 3. Getters
  ***/
 
-std::uint16_t SelectDrawable::getPacketSize() const
+std::uint16_t DrawableSelectionCommand::getPacketSize() const
 {
     return DrawableCommand::getPacketSize() +
             sizeof( addToSelection_ );
 }
 
 
-std::uint8_t SelectDrawable::getAddToSelection() const
+std::uint8_t DrawableSelectionCommand::getAddToSelection() const
 {
     return addToSelection_;
 }
@@ -97,7 +97,7 @@ std::uint8_t SelectDrawable::getAddToSelection() const
  * 4. Setters
  ***/
 
-void SelectDrawable::setAddToSelection( std::uint8_t addToSelection )
+void DrawableSelectionCommand::setAddToSelection( std::uint8_t addToSelection )
 {
     addToSelection_ = addToSelection;
 }

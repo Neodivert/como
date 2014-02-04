@@ -294,7 +294,7 @@ void Scene::setPivotPointMode( PivotPointMode pivotPointMode )
     setPivotPointMode( pivotPointMode, localUserID_ );
 
     // Send the command to the server.
-    server_.sendCommand( SceneCommandConstPtr( new ChangeParameter( localUserID_, pivotPointMode ) ) );
+    server_.sendCommand( SceneCommandConstPtr( new ParameterChangeCommand( localUserID_, pivotPointMode ) ) );
 }
 
 
@@ -358,7 +358,7 @@ void Scene::addCube( const std::uint8_t* color )
     addCube( color, drawableID );
 
     // Send the command to the server.
-    server_.sendCommand( SceneCommandConstPtr( new CreateCube( localUserID_, drawableID, color ) ) );
+    server_.sendCommand( SceneCommandConstPtr( new CubeCreationCommand( localUserID_, drawableID, color ) ) );
 }
 
 
@@ -396,7 +396,7 @@ void Scene::addDrawable( DrawableType drawableType )
 
     switch( drawableType ){
         case DrawableType::CUBE:
-            server_.sendCommand( SceneCommandConstPtr( new CreateCube ) );
+            server_.sendCommand( SceneCommandConstPtr( new CubeCreationCommand ) );
         break;
     }
 }
@@ -470,7 +470,7 @@ void Scene::unselectAll()
     unselectAll( localUserID_ );
 
     // Send command to the server.
-    server_.sendCommand( SceneCommandConstPtr( new SceneCommand( SceneCommandType::UNSELECT_ALL, localUserID_ ) ) );
+    server_.sendCommand( SceneCommandConstPtr( new SceneCommand( SceneCommandType::FULL_DESELECTION, localUserID_ ) ) );
 }
 
 
@@ -509,9 +509,9 @@ DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool a
         // A non selected drawable has been intersected.
         log_->debug( "Object picked\n" );
 
-        // Send a SELECT_DRAWABLE command to the server.
+        // Send a DRAWABLE_SELECTION command to the server.
         server_.sendCommand( SceneCommandConstPtr(
-                                 new SelectDrawable( localUserID_,
+                                 new DrawableSelectionCommand( localUserID_,
                                                      closestObject,
                                                      addToSelection ) ) );
 
@@ -569,9 +569,9 @@ DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool a
                      "\t min t: ", minT, ")\n",
                      "\t min distance: ", glm::distance( glm::vec3( 0.0f, 0.0f, 0.0f ), r1 * t ), "\n" );
 
-        // Send a SELECT_DRAWABLE command to the server.
+        // Send a DRAWABLE_SELECTION command to the server.
         server_.sendCommand( SceneCommandConstPtr(
-                                 new SelectDrawable( localUserID_,
+                                 new DrawableSelectionCommand( localUserID_,
                                                      closestObject,
                                                      addToSelection ) ) );
 
@@ -597,7 +597,7 @@ DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool a
 
 void Scene::translateSelection( glm::vec3 direction )
 {
-    SceneCommandPtr translationCommand( new SelectionTransformation( localUserID_ ) );
+    SceneCommandPtr translationCommand( new SelectionTransformationCommand( localUserID_ ) );
 
     // Round transformation magnitude to 3 decimal places.
     roundTransformationMagnitude( direction[0], direction[1], direction[2] );
@@ -606,7 +606,7 @@ void Scene::translateSelection( glm::vec3 direction )
     translateSelection( direction, localUserID_ );
 
     // Send command to the server.
-    ( dynamic_cast< SelectionTransformation* >( translationCommand.get() ) )->setTranslation( &direction[0] );
+    ( dynamic_cast< SelectionTransformationCommand* >( translationCommand.get() ) )->setTranslation( &direction[0] );
     server_.sendCommand( translationCommand );
 }
 
@@ -624,7 +624,7 @@ void Scene::translateSelection( glm::vec3 direction, UserID userID )
 
 void Scene::rotateSelection( GLfloat angle, glm::vec3 axis )
 {
-    SceneCommandPtr rotationCommand( new SelectionTransformation( localUserID_ ) );
+    SceneCommandPtr rotationCommand( new SelectionTransformationCommand( localUserID_ ) );
 
     // Round transformation magnitude to 3 decimal places.
     roundTransformationMagnitude( angle, axis[0], axis[1], axis[2] );
@@ -633,7 +633,7 @@ void Scene::rotateSelection( GLfloat angle, glm::vec3 axis )
     rotateSelection( angle, axis, localUserID_ );
 
     // Send command to the server.
-    ( dynamic_cast< SelectionTransformation* >( rotationCommand.get() ) )->setRotation( angle, &axis[0] );
+    ( dynamic_cast< SelectionTransformationCommand* >( rotationCommand.get() ) )->setRotation( angle, &axis[0] );
     server_.sendCommand( rotationCommand );
 }
 
@@ -651,7 +651,7 @@ void Scene::rotateSelection( GLfloat angle, glm::vec3 axis, UserID userID )
 
 void Scene::scaleSelection( glm::vec3 scaleFactors )
 {
-    SceneCommandPtr scaleCommand( new SelectionTransformation( localUserID_ ) );
+    SceneCommandPtr scaleCommand( new SelectionTransformationCommand( localUserID_ ) );
 
     // Round transformation magnitude to 3 decimal places.
     roundTransformationMagnitude( scaleFactors[0], scaleFactors[1], scaleFactors[2] );
@@ -660,7 +660,7 @@ void Scene::scaleSelection( glm::vec3 scaleFactors )
     scaleSelection( scaleFactors, localUserID_ );
 
     // Send command to the server.
-    ( dynamic_cast< SelectionTransformation* >( scaleCommand.get() ) )->setScale( &scaleFactors[0] );
+    ( dynamic_cast< SelectionTransformationCommand* >( scaleCommand.get() ) )->setScale( &scaleFactors[0] );
     server_.sendCommand( scaleCommand );
 }
 
@@ -693,7 +693,7 @@ void Scene::deleteSelection()
     deleteSelection( localUserID_ );
 
     // Send Command to the server.
-    SceneCommandPtr deleteSelectionCommand( new SceneCommand( SceneCommandType::DELETE_SELECTION, localUserID_ ) );
+    SceneCommandPtr deleteSelectionCommand( new SceneCommand( SceneCommandType::SELECTION_DELETION, localUserID_ ) );
     server_.sendCommand( deleteSelectionCommand );
 }
 
@@ -800,12 +800,12 @@ void Scene::emitRenderNeeded()
 
 void Scene::executeRemoteCommand( SceneCommandConstPtr command )
 {
-    const UserConnected* userConnected = nullptr;
-    const CreateCube* createCube = nullptr;
-    const SelectionResponse* selectionResponse = nullptr;
-    const SelectDrawable* selectDrawable = nullptr;
-    const SelectionTransformation* selectionTransformation = nullptr;
-    const ChangeParameter* changeParameter = nullptr;
+    const UserConnectionCommand* userConnected = nullptr;
+    const CubeCreationCommand* createCube = nullptr;
+    const SelectionResponseCommand* selectionResponse = nullptr;
+    const DrawableSelectionCommand* selectDrawable = nullptr;
+    const SelectionTransformationCommand* selectionTransformation = nullptr;
+    const ParameterChangeCommand* changeParameter = nullptr;
 
     const float* transf = nullptr;
 
@@ -819,31 +819,31 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
                  ") ...\n" );
 
     switch( command->getType() ){
-        case SceneCommandType::USER_CONNECTED:
-            // Cast to an USER_CONNECTED command.
-            userConnected = dynamic_cast< const UserConnected* >( command.get() );
+        case SceneCommandType::USER_CONNECTION:
+            // Cast to an USER_CONNECTION command.
+            userConnected = dynamic_cast< const UserConnectionCommand* >( command.get() );
 
             // Add user to the scene.
-            addUser( std::shared_ptr< const UserConnected>( new UserConnected( *userConnected ) ) );
+            addUser( std::shared_ptr< const UserConnectionCommand>( new UserConnectionCommand( *userConnected ) ) );
         break;
-        case SceneCommandType::USER_DISCONNECTED:
+        case SceneCommandType::USER_DISCONNECTION:
             // Remove user from the scene.
             removeUser( command->getUserID() );
         break;
-        case SceneCommandType::CREATE_CUBE:
-            // Cast to a CREATE_CUBE command.
-            createCube = dynamic_cast< const CreateCube* >( command.get() );
+        case SceneCommandType::CUBE_CREATION:
+            // Cast to a CUBE_CREATION command.
+            createCube = dynamic_cast< const CubeCreationCommand* >( command.get() );
 
             // Add cube to the scene.
             addCube( createCube->getColor(), createCube->getDrawableID() );
         break;
-        case SceneCommandType::DELETE_SELECTION:
+        case SceneCommandType::SELECTION_DELETION:
             // Delete user selection.
             deleteSelection( command->getUserID() );
         break;
         case SceneCommandType::SELECTION_RESPONSE:
             // Cast to a SELECTION_RESPONSE command.
-            selectionResponse = dynamic_cast< const SelectionResponse* >( command.get() );
+            selectionResponse = dynamic_cast< const SelectionResponseCommand* >( command.get() );
 
             for( i = 0; i < selectionResponse->getNSelections(); i++ ){
                 selectionConfirmed = selectionResponse->getSelectionConfirmed() & (1 << i);
@@ -855,20 +855,20 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
                 localUserPendingSelections_.pop();
             }
         break;
-        case SceneCommandType::SELECT_DRAWABLE:
-            // Cast to a SELECT_DRAWABLE command.
-            selectDrawable = dynamic_cast< const SelectDrawable* >( command.get() );
+        case SceneCommandType::DRAWABLE_SELECTION:
+            // Cast to a DRAWABLE_SELECTION command.
+            selectDrawable = dynamic_cast< const DrawableSelectionCommand* >( command.get() );
 
             // Select drawable.
             this->selectDrawable( selectDrawable->getDrawableID(), selectDrawable->getUserID() );
         break;
-        case SceneCommandType::UNSELECT_ALL:
+        case SceneCommandType::FULL_DESELECTION:
             // Unselect all.
             unselectAll( command->getUserID() );
         break;
         case SceneCommandType::SELECTION_TRANSFORMATION:
             // Cast to a SELECTION_TRANSFORMATION command.
-            selectionTransformation = dynamic_cast< const SelectionTransformation* >( command.get() );
+            selectionTransformation = dynamic_cast< const SelectionTransformationCommand* >( command.get() );
 
             // Transform the user's selection.
             transf = selectionTransformation->getTransformationMagnitude();
@@ -876,20 +876,20 @@ void Scene::executeRemoteCommand( SceneCommandConstPtr command )
             // Execute one transformation or another according to the requested
             // type.
             switch( selectionTransformation->getTransformationType() ){
-                case SelectionTransformationType::TRANSLATION:
+                case SelectionTransformationCommandType::TRANSLATION:
                     translateSelection( glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
                 break;
-                case SelectionTransformationType::ROTATION:
+                case SelectionTransformationCommandType::ROTATION:
                     rotateSelection( selectionTransformation->getAngle(), glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
                 break;
-                case SelectionTransformationType::SCALE:
+                case SelectionTransformationCommandType::SCALE:
                     scaleSelection( glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
                 break;
             }
         break;
-        case SceneCommandType::CHANGE_PARAMETER:
-            // Cast to a CHANGE_PARAMETER command.
-            changeParameter = dynamic_cast< const ChangeParameter* >( command.get() );
+        case SceneCommandType::PARAMETER_CHANGE:
+            // Cast to a PARAMETER_CHANGE command.
+            changeParameter = dynamic_cast< const ParameterChangeCommand* >( command.get() );
 
             // Change parameter.
             switch( changeParameter->getParameterType() ){

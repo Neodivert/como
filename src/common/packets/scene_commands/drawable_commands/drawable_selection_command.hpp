@@ -17,29 +17,28 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef CREATE_CUBE_HPP
-#define CREATE_CUBE_HPP
+#ifndef DRAWABLE_SELECTION_COMMAND_HPP
+#define DRAWABLE_SELECTION_COMMAND_HPP
 
 #include "drawable_command.hpp"
 
 namespace como {
 
-class CreateCube : public DrawableCommand
+class DrawableSelectionCommand : public DrawableCommand
 {
     private:
-        // Mesh color.
-        std::uint8_t color_[4];
+        std::uint8_t addToSelection_;
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Initialization and destruction.
          ***/
-        CreateCube();
-        CreateCube( UserID userID, DrawableID drawableID, const std::uint8_t* color );
-        CreateCube( const CreateCube& b );
-        CreateCube( CreateCube&& ) = delete;
+        DrawableSelectionCommand();
+        DrawableSelectionCommand( UserID userID, DrawableID drawableID, bool addToSelection );
+        DrawableSelectionCommand( const DrawableSelectionCommand& b );
+        DrawableSelectionCommand( DrawableSelectionCommand&& ) = delete;
 
-        ~CreateCube() = default;
+        ~DrawableSelectionCommand() = default;
 
 
         /***
@@ -53,22 +52,22 @@ class CreateCube : public DrawableCommand
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const ;
-        const std::uint8_t* getColor() const ;
+        std::uint8_t getAddToSelection() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setColor( const std::uint8_t* color );
+        void setAddToSelection( std::uint8_t addToSelection );
 
 
         /***
          * 5. Operators
          ***/
-        CreateCube& operator=( const CreateCube& ) = delete;
-        CreateCube& operator=( CreateCube&& ) = delete;
+        DrawableSelectionCommand& operator=( const DrawableSelectionCommand& ) = delete;
+        DrawableSelectionCommand& operator=( DrawableSelectionCommand&& ) = delete;
 };
 
 } // namespace como
 
-#endif // CREATE_CUBE_HPP
+#endif // DRAWABLE_SELECTION_COMMAND_HPP

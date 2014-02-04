@@ -17,15 +17,15 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef USER_ACCEPTED_HPP
-#define USER_ACCEPTED_HPP
+#ifndef USER_ACCEPTANCE_PACKET_HPP
+#define USER_ACCEPTANCE_PACKET_HPP
 
 #include "packet.hpp"
 #include <cstring>
 
 namespace como {
 
-class UserAccepted : public Packet
+class UserAcceptancePacket : public Packet
 {
     public:
         UserID id_;
@@ -36,14 +36,14 @@ class UserAccepted : public Packet
         /***
          * 1. Initialization and destruction
          ***/
-        UserAccepted();
-        UserAccepted( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor );
+        UserAcceptancePacket();
+        UserAcceptancePacket( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor );
         void setData( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor );
-        UserAccepted( const UserAccepted& b );
-        UserAccepted( UserAccepted&& ) = delete;
+        UserAcceptancePacket( const UserAcceptancePacket& b );
+        UserAcceptancePacket( UserAcceptancePacket&& ) = delete;
         virtual Packet* clone() const ;
 
-        ~UserAccepted() = default;
+        ~UserAcceptancePacket() = default;
 
 
         /***
@@ -73,10 +73,10 @@ class UserAccepted : public Packet
         /***
          * 5. Operators
          ***/
-        UserAccepted& operator = (const UserAccepted& b );
-        UserAccepted& operator = ( UserAccepted&& ) = delete;
+        UserAcceptancePacket& operator = (const UserAcceptancePacket& b );
+        UserAcceptancePacket& operator = ( UserAcceptancePacket&& ) = delete;
 };
 
 } // namespace como
 
-#endif // USER_ACCEPTED_HPP
+#endif // USER_ACCEPTANCE_PACKET_HPP

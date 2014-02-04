@@ -29,14 +29,14 @@ namespace como {
 PublicUser::PublicUser( UserID id, const char* name,
             std::shared_ptr< boost::asio::io_service > io_service,
             Socket socket,
-            ProcessSceneUpdateCallback processSceneUpdateCallback,
+            ProcessSceneUpdatePacketCallback processSceneUpdatePacketCallback,
             std::function<void (UserID)> removeUserCallback,
             CommandsHistoricPtr commandsHistoric,
             LogPtr log ) :
     BasicUser( id, name ),
     io_service_( io_service ),
     socket_( SocketPtr( new Socket( std::move( socket ) ) ) ),
-    processSceneUpdateCallback_( processSceneUpdateCallback ),
+    processSceneUpdatePacketCallback_( processSceneUpdatePacketCallback ),
     removeUserCallback_( removeUserCallback ),
     nextCommand_( 0 ),
     synchronizing_( false ),
@@ -44,9 +44,9 @@ PublicUser::PublicUser( UserID id, const char* name,
     log_( log ),
     updateRequested_( false )
 {
-    selectionResponse_ = SelectionResponsePtr( new SelectionResponse );
+    selectionResponse_ = SelectionResponseCommandPtr( new SelectionResponseCommand );
 
-    readSceneUpdate();
+    readSceneUpdatePacket();
 
     //sync();
 
@@ -62,9 +62,9 @@ void PublicUser::requestUpdate()
 {
     mutex_.lock();
 
-    if( !updateRequested_ && needsSceneUpdate() ){
+    if( !updateRequested_ && needsSceneUpdatePacket() ){
         updateRequested_ = true;
-        io_service_->post( std::bind( &PublicUser::sendNextSceneUpdate, this ) );
+        io_service_->post( std::bind( &PublicUser::sendNextSceneUpdatePacket, this ) );
     }
 
     mutex_.unlock();
@@ -74,8 +74,8 @@ void PublicUser::requestUpdate()
 void PublicUser::update()
 {
     mutex_.lock();
-    if( !synchronizing_ && needsSceneUpdate() ){
-        sendNextSceneUpdate();
+    if( !synchronizing_ && needsSceneUpdatePacket() ){
+        sendNextSceneUpdatePacket();
     }
     mutex_.unlock();
 }
@@ -86,19 +86,19 @@ void PublicUser::update()
  * 4. Socket reading
  ***/
 
-void PublicUser::readSceneUpdate()
+void PublicUser::readSceneUpdatePacket()
 {
     mutex_.lock();
     sceneUpdatePacketFromUser_.clear();
-    sceneUpdatePacketFromUser_.asyncRecv( socket_, boost::bind( &PublicUser::onReadSceneUpdate, this, _1, _2 ) );
+    sceneUpdatePacketFromUser_.asyncRecv( socket_, boost::bind( &PublicUser::onReadSceneUpdatePacket, this, _1, _2 ) );
     mutex_.unlock();
 }
 
 
-void PublicUser::onReadSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet )
+void PublicUser::onReadSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet )
 {
     // Call to the processing callback in the server.
-    processSceneUpdateCallback_( errorCode, getID(), std::dynamic_pointer_cast<const SceneUpdate>( packet ) );
+    processSceneUpdatePacketCallback_( errorCode, getID(), std::dynamic_pointer_cast<const SceneUpdatePacket>( packet ) );
 }
 
 
@@ -106,7 +106,7 @@ void PublicUser::onReadSceneUpdate( const boost::system::error_code& errorCode, 
  * 5. Socket writing
  ***/
 
-bool PublicUser::needsSceneUpdate() const
+bool PublicUser::needsSceneUpdatePacket() const
 {
     bool res;
 
@@ -119,42 +119,42 @@ bool PublicUser::needsSceneUpdate() const
 }
 
 
-void PublicUser::sendNextSceneUpdate()
+void PublicUser::sendNextSceneUpdatePacket()
 {
     mutex_.lock();
 
     updateRequested_ = false;
 
     // Create and prepare a SCENE_UPDATE packet.
-    outSceneUpdatePacket_.clear();
+    outSceneUpdatePacketPacket_.clear();
 
     // If there is selection responses to be sent to the user, add it to the
     // scene update packet.
     if( selectionResponse_->getNSelections() ){
-        outSceneUpdatePacket_.addCommand( selectionResponse_ );
+        outSceneUpdatePacketPacket_.addCommand( selectionResponse_ );
     }
 
-    nextCommand_ = commandsHistoric_->fillSceneUpdatePacket( outSceneUpdatePacket_, nextCommand_, MAX_COMMANDS_PER_PACKET, getID() );
+    nextCommand_ = commandsHistoric_->fillSceneUpdatePacketPacket( outSceneUpdatePacketPacket_, nextCommand_, MAX_COMMANDS_PER_PACKET, getID() );
     log_->debug( "Sending scene update - nextCommand: (", (int)nextCommand_, ")\n" );
 
-    //outSceneUpdatePacket_.addCommands( commandsHistoric, nextCommand_, MAX_COMMANDS_PER_PACKET );
+    //outSceneUpdatePacketPacket_.addCommands( commandsHistoric, nextCommand_, MAX_COMMANDS_PER_PACKET );
 
     // Get the number of commands in the packet.
-    nCommandsInLastPacket_ = (std::uint8_t)( outSceneUpdatePacket_.getCommands()->size() );
+    nCommandsInLastPacket_ = (std::uint8_t)( outSceneUpdatePacketPacket_.getCommands()->size() );
 
     if( nCommandsInLastPacket_ ){
         // Pack the previous packet and send it to the client.
-        outSceneUpdatePacket_.asyncSend( socket_, boost::bind( &PublicUser::onWriteSceneUpdate, this, _1, _2 ) );
+        outSceneUpdatePacketPacket_.asyncSend( socket_, boost::bind( &PublicUser::onWriteSceneUpdatePacket, this, _1, _2 ) );
 
         // Signal that the user is being synchronized (permorming an async send).
         synchronizing_ = true;
     }
-//std::dynamic_pointer_cast<const SceneUpdate>( packet )
+//std::dynamic_pointer_cast<const SceneUpdatePacket>( packet )
     mutex_.unlock();
 }
 
 
-void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet )
+void PublicUser::onWriteSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet )
 {
     mutex_.lock();
 
@@ -165,18 +165,18 @@ void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode,
         removeUserCallback_( getID() );
     }else{
         // Update the nextCommand_ index for the next SCENE_UPDATE packet.
-        //nextCommand_ = outSceneUpdatePacket_.getLasCommandSent() + 1;
+        //nextCommand_ = outSceneUpdatePacketPacket_.getLasCommandSent() + 1;
 
         selectionResponse_->clear();
 
         log_->debug( "SCENE_UPDATE sent - commands(",
-                     dynamic_cast< const SceneUpdate* >( packet.get() )->getCommands()->size(),
+                     dynamic_cast< const SceneUpdatePacket* >( packet.get() )->getCommands()->size(),
                      ") - nextCommand_(",
                      (int)nextCommand_, ")\n" );
 
-        if( needsSceneUpdate() ){
+        if( needsSceneUpdatePacket() ){
             requestUpdate();
-            //sendNextSceneUpdate();
+            //sendNextSceneUpdatePacket();
         }else{
             updateRequested_ = false;
             synchronizing_ = false;

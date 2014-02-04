@@ -71,7 +71,7 @@ void CommandsHistoric::addCommand( SceneCommandConstPtr command )
  * 5. Auxiliar methods
  ***/
 
-std::uint32_t CommandsHistoric::fillSceneUpdatePacket( SceneUpdate& packet,
+std::uint32_t CommandsHistoric::fillSceneUpdatePacketPacket( SceneUpdatePacket& packet,
                                                        const unsigned int firstCommand,
                                                        const unsigned int nCommands,
                                                        UserID userID ) const

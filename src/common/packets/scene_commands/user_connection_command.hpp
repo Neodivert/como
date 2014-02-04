@@ -17,58 +17,63 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef NEW_USER_HPP
-#define NEW_USER_HPP
+#ifndef USER_CONNECTION_COMMAND_HPP
+#define USER_CONNECTION_COMMAND_HPP
 
-#include "packet.hpp"
+#include "scene_command.hpp"
+#include "../user_acceptance_packet.hpp"
 
 namespace como {
 
-class NewUser : public Packet
-{  
-    public:
+class UserConnectionCommand : public SceneCommand
+{
+    private:
         char name_[NAME_SIZE];
+        std::uint8_t selectionColor_[4];
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        NewUser();
-        NewUser( const char* name );
-        NewUser( const NewUser& b );
-        NewUser( NewUser&& ) = delete;
-        virtual Packet* clone() const ;
+        UserConnectionCommand();
+        UserConnectionCommand( const UserAcceptancePacket& userAcceptedPacket );
+        UserConnectionCommand( const UserConnectionCommand& b );
+        UserConnectionCommand( UserConnectionCommand&& ) = delete;
 
-        ~NewUser() = default;
+        ~UserConnectionCommand() = default;
 
 
         /***
          * 2. Packing and unpacking
          ***/
-        virtual char* packBody( char* buffer ) const ;
-        virtual const char* unpackBody( const char* buffer );
+        virtual char* pack( char* buffer ) const ;
+        virtual const char* unpack( const char* buffer ) ;
 
 
         /***
          * 3. Getters
          ***/
-        virtual bool expectedType() const;
+        virtual std::uint16_t getPacketSize() const ;
         const char* getName() const ;
+        const std::uint8_t* getSelectionColor() const ;
 
 
         /***
          * 4. Setters
          ***/
         void setName( const char* name );
+        void setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a );
 
 
         /***
          * 5. Operators
          ***/
-        NewUser& operator = (const NewUser& b);
-        NewUser& operator = ( NewUser&& ) = delete;
+        UserConnectionCommand& operator=( const UserConnectionCommand& ) = delete;
+        UserConnectionCommand& operator=( UserConnectionCommand&& ) = delete;
 };
+
+typedef std::shared_ptr< const UserConnectionCommand > UserConnectionCommandConstPtr;
 
 } // namespace como
 
-#endif // NEW_USER_HPP
+#endif // USER_CONNECTION_COMMAND_HPP

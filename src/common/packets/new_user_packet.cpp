@@ -17,7 +17,7 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "new_user.hpp"
+#include "new_user_packet.hpp"
 #include <cstring>
 
 namespace como {
@@ -27,7 +27,7 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-NewUser::NewUser() :
+NewUserPacket::NewUserPacket() :
     Packet( PacketType::NEW_USER ),
     name_{ 0 }
 {
@@ -37,7 +37,7 @@ NewUser::NewUser() :
 }
 
 
-NewUser::NewUser( const char* name ) :
+NewUserPacket::NewUserPacket( const char* name ) :
     Packet( PacketType::NEW_USER ),
     name_{ 0 }
 {
@@ -47,7 +47,7 @@ NewUser::NewUser( const char* name ) :
 }
 
 
-NewUser::NewUser( const NewUser& b ) :
+NewUserPacket::NewUserPacket( const NewUserPacket& b ) :
     Packet( b ),
     name_{ 0 }
 {
@@ -55,9 +55,9 @@ NewUser::NewUser( const NewUser& b ) :
 }
 
 
-Packet* NewUser::clone() const
+Packet* NewUserPacket::clone() const
 {
-    return new NewUser( *this );
+    return new NewUserPacket( *this );
 }
 
 
@@ -65,7 +65,7 @@ Packet* NewUser::clone() const
  * 2. Packing and unpacking
  ***/
 
-char* NewUser::packBody( char* buffer ) const
+char* NewUserPacket::packBody( char* buffer ) const
 {
     // Pack the user name into the buffer.
     packer::pack( name_, buffer, NAME_SIZE );
@@ -75,7 +75,7 @@ char* NewUser::packBody( char* buffer ) const
 }
 
 
-const char* NewUser::unpackBody( const char* buffer )
+const char* NewUserPacket::unpackBody( const char* buffer )
 {
     // Pack the user name into the buffer.
     packer::unpack( name_, buffer, NAME_SIZE );
@@ -89,13 +89,13 @@ const char* NewUser::unpackBody( const char* buffer )
  * 2. Getters
  ***/
 
-const char* NewUser::getName() const
+const char* NewUserPacket::getName() const
 {
     return name_;
 }
 
 
-bool NewUser::expectedType() const
+bool NewUserPacket::expectedType() const
 {
     return ( Packet::getType() == PacketType::NEW_USER );
 }
@@ -105,7 +105,7 @@ bool NewUser::expectedType() const
  * 4. Setters
  ***/
 
-void NewUser::setName( const char* name )
+void NewUserPacket::setName( const char* name )
 {
     strncpy( name_, name, NAME_SIZE );
 }
@@ -115,7 +115,7 @@ void NewUser::setName( const char* name )
  * 5. Operators
  ***/
 
-NewUser& NewUser::operator = (const NewUser& b)
+NewUserPacket& NewUserPacket::operator = (const NewUserPacket& b)
 {
     if( this != &b ){
         Packet::operator =( b );

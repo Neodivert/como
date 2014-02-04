@@ -60,7 +60,7 @@ class UsersList : public QListWidget
          * 3. Users insertion / deletion
          ***/
     public slots:
-        void addUser( UserConnectedConstPtr userConnectedPacket );
+        void addUser( UserConnectionCommandConstPtr userConnectedPacket );
         void removeUser( UserID userID );
 };
 

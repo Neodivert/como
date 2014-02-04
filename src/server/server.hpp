@@ -138,9 +138,9 @@ class Server
          * \param userID ID of the user who sent the packet.
          * \param sceneUpdate SCENE_UPDATE packet received from client.
         */
-        void processSceneUpdate( const boost::system::error_code& errorCode,
+        void processSceneUpdatePacket( const boost::system::error_code& errorCode,
                                  UserID userID,
-                                 SceneUpdateConstPtr sceneUpdate );
+                                 SceneUpdatePacketConstPtr sceneUpdate );
 
         /*! \brief Process a scene command.
          * \param userID ID of the user who sent the command.
