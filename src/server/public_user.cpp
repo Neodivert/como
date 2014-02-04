@@ -23,7 +23,7 @@
 namespace como {
 
 /***
- * 1. Initialization and destruction
+ * 1. Construction
  ***/
 
 PublicUser::PublicUser( UserID id, const char* name,
@@ -55,7 +55,7 @@ PublicUser::PublicUser( UserID id, const char* name,
 
 
 /***
- * 2. User updating
+ * 3. User updating
  ***/
 
 void PublicUser::requestUpdate()
@@ -83,7 +83,7 @@ void PublicUser::update()
 
 
 /***
- * 3. Socket reading
+ * 4. Socket reading
  ***/
 
 void PublicUser::readSceneUpdate()
@@ -103,7 +103,7 @@ void PublicUser::onReadSceneUpdate( const boost::system::error_code& errorCode, 
 
 
 /***
- * 4. Socket writing
+ * 5. Socket writing
  ***/
 
 bool PublicUser::needsSceneUpdate() const
@@ -188,7 +188,7 @@ void PublicUser::onWriteSceneUpdate( const boost::system::error_code& errorCode,
 
 
 /***
- * 5. Selection responses
+ * 6. Selection responses
  ***/
 
 void PublicUser::addSelectionResponse( bool selectionResponse )

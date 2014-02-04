@@ -45,6 +45,7 @@ SOURCES += \
     ../../src/common/packets/scene_commands/user_connected.cpp \
     ../../src/server/public_user.cpp \
     ../../src/server/commands_historic.cpp \
+    ../../src/common/utilities/ids.cpp \
     ../../src/common/users/basic_user.cpp \
     ../../src/common/packets/scene_commands/drawable_commands/drawable_command.cpp \
     ../../src/common/packets/scene_commands/drawable_commands/create_cube.cpp \

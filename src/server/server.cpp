@@ -23,7 +23,7 @@ namespace como {
 
 
 /***
- * 1. Initialization and destruction
+ * 1. Construction
  ***/
 
 Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThreads ) :
@@ -54,7 +54,7 @@ Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThre
 
 
 /***
- * 2. Main loop
+ * 3. Main loop
  ***/
 
 void Server::run()
@@ -106,7 +106,7 @@ void Server::broadcast()
 
 
 /***
- * 5. Listeners
+ * 4. Listeners
  ***/
 
 void Server::listen()
@@ -119,7 +119,7 @@ void Server::listen()
 
 
 /***
- * 4. Handlers
+ * 5. Handlers
  ***/
 
 void Server::onAccept( const boost::system::error_code& errorCode )
@@ -264,7 +264,7 @@ void Server::processSceneCommand( SceneCommandConstPtr sceneCommand )
 
 
 /***
- * 7. Commands historic management.
+ * 6. Commands historic management.
  ***/
 
 void Server::addCommand( SceneCommandConstPtr sceneCommand )
@@ -275,7 +275,7 @@ void Server::addCommand( SceneCommandConstPtr sceneCommand )
 
 
 /***
- * 8. Auxiliar methods
+ * 7. Auxiliar methods
  ***/
 
 void Server::deleteUser( UserID id )

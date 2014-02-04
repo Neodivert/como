@@ -23,7 +23,7 @@ namespace como {
 
 
 /***
- * 1. Initialization
+ * 1. Construction
  ***/
 
 CommandsHistoric::CommandsHistoric( std::function< void () > broadcastCallback ) :
@@ -32,7 +32,7 @@ CommandsHistoric::CommandsHistoric( std::function< void () > broadcastCallback )
 }
 
 /***
- * 2. Getters
+ * 3. Getters
  ***/
 
 unsigned int CommandsHistoric::getSize() const
@@ -50,7 +50,7 @@ unsigned int CommandsHistoric::getSize() const
 
 
 /***
- * 3. Historic modification
+ * 4. Historic modification
  ***/
 
 void CommandsHistoric::addCommand( SceneCommandConstPtr command )
@@ -68,38 +68,7 @@ void CommandsHistoric::addCommand( SceneCommandConstPtr command )
 
 
 /***
- * 3. Historic synchronisation
- ***/
-
-/*
-SceneCommandConstPtr CommandsHistoric::getCommand( const std::uint32_t commandIndex ) const
-{
-    SceneCommandConstPtr command;
-    CommandsList::const_iterator it;
-
-    // "A "lock" here is just a C++ wrapper class that takes a mutex in its
-    // constructor and releases it at the destructor. It is useful for
-    // establishing synchronizing for C++ scopes."
-    // http://stackoverflow.com/questions/1055398/differences-between-conditional-variables-mutexes-and-locks
-    std::unique_lock<std::mutex> locker( commandsMutex_ );
-
-    // Wait until there is a new command at the i-th position in the historic.
-    while( commandIndex >= commands_.size() ){
-        newCommandsAdded_.wait( locker, [&, this](){ return ( commandIndex < commands_.size() ); } );
-    }
-
-    // There is a command at the i-th position. Return it.
-    it = commands_.begin();
-    std::advance( it, commandIndex );
-    command = *it;
-
-    return command;
-}
-*/
-
-
-/***
- * 4. Auxiliar methods
+ * 5. Auxiliar methods
  ***/
 
 std::uint32_t CommandsHistoric::fillSceneUpdatePacket( SceneUpdate& packet,

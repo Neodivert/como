@@ -48,30 +48,46 @@ class CommandsHistoric
 
     public:
         /***
-         * 1. Initialization
+         * 1. Construction
          ***/
+        CommandsHistoric() = delete;
+        CommandsHistoric( const CommandsHistoric& ) = delete;
+        CommandsHistoric( CommandsHistoric&& ) = delete;
         CommandsHistoric( std::function< void () > broadcastCallback );
 
 
         /***
-         * 2. Getters
+         * 2. Destruction
+         ***/
+        ~CommandsHistoric() = default;
+
+
+        /***
+         * 3. Getters
          ***/
         unsigned int getSize() const ;
 
 
         /***
-         * 3. Historic modification
+         * 4. Historic modification
          ***/
         void addCommand( SceneCommandConstPtr command );
 
 
         /***
-         * 4. Auxiliar methods
+         * 5. Auxiliar methods
          ***/
         std::uint32_t fillSceneUpdatePacket( SceneUpdate& packet,
                                              const unsigned int firstCommand,
                                              const unsigned int nCommands,
                                              UserID userID ) const ;
+
+
+        /***
+         * 6. Operators
+         ***/
+        CommandsHistoric& operator = (const CommandsHistoric& ) = delete;
+        CommandsHistoric& operator = ( CommandsHistoric&& ) = delete;
 };
 
 typedef std::shared_ptr< CommandsHistoric > CommandsHistoricPtr;

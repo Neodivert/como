@@ -77,8 +77,11 @@ class PublicUser : public BasicUser
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
+        PublicUser() = delete;
+        PublicUser( const PublicUser& ) = delete;
+        PublicUser( PublicUser&& ) = delete;
         PublicUser( UserID id, const char* name,
                     std::shared_ptr< boost::asio::io_service > io_service,
                     Socket socket,
@@ -86,11 +89,16 @@ class PublicUser : public BasicUser
                     std::function<void (UserID)> removeUserCallback,
                     CommandsHistoricPtr commandsHistoric,
                     LogPtr log );
-        ~PublicUser(){}
 
 
         /***
-         * 2. User updating
+         * 2. Destruction
+         ***/
+        ~PublicUser() = default;
+
+
+        /***
+         * 3. User updating
          ***/
         void requestUpdate();
 
@@ -99,14 +107,14 @@ class PublicUser : public BasicUser
     public:
 
         /***
-         * 3. Socket reading
+         * 4. Socket reading
          ***/
         void readSceneUpdate();
         void onReadSceneUpdate( const boost::system::error_code& errorCode, PacketPtr packet );
 
 
         /***
-         * 4. Socket writing
+         * 5. Socket writing
          ***/
         bool needsSceneUpdate() const ;
         void sendNextSceneUpdate();
@@ -114,9 +122,16 @@ class PublicUser : public BasicUser
 
 
         /***
-         * 5. Selection responses
+         * 6. Selection responses
          ***/
         void addSelectionResponse( bool selectionResponse );
+
+
+        /***
+         * 7. Operators
+         ***/
+        PublicUser& operator = (const PublicUser& ) = delete;
+        PublicUser& operator = ( PublicUser&& ) = delete;
 };
 
 

@@ -90,8 +90,11 @@ class Server
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
+        Server() = delete;
+        Server( const Server& ) = delete;
+        Server( Server&& ) = delete;
 
         /*! \brief Initialize a server.
          * \param port_ port the server will be listening to.
@@ -102,7 +105,13 @@ class Server
 
 
         /***
-         * 2. Main loop
+         * 2. Destruction
+         ***/
+        ~Server() = default;
+
+
+        /***
+         * 3. Main loop
          ***/
         /*! \brief Start the server's main loop. */
         void run();
@@ -112,14 +121,14 @@ class Server
         void broadcast();
 
         /***
-         * 3. Listeners
+         * 4. Listeners
          ***/
         /*! \brief Listen for a new connection */
         void listen();
 
 
         /***
-         * 4. Handlers
+         * 5. Handlers
          ***/
         /*! \brief Handler for a new connection */
         void onAccept( const boost::system::error_code& errorCode );
@@ -141,14 +150,14 @@ class Server
 
 
         /***
-         * 5. Commands historic management.
+         * 6. Commands historic management.
          ***/
         /*! \brief Add a command to the historic. */
         void addCommand( SceneCommandConstPtr sceneCommand );
 
 
         /***
-         * 6. Auxiliar methods
+         * 7. Auxiliar methods
          ***/
         void deleteUser( UserID id );
         void unselectAll( UserID userID );
@@ -158,6 +167,13 @@ class Server
         void workerThread();
         void openAcceptor();
         bool nameInUse( const char* newName ) const ;
+
+    public:
+        /***
+         * 8. Operators
+         ***/
+        Server& operator = (const Server& ) = delete;
+        Server& operator = ( Server&& ) = delete;
 };
 
 } // namespace como
