@@ -129,4 +129,5 @@ SOURCES += \
     ../../src/common/packets/scene_commands/drawable_commands/select_drawable.cpp \
     ../../src/common/packets/scene_commands/selection_transformation.cpp \
     ../../src/client/models/3d/drawables_selection.cpp \
-    ../../src/common/packets/scene_commands/change_parameter.cpp
+    ../../src/common/packets/scene_commands/change_parameter.cpp \
+    ../../src/common/utilities/ids.cpp

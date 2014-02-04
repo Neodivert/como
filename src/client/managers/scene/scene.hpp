@@ -105,7 +105,7 @@ class Scene : public QOffscreenSurface
         Scene( Scene&& ) = delete;
         Scene( LogPtr log );
 
-        ~Scene();
+        virtual ~Scene();
 
         void initOpenGL();
 

@@ -36,7 +36,12 @@ class BasicUser : public std::enable_shared_from_this< BasicUser >
         /***
          * 1. Initialization and destruction
          ***/
+        BasicUser() = delete;
+        BasicUser( const BasicUser& ) = delete;
+        BasicUser( BasicUser&& ) = delete;
         BasicUser( UserID id, const char* name );
+
+        ~BasicUser() = default;
 
 
         /***
@@ -44,6 +49,13 @@ class BasicUser : public std::enable_shared_from_this< BasicUser >
          ***/
         UserID getID() const ;
         const char* getName() const ;
+
+
+        /***
+         * 3. Operators
+         ***/
+        BasicUser& operator = (const BasicUser& ) = delete;
+        BasicUser& operator = ( BasicUser&& ) = delete;
 };
 
 } // namespace como

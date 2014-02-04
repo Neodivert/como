@@ -42,7 +42,10 @@ class SceneUpdate : public Packet
          ***/
         SceneUpdate();
         SceneUpdate( const SceneUpdate& b );
+        SceneUpdate( SceneUpdate&& ) = delete;
         virtual Packet* clone() const ;
+
+        ~SceneUpdate() = default;
 
 
         /***
@@ -73,6 +76,13 @@ class SceneUpdate : public Packet
                           const std::uint32_t& firstCommand,
                           const std::uint8_t& maxCommands );*/
         void clear();
+
+
+        /***
+         * 5. Operators
+         ***/
+        SceneUpdate& operator = (const SceneUpdate& b) = delete;
+        SceneUpdate& operator = ( SceneUpdate&& ) = delete;
 };
 
 typedef std::shared_ptr< SceneUpdate > SceneUpdatePtr;

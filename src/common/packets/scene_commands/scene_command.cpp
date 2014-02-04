@@ -40,6 +40,7 @@ SceneCommand::SceneCommand( SceneCommandType type, UserID userID ) :
 
 
 SceneCommand::SceneCommand( const SceneCommand& b ) :
+    Packable( b ),
     type_( b.type_ ),
     userID_( b.userID_ )
 {

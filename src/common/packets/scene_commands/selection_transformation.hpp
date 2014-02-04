@@ -58,8 +58,9 @@ class SelectionTransformation : public SceneCommand
         SelectionTransformation();
         SelectionTransformation( UserID userID );
         SelectionTransformation( const SelectionTransformation& b );
+        SelectionTransformation( SelectionTransformation&& ) = delete;
 
-        virtual ~SelectionTransformation(){}
+        ~SelectionTransformation() = default;
 
 
         /***
@@ -94,6 +95,13 @@ class SelectionTransformation : public SceneCommand
 
     private:
         void setTransformationMagnitude( float angle, float x, float y, float z );
+
+    public:
+        /***
+         * 5. Operators
+         ***/
+        SelectionTransformation& operator=( const SelectionTransformation& ) = delete;
+        SelectionTransformation& operator=( SelectionTransformation&& ) = delete;
 };
 
 } // namespace como

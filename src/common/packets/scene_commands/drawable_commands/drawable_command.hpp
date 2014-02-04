@@ -33,11 +33,13 @@ class DrawableCommand : public SceneCommand
         /***
          * 1. Initialization and destruction
          ***/
+        DrawableCommand() = delete;
         DrawableCommand( SceneCommandType sceneCommandType );
         DrawableCommand( UserID userID, DrawableID drawableID, SceneCommandType sceneCommandType );
         DrawableCommand( const DrawableCommand& b );
+        DrawableCommand( DrawableCommand&& ) = delete;
 
-        virtual ~DrawableCommand(){}
+        ~DrawableCommand() = default;
 
 
         /***
@@ -59,6 +61,13 @@ class DrawableCommand : public SceneCommand
          * 4. Setters
          ***/
         void setDrawableID( const DrawableID& drawableID );
+
+
+        /***
+         * 5. Operators
+         ***/
+        DrawableCommand& operator=( const DrawableCommand& ) = delete;
+        DrawableCommand& operator=( DrawableCommand&& ) = delete;
 };
 
 } // namespace como

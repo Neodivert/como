@@ -36,8 +36,9 @@ class SelectDrawable : public DrawableCommand
         SelectDrawable();
         SelectDrawable( UserID userID, DrawableID drawableID, bool addToSelection );
         SelectDrawable( const SelectDrawable& b );
+        SelectDrawable( SelectDrawable&& ) = delete;
 
-        virtual ~SelectDrawable(){}
+        ~SelectDrawable() = default;
 
 
         /***
@@ -58,6 +59,13 @@ class SelectDrawable : public DrawableCommand
          * 4. Setters
          ***/
         void setAddToSelection( std::uint8_t addToSelection );
+
+
+        /***
+         * 5. Operators
+         ***/
+        SelectDrawable& operator=( const SelectDrawable& ) = delete;
+        SelectDrawable& operator=( SelectDrawable&& ) = delete;
 };
 
 } // namespace como

@@ -56,8 +56,9 @@ class ChangeParameter : public SceneCommand
         ChangeParameter( UserID userID );
         ChangeParameter( UserID userID, PivotPointMode pivotPointMode );
         ChangeParameter( const ChangeParameter& b );
+        ChangeParameter( ChangeParameter&& ) = delete;
 
-        virtual ~ChangeParameter(){}
+        ~ChangeParameter() = default;
 
 
         /***
@@ -79,6 +80,13 @@ class ChangeParameter : public SceneCommand
          * 4. Setters
          ***/
         void setPivotPointMode( PivotPointMode pivotPointMode );
+
+
+        /***
+         * 5. Operators
+         ***/
+        ChangeParameter& operator=( const ChangeParameter& ) = delete;
+        ChangeParameter& operator=( ChangeParameter&& ) = delete;
 };
 
 } // namespace como

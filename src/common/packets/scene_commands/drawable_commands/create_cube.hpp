@@ -37,8 +37,9 @@ class CreateCube : public DrawableCommand
         CreateCube();
         CreateCube( UserID userID, DrawableID drawableID, const std::uint8_t* color );
         CreateCube( const CreateCube& b );
+        CreateCube( CreateCube&& ) = delete;
 
-        virtual ~CreateCube(){}
+        ~CreateCube() = default;
 
 
         /***
@@ -59,6 +60,13 @@ class CreateCube : public DrawableCommand
          * 4. Setters
          ***/
         void setColor( const std::uint8_t* color );
+
+
+        /***
+         * 5. Operators
+         ***/
+        CreateCube& operator=( const CreateCube& ) = delete;
+        CreateCube& operator=( CreateCube&& ) = delete;
 };
 
 } // namespace como

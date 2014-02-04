@@ -38,20 +38,29 @@ struct DrawableID {
     UserID creatorID;
     DrawableIndex drawableIndex;
 
-    DrawableID() :
-        creatorID( 0 ),
-        drawableIndex( 0 )
-    {}
 
-    bool operator < ( const DrawableID& b ) const {
-        return ( ( creatorID < b.creatorID ) ||
-                 ( (creatorID == b.creatorID) && (drawableIndex < b.drawableIndex) ) );
-    }
+    /***
+     * 1. Construction
+     ***/
+    DrawableID();
+    DrawableID( const DrawableID& ) = default;
+    DrawableID( DrawableID&& ) = default;
 
-    bool operator == ( const DrawableID& b ) const {
-        return ( ( creatorID == b.creatorID ) &&
-                 (drawableIndex == b.drawableIndex ) );
-    }
+
+    /***
+     * 2. Destruction
+     ***/
+    ~DrawableID() = default;
+
+
+    /***
+     * 3. Operators
+     ***/
+    bool operator < ( const DrawableID& b ) const ;
+    bool operator == ( const DrawableID& b ) const ;
+
+    DrawableID& operator = (const DrawableID& b ) = default;
+    DrawableID& operator = ( DrawableID&& ) = default;
 };
 
 const DrawableID NULL_DRAWABLE_ID;

@@ -40,7 +40,10 @@ class UserAccepted : public Packet
         UserAccepted( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor );
         void setData( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor );
         UserAccepted( const UserAccepted& b );
+        UserAccepted( UserAccepted&& ) = delete;
         virtual Packet* clone() const ;
+
+        ~UserAccepted() = default;
 
 
         /***
@@ -71,6 +74,7 @@ class UserAccepted : public Packet
          * 5. Operators
          ***/
         UserAccepted& operator = (const UserAccepted& b );
+        UserAccepted& operator = ( UserAccepted&& ) = delete;
 };
 
 } // namespace como

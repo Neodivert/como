@@ -42,8 +42,9 @@ class SelectionResponse : public SceneCommand
          ***/
         SelectionResponse();
         SelectionResponse( const SelectionResponse& b );
+        SelectionResponse( SelectionResponse&& ) = delete;
 
-        virtual ~SelectionResponse(){}
+        ~SelectionResponse() = default;
 
 
         /***
@@ -66,6 +67,13 @@ class SelectionResponse : public SceneCommand
          ***/
         void addSelectionConfirmation( bool confirmed );
         void clear();
+
+
+        /***
+         * 5. Operators
+         ***/
+        SelectionResponse& operator=( const SelectionResponse& ) = delete;
+        SelectionResponse& operator=( SelectionResponse&& ) = delete;
 };
 
 typedef std::shared_ptr< SelectionResponse > SelectionResponsePtr;

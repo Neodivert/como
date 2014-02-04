@@ -61,7 +61,10 @@ class Packet : public Packable
         Packet() = delete ;
         Packet( PacketType type );
         Packet( const Packet& b );
+        Packet( Packet&& ) = delete;
         virtual Packet* clone() const = 0;
+
+        ~Packet() = default;
 
         const char* getBuffer() const { return buffer_; }
 
@@ -107,7 +110,8 @@ class Packet : public Packable
         /***
          * 4. Operators
          ***/
-        Packet& operator =( const Packet& b );
+        Packet& operator = ( const Packet& b );
+        Packet& operator = ( Packet&& ) = delete;
 };
 
 } // namespace como

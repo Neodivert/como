@@ -33,6 +33,10 @@ class Packable
         /***
          * 1. Initialization and destruction
          ***/
+        Packable() = default;
+        Packable( const Packable& ) = default;
+        Packable( Packable&& ) = default;
+
         virtual ~Packable(){}
 
 
@@ -47,6 +51,13 @@ class Packable
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const = 0;
+
+
+        /***
+         * 5. Operators
+         ***/
+        Packable& operator = (const Packable& b) = delete;
+        Packable& operator = ( Packable&& ) = delete;
 };
 
 } // namespace como

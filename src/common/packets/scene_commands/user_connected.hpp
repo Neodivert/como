@@ -38,6 +38,9 @@ class UserConnected : public SceneCommand
         UserConnected();
         UserConnected( const UserAccepted& userAcceptedPacket );
         UserConnected( const UserConnected& b );
+        UserConnected( UserConnected&& ) = delete;
+
+        ~UserConnected() = default;
 
 
         /***
@@ -60,6 +63,13 @@ class UserConnected : public SceneCommand
          ***/
         void setName( const char* name );
         void setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a );
+
+
+        /***
+         * 5. Operators
+         ***/
+        UserConnected& operator=( const UserConnected& ) = delete;
+        UserConnected& operator=( UserConnected&& ) = delete;
 };
 
 typedef std::shared_ptr< const UserConnected > UserConnectedConstPtr;

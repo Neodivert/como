@@ -62,11 +62,13 @@ class SceneCommand : public Packable
         /***
          * 1. Initialization and destruction
          ***/
+        SceneCommand() = delete;
         SceneCommand( SceneCommandType type );
         SceneCommand( SceneCommandType type, UserID userID );
         SceneCommand( const SceneCommand& b );
+        SceneCommand( SceneCommand&& ) = delete;
 
-        virtual ~SceneCommand(){}
+        ~SceneCommand() = default;
 
 
         /***
@@ -89,6 +91,13 @@ class SceneCommand : public Packable
          * 4. Setters
          ***/
         void setUserID( const UserID& userID );
+
+
+        /***
+         * 5. Operators
+         ***/
+        SceneCommand& operator=( const SceneCommand& ) = delete;
+        SceneCommand& operator=( SceneCommand&& ) = delete;
 };
 
 typedef std::shared_ptr< SceneCommand > SceneCommandPtr;

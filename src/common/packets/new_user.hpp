@@ -36,7 +36,10 @@ class NewUser : public Packet
         NewUser();
         NewUser( const char* name );
         NewUser( const NewUser& b );
+        NewUser( NewUser&& ) = delete;
         virtual Packet* clone() const ;
+
+        ~NewUser() = default;
 
 
         /***
@@ -63,6 +66,7 @@ class NewUser : public Packet
          * 5. Operators
          ***/
         NewUser& operator = (const NewUser& b);
+        NewUser& operator = ( NewUser&& ) = delete;
 };
 
 } // namespace como

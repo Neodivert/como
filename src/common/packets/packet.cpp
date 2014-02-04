@@ -34,6 +34,7 @@ Packet::Packet( PacketType type ) :
 }
 
 Packet::Packet( const Packet& b ) :
+    Packable( b ),
     type_( b.type_ ),
     bodySize_( b.bodySize_ ),
     buffer_{}

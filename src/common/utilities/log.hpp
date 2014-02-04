@@ -49,6 +49,8 @@ class Log
          * 1. Initialization
          ***/
         Log() : out_( std::cout ) {}
+        Log( const Log& ) = delete;
+        Log( Log&& ) = delete;
 
 
         /***
@@ -97,6 +99,13 @@ class Log
 
         template< class T, class... Args >
         void error( T value, Args... args );
+
+
+        /***
+         * 6. Operators
+         ***/
+        Log& operator = (const Log& ) = delete;
+        Log& operator = ( Log&& ) = delete;
 };
 
 typedef std::shared_ptr< Log > LogPtr;
