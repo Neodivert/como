@@ -28,11 +28,9 @@ namespace como {
 
 SceneUpdatePacket::SceneUpdatePacket() :
     Packet( PacketType::SCENE_UPDATE ),
-    lastCommandSent_( 0 ),
     nUnsyncCommands_( 0 )
 {
     bodySize_ =
-            sizeof( lastCommandSent_ ) +
             sizeof( nUnsyncCommands_ ) +
             sizeof( std::uint8_t ); // The number of commands in the packet is encoded as a uint8.
 }
@@ -40,7 +38,6 @@ SceneUpdatePacket::SceneUpdatePacket() :
 
 SceneUpdatePacket::SceneUpdatePacket( const SceneUpdatePacket& b ) :
     Packet( b ),
-    lastCommandSent_( b.lastCommandSent_ ),
     nUnsyncCommands_( b.nUnsyncCommands_ ),
     commands_( b.commands_ )
 {
@@ -61,7 +58,6 @@ char* SceneUpdatePacket::packBody( char* buffer ) const
     unsigned int i = 0;
 
     // Pack the packet's body.
-    packer::pack( lastCommandSent_, buffer );
     packer::pack( nUnsyncCommands_, buffer );
     packer::pack( (std::uint8_t)( commands_.size() ), buffer );
 
@@ -80,9 +76,7 @@ const char* SceneUpdatePacket::unpackBody( const char* buffer )
     std::uint8_t nCommands = 0;
     SceneCommandPtr sceneCommandPtr;
 
-
-    // Pack the packet's body.
-    packer::unpack( lastCommandSent_, buffer );
+    // Unpack the packet's body.
     packer::unpack( nUnsyncCommands_, buffer );
     packer::unpack( nCommands, buffer );
     commands_.clear();
@@ -134,12 +128,6 @@ const char* SceneUpdatePacket::unpackBody( const char* buffer )
  * 3. Getters
  ***/
 
-std::uint32_t SceneUpdatePacket::getLasCommandSent() const
-{
-    return lastCommandSent_;
-}
-
-
 std::uint32_t SceneUpdatePacket::getUnsyncCommands() const
 {
     return nUnsyncCommands_;
@@ -181,46 +169,14 @@ void SceneUpdatePacket::addCommand( SceneCommandConstPtr command,
 
     // Update the SCENE_UPDATE packet's header.
     bodySize_ += command->getPacketSize();
-    lastCommandSent_ = commandIndex;
     nUnsyncCommands_ = historicSize - (commandIndex + 1);
 }
 
-/*
-void SceneUpdatePacket::addCommands(
-                            const CommandsList* commandsHistoric,
-                            const std::uint32_t& firstCommand,
-                            const std::uint8_t& maxCommands )
-{
-    // Validity check: maxCommands can't be zero.
-    if( !maxCommands ){
-        throw std::runtime_error( std::string( "ERROR at SceneUpdatePacket::addCommands - maxCommands can't be zero" ) );
-    }
-
-    std::list< SceneCommandConstPtr >::const_iterator it = commandsHistoric->begin();
-    std::advance( it, firstCommand );
-    unsigned int i = 0;
-
-
-    while( ( i < maxCommands ) && ( it != commandsHistoric->end() ) ){
-        //std::cout << "Adding command [" << (firstCommand + i) << " (" << static_cast< int >( (*it)->getType() ) << ")] to SCENE_UPDATE packet" << std::endl;
-        commands_.push_back( *it );
-        bodySize_ += (*it)->getPacketSize();
-
-        it++;
-        i++;
-    }
-
-    // Update the SCENE_UPDATE packet's header.
-    lastCommandSent_ = commandIndex;
-    nUnsyncCommands_ = commandsHistoric->size() - (commandIndex + 1);
-}
-*/
 
 void SceneUpdatePacket::clear()
 {
     commands_.clear();
     bodySize_ =
-            sizeof( lastCommandSent_ ) +
             sizeof( nUnsyncCommands_ ) +
             sizeof( std::uint8_t ); // The number of commands in the packet is encoded as a uint8.
 }

@@ -32,7 +32,6 @@ typedef std::list< SceneCommandConstPtr > CommandsList;
 class SceneUpdatePacket : public Packet
 {
     private:
-        std::uint32_t lastCommandSent_;
         std::uint32_t nUnsyncCommands_;
         std::vector< SceneCommandConstPtr > commands_;
 
@@ -58,7 +57,6 @@ class SceneUpdatePacket : public Packet
         /***
          * 3. Getters
          ***/
-        std::uint32_t getLasCommandSent() const ;
         std::uint32_t getUnsyncCommands() const ;
         const std::vector< SceneCommandConstPtr >* getCommands() const ;
         virtual bool expectedType() const ;
