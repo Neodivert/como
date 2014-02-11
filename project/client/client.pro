@@ -82,17 +82,18 @@ HEADERS += \
     ../../src/common/commands/drawable_commands/cube_creation_command.hpp \
     ../../src/common/commands/drawable_commands/drawable_selection_command.hpp \
     ../../src/common/commands/user_commands/parameter_change_command.hpp \
-    ../../src/common/commands/selection_response_command.hpp \
-    ../../src/common/commands/selection_transformation_command.hpp \
+    ../../src/common/commands/selection_commands/selection_response_command.hpp \
+    ../../src/common/commands/selection_commands/selection_transformation_command.hpp \
     ../../src/common/commands/user_commands/user_connection_command.hpp \
     ../../src/common/packets/new_user_packet.hpp \
     ../../src/common/packets/user_acceptance_packet.hpp \
     ../../src/common/packets/scene_update_packet.hpp \
     ../../src/common/commands/user_commands/user_disconnection_command.hpp \
-    ../../src/common/commands/full_deselection_command.hpp \
+    ../../src/common/commands/selection_commands/full_deselection_command.hpp \
     ../../src/common/commands/user_commands/user_command.hpp \
     ../../src/common/commands/command.hpp \
-    ../../src/common/commands/commands.hpp
+    ../../src/common/commands/commands.hpp \
+    ../../src/common/commands/selection_commands/selection_command.hpp
 
 # Code sources
 SOURCES += \
@@ -127,13 +128,14 @@ SOURCES += \
     ../../src/common/commands/drawable_commands/cube_creation_command.cpp \
     ../../src/common/commands/drawable_commands/drawable_selection_command.cpp \
     ../../src/common/commands/user_commands/parameter_change_command.cpp \
-    ../../src/common/commands/selection_response_command.cpp \
-    ../../src/common/commands/selection_transformation_command.cpp \
+    ../../src/common/commands/selection_commands/selection_response_command.cpp \
+    ../../src/common/commands/selection_commands/selection_transformation_command.cpp \
     ../../src/common/commands/user_commands/user_connection_command.cpp \
     ../../src/common/packets/new_user_packet.cpp \
     ../../src/common/packets/user_acceptance_packet.cpp \
     ../../src/common/packets/scene_update_packet.cpp \
     ../../src/common/commands/user_commands/user_disconnection_command.cpp \
-    ../../src/common/commands/full_deselection_command.cpp \
+    ../../src/common/commands/selection_commands/full_deselection_command.cpp \
     ../../src/common/commands/user_commands/user_command.cpp \
-    ../../src/common/commands/command.cpp
+    ../../src/common/commands/command.cpp \
+    ../../src/common/commands/selection_commands/selection_command.cpp
