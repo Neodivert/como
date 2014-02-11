@@ -17,49 +17,43 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PACKABLE_HPP
-#define PACKABLE_HPP
+#ifndef FULL_DESELECTION_COMMAND_HPP
+#define FULL_DESELECTION_COMMAND_HPP
 
-#include "../utilities/packer.hpp"
-#include "../utilities/ids.hpp"
+#include "scene_command.hpp"
 
 namespace como {
 
-const unsigned int NAME_SIZE = 64;
-
-class Packable
-{   
+class FullDeselectionCommand : public SceneCommand
+{
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
-        Packable() = default;
-        Packable( const Packable& ) = default;
-        Packable( Packable&& ) = default;
-
-        virtual ~Packable(){}
+        FullDeselectionCommand() = default;
+        FullDeselectionCommand( const UserDisconnectionCommand& ) = default;
+        FullDeselectionCommand( SceneCommand&& ) = delete;
 
 
         /***
-         * 2. Packing and unpacking
+         * 2. Destruction
          ***/
-        virtual char* pack( char* buffer ) const = 0;
-        virtual const char* unpack( const char* buffer ) = 0;
+        ~FullDeselectionCommand() = default;
 
 
         /***
          * 3. Getters
          ***/
-        virtual std::uint16_t getPacketSize() const = 0;
+        virtual SceneCommandType getType() const ;
 
 
         /***
-         * 5. Operators
+         * 4. Operators
          ***/
-        Packable& operator = (const Packable& b) = delete;
-        Packable& operator = ( Packable&& ) = delete;
+        FullDeselectionCommand& operator=( const FullDeselectionCommand& ) = delete;
+        FullDeselectionCommand& operator=( FullDeselectionCommand&& ) = delete;
 };
 
 } // namespace como
 
-#endif // PACKABLE_HPP
+#endif // FULL_DESELECTION_COMMAND_HPP

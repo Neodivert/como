@@ -17,29 +17,29 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef DRAWABLE_COMMAND_HPP
-#define DRAWABLE_COMMAND_HPP
+#ifndef CUBE_CREATION_COMMAND_HPP
+#define CUBE_CREATION_COMMAND_HPP
 
-#include "../scene_command.hpp"
+#include "drawable_command.hpp"
 
 namespace como {
 
-class DrawableCommand : public SceneCommand
+class CubeCreationCommand : public DrawableCommand
 {
     private:
-        DrawableID drawableID_;
+        // Mesh color.
+        std::uint8_t color_[4];
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        DrawableCommand() = delete;
-        DrawableCommand( SceneCommandType sceneCommandType );
-        DrawableCommand( UserID userID, DrawableID drawableID, SceneCommandType sceneCommandType );
-        DrawableCommand( const DrawableCommand& b );
-        DrawableCommand( DrawableCommand&& ) = delete;
+        CubeCreationCommand();
+        CubeCreationCommand( UserID userID, DrawableID drawableID, const std::uint8_t* color );
+        CubeCreationCommand( const CubeCreationCommand& b );
+        CubeCreationCommand( CubeCreationCommand&& ) = delete;
 
-        ~DrawableCommand() = default;
+        ~CubeCreationCommand() = default;
 
 
         /***
@@ -52,24 +52,24 @@ class DrawableCommand : public SceneCommand
         /***
          * 3. Getters
          ***/
+        virtual SceneCommandType getType() const;
         virtual std::uint16_t getPacketSize() const ;
-        //static SceneCommandType getType( const char* buffer );
-        DrawableID getDrawableID() const ;
+        const std::uint8_t* getColor() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setDrawableID( const DrawableID& drawableID );
+        void setColor( const std::uint8_t* color );
 
 
         /***
          * 5. Operators
          ***/
-        DrawableCommand& operator=( const DrawableCommand& ) = delete;
-        DrawableCommand& operator=( DrawableCommand&& ) = delete;
+        CubeCreationCommand& operator=( const CubeCreationCommand& ) = delete;
+        CubeCreationCommand& operator=( CubeCreationCommand&& ) = delete;
 };
 
 } // namespace como
 
-#endif // DRAWABLE_COMMAND_HPP
+#endif // CUBE_CREATION_COMMAND_HPP

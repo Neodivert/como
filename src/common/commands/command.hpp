@@ -17,16 +17,21 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SCENE_COMMAND_HPP
-#define SCENE_COMMAND_HPP
+#ifndef COMMAND_HPP
+#define COMMAND_HPP
 
-#include "../packable.hpp"
+#include "../packets/packable.hpp"
 #include <memory>
+#include <stdexcept>
 
 namespace como {
 
-enum class SceneCommandType : std::uint8_t
+enum class CommandTarget : std::uint8_t
 {
+    USER = 0,
+    DRAWABLE,
+    SELECTION
+    /*
     USER_CONNECTION = 0,
     USER_DISCONNECTION,
     CUBE_CREATION,
@@ -36,10 +41,17 @@ enum class SceneCommandType : std::uint8_t
     SELECTION_DELETION,
     SELECTION_TRANSFORMATION,
     PARAMETER_CHANGE
+    */
 };
 
-const char sceneCommandStrings[][32]
+
+const char CommandTargetStrings[][32]
 {
+    "USER",
+    "DRAWABLE",
+    "SELECTION"
+
+    /*
     "USER_CONNECTION",
     "USER_DISCONNECTION",
     "CUBE_CREATION",
@@ -49,60 +61,69 @@ const char sceneCommandStrings[][32]
     "SELECTION_DELETION",
     "SELECTION_TRANSFORMATION",
     "PARAMETER_CHANGE"
+    */
 };
 
-class SceneCommand : public Packable
+class Command : public Packable
 {
     private:
-        SceneCommandType type_;
+        const CommandTarget commandTarget_;
         UserID userID_;
 
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
-        SceneCommand() = delete;
-        SceneCommand( SceneCommandType type );
-        SceneCommand( SceneCommandType type, UserID userID );
-        SceneCommand( const SceneCommand& b );
-        SceneCommand( SceneCommand&& ) = delete;
-
-        ~SceneCommand() = default;
+        Command() = delete;
+        Command( CommandTarget commandTarget, UserID userID = 0 );
+        Command( const Command& b );
+        Command( Command&& ) = delete;
 
 
         /***
-         * 2. Packing and unpacking
+         * 2. Destruction
+         ***/
+        ~Command() = default;
+
+
+        /***
+         * 3. Packing and unpacking
          ***/
         virtual char* pack( char* buffer ) const ;
         virtual const char* unpack( const char* buffer ) ;
 
 
         /***
-         * 3. Getters
+         * 4. Getters
          ***/
-        virtual std::uint16_t getPacketSize() const ;
-        SceneCommandType getType() const ;
-        static SceneCommandType getType( const char* buffer );
+        CommandTarget getTarget() const ;
+        std::uint16_t getPacketSize() const;
         UserID getUserID() const ;
 
 
         /***
-         * 4. Setters
+         * 5. Buffer pre reading
+         ***/
+        static CommandTarget getTarget( const char* buffer );
+
+
+        /***
+         * 6. Setters
          ***/
         void setUserID( const UserID& userID );
 
 
         /***
-         * 5. Operators
+         * 7. Operators
          ***/
-        SceneCommand& operator=( const SceneCommand& ) = delete;
-        SceneCommand& operator=( SceneCommand&& ) = delete;
+        CommandTarget& operator=( const CommandTarget& ) = delete;
+        CommandTarget& operator=( CommandTarget&& ) = delete;
 };
 
-typedef std::shared_ptr< SceneCommand > SceneCommandPtr;
-typedef std::shared_ptr< const SceneCommand > SceneCommandConstPtr;
+typedef std::shared_ptr< Command > CommandPtr;
+typedef std::shared_ptr< const Command > CommandConstPtr;
 
 } // namespace como
 
-#endif // SCENE_COMMAND_HPP
+#endif // COMMAND_HPP

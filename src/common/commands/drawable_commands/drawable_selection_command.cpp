@@ -26,14 +26,14 @@ namespace como {
  ***/
 
 DrawableSelectionCommand::DrawableSelectionCommand() :
-    DrawableCommand( SceneCommandType::DRAWABLE_SELECTION ),
+    DrawableCommand(),
     addToSelection_( false )
 {
 }
 
 
 DrawableSelectionCommand::DrawableSelectionCommand( UserID userID, DrawableID drawableID, bool addToSelection ) :
-    DrawableCommand( userID, drawableID, SceneCommandType::DRAWABLE_SELECTION ),
+    DrawableCommand( userID, drawableID ),
     addToSelection_( addToSelection == true )
 {
 }
@@ -79,6 +79,12 @@ const char* DrawableSelectionCommand::unpack( const char* buffer )
 /***
  * 3. Getters
  ***/
+
+virtual SceneCommandType DrawableSelectionCommand::getType() const
+{
+    return SceneCommandType::DRAWABLE_SELECTION;
+}
+
 
 std::uint16_t DrawableSelectionCommand::getPacketSize() const
 {

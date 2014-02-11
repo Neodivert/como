@@ -17,16 +17,17 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SCENE_COMMANDS_HPP
-#define SCENE_COMMANDS_HPP
+#include "user_disconnection_command.hpp"
 
-#include "scene_command.hpp"
-#include "user_connection_command.hpp"
-#include "drawable_commands/drawable_command.hpp"
-#include "drawable_commands/cube_creation_command.hpp"
-#include "selection_response_command.hpp"
-#include "drawable_commands/drawable_selection_command.hpp"
-#include "selection_transformation_command.hpp"
-#include "parameter_change_command.hpp"
+namespace como {
 
-#endif // SCENE_COMMANDS_HPP
+/***
+ * 1. Construction
+ ***/
+
+UserDisconnectionCommand::UserDisconnectionCommand( UserID userID ) :
+    UserCommand( UserCommandType::USER_DISCONNECTION, userID )
+{
+}
+
+} // namespace como

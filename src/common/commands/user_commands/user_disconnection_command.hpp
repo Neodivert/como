@@ -17,49 +17,37 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PACKABLE_HPP
-#define PACKABLE_HPP
+#ifndef USER_DISCONNECTION_COMMAND_HPP
+#define USER_DISCONNECTION_COMMAND_HPP
 
-#include "../utilities/packer.hpp"
-#include "../utilities/ids.hpp"
+#include "user_command.hpp"
 
 namespace como {
 
-const unsigned int NAME_SIZE = 64;
-
-class Packable
-{   
+class UserDisconnectionCommand : public UserCommand
+{
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
-        Packable() = default;
-        Packable( const Packable& ) = default;
-        Packable( Packable&& ) = default;
-
-        virtual ~Packable(){}
+        UserDisconnectionCommand( UserID userID );
+        UserDisconnectionCommand( const UserDisconnectionCommand& ) = default;
+        UserDisconnectionCommand( UserDisconnectionCommand&& ) = delete;
 
 
         /***
-         * 2. Packing and unpacking
+         * 2. Destruction
          ***/
-        virtual char* pack( char* buffer ) const = 0;
-        virtual const char* unpack( const char* buffer ) = 0;
+        ~UserDisconnectionCommand() = default;
 
 
         /***
-         * 3. Getters
+         * 3. Operators
          ***/
-        virtual std::uint16_t getPacketSize() const = 0;
-
-
-        /***
-         * 5. Operators
-         ***/
-        Packable& operator = (const Packable& b) = delete;
-        Packable& operator = ( Packable&& ) = delete;
+        UserDisconnectionCommand& operator=( const UserDisconnectionCommand& ) = delete;
+        UserDisconnectionCommand& operator=( UserDisconnectionCommand&& ) = delete;
 };
 
 } // namespace como
 
-#endif // PACKABLE_HPP
+#endif // USER_DISCONNECTION_COMMAND_HPP

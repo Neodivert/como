@@ -17,58 +17,68 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef CUBE_CREATION_COMMAND_HPP
-#define CUBE_CREATION_COMMAND_HPP
+#ifndef USER_COMMAND_HPP
+#define USER_COMMAND_HPP
 
-#include "drawable_command.hpp"
+#include "../command.hpp"
 
 namespace como {
 
-class CubeCreationCommand : public DrawableCommand
+enum class UserCommandType : std::uint8_t
+{
+    USER_CONNECTION,
+    USER_DISCONNECTION
+};
+
+
+class UserCommand : public Command
 {
     private:
-        // Mesh color.
-        std::uint8_t color_[4];
+        const UserCommandType commandType_;
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
-        CubeCreationCommand();
-        CubeCreationCommand( UserID userID, DrawableID drawableID, const std::uint8_t* color );
-        CubeCreationCommand( const CubeCreationCommand& b );
-        CubeCreationCommand( CubeCreationCommand&& ) = delete;
+        UserCommand() = delete;
+        UserCommand( UserCommandType userCommandType, UserID userID );
+        UserCommand( const UserCommand& b );
+        UserCommand( UserCommand&& ) = delete;
 
-        ~CubeCreationCommand() = default;
+
+        /***
+         * 2. Destruction
+         ***/
+        ~UserCommand() = default;
 
 
         /***
          * 2. Packing and unpacking
          ***/
-        virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer ) ;
+        virtual char* pack( char* buffer ) const = 0;
+        virtual const char* unpack( const char* buffer ) = 0;
 
 
         /***
          * 3. Getters
          ***/
+        virtual UserCommandType getType() const;
         virtual std::uint16_t getPacketSize() const ;
-        const std::uint8_t* getColor() const ;
 
 
         /***
-         * 4. Setters
+         * 4. Buffer pre reading
          ***/
-        void setColor( const std::uint8_t* color );
+        static UserCommandType getType( const char* buffer );
 
 
         /***
          * 5. Operators
          ***/
-        CubeCreationCommand& operator=( const CubeCreationCommand& ) = delete;
-        CubeCreationCommand& operator=( CubeCreationCommand&& ) = delete;
+        UserCommand& operator=( const UserCommand& ) = delete;
+        UserCommand& operator=( UserCommand&& ) = delete;
 };
 
 } // namespace como
 
-#endif // CUBE_CREATION_COMMAND_HPP
+#endif // USER_COMMAND_HPP

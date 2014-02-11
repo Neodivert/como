@@ -27,7 +27,7 @@ namespace como {
  ***/
 
 SelectionResponseCommand::SelectionResponseCommand() :
-    SceneCommand( SceneCommandType::SELECTION_RESPONSE, 0 ), // UserID: 0 - Server
+    SceneCommand( 0 ), // UserID: 0 - Server
     nSelections_( 0 ),
     selectionConfirmed_( 0 )
 {
@@ -81,6 +81,12 @@ const char* SelectionResponseCommand::unpack( const char* buffer )
 /***
  * 3. Getters
  ***/
+
+virtual SceneCommandType getType() const
+{
+    return SceneCommandType::SELECTION_RESPONSE;
+}
+
 
 std::uint16_t SelectionResponseCommand::getPacketSize() const
 {

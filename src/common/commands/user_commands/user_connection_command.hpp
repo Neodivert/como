@@ -17,28 +17,30 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef DRAWABLE_SELECTION_COMMAND_HPP
-#define DRAWABLE_SELECTION_COMMAND_HPP
+#ifndef USER_CONNECTION_COMMAND_HPP
+#define USER_CONNECTION_COMMAND_HPP
 
-#include "drawable_command.hpp"
+#include "user_command.hpp"
+#include "../../packets/user_acceptance_packet.hpp"
 
 namespace como {
 
-class DrawableSelectionCommand : public DrawableCommand
+class UserConnectionCommand : public UserCommand
 {
     private:
-        std::uint8_t addToSelection_;
+        char name_[NAME_SIZE];
+        std::uint8_t selectionColor_[4];
 
     public:
         /***
-         * 1. Initialization and destruction.
+         * 1. Initialization and destruction
          ***/
-        DrawableSelectionCommand();
-        DrawableSelectionCommand( UserID userID, DrawableID drawableID, bool addToSelection );
-        DrawableSelectionCommand( const DrawableSelectionCommand& b );
-        DrawableSelectionCommand( DrawableSelectionCommand&& ) = delete;
+        UserConnectionCommand( UserID userID );
+        UserConnectionCommand( const UserAcceptancePacket& userAcceptancePacket );
+        UserConnectionCommand( const UserConnectionCommand& b );
+        UserConnectionCommand( UserConnectionCommand&& ) = delete;
 
-        ~DrawableSelectionCommand() = default;
+        ~UserConnectionCommand() = default;
 
 
         /***
@@ -52,22 +54,26 @@ class DrawableSelectionCommand : public DrawableCommand
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const ;
-        std::uint8_t getAddToSelection() const ;
+        const char* getName() const ;
+        const std::uint8_t* getSelectionColor() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setAddToSelection( std::uint8_t addToSelection );
+        void setName( const char* name );
+        void setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a );
 
 
         /***
          * 5. Operators
          ***/
-        DrawableSelectionCommand& operator=( const DrawableSelectionCommand& ) = delete;
-        DrawableSelectionCommand& operator=( DrawableSelectionCommand&& ) = delete;
+        UserConnectionCommand& operator=( const UserConnectionCommand& ) = delete;
+        UserConnectionCommand& operator=( UserConnectionCommand&& ) = delete;
 };
+
+typedef std::shared_ptr< const UserConnectionCommand > UserConnectionCommandConstPtr;
 
 } // namespace como
 
-#endif // DRAWABLE_SELECTION_COMMAND_HPP
+#endif // USER_CONNECTION_COMMAND_HPP

@@ -86,6 +86,12 @@ const char* CubeCreationCommand::CubeCreationCommand::unpack( const char* buffer
  * 3. Getters
  ***/
 
+SceneCommandType CubeCreationCommand::getType() const
+{
+    return SceneCommandType::CUBE_CREATION;
+}
+
+
 std::uint16_t CubeCreationCommand::getPacketSize() const
 {
     return ( DrawableCommand::getPacketSize() +

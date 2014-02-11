@@ -26,20 +26,19 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-UserConnectionCommand::UserConnectionCommand() :
-    SceneCommand( SceneCommandType::USER_CONNECTION )
-{
-    unsigned int i = 0;
+UserConnectionCommand::UserConnectionCommand( UserID userID ) :
+    UserCommand( UserCommandType::USER_CONNECTION, userID ),
+    name_({0}),
+    selectionColor_({0})
 
-    name_[0] = 0;
-    for( ; i<4; i++ ){
-        selectionColor_[i] = 0;
-    }
+{
 }
 
 
 UserConnectionCommand::UserConnectionCommand( const UserAcceptancePacket& userAcceptedPacket ) :
-    SceneCommand( SceneCommandType::USER_CONNECTION )
+    UserCommand( UserCommandType::USER_CONNECTION, userAcceptedPacket.getId() ),
+    name_({0}),
+    selectionColor_({0})
 {
     const std::uint8_t* selectionColor;
 
@@ -55,7 +54,9 @@ UserConnectionCommand::UserConnectionCommand( const UserAcceptancePacket& userAc
 
 
 UserConnectionCommand::UserConnectionCommand( const UserConnectionCommand& b ) :
-    SceneCommand( b )
+    UserCommand( b ),
+    name_({0}),
+    selectionColor_({0})
 {
     const std::uint8_t* selectionColor = nullptr;
     setUserID( b.getUserID() );
@@ -76,10 +77,10 @@ char* UserConnectionCommand::pack( char* buffer ) const
 {
     unsigned int i = 0;
 
-    // Pack the command's "header".
-    buffer = SceneCommand::pack( buffer );
+    // Pack UserCommand attributes.
+    buffer = UserCommand::pack( buffer );
 
-    // Pack the command's body.
+    // Pack UserConnectionCommand attributes.
     packer::pack( name_, buffer, NAME_SIZE );
     for( i=0; i<4; i++ ){
         packer::pack( selectionColor_[i], buffer );
@@ -94,10 +95,10 @@ const char* UserConnectionCommand::unpack( const char* buffer )
 {
     unsigned int i = 0;
 
-    // Unpack the command's "header".
-    buffer = SceneCommand::unpack( buffer );
+    // Unpack UserCommand attributes.
+    buffer = UserCommand::unpack( buffer );
 
-    // Unpack the command's body.
+    // Unpack UserConnectionCommand attributes.
     packer::unpack( name_, buffer, NAME_SIZE );
     for( i=0; i<4; i++ ){
         packer::unpack( selectionColor_[i], buffer );
@@ -112,9 +113,10 @@ const char* UserConnectionCommand::unpack( const char* buffer )
  * 3. Getters
  ***/
 
+
 std::uint16_t UserConnectionCommand::getPacketSize() const
 {
-    return SceneCommand::getPacketSize() + NAME_SIZE + 4;
+    return UserCommand::getPacketSize() + NAME_SIZE + 4;
 }
 
 

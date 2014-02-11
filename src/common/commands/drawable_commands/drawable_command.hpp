@@ -17,30 +17,28 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef USER_CONNECTION_COMMAND_HPP
-#define USER_CONNECTION_COMMAND_HPP
+#ifndef DRAWABLE_COMMAND_HPP
+#define DRAWABLE_COMMAND_HPP
 
-#include "scene_command.hpp"
-#include "../user_acceptance_packet.hpp"
+#include "../scene_command.hpp"
 
 namespace como {
 
-class UserConnectionCommand : public SceneCommand
+class DrawableCommand : public SceneCommand
 {
     private:
-        char name_[NAME_SIZE];
-        std::uint8_t selectionColor_[4];
+        DrawableID drawableID_;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        UserConnectionCommand();
-        UserConnectionCommand( const UserAcceptancePacket& userAcceptedPacket );
-        UserConnectionCommand( const UserConnectionCommand& b );
-        UserConnectionCommand( UserConnectionCommand&& ) = delete;
+        DrawableCommand() = delete;
+        DrawableCommand( UserID userID, DrawableID drawableID );
+        DrawableCommand( const DrawableCommand& b );
+        DrawableCommand( DrawableCommand&& ) = delete;
 
-        ~UserConnectionCommand() = default;
+        ~DrawableCommand() = default;
 
 
         /***
@@ -54,26 +52,23 @@ class UserConnectionCommand : public SceneCommand
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const ;
-        const char* getName() const ;
-        const std::uint8_t* getSelectionColor() const ;
+        //static SceneCommandType getType( const char* buffer );
+        DrawableID getDrawableID() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setName( const char* name );
-        void setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a );
+        void setDrawableID( const DrawableID& drawableID );
 
 
         /***
          * 5. Operators
          ***/
-        UserConnectionCommand& operator=( const UserConnectionCommand& ) = delete;
-        UserConnectionCommand& operator=( UserConnectionCommand&& ) = delete;
+        DrawableCommand& operator=( const DrawableCommand& ) = delete;
+        DrawableCommand& operator=( DrawableCommand&& ) = delete;
 };
-
-typedef std::shared_ptr< const UserConnectionCommand > UserConnectionCommandConstPtr;
 
 } // namespace como
 
-#endif // USER_CONNECTION_COMMAND_HPP
+#endif // DRAWABLE_COMMAND_HPP

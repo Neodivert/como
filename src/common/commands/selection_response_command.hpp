@@ -57,6 +57,7 @@ class SelectionResponseCommand : public SceneCommand
         /***
          * 3. Getters
          ***/
+        virtual SceneCommandType getType() const;
         virtual std::uint16_t getPacketSize() const ;
         std::uint8_t getNSelections() const ;
         std::uint32_t getSelectionConfirmed() const ;

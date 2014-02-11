@@ -25,15 +25,8 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-
-DrawableCommand::DrawableCommand( SceneCommandType sceneCommandType ) :
-    SceneCommand( sceneCommandType )
-{
-}
-
-
-DrawableCommand::DrawableCommand( UserID userID, DrawableID drawableID, SceneCommandType sceneCommandType ) :
-    SceneCommand( sceneCommandType, userID ),
+DrawableCommand::DrawableCommand( UserID userID, DrawableID drawableID ) :
+    SceneCommand( userID ),
     drawableID_( drawableID )
 {
 }
