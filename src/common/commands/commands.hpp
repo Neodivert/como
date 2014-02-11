@@ -20,15 +20,18 @@
 #ifndef COMMANDS_HPP
 #define COMMANDS_HPP
 
-#include "command.hpp"
-#include "user_connection_command.hpp"
-#include "full_deselection_command.hpp"
-#include "user_disconnection_command.hpp"
-#include "drawable_commands/drawable_command.hpp"
+// User commands
+#include "user_commands/user_connection_command.hpp"
+#include "user_commands/user_disconnection_command.hpp"
+#include "user_commands/parameter_change_command.hpp"
+
+// Drawable commands
 #include "drawable_commands/cube_creation_command.hpp"
-#include "selection_response_command.hpp"
 #include "drawable_commands/drawable_selection_command.hpp"
-#include "selection_transformation_command.hpp"
-#include "parameter_change_command.hpp"
+
+// Selection commands
+#include "selection_commands/full_deselection_command.hpp"
+#include "selection_commands/selection_response_command.hpp"
+#include "selection_commands/selection_transformation_command.hpp"
 
 #endif // COMMANDS_HPP
