@@ -44,7 +44,7 @@ void replaceChacacter( char* str, char oldChar, char newChar )
  ***/
 
 SelectionTransformationCommand::SelectionTransformationCommand() :
-    SceneCommand( SceneCommandType::SELECTION_TRANSFORMATION, 0 ),
+    SelectionCommand( SelectionCommandType::SELECTION_TRANSFORMATION, 0 ),
     transformationType_( SelectionTransformationCommandType::TRANSLATION )
 {
     setTransformationMagnitude( 0.0f, 0.0f, 0.0f, 0.0f );
@@ -52,7 +52,7 @@ SelectionTransformationCommand::SelectionTransformationCommand() :
 
 
 SelectionTransformationCommand::SelectionTransformationCommand( UserID userID ) :
-    SceneCommand( SceneCommandType::SELECTION_TRANSFORMATION, userID ),
+    SelectionCommand( SelectionCommandType::SELECTION_TRANSFORMATION, userID ),
     transformationType_( SelectionTransformationCommandType::TRANSLATION  )
 {
     setTransformationMagnitude( 0.0f, 0.0f, 0.0f, 0.0f );
@@ -60,7 +60,7 @@ SelectionTransformationCommand::SelectionTransformationCommand( UserID userID ) 
 
 
 SelectionTransformationCommand::SelectionTransformationCommand( const SelectionTransformationCommand& b ) :
-    SceneCommand( b ),
+    SelectionCommand( b ),
     transformationType_( b.transformationType_ )
 {
     setTransformationMagnitude( b.angle_,
@@ -71,18 +71,16 @@ SelectionTransformationCommand::SelectionTransformationCommand( const SelectionT
 
 
 /***
- * 2. Packing and unpacking
+ * 3. Packing and unpacking
  ***/
 
 char* SelectionTransformationCommand::pack( char* buffer ) const
 {
-    // Pack the SceneCommand fields.
-    buffer = SceneCommand::pack( buffer );
+    // Pack SelectionCommand attributes.
+    buffer = SelectionCommand::pack( buffer );
 
-    // Pack the transformation type.
+    // Pack SelectionTransformationCommand attributes.
     packer::pack( static_cast< std::uint8_t >( transformationType_ ), buffer );
-
-    // Pack the transformation magnitude.
     packer::pack( transformationMagnitudeStr_, buffer, TRANSFORMATION_MAGNITUDE_STR_SIZE );
 
     // Return the buffer updated pointer.
@@ -95,25 +93,13 @@ const char* SelectionTransformationCommand::unpack( const char* buffer )
     std::uint8_t transformationType;
     int sscanfReturnValue = 0;
 
-    // Unpack the SceneCommand fields.
-    buffer = SceneCommand::unpack( buffer );
+    // Unpack SelectionCommand attributes.
+    buffer = SelectionCommand::unpack( buffer );
 
-    // Unpack the transformation type.
+    // Unpack SelectionTransformationCommand attributes.
     packer::unpack( transformationType, buffer );
     transformationType_ = static_cast< SelectionTransformationCommandType >( transformationType );
-
-    // Unpack the transformation magnitude (string format).
     packer::unpack( transformationMagnitudeStr_, buffer, TRANSFORMATION_MAGNITUDE_STR_SIZE );
-
-    /*
-    char* str = transformationMagnitudeStr_;
-    while( *str ){
-        if( *str == ',' ){
-            *str = '.';
-        }
-        str++;
-    }
-    */
 
     // The string representation of the float values may have a different
     // decimal separator between machines. Replace the dots (used for network
@@ -144,13 +130,13 @@ const char* SelectionTransformationCommand::unpack( const char* buffer )
 
 
 /***
- * 3. Getters
+ * 4. Getters
  ***/
 
 
 std::uint16_t SelectionTransformationCommand::getPacketSize() const
 {
-    return SceneCommand::getPacketSize() +
+    return SelectionCommand::getPacketSize() +
             sizeof( transformationType_ ) +
             TRANSFORMATION_MAGNITUDE_STR_SIZE;
 }
@@ -175,7 +161,7 @@ float SelectionTransformationCommand::getAngle() const
 
 
 /***
- * 4. Setters
+ * 5. Setters
  ***/
 
 

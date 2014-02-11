@@ -20,7 +20,7 @@
 #ifndef SELECTION_TRANSFORMATION_COMMAND_HPP
 #define SELECTION_TRANSFORMATION_COMMAND_HPP
 
-#include "scene_command.hpp"
+#include "selection_command.hpp"
 
 namespace como {
 
@@ -35,7 +35,7 @@ enum class SelectionTransformationCommandType
 const unsigned int TRANSFORMATION_MAGNITUDE_STR_SIZE = 32;
 
 
-class SelectionTransformationCommand : public SceneCommand
+class SelectionTransformationCommand : public SelectionCommand
 {
     private:
         // Transformation type.
@@ -53,25 +53,29 @@ class SelectionTransformationCommand : public SceneCommand
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
         SelectionTransformationCommand();
         SelectionTransformationCommand( UserID userID );
         SelectionTransformationCommand( const SelectionTransformationCommand& b );
         SelectionTransformationCommand( SelectionTransformationCommand&& ) = delete;
 
+
+        /***
+         * 2. Destruction
+         ***/
         ~SelectionTransformationCommand() = default;
 
 
         /***
-         * 2. Packing and unpacking
+         * 3. Packing and unpacking
          ***/
         virtual char* pack( char* buffer ) const ;
         virtual const char* unpack( const char* buffer ) ;
 
 
         /***
-         * 3. Getters
+         * 4. Getters
          ***/
         virtual std::uint16_t getPacketSize() const ;
         SelectionTransformationCommandType getTransformationType() const ;
@@ -80,7 +84,7 @@ class SelectionTransformationCommand : public SceneCommand
 
 
         /***
-         * 4. Setters
+         * 5. Setters
          ***/
         void setTransformationType( SelectionTransformationCommandType transformationType );
 
