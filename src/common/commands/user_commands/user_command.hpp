@@ -62,7 +62,7 @@ class UserCommand : public Command
         /***
          * 3. Getters
          ***/
-        virtual UserCommandType getType() const;
+        UserCommandType getType() const;
         virtual std::uint16_t getPacketSize() const ;
 
 

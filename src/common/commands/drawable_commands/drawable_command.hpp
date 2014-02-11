@@ -20,50 +20,66 @@
 #ifndef DRAWABLE_COMMAND_HPP
 #define DRAWABLE_COMMAND_HPP
 
-#include "../scene_command.hpp"
+#include "../command.hpp"
 
 namespace como {
 
-class DrawableCommand : public SceneCommand
+enum class DrawableCommandType : std::uint8_t {
+    CUBE_CREATION = 0,
+    DRAWABLE_SELECTION
+};
+
+class DrawableCommand : public Command
 {
     private:
+        const DrawableCommandType commandType_;
         DrawableID drawableID_;
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
         DrawableCommand() = delete;
-        DrawableCommand( UserID userID, DrawableID drawableID );
+        DrawableCommand( DrawableCommandType drawableCommandType, UserID userID, DrawableID drawableID );
         DrawableCommand( const DrawableCommand& b );
         DrawableCommand( DrawableCommand&& ) = delete;
 
+
+        /***
+         * 2. Destruction
+         ***/
         ~DrawableCommand() = default;
 
 
         /***
-         * 2. Packing and unpacking
+         * 3. Packing and unpacking
          ***/
         virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer ) ;
+        virtual const char* unpack( const char* buffer );
 
 
         /***
-         * 3. Getters
+         * 4. Getters
          ***/
+        DrawableCommandType getType() const;
         virtual std::uint16_t getPacketSize() const ;
-        //static SceneCommandType getType( const char* buffer );
         DrawableID getDrawableID() const ;
 
 
         /***
-         * 4. Setters
+         * 5. Buffer pre reading
+         ***/
+        static DrawableCommandType getType( const char* buffer );
+
+
+        /***
+         * 6. Setters
          ***/
         void setDrawableID( const DrawableID& drawableID );
 
 
         /***
-         * 5. Operators
+         * 7. Operators
          ***/
         DrawableCommand& operator=( const DrawableCommand& ) = delete;
         DrawableCommand& operator=( DrawableCommand&& ) = delete;
