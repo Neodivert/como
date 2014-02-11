@@ -27,7 +27,8 @@ namespace como {
 enum class UserCommandType : std::uint8_t
 {
     USER_CONNECTION,
-    USER_DISCONNECTION
+    USER_DISCONNECTION,
+    PARAMETER_CHANGE
 };
 
 

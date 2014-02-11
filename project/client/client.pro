@@ -81,7 +81,7 @@ HEADERS += \
     ../../src/client/models/3d/drawables_selection.hpp \
     ../../src/common/commands/drawable_commands/cube_creation_command.hpp \
     ../../src/common/commands/drawable_commands/drawable_selection_command.hpp \
-    ../../src/common/commands/parameter_change_command.hpp \
+    ../../src/common/commands/user_commands/parameter_change_command.hpp \
     ../../src/common/commands/selection_response_command.hpp \
     ../../src/common/commands/selection_transformation_command.hpp \
     ../../src/common/commands/user_commands/user_connection_command.hpp \
@@ -126,7 +126,7 @@ SOURCES += \
     ../../src/common/utilities/ids.cpp \
     ../../src/common/commands/drawable_commands/cube_creation_command.cpp \
     ../../src/common/commands/drawable_commands/drawable_selection_command.cpp \
-    ../../src/common/commands/parameter_change_command.cpp \
+    ../../src/common/commands/user_commands/parameter_change_command.cpp \
     ../../src/common/commands/selection_response_command.cpp \
     ../../src/common/commands/selection_transformation_command.cpp \
     ../../src/common/commands/user_commands/user_connection_command.cpp \

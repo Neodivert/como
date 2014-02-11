@@ -25,16 +25,8 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-ParameterChangeCommand::ParameterChangeCommand() :
-    SceneCommand( SceneCommandType::PARAMETER_CHANGE ),
-    parameterType_( ParameterType::PIVOT_POINT_MODE )
-{
-    value_.pivotPointMode_ = PivotPointMode::MEDIAN_POINT;
-}
-
-
 ParameterChangeCommand::ParameterChangeCommand( UserID userID ) :
-    SceneCommand( SceneCommandType::PARAMETER_CHANGE, userID ),
+    UserCommand( UserCommandType::PARAMETER_CHANGE, userID ),
     parameterType_( ParameterType::PIVOT_POINT_MODE )
 {
     value_.pivotPointMode_ = PivotPointMode::MEDIAN_POINT;
@@ -42,7 +34,7 @@ ParameterChangeCommand::ParameterChangeCommand( UserID userID ) :
 
 
 ParameterChangeCommand::ParameterChangeCommand( UserID userID, PivotPointMode pivotPointMode ) :
-    SceneCommand( SceneCommandType::PARAMETER_CHANGE, userID ),
+    UserCommand( UserCommandType::PARAMETER_CHANGE, userID ),
     parameterType_( ParameterType::PIVOT_POINT_MODE )
 {
     value_.pivotPointMode_ = pivotPointMode;
@@ -50,7 +42,7 @@ ParameterChangeCommand::ParameterChangeCommand( UserID userID, PivotPointMode pi
 
 
 ParameterChangeCommand::ParameterChangeCommand( const ParameterChangeCommand& b ) :
-    SceneCommand( b ),
+    UserCommand( b ),
     parameterType_( b.parameterType_ )
 {
     value_ = b.value_;
@@ -58,15 +50,15 @@ ParameterChangeCommand::ParameterChangeCommand( const ParameterChangeCommand& b 
 
 
 /***
- * 2. Packing and unpacking
+ * 3. Packing and unpacking
  ***/
 
 char* ParameterChangeCommand::pack( char* buffer ) const
 {
-    // Pack SceneCommand fields.
-    buffer = SceneCommand::pack( buffer );
+    // Pack UserCommand attributes.
+    buffer = UserCommand::pack( buffer );
 
-    // Pack the parameter type.
+    // Pack ParameterCnageCommand attributes.
     packer::pack( static_cast< std::uint8_t >( parameterType_ ), buffer );
 
     // Pack the parameter value (union).
@@ -85,10 +77,10 @@ const char* ParameterChangeCommand::unpack( const char* buffer )
 {
     std::uint8_t castedValue;
 
-    // Unpack SceneCommand fields.
-    buffer = SceneCommand::unpack( buffer );
+    // Unpack UserCommand fields.
+    buffer = UserCommand::unpack( buffer );
 
-    // Unpack the parameter type.
+    // Unpack ParameterCnageCommand attributes.
     packer::unpack( castedValue, buffer );
     parameterType_ = static_cast< ParameterType >( castedValue );
 
@@ -106,12 +98,12 @@ const char* ParameterChangeCommand::unpack( const char* buffer )
 
 
 /***
- * 3. Getters
+ * 4. Getters
  ***/
 
 std::uint16_t ParameterChangeCommand::getPacketSize() const
 {
-    uint16_t packetSize = SceneCommand::getPacketSize() +
+    uint16_t packetSize = UserCommand::getPacketSize() +
             sizeof( parameterType_ );
 
     switch( parameterType_ ){
@@ -137,7 +129,7 @@ PivotPointMode ParameterChangeCommand::getPivotPointMode() const
 
 
 /***
- * 4. Setters
+ * 5. Setters
  ***/
 
 void ParameterChangeCommand::setPivotPointMode( PivotPointMode pivotPointMode )

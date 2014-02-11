@@ -20,7 +20,7 @@
 #ifndef PARAMETER_CHANGE_COMMAND_HPP
 #define PARAMETER_CHANGE_COMMAND_HPP
 
-#include "scene_command.hpp"
+#include "user_command.hpp"
 
 namespace como {
 
@@ -38,7 +38,7 @@ enum class ParameterType
 };
 
 
-class ParameterChangeCommand : public SceneCommand
+class ParameterChangeCommand : public UserCommand
 {
     private:
         ParameterType parameterType_;
@@ -50,26 +50,30 @@ class ParameterChangeCommand : public SceneCommand
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
-        ParameterChangeCommand();
+        ParameterChangeCommand() = delete;
         ParameterChangeCommand( UserID userID );
         ParameterChangeCommand( UserID userID, PivotPointMode pivotPointMode );
         ParameterChangeCommand( const ParameterChangeCommand& b );
         ParameterChangeCommand( ParameterChangeCommand&& ) = delete;
 
+
+        /***
+         * 2. Destruction
+         ***/
         ~ParameterChangeCommand() = default;
 
 
         /***
-         * 2. Packing and unpacking
+         * 3. Packing and unpacking
          ***/
         virtual char* pack( char* buffer ) const ;
         virtual const char* unpack( const char* buffer ) ;
 
 
         /***
-         * 3. Getters
+         * 4. Getters
          ***/
         virtual std::uint16_t getPacketSize() const ;
         ParameterType getParameterType() const ;
@@ -77,13 +81,13 @@ class ParameterChangeCommand : public SceneCommand
 
 
         /***
-         * 4. Setters
+         * 5. Setters
          ***/
         void setPivotPointMode( PivotPointMode pivotPointMode );
 
 
         /***
-         * 5. Operators
+         * 6. Operators
          ***/
         ParameterChangeCommand& operator=( const ParameterChangeCommand& ) = delete;
         ParameterChangeCommand& operator=( ParameterChangeCommand&& ) = delete;
