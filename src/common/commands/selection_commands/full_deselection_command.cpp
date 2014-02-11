@@ -22,12 +22,19 @@
 namespace como {
 
 /***
- * 3. Getters
+ * 1. Construction
  ***/
 
-SceneCommandType FullDeselectionCommand::getType() const
+FullDeselectionCommand::FullDeselectionCommand( UserID userID ) :
+    SelectionCommand( SelectionCommandType::FULL_DESELECTION, userID )
 {
-    return SceneCommandType::FULL_DESELECTION;
 }
+
+
+FullDeselectionCommand::FullDeselectionCommand( const FullDeselectionCommand& b ) :
+    SelectionCommand( b )
+{
+}
+
 
 } // namespace como

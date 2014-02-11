@@ -20,19 +20,19 @@
 #ifndef FULL_DESELECTION_COMMAND_HPP
 #define FULL_DESELECTION_COMMAND_HPP
 
-#include "scene_command.hpp"
+#include "selection_command.hpp"
 
 namespace como {
 
-class FullDeselectionCommand : public SceneCommand
+class FullDeselectionCommand : public SelectionCommand
 {
     public:
         /***
          * 1. Construction
          ***/
-        FullDeselectionCommand() = default;
-        FullDeselectionCommand( const UserDisconnectionCommand& ) = default;
-        FullDeselectionCommand( SceneCommand&& ) = delete;
+        FullDeselectionCommand( UserID userID );
+        FullDeselectionCommand( const FullDeselectionCommand& );
+        FullDeselectionCommand( FullDeselectionCommand&& ) = delete;
 
 
         /***
@@ -42,13 +42,7 @@ class FullDeselectionCommand : public SceneCommand
 
 
         /***
-         * 3. Getters
-         ***/
-        virtual SceneCommandType getType() const ;
-
-
-        /***
-         * 4. Operators
+         * 3. Operators
          ***/
         FullDeselectionCommand& operator=( const FullDeselectionCommand& ) = delete;
         FullDeselectionCommand& operator=( FullDeselectionCommand&& ) = delete;

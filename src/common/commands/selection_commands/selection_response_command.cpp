@@ -27,7 +27,7 @@ namespace como {
  ***/
 
 SelectionResponseCommand::SelectionResponseCommand() :
-    SceneCommand( 0 ), // UserID: 0 - Server
+    SelectionCommand( SelectionCommandType::SELECTION_RESPONSE, 0 ), // UserID: 0 - Server
     nSelections_( 0 ),
     selectionConfirmed_( 0 )
 {
@@ -35,7 +35,7 @@ SelectionResponseCommand::SelectionResponseCommand() :
 
 
 SelectionResponseCommand::SelectionResponseCommand( const SelectionResponseCommand& b ) :
-    SceneCommand( b ),
+    SelectionCommand( b ),
     nSelections_( b.nSelections_ ),
     selectionConfirmed_( b.selectionConfirmed_ )
 {
@@ -43,18 +43,16 @@ SelectionResponseCommand::SelectionResponseCommand( const SelectionResponseComma
 
 
 /***
- * 2. Packing and unpacking
+ * 3. Packing and unpacking
  ***/
 
 char* SelectionResponseCommand::pack( char* buffer ) const
 {
-    // Pack the ScemeCommand fields.
-    buffer = SceneCommand::pack( buffer );
+    // Pack SelectionCommand attributes.
+    buffer = SelectionCommand::pack( buffer );
 
-    // Pack the number of selection responses.
+    // Pack SelectionResponseCommand attributes..
     packer::pack( nSelections_, buffer );
-
-    // Pack the selection responses.
     packer::pack( selectionConfirmed_, buffer );
 
     // Return the buffer updated pointer.
@@ -64,13 +62,11 @@ char* SelectionResponseCommand::pack( char* buffer ) const
 
 const char* SelectionResponseCommand::unpack( const char* buffer )
 {
-    // Unpack the ScemeCommand fields.
-    buffer = SceneCommand::unpack( buffer );
+    // Unpack SelectionCommand attributes.
+    buffer = SelectionCommand::unpack( buffer );
 
-    // Unpack the number of selection responses.
+    // Unpack SelectionResponseCommand attributes.
     packer::unpack( nSelections_, buffer );
-
-    // Unpack the selection responses.
     packer::unpack( selectionConfirmed_, buffer );
 
     // Return the buffer updated pointer.
@@ -82,15 +78,9 @@ const char* SelectionResponseCommand::unpack( const char* buffer )
  * 3. Getters
  ***/
 
-virtual SceneCommandType getType() const
-{
-    return SceneCommandType::SELECTION_RESPONSE;
-}
-
-
 std::uint16_t SelectionResponseCommand::getPacketSize() const
 {
-    return SceneCommand::getPacketSize() +
+    return SelectionCommand::getPacketSize() +
             sizeof( nSelections_ ) +
             sizeof( selectionConfirmed_ );
 }

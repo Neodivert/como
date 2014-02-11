@@ -20,13 +20,13 @@
 #ifndef SELECTION_RESPONSE_COMMAND_HPP
 #define SELECTION_RESPONSE_COMMAND_HPP
 
-#include "scene_command.hpp"
+#include "selection_command.hpp"
 
 namespace como {
 
 const std::uint8_t MAX_SELECTION_CONFIRMATIONS = 32;
 
-class SelectionResponseCommand : public SceneCommand
+class SelectionResponseCommand : public SelectionCommand
 {
     private:
         std::uint8_t nSelections_;
@@ -38,17 +38,21 @@ class SelectionResponseCommand : public SceneCommand
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
         SelectionResponseCommand();
         SelectionResponseCommand( const SelectionResponseCommand& b );
         SelectionResponseCommand( SelectionResponseCommand&& ) = delete;
 
+
+        /***
+         * 2. Destruction
+         ***/
         ~SelectionResponseCommand() = default;
 
 
         /***
-         * 2. Packing and unpacking
+         * 3. Packing and unpacking
          ***/
         virtual char* pack( char* buffer ) const ;
         virtual const char* unpack( const char* buffer ) ;
@@ -57,7 +61,6 @@ class SelectionResponseCommand : public SceneCommand
         /***
          * 3. Getters
          ***/
-        virtual SceneCommandType getType() const;
         virtual std::uint16_t getPacketSize() const ;
         std::uint8_t getNSelections() const ;
         std::uint32_t getSelectionConfirmed() const ;
