@@ -25,15 +25,8 @@ namespace como {
  * 1. Initialization and destruction.
  ***/
 
-DrawableSelectionCommand::DrawableSelectionCommand() :
-    DrawableCommand(),
-    addToSelection_( false )
-{
-}
-
-
 DrawableSelectionCommand::DrawableSelectionCommand( UserID userID, DrawableID drawableID, bool addToSelection ) :
-    DrawableCommand( userID, drawableID ),
+    DrawableCommand( DrawableCommandType::DRAWABLE_SELECTION, userID, drawableID ),
     addToSelection_( addToSelection == true )
 {
 }
@@ -52,10 +45,10 @@ DrawableSelectionCommand::DrawableSelectionCommand( const DrawableSelectionComma
 
 char* DrawableSelectionCommand::pack( char* buffer ) const
 {
-    // Pack the Drawable command fields.
+    // Pack DrawableCommand attributes.
     buffer = DrawableCommand::pack( buffer );
 
-    // Pack the "add to selection" field.
+    // Pack DrawableSelectionCommand attributes.
     packer::pack( addToSelection_, buffer );
 
     // Return the buffer updated pointer.
@@ -65,10 +58,10 @@ char* DrawableSelectionCommand::pack( char* buffer ) const
 
 const char* DrawableSelectionCommand::unpack( const char* buffer )
 {
-    // Unpack the Drawable command fields.
+    // Unpack DrawableCommand attributes.
     buffer = DrawableCommand::unpack( buffer );
 
-    // Unpack the "add to selection" field.
+    // Unpack DrawableCommand attributes.
     packer::unpack( addToSelection_, buffer );
 
     // Return the buffer updated pointer.
@@ -79,12 +72,6 @@ const char* DrawableSelectionCommand::unpack( const char* buffer )
 /***
  * 3. Getters
  ***/
-
-virtual SceneCommandType DrawableSelectionCommand::getType() const
-{
-    return SceneCommandType::DRAWABLE_SELECTION;
-}
-
 
 std::uint16_t DrawableSelectionCommand::getPacketSize() const
 {

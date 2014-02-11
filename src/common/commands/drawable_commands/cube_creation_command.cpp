@@ -21,18 +21,14 @@
 
 namespace como {
 
+
 /***
  * 1. Initialization and destruction
  ***/
 
-CubeCreationCommand::CubeCreationCommand() :
-    DrawableCommand( SceneCommandType::CUBE_CREATION )
-{
-}
-
-
 CubeCreationCommand::CubeCreationCommand( UserID userID, DrawableID drawableID, const std::uint8_t* color ) :
-    DrawableCommand( userID, drawableID, SceneCommandType::CUBE_CREATION )
+    DrawableCommand( DrawableCommandType::CUBE_CREATION, userID, drawableID ),
+    color_({0})
 {
     setColor( color );
 }
@@ -52,10 +48,10 @@ char* CubeCreationCommand::pack( char* buffer ) const
 {
     unsigned int i;
 
-    // Pack the DrawableCommand struct fields.
+    // Pack DrawableCommand attributes.
     buffer = DrawableCommand::pack( buffer );
 
-    // Pack the color.
+    // Pack CubeCreationCommand attributes.
     for( i = 0; i < 4; i++ ){
         packer::pack( color_[i], buffer );
     }
@@ -69,10 +65,10 @@ const char* CubeCreationCommand::CubeCreationCommand::unpack( const char* buffer
 {
     unsigned int i;
 
-    // Unpack the DrawableCommand struct fields.
+    // Unpack DrawableCommand attributes.
     buffer = DrawableCommand::unpack( buffer );
 
-    // Unpak the color.
+    // Unpack CubeCreationCommand attributes.
     for( i = 0; i < 4; i++ ){
         packer::unpack( color_[i], buffer );
     }
@@ -85,12 +81,6 @@ const char* CubeCreationCommand::CubeCreationCommand::unpack( const char* buffer
 /***
  * 3. Getters
  ***/
-
-SceneCommandType CubeCreationCommand::getType() const
-{
-    return SceneCommandType::CUBE_CREATION;
-}
-
 
 std::uint16_t CubeCreationCommand::getPacketSize() const
 {

@@ -33,7 +33,7 @@ class DrawableSelectionCommand : public DrawableCommand
         /***
          * 1. Initialization and destruction.
          ***/
-        DrawableSelectionCommand();
+        DrawableSelectionCommand() = delete;
         DrawableSelectionCommand( UserID userID, DrawableID drawableID, bool addToSelection );
         DrawableSelectionCommand( const DrawableSelectionCommand& b );
         DrawableSelectionCommand( DrawableSelectionCommand&& ) = delete;
@@ -51,7 +51,6 @@ class DrawableSelectionCommand : public DrawableCommand
         /***
          * 3. Getters
          ***/
-        virtual SceneCommandType getType() const;
         virtual std::uint16_t getPacketSize() const ;
         std::uint8_t getAddToSelection() const ;
 

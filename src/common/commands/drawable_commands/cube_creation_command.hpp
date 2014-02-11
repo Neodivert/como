@@ -34,7 +34,7 @@ class CubeCreationCommand : public DrawableCommand
         /***
          * 1. Initialization and destruction
          ***/
-        CubeCreationCommand();
+        CubeCreationCommand() = delete;
         CubeCreationCommand( UserID userID, DrawableID drawableID, const std::uint8_t* color );
         CubeCreationCommand( const CubeCreationCommand& b );
         CubeCreationCommand( CubeCreationCommand&& ) = delete;
@@ -52,7 +52,6 @@ class CubeCreationCommand : public DrawableCommand
         /***
          * 3. Getters
          ***/
-        virtual SceneCommandType getType() const;
         virtual std::uint16_t getPacketSize() const ;
         const std::uint8_t* getColor() const ;
 
