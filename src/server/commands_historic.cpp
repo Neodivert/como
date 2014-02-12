@@ -53,7 +53,7 @@ unsigned int CommandsHistoric::getSize() const
  * 4. Historic modification
  ***/
 
-void CommandsHistoric::addCommand( SceneCommandConstPtr command )
+void CommandsHistoric::addCommand( CommandConstPtr command )
 {
     commandsMutex_.lock();
 

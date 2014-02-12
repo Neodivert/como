@@ -33,47 +33,65 @@ MOC_DIR = $$BUILD_DATA_DIR/moc
 RCC_DIR = $$BUILD_DATA_DIR/qrc
 UI_DIR = $$BUILD_DATA_DIR/ui
 
+# Server headers
+HEADERS += \
+    ../../src/server/server.hpp \
+    ../../src/server/public_user.hpp \
+    ../../src/server/commands_historic.hpp
+
+# Common headers (used by both client and server).
+HEADERS += \
+    ../../src/common/utilities/packer.hpp \
+    ../../src/common/packets/packable.hpp \
+    ../../src/common/packets/packet.hpp \
+    ../../src/common/packets/packets.hpp \
+    ../../src/common/packets/new_user_packet.hpp \
+    ../../src/common/packets/user_acceptance_packet.hpp \
+    ../../src/common/packets/scene_update_packet.hpp \
+    ../../src/common/utilities/ids.hpp \
+    ../../src/common/utilities/log.hpp \
+    ../../src/common/users/basic_user.hpp \
+    ../../src/common/commands/command.hpp \
+    ../../src/common/commands/commands.hpp \
+    ../../src/common/commands/user_commands/user_command.hpp \
+    ../../src/common/commands/user_commands/user_connection_command.hpp \
+    ../../src/common/commands/user_commands/user_disconnection_command.hpp \
+    ../../src/common/commands/user_commands/parameter_change_command.hpp \
+    ../../src/common/commands/drawable_commands/drawable_command.hpp \
+    ../../src/common/commands/drawable_commands/cube_creation_command.hpp \
+    ../../src/common/commands/drawable_commands/drawable_selection_command.hpp \
+    ../../src/common/commands/selection_commands/selection_response_command.hpp \
+    ../../src/common/commands/selection_commands/selection_transformation_command.hpp \
+    ../../src/common/commands/selection_commands/full_deselection_command.hpp \
+    ../../src/common/commands/selection_commands/selection_command.hpp \
+    ../../src/common/commands/selection_commands/selection_deletion_command.hpp
+
+# Server sources
 SOURCES += \
     ../../src/server/main.cpp \
     ../../src/server/server.cpp \
-    ../../src/common/packets/user_acceptance_packet.cpp \
+    ../../src/server/public_user.cpp \
+    ../../src/server/commands_historic.cpp
+
+# Common sources (used by both client and server).
+SOURCES += \
+    ../../src/common/utilities/packer.cpp \
     ../../src/common/packets/packet.cpp \
     ../../src/common/packets/new_user_packet.cpp \
+    ../../src/common/packets/user_acceptance_packet.cpp \
     ../../src/common/packets/scene_update_packet.cpp \
-    ../../src/common/packets/scene_commands/scene_command.cpp \
-    ../../src/common/utilities/packer.cpp \
-    ../../src/common/packets/scene_commands/user_connection_command.cpp \
-    ../../src/server/public_user.cpp \
-    ../../src/server/commands_historic.cpp \
     ../../src/common/utilities/ids.cpp \
     ../../src/common/users/basic_user.cpp \
-    ../../src/common/packets/scene_commands/drawable_commands/drawable_command.cpp \
-    ../../src/common/packets/scene_commands/drawable_commands/cube_creation_command.cpp \
-    ../../src/common/packets/scene_commands/selection_response_command.cpp \
-    ../../src/common/packets/scene_commands/drawable_commands/drawable_selection_command.cpp \
-    ../../src/common/packets/scene_commands/selection_transformation_command.cpp \
-    ../../src/common/packets/scene_commands/parameter_change_command.cpp
-
-HEADERS += \
-    ../../src/server/server.hpp \
-    ../../src/common/packets/user_acceptance_packet.hpp \
-    ../../src/common/packets/packet.hpp \
-    ../../src/common/packets/packable.hpp \
-    ../../src/common/packets/new_user_packet.hpp \
-    ../../src/common/packets/packets.hpp \
-    ../../src/common/packets/scene_update_packet.hpp \
-    ../../src/common/packets/scene_commands/scene_command.hpp \
-    ../../src/common/packets/scene_commands/scene_commands.hpp \
-    ../../src/common/utilities/packer.hpp \
-    ../../src/common/packets/scene_commands/user_connection_command.hpp \
-    ../../src/server/public_user.hpp \
-    ../../src/common/utilities/log.hpp \
-    ../../src/server/commands_historic.hpp \
-    ../../src/common/utilities/ids.hpp \
-    ../../src/common/users/basic_user.hpp \
-    ../../src/common/packets/scene_commands/drawable_commands/drawable_command.hpp \
-    ../../src/common/packets/scene_commands/drawable_commands/cube_creation_command.hpp \
-    ../../src/common/packets/scene_commands/selection_response_command.hpp \
-    ../../src/common/packets/scene_commands/drawable_commands/drawable_selection_command.hpp \
-    ../../src/common/packets/scene_commands/selection_transformation_command.hpp \
-    ../../src/common/packets/scene_commands/parameter_change_command.hpp
+    ../../src/common/commands/command.cpp \
+    ../../src/common/commands/user_commands/user_command.cpp \
+    ../../src/common/commands/user_commands/user_connection_command.cpp \
+    ../../src/common/commands/user_commands/user_disconnection_command.cpp \
+    ../../src/common/commands/user_commands/parameter_change_command.cpp \
+    ../../src/common/commands/drawable_commands/drawable_command.cpp \
+    ../../src/common/commands/drawable_commands/cube_creation_command.cpp \
+    ../../src/common/commands/drawable_commands/drawable_selection_command.cpp \
+    ../../src/common/commands/selection_commands/selection_response_command.cpp \
+    ../../src/common/commands/selection_commands/selection_transformation_command.cpp \
+    ../../src/common/commands/selection_commands/full_deselection_command.cpp \
+    ../../src/common/commands/selection_commands/selection_command.cpp \
+    ../../src/common/commands/selection_commands/selection_deletion_command.cpp

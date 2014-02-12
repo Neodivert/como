@@ -27,7 +27,7 @@
 
 namespace como {
 
-typedef std::list< std::shared_ptr< const SceneCommand > > CommandsList;
+typedef std::list< CommandConstPtr > CommandsList;
 
 class CommandsHistoric
 {
@@ -71,7 +71,7 @@ class CommandsHistoric
         /***
          * 4. Historic modification
          ***/
-        void addCommand( SceneCommandConstPtr command );
+        void addCommand( CommandConstPtr command );
 
 
         /***

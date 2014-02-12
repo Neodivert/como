@@ -146,14 +146,14 @@ class Server
          * \param userID ID of the user who sent the command.
          * \param sceneCommand Scene command.
          */
-        void processSceneCommand( SceneCommandConstPtr sceneCommand );
+        void processSceneCommand( CommandConstPtr sceneCommand );
 
 
         /***
          * 6. Commands historic management.
          ***/
         /*! \brief Add a command to the historic. */
-        void addCommand( SceneCommandConstPtr sceneCommand );
+        void addCommand( CommandConstPtr sceneCommand );
 
 
         /***

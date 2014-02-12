@@ -172,7 +172,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
                     );
 
         // Add an USER_CONNECTION scene command to the server historic.
-        addCommand( SceneCommandConstPtr( new UserConnectionCommand( userAcceptedPacket ) ) );
+        addCommand( CommandConstPtr( new UserConnectionCommand( userAcceptedPacket ) ) );
 
         // Increment the "new id" for the next user.
         newId_++;
@@ -196,7 +196,7 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
                                  SceneUpdatePacketConstPtr sceneUpdate )
 {
     unsigned int i;
-    const std::vector< SceneCommandConstPtr >* commands = nullptr;
+    const std::vector< CommandConstPtr >* commands = nullptr;
 
     mutex_.lock();
     if( errorCode ){
@@ -223,38 +223,43 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
     }
 }
 
-void Server::processSceneCommand( SceneCommandConstPtr sceneCommand )
+void Server::processSceneCommand( CommandConstPtr sceneCommand )
 {
     const CubeCreationCommand* createCube = nullptr;
     const DrawableSelectionCommand* selectDrawable = nullptr;
 
-    switch( sceneCommand->getType() ){
-        case SceneCommandType::CUBE_CREATION:
-            // CUBE_CREATION command received, cast its pointer.
-            createCube = dynamic_cast< const CubeCreationCommand* >( sceneCommand.get() );
-
-            // Add a node to the Drawable Owners map for the recently added
-            // cube. Mark it with a 0 (no owner).
-            drawableOwners_[createCube->getDrawableID()] = 0;
-
-            log_->debug( "Cube added! (", (int)( createCube->getDrawableID().creatorID ), ", ", (int)( createCube->getDrawableID().drawableIndex ), ")\n" );
+    switch( sceneCommand->getTarget() ){
+        case CommandTarget::USER:
         break;
-        case SceneCommandType::DRAWABLE_SELECTION:
-            // DRAWABLE_SELECTION command received, cast its pointer.
-            selectDrawable = dynamic_cast< const DrawableSelectionCommand* >( sceneCommand.get() );
+        case CommandTarget::DRAWABLE:
+            switch( ( dynamic_cast< const DrawableCommand* >( sceneCommand.get() ) )->getType() ){
+                case DrawableCommandType::CUBE_CREATION:
+                    // CUBE_CREATION command received, cast its pointer.
+                    createCube = dynamic_cast< const CubeCreationCommand* >( sceneCommand.get() );
 
-            // Give an affirmative response to the user's selection if the
-            // desired drawable isn't selected by anyone (User ID = 0).
-            users_.at( sceneCommand->getUserID() );
-            log_->debug( "Selecting drawable (", (int)( selectDrawable->getDrawableID().creatorID ), ", ", (int)( selectDrawable->getDrawableID().drawableIndex ), ")\n" );
-            users_.at( sceneCommand->getUserID() )->addSelectionResponse( drawableOwners_.at( selectDrawable->getDrawableID() ) == 0 );
+                    // Add a node to the Drawable Owners map for the recently added
+                    // cube. Mark it with a 0 (no owner).
+                    drawableOwners_[createCube->getDrawableID()] = 0;
+
+                    log_->debug( "Cube added! (", (int)( createCube->getDrawableID().creatorID ), ", ", (int)( createCube->getDrawableID().drawableIndex ), ")\n" );
+                break;
+                case DrawableCommandType::DRAWABLE_SELECTION:
+                    // DRAWABLE_SELECTION command received, cast its pointer.
+                    selectDrawable = dynamic_cast< const DrawableSelectionCommand* >( sceneCommand.get() );
+
+                    // Give an affirmative response to the user's selection if the
+                    // desired drawable isn't selected by anyone (User ID = 0).
+                    users_.at( sceneCommand->getUserID() );
+                    log_->debug( "Selecting drawable (", (int)( selectDrawable->getDrawableID().creatorID ), ", ", (int)( selectDrawable->getDrawableID().drawableIndex ), ")\n" );
+                    users_.at( sceneCommand->getUserID() )->addSelectionResponse( drawableOwners_.at( selectDrawable->getDrawableID() ) == 0 );
+                break;
+            }
         break;
-        case SceneCommandType::FULL_DESELECTION:
-            // Unselect all.
-            unselectAll( sceneCommand->getUserID() );
-        break;
-        default:
-            // No processing needed.
+        case CommandTarget::SELECTION:
+            if( ( dynamic_cast< const SelectionCommand* >( sceneCommand.get() ) )->getType() == SelectionCommandType::FULL_DESELECTION ){
+                // Unselect all.
+                unselectAll( sceneCommand->getUserID() );
+            }
         break;
     }
 
@@ -267,7 +272,7 @@ void Server::processSceneCommand( SceneCommandConstPtr sceneCommand )
  * 6. Commands historic management.
  ***/
 
-void Server::addCommand( SceneCommandConstPtr sceneCommand )
+void Server::addCommand( CommandConstPtr sceneCommand )
 {
     // Add the command to the historic.
     commandsHistoric_->addCommand( sceneCommand );
@@ -287,7 +292,7 @@ void Server::deleteUser( UserID id )
 
     // Add a SceneCommand to the historic informing about the user
     // disconnection.
-    addCommand( SceneCommandConstPtr( new SceneCommand( SceneCommandType::USER_DISCONNECTION, id ) ) );
+    addCommand( CommandConstPtr( new UserDisconnectionCommand( id ) ) );
 
     if( users_.size() == (MAX_SESSIONS - 1) ){
         // If the server was full before this user got out, that means the acceptor wasn't
