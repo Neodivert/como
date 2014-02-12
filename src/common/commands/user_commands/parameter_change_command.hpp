@@ -52,8 +52,7 @@ class ParameterChangeCommand : public UserCommand
         /***
          * 1. Construction
          ***/
-        ParameterChangeCommand() = delete;
-        ParameterChangeCommand( UserID userID );
+        ParameterChangeCommand( UserID userID = 0 );
         ParameterChangeCommand( UserID userID, PivotPointMode pivotPointMode );
         ParameterChangeCommand( const ParameterChangeCommand& b );
         ParameterChangeCommand( ParameterChangeCommand&& ) = delete;

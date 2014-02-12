@@ -27,7 +27,8 @@ namespace como {
 enum class SelectionCommandType : std::uint8_t {
     FULL_DESELECTION = 0,
     SELECTION_RESPONSE,
-    SELECTION_TRANSFORMATION
+    SELECTION_TRANSFORMATION,
+    SELECTION_DELETION
 };
 
 
@@ -78,6 +79,9 @@ class SelectionCommand : public Command
         SelectionCommand& operator=( const SelectionCommand& ) = delete;
         SelectionCommand& operator=( SelectionCommand&& ) = delete;
 };
+
+
+typedef std::shared_ptr< const SelectionCommand > SelectionCommandConstPtr;
 
 } // namespace como
 

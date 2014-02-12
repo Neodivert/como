@@ -31,37 +31,14 @@ enum class CommandTarget : std::uint8_t
     USER = 0,
     DRAWABLE,
     SELECTION
-    /*
-    USER_CONNECTION = 0,
-    USER_DISCONNECTION,
-    CUBE_CREATION,
-    SELECTION_RESPONSE,
-    DRAWABLE_SELECTION,
-    FULL_DESELECTION,
-    SELECTION_DELETION,
-    SELECTION_TRANSFORMATION,
-    PARAMETER_CHANGE
-    */
 };
 
 
-const char CommandTargetStrings[][32]
+const char commandTargetStrings[][32]
 {
     "USER",
     "DRAWABLE",
     "SELECTION"
-
-    /*
-    "USER_CONNECTION",
-    "USER_DISCONNECTION",
-    "CUBE_CREATION",
-    "SELECTION_RESPONSE",
-    "DRAWABLE_SELECTION",
-    "FULL_DESELECTION",
-    "SELECTION_DELETION",
-    "SELECTION_TRANSFORMATION",
-    "PARAMETER_CHANGE"
-    */
 };
 
 class Command : public Packable

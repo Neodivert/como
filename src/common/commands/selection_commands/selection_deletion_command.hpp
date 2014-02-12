@@ -17,37 +17,37 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef USER_DISCONNECTION_COMMAND_HPP
-#define USER_DISCONNECTION_COMMAND_HPP
+#ifndef SELECTION_DELETION_COMMAND_HPP
+#define SELECTION_DELETION_COMMAND_HPP
 
-#include "user_command.hpp"
+#include "selection_command.hpp"
 
 namespace como {
 
-class UserDisconnectionCommand : public UserCommand
+class SelectionDeletionCommand : public SelectionCommand
 {
     public:
         /***
          * 1. Construction
          ***/
-        UserDisconnectionCommand( UserID userID = 0 );
-        UserDisconnectionCommand( const UserDisconnectionCommand& ) = default;
-        UserDisconnectionCommand( UserDisconnectionCommand&& ) = delete;
+        SelectionDeletionCommand( UserID userID = 0 );
+        SelectionDeletionCommand( const SelectionDeletionCommand& );
+        SelectionDeletionCommand( SelectionDeletionCommand&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~UserDisconnectionCommand() = default;
+        ~SelectionDeletionCommand() = default;
 
 
         /***
          * 3. Operators
          ***/
-        UserDisconnectionCommand& operator=( const UserDisconnectionCommand& ) = delete;
-        UserDisconnectionCommand& operator=( UserDisconnectionCommand&& ) = delete;
+        SelectionDeletionCommand& operator=( const SelectionDeletionCommand& ) = delete;
+        SelectionDeletionCommand& operator=( SelectionDeletionCommand&& ) = delete;
 };
 
 } // namespace como
 
-#endif // USER_DISCONNECTION_COMMAND_HPP
+#endif // SELECTION_DELETION_COMMAND_HPP

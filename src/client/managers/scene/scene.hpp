@@ -26,13 +26,13 @@
 #include "../../models/3d/camera.hpp"
 #include "../../models/users/public_user.hpp"
 #include "../../../common/utilities/log.hpp"
-#include "../../../common/packets/scene_commands/scene_commands.hpp"
+#include "../../../common/commands/commands.hpp"
 #include "../server_interface/server_interface.hpp"
 #include "../../models/utilities/msl/src/shader_loader.hpp"
 #include "../../models/3d/drawables_selection.hpp"
 #include <queue>
 
-Q_DECLARE_METATYPE( como::SceneCommandConstPtr )
+Q_DECLARE_METATYPE( como::CommandConstPtr )
 
 namespace como {
 
@@ -218,8 +218,15 @@ class Scene : public QOffscreenSurface
         /***
          * 11. Slots
          ***/
+    private:
+        void executeRemoteUserCommand( UserCommandConstPtr command );
+        void executeRemoteDrawableCommand( DrawableCommandConstPtr command );
+        void executeRemoteSelectionCommand( SelectionCommandConstPtr command );
+
     public slots:
-        void executeRemoteCommand( SceneCommandConstPtr command );
+        void executeRemoteCommand( CommandConstPtr command );
+
+
 
 
         /***

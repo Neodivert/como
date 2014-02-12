@@ -21,19 +21,19 @@
 #define SCENE_UPDATE_PACKET_HPP
 
 #include "packet.hpp"
-#include "../commands/command.hpp"
+#include "../commands/commands.hpp"
 #include <vector>
 #include <list>
 
 namespace como {
 
-typedef std::list< SceneCommandConstPtr > CommandsList;
+typedef std::list< CommandConstPtr > CommandsList;
 
 class SceneUpdatePacket : public Packet
 {
     private:
         std::uint32_t nUnsyncCommands_;
-        std::vector< SceneCommandConstPtr > commands_;
+        std::vector< CommandConstPtr > commands_;
 
     public:
         /***
@@ -58,15 +58,15 @@ class SceneUpdatePacket : public Packet
          * 3. Getters
          ***/
         std::uint32_t getUnsyncCommands() const ;
-        const std::vector< SceneCommandConstPtr >* getCommands() const ;
+        const std::vector< CommandConstPtr >* getCommands() const ;
         virtual bool expectedType() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void addCommand( SceneCommandConstPtr command );
-        void addCommand( SceneCommandConstPtr command,
+        void addCommand( CommandConstPtr command );
+        void addCommand( CommandConstPtr command,
                          const std::uint32_t& commandIndex,
                          const std::uint32_t& historicSize );
         /*

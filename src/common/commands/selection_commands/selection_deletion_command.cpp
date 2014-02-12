@@ -17,12 +17,24 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PACKETS_HPP
-#define PACKETS_HPP
+#include "selection_deletion_command.hpp"
 
-// Packets
-#include "new_user_packet.hpp"
-#include "user_acceptance_packet.hpp"
-#include "scene_update_packet.hpp"
+namespace como {
 
-#endif // PACKETS_HPP
+/***
+ * 1. Construction
+ ***/
+
+SelectionDeletionCommand::SelectionDeletionCommand( UserID userID ) :
+    SelectionCommand( SelectionCommandType::SELECTION_DELETION, userID )
+{
+}
+
+
+SelectionDeletionCommand::SelectionDeletionCommand( const SelectionDeletionCommand& b ) :
+    SelectionCommand( b )
+{
+}
+
+
+} // namespace como

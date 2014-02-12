@@ -136,7 +136,7 @@ void ServerInterface::onSceneUpdatePacketReceived( const boost::system::error_co
     }
 
     unsigned int i;
-    const std::vector< SceneCommandConstPtr >* sceneCommands = nullptr;
+    const std::vector< CommandConstPtr >* sceneCommands = nullptr;
 
     SceneUpdatePacket* sceneUpdate = dynamic_cast< SceneUpdatePacket *>( packet.get() );
     //const UserConnectionCommand* userConnectedCommand = nullptr;
@@ -173,7 +173,7 @@ void ServerInterface::onSceneUpdatePacketSended( const boost::system::error_code
  * 4. Server communication
  ***/
 
-void ServerInterface::sendCommand( SceneCommandConstPtr sceneCommand )
+void ServerInterface::sendCommand( CommandConstPtr sceneCommand )
 {
     // Queue the new scene command.
     sceneCommandsToServer_.push( sceneCommand );

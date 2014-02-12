@@ -20,7 +20,7 @@
 #ifndef USERS_LIST_HPP
 #define USERS_LIST_HPP
 
-#include "../../common/packets/scene_commands/scene_commands.hpp"
+#include "../../common/commands/commands.hpp"
 #include "../../common/utilities/log.hpp"
 #include <QListWidget>
 #include <map>

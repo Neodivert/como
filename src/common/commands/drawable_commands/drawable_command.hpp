@@ -85,6 +85,8 @@ class DrawableCommand : public Command
         DrawableCommand& operator=( DrawableCommand&& ) = delete;
 };
 
+typedef std::shared_ptr< const DrawableCommand > DrawableCommandConstPtr;
+
 } // namespace como
 
 #endif // DRAWABLE_COMMAND_HPP

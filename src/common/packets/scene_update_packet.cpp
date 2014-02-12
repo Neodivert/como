@@ -74,7 +74,7 @@ const char* SceneUpdatePacket::unpackBody( const char* buffer )
 {
     unsigned int i = 0;
     std::uint8_t nCommands = 0;
-    SceneCommandPtr sceneCommandPtr;
+    CommandPtr commandPtr;
 
     // Unpack the packet's body.
     packer::unpack( nUnsyncCommands_, buffer );
@@ -83,40 +83,54 @@ const char* SceneUpdatePacket::unpackBody( const char* buffer )
     commands_.reserve( nCommands );
 
     for( i=0; i<nCommands; i++ ){
-        switch( SceneCommand::getType( buffer ) ){
-            case SceneCommandType::USER_CONNECTION:
-                sceneCommandPtr =  SceneCommandPtr( new UserConnectionCommand );
+        switch( Command::getTarget( buffer ) ){
+            // User commands
+            case CommandTarget::USER:
+                switch( UserCommand::getType( buffer+1 ) ){ // TODO: buffer+1 is ugly.
+                    case UserCommandType::USER_CONNECTION:
+                        commandPtr = CommandPtr( new UserConnectionCommand );
+                    break;
+                    case UserCommandType::USER_DISCONNECTION:
+                        commandPtr =  CommandPtr( new UserDisconnectionCommand );
+                    break;
+                    case UserCommandType::PARAMETER_CHANGE:
+                        commandPtr = CommandPtr( new ParameterChangeCommand );
+                    break;
+                }
             break;
-            case SceneCommandType::USER_DISCONNECTION:
-                sceneCommandPtr =  SceneCommandPtr( new SceneCommand( SceneCommandType::USER_DISCONNECTION ) );
+
+            // Drawable commands
+            case CommandTarget::DRAWABLE:
+                switch( DrawableCommand::getType( buffer+1 ) ){ // TODO: buffer+1 is ugly.
+                    case DrawableCommandType::CUBE_CREATION:
+                        commandPtr =  CommandPtr( new CubeCreationCommand );
+                    break;
+                    case DrawableCommandType::DRAWABLE_SELECTION:
+                        commandPtr = CommandPtr( new DrawableSelectionCommand );
+                    break;
+                }
             break;
-            case SceneCommandType::CUBE_CREATION:
-                sceneCommandPtr =  SceneCommandPtr( new CubeCreationCommand );
-            break;
-            case SceneCommandType::DRAWABLE_SELECTION:
-                sceneCommandPtr = SceneCommandPtr( new DrawableSelectionCommand );
-            break;
-            case SceneCommandType::SELECTION_RESPONSE:
-                sceneCommandPtr =  SceneCommandPtr( new SelectionResponseCommand );
-            break;
-            case SceneCommandType::FULL_DESELECTION:
-                sceneCommandPtr =  SceneCommandPtr( new SceneCommand( SceneCommandType::FULL_DESELECTION ) );
-            break;
-            case SceneCommandType::SELECTION_DELETION:
-                sceneCommandPtr = SceneCommandPtr( new SceneCommand( SceneCommandType::SELECTION_DELETION ) );
-            break;
-            case SceneCommandType::SELECTION_TRANSFORMATION:
-                sceneCommandPtr = SceneCommandPtr( new SelectionTransformationCommand );
-            break;
-            case SceneCommandType::PARAMETER_CHANGE:
-                sceneCommandPtr = SceneCommandPtr( new ParameterChangeCommand );
-            break;
-            default:
-                throw std::runtime_error( "ERROR: Unknown command found while unpackin SCENE_UPDATE packet" );
+
+            // Selection commands
+            case CommandTarget::SELECTION:
+                switch( SelectionCommand::getType( buffer+1 ) ){ // TODO: buffer+1 is ugly.
+                    case SelectionCommandType::SELECTION_RESPONSE:
+                        commandPtr = CommandPtr( new SelectionResponseCommand );
+                    break;
+                    case SelectionCommandType::FULL_DESELECTION:
+                        commandPtr =  CommandPtr( new FullDeselectionCommand );
+                    break;
+                    case SelectionCommandType::SELECTION_DELETION:
+                        commandPtr = CommandPtr( new SelectionDeletionCommand );
+                    break;
+                    case SelectionCommandType::SELECTION_TRANSFORMATION:
+                        commandPtr = CommandPtr( new SelectionTransformationCommand );
+                    break;
+                }
             break;
         }
-        buffer = sceneCommandPtr->unpack( buffer );
-        commands_.push_back( sceneCommandPtr );
+        buffer = commandPtr->unpack( buffer );
+        commands_.push_back( commandPtr );
     }
 
     // Return the updated buffer ptr.
@@ -134,7 +148,7 @@ std::uint32_t SceneUpdatePacket::getUnsyncCommands() const
 }
 
 
-const std::vector< SceneCommandConstPtr >* SceneUpdatePacket::getCommands() const
+const std::vector< CommandConstPtr >* SceneUpdatePacket::getCommands() const
 {
     return &commands_;
 }
@@ -150,7 +164,7 @@ bool SceneUpdatePacket::expectedType() const
  * 4. Setters
  ***/
 
-void SceneUpdatePacket::addCommand( SceneCommandConstPtr command )
+void SceneUpdatePacket::addCommand( CommandConstPtr command )
 {
     // Push back the given command.
     commands_.push_back( command );
@@ -160,7 +174,7 @@ void SceneUpdatePacket::addCommand( SceneCommandConstPtr command )
 }
 
 
-void SceneUpdatePacket::addCommand( SceneCommandConstPtr command,
+void SceneUpdatePacket::addCommand( CommandConstPtr command,
                               const std::uint32_t& commandIndex,
                               const std::uint32_t& historicSize )
 {

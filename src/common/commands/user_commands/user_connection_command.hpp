@@ -35,7 +35,7 @@ class UserConnectionCommand : public UserCommand
         /***
          * 1. Initialization and destruction
          ***/
-        UserConnectionCommand( UserID userID );
+        UserConnectionCommand( UserID userID = 0 );
         UserConnectionCommand( const UserAcceptancePacket& userAcceptancePacket );
         UserConnectionCommand( const UserConnectionCommand& b );
         UserConnectionCommand( UserConnectionCommand&& ) = delete;

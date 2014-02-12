@@ -56,8 +56,8 @@ class UserCommand : public Command
         /***
          * 2. Packing and unpacking
          ***/
-        virtual char* pack( char* buffer ) const = 0;
-        virtual const char* unpack( const char* buffer ) = 0;
+        virtual char* pack( char* buffer ) const;
+        virtual const char* unpack( const char* buffer );
 
 
         /***
@@ -79,6 +79,9 @@ class UserCommand : public Command
         UserCommand& operator=( const UserCommand& ) = delete;
         UserCommand& operator=( UserCommand&& ) = delete;
 };
+
+
+typedef std::shared_ptr< const UserCommand > UserCommandConstPtr;
 
 } // namespace como
 

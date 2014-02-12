@@ -21,7 +21,7 @@
 #define SERVER_INTERFACE_HPP
 
 #include "../../../common/packets/packets.hpp"
-#include "../../../common/packets/scene_commands/scene_commands.hpp"
+#include "../../../common/commands/commands.hpp"
 #include "../../../common/utilities/log.hpp"
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
@@ -49,7 +49,7 @@ class ServerInterface : public QObject
         SceneUpdatePacket sceneUpdatePacketToServer_;
 
         // Queue with scene commands to be sended to the server.
-        std::queue< SceneCommandConstPtr > sceneCommandsToServer_;
+        std::queue< CommandConstPtr > sceneCommandsToServer_;
 
         boost::asio::deadline_timer timer_;
 
@@ -88,7 +88,7 @@ class ServerInterface : public QObject
          * 4. Server communication
          ***/
     public:
-        void sendCommand( SceneCommandConstPtr sceneCommand );
+        void sendCommand( CommandConstPtr sceneCommand );
     private:
         void sendPendingCommands();
         void setTimer();
@@ -110,7 +110,7 @@ class ServerInterface : public QObject
          * 5. Signals
          ***/
     signals:
-        void commandReceived( SceneCommandConstPtr command );
+        void commandReceived( CommandConstPtr command );
 };
 
 typedef std::shared_ptr<ServerInterface> ServerInterfacePtr;

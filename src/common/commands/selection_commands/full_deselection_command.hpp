@@ -30,7 +30,7 @@ class FullDeselectionCommand : public SelectionCommand
         /***
          * 1. Construction
          ***/
-        FullDeselectionCommand( UserID userID );
+        FullDeselectionCommand( UserID userID = 0 );
         FullDeselectionCommand( const FullDeselectionCommand& );
         FullDeselectionCommand( FullDeselectionCommand&& ) = delete;
 

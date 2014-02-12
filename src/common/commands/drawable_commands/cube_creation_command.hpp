@@ -34,7 +34,7 @@ class CubeCreationCommand : public DrawableCommand
         /***
          * 1. Initialization and destruction
          ***/
-        CubeCreationCommand() = delete;
+        CubeCreationCommand();
         CubeCreationCommand( UserID userID, DrawableID drawableID, const std::uint8_t* color );
         CubeCreationCommand( const CubeCreationCommand& b );
         CubeCreationCommand( CubeCreationCommand&& ) = delete;

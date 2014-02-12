@@ -93,7 +93,8 @@ HEADERS += \
     ../../src/common/commands/user_commands/user_command.hpp \
     ../../src/common/commands/command.hpp \
     ../../src/common/commands/commands.hpp \
-    ../../src/common/commands/selection_commands/selection_command.hpp
+    ../../src/common/commands/selection_commands/selection_command.hpp \
+    ../../src/common/commands/selection_commands/selection_deletion_command.hpp
 
 # Code sources
 SOURCES += \
@@ -138,4 +139,5 @@ SOURCES += \
     ../../src/common/commands/selection_commands/full_deselection_command.cpp \
     ../../src/common/commands/user_commands/user_command.cpp \
     ../../src/common/commands/command.cpp \
-    ../../src/common/commands/selection_commands/selection_command.cpp
+    ../../src/common/commands/selection_commands/selection_command.cpp \
+    ../../src/common/commands/selection_commands/selection_deletion_command.cpp

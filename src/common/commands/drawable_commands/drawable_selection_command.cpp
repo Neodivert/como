@@ -25,9 +25,14 @@ namespace como {
  * 1. Initialization and destruction.
  ***/
 
+DrawableSelectionCommand::DrawableSelectionCommand() :
+    DrawableCommand( DrawableCommandType::DRAWABLE_SELECTION, 0, NULL_DRAWABLE_ID ),
+    addToSelection_( false )
+{}
+
 DrawableSelectionCommand::DrawableSelectionCommand( UserID userID, DrawableID drawableID, bool addToSelection ) :
     DrawableCommand( DrawableCommandType::DRAWABLE_SELECTION, userID, drawableID ),
-    addToSelection_( addToSelection == true )
+    addToSelection_( addToSelection )
 {
 }
 

@@ -21,7 +21,7 @@
 #define PUBLIC_USER_HPP
 
 #include "../3d/drawables_selection.hpp"
-#include "../../../common/packets/scene_commands/scene_commands.hpp"
+#include "../../../common/commands/commands.hpp"
 #include "../../../common/users/basic_user.hpp"
 
 namespace como {

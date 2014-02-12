@@ -26,6 +26,11 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
+CubeCreationCommand::CubeCreationCommand() :
+    DrawableCommand( DrawableCommandType::CUBE_CREATION, 0, NULL_DRAWABLE_ID ),
+    color_({0})
+{}
+
 CubeCreationCommand::CubeCreationCommand( UserID userID, DrawableID drawableID, const std::uint8_t* color ) :
     DrawableCommand( DrawableCommandType::CUBE_CREATION, userID, drawableID ),
     color_({0})
