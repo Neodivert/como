@@ -17,52 +17,50 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PACKABLE_WRAPPER_HPP
-#define PACKABLE_WRAPPER_HPP
+#ifndef PACKABLE_WRAPPER_UINT8_HPP
+#define PACKABLE_WRAPPER_UINT8_HPP
 
-#include "packable.hpp"
+#include "packable_wrapper.hpp"
 
 namespace como {
 
-template <class T>
-class PackableWrapper : public Packable {
-    protected:
-        T* value_;
-
+class PackableWrapperUint8 : public PackableWrapper< std::uint8_t >
+{
     public:
         /***
          * 1. Construction
          ***/
-        PackableWrapper( T* value ) : value_( value ){}
-        PackableWrapper( const PackableWrapper& ) = default;
-        PackableWrapper( PackableWrapper&& ) = default;
+        PackableWrapperUint8( std::uint8_t* value );
+        PackableWrapperUint8( const PackableWrapperUint8& ) = default;
+        PackableWrapperUint8( PackableWrapperUint8&& ) = default;
 
 
         /***
          * 2. Destruction
          ***/
-        ~PackableWrapper() = default;
+        ~PackableWrapperUint8() = default;
 
 
         /***
-         * 3. Getters
+         * 3. Packing and unpacking
          ***/
-        T getValue() const { return *value_; }
+        virtual void* pack( void* buffer ) const = 0;
+        virtual const void* unpack( const void* buffer ) = 0;
 
 
         /***
-         * 4. Setters
+         * 4. Getters
          ***/
-        void setValue( T value ){ *value_ = value; }
+        virtual std::uint16_t getPacketSize() const = 0;
 
 
         /***
          * 5. Operators
          ***/
-        PackableWrapper& operator = (const PackableWrapper& b) = delete;
-        PackableWrapper& operator = ( PackableWrapper&& ) = delete;
+        PackableWrapperUint8& operator = (const PackableWrapperUint8& b) = delete;
+        PackableWrapperUint8& operator = ( PackableWrapperUint8&& ) = delete;
 };
 
 } // namespace como
 
-#endif // PACKABLE_WRAPPER_HPP
+#endif // PACKABLE_WRAPPER_UINT8_HPP
