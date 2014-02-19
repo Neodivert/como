@@ -43,8 +43,8 @@ class Packable
         /***
          * 2. Packing and unpacking
          ***/
-        virtual char* pack( char* buffer ) const = 0;
-        virtual const char* unpack( const char* buffer ) = 0;
+        virtual void* pack( void* buffer ) const = 0;
+        virtual const void* unpack( const void* buffer ) = 0;
 
 
         /***

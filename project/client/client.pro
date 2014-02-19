@@ -70,14 +70,15 @@ HEADERS += \
     ../../src/client/gui/users_list.hpp \
     ../../src/client/managers/scene/public_scene.hpp \
     ../../src/client/managers/server_interface/server_interface.hpp \
-    ../../src/client/models/3d/drawables_selection.hpp
+    ../../src/client/models/3d/drawables_selection.hpp \
+    ../../src/common/packables/packable_wrapper.hpp
 
 
 
 # Common headers (used by both client and server).
 HEADERS += \
     ../../src/common/utilities/packer.hpp \
-    ../../src/common/packets/packable.hpp \
+    ../../src/common/packables/packable.hpp \
     ../../src/common/packets/packet.hpp \
     ../../src/common/packets/packets.hpp \
     ../../src/common/packets/new_user_packet.hpp \

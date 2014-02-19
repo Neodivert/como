@@ -20,7 +20,7 @@
 #ifndef COMMAND_HPP
 #define COMMAND_HPP
 
-#include "../packets/packable.hpp"
+#include "../packables/packable.hpp"
 #include <memory>
 #include <stdexcept>
 
