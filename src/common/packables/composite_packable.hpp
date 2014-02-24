@@ -17,58 +17,59 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef CUBE_CREATION_COMMAND_HPP
-#define CUBE_CREATION_COMMAND_HPP
+#ifndef COMPOSITE_PACKABLE_HPP
+#define COMPOSITE_PACKABLE_HPP
 
-#include "drawable_command.hpp"
+#include "packable.hpp"
+#include <vector>
 
 namespace como {
 
-class CubeCreationCommand : public DrawableCommand
+class CompositePackable : public Packable
 {
     private:
-        // Mesh color.
-        std::uint8_t color_[4];
+        // Yes, simple pointers. We are NOT owning the pointed packables.
+        std::vector< Packable* > packables_;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
-        CubeCreationCommand();
-        CubeCreationCommand( UserID userID, DrawableID drawableID, const std::uint8_t* color );
-        CubeCreationCommand( const CubeCreationCommand& b );
-        CubeCreationCommand( CubeCreationCommand&& ) = delete;
+        CompositePackable() = default;
+        CompositePackable( const CompositePackable& ) = default;
+        CompositePackable( CompositePackable&& ) = default;
 
-        ~CubeCreationCommand() = default;
+        virtual ~CompositePackable(){}
 
 
         /***
          * 2. Packing and unpacking
          ***/
-        virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer ) ;
+        virtual void* pack( void* buffer ) const;
+        virtual const void* unpack( const void* buffer );
 
 
         /***
          * 3. Getters
          ***/
-        virtual std::uint16_t getPacketSize() const ;
-        const std::uint8_t* getColor() const ;
+        virtual std::uint16_t getPacketSize() const;
 
 
         /***
-         * 4. Setters
+         * 4. Packables management
          ***/
-        void setColor( const std::uint8_t* color );
+    protected:
+        void addPackable( Packable* packable );
+    public:
 
 
         /***
          * 5. Operators
          ***/
-        CubeCreationCommand& operator=( const CubeCreationCommand& ) = delete;
-        CubeCreationCommand& operator=( CubeCreationCommand&& ) = delete;
+        CompositePackable& operator = (const CompositePackable& b) = delete;
+        CompositePackable& operator = ( CompositePackable&& ) = delete;
 };
 
 } // namespace como
 
-#endif // CUBE_CREATION_COMMAND_HPP
+#endif // COMPOSITE_PACKABLE_HPP
