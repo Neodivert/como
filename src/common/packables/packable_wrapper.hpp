@@ -24,16 +24,16 @@
 
 namespace como {
 
-template <class T>
+template <class PackedValue, class UnpackedValue>
 class PackableWrapper : public Packable {
     protected:
-        T* value_;
+        UnpackedValue value_;
 
     public:
         /***
          * 1. Construction
          ***/
-        PackableWrapper( T* value ) : value_( value ){}
+        PackableWrapper( UnpackedValue* value ) : value_( value ){}
         PackableWrapper( const PackableWrapper& ) = default;
         PackableWrapper( PackableWrapper&& ) = default;
 
@@ -47,21 +47,63 @@ class PackableWrapper : public Packable {
         /***
          * 3. Getters
          ***/
-        T getValue() const { return *value_; }
+        UnpackedValue getValue() const { return value_; }
+        virtual std::uint16_t getPacketSize() const { return sizeof( PackedValue ); }
 
 
         /***
          * 4. Setters
          ***/
-        void setValue( T value ){ *value_ = value; }
+        void setValue( UnpackedValue value ){ value_ = value; }
 
 
         /***
-         * 5. Operators
+         * 5. Packing and unpacking
+         ***/
+        virtual void* pack( void* buffer ) const ;
+        virtual const void* unpack( const void* buffer ) ;
+
+
+        /***
+         * 6. Operators
          ***/
         PackableWrapper& operator = (const PackableWrapper& b) = delete;
         PackableWrapper& operator = ( PackableWrapper&& ) = delete;
 };
+
+
+/***
+ * 5. Packing and unpacking
+ ***/
+
+template <class PackedValue, class UnpackedValue>
+void* PackableWrapper::pack( void* buffer ) const
+{
+    // Cast the buffer to the PackedValue type.
+    PackedValue* castedBuffer = static_cast< PackedValue* >( buffer );
+
+    // Pack the wrapper's inner value into the buffer.
+    *castedBuffer = static_cast< PackedValue >( value_ );
+
+    // Return a pointer to the next position in buffer.
+    return static_cast< void* >( castedBuffer + 1 );
+}
+
+
+template <class PackedValue, class UnpackedValue>
+const void* unpack( const void* buffer )
+{
+    // Cast buffer to the UnpackedValue type.
+    UnpackedValue* castedBuffer = static_cast< UnpackedValue* >( buffer );
+
+    // Unpack the wrapper's inner valued from the buffer.
+    value_ = *castedBuffer;
+
+    // Return a pointer to the next position in buffer.
+    return static_cast< void* >( castedBuffer + 1 );
+}
+
+
 
 } // namespace como
 
