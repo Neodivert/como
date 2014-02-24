@@ -31,6 +31,7 @@
 
 #include <clocale>
 
+
 int main( int argc, char *argv[] )
 {
     // Create a Qt application.

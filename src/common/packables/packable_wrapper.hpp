@@ -33,7 +33,8 @@ class PackableWrapper : public Packable {
         /***
          * 1. Construction
          ***/
-        PackableWrapper( UnpackedValue* value ) : value_( value ){}
+        PackableWrapper() = default;
+        PackableWrapper( const UnpackedValue& value ) : value_( value ){}
         PackableWrapper( const PackableWrapper& ) = default;
         PackableWrapper( PackableWrapper&& ) = default;
 
@@ -76,8 +77,8 @@ class PackableWrapper : public Packable {
  * 5. Packing and unpacking
  ***/
 
-template <class PackedValue, class UnpackedValue>
-void* PackableWrapper::pack( void* buffer ) const
+template <class PackedValue, class UnpackedValue >
+void* PackableWrapper< PackedValue, UnpackedValue >::pack( void* buffer ) const
 {
     // Cast the buffer to the PackedValue type.
     PackedValue* castedBuffer = static_cast< PackedValue* >( buffer );
@@ -91,16 +92,16 @@ void* PackableWrapper::pack( void* buffer ) const
 
 
 template <class PackedValue, class UnpackedValue>
-const void* unpack( const void* buffer )
+const void* PackableWrapper< PackedValue, UnpackedValue >::unpack( const void* buffer )
 {
     // Cast buffer to the UnpackedValue type.
-    UnpackedValue* castedBuffer = static_cast< UnpackedValue* >( buffer );
+    const UnpackedValue* castedBuffer = static_cast< const UnpackedValue* >( buffer );
 
     // Unpack the wrapper's inner valued from the buffer.
     value_ = *castedBuffer;
 
     // Return a pointer to the next position in buffer.
-    return static_cast< void* >( castedBuffer + 1 );
+    return static_cast< const void* >( castedBuffer + 1 );
 }
 
 
