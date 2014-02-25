@@ -29,7 +29,8 @@ class CompositePackable : public Packable
 {
     private:
         // Yes, simple pointers. We are NOT owning the pointed packables.
-        std::vector< Packable* > packables_;
+        std::vector< Packable* > headerPackables_;
+        std::vector< Packable* > bodyPackables_;
 
     public:
         /***
@@ -47,19 +48,26 @@ class CompositePackable : public Packable
          ***/
         virtual void* pack( void* buffer ) const;
         virtual const void* unpack( const void* buffer );
+        virtual void* packHeader( void* buffer ) const;
+        virtual const void* unpackHeader( const void* buffer );
+        virtual void* packBody( void* buffer ) const;
+        virtual const void* unpackBody( const void* buffer );
 
 
         /***
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const;
+        virtual std::uint16_t getPacketHeaderSize() const;
+        virtual std::uint16_t getPacketBodySize() const;
 
 
         /***
          * 4. Packables management
          ***/
     protected:
-        void addPackable( Packable* packable );
+        void addHeaderPackable( Packable* packable );
+        void addBodyPackable( Packable* packable );
     public:
 
 

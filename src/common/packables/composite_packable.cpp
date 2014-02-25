@@ -28,20 +28,63 @@ namespace como {
 
 void* CompositePackable::pack( void* buffer ) const
 {
+    buffer = packHeader( buffer );
+    buffer = packBody( buffer );
+
+    return buffer;
+}
+
+
+const void* CompositePackable::unpack( const void* buffer )
+{
+    buffer = unpackHeader( buffer );
+    buffer = unpackBody( buffer );
+
+    return buffer;
+}
+
+
+void* CompositePackable::packHeader( void* buffer ) const
+{
     std::vector< Packable* >::const_iterator it;
 
-    for( it = packables_.begin(); it != packables_.end(); it++ ){
+    for( it = headerPackables_.begin(); it != headerPackables_.end(); it++ ){
         buffer = (*it)->pack( buffer );
     }
 
     return buffer;
 }
 
-const void* CompositePackable::unpack( const void* buffer )
+
+const void* CompositePackable::unpackHeader( const void* buffer )
 {
     std::vector< Packable* >::iterator it;
 
-    for( it = packables_.begin(); it != packables_.end(); it++ ){
+    for( it = headerPackables_.begin(); it != headerPackables_.end(); it++ ){
+        buffer = (*it)->unpack( buffer );
+    }
+
+    return buffer;
+}
+
+
+void* CompositePackable::packBody( void* buffer ) const
+{
+    std::vector< Packable* >::const_iterator it;
+
+    for( it = bodyPackables_.begin(); it != bodyPackables_.end(); it++ ){
+        buffer = (*it)->pack( buffer );
+    }
+
+    return buffer;
+}
+
+
+const void* CompositePackable::unpackBody( const void* buffer )
+{
+    std::vector< Packable* >::iterator it;
+
+    for( it = bodyPackables_.begin(); it != bodyPackables_.end(); it++ ){
         buffer = (*it)->unpack( buffer );
     }
 
@@ -53,12 +96,33 @@ const void* CompositePackable::unpack( const void* buffer )
  * 3. Getters
  ***/
 
+
 std::uint16_t CompositePackable::getPacketSize() const
+{
+    return getPacketHeaderSize() +
+            getPacketBodySize();
+}
+
+
+std::uint16_t CompositePackable::getPacketHeaderSize() const
 {
     std::uint16_t packetSize = 0;
     std::vector< Packable* >::const_iterator it;
 
-    for( it = packables_.begin(); it != packables_.end(); it++ ){
+    for( it = headerPackables_.begin(); it != headerPackables_.end(); it++ ){
+        packetSize += (*it)->getPacketSize();
+    }
+
+    return packetSize;
+}
+
+
+std::uint16_t CompositePackable::getPacketBodySize() const
+{
+    std::uint16_t packetSize = 0;
+    std::vector< Packable* >::const_iterator it;
+
+    for( it = bodyPackables_.begin(); it != bodyPackables_.end(); it++ ){
         packetSize += (*it)->getPacketSize();
     }
 
@@ -70,9 +134,15 @@ std::uint16_t CompositePackable::getPacketSize() const
  * 4. Packables management
  ***/
 
-void CompositePackable::addPackable( Packable* packable )
+void CompositePackable::addHeaderPackable( Packable* packable )
 {
-    packables_.push_back( packable );
+    headerPackables_.push_back( packable );
+}
+
+
+void CompositePackable::addBodyPackable( Packable* packable )
+{
+    headerPackables_.push_back( packable );
 }
 
 
