@@ -89,24 +89,10 @@ class Packet : public CompositePackable
 
 
         /***
-         * 2. Packing and unpacking
-         ***/
-        void* pack( void* buffer ) const ;
-        const void* unpack( const void* buffer );
-        void* packHeader( void* buffer ) const ;
-        const void* unpackHeader( const void* buffer );
-        virtual void* packBody( void* buffer ) const;
-        virtual const void* unpackBody( const void* buffer );
-
-
-        /***
          * 3. Getters
          ***/
         PacketType getType() const ;
-        std::uint16_t getBodySize() const ;
         virtual bool expectedType() const = 0;
-        static std::uint8_t getHeaderSize();
-        virtual std::uint16_t getPacketSize() const ;
 
 
         /***
