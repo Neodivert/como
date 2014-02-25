@@ -51,7 +51,6 @@ class Packet : public CompositePackable
 {
     private:
         PackableWrapper< std::uint8_t, PacketType > type_;
-    protected:
         PackableWrapper< std::uint16_t, std::uint16_t > bodySize_;
 
         char buffer_[PACKET_BUFFER_SIZE];
@@ -70,6 +69,10 @@ class Packet : public CompositePackable
 
         const char* getBuffer() const { return buffer_; }
 
+        /***
+         * 2. Packing
+         ***/
+        virtual void* packHeader( void* buffer ) const;
 
         /***
          * 2. Socket communication

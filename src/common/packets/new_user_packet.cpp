@@ -28,30 +28,23 @@ namespace como {
  ***/
 
 NewUserPacket::NewUserPacket() :
-    Packet( PacketType::NEW_USER ),
-    name_{ 0 }
+    Packet( PacketType::NEW_USER )
 {
-    bodySize_ += NAME_SIZE;
-
-    strcpy( name_, "Unnamed" );
+    name_ = "Unnamed";
 }
 
 
 NewUserPacket::NewUserPacket( const char* name ) :
-    Packet( PacketType::NEW_USER ),
-    name_{ 0 }
+    Packet( PacketType::NEW_USER )
 {
-    bodySize_ += NAME_SIZE;
-
-    strncpy( name_, name, NAME_SIZE );
+    name_ = name;
 }
 
 
 NewUserPacket::NewUserPacket( const NewUserPacket& b ) :
-    Packet( b ),
-    name_{ 0 }
+    Packet( b )
 {
-    strncpy( name_, b.name_, NAME_SIZE );
+    name_ = b.name_;
 }
 
 
@@ -62,36 +55,12 @@ Packet* NewUserPacket::clone() const
 
 
 /***
- * 2. Packing and unpacking
- ***/
-
-char* NewUserPacket::packBody( char* buffer ) const
-{
-    // Pack the user name into the buffer.
-    packer::pack( name_, buffer, NAME_SIZE );
-
-    // Return the updated buffer pointer.
-    return buffer;
-}
-
-
-const char* NewUserPacket::unpackBody( const char* buffer )
-{
-    // Pack the user name into the buffer.
-    packer::unpack( name_, buffer, NAME_SIZE );
-
-    // Return the updated buffer pointer.
-    return buffer;
-}
-
-
-/***
- * 2. Getters
+ * 3. Getters
  ***/
 
 const char* NewUserPacket::getName() const
 {
-    return name_;
+    return name_.getValue();
 }
 
 
@@ -107,7 +76,7 @@ bool NewUserPacket::expectedType() const
 
 void NewUserPacket::setName( const char* name )
 {
-    strncpy( name_, name, NAME_SIZE );
+    name_ = name;
 }
 
 
@@ -120,7 +89,7 @@ NewUserPacket& NewUserPacket::operator = (const NewUserPacket& b)
     if( this != &b ){
         Packet::operator =( b );
 
-        strncpy( name_, b.name_, NAME_SIZE );
+        name_ = b.name_;
     }
 
     return *this;

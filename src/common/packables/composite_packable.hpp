@@ -37,8 +37,8 @@ class CompositePackable : public Packable
          * 1. Initialization and destruction
          ***/
         CompositePackable() = default;
-        CompositePackable( const CompositePackable& ) = default;
-        CompositePackable( CompositePackable&& ) = default;
+        CompositePackable( const CompositePackable& ) = delete; // We can't copy pointers to packables we don't own.
+        CompositePackable( CompositePackable&& ) = delete; // We can't copy pointers to packables we don't own.
 
         virtual ~CompositePackable(){}
 

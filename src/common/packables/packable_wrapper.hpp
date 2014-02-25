@@ -68,8 +68,8 @@ class PackableWrapper : public Packable {
         /***
          * 6. Operators
          ***/
-        PackableWrapper& operator = (const PackableWrapper& b) = delete;
-        PackableWrapper& operator = ( PackableWrapper&& ) = delete;
+        PackableWrapper<PackedValue, UnpackedValue>& operator = ( const PackableWrapper<PackedValue, UnpackedValue>& b );
+        PackableWrapper<PackedValue, UnpackedValue>& operator = ( PackableWrapper<PackedValue, UnpackedValue>&& ) = delete;
 };
 
 
@@ -102,6 +102,20 @@ const void* PackableWrapper< PackedValue, UnpackedValue >::unpack( const void* b
 
     // Return a pointer to the next position in buffer.
     return static_cast< const void* >( castedBuffer + 1 );
+}
+
+
+/***
+ * 6. Operators
+ ***/
+
+template <class PackedValue, class UnpackedValue>
+PackableWrapper<PackedValue, UnpackedValue>& PackableWrapper<PackedValue, UnpackedValue>::operator = ( const PackableWrapper< PackedValue, UnpackedValue >& b )
+{
+    if( this != &b ){
+        value_ = b.value_;
+    }
+    return *this;
 }
 
 

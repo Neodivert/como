@@ -20,6 +20,7 @@
 #ifndef NEW_USER_PACKET_HPP
 #define NEW_USER_PACKET_HPP
 
+#include "../packables/packable_string.hpp"
 #include "packet.hpp"
 
 namespace como {
@@ -27,11 +28,11 @@ namespace como {
 class NewUserPacket : public Packet
 {  
     public:
-        char name_[NAME_SIZE];
+        PackableString< NAME_SIZE > name_;
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
         NewUserPacket();
         NewUserPacket( const char* name );
@@ -39,14 +40,11 @@ class NewUserPacket : public Packet
         NewUserPacket( NewUserPacket&& ) = delete;
         virtual Packet* clone() const ;
 
-        ~NewUserPacket() = default;
-
 
         /***
-         * 2. Packing and unpacking
+         * 2. Destruction
          ***/
-        virtual char* packBody( char* buffer ) const ;
-        virtual const char* unpackBody( const char* buffer );
+        ~NewUserPacket() = default;
 
 
         /***

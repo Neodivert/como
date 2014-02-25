@@ -49,6 +49,20 @@ Packet::Packet( const Packet& b ) :
 
 
 /***
+ * 2. Packing
+ ***/
+
+void* Packet::packHeader( void* buffer ) const
+{
+    // Update the value for the packet body size to be packed.
+    bodySize_.setValue( getPacketBodySize() );
+
+    // Pack the packet's header.
+    return CompositePackable::packHeader( buffer );
+}
+
+
+/***
  * 2. Socket communication
  ***/
 
