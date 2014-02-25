@@ -20,7 +20,8 @@
 #ifndef PACKET_HPP
 #define PACKET_HPP
 
-#include "../packables/packable.hpp"
+#include "../packables/composite_packable.hpp"
+#include "../packables/packable_wrapper.hpp"
 #include "../utilities/packer.hpp"
 #include <stdexcept>
 #include <boost/asio.hpp>
@@ -36,7 +37,7 @@ typedef std::shared_ptr< Socket > SocketPtr;
 typedef std::shared_ptr< Packet > PacketPtr;
 typedef std::function<void( const boost::system::error_code& errorCode, PacketPtr)> PacketHandler;
 
-enum class PacketType : std::int8_t
+enum class PacketType : std::uint8_t
 {
     NEW_USER = 0,
     USER_ACCEPTED = 1,
@@ -45,12 +46,13 @@ enum class PacketType : std::int8_t
 
 const unsigned int PACKET_BUFFER_SIZE = 512;
 
-class Packet : public Packable
+
+class Packet : public CompositePackable
 {
     private:
-        PacketType type_;
+        PackableWrapper< std::uint8_t, PacketType > type_;
     protected:
-        std::uint16_t bodySize_;
+        PackableWrapper< std::uint16_t, std::uint16_t > bodySize_;
 
         char buffer_[PACKET_BUFFER_SIZE];
 
@@ -89,12 +91,12 @@ class Packet : public Packable
         /***
          * 2. Packing and unpacking
          ***/
-        char* pack( char* buffer ) const ;
-        const char* unpack( const char* buffer );
-        char* packHeader( char* buffer ) const ;
-        const char* unpackHeader( const char* buffer );
-        virtual char* packBody( char* buffer ) const = 0;
-        virtual const char* unpackBody( const char* buffer ) = 0;
+        void* pack( void* buffer ) const ;
+        const void* unpack( const void* buffer );
+        void* packHeader( void* buffer ) const ;
+        const void* unpackHeader( const void* buffer );
+        virtual void* packBody( void* buffer ) const;
+        virtual const void* unpackBody( const void* buffer );
 
 
         /***

@@ -31,6 +31,8 @@ Packet::Packet( PacketType type ) :
     bodySize_( 0 ),
     buffer_{}
 {
+    addPackable( &type_ );
+    addPackable( &bodySize_ );
 }
 
 Packet::Packet( const Packet& b ) :
@@ -39,6 +41,9 @@ Packet::Packet( const Packet& b ) :
     bodySize_( b.bodySize_ ),
     buffer_{}
 {
+    addPackable( &type_ );
+    addPackable( &bodySize_ );
+
     strncpy( buffer_, b.buffer_, PACKET_BUFFER_SIZE );
 }
 
@@ -194,7 +199,7 @@ void Packet::onPacketRecv( const boost::system::error_code& errorCode, std::size
  * 2. Packing and unpacking
  ***/
 
-char* Packet::pack( char* buffer ) const
+void* Packet::pack( void* buffer ) const
 {
     // Pack the packet's header.
     buffer = packHeader( buffer );
@@ -205,7 +210,7 @@ char* Packet::pack( char* buffer ) const
 }
 
 
-const char* Packet::unpack( const char* buffer )
+const void* Packet::unpack( const void* buffer )
 {
     // Unpack the packet's header.
     buffer = unpackHeader( buffer );
@@ -216,27 +221,39 @@ const char* Packet::unpack( const char* buffer )
 }
 
 
-char* Packet::packHeader( char* buffer ) const
+void* Packet::packHeader( void* buffer ) const
 {
     // Pack the packet's type.
-    packer::pack( static_cast< std::uint8_t >( type_ ), buffer );
+    buffer = type_.pack( buffer );
 
     // Pack the body's size.
-    packer::pack( bodySize_, buffer );
+    buffer = bodySize_.pack( buffer );
 
     return buffer;
 }
 
 const char* Packet::unpackHeader( const char* buffer )
 {
-    std::uint8_t type;
-
     // Unpack the packet's type.
-    packer::unpack( type, buffer );
-    type_ = static_cast< PacketType >( type );
+    buffer = type_.unpack( buffer );
 
     // Unpack the body's size.
-    packer::unpack( bodySize_, buffer );
+    buffer = bodySize_.unpack( buffer );
+
+    return buffer;
+}
+
+
+void* Packet::packBody( void* buffer ) const
+{
+    buffer = CompositePackable::pack( buffer );
+
+    return buffer;
+}
+
+const void* Packet::unpackBody( const void* buffer )
+{
+    buffer = CompositePackable::unpack( buffer );
 
     return buffer;
 }
@@ -248,19 +265,20 @@ const char* Packet::unpackHeader( const char* buffer )
 
 PacketType Packet::getType() const
 {
-    return type_;
+    return type_.getValue();
 }
 
 
 std::uint16_t Packet::getBodySize() const
 {
-    return bodySize_;
+    return bodySize_.getValue();
 }
 
 
 std::uint8_t Packet::getHeaderSize()
 {
-    return sizeof( type_ ) + sizeof( bodySize_ );
+    return type_.getPacketSize() +
+            bodySize_.getPacketSize();
 }
 
 
