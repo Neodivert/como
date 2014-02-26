@@ -20,7 +20,7 @@
 #ifndef NEW_USER_PACKET_HPP
 #define NEW_USER_PACKET_HPP
 
-#include "../packables/packable_string.hpp"
+#include "../packables/packable_array.hpp"
 #include "packet.hpp"
 
 namespace como {
@@ -28,7 +28,7 @@ namespace como {
 class NewUserPacket : public Packet
 {  
     public:
-        PackableString< NAME_SIZE > name_;
+        PackableArray< char, NAME_SIZE > name_;
 
     public:
         /***

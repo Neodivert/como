@@ -22,50 +22,46 @@
 namespace como {
 
 /***
- * 1. Initialization and destruction
+ * 1. Construction
  ***/
 
 UserAcceptancePacket::UserAcceptancePacket() :
     Packet( PacketType::USER_ACCEPTED ),
-    id_( 0 )
+    id_( 0 ),
+    name_( "Unnamed" ),
+    selectionColor_( {0} )
 {
-    bodySize_ = sizeof( id_ ) + NAME_SIZE + 4;
+    //for( ; i<4; i++ ){
+    //    selectionColor_[i] = 0;
+    //}
 
-    unsigned int i = 0;
-
-    strcpy( name_, "Unnamed" );
-
-    for( ; i<4; i++ ){
-        selectionColor_[i] = 0;
-    }
+    addBodyPackable( &id_ );
+    addBodyPackable( &name_ );
+    addBodyPackable( &selectionColor_ );
 }
 
 
 UserAcceptancePacket::UserAcceptancePacket( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor ) :
-    Packet( PacketType::USER_ACCEPTED )
+    Packet( PacketType::USER_ACCEPTED ),
+    id_( id ),
+    name_( name ),
+    selectionColor_( selectionColor )
 {
-    bodySize_ = sizeof( id_ ) + NAME_SIZE + 4;
-
-    setData( id, name, selectionColor );
-}
-
-
-void UserAcceptancePacket::setData( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor )
-{
-    unsigned int i = 0;
-
-    id_ = id;
-    strcpy( name_, name );
-    for( ; i<4; i++ ){
-        selectionColor_[i] = selectionColor[i];
-    }
+    addBodyPackable( &id_ );
+    addBodyPackable( &name_ );
+    addBodyPackable( &selectionColor_ );
 }
 
 
 UserAcceptancePacket::UserAcceptancePacket( const UserAcceptancePacket& b ) :
-    Packet( b )
+    Packet( b ),
+    id_( b.id_ ),
+    name_( b.name_ ),
+    selectionColor_( b.selectionColor_ )
 {
-    setData( b.id_, b.name_, b.selectionColor_ );
+    addBodyPackable( &id_ );
+    addBodyPackable( &name_ );
+    addBodyPackable( &selectionColor_ );
 }
 
 
@@ -75,49 +71,6 @@ Packet* UserAcceptancePacket::clone() const
 }
 
 
-/***
- * 2. Packing and unpacking
- ***/
-
-char* UserAcceptancePacket::packBody( char* buffer ) const
-{
-    unsigned int i = 0;
-
-    // Place the user's id into the buffer.
-    packer::pack( id_, buffer );
-
-    // Place the user's name after the id in the stream.
-    packer::pack( name_, buffer, NAME_SIZE );
-
-    // Place the user's selection color at the end.
-    for( ; i < 4; i++ ){
-        packer::pack( selectionColor_[i], buffer );
-    }
-
-    // Return the updated buffer pointer.
-    return buffer;
-}
-
-
-const char* UserAcceptancePacket::unpackBody( const char* buffer )
-{
-    unsigned int i = 0;
-
-    // Get the user's id.
-    packer::unpack( id_, buffer );
-
-    // Get the user's name.
-    packer::unpack( name_, buffer, NAME_SIZE );
-
-    // Get the user's selection color.
-    for( ; i<4; i++ ){
-        packer::unpack( selectionColor_[i], buffer );
-    }
-
-    // Return the updated buffer pointer.
-    return buffer;
-}
-
 
 /***
  * 3. Getters
@@ -125,19 +78,19 @@ const char* UserAcceptancePacket::unpackBody( const char* buffer )
 
 std::uint32_t UserAcceptancePacket::getId() const
 {
-    return id_;
+    return id_.getValue();
 }
 
 
 const char* UserAcceptancePacket::getName() const
 {
-    return name_;
+    return name_.getValue();
 }
 
 
 const std::uint8_t* UserAcceptancePacket::getSelectionColor() const
 {
-    return selectionColor_;
+    return selectionColor_.getValue();
 }
 
 
@@ -151,6 +104,13 @@ bool UserAcceptancePacket::expectedType() const
  * 4. Setters
  ***/
 
+void UserAcceptancePacket::setData( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor )
+{
+    id_ = id;
+    name_ = name;
+    selectionColor_ = selectionColor;
+}
+
 
 void UserAcceptancePacket::setId( const std::uint32_t& id )
 {
@@ -160,7 +120,7 @@ void UserAcceptancePacket::setId( const std::uint32_t& id )
 
 void UserAcceptancePacket::setName( const char* name )
 {
-    strncpy( name_, name, NAME_SIZE );
+    name_ = name;
 }
 
 
@@ -179,16 +139,12 @@ void UserAcceptancePacket::setSelectionColor( const std::uint8_t& r, const std::
 
 UserAcceptancePacket& UserAcceptancePacket::operator = (const UserAcceptancePacket& b )
 {
-    unsigned int i;
-
     if( this != &b ){
         Packet::operator =( b );
 
         id_ = b.id_;
-        strncpy( name_, b.name_, NAME_SIZE );
-        for( i=0; i<4; i++ ){
-            selectionColor_[i] = b.selectionColor_[i];
-        }
+        name_ = b.name_;
+        selectionColor_ = b.selectionColor_;
     }
 
     return *this;

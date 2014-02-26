@@ -23,34 +23,33 @@
 #include "packet.hpp"
 #include <cstring>
 
+#include "../packables/packable_wrapper.hpp"
+#include "../packables/packable_array.hpp"
+
 namespace como {
 
 class UserAcceptancePacket : public Packet
 {
     public:
-        UserID id_;
-        char name_[NAME_SIZE];
-        std::uint8_t selectionColor_[4]; // RGBA format.
+        PackableWrapper< UserID, UserID > id_;
+        PackableArray<char, NAME_SIZE> name_;
+        PackableArray< std::uint8_t, 4 > selectionColor_; // RGBA format.
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
         UserAcceptancePacket();
         UserAcceptancePacket( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor );
-        void setData( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor );
         UserAcceptancePacket( const UserAcceptancePacket& b );
         UserAcceptancePacket( UserAcceptancePacket&& ) = delete;
         virtual Packet* clone() const ;
 
-        ~UserAcceptancePacket() = default;
-
 
         /***
-         * 2. Packing and unpacking
+         * 2. Destruction
          ***/
-        virtual char* packBody( char* buffer ) const ;
-        virtual const char* unpackBody( const char* buffer );
+        ~UserAcceptancePacket() = default;
 
 
         /***
@@ -65,6 +64,7 @@ class UserAcceptancePacket : public Packet
         /***
          * 4. Setters
          ***/
+        void setData( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor );
         void setId( const std::uint32_t& id );
         void setName( const char* name );
         void setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a );

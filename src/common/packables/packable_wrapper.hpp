@@ -69,6 +69,7 @@ class PackableWrapper : public Packable {
          * 6. Operators
          ***/
         PackableWrapper<PackedValue, UnpackedValue>& operator = ( const PackableWrapper<PackedValue, UnpackedValue>& b );
+        PackableWrapper<PackedValue, UnpackedValue>& operator = ( const UnpackedValue& unpackedValue );
         PackableWrapper<PackedValue, UnpackedValue>& operator = ( PackableWrapper<PackedValue, UnpackedValue>&& ) = delete;
 };
 
@@ -119,6 +120,13 @@ PackableWrapper<PackedValue, UnpackedValue>& PackableWrapper<PackedValue, Unpack
 }
 
 
+template <class PackedValue, class UnpackedValue>
+PackableWrapper<PackedValue, UnpackedValue>& PackableWrapper<PackedValue, UnpackedValue>::operator = ( const UnpackedValue& unpackedValue )
+{
+    value_ = unpackedValue;
+
+    return *this;
+}
 
 } // namespace como
 
