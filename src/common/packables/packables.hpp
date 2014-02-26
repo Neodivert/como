@@ -21,7 +21,7 @@
 #define PACKABLES_HPP
 
 #include "packable_array.hpp"
-#include "packable_wrapper.hpp"
+#include "packable_uint8.hpp"
 #include "composite_packable.hpp"
 
 #endif // PACKABLES_HPP

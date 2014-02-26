@@ -20,13 +20,16 @@
 #ifndef IDS_HPP
 #define IDS_HPP
 
-#include <cstdint>
+#include "../packables/packable_uint16.hpp"
 
 namespace como {
 
 typedef std::uint16_t UserID;
-typedef std::uint32_t DrawableIndex;
+typedef PackableUint16< UserID > PackableUserID;
 
+
+typedef std::uint32_t DrawableIndex;
+typedef PackableUint32< DrawableIndex > PackableDrawableIndex;
 
 /*
  * A drawable is uniquely identified by a pair of values:

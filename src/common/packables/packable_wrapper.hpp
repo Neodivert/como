@@ -24,17 +24,17 @@
 
 namespace como {
 
-template <class PackedValue, class UnpackedValue>
+template <class UnpackedType>
 class PackableWrapper : public Packable {
     protected:
-        UnpackedValue value_;
+        UnpackedType value_;
 
     public:
         /***
          * 1. Construction
          ***/
         PackableWrapper() = default;
-        PackableWrapper( const UnpackedValue& value ) : value_( value ){}
+        PackableWrapper( const UnpackedType& value ) : value_( value ){}
         PackableWrapper( const PackableWrapper& ) = default;
         PackableWrapper( PackableWrapper&& ) = default;
 
@@ -48,70 +48,38 @@ class PackableWrapper : public Packable {
         /***
          * 3. Getters
          ***/
-        UnpackedValue getValue() const { return value_; }
-        virtual std::uint16_t getPacketSize() const { return sizeof( PackedValue ); }
+        UnpackedType getValue() const { return value_; }
+        virtual std::uint16_t getPacketSize() const = 0;
 
 
         /***
          * 4. Setters
          ***/
-        void setValue( UnpackedValue value ){ value_ = value; }
+        void setValue( UnpackedType value ){ value_ = value; }
 
 
         /***
          * 5. Packing and unpacking
          ***/
-        virtual void* pack( void* buffer ) const ;
-        virtual const void* unpack( const void* buffer ) ;
+        virtual void* pack( void* buffer ) const = 0;
+        virtual const void* unpack( const void* buffer ) = 0;
 
 
         /***
          * 6. Operators
          ***/
-        PackableWrapper<PackedValue, UnpackedValue>& operator = ( const PackableWrapper<PackedValue, UnpackedValue>& b );
-        PackableWrapper<PackedValue, UnpackedValue>& operator = ( const UnpackedValue& unpackedValue );
-        PackableWrapper<PackedValue, UnpackedValue>& operator = ( PackableWrapper<PackedValue, UnpackedValue>&& ) = delete;
+        PackableWrapper<UnpackedType>& operator = ( const PackableWrapper<UnpackedType>& b );
+        PackableWrapper<UnpackedType>& operator = ( const UnpackedType& UnpackedType );
+        PackableWrapper<UnpackedType>& operator = ( PackableWrapper<UnpackedType>&& ) = delete;
 };
-
-
-/***
- * 5. Packing and unpacking
- ***/
-
-template <class PackedValue, class UnpackedValue >
-void* PackableWrapper< PackedValue, UnpackedValue >::pack( void* buffer ) const
-{
-    // Cast the buffer to the PackedValue type.
-    PackedValue* castedBuffer = static_cast< PackedValue* >( buffer );
-
-    // Pack the wrapper's inner value into the buffer.
-    *castedBuffer = static_cast< PackedValue >( value_ );
-
-    // Return a pointer to the next position in buffer.
-    return static_cast< void* >( castedBuffer + 1 );
-}
-
-
-template <class PackedValue, class UnpackedValue>
-const void* PackableWrapper< PackedValue, UnpackedValue >::unpack( const void* buffer )
-{
-    // Cast buffer to the UnpackedValue type.
-    const UnpackedValue* castedBuffer = static_cast< const UnpackedValue* >( buffer );
-
-    // Unpack the wrapper's inner valued from the buffer.
-    value_ = *castedBuffer;
-
-    // Return a pointer to the next position in buffer.
-    return static_cast< const void* >( castedBuffer + 1 );
-}
 
 
 /***
  * 6. Operators
  ***/
 
-template <class PackedValue, class UnpackedValue>
-PackableWrapper<PackedValue, UnpackedValue>& PackableWrapper<PackedValue, UnpackedValue>::operator = ( const PackableWrapper< PackedValue, UnpackedValue >& b )
+template <class UnpackedType>
+PackableWrapper<UnpackedType>& PackableWrapper<UnpackedType>::operator = ( const PackableWrapper<UnpackedType>& b )
 {
     if( this != &b ){
         value_ = b.value_;
@@ -120,10 +88,10 @@ PackableWrapper<PackedValue, UnpackedValue>& PackableWrapper<PackedValue, Unpack
 }
 
 
-template <class PackedValue, class UnpackedValue>
-PackableWrapper<PackedValue, UnpackedValue>& PackableWrapper<PackedValue, UnpackedValue>::operator = ( const UnpackedValue& unpackedValue )
+template <class UnpackedType>
+PackableWrapper<UnpackedType>& PackableWrapper<UnpackedType>::operator = ( const UnpackedType& value )
 {
-    value_ = unpackedValue;
+    value_ = value;
 
     return *this;
 }
