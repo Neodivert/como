@@ -71,7 +71,8 @@ HEADERS += \
     ../../src/client/managers/scene/public_scene.hpp \
     ../../src/client/managers/server_interface/server_interface.hpp \
     ../../src/client/models/3d/drawables_selection.hpp \
-    ../../src/common/packables/packable_array.hpp
+    ../../src/common/packables/packable_array.hpp \
+    ../../src/common/packables/packables.hpp
 
 
 
