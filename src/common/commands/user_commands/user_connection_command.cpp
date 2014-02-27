@@ -23,7 +23,7 @@
 namespace como {
 
 /***
- * 1. Initialization and destruction
+ * 1. Construction
  ***/
 
 UserConnectionCommand::UserConnectionCommand( UserID userID ) :
@@ -32,6 +32,8 @@ UserConnectionCommand::UserConnectionCommand( UserID userID ) :
     selectionColor_({0})
 
 {
+    addBodyPackable( &name_ );
+    addBodyPackable( &selectionColor_ );
 }
 
 
@@ -50,6 +52,9 @@ UserConnectionCommand::UserConnectionCommand( const UserAcceptancePacket& userAc
                        selectionColor[1],
                        selectionColor[2],
                        selectionColor[3] );
+
+    addBodyPackable( &name_ );
+    addBodyPackable( &selectionColor_ );
 }
 
 
@@ -67,45 +72,9 @@ UserConnectionCommand::UserConnectionCommand( const UserConnectionCommand& b ) :
                        selectionColor[1],
                        selectionColor[2],
                        selectionColor[3] );
-}
 
-/***
- * 2. Packing and unpacking
- ***/
-
-char* UserConnectionCommand::pack( char* buffer ) const
-{
-    unsigned int i = 0;
-
-    // Pack UserCommand attributes.
-    buffer = UserCommand::pack( buffer );
-
-    // Pack UserConnectionCommand attributes.
-    packer::pack( name_, buffer, NAME_SIZE );
-    for( i=0; i<4; i++ ){
-        packer::pack( selectionColor_[i], buffer );
-    }
-
-    // Return the updated buffer pointer.
-    return buffer;
-}
-
-
-const char* UserConnectionCommand::unpack( const char* buffer )
-{
-    unsigned int i = 0;
-
-    // Unpack UserCommand attributes.
-    buffer = UserCommand::unpack( buffer );
-
-    // Unpack UserConnectionCommand attributes.
-    packer::unpack( name_, buffer, NAME_SIZE );
-    for( i=0; i<4; i++ ){
-        packer::unpack( selectionColor_[i], buffer );
-    }
-
-    // Return the updated buffer pointer.
-    return buffer;
+    addBodyPackable( &name_ );
+    addBodyPackable( &selectionColor_ );
 }
 
 
@@ -113,22 +82,15 @@ const char* UserConnectionCommand::unpack( const char* buffer )
  * 3. Getters
  ***/
 
-
-std::uint16_t UserConnectionCommand::getPacketSize() const
-{
-    return UserCommand::getPacketSize() + NAME_SIZE + 4;
-}
-
-
 const char* UserConnectionCommand::getName() const
 {
-    return name_;
+    return name_.getValue();
 }
 
 
 const std::uint8_t* UserConnectionCommand::getSelectionColor() const
 {
-    return selectionColor_;
+    return selectionColor_.getValue();
 }
 
 
@@ -138,7 +100,7 @@ const std::uint8_t* UserConnectionCommand::getSelectionColor() const
 
 void UserConnectionCommand::setName( const char* name )
 {
-    strncpy( name_, name, NAME_SIZE );
+    name_ = name;
 }
 
 

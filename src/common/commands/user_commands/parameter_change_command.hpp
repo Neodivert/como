@@ -25,27 +25,30 @@
 namespace como {
 
 // Available pivot point modes.
-enum class PivotPointMode
+enum class PivotPointMode : std::uint8_t
 {
     MEDIAN_POINT = 0,
     INDIVIDUAL_CENTROIDS,
     WORLD_ORIGIN
 };
+typedef PackableUint8< PivotPointMode > PackablePivotPointMode;
 
-enum class ParameterType
+enum class ParameterType : std::uint8_t
 {
     PIVOT_POINT_MODE
 };
+typedef PackableUint8< ParameterType > PackableParameterType;
 
 
 class ParameterChangeCommand : public UserCommand
 {
     private:
-        ParameterType parameterType_;
+        PackableParameterType parameterType_;
 
-        union ParameterValue {
-            PivotPointMode pivotPointMode_;
-        } value_;
+        // TODO: Transform the full union into a packable.
+        // Adapt the packing and unpacking methods for switching between parameter types.
+        // Adapt the getPacketSize() method.
+        PackablePivotPointMode pivotPointMode_;
 
 
     public:
@@ -65,28 +68,20 @@ class ParameterChangeCommand : public UserCommand
 
 
         /***
-         * 3. Packing and unpacking
+         * 3. Getters
          ***/
-        virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer ) ;
-
-
-        /***
-         * 4. Getters
-         ***/
-        virtual std::uint16_t getPacketSize() const ;
         ParameterType getParameterType() const ;
         PivotPointMode getPivotPointMode() const ;
 
 
         /***
-         * 5. Setters
+         * 4. Setters
          ***/
         void setPivotPointMode( PivotPointMode pivotPointMode );
 
 
         /***
-         * 6. Operators
+         * 5. Operators
          ***/
         ParameterChangeCommand& operator=( const ParameterChangeCommand& ) = delete;
         ParameterChangeCommand& operator=( ParameterChangeCommand&& ) = delete;

@@ -30,12 +30,13 @@ enum class UserCommandType : std::uint8_t
     USER_DISCONNECTION,
     PARAMETER_CHANGE
 };
+typedef PackableUint8< UserCommandType > PackableUserCommandType;
 
 
 class UserCommand : public Command
 {
     private:
-        const UserCommandType commandType_;
+        const PackableUserCommandType commandType_;
 
     public:
         /***
@@ -54,23 +55,15 @@ class UserCommand : public Command
 
 
         /***
-         * 2. Packing and unpacking
-         ***/
-        virtual char* pack( char* buffer ) const;
-        virtual const char* unpack( const char* buffer );
-
-
-        /***
          * 3. Getters
          ***/
         UserCommandType getType() const;
-        virtual std::uint16_t getPacketSize() const ;
 
 
         /***
          * 4. Buffer pre reading
          ***/
-        static UserCommandType getType( const char* buffer );
+        static UserCommandType getType( const void* buffer );
 
 
         /***

@@ -104,14 +104,18 @@ const void* PackableUint8<UnpackedType>::unpack( const void* buffer )
 template <class UnpackedType>
 PackableUint8<UnpackedType>& PackableUint8<UnpackedType>::operator = ( const PackableUint8<UnpackedType>& b )
 {
-    return PackableWrapper<UnpackedType>::operator =( b );
+    PackableWrapper<UnpackedType>::operator =( b );
+
+    return *this;
 }
 
 
 template <class UnpackedType>
 PackableUint8<UnpackedType>& PackableUint8<UnpackedType>::operator = ( const UnpackedType& value )
 {
-    return PackableWrapper<UnpackedType>::operator =( value );
+    PackableWrapper<UnpackedType>::operator =( value );
+
+    return *this;
 }
 
 } // namespace como

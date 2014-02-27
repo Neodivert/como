@@ -28,32 +28,28 @@ namespace como {
 class UserConnectionCommand : public UserCommand
 {
     private:
-        char name_[NAME_SIZE];
-        std::uint8_t selectionColor_[4];
+        PackableString<NAME_SIZE> name_;
+        PackableRGBA selectionColor_;
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
         UserConnectionCommand( UserID userID = 0 );
         UserConnectionCommand( const UserAcceptancePacket& userAcceptancePacket );
         UserConnectionCommand( const UserConnectionCommand& b );
         UserConnectionCommand( UserConnectionCommand&& ) = delete;
 
-        ~UserConnectionCommand() = default;
-
 
         /***
-         * 2. Packing and unpacking
+         * 2. Destruction
          ***/
-        virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer ) ;
+        ~UserConnectionCommand() = default;
 
 
         /***
          * 3. Getters
          ***/
-        virtual std::uint16_t getPacketSize() const ;
         const char* getName() const ;
         const std::uint8_t* getSelectionColor() const ;
 

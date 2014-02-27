@@ -29,6 +29,7 @@ UserCommand::UserCommand( UserCommandType userCommandType, UserID userID ) :
     Command( CommandTarget::USER, userID ),
     commandType_( userCommandType )
 {
+    addBodyPackable( &commandType_ );
 }
 
 
@@ -36,43 +37,7 @@ UserCommand::UserCommand( const UserCommand& b ) :
     Command( b ),
     commandType_( b.commandType_ )
 {
-}
-
-
-/***
- * 2. Packing and unpacking
- ***/
-
-char* UserCommand::pack( char* buffer ) const
-{
-    // Pack Command attributes.
-    buffer = Command::pack( buffer );
-
-    // Pack UserCommand attributes.
-    packer::pack( static_cast< std::uint8_t >( commandType_ ), buffer );
-
-    // Return the updated buffer.
-    return buffer;
-}
-
-
-const char* UserCommand::unpack( const char* buffer )
-{
-    std::uint8_t commandType;
-
-    // Unpack Command attributes.
-    buffer = Command::unpack( buffer );
-
-    // Unpack UserCommand attributes.
-    packer::unpack( commandType, buffer );
-
-    // TODO: Remove this check in future versions.
-    if( static_cast< UserCommandType >( commandType ) == commandType_ ){
-        throw std::runtime_error( "ERROR: Unexpected UserCommand" );
-    }
-
-    // Return the updated buffer.
-    return buffer;
+    addBodyPackable( &commandType_ );
 }
 
 
@@ -82,14 +47,7 @@ const char* UserCommand::unpack( const char* buffer )
 
 UserCommandType UserCommand::getType() const
 {
-    return commandType_;
-}
-
-
-std::uint16_t UserCommand::getPacketSize() const
-{
-    return Command::getPacketSize() +
-            sizeof( commandType_ );
+    return commandType_.getValue();
 }
 
 
@@ -97,9 +55,9 @@ std::uint16_t UserCommand::getPacketSize() const
  * 4. Buffer pre reading
  ***/
 
-UserCommandType UserCommand::getType( const char* buffer )
+UserCommandType UserCommand::getType( const void* buffer )
 {
-    return static_cast< const UserCommandType >( *( reinterpret_cast< const std::uint8_t* >( buffer ) ) );
+    return *( static_cast< const UserCommandType* >( buffer ) );
 }
 
 
