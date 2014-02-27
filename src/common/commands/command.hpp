@@ -21,6 +21,7 @@
 #define COMMAND_HPP
 
 #include "../packables/packables.hpp"
+#include "../utilities/ids.hpp"
 #include <memory>
 #include <stdexcept>
 
@@ -32,6 +33,7 @@ enum class CommandTarget : std::uint8_t
     DRAWABLE,
     SELECTION
 };
+typedef PackableUint8<CommandTarget> PackableCommandTarget;
 
 
 const char commandTargetStrings[][32]
@@ -41,11 +43,11 @@ const char commandTargetStrings[][32]
     "SELECTION"
 };
 
-class Command : public Packable
+class Command : public CompositePackable
 {
     private:
-        const CommandTarget commandTarget_;
-        UserID userID_;
+        const PackableCommandTarget commandTarget_;
+        PackableUserID userID_;
 
 
     public:
@@ -65,34 +67,26 @@ class Command : public Packable
 
 
         /***
-         * 3. Packing and unpacking
-         ***/
-        virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer ) ;
-
-
-        /***
-         * 4. Getters
+         * 3. Getters
          ***/
         CommandTarget getTarget() const ;
-        std::uint16_t getPacketSize() const;
         UserID getUserID() const ;
 
 
         /***
-         * 5. Buffer pre reading
+         * 4. Buffer pre reading
          ***/
         static CommandTarget getTarget( const char* buffer );
 
 
         /***
-         * 6. Setters
+         * 5. Setters
          ***/
         void setUserID( const UserID& userID );
 
 
         /***
-         * 7. Operators
+         * 6. Operators
          ***/
         CommandTarget& operator=( const CommandTarget& ) = delete;
         CommandTarget& operator=( CommandTarget&& ) = delete;

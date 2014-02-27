@@ -134,13 +134,13 @@ std::uint16_t CompositePackable::getPacketBodySize() const
  * 4. Packables management
  ***/
 
-void CompositePackable::addHeaderPackable( Packable* packable )
+void CompositePackable::addHeaderPackable( const Packable* packable )
 {
     headerPackables_.push_back( packable );
 }
 
 
-void CompositePackable::addBodyPackable( Packable* packable )
+void CompositePackable::addBodyPackable( const Packable* packable )
 {
     headerPackables_.push_back( packable );
 }

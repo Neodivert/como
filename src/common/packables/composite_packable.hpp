@@ -66,8 +66,8 @@ class CompositePackable : public Packable
          * 4. Packables management
          ***/
     protected:
-        void addHeaderPackable( Packable* packable );
-        void addBodyPackable( Packable* packable );
+        void addHeaderPackable( const Packable* packable );
+        void addBodyPackable( const Packable* packable );
     public:
 
 

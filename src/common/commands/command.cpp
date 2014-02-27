@@ -29,83 +29,48 @@ Command::Command( CommandTarget commandTarget, UserID userID ) :
     commandTarget_( commandTarget ),
     userID_( userID )
 {
+    addHeaderPackable( &commandTarget_ );
+    addHeaderPackable( &userID_ );
 }
 
 
 Command::Command( const Command& b ) :
-    Packable( b ),
+    CompositePackable(), // TODO: Maybe is better to implement a empty CompositePackable copy constructor?
     commandTarget_( b.commandTarget_ ),
     userID_( b.userID_ )
 {
+    addHeaderPackable( &commandTarget_ );
+    addHeaderPackable( &userID_ );
 }
 
 
 /***
- * 3. Packing and unpacking
- ***/
-
-char* Command::pack( char* buffer ) const
-{
-    // Pack the Command's "header".
-    packer::pack( static_cast< std::uint8_t >( commandTarget_ ), buffer );
-    packer::pack( userID_, buffer );
-
-    // Return the updated buffer.
-    return buffer;
-}
-
-
-const char* Command::unpack( const char* buffer )
-{
-    std::uint8_t unpackedCommandTarget;
-
-    // Unpack the Command's "header".
-    packer::unpack( unpackedCommandTarget, buffer );
-    // TODO: Modify SCENE_UPDATE structure so this check isn't necesary.
-    if( static_cast< CommandTarget >( unpackedCommandTarget ) != commandTarget_ ){
-        throw std::runtime_error( "Unexpected packet when unpacking" );
-    }
-    packer::unpack( userID_, buffer );
-
-    // Return the updated buffer.
-    return buffer;
-}
-
-
-/***
- * 4. Getters
+ * 3. Getters
  ***/
 
 CommandTarget Command::getTarget() const
 {
-    return commandTarget_;
+    return commandTarget_.getValue();
 }
-
-
-std::uint16_t Command::getPacketSize() const
-{
-    return sizeof( CommandTarget ) + sizeof( userID_ );
-}
-
 
 UserID Command::getUserID() const
 {
-    return userID_;
+    return userID_.getValue();
 }
 
 
 /***
- * 5. Buffer pre reading
+ * 4. Buffer pre reading
  ***/
 
 CommandTarget Command::getTarget( const char* buffer )
 {
-    return static_cast< const CommandTarget >(*buffer);
+    return static_cast< const CommandTarget >( *buffer );
 }
 
 
 /***
- * 6. Setters
+ * 5. Setters
  ***/
 
 void Command::setUserID( const UserID& userID )
