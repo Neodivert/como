@@ -20,7 +20,7 @@
 #ifndef PACKABLES_HPP
 #define PACKABLES_HPP
 
-#include "packable_array.hpp"
+#include "packable_string.hpp"
 #include "packable_uint8.hpp"
 #include "packable_uint16.hpp"
 #include "packable_uint32.hpp"

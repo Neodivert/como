@@ -24,7 +24,7 @@
 #include <cstring>
 
 #include "../packables/packable_wrapper.hpp"
-#include "../packables/packable_array.hpp"
+#include "../packables/packable_string.hpp"
 
 namespace como {
 
@@ -32,7 +32,7 @@ class UserAcceptancePacket : public Packet
 {
     public:
         PackableUserID id_;
-        PackableArray<char, NAME_SIZE> name_;
+        PackableString<NAME_SIZE> name_;
         PackableArray< std::uint8_t, 4 > selectionColor_; // RGBA format.
 
     public:
