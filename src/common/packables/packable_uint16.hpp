@@ -101,7 +101,7 @@ const void* PackableUint16<UnpackedType>::unpack( const void* buffer )
     const UnpackedType* castedBuffer = static_cast< const UnpackedType* >( buffer );
 
     // Unpack the wrapper's inner valued from the buffer and translate it from network order.
-    this->value_ = *castedBuffer;
+    this->value_ = static_cast< UnpackedType >( *castedBuffer );
 #if LITTLE_ENDIAN
     value_ = ( (value_ & 0xFF00) >> 8 ) | ((value_ & 0x00FF ) << 8);
 #endif
@@ -117,14 +117,18 @@ const void* PackableUint16<UnpackedType>::unpack( const void* buffer )
 template <class UnpackedType>
 PackableUint16<UnpackedType>& PackableUint16<UnpackedType>::operator = ( const PackableUint16<UnpackedType>& b )
 {
-    return PackableWrapper<UnpackedType>::operator =( b );
+    PackableWrapper<UnpackedType>::operator =( b );
+
+    return *this;
 }
 
 
 template <class UnpackedType>
 PackableUint16<UnpackedType>& PackableUint16<UnpackedType>::operator = ( const UnpackedType& value )
 {
-    return PackableWrapper<UnpackedType>::operator =( value );
+    PackableWrapper<UnpackedType>::operator =( value );
+
+    return *this;
 }
 
 

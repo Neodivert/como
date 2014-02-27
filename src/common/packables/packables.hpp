@@ -22,6 +22,7 @@
 
 #include "packable_string.hpp"
 #include "packable_uint8.hpp"
+#include "packable_uint8_array.hpp"
 #include "packable_uint16.hpp"
 #include "packable_uint32.hpp"
 #include "composite_packable.hpp"

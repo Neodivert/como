@@ -102,7 +102,7 @@ const void* PackableUint32<UnpackedType>::unpack( const void* buffer )
     const UnpackedType* castedBuffer = static_cast< const UnpackedType* >( buffer );
 
     // Unpack the wrapper's inner valued from the buffer and translate it from network order.
-    this->value_ = *castedBuffer;
+    this->value_ = static_cast< UnpackedType >( *castedBuffer );
 #if LITTLE_ENDIAN
     value_ = ( (value_ & 0xFF000000) >> 24 ) |
             ( (value_ & 0x00FF0000) >> 8 ) |

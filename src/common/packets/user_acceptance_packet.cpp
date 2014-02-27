@@ -31,10 +31,6 @@ UserAcceptancePacket::UserAcceptancePacket() :
     name_( "Unnamed" ),
     selectionColor_( {0} )
 {
-    //for( ; i<4; i++ ){
-    //    selectionColor_[i] = 0;
-    //}
-
     addBodyPackable( &id_ );
     addBodyPackable( &name_ );
     addBodyPackable( &selectionColor_ );

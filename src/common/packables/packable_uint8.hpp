@@ -90,7 +90,7 @@ const void* PackableUint8<UnpackedType>::unpack( const void* buffer )
     const UnpackedType* castedBuffer = static_cast< const UnpackedType* >( buffer );
 
     // Unpack the wrapper's inner valued from the buffer.
-    this->value_ = *castedBuffer;
+    this->value_ = static_cast< UnpackedType >( *castedBuffer );
 
     // Return a pointer to the next position in buffer.
     return static_cast< const void* >( castedBuffer + 1 );
