@@ -20,8 +20,7 @@
 #ifndef PACKET_HPP
 #define PACKET_HPP
 
-#include "../packables/composite_packable.hpp"
-#include "../packables/packable_wrapper.hpp"
+#include "../packables/packables.hpp"
 #include "../utilities/packer.hpp"
 #include <stdexcept>
 #include <boost/asio.hpp>
@@ -50,8 +49,8 @@ const unsigned int PACKET_BUFFER_SIZE = 512;
 class Packet : public CompositePackable
 {
     private:
-        PackableWrapper< std::uint8_t, PacketType > type_;
-        PackableWrapper< std::uint16_t, std::uint16_t > bodySize_;
+        PackableUint8< PacketType > type_;
+        PackableUint16< std::uint16_t > bodySize_;
 
         char buffer_[PACKET_BUFFER_SIZE];
 
@@ -69,10 +68,6 @@ class Packet : public CompositePackable
 
         const char* getBuffer() const { return buffer_; }
 
-        /***
-         * 2. Packing
-         ***/
-        virtual void* packHeader( void* buffer ) const;
 
         /***
          * 2. Socket communication
@@ -84,6 +79,7 @@ class Packet : public CompositePackable
         void asyncRecv( SocketPtr socket, PacketHandler packetHandler );
 
     private:
+        void updateHeader();
         void asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
         void asyncRecvBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
         void onPacketRecv( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler );

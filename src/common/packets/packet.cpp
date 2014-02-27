@@ -36,7 +36,7 @@ Packet::Packet( PacketType type ) :
 }
 
 Packet::Packet( const Packet& b ) :
-    CompositePackable( b ),
+    CompositePackable(),
     type_( b.type_ ),
     bodySize_( b.bodySize_ ),
     buffer_{}
@@ -49,30 +49,22 @@ Packet::Packet( const Packet& b ) :
 
 
 /***
- * 2. Packing
- ***/
-
-void* Packet::packHeader( void* buffer ) const
-{
-    // Update the value for the packet body size to be packed.
-    bodySize_.setValue( getPacketBodySize() );
-
-    // Pack the packet's header.
-    return CompositePackable::packHeader( buffer );
-}
-
-
-/***
  * 2. Socket communication
  ***/
 
+void Packet::updateHeader()
+{
+    // Update the value for the packet body size to be packed.
+    bodySize_.setValue( getPacketBodySize() );
+}
 
 void Packet::send( boost::asio::ip::tcp::socket& socket )
 {
     char buffer[256] = {};
     boost::system::error_code errorCode;
 
-    // Pack the packet's header into the buffer.
+    // Update and pack the packet's header into the buffer.
+    updateHeader();
     packHeader( buffer );
 
     // Write synchronously the packet's header to the socket.
@@ -94,7 +86,8 @@ void Packet::send( boost::asio::ip::tcp::socket& socket )
 
 void Packet::asyncSend( SocketPtr socket, PacketHandler packetHandler )
 {
-    // Pack the packet's header into the buffer.
+    // Update and pack the packet's header into the buffer.
+    updateHeader();
     packHeader( buffer_ );
 
     // Write asynchronously the packet's header to the socket.

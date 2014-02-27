@@ -22,15 +22,19 @@
 
 #include "packable_wrapper.hpp"
 
+namespace como {
+
 template <class UnpackedType>
 class PackableUint16 : public PackableWrapper<UnpackedType>
 {
+    using PackableWrapper<UnpackedType>::value_;
+
     public:
         /***
          * 1. Construction
          ***/
         PackableUint16() = default;
-        PackableUint16( const UnpackedType& value ) : PackableWrapper( value ){}
+        PackableUint16( const UnpackedType& value ) : PackableWrapper<UnpackedType>( value ){}
         PackableUint16( const PackableUint16& ) = default;
         PackableUint16( PackableUint16&& ) = default;
 
@@ -55,10 +59,10 @@ class PackableUint16 : public PackableWrapper<UnpackedType>
 
 
         /***
-         * 6. Operators
+         * 5. Operators
          ***/
         PackableUint16<UnpackedType>& operator = ( const PackableUint16<UnpackedType>& b );
-        PackableUint16<UnpackedType>& operator = ( const UnpackedType& UnpackedType );
+        PackableUint16<UnpackedType>& operator = ( const UnpackedType& value );
         PackableUint16<UnpackedType>& operator = ( PackableUint16<UnpackedType>&& ) = delete;
 };
 
@@ -76,7 +80,7 @@ void* PackableUint16<UnpackedType>::pack( void* buffer ) const
     std::uint16_t* castedBuffer = static_cast< std::uint16_t* >( buffer );
 
     // Get the wrapper's inner value and translate it to network order.
-    networkValue = static_cast< std::uint16_t >( value_ );
+    networkValue = static_cast< std::uint16_t >( this->value_ );
 #if LITTLE_ENDIAN
     networkValue = ( (networkValue & 0xFF00) >> 8 ) | ((networkValue & 0x00FF ) << 8);
 #endif
@@ -97,7 +101,7 @@ const void* PackableUint16<UnpackedType>::unpack( const void* buffer )
     const UnpackedType* castedBuffer = static_cast< const UnpackedType* >( buffer );
 
     // Unpack the wrapper's inner valued from the buffer and translate it from network order.
-    value_ = *castedBuffer;
+    this->value_ = *castedBuffer;
 #if LITTLE_ENDIAN
     value_ = ( (value_ & 0xFF00) >> 8 ) | ((value_ & 0x00FF ) << 8);
 #endif
@@ -105,5 +109,26 @@ const void* PackableUint16<UnpackedType>::unpack( const void* buffer )
     // Return a pointer to the next position in buffer.
     return static_cast< const void* >( castedBuffer + 1 );
 }
+
+/***
+ * 5. Operators
+ ***/
+
+template <class UnpackedType>
+PackableUint16<UnpackedType>& PackableUint16<UnpackedType>::operator = ( const PackableUint16<UnpackedType>& b )
+{
+    return PackableWrapper<UnpackedType>::operator =( b );
+}
+
+
+template <class UnpackedType>
+PackableUint16<UnpackedType>& PackableUint16<UnpackedType>::operator = ( const UnpackedType& value )
+{
+    return PackableWrapper<UnpackedType>::operator =( value );
+}
+
+
+
+} // namespace como
 
 #endif // PACKABLE_UINT16_HPP

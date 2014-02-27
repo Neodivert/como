@@ -31,7 +31,7 @@ namespace como {
 class UserAcceptancePacket : public Packet
 {
     public:
-        PackableWrapper< UserID, UserID > id_;
+        PackableUserID id_;
         PackableArray<char, NAME_SIZE> name_;
         PackableArray< std::uint8_t, 4 > selectionColor_; // RGBA format.
 

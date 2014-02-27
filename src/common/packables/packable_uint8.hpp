@@ -22,6 +22,8 @@
 
 #include "packable_wrapper.hpp"
 
+namespace como {
+
 template <class UnpackedType>
 class PackableUint8 : public PackableWrapper<UnpackedType>
 {
@@ -30,7 +32,7 @@ class PackableUint8 : public PackableWrapper<UnpackedType>
          * 1. Construction
          ***/
         PackableUint8() = default;
-        PackableUint8( const UnpackedType& value ) : PackableWrapper( value ){}
+        PackableUint8( const UnpackedType& value ) : PackableWrapper<UnpackedType>( value ){}
         PackableUint8( const PackableUint8& ) = default;
         PackableUint8( PackableUint8&& ) = default;
 
@@ -58,7 +60,7 @@ class PackableUint8 : public PackableWrapper<UnpackedType>
          * 6. Operators
          ***/
         PackableUint8<UnpackedType>& operator = ( const PackableUint8<UnpackedType>& b );
-        PackableUint8<UnpackedType>& operator = ( const UnpackedType& UnpackedType );
+        PackableUint8<UnpackedType>& operator = ( const UnpackedType& value );
         PackableUint8<UnpackedType>& operator = ( PackableUint8<UnpackedType>&& ) = delete;
 };
 
@@ -74,7 +76,7 @@ void* PackableUint8<UnpackedType>::pack( void* buffer ) const
     std::uint8_t* castedBuffer = static_cast< std::uint8_t* >( buffer );
 
     // Pack the wrapper's inner value into the buffer.
-    *castedBuffer = static_cast< std::uint8_t >( value_ );
+    *castedBuffer = static_cast< std::uint8_t >( this->value_ );
 
     // Return a pointer to the next position in buffer.
     return static_cast< void* >( castedBuffer + 1 );
@@ -88,10 +90,30 @@ const void* PackableUint8<UnpackedType>::unpack( const void* buffer )
     const UnpackedType* castedBuffer = static_cast< const UnpackedType* >( buffer );
 
     // Unpack the wrapper's inner valued from the buffer.
-    value_ = *castedBuffer;
+    this->value_ = *castedBuffer;
 
     // Return a pointer to the next position in buffer.
     return static_cast< const void* >( castedBuffer + 1 );
 }
+
+
+/***
+ * 6. Operators
+ ***/
+
+template <class UnpackedType>
+PackableUint8<UnpackedType>& PackableUint8<UnpackedType>::operator = ( const PackableUint8<UnpackedType>& b )
+{
+    return PackableWrapper<UnpackedType>::operator =( b );
+}
+
+
+template <class UnpackedType>
+PackableUint8<UnpackedType>& PackableUint8<UnpackedType>::operator = ( const UnpackedType& value )
+{
+    return PackableWrapper<UnpackedType>::operator =( value );
+}
+
+} // namespace como
 
 #endif // PACKABLE_UINT8_HPP

@@ -20,7 +20,8 @@
 #ifndef IDS_HPP
 #define IDS_HPP
 
-#include "../packables/packable_uint16.hpp"
+#include "../packables/packables.hpp"
+#include <cstdint>
 
 namespace como {
 

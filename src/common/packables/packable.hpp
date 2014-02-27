@@ -21,7 +21,8 @@
 #define PACKABLE_HPP
 
 //#include "../utilities/packer.hpp"
-#include "../utilities/ids.hpp"
+//#include "../utilities/ids.hpp"
+#include <cstdint>
 
 namespace como {
 

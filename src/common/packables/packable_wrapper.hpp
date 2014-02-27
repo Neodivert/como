@@ -21,6 +21,7 @@
 #define PACKABLE_WRAPPER_HPP
 
 #include "packable.hpp"
+#include <cstdint>
 
 namespace como {
 
@@ -48,14 +49,14 @@ class PackableWrapper : public Packable {
         /***
          * 3. Getters
          ***/
-        UnpackedType getValue() const { return value_; }
+        UnpackedType getValue() const { return this->value_; }
         virtual std::uint16_t getPacketSize() const = 0;
 
 
         /***
          * 4. Setters
          ***/
-        void setValue( UnpackedType value ){ value_ = value; }
+        void setValue( UnpackedType value ){ this->value_ = value; }
 
 
         /***
@@ -69,7 +70,7 @@ class PackableWrapper : public Packable {
          * 6. Operators
          ***/
         PackableWrapper<UnpackedType>& operator = ( const PackableWrapper<UnpackedType>& b );
-        PackableWrapper<UnpackedType>& operator = ( const UnpackedType& UnpackedType );
+        PackableWrapper<UnpackedType>& operator = ( const UnpackedType& value );
         PackableWrapper<UnpackedType>& operator = ( PackableWrapper<UnpackedType>&& ) = delete;
 };
 

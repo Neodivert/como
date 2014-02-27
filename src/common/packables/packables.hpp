@@ -22,6 +22,8 @@
 
 #include "packable_array.hpp"
 #include "packable_uint8.hpp"
+#include "packable_uint16.hpp"
+#include "packable_uint32.hpp"
 #include "composite_packable.hpp"
 
 #endif // PACKABLES_HPP
