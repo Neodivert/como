@@ -21,6 +21,7 @@
 #define PACKABLE_UINT8_HPP
 
 #include "packable_wrapper.hpp"
+#include <stdexcept>
 
 namespace como {
 
@@ -54,6 +55,7 @@ class PackableUint8 : public PackableWrapper<UnpackedType>
          ***/
         virtual void* pack( void* buffer ) const ;
         virtual const void* unpack( const void* buffer ) ;
+        virtual const void* unpack( const void* buffer ) const ;
 
 
         /***
@@ -91,6 +93,29 @@ const void* PackableUint8<UnpackedType>::unpack( const void* buffer )
 
     // Unpack the wrapper's inner valued from the buffer.
     this->value_ = static_cast< UnpackedType >( *castedBuffer );
+
+    // Return a pointer to the next position in buffer.
+    return static_cast< const void* >( castedBuffer + 1 );
+}
+
+
+template <class UnpackedType>
+const void* PackableUint8<UnpackedType>::unpack( const void* buffer ) const
+{
+    char errorMessage[256];
+
+    // Cast buffer to the UnpackedType type.
+    const UnpackedType* castedBuffer = static_cast< const UnpackedType* >( buffer );
+
+    // Check the wrapper's inner valued from the buffer.
+    if( this->value_ != static_cast< UnpackedType >( *castedBuffer ) ){
+        sprintf( errorMessage,
+                 "ERROR: Unexpected value when unpacking uint8 (expected value: %i / unpacked value: %i)",
+                 this->value_,
+                 static_cast< UnpackedType >( *castedBuffer ) );
+
+        throw std::runtime_error( errorMessage );
+    }
 
     // Return a pointer to the next position in buffer.
     return static_cast< const void* >( castedBuffer + 1 );

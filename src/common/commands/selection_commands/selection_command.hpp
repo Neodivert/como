@@ -30,12 +30,13 @@ enum class SelectionCommandType : std::uint8_t {
     SELECTION_TRANSFORMATION,
     SELECTION_DELETION
 };
+typedef PackableUint8< SelectionCommandType > PackableSelectionCommandType;
 
 
 class SelectionCommand : public Command
 {
     private:
-        const SelectionCommandType commandType_;
+        const PackableSelectionCommandType commandType_;
 
     public:
         /***
@@ -54,23 +55,15 @@ class SelectionCommand : public Command
 
 
         /***
-         * 2. Packing and unpacking
-         ***/
-        virtual char* pack( char* buffer ) const;
-        virtual const char* unpack( const char* buffer );
-
-
-        /***
          * 3. Getters
          ***/
         SelectionCommandType getType() const;
-        virtual std::uint16_t getPacketSize() const ;
 
 
         /***
          * 4. Buffer pre reading
          ***/
-        static SelectionCommandType getType( const char* buffer );
+        static SelectionCommandType getType( const void* buffer );
 
 
         /***
@@ -79,7 +72,6 @@ class SelectionCommand : public Command
         SelectionCommand& operator=( const SelectionCommand& ) = delete;
         SelectionCommand& operator=( SelectionCommand&& ) = delete;
 };
-
 
 typedef std::shared_ptr< const SelectionCommand > SelectionCommandConstPtr;
 

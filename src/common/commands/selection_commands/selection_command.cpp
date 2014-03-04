@@ -29,6 +29,7 @@ SelectionCommand::SelectionCommand( SelectionCommandType selectionCommandType, U
     Command( CommandTarget::SELECTION, userID ),
     commandType_( selectionCommandType )
 {
+    addBodyPackable( &commandType_ );
 }
 
 
@@ -36,43 +37,7 @@ SelectionCommand::SelectionCommand( const SelectionCommand& b ) :
     Command( b ),
     commandType_( b.commandType_ )
 {
-}
-
-
-/***
- * 2. Packing and unpacking
- ***/
-
-char* SelectionCommand::pack( char* buffer ) const
-{
-    // Pack Command attributes.
-    buffer = Command::pack( buffer );
-
-    // Pack SelectionCommand attributes.
-    packer::pack( static_cast< std::uint8_t >( commandType_ ), buffer );
-
-    // Return updated buffer pointer.
-    return buffer;
-}
-
-
-const char* SelectionCommand::unpack( const char* buffer )
-{
-    std::uint8_t commandType;
-
-    // Unpack Command attributes.
-    buffer = Command::unpack( buffer );
-
-    // Unpack SelectionCommand attributes.
-    packer::unpack( commandType, buffer );
-
-    // TODO: Remove this check in future versions.
-    if( commandType_ != static_cast< SelectionCommandType >( commandType ) ){
-        throw std::runtime_error( "ERROR: Unexpected SelectionCommand" );
-    }
-
-    // Return updated buffer pointer.
-    return buffer;
+    addBodyPackable( &commandType_ );
 }
 
 
@@ -82,14 +47,7 @@ const char* SelectionCommand::unpack( const char* buffer )
 
 SelectionCommandType SelectionCommand::getType() const
 {
-    return commandType_;
-}
-
-
-std::uint16_t SelectionCommand::getPacketSize() const
-{
-    return Command::getPacketSize() +
-            sizeof( commandType_ );
+    return commandType_.getValue();
 }
 
 
@@ -97,9 +55,10 @@ std::uint16_t SelectionCommand::getPacketSize() const
  * 4. Buffer pre reading
  ***/
 
-SelectionCommandType SelectionCommand::getType( const char* buffer )
+SelectionCommandType SelectionCommand::getType( const void* buffer )
 {
-    return static_cast< SelectionCommandType >( *( reinterpret_cast< const std::uint8_t* >( buffer ) ) );
+    return *( static_cast< const SelectionCommandType* >( buffer ) );
 }
+
 
 } // namespace como

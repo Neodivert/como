@@ -31,6 +31,8 @@ SelectionResponseCommand::SelectionResponseCommand() :
     nSelections_( 0 ),
     selectionConfirmed_( 0 )
 {
+    addBodyPackable( &nSelections_ );
+    addBodyPackable( &selectionConfirmed_ );
 }
 
 
@@ -39,38 +41,8 @@ SelectionResponseCommand::SelectionResponseCommand( const SelectionResponseComma
     nSelections_( b.nSelections_ ),
     selectionConfirmed_( b.selectionConfirmed_ )
 {
-}
-
-
-/***
- * 3. Packing and unpacking
- ***/
-
-char* SelectionResponseCommand::pack( char* buffer ) const
-{
-    // Pack SelectionCommand attributes.
-    buffer = SelectionCommand::pack( buffer );
-
-    // Pack SelectionResponseCommand attributes..
-    packer::pack( nSelections_, buffer );
-    packer::pack( selectionConfirmed_, buffer );
-
-    // Return the buffer updated pointer.
-    return buffer;
-}
-
-
-const char* SelectionResponseCommand::unpack( const char* buffer )
-{
-    // Unpack SelectionCommand attributes.
-    buffer = SelectionCommand::unpack( buffer );
-
-    // Unpack SelectionResponseCommand attributes.
-    packer::unpack( nSelections_, buffer );
-    packer::unpack( selectionConfirmed_, buffer );
-
-    // Return the buffer updated pointer.
-    return buffer;
+    addBodyPackable( &nSelections_ );
+    addBodyPackable( &selectionConfirmed_ );
 }
 
 
@@ -78,23 +50,15 @@ const char* SelectionResponseCommand::unpack( const char* buffer )
  * 3. Getters
  ***/
 
-std::uint16_t SelectionResponseCommand::getPacketSize() const
-{
-    return SelectionCommand::getPacketSize() +
-            sizeof( nSelections_ ) +
-            sizeof( selectionConfirmed_ );
-}
-
-
 std::uint8_t SelectionResponseCommand::getNSelections() const
 {
-    return nSelections_;
+    return nSelections_.getValue();
 }
 
 
 std::uint32_t SelectionResponseCommand::getSelectionConfirmed() const
 {
-    return selectionConfirmed_;
+    return selectionConfirmed_.getValue();
 }
 
 
@@ -106,15 +70,15 @@ void SelectionResponseCommand::addSelectionConfirmation( bool confirmed )
 {
     std::uint8_t confirmationFlag = confirmed ? 1 : 0;
 
-    if( nSelections_ >= MAX_SELECTION_CONFIRMATIONS ){
+    if( nSelections_.getValue() >= MAX_SELECTION_CONFIRMATIONS ){
         throw std::runtime_error( "Selection confirmations exceeds the limit" );
     }
 
     // Add the confirmation flag to the bits flag.
-    confirmationFlag <<= nSelections_;
-    selectionConfirmed_ |= confirmationFlag;
+    confirmationFlag <<= nSelections_.getValue();
+    selectionConfirmed_ = selectionConfirmed_.getValue() | confirmationFlag;
 
-    nSelections_++;
+    nSelections_ = nSelections_.getValue() + 1;
 }
 
 

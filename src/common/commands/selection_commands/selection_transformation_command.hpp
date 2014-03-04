@@ -25,12 +25,13 @@
 namespace como {
 
 // Transformation types.
-enum class SelectionTransformationCommandType
+enum class SelectionTransformationCommandType : std::uint8_t
 {
     TRANSLATION = 0,
     ROTATION,
     SCALE
 };
+typedef PackableUint8< SelectionTransformationCommandType > PackableSelectionTransformationCommandType;
 
 const unsigned int TRANSFORMATION_MAGNITUDE_STR_SIZE = 32;
 

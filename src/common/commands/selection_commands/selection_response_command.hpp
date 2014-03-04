@@ -29,11 +29,11 @@ const std::uint8_t MAX_SELECTION_CONFIRMATIONS = 32;
 class SelectionResponseCommand : public SelectionCommand
 {
     private:
-        std::uint8_t nSelections_;
+        PackableUint8< std::uint8_t > nSelections_;
 
         // Bits flag: the i-th bit indicates whether the i-th selection sent
         // by the client is confirmed (1) or denied (0).
-        std::uint32_t selectionConfirmed_;
+        PackableUint32< std::uint32_t > selectionConfirmed_;
 
 
     public:
@@ -52,16 +52,8 @@ class SelectionResponseCommand : public SelectionCommand
 
 
         /***
-         * 3. Packing and unpacking
-         ***/
-        virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer ) ;
-
-
-        /***
          * 3. Getters
          ***/
-        virtual std::uint16_t getPacketSize() const ;
         std::uint8_t getNSelections() const ;
         std::uint32_t getSelectionConfirmed() const ;
 

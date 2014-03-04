@@ -46,7 +46,7 @@ class PackableUint32 : public PackableWrapper<UnpackedType>
         /***
          * 3. Getters
          ***/
-        virtual std::uint32_t getPacketSize() const { return sizeof( std::uint32_t ); }
+        virtual std::uint16_t getPacketSize() const { return sizeof( std::uint32_t ); }
 
 
         /***
@@ -104,10 +104,10 @@ const void* PackableUint32<UnpackedType>::unpack( const void* buffer )
     // Unpack the wrapper's inner valued from the buffer and translate it from network order.
     this->value_ = static_cast< UnpackedType >( *castedBuffer );
 #if LITTLE_ENDIAN
-    value_ = ( (value_ & 0xFF000000) >> 24 ) |
-            ( (value_ & 0x00FF0000) >> 8 ) |
-            ( (value_ & 0x0000FF00) << 8 ) |
-            ( (value_ & 0x000000FF) << 24 );
+    this->value_ = ( (this->value_ & 0xFF000000) >> 24 ) |
+            ( (this->value_ & 0x00FF0000) >> 8 ) |
+            ( (this->value_ & 0x0000FF00) << 8 ) |
+            ( (this->value_ & 0x000000FF) << 24 );
 #endif
 
     // Return a pointer to the next position in buffer.
@@ -122,14 +122,18 @@ const void* PackableUint32<UnpackedType>::unpack( const void* buffer )
 template <class UnpackedType>
 PackableUint32<UnpackedType>& PackableUint32<UnpackedType>::operator = ( const PackableUint32<UnpackedType>& b )
 {
-    return PackableWrapper<UnpackedType>::operator =( b );
+    PackableWrapper<UnpackedType>::operator =( b );
+
+    return *this;
 }
 
 
 template <class UnpackedType>
 PackableUint32<UnpackedType>& PackableUint32<UnpackedType>::operator = ( const UnpackedType& value )
 {
-    return PackableWrapper<UnpackedType>::operator =( value );
+    PackableWrapper<UnpackedType>::operator =( value );
+
+    return *this;
 }
 
 } // namespace como
