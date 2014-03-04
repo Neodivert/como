@@ -98,7 +98,8 @@ const void* PackableUint8<UnpackedType>::unpack( const void* buffer )
     return static_cast< const void* >( castedBuffer + 1 );
 }
 
-
+// This "constant unpacking" allows us to automatically throw an exception if
+// we are expecting one value but receive other.
 template <class UnpackedType>
 const void* PackableUint8<UnpackedType>::unpack( const void* buffer ) const
 {

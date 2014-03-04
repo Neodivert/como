@@ -47,7 +47,10 @@ SelectionTransformationCommand::SelectionTransformationCommand() :
     SelectionCommand( SelectionCommandType::SELECTION_TRANSFORMATION, 0 ),
     transformationType_( SelectionTransformationCommandType::TRANSLATION )
 {
-    setTransformationMagnitude( 0.0f, 0.0f, 0.0f, 0.0f );
+    transformationMagnitude_.setValue( 0.0f, 0.0f, 0.0f, 0.0f );
+
+    addBodyPackable( &transformationType_ );
+    addBodyPackable( &transformationMagnitude_ );
 }
 
 
@@ -55,77 +58,20 @@ SelectionTransformationCommand::SelectionTransformationCommand( UserID userID ) 
     SelectionCommand( SelectionCommandType::SELECTION_TRANSFORMATION, userID ),
     transformationType_( SelectionTransformationCommandType::TRANSLATION  )
 {
-    setTransformationMagnitude( 0.0f, 0.0f, 0.0f, 0.0f );
+    transformationMagnitude_.setValue( 0.0f, 0.0f, 0.0f, 0.0f );
+
+    addBodyPackable( &transformationType_ );
+    addBodyPackable( &transformationMagnitude_ );
 }
 
 
 SelectionTransformationCommand::SelectionTransformationCommand( const SelectionTransformationCommand& b ) :
     SelectionCommand( b ),
-    transformationType_( b.transformationType_ )
+    transformationType_( b.transformationType_ ),
+    transformationMagnitude_( b.transformationMagnitude_ )
 {
-    setTransformationMagnitude( b.angle_,
-                                b.transformationMagnitude_[0],
-                                b.transformationMagnitude_[1],
-                                b.transformationMagnitude_[2] );
-}
-
-
-/***
- * 3. Packing and unpacking
- ***/
-
-char* SelectionTransformationCommand::pack( char* buffer ) const
-{
-    // Pack SelectionCommand attributes.
-    buffer = SelectionCommand::pack( buffer );
-
-    // Pack SelectionTransformationCommand attributes.
-    packer::pack( static_cast< std::uint8_t >( transformationType_ ), buffer );
-    packer::pack( transformationMagnitudeStr_, buffer, TRANSFORMATION_MAGNITUDE_STR_SIZE );
-
-    // Return the buffer updated pointer.
-    return buffer;
-}
-
-
-const char* SelectionTransformationCommand::unpack( const char* buffer )
-{
-    std::uint8_t transformationType;
-    int sscanfReturnValue = 0;
-
-    // Unpack SelectionCommand attributes.
-    buffer = SelectionCommand::unpack( buffer );
-
-    // Unpack SelectionTransformationCommand attributes.
-    packer::unpack( transformationType, buffer );
-    transformationType_ = static_cast< SelectionTransformationCommandType >( transformationType );
-    packer::unpack( transformationMagnitudeStr_, buffer, TRANSFORMATION_MAGNITUDE_STR_SIZE );
-
-    // The string representation of the float values may have a different
-    // decimal separator between machines. Replace the dots (used for network
-    // transfer) with the local decimal separator.
-    replaceChacacter( transformationMagnitudeStr_,
-                      '.',
-                      ( localeconv() )->decimal_point[0] );
-
-    // Translate the previous transformation magnitude from string format to
-    // float one.
-    sscanfReturnValue = sscanf( transformationMagnitudeStr_,
-                                STRING_TO_FLOAT_FORMAT,
-                                &angle_,
-                                &( transformationMagnitude_[0] ),
-                                &( transformationMagnitude_[1] ),
-                                &( transformationMagnitude_[2] )
-                                );
-
-    if( ( sscanfReturnValue < 4 ) || ( sscanfReturnValue == EOF ) ){
-        throw std::runtime_error( std::string( "ERROR when unpacking transformation magnitude by sscanf: return value(" ) +
-                                  std::to_string( sscanfReturnValue ) +
-                                  std::string( ")" ) );
-    }
-
-    // Return the buffer updated pointer.
-    return buffer;
+    addBodyPackable( &transformationType_ );
+    addBodyPackable( &transformationMagnitude_ );
 }
 
 
@@ -133,30 +79,21 @@ const char* SelectionTransformationCommand::unpack( const char* buffer )
  * 4. Getters
  ***/
 
-
-std::uint16_t SelectionTransformationCommand::getPacketSize() const
-{
-    return SelectionCommand::getPacketSize() +
-            sizeof( transformationType_ ) +
-            TRANSFORMATION_MAGNITUDE_STR_SIZE;
-}
-
-
 SelectionTransformationCommandType SelectionTransformationCommand::getTransformationType() const
 {
-    return transformationType_;
+    return transformationType_.getValue();
 }
 
 
 const float* SelectionTransformationCommand::getTransformationMagnitude() const
 {
-    return transformationMagnitude_;
+    return transformationMagnitude_.getValue();
 }
 
 
 float SelectionTransformationCommand::getAngle() const
 {
-    return angle_;
+    return transformationMagnitude_[3];
 }
 
 
@@ -177,7 +114,7 @@ void SelectionTransformationCommand::setTranslation( float tx, float ty, float t
     transformationType_ = SelectionTransformationCommandType::TRANSLATION;
 
     // Set the transformation magnitude.
-    setTransformationMagnitude( 0.0f, tx, ty, tz );
+    transformationMagnitude_.setValue( tx, ty, tz, 0.0f );
 }
 
 
@@ -187,10 +124,10 @@ void SelectionTransformationCommand::setTranslation( const float* direction )
     transformationType_ = SelectionTransformationCommandType::TRANSLATION;
 
     // Set the transformation magnitude.
-    setTransformationMagnitude( 0.0f,
-                                direction[0],
-                                direction[1],
-                                direction[2] );
+    transformationMagnitude_.setValue( direction[0],
+                                        direction[1],
+                                        direction[2],
+                                        direction[3] );
 }
 
 
@@ -200,7 +137,7 @@ void SelectionTransformationCommand::setRotation( float angle, float vx, float v
     transformationType_ = SelectionTransformationCommandType::ROTATION;
 
     // Set the transformation magnitude.
-    setTransformationMagnitude( angle, vx, vy, vz );
+    transformationMagnitude_.setValue( vx, vy, vz, angle );
 }
 
 
@@ -210,11 +147,7 @@ void SelectionTransformationCommand::setRotation( float angle, const float* axis
     transformationType_ = SelectionTransformationCommandType::ROTATION;
 
     // Set the transformation magnitude.
-    setTransformationMagnitude(
-            angle,
-            axis[0],
-            axis[1],
-            axis[2] );
+    transformationMagnitude_.setValue( axis[0], axis[1], axis[2], angle );
 }
 
 
@@ -224,7 +157,7 @@ void SelectionTransformationCommand::setScale( float sx, float sy, float sz )
     transformationType_ = SelectionTransformationCommandType::SCALE;
 
     // Set the transformation magnitude.
-    setTransformationMagnitude( 0.0f, sx, sy, sz );
+    transformationMagnitude_.setValue( sx, sy, sz, 0.0f );
 }
 
 
@@ -234,40 +167,7 @@ void SelectionTransformationCommand::setScale( const float* magnitude )
     transformationType_ = SelectionTransformationCommandType::SCALE;
 
     // Set the transformation magnitude.
-    setTransformationMagnitude(
-            0.0f,
-            magnitude[0],
-            magnitude[1],
-            magnitude[2] );
+    transformationMagnitude_.setValue( magnitude[0], magnitude[1], magnitude[2], magnitude[3] );
 }
-
-
-void SelectionTransformationCommand::setTransformationMagnitude( float angle, float x, float y, float z )
-{
-    // Copy the angle.
-    angle_ = angle;
-
-    // Copy the transformation magnitude.
-    transformationMagnitude_[0] = x;
-    transformationMagnitude_[1] = y;
-    transformationMagnitude_[2] = z;
-
-    // Create the string representation of the transformation angle and vector.
-    snprintf( transformationMagnitudeStr_,
-              TRANSFORMATION_MAGNITUDE_STR_SIZE,
-              FLOAT_TO_STRING_FORMAT,
-              angle,
-              x,
-              y,
-              z );
-
-    // The string representation of the float values may have a different
-    // decimal separator between machines. Replace it with a dot for
-    // network transfer.
-    replaceChacacter( transformationMagnitudeStr_,
-                      ( localeconv() )->decimal_point[0],
-                      '.' );
-}
-
 
 } // namespace como

@@ -77,7 +77,8 @@ HEADERS += \
     ../../src/common/packables/packable_uint32.hpp \
     ../../src/common/packables/packable_string.hpp \
     ../../src/common/packables/packable_array_wrapper.hpp \
-    ../../src/common/packables/packable_uint8_array.hpp
+    ../../src/common/packables/packable_uint8_array.hpp \
+    ../../src/common/packables/packable_vector4.hpp
 
 
 
@@ -136,7 +137,8 @@ SOURCES += \
     ../../src/client/gui/users_list.cpp \
     ../../src/client/managers/scene/public_scene.cpp \
     ../../src/client/managers/server_interface/server_interface.cpp \
-    ../../src/client/models/3d/drawables_selection.cpp
+    ../../src/client/models/3d/drawables_selection.cpp \
+    ../../src/common/packables/packable_vector4.cpp
 
 
 # Common sources (used by both client and server).

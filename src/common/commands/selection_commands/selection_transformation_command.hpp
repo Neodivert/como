@@ -39,18 +39,8 @@ const unsigned int TRANSFORMATION_MAGNITUDE_STR_SIZE = 32;
 class SelectionTransformationCommand : public SelectionCommand
 {
     private:
-        // Transformation type.
-        SelectionTransformationCommandType transformationType_;
-
-        // Angle (for rotations).
-        float angle_;
-
-        // Transformation magnitude (in every axis).
-        float transformationMagnitude_[3];
-
-        // Transformation magnitude (in string format for network
-        // communication).
-        char transformationMagnitudeStr_[TRANSFORMATION_MAGNITUDE_STR_SIZE];
+        PackableSelectionTransformationCommandType transformationType_;
+        PackableVector4 transformationMagnitude_;
 
     public:
         /***
@@ -78,7 +68,6 @@ class SelectionTransformationCommand : public SelectionCommand
         /***
          * 4. Getters
          ***/
-        virtual std::uint16_t getPacketSize() const ;
         SelectionTransformationCommandType getTransformationType() const ;
         const float* getTransformationMagnitude() const ;
         float getAngle() const ;
@@ -97,9 +86,6 @@ class SelectionTransformationCommand : public SelectionCommand
 
         void setScale( float sx, float sy, float sz );
         void setScale( const float* magnitude );
-
-    private:
-        void setTransformationMagnitude( float angle, float x, float y, float z );
 
     public:
         /***
