@@ -27,31 +27,27 @@ namespace como {
 class DrawableSelectionCommand : public DrawableCommand
 {
     private:
-        std::uint8_t addToSelection_;
+        PackableUint8< std::uint8_t > addToSelection_;
 
     public:
         /***
-         * 1. Initialization and destruction.
+         * 1. Construction
          ***/
         DrawableSelectionCommand();
-        DrawableSelectionCommand( UserID userID, DrawableID drawableID, bool addToSelection );
+        DrawableSelectionCommand( UserID userID, PackableDrawableID drawableID, bool addToSelection );
         DrawableSelectionCommand( const DrawableSelectionCommand& b );
         DrawableSelectionCommand( DrawableSelectionCommand&& ) = delete;
 
-        ~DrawableSelectionCommand() = default;
-
 
         /***
-         * 2. Packing and unpacking
+         * 2. Destruction
          ***/
-        virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer ) ;
+        ~DrawableSelectionCommand() = default;
 
 
         /***
          * 3. Getters
          ***/
-        virtual std::uint16_t getPacketSize() const ;
         std::uint8_t getAddToSelection() const ;
 
 

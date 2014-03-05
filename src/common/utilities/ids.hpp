@@ -38,36 +38,36 @@ typedef PackableUint32< DrawableIndex > PackableDrawableIndex;
  * - A index to differ the drawable from others created by the same user.
  */
 
-struct DrawableID {
-    UserID creatorID;
-    DrawableIndex drawableIndex;
+struct PackableDrawableID : public CompositePackable {
+    PackableUserID creatorID;
+    PackableDrawableIndex drawableIndex;
 
 
     /***
      * 1. Construction
      ***/
-    DrawableID();
-    DrawableID( const DrawableID& ) = default;
-    DrawableID( DrawableID&& ) = default;
+    PackableDrawableID();
+    PackableDrawableID( const PackableDrawableID& b );
+    PackableDrawableID( PackableDrawableID&& ) = delete;
 
 
     /***
      * 2. Destruction
      ***/
-    ~DrawableID() = default;
+    ~PackableDrawableID() = default;
 
 
     /***
      * 3. Operators
      ***/
-    bool operator < ( const DrawableID& b ) const ;
-    bool operator == ( const DrawableID& b ) const ;
+    bool operator < ( const PackableDrawableID& b ) const ;
+    bool operator == ( const PackableDrawableID& b ) const ;
 
-    DrawableID& operator = (const DrawableID& b ) = default;
-    DrawableID& operator = ( DrawableID&& ) = default;
+    PackableDrawableID& operator = (const PackableDrawableID& b );
+    PackableDrawableID& operator = ( PackableDrawableID&& ) = delete;
 };
 
-const DrawableID NULL_DRAWABLE_ID;
+const PackableDrawableID NULL_DRAWABLE_ID;
 
 } // namespace como
 

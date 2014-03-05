@@ -29,18 +29,20 @@ enum class DrawableCommandType : std::uint8_t {
     DRAWABLE_SELECTION
 };
 
+typedef PackableUint8< DrawableCommandType > PackableDrawableCommandType;
+
 class DrawableCommand : public Command
 {
     private:
-        const DrawableCommandType commandType_;
-        DrawableID drawableID_;
+        const PackableDrawableCommandType commandType_;
+        PackableDrawableID drawableID_;
 
     public:
         /***
          * 1. Construction
          ***/
         DrawableCommand() = delete;
-        DrawableCommand( DrawableCommandType drawableCommandType, UserID userID, DrawableID drawableID );
+        DrawableCommand( DrawableCommandType drawableCommandType, UserID userID, PackableDrawableID drawableID );
         DrawableCommand( const DrawableCommand& b );
         DrawableCommand( DrawableCommand&& ) = delete;
 
@@ -52,30 +54,22 @@ class DrawableCommand : public Command
 
 
         /***
-         * 3. Packing and unpacking
-         ***/
-        virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer );
-
-
-        /***
-         * 4. Getters
+         * 3. Getters
          ***/
         DrawableCommandType getType() const;
-        virtual std::uint16_t getPacketSize() const ;
-        DrawableID getDrawableID() const ;
+        PackableDrawableID getDrawableID() const ;
 
 
         /***
          * 5. Buffer pre reading
          ***/
-        static DrawableCommandType getType( const char* buffer );
+        static DrawableCommandType getType( const void* buffer );
 
 
         /***
          * 6. Setters
          ***/
-        void setDrawableID( const DrawableID& drawableID );
+        void setDrawableID( const PackableDrawableID& drawableID );
 
 
         /***

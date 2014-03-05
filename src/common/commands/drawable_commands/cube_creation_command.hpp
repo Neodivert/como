@@ -28,31 +28,26 @@ class CubeCreationCommand : public DrawableCommand
 {
     private:
         // Mesh color.
-        std::uint8_t color_[4];
+        PackableRGBA color_;
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
         CubeCreationCommand();
-        CubeCreationCommand( UserID userID, DrawableID drawableID, const std::uint8_t* color );
+        CubeCreationCommand( UserID userID, PackableDrawableID drawableID, const std::uint8_t* color );
         CubeCreationCommand( const CubeCreationCommand& b );
         CubeCreationCommand( CubeCreationCommand&& ) = delete;
 
-        ~CubeCreationCommand() = default;
-
-
         /***
-         * 2. Packing and unpacking
+         * 2. Destruction
          ***/
-        virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer ) ;
+        ~CubeCreationCommand() = default;
 
 
         /***
          * 3. Getters
          ***/
-        virtual std::uint16_t getPacketSize() const ;
         const std::uint8_t* getColor() const ;
 
 

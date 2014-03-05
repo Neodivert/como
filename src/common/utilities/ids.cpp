@@ -25,25 +25,50 @@ namespace como {
  * 1. Construction
  ***/
 
-DrawableID::DrawableID() :
+
+PackableDrawableID::PackableDrawableID() :
     creatorID( 0 ),
     drawableIndex( 0 )
-{}
+{
+    addBodyPackable( &creatorID );
+    addBodyPackable( &drawableIndex );
+}
+
+PackableDrawableID::PackableDrawableID( const PackableDrawableID& b ) :
+    CompositePackable(),
+    creatorID( b.creatorID ),
+    drawableIndex( b.drawableIndex )
+{
+    addBodyPackable( &creatorID );
+    addBodyPackable( &drawableIndex );
+}
 
 
 /***
  * 3. Operators
  ***/
 
-bool DrawableID::operator < ( const DrawableID& b ) const {
-    return ( ( creatorID < b.creatorID ) ||
-             ( (creatorID == b.creatorID) && (drawableIndex < b.drawableIndex) ) );
+bool PackableDrawableID::operator < ( const PackableDrawableID& b ) const
+{
+    return ( ( creatorID.getValue() < b.creatorID.getValue() ) ||
+             ( (creatorID.getValue() == b.creatorID.getValue()) && (drawableIndex.getValue() < b.drawableIndex.getValue()) ) );
 }
 
-bool DrawableID::operator == ( const DrawableID& b ) const {
-    return ( ( creatorID == b.creatorID ) &&
-             (drawableIndex == b.drawableIndex ) );
+bool PackableDrawableID::operator == ( const PackableDrawableID& b ) const
+{
+    return ( ( creatorID.getValue() == b.creatorID.getValue() ) &&
+             (drawableIndex.getValue() == b.drawableIndex.getValue() ) );
 }
 
+
+PackableDrawableID& PackableDrawableID::operator = (const PackableDrawableID& b )
+{
+    if( this != &b ){
+        creatorID = b.creatorID;
+        drawableIndex = b.drawableIndex;
+    }
+
+    return *this;
+}
 
 } // namespace como

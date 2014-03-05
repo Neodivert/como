@@ -25,7 +25,7 @@ namespace como {
  * 1. Construction
  ***/
 
-DrawableCommand::DrawableCommand( DrawableCommandType drawableCommandType, UserID userID, DrawableID drawableID ) :
+DrawableCommand::DrawableCommand( DrawableCommandType drawableCommandType, UserID userID, PackableDrawableID drawableID ) :
     Command( CommandTarget::DRAWABLE, userID ),
     commandType_( drawableCommandType ),
     drawableID_( drawableID )
@@ -42,67 +42,16 @@ DrawableCommand::DrawableCommand( const DrawableCommand& b ) :
 
 
 /***
- * 3. Packing and unpacking
- ***/
-
-char* DrawableCommand::pack( char* buffer ) const
-{
-    // Pack Command attributes.
-    buffer = Command::pack( buffer );
-
-    // Pack DrawableCommand attributes.
-    packer::pack( static_cast< std::uint8_t >( commandType_ ), buffer );
-    packer::pack( drawableID_.creatorID, buffer );
-    packer::pack( drawableID_.drawableIndex, buffer );
-
-    // Return the buffer updated pointer.
-    return buffer;
-}
-
-
-const char* DrawableCommand::unpack( const char* buffer )
-{
-    std::uint8_t commandType;
-
-    // Unpack Command attributes.
-    buffer = Command::unpack( buffer );
-
-    // Unpack DrawableCommand ID.
-    packer::unpack( commandType, buffer );
-
-    // TODO: Remove this check in future versions.
-    if( commandType_ != static_cast< DrawableCommandType >( commandType ) ){
-        throw std::runtime_error( "ERROR: Unexpected DrawableCommand type" );
-    }
-
-    packer::unpack( drawableID_.creatorID, buffer );
-    packer::unpack( drawableID_.drawableIndex, buffer );
-
-    // Return the buffer updated pointer.
-    return buffer;
-}
-
-
-/***
- * 4. Getters
+ * 3. Getters
  ***/
 
 DrawableCommandType DrawableCommand::getType() const
 {
-    return commandType_;
+    return commandType_.getValue();
 }
 
 
-std::uint16_t DrawableCommand::getPacketSize() const
-{
-    return ( Command::getPacketSize() +
-             sizeof( commandType_ ) +
-             sizeof( drawableID_.creatorID ) +
-             sizeof( drawableID_.drawableIndex ) );
-}
-
-
-DrawableID DrawableCommand::getDrawableID() const
+PackableDrawableID DrawableCommand::getDrawableID() const
 {
     return drawableID_;
 }
@@ -112,9 +61,9 @@ DrawableID DrawableCommand::getDrawableID() const
  * 5. Buffer pre reading
  ***/
 
-DrawableCommandType DrawableCommand::getType( const char* buffer )
+DrawableCommandType DrawableCommand::getType( const void* buffer )
 {
-    return static_cast< DrawableCommandType >( *( reinterpret_cast< const std::uint8_t* >( buffer ) ) );
+    return *( static_cast< const DrawableCommandType* >( buffer ) );
 }
 
 
@@ -122,7 +71,7 @@ DrawableCommandType DrawableCommand::getType( const char* buffer )
  * 6. Setters
  ***/
 
-void DrawableCommand::setDrawableID( const DrawableID& drawableID )
+void DrawableCommand::setDrawableID( const PackableDrawableID& drawableID )
 {
     drawableID_ = drawableID;
 }

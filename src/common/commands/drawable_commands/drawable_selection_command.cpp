@@ -22,18 +22,21 @@
 namespace como {
 
 /***
- * 1. Initialization and destruction.
+ * 1. Construction
  ***/
 
 DrawableSelectionCommand::DrawableSelectionCommand() :
     DrawableCommand( DrawableCommandType::DRAWABLE_SELECTION, 0, NULL_DRAWABLE_ID ),
     addToSelection_( false )
-{}
+{
+    addBodyPackable( &addToSelection_ );
+}
 
-DrawableSelectionCommand::DrawableSelectionCommand( UserID userID, DrawableID drawableID, bool addToSelection ) :
+DrawableSelectionCommand::DrawableSelectionCommand( UserID userID, PackableDrawableID drawableID, bool addToSelection ) :
     DrawableCommand( DrawableCommandType::DRAWABLE_SELECTION, userID, drawableID ),
     addToSelection_( addToSelection )
 {
+    addBodyPackable( &addToSelection_ );
 }
 
 
@@ -41,36 +44,7 @@ DrawableSelectionCommand::DrawableSelectionCommand( const DrawableSelectionComma
     DrawableCommand( b ),
     addToSelection_( b.addToSelection_ )
 {
-}
-
-
-/***
- * 2. Packing and unpacking
- ***/
-
-char* DrawableSelectionCommand::pack( char* buffer ) const
-{
-    // Pack DrawableCommand attributes.
-    buffer = DrawableCommand::pack( buffer );
-
-    // Pack DrawableSelectionCommand attributes.
-    packer::pack( addToSelection_, buffer );
-
-    // Return the buffer updated pointer.
-    return buffer;
-}
-
-
-const char* DrawableSelectionCommand::unpack( const char* buffer )
-{
-    // Unpack DrawableCommand attributes.
-    buffer = DrawableCommand::unpack( buffer );
-
-    // Unpack DrawableCommand attributes.
-    packer::unpack( addToSelection_, buffer );
-
-    // Return the buffer updated pointer.
-    return buffer;
+    addBodyPackable( &addToSelection_ );
 }
 
 
@@ -78,16 +52,10 @@ const char* DrawableSelectionCommand::unpack( const char* buffer )
  * 3. Getters
  ***/
 
-std::uint16_t DrawableSelectionCommand::getPacketSize() const
-{
-    return DrawableCommand::getPacketSize() +
-            sizeof( addToSelection_ );
-}
-
 
 std::uint8_t DrawableSelectionCommand::getAddToSelection() const
 {
-    return addToSelection_;
+    return addToSelection_.getValue();
 }
 
 

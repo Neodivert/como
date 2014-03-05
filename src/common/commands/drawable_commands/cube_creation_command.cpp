@@ -23,63 +23,30 @@ namespace como {
 
 
 /***
- * 1. Initialization and destruction
+ * 1. Construction
  ***/
 
 CubeCreationCommand::CubeCreationCommand() :
     DrawableCommand( DrawableCommandType::CUBE_CREATION, 0, NULL_DRAWABLE_ID ),
     color_({0})
-{}
+{
+    addBodyPackable( &color_ );
+}
 
-CubeCreationCommand::CubeCreationCommand( UserID userID, DrawableID drawableID, const std::uint8_t* color ) :
+CubeCreationCommand::CubeCreationCommand( UserID userID, PackableDrawableID drawableID, const std::uint8_t* color ) :
     DrawableCommand( DrawableCommandType::CUBE_CREATION, userID, drawableID ),
-    color_({0})
+    color_()
 {
     setColor( color );
+
+    addBodyPackable( &color_ );
 }
 
 CubeCreationCommand::CubeCreationCommand( const CubeCreationCommand& b ) :
-    DrawableCommand( b )
+    DrawableCommand( b ),
+    color_( b.color_ )
 {
-    setColor( b.color_ );
-}
-
-
-/***
- * 2. Packing and unpacking
- ***/
-
-char* CubeCreationCommand::pack( char* buffer ) const
-{
-    unsigned int i;
-
-    // Pack DrawableCommand attributes.
-    buffer = DrawableCommand::pack( buffer );
-
-    // Pack CubeCreationCommand attributes.
-    for( i = 0; i < 4; i++ ){
-        packer::pack( color_[i], buffer );
-    }
-
-    // Return the updated buffer pointer.
-    return buffer;
-}
-
-
-const char* CubeCreationCommand::CubeCreationCommand::unpack( const char* buffer )
-{
-    unsigned int i;
-
-    // Unpack DrawableCommand attributes.
-    buffer = DrawableCommand::unpack( buffer );
-
-    // Unpack CubeCreationCommand attributes.
-    for( i = 0; i < 4; i++ ){
-        packer::unpack( color_[i], buffer );
-    }
-
-    // Return the updated buffer pointer.
-    return buffer;
+    addBodyPackable( &color_ );
 }
 
 
@@ -87,16 +54,9 @@ const char* CubeCreationCommand::CubeCreationCommand::unpack( const char* buffer
  * 3. Getters
  ***/
 
-std::uint16_t CubeCreationCommand::getPacketSize() const
-{
-    return ( DrawableCommand::getPacketSize() +
-             sizeof( color_[0] ) * 4 );
-}
-
-
 const std::uint8_t* CubeCreationCommand::getColor() const
 {
-    return color_;
+    return color_.getValue();
 }
 
 
@@ -106,10 +66,7 @@ const std::uint8_t* CubeCreationCommand::getColor() const
 
 void CubeCreationCommand::setColor( const std::uint8_t* color )
 {
-    unsigned int i = 0;
-    for( ; i < 4; i++ ){
-        color_[i] = color[i];
-    }
+    color_ = color;
 }
 
 } // namespace como
