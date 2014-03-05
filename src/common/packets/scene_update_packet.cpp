@@ -30,9 +30,8 @@ SceneUpdatePacket::SceneUpdatePacket() :
     Packet( PacketType::SCENE_UPDATE ),
     nUnsyncCommands_( 0 )
 {
-    bodySize_ =
-            sizeof( nUnsyncCommands_ ) +
-            sizeof( std::uint8_t ); // The number of commands in the packet is encoded as a uint8.
+    addHeaderPackable( &nUnsyncCommands_ );
+    addHeaderPackable( &nCommands_ );
 }
 
 
@@ -41,6 +40,8 @@ SceneUpdatePacket::SceneUpdatePacket( const SceneUpdatePacket& b ) :
     nUnsyncCommands_( b.nUnsyncCommands_ ),
     commands_( b.commands_ )
 {
+    addHeaderPackable( &nUnsyncCommands_ );
+    addHeaderPackable( &nCommands_ );
 }
 
 
@@ -50,43 +51,21 @@ Packet* SceneUpdatePacket::clone() const
 }
 
 /***
- * 2. Packing and unpacking
+ * 3. Packing and unpacking
  ***/
 
-char* SceneUpdatePacket::packBody( char* buffer ) const
-{
-    unsigned int i = 0;
-
-    // Pack the packet's body.
-    packer::pack( nUnsyncCommands_, buffer );
-    packer::pack( (std::uint8_t)( commands_.size() ), buffer );
-
-    for( ; i<commands_.size(); i++ ){
-        buffer = commands_[i]->pack( buffer );
-    }
-
-    // Return the updated buffer ptr.
-    return buffer;
-}
-
-
-const char* SceneUpdatePacket::unpackBody( const char* buffer )
+const void* SceneUpdatePacket::unpackBody( const void* buffer )
 {
     unsigned int i = 0;
     std::uint8_t nCommands = 0;
     CommandPtr commandPtr;
 
-    // Unpack the packet's body.
-    packer::unpack( nUnsyncCommands_, buffer );
-    packer::unpack( nCommands, buffer );
-    commands_.clear();
-    commands_.reserve( nCommands );
-
+    // Unpack the packet's body (commands).
     for( i=0; i<nCommands; i++ ){
         switch( Command::getTarget( buffer ) ){
             // User commands
             case CommandTarget::USER:
-                switch( UserCommand::getType( buffer+1 ) ){ // TODO: buffer+1 is ugly.
+                switch( UserCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 1 ) ){ // TODO: buffer+1 is ugly.
                     case UserCommandType::USER_CONNECTION:
                         commandPtr = CommandPtr( new UserConnectionCommand );
                     break;
@@ -101,7 +80,7 @@ const char* SceneUpdatePacket::unpackBody( const char* buffer )
 
             // Drawable commands
             case CommandTarget::DRAWABLE:
-                switch( DrawableCommand::getType( buffer+1 ) ){ // TODO: buffer+1 is ugly.
+                switch( DrawableCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 1 ) ){ // TODO: buffer+1 is ugly.
                     case DrawableCommandType::CUBE_CREATION:
                         commandPtr =  CommandPtr( new CubeCreationCommand );
                     break;
@@ -113,7 +92,7 @@ const char* SceneUpdatePacket::unpackBody( const char* buffer )
 
             // Selection commands
             case CommandTarget::SELECTION:
-                switch( SelectionCommand::getType( buffer+1 ) ){ // TODO: buffer+1 is ugly.
+                switch( SelectionCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 1 ) ){ // TODO: buffer+1 is ugly.
                     case SelectionCommandType::SELECTION_RESPONSE:
                         commandPtr = CommandPtr( new SelectionResponseCommand );
                     break;
@@ -144,7 +123,7 @@ const char* SceneUpdatePacket::unpackBody( const char* buffer )
 
 std::uint32_t SceneUpdatePacket::getUnsyncCommands() const
 {
-    return nUnsyncCommands_;
+    return nUnsyncCommands_.getValue();
 }
 
 
@@ -168,9 +147,10 @@ void SceneUpdatePacket::addCommand( CommandConstPtr command )
 {
     // Push back the given command.
     commands_.push_back( command );
+    addBodyPackable( commands_.back().get() );
 
-    // Update the SCENE_UPDATE packet's header.
-    bodySize_ += command->getPacketSize();
+    // Update the number of commands.
+    nCommands_ = nCommands_.getValue() + 1;
 }
 
 
@@ -180,9 +160,11 @@ void SceneUpdatePacket::addCommand( CommandConstPtr command,
 {
     // Push back the given command.
     commands_.push_back( command );
+    addBodyPackable( commands_.back().get() );
 
-    // Update the SCENE_UPDATE packet's header.
-    bodySize_ += command->getPacketSize();
+    // Update the number of commands.
+    nCommands_ = nCommands_.getValue() + 1;
+
     nUnsyncCommands_ = historicSize - (commandIndex + 1);
 }
 
@@ -190,9 +172,9 @@ void SceneUpdatePacket::addCommand( CommandConstPtr command,
 void SceneUpdatePacket::clear()
 {
     commands_.clear();
-    bodySize_ =
-            sizeof( nUnsyncCommands_ ) +
-            sizeof( std::uint8_t ); // The number of commands in the packet is encoded as a uint8.
+
+    // Update the number of commands.
+    nCommands_ = 0;
 }
 
 } // namespace como

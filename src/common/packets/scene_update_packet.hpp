@@ -32,26 +32,30 @@ typedef std::list< CommandConstPtr > CommandsList;
 class SceneUpdatePacket : public Packet
 {
     private:
-        std::uint32_t nUnsyncCommands_;
+        PackableUint32< std::uint32_t > nUnsyncCommands_;
+        PackableUint8< std::uint32_t > nCommands_;
         std::vector< CommandConstPtr > commands_;
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
         SceneUpdatePacket();
         SceneUpdatePacket( const SceneUpdatePacket& b );
         SceneUpdatePacket( SceneUpdatePacket&& ) = delete;
         virtual Packet* clone() const ;
 
+
+        /***
+         * 2. Destruction
+         ***/
         ~SceneUpdatePacket() = default;
 
 
         /***
-         * 2. Packing and unpacking
+         * 3. Packing and unpacking
          ***/
-        virtual char* packBody( char* buffer ) const ;
-        virtual const char* unpackBody( const char* buffer );
+        virtual const void* unpackBody( const void* buffer );
 
 
         /***

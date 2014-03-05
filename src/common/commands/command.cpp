@@ -63,9 +63,9 @@ UserID Command::getUserID() const
  * 4. Buffer pre reading
  ***/
 
-CommandTarget Command::getTarget( const char* buffer )
+CommandTarget Command::getTarget( const void* buffer )
 {
-    return static_cast< const CommandTarget >( *buffer );
+    return *( static_cast< const CommandTarget* >( buffer ) );
 }
 
 

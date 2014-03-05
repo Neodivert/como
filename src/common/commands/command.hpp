@@ -76,7 +76,7 @@ class Command : public CompositePackable
         /***
          * 4. Buffer pre reading
          ***/
-        static CommandTarget getTarget( const char* buffer );
+        static CommandTarget getTarget( const void* buffer );
 
 
         /***
