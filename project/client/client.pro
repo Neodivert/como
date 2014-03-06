@@ -70,15 +70,7 @@ HEADERS += \
     ../../src/client/gui/users_list.hpp \
     ../../src/client/managers/scene/public_scene.hpp \
     ../../src/client/managers/server_interface/server_interface.hpp \
-    ../../src/client/models/3d/drawables_selection.hpp \
-    ../../src/common/packables/packables.hpp \
-    ../../src/common/packables/packable_uint8.hpp \
-    ../../src/common/packables/packable_uint16.hpp \
-    ../../src/common/packables/packable_uint32.hpp \
-    ../../src/common/packables/packable_string.hpp \
-    ../../src/common/packables/packable_array_wrapper.hpp \
-    ../../src/common/packables/packable_uint8_array.hpp \
-    ../../src/common/packables/packable_vector4.hpp
+    ../../src/client/models/3d/drawables_selection.hpp
 
 
 
@@ -109,7 +101,15 @@ HEADERS += \
     ../../src/common/commands/selection_commands/selection_transformation_command.hpp \
     ../../src/common/commands/selection_commands/full_deselection_command.hpp \
     ../../src/common/commands/selection_commands/selection_command.hpp \
-    ../../src/common/commands/selection_commands/selection_deletion_command.hpp
+    ../../src/common/commands/selection_commands/selection_deletion_command.hpp \
+    ../../src/common/packables/packables.hpp \
+    ../../src/common/packables/packable_uint8.hpp \
+    ../../src/common/packables/packable_uint16.hpp \
+    ../../src/common/packables/packable_uint32.hpp \
+    ../../src/common/packables/packable_string.hpp \
+    ../../src/common/packables/packable_array_wrapper.hpp \
+    ../../src/common/packables/packable_uint8_array.hpp \
+    ../../src/common/packables/packable_vector4.hpp
 
 
 
@@ -137,8 +137,7 @@ SOURCES += \
     ../../src/client/gui/users_list.cpp \
     ../../src/client/managers/scene/public_scene.cpp \
     ../../src/client/managers/server_interface/server_interface.cpp \
-    ../../src/client/models/3d/drawables_selection.cpp \
-    ../../src/common/packables/packable_vector4.cpp
+    ../../src/client/models/3d/drawables_selection.cpp
 
 
 # Common sources (used by both client and server).
@@ -163,5 +162,6 @@ SOURCES += \
     ../../src/common/commands/selection_commands/selection_transformation_command.cpp \
     ../../src/common/commands/selection_commands/full_deselection_command.cpp \
     ../../src/common/commands/selection_commands/selection_command.cpp \
-    ../../src/common/commands/selection_commands/selection_deletion_command.cpp
+    ../../src/common/commands/selection_commands/selection_deletion_command.cpp \
+    ../../src/common/packables/packable_vector4.cpp
 

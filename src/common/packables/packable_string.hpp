@@ -51,6 +51,7 @@ class PackableString : public Packable
          ***/
         virtual void* pack( void* buffer ) const ;
         virtual const void* unpack( const void* buffer ) ;
+        virtual const void* unpack( const void* buffer ) const;
 
 
         /***
@@ -116,6 +117,23 @@ const void* PackableString<STRING_SIZE>::unpack( const void* buffer )
     const char* castedBuffer = static_cast< const char* >( buffer );
 
     strncpy( str_, static_cast< const char* >( buffer ), STRING_SIZE );
+
+    return static_cast< const void *>( castedBuffer + STRING_SIZE );
+}
+
+
+template <unsigned int STRING_SIZE>
+const void* PackableString<STRING_SIZE>::unpack( const void* buffer ) const
+{
+    char unpackedStr[STRING_SIZE] = { 0 };
+
+    const char* castedBuffer = static_cast< const char* >( buffer );
+
+    strncpy( unpackedStr, static_cast< const char* >( buffer ), STRING_SIZE );
+
+    if( strncmp( str_, unpackedStr, STRING_SIZE ) ){
+        throw std::runtime_error( "ERROR: Unpacked an unexpected PackableString" );
+    }
 
     return static_cast< const void *>( castedBuffer + STRING_SIZE );
 }

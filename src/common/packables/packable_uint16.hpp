@@ -54,8 +54,9 @@ class PackableUint16 : public PackableWrapper<UnpackedType>
         /***
          * 4. Packing and unpacking
          ***/
-        virtual void* pack( void* buffer ) const ;
-        virtual const void* unpack( const void* buffer ) ;
+        virtual void* pack( void* buffer ) const;
+        virtual const void* unpack( const void* buffer );
+        virtual const void* unpack( const void* buffer ) const;
 
 
         /***
@@ -109,6 +110,30 @@ const void* PackableUint16<UnpackedType>::unpack( const void* buffer )
     // Return a pointer to the next position in buffer.
     return static_cast< const void* >( castedBuffer + 1 );
 }
+
+
+template <class UnpackedType>
+const void* PackableUint16<UnpackedType>::unpack( const void* buffer ) const
+{
+    UnpackedType unpackedValue;
+
+    // Cast buffer to the UnpackedType type.
+    const UnpackedType* castedBuffer = static_cast< const UnpackedType* >( buffer );
+
+    // Unpack the wrapper's inner valued from the buffer and translate it from network order.
+    unpackedValue = static_cast< UnpackedType >( *castedBuffer );
+#if LITTLE_ENDIAN
+    unpackedValue = ( (unpackedValue & 0xFF00) >> 8 ) | ((unpackedValue & 0x00FF ) << 8);
+#endif
+
+    if( unpackedValue != value_ ){
+        throw std::runtime_error( "ERROR: Unpacked an unexpected PackableUint16" );
+    }
+
+    // Return a pointer to the next position in buffer.
+    return static_cast< const void* >( castedBuffer + 1 );
+}
+
 
 /***
  * 5. Operators

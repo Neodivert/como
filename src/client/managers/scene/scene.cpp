@@ -308,7 +308,7 @@ void Scene::setPivotPointMode( PivotPointMode pivotPointMode, UserID userID )
  * 5. Drawables administration
  ***/
 
-void Scene::addDrawable( DrawablePtr drawable, DrawableID drawableID )
+void Scene::addDrawable( DrawablePtr drawable, PackableDrawableID drawableID )
 {
     takeOpenGLContext();
 
@@ -345,7 +345,7 @@ void Scene::addCube( QColor color )
 
 void Scene::addCube( const std::uint8_t* color )
 {
-    DrawableID drawableID;
+    PackableDrawableID drawableID;
 
     // Give a unique ID to the new drawable (bind it to the local user).
     drawableID.creatorID = localUserID_;
@@ -362,7 +362,7 @@ void Scene::addCube( const std::uint8_t* color )
 }
 
 
-void Scene::addCube( const std::uint8_t* color, DrawableID drawableID )
+void Scene::addCube( const std::uint8_t* color, PackableDrawableID drawableID )
 {
     try {
         takeOpenGLContext();
@@ -382,7 +382,7 @@ void Scene::addCube( const std::uint8_t* color, DrawableID drawableID )
 /*
 void Scene::addDrawable( DrawableType drawableType )
 {
-    DrawableID drawableID;
+    PackableDrawableID drawableID;
 
     // Give a unique ID to the new drawable (bind it to the local user).
     drawableID.creatorID = localUserID_;
@@ -401,7 +401,7 @@ void Scene::addDrawable( DrawableType drawableType )
     }
 }
 
-void Scene::addDrawable( DrawableType drawableType, DrawableID drawableID )
+void Scene::addDrawable( DrawableType drawableType, PackableDrawableID drawableID )
 {
     DrawablePtr drawable;
     Cube* cube;
@@ -421,12 +421,12 @@ void Scene::addDrawable( DrawableType drawableType, DrawableID drawableID )
  * 6. Drawables selection
  ***/
 
-void Scene::selectDrawable( DrawableID drawableID )
+void Scene::selectDrawable( PackableDrawableID drawableID )
 {
     selectDrawable( drawableID, localUserID_ );
 }
 
-void Scene::selectDrawable( DrawableID drawableID, UserID userID )
+void Scene::selectDrawable( PackableDrawableID drawableID, UserID userID )
 {
     bool drawableFound = false;
     UsersMap::iterator currentUser;
@@ -486,11 +486,11 @@ void Scene::unselectAll( const unsigned int& userId )
 
 
 
-DrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection )
+PackableDrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection )
 {
     const float MAX_T = 9999999.0f;
     float minT = MAX_T;
-    DrawableID closestObject;
+    PackableDrawableID closestObject;
 
     DrawablesSelection& userSelection = users_.at( localUserID_ )->selection;
 
@@ -865,7 +865,7 @@ void Scene::executeRemoteSelectionCommand( SelectionCommandConstPtr command )
     bool selectionConfirmed;
     unsigned int i;
 
-    DrawableID pendingSelection;
+    PackableDrawableID pendingSelection;
 
     switch( command->getType() ){
         case SelectionCommandType::SELECTION_DELETION:

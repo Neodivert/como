@@ -53,7 +53,8 @@ class PackableUint32 : public PackableWrapper<UnpackedType>
          * 4. Packing and unpacking
          ***/
         virtual void* pack( void* buffer ) const ;
-        virtual const void* unpack( const void* buffer ) ;
+        virtual const void* unpack( const void* buffer );
+        virtual const void* unpack( const void* buffer ) const;
 
 
         /***
@@ -109,6 +110,32 @@ const void* PackableUint32<UnpackedType>::unpack( const void* buffer )
             ( (this->value_ & 0x0000FF00) << 8 ) |
             ( (this->value_ & 0x000000FF) << 24 );
 #endif
+
+    // Return a pointer to the next position in buffer.
+    return static_cast< const void* >( castedBuffer + 1 );
+}
+
+
+template <class UnpackedType>
+const void* PackableUint32<UnpackedType>::unpack( const void* buffer ) const
+{
+    UnpackedType unpackedValue;
+
+    // Cast buffer to the UnpackedType type.
+    const UnpackedType* castedBuffer = static_cast< const UnpackedType* >( buffer );
+
+    // Unpack the wrapper's inner valued from the buffer and translate it from network order.
+    unpackedValue = static_cast< UnpackedType >( *castedBuffer );
+#if LITTLE_ENDIAN
+    unpackedValue = ( (unpackedValue & 0xFF000000) >> 24 ) |
+            ( (unpackedValue & 0x00FF0000) >> 8 ) |
+            ( (unpackedValue & 0x0000FF00) << 8 ) |
+            ( (unpackedValue & 0x000000FF) << 24 );
+#endif
+
+    if( unpackedValue != this->value_ ){
+        throw std::runtime_error( "ERROR: Unpacked an unexpected PackableUint32" );
+    }
 
     // Return a pointer to the next position in buffer.
     return static_cast< const void* >( castedBuffer + 1 );

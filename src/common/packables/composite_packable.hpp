@@ -25,12 +25,35 @@
 
 namespace como {
 
+struct PackablePair {
+    const Packable* constant;
+    Packable* variable;
+
+    /*
+     * A CompositePackable can hold both constant and non-constant (variable)
+     * packables, so we must save both of them. When adding a packable to
+     * the CompositePackable, we fill one of the two fields:
+     *
+     * When adding a costant packable: we save a pair with the constant
+     * pointer and a null variable one.
+     * Adding a variable packable: we save a pair with both constant and
+     * non-constant variants of the pointer.
+    */
+    PackablePair( const Packable* constant_ = nullptr, Packable* variable_ = nullptr ) :
+        constant( constant_ ),
+        variable( variable_ )
+    {}
+};
+
 class CompositePackable : public Packable
 {
     private:
         // Yes, simple pointers. We are NOT owning the pointed packables.
-        std::vector< Packable* > headerPackables_;
-        std::vector< Packable* > bodyPackables_;
+        std::vector< PackablePair > headerPackables_;
+        //std::vector< const Packable* > constHeaderPackables_;
+        //std::vector< bool > headerPackableConstness_;
+
+        std::vector< PackablePair > bodyPackables_;
 
     public:
         /***
@@ -48,10 +71,15 @@ class CompositePackable : public Packable
          ***/
         virtual void* pack( void* buffer ) const;
         virtual const void* unpack( const void* buffer );
+        virtual const void* unpack( const void* buffer ) const ;
+
         virtual void* packHeader( void* buffer ) const;
         virtual const void* unpackHeader( const void* buffer );
+        virtual const void* unpackHeader( const void* buffer ) const ;
+
         virtual void* packBody( void* buffer ) const;
         virtual const void* unpackBody( const void* buffer );
+        virtual const void* unpackBody( const void* buffer ) const ;
 
 
         /***
@@ -66,7 +94,9 @@ class CompositePackable : public Packable
          * 4. Packables management
          ***/
     protected:
+        void addHeaderPackable( Packable* packable );
         void addHeaderPackable( const Packable* packable );
+        void addBodyPackable( Packable* packable );
         void addBodyPackable( const Packable* packable );
     public:
 

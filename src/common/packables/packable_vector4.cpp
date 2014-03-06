@@ -172,6 +172,56 @@ const void* PackableVector4::unpack( const void* buffer )
 }
 
 
+const void* PackableVector4::unpack( const void* buffer ) const
+{
+    float unpackedValues[4];
+    char unpackedString[PACK_STRING_SIZE];
+    unsigned int i;
+
+    int sscanfReturnValue = 0;
+
+    // Cast the buffer.
+    const char* castedBuffer = static_cast<const char*>( buffer );
+
+    // Unpack this packable's content from the buffer.
+    strncpy( unpackedString, castedBuffer, PACK_STRING_SIZE );
+
+    // The string representation of the float values may have a different
+    // decimal separator between machines. Replace the dots (used for network
+    // transfer) with the local decimal separator.
+    for( i=0; i<PACK_STRING_SIZE; i++ ){
+        if( unpackedString[i] == '.' ){
+            unpackedString[i] = ( localeconv() )->decimal_point[0];
+        }
+    }
+
+    // Translate the previous transformation magnitude from string format to
+    // float one.
+    sscanfReturnValue = sscanf( unpackedString,
+                                FLOAT_TO_STRING_FORMAT,
+                                &( unpackedValues[0] ),
+                                &( unpackedValues[1] ),
+                                &( unpackedValues[2] ),
+                                &( unpackedValues[3] )
+                                );
+
+    if( ( sscanfReturnValue < 4 ) || ( sscanfReturnValue == EOF ) ){
+        throw std::runtime_error( std::string( "ERROR when unpacking vector4 with sscanf: return value(" ) +
+                                  std::to_string( sscanfReturnValue ) +
+                                  std::string( ")" ) );
+    }
+
+    for( i=0; i<4; i++ ){
+        if( unpackedValues[i] != values_[i] ){
+            throw std::runtime_error( "ERROR: Unpacked an unexpected PackableVector4" );
+        }
+    }
+
+    // Return a pointer to the next position in buffer.
+    return static_cast<const void *>( castedBuffer + getPacketSize() );
+}
+
+
 /***
  * 6. Operators
  ***/

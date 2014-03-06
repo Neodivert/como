@@ -59,14 +59,7 @@ class SelectionTransformationCommand : public SelectionCommand
 
 
         /***
-         * 3. Packing and unpacking
-         ***/
-        virtual char* pack( char* buffer ) const ;
-        virtual const char* unpack( const char* buffer ) ;
-
-
-        /***
-         * 4. Getters
+         * 3. Getters
          ***/
         SelectionTransformationCommandType getTransformationType() const ;
         const float* getTransformationMagnitude() const ;
@@ -74,7 +67,7 @@ class SelectionTransformationCommand : public SelectionCommand
 
 
         /***
-         * 5. Setters
+         * 4. Setters
          ***/
         void setTransformationType( SelectionTransformationCommandType transformationType );
 

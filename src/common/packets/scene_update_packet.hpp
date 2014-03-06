@@ -55,6 +55,8 @@ class SceneUpdatePacket : public Packet
         /***
          * 3. Packing and unpacking
          ***/
+        // TODO: I am not making use of bodyPackables_ for packing/unpacking commands.
+        virtual void* packBody( void* buffer );
         virtual const void* unpackBody( const void* buffer );
 
 

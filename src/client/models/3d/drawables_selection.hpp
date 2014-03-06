@@ -28,7 +28,7 @@
 
 namespace como {
 
-typedef std::map< DrawableID, DrawablePtr > DrawablesMap;
+typedef std::map< PackableDrawableID, DrawablePtr > DrawablesMap;
 
 typedef std::function<void (void)> NotificationCallback;
 
@@ -98,8 +98,8 @@ class DrawablesSelection
          * 6. Drawables management
          ***/
     public:
-        void addDrawable( DrawableID drawableID, DrawablePtr drawable );
-        bool moveDrawable( DrawableID drawableID, DrawablesSelection& destinySelection );
+        void addDrawable( PackableDrawableID drawableID, DrawablePtr drawable );
+        bool moveDrawable( PackableDrawableID drawableID, DrawablesSelection& destinySelection );
         void moveAll( DrawablesSelection& destinySelection );
         void clear();
 
@@ -107,7 +107,7 @@ class DrawablesSelection
         /***
          * 7. Ray picking
          ***/
-        bool intersect( glm::vec3 r0, glm::vec3 r1, DrawableID& closestDrawable, float& minT ) const ;
+        bool intersect( glm::vec3 r0, glm::vec3 r1, PackableDrawableID& closestDrawable, float& minT ) const ;
 
 
         /***

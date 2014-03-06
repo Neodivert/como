@@ -34,7 +34,18 @@ PackableDrawableID::PackableDrawableID() :
     addBodyPackable( &drawableIndex );
 }
 
+
 PackableDrawableID::PackableDrawableID( const PackableDrawableID& b ) :
+    CompositePackable(),
+    creatorID( b.creatorID ),
+    drawableIndex( b.drawableIndex )
+{
+    addBodyPackable( &creatorID );
+    addBodyPackable( &drawableIndex );
+}
+
+
+PackableDrawableID::PackableDrawableID( PackableDrawableID&& b ) :
     CompositePackable(),
     creatorID( b.creatorID ),
     drawableIndex( b.drawableIndex )

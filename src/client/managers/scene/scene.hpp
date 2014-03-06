@@ -76,7 +76,7 @@ class Scene : public QOffscreenSurface
         UserID localUserID_;
         DrawableIndex localUserNextDrawableIndex_;
 
-        std::queue< DrawableID > localUserPendingSelections_;
+        std::queue< PackableDrawableID > localUserPendingSelections_;
 
         shared_ptr< QOpenGLContext > oglContext_;
 
@@ -148,29 +148,29 @@ class Scene : public QOffscreenSurface
          * 5. Drawables administration
          ***/
     private:
-        void addDrawable( DrawablePtr drawable, DrawableID drawableID );
+        void addDrawable( DrawablePtr drawable, PackableDrawableID drawableID );
         void takeOpenGLContext();
     public:
         void addCube( QColor color );
         void addCube( const std::uint8_t* color );
-        void addCube( const std::uint8_t* color, DrawableID drawableID );
+        void addCube( const std::uint8_t* color, PackableDrawableID drawableID );
 
         //void addDrawable( DrawableType drawableType );
-        //void addDrawable( DrawableType drawableType, DrawableID drawableID );
+        //void addDrawable( DrawableType drawableType, PackableDrawableID drawableID );
 
 
         /***
          * 6. Drawables selection.
          ***/
     public:
-        void selectDrawable( DrawableID drawableID );
-        void selectDrawable( DrawableID drawableID, UserID userID );
+        void selectDrawable( PackableDrawableID drawableID );
+        void selectDrawable( PackableDrawableID drawableID, UserID userID );
         //void selectAll();
 
         void unselectAll();
         void unselectAll( const unsigned int& userId );
 
-        DrawableID selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection );
+        PackableDrawableID selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection );
 
 
         /***

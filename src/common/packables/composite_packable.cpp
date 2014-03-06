@@ -44,12 +44,21 @@ const void* CompositePackable::unpack( const void* buffer )
 }
 
 
+const void* CompositePackable::unpack( const void* buffer ) const
+{
+    buffer = unpackHeader( buffer );
+    buffer = unpackBody( buffer );
+
+    return buffer;
+}
+
+
 void* CompositePackable::packHeader( void* buffer ) const
 {
-    std::vector< Packable* >::const_iterator it;
+    std::vector< PackablePair >::const_iterator it;
 
     for( it = headerPackables_.begin(); it != headerPackables_.end(); it++ ){
-        buffer = (*it)->pack( buffer );
+        buffer = it->variable->pack( buffer );
     }
 
     return buffer;
@@ -58,10 +67,26 @@ void* CompositePackable::packHeader( void* buffer ) const
 
 const void* CompositePackable::unpackHeader( const void* buffer )
 {
-    std::vector< Packable* >::iterator it;
+    std::vector< PackablePair >::iterator it;
 
     for( it = headerPackables_.begin(); it != headerPackables_.end(); it++ ){
-        buffer = (*it)->unpack( buffer );
+        if( it->variable != nullptr ){
+            buffer = it->variable->unpack( buffer );
+        }else{
+            buffer = it->constant->unpack( buffer );
+        }
+    }
+
+    return buffer;
+}
+
+
+const void* CompositePackable::unpackHeader( const void* buffer ) const
+{
+    std::vector< PackablePair >::const_iterator it;
+
+    for( it = headerPackables_.begin(); it != headerPackables_.end(); it++ ){
+        buffer = it->constant->unpack( buffer );
     }
 
     return buffer;
@@ -70,10 +95,10 @@ const void* CompositePackable::unpackHeader( const void* buffer )
 
 void* CompositePackable::packBody( void* buffer ) const
 {
-    std::vector< Packable* >::const_iterator it;
+    std::vector< PackablePair >::const_iterator it;
 
     for( it = bodyPackables_.begin(); it != bodyPackables_.end(); it++ ){
-        buffer = (*it)->pack( buffer );
+        buffer = it->variable->pack( buffer );
     }
 
     return buffer;
@@ -82,10 +107,26 @@ void* CompositePackable::packBody( void* buffer ) const
 
 const void* CompositePackable::unpackBody( const void* buffer )
 {
-    std::vector< Packable* >::iterator it;
+    std::vector< PackablePair >::iterator it;
 
     for( it = bodyPackables_.begin(); it != bodyPackables_.end(); it++ ){
-        buffer = (*it)->unpack( buffer );
+        if( it->variable != nullptr ){
+            buffer = it->variable->unpack( buffer );
+        }else{
+            buffer = it->constant->unpack( buffer );
+        }
+    }
+
+    return buffer;
+}
+
+
+const void* CompositePackable::unpackBody( const void* buffer ) const
+{
+    std::vector< PackablePair >::const_iterator it;
+
+    for( it = bodyPackables_.begin(); it != bodyPackables_.end(); it++ ){
+        buffer = it->constant->unpack( buffer );
     }
 
     return buffer;
@@ -107,10 +148,10 @@ std::uint16_t CompositePackable::getPacketSize() const
 std::uint16_t CompositePackable::getPacketHeaderSize() const
 {
     std::uint16_t packetSize = 0;
-    std::vector< Packable* >::const_iterator it;
+    std::vector< PackablePair >::const_iterator it;
 
     for( it = headerPackables_.begin(); it != headerPackables_.end(); it++ ){
-        packetSize += (*it)->getPacketSize();
+        packetSize += it->constant->getPacketSize();
     }
 
     return packetSize;
@@ -120,10 +161,10 @@ std::uint16_t CompositePackable::getPacketHeaderSize() const
 std::uint16_t CompositePackable::getPacketBodySize() const
 {
     std::uint16_t packetSize = 0;
-    std::vector< Packable* >::const_iterator it;
+    std::vector< PackablePair >::const_iterator it;
 
     for( it = bodyPackables_.begin(); it != bodyPackables_.end(); it++ ){
-        packetSize += (*it)->getPacketSize();
+        packetSize += it->constant->getPacketSize();
     }
 
     return packetSize;
@@ -134,15 +175,25 @@ std::uint16_t CompositePackable::getPacketBodySize() const
  * 4. Packables management
  ***/
 
+void CompositePackable::addHeaderPackable( Packable* packable )
+{
+    headerPackables_.push_back( PackablePair( packable, packable ) );
+}
+
 void CompositePackable::addHeaderPackable( const Packable* packable )
 {
-    headerPackables_.push_back( packable );
+    headerPackables_.push_back( PackablePair( packable, nullptr ) );
 }
 
 
+void CompositePackable::addBodyPackable( Packable* packable )
+{
+    bodyPackables_.push_back( PackablePair( packable, packable ) );
+}
+
 void CompositePackable::addBodyPackable( const Packable* packable )
 {
-    headerPackables_.push_back( packable );
+    bodyPackables_.push_back( PackablePair( packable, nullptr ) );
 }
 
 

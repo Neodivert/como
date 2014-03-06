@@ -54,14 +54,21 @@ Packet* SceneUpdatePacket::clone() const
  * 3. Packing and unpacking
  ***/
 
+void* SceneUpdatePacket::packBody( void* buffer )
+{
+    for( unsigned i=0; i<nCommands_.getValue(); i++ ){
+        buffer = commands_[i]->pack( buffer );
+    }
+    return buffer;
+}
+
 const void* SceneUpdatePacket::unpackBody( const void* buffer )
 {
     unsigned int i = 0;
-    std::uint8_t nCommands = 0;
     CommandPtr commandPtr;
 
     // Unpack the packet's body (commands).
-    for( i=0; i<nCommands; i++ ){
+    for( i=0; i<nCommands_.getValue(); i++ ){
         switch( Command::getTarget( buffer ) ){
             // User commands
             case CommandTarget::USER:
@@ -147,7 +154,7 @@ void SceneUpdatePacket::addCommand( CommandConstPtr command )
 {
     // Push back the given command.
     commands_.push_back( command );
-    addBodyPackable( commands_.back().get() );
+    //addBodyPackable( commands_.back().get() );
 
     // Update the number of commands.
     nCommands_ = nCommands_.getValue() + 1;
@@ -160,7 +167,7 @@ void SceneUpdatePacket::addCommand( CommandConstPtr command,
 {
     // Push back the given command.
     commands_.push_back( command );
-    addBodyPackable( commands_.back().get() );
+    //addBodyPackable( commands_.back().get() );
 
     // Update the number of commands.
     nCommands_ = nCommands_.getValue() + 1;

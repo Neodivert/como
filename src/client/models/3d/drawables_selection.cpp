@@ -175,14 +175,14 @@ void DrawablesSelection::updateSelectionCentroid()
  ***/
 
 
-void DrawablesSelection::addDrawable( DrawableID drawableID, DrawablePtr drawable )
+void DrawablesSelection::addDrawable( PackableDrawableID drawableID, DrawablePtr drawable )
 {
     // Insert the given pair <ID, drawable> into the selection.
     drawables_[ drawableID ] = drawable;
 }
 
 
-bool DrawablesSelection::moveDrawable( DrawableID drawableID, DrawablesSelection& destinySelection )
+bool DrawablesSelection::moveDrawable( PackableDrawableID drawableID, DrawablesSelection& destinySelection )
 {
     // Check if the required drawable is in this selection.
     if( drawables_.count( drawableID ) ){
@@ -232,7 +232,7 @@ void DrawablesSelection::clear()
  * 7. Ray picking
  ***/
 
-bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, DrawableID& closestDrawable, float& minT ) const
+bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, PackableDrawableID& closestDrawable, float& minT ) const
 {
     DrawablesMap::const_iterator drawable;
     float t;

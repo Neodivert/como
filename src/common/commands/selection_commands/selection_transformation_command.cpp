@@ -76,7 +76,7 @@ SelectionTransformationCommand::SelectionTransformationCommand( const SelectionT
 
 
 /***
- * 4. Getters
+ * 3. Getters
  ***/
 
 SelectionTransformationCommandType SelectionTransformationCommand::getTransformationType() const
@@ -98,7 +98,7 @@ float SelectionTransformationCommand::getAngle() const
 
 
 /***
- * 5. Setters
+ * 4. Setters
  ***/
 
 

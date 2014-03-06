@@ -23,6 +23,7 @@
 //#include "../utilities/packer.hpp"
 //#include "../utilities/ids.hpp"
 #include <cstdint>
+#include <stdexcept>
 
 namespace como {
 
@@ -46,6 +47,7 @@ class Packable
          ***/
         virtual void* pack( void* buffer ) const = 0;
         virtual const void* unpack( const void* buffer ) = 0;
+        virtual const void* unpack( const void* buffer ) const = 0;
 
 
         /***

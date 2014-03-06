@@ -48,7 +48,7 @@ struct PackableDrawableID : public CompositePackable {
      ***/
     PackableDrawableID();
     PackableDrawableID( const PackableDrawableID& b );
-    PackableDrawableID( PackableDrawableID&& ) = delete;
+    PackableDrawableID( PackableDrawableID&& b );
 
 
     /***

@@ -52,8 +52,9 @@ class PackableUint8Array : public PackableArrayWrapper<UnpackedType, ARRAY_SIZE>
         /***
          * 4. Packing and unpacking
          ***/
-        virtual void* pack( void* buffer ) const ;
-        virtual const void* unpack( const void* buffer ) ;
+        virtual void* pack( void* buffer ) const;
+        virtual const void* unpack( const void* buffer );
+        virtual const void* unpack( const void* buffer ) const;
 
 
         /***
@@ -100,6 +101,30 @@ const void* PackableUint8Array<UnpackedType, ARRAY_SIZE>::unpack( const void* bu
     // Unpack the wrapper's inner values from the buffer.
     for( i=0; i<ARRAY_SIZE; i++ ){
         this->values_[i] = static_cast< UnpackedType >( castedBuffer[i] );
+    }
+
+    // Return a pointer to the next position in buffer.
+    return static_cast< const void* >( castedBuffer + ARRAY_SIZE );
+}
+
+
+template <class UnpackedType, unsigned int ARRAY_SIZE>
+const void* PackableUint8Array<UnpackedType, ARRAY_SIZE>::unpack( const void* buffer ) const
+{
+    UnpackedType unpackedValue;
+
+    unsigned int i;
+
+    // Cast buffer to the UnpackedType type.
+    const UnpackedType* castedBuffer = static_cast< const UnpackedType* >( buffer );
+
+    // Unpack the wrapper's inner values from the buffer.
+    for( i=0; i<ARRAY_SIZE; i++ ){
+        unpackedValue = static_cast< UnpackedType >( castedBuffer[i] );
+
+        if( unpackedValue != this->values_[i] ){
+            throw std::runtime_error( "ERROR: Unpacked an unexpected PackableUint8Array" );
+        }
     }
 
     // Return a pointer to the next position in buffer.

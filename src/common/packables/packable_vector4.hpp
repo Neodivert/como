@@ -66,8 +66,9 @@ class PackableVector4 : public Packable
         /***
          * 5. Packing and unpacking
          ***/
-        virtual void* pack( void* buffer ) const ;
-        virtual const void* unpack( const void* buffer ) ;
+        virtual void* pack( void* buffer ) const;
+        virtual const void* unpack( const void* buffer );
+        virtual const void* unpack( const void* buffer ) const;
 
 
         /***
