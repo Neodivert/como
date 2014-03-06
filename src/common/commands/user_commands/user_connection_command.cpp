@@ -28,8 +28,8 @@ namespace como {
 
 UserConnectionCommand::UserConnectionCommand( UserID userID ) :
     UserCommand( UserCommandType::USER_CONNECTION, userID ),
-    name_({0}),
-    selectionColor_({0})
+    name_( "Unnamed" ),
+    selectionColor_()
 
 {
     addBodyPackable( &name_ );
@@ -39,8 +39,8 @@ UserConnectionCommand::UserConnectionCommand( UserID userID ) :
 
 UserConnectionCommand::UserConnectionCommand( const UserAcceptancePacket& userAcceptedPacket ) :
     UserCommand( UserCommandType::USER_CONNECTION, userAcceptedPacket.getId() ),
-    name_({0}),
-    selectionColor_({0})
+    name_( "Unnamed" ),
+    selectionColor_()
 {
     const std::uint8_t* selectionColor;
 

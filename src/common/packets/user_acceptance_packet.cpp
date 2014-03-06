@@ -29,7 +29,7 @@ UserAcceptancePacket::UserAcceptancePacket() :
     Packet( PacketType::USER_ACCEPTED ),
     id_( 0 ),
     name_( "Unnamed" ),
-    selectionColor_( {0} )
+    selectionColor_()
 {
     addBodyPackable( &id_ );
     addBodyPackable( &name_ );

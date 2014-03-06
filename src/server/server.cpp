@@ -134,6 +134,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         log_->error( "[", boost::this_thread::get_id(), "]: ERROR(", errorCode.message(), ")\n" );
     }else{
         // Connection established. Wait synchronously for a NEW_USER package.
+        log_->debug( "[", newUserPacket.getName(), "] (", boost::this_thread::get_id(), "): Connecting!\n" );
         newUserPacket.recv( newSocket_ );
         log_->debug( "[", newUserPacket.getName(), "] (", boost::this_thread::get_id(), "): Connected!\n" );
 
@@ -241,7 +242,7 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
                     // cube. Mark it with a 0 (no owner).
                     drawableOwners_[createCube->getDrawableID()] = 0;
 
-                    log_->debug( "Cube added! (", (int)( createCube->getDrawableID().creatorID ), ", ", (int)( createCube->getDrawableID().drawableIndex ), ")\n" );
+                    log_->debug( "Cube added! (", (int)( createCube->getDrawableID().creatorID.getValue() ), ", ", (int)( createCube->getDrawableID().drawableIndex.getValue() ), ")\n" );
                 break;
                 case DrawableCommandType::DRAWABLE_SELECTION:
                     // DRAWABLE_SELECTION command received, cast its pointer.
@@ -250,7 +251,7 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
                     // Give an affirmative response to the user's selection if the
                     // desired drawable isn't selected by anyone (User ID = 0).
                     users_.at( sceneCommand->getUserID() );
-                    log_->debug( "Selecting drawable (", (int)( selectDrawable->getDrawableID().creatorID ), ", ", (int)( selectDrawable->getDrawableID().drawableIndex ), ")\n" );
+                    log_->debug( "Selecting drawable (", (int)( selectDrawable->getDrawableID().creatorID.getValue() ), ", ", (int)( selectDrawable->getDrawableID().drawableIndex.getValue() ), ")\n" );
                     users_.at( sceneCommand->getUserID() )->addSelectionResponse( drawableOwners_.at( selectDrawable->getDrawableID() ) == 0 );
                 break;
             }

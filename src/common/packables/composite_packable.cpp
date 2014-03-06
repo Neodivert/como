@@ -58,7 +58,7 @@ void* CompositePackable::packHeader( void* buffer ) const
     std::vector< PackablePair >::const_iterator it;
 
     for( it = headerPackables_.begin(); it != headerPackables_.end(); it++ ){
-        buffer = it->variable->pack( buffer );
+        buffer = it->constant->pack( buffer );
     }
 
     return buffer;
@@ -98,7 +98,7 @@ void* CompositePackable::packBody( void* buffer ) const
     std::vector< PackablePair >::const_iterator it;
 
     for( it = bodyPackables_.begin(); it != bodyPackables_.end(); it++ ){
-        buffer = it->variable->pack( buffer );
+        buffer = it->constant->pack( buffer );
     }
 
     return buffer;

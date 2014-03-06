@@ -31,6 +31,8 @@ NewUserPacket::NewUserPacket() :
     Packet( PacketType::NEW_USER )
 {
     name_ = "Unnamed";
+
+    addBodyPackable( &name_ );
 }
 
 
@@ -38,6 +40,8 @@ NewUserPacket::NewUserPacket( const char* name ) :
     Packet( PacketType::NEW_USER )
 {
     name_ = name;
+
+    addBodyPackable( &name_ );
 }
 
 
@@ -45,6 +49,8 @@ NewUserPacket::NewUserPacket( const NewUserPacket& b ) :
     Packet( b )
 {
     name_ = b.name_;
+
+    addBodyPackable( &name_ );
 }
 
 

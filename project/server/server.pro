@@ -25,7 +25,8 @@ QMAKE_CXXFLAGS += -pedantic-errors
 # http://stackoverflow.com/questions/2580934/how-to-specify-different-debug-release-output-directories-in-qmake-pro-file
 # http://qt-project.org/doc/qt-4.8/qmake-project-files.html#variables
 # release: DESTDIR = build/release
-debug:   DESTDIR = ../../bin/server
+#debug:   DESTDIR = ../../bin/server
+DESTDIR = .
 
 BUILD_DATA_DIR = $$DESTDIR/.build_data
 OBJECTS_DIR = $$BUILD_DATA_DIR/obj
@@ -42,7 +43,9 @@ HEADERS += \
 # Common headers (used by both client and server).
 HEADERS += \
     ../../src/common/utilities/packer.hpp \
-    ../../src/common/packets/packable.hpp \
+    ../../src/common/packables/packable.hpp \
+    ../../src/common/packables/packable_wrapper.hpp \
+    ../../src/common/packables/composite_packable.hpp \
     ../../src/common/packets/packet.hpp \
     ../../src/common/packets/packets.hpp \
     ../../src/common/packets/new_user_packet.hpp \
@@ -64,7 +67,15 @@ HEADERS += \
     ../../src/common/commands/selection_commands/selection_transformation_command.hpp \
     ../../src/common/commands/selection_commands/full_deselection_command.hpp \
     ../../src/common/commands/selection_commands/selection_command.hpp \
-    ../../src/common/commands/selection_commands/selection_deletion_command.hpp
+    ../../src/common/commands/selection_commands/selection_deletion_command.hpp \
+    ../../src/common/packables/packables.hpp \
+    ../../src/common/packables/packable_uint8.hpp \
+    ../../src/common/packables/packable_uint16.hpp \
+    ../../src/common/packables/packable_uint32.hpp \
+    ../../src/common/packables/packable_string.hpp \
+    ../../src/common/packables/packable_array_wrapper.hpp \
+    ../../src/common/packables/packable_uint8_array.hpp \
+    ../../src/common/packables/packable_vector4.hpp
 
 # Server sources
 SOURCES += \
@@ -76,6 +87,7 @@ SOURCES += \
 # Common sources (used by both client and server).
 SOURCES += \
     ../../src/common/utilities/packer.cpp \
+    ../../src/common/packables/composite_packable.cpp \
     ../../src/common/packets/packet.cpp \
     ../../src/common/packets/new_user_packet.cpp \
     ../../src/common/packets/user_acceptance_packet.cpp \
@@ -94,4 +106,5 @@ SOURCES += \
     ../../src/common/commands/selection_commands/selection_transformation_command.cpp \
     ../../src/common/commands/selection_commands/full_deselection_command.cpp \
     ../../src/common/commands/selection_commands/selection_command.cpp \
-    ../../src/common/commands/selection_commands/selection_deletion_command.cpp
+    ../../src/common/commands/selection_commands/selection_deletion_command.cpp \
+    ../../src/common/packables/packable_vector4.cpp
