@@ -30,7 +30,7 @@ CubeCreationCommand::CubeCreationCommand() :
     DrawableCommand( DrawableCommandType::CUBE_CREATION, 0, NULL_DRAWABLE_ID ),
     color_({0})
 {
-    addBodyPackable( &color_ );
+    addPackable( &color_ );
 }
 
 CubeCreationCommand::CubeCreationCommand( UserID userID, PackableDrawableID drawableID, const std::uint8_t* color ) :
@@ -39,14 +39,14 @@ CubeCreationCommand::CubeCreationCommand( UserID userID, PackableDrawableID draw
 {
     setColor( color );
 
-    addBodyPackable( &color_ );
+    addPackable( &color_ );
 }
 
 CubeCreationCommand::CubeCreationCommand( const CubeCreationCommand& b ) :
     DrawableCommand( b ),
     color_( b.color_ )
 {
-    addBodyPackable( &color_ );
+    addPackable( &color_ );
 }
 
 

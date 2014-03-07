@@ -30,8 +30,8 @@ PackableDrawableID::PackableDrawableID() :
     creatorID( 0 ),
     drawableIndex( 0 )
 {
-    addBodyPackable( &creatorID );
-    addBodyPackable( &drawableIndex );
+    addPackable( &creatorID );
+    addPackable( &drawableIndex );
 }
 
 
@@ -40,8 +40,8 @@ PackableDrawableID::PackableDrawableID( const PackableDrawableID& b ) :
     creatorID( b.creatorID ),
     drawableIndex( b.drawableIndex )
 {
-    addBodyPackable( &creatorID );
-    addBodyPackable( &drawableIndex );
+    addPackable( &creatorID );
+    addPackable( &drawableIndex );
 }
 
 
@@ -50,8 +50,8 @@ PackableDrawableID::PackableDrawableID( PackableDrawableID&& b ) :
     creatorID( b.creatorID ),
     drawableIndex( b.drawableIndex )
 {
-    addBodyPackable( &creatorID );
-    addBodyPackable( &drawableIndex );
+    addPackable( &creatorID );
+    addPackable( &drawableIndex );
 }
 
 

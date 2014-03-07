@@ -26,6 +26,7 @@
 #include <boost/asio.hpp>
 #include <functional>
 #include <boost/bind.hpp>
+#include "packet_header.hpp"
 
 namespace como {
 
@@ -36,12 +37,6 @@ typedef std::shared_ptr< Socket > SocketPtr;
 typedef std::shared_ptr< Packet > PacketPtr;
 typedef std::function<void( const boost::system::error_code& errorCode, PacketPtr)> PacketHandler;
 
-enum class PacketType : std::uint8_t
-{
-    NEW_USER = 0,
-    USER_ACCEPTED = 1,
-    SCENE_UPDATE = 2
-};
 
 const unsigned int PACKET_BUFFER_SIZE = 512;
 
@@ -49,8 +44,7 @@ const unsigned int PACKET_BUFFER_SIZE = 512;
 class Packet : public CompositePackable
 {
     private:
-        PackableUint8< PacketType > type_;
-        PackableUint16< std::uint16_t > bodySize_;
+        PacketHeader header_;
 
         char buffer_[PACKET_BUFFER_SIZE];
 
@@ -88,14 +82,30 @@ class Packet : public CompositePackable
 
 
         /***
-         * 3. Getters
+         * 3. Packing and unpacking
+         ***/
+        virtual void* pack( void* buffer ) const;
+        virtual const void* unpack( const void* buffer );
+        virtual const void* unpack( const void* buffer ) const ;
+
+        virtual void* packHeader( void* buffer ) const;
+        virtual const void* unpackHeader( const void* buffer );
+        virtual const void* unpackHeader( const void* buffer ) const ;
+
+        virtual void* packBody( void* buffer ) const;
+        virtual const void* unpackBody( const void* buffer );
+        virtual const void* unpackBody( const void* buffer ) const ;
+
+
+        /***
+         * 4. Getters
          ***/
         PacketType getType() const ;
         virtual bool expectedType() const = 0;
 
 
         /***
-         * 4. Operators
+         * 5. Operators
          ***/
         Packet& operator = ( const Packet& b );
         Packet& operator = ( Packet&& ) = delete;

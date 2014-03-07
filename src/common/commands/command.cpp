@@ -29,8 +29,8 @@ Command::Command( CommandTarget commandTarget, UserID userID ) :
     commandTarget_( commandTarget ),
     userID_( userID )
 {
-    addHeaderPackable( &commandTarget_ );
-    addHeaderPackable( &userID_ );
+    addPackable( &commandTarget_ );
+    addPackable( &userID_ );
 }
 
 
@@ -39,8 +39,8 @@ Command::Command( const Command& b ) :
     commandTarget_( b.commandTarget_ ),
     userID_( b.userID_ )
 {
-    addHeaderPackable( &commandTarget_ );
-    addHeaderPackable( &userID_ );
+    addPackable( &commandTarget_ );
+    addPackable( &userID_ );
 }
 
 

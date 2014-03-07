@@ -31,8 +31,8 @@ ParameterChangeCommand::ParameterChangeCommand( UserID userID ) :
 {
     pivotPointMode_ = PivotPointMode::MEDIAN_POINT;
 
-    addBodyPackable( &parameterType_ );
-    addBodyPackable( &pivotPointMode_ );
+    addPackable( &parameterType_ );
+    addPackable( &pivotPointMode_ );
 }
 
 
@@ -42,8 +42,8 @@ ParameterChangeCommand::ParameterChangeCommand( UserID userID, PivotPointMode pi
 {
     pivotPointMode_ = pivotPointMode;
 
-    addBodyPackable( &parameterType_ );
-    addBodyPackable( &pivotPointMode_ );
+    addPackable( &parameterType_ );
+    addPackable( &pivotPointMode_ );
 }
 
 
@@ -53,8 +53,8 @@ ParameterChangeCommand::ParameterChangeCommand( const ParameterChangeCommand& b 
 {
     pivotPointMode_ = b.pivotPointMode_;
 
-    addBodyPackable( &parameterType_ );
-    addBodyPackable( &pivotPointMode_ );
+    addPackable( &parameterType_ );
+    addPackable( &pivotPointMode_ );
 }
 
 

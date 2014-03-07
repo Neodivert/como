@@ -29,7 +29,7 @@ UserCommand::UserCommand( UserCommandType userCommandType, UserID userID ) :
     Command( CommandTarget::USER, userID ),
     commandType_( userCommandType )
 {
-    addBodyPackable( &commandType_ );
+    addPackable( &commandType_ );
 }
 
 
@@ -37,7 +37,7 @@ UserCommand::UserCommand( const UserCommand& b ) :
     Command( b ),
     commandType_( b.commandType_ )
 {
-    addBodyPackable( &commandType_ );
+    addPackable( &commandType_ );
 }
 
 

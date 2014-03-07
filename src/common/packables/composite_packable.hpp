@@ -26,6 +26,7 @@
 namespace como {
 
 struct PackablePair {
+    // Yes, simple pointers. We are NOT owning the pointed packables.
     const Packable* constant;
     Packable* variable;
 
@@ -48,19 +49,14 @@ struct PackablePair {
 class CompositePackable : public Packable
 {
     private:
-        // Yes, simple pointers. We are NOT owning the pointed packables.
-        std::vector< PackablePair > headerPackables_;
-        //std::vector< const Packable* > constHeaderPackables_;
-        //std::vector< bool > headerPackableConstness_;
-
-        std::vector< PackablePair > bodyPackables_;
+        std::vector< PackablePair > packables_;
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
         CompositePackable() = default;
-        CompositePackable( const CompositePackable& ) = delete; // We can't copy pointers to packables we don't own.
+        CompositePackable( const CompositePackable& b ) : Packable( b ){} // We can't copy pointers to packables we don't own.
         CompositePackable( CompositePackable&& ) = delete; // We can't copy pointers to packables we don't own.
 
         virtual ~CompositePackable(){}
@@ -73,31 +69,19 @@ class CompositePackable : public Packable
         virtual const void* unpack( const void* buffer );
         virtual const void* unpack( const void* buffer ) const ;
 
-        virtual void* packHeader( void* buffer ) const;
-        virtual const void* unpackHeader( const void* buffer );
-        virtual const void* unpackHeader( const void* buffer ) const ;
-
-        virtual void* packBody( void* buffer ) const;
-        virtual const void* unpackBody( const void* buffer );
-        virtual const void* unpackBody( const void* buffer ) const ;
-
 
         /***
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const;
-        virtual std::uint16_t getPacketHeaderSize() const;
-        virtual std::uint16_t getPacketBodySize() const;
 
 
         /***
          * 4. Packables management
          ***/
     protected:
-        void addHeaderPackable( Packable* packable );
-        void addHeaderPackable( const Packable* packable );
-        void addBodyPackable( Packable* packable );
-        void addBodyPackable( const Packable* packable );
+        void addPackable( Packable* packable );
+        void addPackable( const Packable* packable );
     public:
 
 

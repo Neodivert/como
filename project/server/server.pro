@@ -75,7 +75,8 @@ HEADERS += \
     ../../src/common/packables/packable_string.hpp \
     ../../src/common/packables/packable_array_wrapper.hpp \
     ../../src/common/packables/packable_uint8_array.hpp \
-    ../../src/common/packables/packable_vector4.hpp
+    ../../src/common/packables/packable_vector4.hpp \
+    ../../src/common/packets/packet_header.hpp
 
 # Server sources
 SOURCES += \
@@ -107,4 +108,5 @@ SOURCES += \
     ../../src/common/commands/selection_commands/full_deselection_command.cpp \
     ../../src/common/commands/selection_commands/selection_command.cpp \
     ../../src/common/commands/selection_commands/selection_deletion_command.cpp \
-    ../../src/common/packables/packable_vector4.cpp
+    ../../src/common/packables/packable_vector4.cpp \
+    ../../src/common/packets/packet_header.cpp

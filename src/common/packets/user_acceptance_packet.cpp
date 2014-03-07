@@ -31,9 +31,9 @@ UserAcceptancePacket::UserAcceptancePacket() :
     name_( "Unnamed" ),
     selectionColor_()
 {
-    addBodyPackable( &id_ );
-    addBodyPackable( &name_ );
-    addBodyPackable( &selectionColor_ );
+    addPackable( &id_ );
+    addPackable( &name_ );
+    addPackable( &selectionColor_ );
 }
 
 
@@ -43,9 +43,9 @@ UserAcceptancePacket::UserAcceptancePacket( const std::uint32_t& id, const char*
     name_( name ),
     selectionColor_( selectionColor )
 {
-    addBodyPackable( &id_ );
-    addBodyPackable( &name_ );
-    addBodyPackable( &selectionColor_ );
+    addPackable( &id_ );
+    addPackable( &name_ );
+    addPackable( &selectionColor_ );
 }
 
 
@@ -55,9 +55,9 @@ UserAcceptancePacket::UserAcceptancePacket( const UserAcceptancePacket& b ) :
     name_( b.name_ ),
     selectionColor_( b.selectionColor_ )
 {
-    addBodyPackable( &id_ );
-    addBodyPackable( &name_ );
-    addBodyPackable( &selectionColor_ );
+    addPackable( &id_ );
+    addPackable( &name_ );
+    addPackable( &selectionColor_ );
 }
 
 

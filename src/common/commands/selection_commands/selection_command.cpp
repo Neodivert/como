@@ -29,7 +29,7 @@ SelectionCommand::SelectionCommand( SelectionCommandType selectionCommandType, U
     Command( CommandTarget::SELECTION, userID ),
     commandType_( selectionCommandType )
 {
-    addBodyPackable( &commandType_ );
+    addPackable( &commandType_ );
 }
 
 
@@ -37,7 +37,7 @@ SelectionCommand::SelectionCommand( const SelectionCommand& b ) :
     Command( b ),
     commandType_( b.commandType_ )
 {
-    addBodyPackable( &commandType_ );
+    addPackable( &commandType_ );
 }
 
 

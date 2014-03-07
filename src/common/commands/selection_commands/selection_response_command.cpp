@@ -31,8 +31,8 @@ SelectionResponseCommand::SelectionResponseCommand() :
     nSelections_( 0 ),
     selectionConfirmed_( 0 )
 {
-    addBodyPackable( &nSelections_ );
-    addBodyPackable( &selectionConfirmed_ );
+    addPackable( &nSelections_ );
+    addPackable( &selectionConfirmed_ );
 }
 
 
@@ -41,8 +41,8 @@ SelectionResponseCommand::SelectionResponseCommand( const SelectionResponseComma
     nSelections_( b.nSelections_ ),
     selectionConfirmed_( b.selectionConfirmed_ )
 {
-    addBodyPackable( &nSelections_ );
-    addBodyPackable( &selectionConfirmed_ );
+    addPackable( &nSelections_ );
+    addPackable( &selectionConfirmed_ );
 }
 
 

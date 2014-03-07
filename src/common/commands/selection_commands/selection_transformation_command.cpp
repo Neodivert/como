@@ -49,8 +49,8 @@ SelectionTransformationCommand::SelectionTransformationCommand() :
 {
     transformationMagnitude_.setValue( 0.0f, 0.0f, 0.0f, 0.0f );
 
-    addBodyPackable( &transformationType_ );
-    addBodyPackable( &transformationMagnitude_ );
+    addPackable( &transformationType_ );
+    addPackable( &transformationMagnitude_ );
 }
 
 
@@ -60,8 +60,8 @@ SelectionTransformationCommand::SelectionTransformationCommand( UserID userID ) 
 {
     transformationMagnitude_.setValue( 0.0f, 0.0f, 0.0f, 0.0f );
 
-    addBodyPackable( &transformationType_ );
-    addBodyPackable( &transformationMagnitude_ );
+    addPackable( &transformationType_ );
+    addPackable( &transformationMagnitude_ );
 }
 
 
@@ -70,8 +70,8 @@ SelectionTransformationCommand::SelectionTransformationCommand( const SelectionT
     transformationType_( b.transformationType_ ),
     transformationMagnitude_( b.transformationMagnitude_ )
 {
-    addBodyPackable( &transformationType_ );
-    addBodyPackable( &transformationMagnitude_ );
+    addPackable( &transformationType_ );
+    addPackable( &transformationMagnitude_ );
 }
 
 

@@ -32,8 +32,8 @@ UserConnectionCommand::UserConnectionCommand( UserID userID ) :
     selectionColor_()
 
 {
-    addBodyPackable( &name_ );
-    addBodyPackable( &selectionColor_ );
+    addPackable( &name_ );
+    addPackable( &selectionColor_ );
 }
 
 
@@ -53,8 +53,8 @@ UserConnectionCommand::UserConnectionCommand( const UserAcceptancePacket& userAc
                        selectionColor[2],
                        selectionColor[3] );
 
-    addBodyPackable( &name_ );
-    addBodyPackable( &selectionColor_ );
+    addPackable( &name_ );
+    addPackable( &selectionColor_ );
 }
 
 
@@ -73,8 +73,8 @@ UserConnectionCommand::UserConnectionCommand( const UserConnectionCommand& b ) :
                        selectionColor[2],
                        selectionColor[3] );
 
-    addBodyPackable( &name_ );
-    addBodyPackable( &selectionColor_ );
+    addPackable( &name_ );
+    addPackable( &selectionColor_ );
 }
 
 

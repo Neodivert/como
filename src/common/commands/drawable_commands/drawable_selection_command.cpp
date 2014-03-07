@@ -29,14 +29,14 @@ DrawableSelectionCommand::DrawableSelectionCommand() :
     DrawableCommand( DrawableCommandType::DRAWABLE_SELECTION, 0, NULL_DRAWABLE_ID ),
     addToSelection_( false )
 {
-    addBodyPackable( &addToSelection_ );
+    addPackable( &addToSelection_ );
 }
 
 DrawableSelectionCommand::DrawableSelectionCommand( UserID userID, PackableDrawableID drawableID, bool addToSelection ) :
     DrawableCommand( DrawableCommandType::DRAWABLE_SELECTION, userID, drawableID ),
     addToSelection_( addToSelection )
 {
-    addBodyPackable( &addToSelection_ );
+    addPackable( &addToSelection_ );
 }
 
 
@@ -44,7 +44,7 @@ DrawableSelectionCommand::DrawableSelectionCommand( const DrawableSelectionComma
     DrawableCommand( b ),
     addToSelection_( b.addToSelection_ )
 {
-    addBodyPackable( &addToSelection_ );
+    addPackable( &addToSelection_ );
 }
 
 

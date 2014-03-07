@@ -30,6 +30,8 @@ DrawableCommand::DrawableCommand( DrawableCommandType drawableCommandType, UserI
     commandType_( drawableCommandType ),
     drawableID_( drawableID )
 {
+    addPackable( &commandType_ );
+    addPackable( &drawableID_ );
 }
 
 
@@ -38,6 +40,8 @@ DrawableCommand::DrawableCommand( const DrawableCommand& b ) :
     commandType_( b.commandType_ ),
     drawableID_( b.drawableID_ )
 {
+    addPackable( &commandType_ );
+    addPackable( &drawableID_ );
 }
 
 

@@ -17,46 +17,30 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "new_user_packet.hpp"
-#include <cstring>
+#include "packet_header.hpp"
 
 namespace como {
 
-
 /***
- * 1. Initialization and destruction
+ * 1. Construction
  ***/
 
-NewUserPacket::NewUserPacket() :
-    Packet( PacketType::NEW_USER )
+PacketHeader::PacketHeader( PacketType type ) :
+    type_( type ),
+    bodySize_( 0 )
 {
-    name_ = "Unnamed";
-
-    addPackable( &name_ );
+    addPackable( &type_ );
+    addPackable( &bodySize_ );
 }
 
 
-NewUserPacket::NewUserPacket( const char* name ) :
-    Packet( PacketType::NEW_USER )
+PacketHeader::PacketHeader( const PacketHeader& b ) :
+    CompositePackable( b ),
+    type_( b.type_ ),
+    bodySize_( b.bodySize_ )
 {
-    name_ = name;
-
-    addPackable( &name_ );
-}
-
-
-NewUserPacket::NewUserPacket( const NewUserPacket& b ) :
-    Packet( b )
-{
-    name_ = b.name_;
-
-    addPackable( &name_ );
-}
-
-
-Packet* NewUserPacket::clone() const
-{
-    return new NewUserPacket( *this );
+    addPackable( &type_ );
+    addPackable( &bodySize_ );
 }
 
 
@@ -64,15 +48,15 @@ Packet* NewUserPacket::clone() const
  * 3. Getters
  ***/
 
-const char* NewUserPacket::getName() const
+PacketType PacketHeader::getType() const
 {
-    return name_.getValue();
+    return type_.getValue();
 }
 
 
-bool NewUserPacket::expectedType() const
+std::uint16_t PacketHeader::getBodySize() const
 {
-    return ( Packet::getType() == PacketType::NEW_USER );
+    return bodySize_.getValue();
 }
 
 
@@ -80,9 +64,9 @@ bool NewUserPacket::expectedType() const
  * 4. Setters
  ***/
 
-void NewUserPacket::setName( const char* name )
+void PacketHeader::setBodySize( std::uint16_t bodySize )
 {
-    name_ = name;
+    bodySize_ = bodySize;
 }
 
 
@@ -90,15 +74,26 @@ void NewUserPacket::setName( const char* name )
  * 5. Operators
  ***/
 
-NewUserPacket& NewUserPacket::operator = (const NewUserPacket& b)
+CompositePackable& PacketHeader::operator = (const PacketHeader& b )
 {
     if( this != &b ){
-        Packet::operator =( b );
-
-        name_ = b.name_;
+        type_ = b.type_;
+        bodySize_ = b.bodySize_;
     }
 
     return *this;
 }
+
+
+CompositePackable& PacketHeader::operator = ( PacketHeader&& b )
+{
+    if( this != &b ){
+        type_ = b.type_;
+        bodySize_ = b.bodySize_;
+    }
+
+    return *this;
+}
+
 
 } // namespace como

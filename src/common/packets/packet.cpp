@@ -27,23 +27,16 @@ namespace como {
  ***/
 
 Packet::Packet( PacketType type ) :
-    type_( type ),
-    bodySize_( 0 ),
-    buffer_{}
+    header_( type ),
+    buffer_({0})
 {
-    addHeaderPackable( &type_ );
-    addHeaderPackable( &bodySize_ );
 }
 
 Packet::Packet( const Packet& b ) :
     CompositePackable(),
-    type_( b.type_ ),
-    bodySize_( b.bodySize_ ),
+    header_( b.header_ ),
     buffer_{}
 {
-    addHeaderPackable( &type_ );
-    addHeaderPackable( &bodySize_ );
-
     strncpy( buffer_, b.buffer_, PACKET_BUFFER_SIZE );
 }
 
@@ -55,7 +48,7 @@ Packet::Packet( const Packet& b ) :
 void Packet::updateHeader()
 {
     // Update the value for the packet body size to be packed.
-    bodySize_.setValue( getPacketBodySize() );
+    header_.setBodySize( getPacketSize() );
 }
 
 void Packet::send( boost::asio::ip::tcp::socket& socket )
@@ -68,7 +61,7 @@ void Packet::send( boost::asio::ip::tcp::socket& socket )
     packHeader( buffer );
 
     // Write synchronously the packet's header to the socket.
-    boost::asio::write( socket, boost::asio::buffer( buffer, (int)getPacketHeaderSize() ), errorCode );
+    boost::asio::write( socket, boost::asio::buffer( buffer, (int)( header_.getPacketSize() ) ), errorCode );
     if( errorCode ){
         throw std::runtime_error( std::string( "ERROR when sending packet header' (" ) + errorCode.message() + ")" );
     }
@@ -77,7 +70,7 @@ void Packet::send( boost::asio::ip::tcp::socket& socket )
     packBody( buffer );
 
     // Write synchronously the packet's body to the socket.
-    boost::asio::write( socket, boost::asio::buffer( buffer, (int)( bodySize_.getValue() ) ), errorCode );
+    boost::asio::write( socket, boost::asio::buffer( buffer, (int)( header_.getBodySize() ) ), errorCode );
     if( errorCode ){
         throw std::runtime_error( std::string( "ERROR when sending packet body' (" ) + errorCode.message() + ")" );
     }
@@ -93,7 +86,7 @@ void Packet::asyncSend( SocketPtr socket, PacketHandler packetHandler )
     // Write asynchronously the packet's header to the socket.
     boost::asio::async_write(
                 *socket,
-                boost::asio::buffer( buffer_, (int)getPacketHeaderSize() ),
+                boost::asio::buffer( buffer_, (int)( header_.getPacketSize() ) ),
                 boost::bind( &Packet::asyncSendBody, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred, socket, packetHandler )
                 );
 }
@@ -112,7 +105,7 @@ void Packet::asyncSendBody( const boost::system::error_code& headerErrorCode, st
     // Write asynchronously the packet's body to the socket.
     boost::asio::async_write(
                 *socket,
-                boost::asio::buffer( buffer_, (int)( bodySize_.getValue() ) ),
+                boost::asio::buffer( buffer_, (int)( header_.getBodySize() ) ),
                 boost::bind( &Packet::onPacketSend, this, _1, _2, packetHandler )
                 );
 }
@@ -131,7 +124,7 @@ void Packet::recv( boost::asio::ip::tcp::socket& socket )
     boost::system::error_code errorCode;
 
     // Read synchronously the packet's header from the socket.
-    boost::asio::read( socket, boost::asio::buffer( buffer, (int)getPacketHeaderSize() ), errorCode );
+    boost::asio::read( socket, boost::asio::buffer( buffer, (int)( header_.getPacketSize() ) ), errorCode );
 
     if( errorCode ){
         throw std::runtime_error( std::string( "ERROR when receiving packet header' (" ) + errorCode.message() + ")" );
@@ -144,7 +137,7 @@ void Packet::recv( boost::asio::ip::tcp::socket& socket )
     }
 
     // Read synchronously the packet's body from the socket.
-    boost::asio::read( socket, boost::asio::buffer( buffer, (int)( bodySize_.getValue() ) ), errorCode );
+    boost::asio::read( socket, boost::asio::buffer( buffer, (int)( header_.getBodySize() ) ), errorCode );
 
     if( errorCode ){
         throw std::runtime_error( std::string( "ERROR when receiving packet body' (" ) + errorCode.message() + ")" );
@@ -160,7 +153,7 @@ void Packet::asyncRecv( SocketPtr socket, PacketHandler packetHandler )
     // Read asynchronously the packet's header from the socket.
     boost::asio::async_read(
                 *socket,
-                boost::asio::buffer( buffer_, (int)getPacketHeaderSize() ),
+                boost::asio::buffer( buffer_, (int)( header_.getPacketSize() ) ),
                 boost::bind( &Packet::asyncRecvBody, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred, socket, packetHandler )
                 );
 }
@@ -185,7 +178,7 @@ void Packet::asyncRecvBody( const boost::system::error_code& headerErrorCode, st
     // Write asynchronously the packet's header to the socket.
     boost::asio::async_read(
                 *socket,
-                boost::asio::buffer( buffer_, (int)( bodySize_.getValue() ) ),
+                boost::asio::buffer( buffer_, (int)( header_.getBodySize() ) ),
                 boost::bind( &Packet::onPacketRecv, this, _1, _2, packetHandler ) );
 }
 
@@ -203,24 +196,77 @@ void Packet::onPacketRecv( const boost::system::error_code& errorCode, std::size
 
 
 /***
- * 3. Getters
+ * 3. Packing and unpacking
  ***/
 
-PacketType Packet::getType() const
+void* Packet::pack( void* buffer ) const
 {
-    return type_.getValue();
+    buffer = packHeader( buffer );
+    return packBody( buffer );
+}
+
+const void* Packet::unpack( const void* buffer )
+{
+    buffer = unpackHeader( buffer );
+    return unpackBody( buffer );
+}
+
+const void* Packet::unpack( const void* buffer ) const
+{
+    buffer = unpackHeader( buffer );
+    return unpackBody( buffer );
+}
+
+
+void* Packet::packHeader( void* buffer ) const
+{
+    return header_.pack( buffer );
+}
+
+const void* Packet::unpackHeader( const void* buffer )
+{
+    return header_.unpack( buffer );
+}
+
+const void* Packet::unpackHeader( const void* buffer ) const
+{
+    return header_.unpack( buffer );
+}
+
+void* Packet::packBody( void* buffer ) const
+{
+    return CompositePackable::pack( buffer );
+}
+
+const void* Packet::unpackBody( const void* buffer )
+{
+    return CompositePackable::unpack( buffer );
+}
+
+const void* Packet::unpackBody( const void* buffer ) const
+{
+    return CompositePackable::unpack( buffer );
 }
 
 
 /***
- * 4. Operators
+ * 4. Getters
+ ***/
+
+PacketType Packet::getType() const
+{
+    return header_.getType();
+}
+
+
+/***
+ * 5. Operators
  ***/
 
 Packet& Packet::operator =( const Packet& b )
 {
     if( this != &b ){
-        type_.setValue( b.type_.getValue() );
-        bodySize_.setValue( b.bodySize_.getValue() );
+        header_ = b.header_;
         strncpy( buffer_, b.buffer_, PACKET_BUFFER_SIZE );
     }
 

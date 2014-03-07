@@ -30,8 +30,8 @@ SceneUpdatePacket::SceneUpdatePacket() :
     Packet( PacketType::SCENE_UPDATE ),
     nUnsyncCommands_( 0 )
 {
-    addHeaderPackable( &nUnsyncCommands_ );
-    addHeaderPackable( &nCommands_ );
+    addPackable( &nUnsyncCommands_ );
+    addPackable( &nCommands_ );
 }
 
 
@@ -40,8 +40,8 @@ SceneUpdatePacket::SceneUpdatePacket( const SceneUpdatePacket& b ) :
     nUnsyncCommands_( b.nUnsyncCommands_ ),
     commands_( b.commands_ )
 {
-    addHeaderPackable( &nUnsyncCommands_ );
-    addHeaderPackable( &nCommands_ );
+    addPackable( &nUnsyncCommands_ );
+    addPackable( &nCommands_ );
 }
 
 
