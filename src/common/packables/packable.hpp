@@ -20,8 +20,6 @@
 #ifndef PACKABLE_HPP
 #define PACKABLE_HPP
 
-//#include "../utilities/packer.hpp"
-//#include "../utilities/ids.hpp"
 #include <cstdint>
 #include <stdexcept>
 
@@ -29,36 +27,74 @@ namespace como {
 
 const unsigned int NAME_SIZE = 64;
 
+/**
+ * \class Packable
+ *
+ * \brief Interface for all entities which can be packed / unpacked and sent
+ * through the network.
+ */
+
 class Packable
 {   
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
+        /// Creates an emtpy packable.
         Packable() = default;
+
+        /// Creates a copy from another packable.
         Packable( const Packable& ) = default;
+
+        /// Creates a "move copy" from another packable.
         Packable( Packable&& ) = default;
 
+
+        /***
+         * 2. Destruction
+         ***/
+        /// Destroys the packable.
         virtual ~Packable(){}
 
 
         /***
-         * 2. Packing and unpacking
+         * 3. Packing and unpacking
          ***/
+
+        /** \brief Packs this packable into the given buffer.
+        * \param buffer a pointer to the buffer where this packable will be packed into.
+        * \return a pointer to the first position in the buffer after this packable's packed data.
+        */
         virtual void* pack( void* buffer ) const = 0;
+
+        /** \brief Unpacks this packable from the given buffer.
+        * \param buffer a pointer to the buffer where this packable will be unpacked from.
+        * \return a pointer to the first position in the buffer after this packable's packed data.
+        */
         virtual const void* unpack( const void* buffer ) = 0;
+
+        /** \brief Unpacks data from the given buffer AND THROW AN EXCEPTION if it is different from
+        * this packable's inner data.
+        * \param buffer a pointer to the buffer where the data will be unpacked from.
+        * \return a pointer to the first position in the buffer after this packable's packed data.
+        */
         virtual const void* unpack( const void* buffer ) const = 0;
 
 
         /***
          * 3. Getters
          ***/
+
+        /** \brief Returns the size that this packable's data would occupy once packed.
+        * \return the size that this packable's data would occupy once packed.
+        */
         virtual std::uint16_t getPacketSize() const = 0;
 
 
         /***
          * 5. Operators
          ***/
+        // TODO: Make it possible to assign packables.
         Packable& operator = (const Packable& b) = delete;
         Packable& operator = ( Packable&& ) = delete;
 };
