@@ -196,8 +196,9 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
                                  UserID userID,
                                  SceneUpdatePacketConstPtr sceneUpdate )
 {
-    unsigned int i;
-    const std::vector< CommandConstPtr >* commands = nullptr;
+    const CommandsList* commands = nullptr;
+    CommandsList::const_iterator commandsIterator;
+
 
     mutex_.lock();
     if( errorCode ){
@@ -212,9 +213,8 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
         log_->debug( "SCENE_UPDATE received from [", users_.at( userID )->getName(), "] with (", commands->size(), ") commands\n" );
 
         // Add the commands to the historic.
-        for( i=0; i<commands->size(); i++ ){
-            processSceneCommand( (*commands)[i] );
-
+        for( commandsIterator = commands->begin(); commandsIterator != commands->end(); commandsIterator++ ){
+            processSceneCommand( *commandsIterator );
         }
 
         mutex_.unlock();

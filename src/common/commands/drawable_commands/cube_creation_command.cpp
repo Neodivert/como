@@ -27,15 +27,13 @@ namespace como {
  ***/
 
 CubeCreationCommand::CubeCreationCommand() :
-    DrawableCommand( DrawableCommandType::CUBE_CREATION, 0, NULL_DRAWABLE_ID ),
-    color_({0})
+    DrawableCommand( DrawableCommandType::CUBE_CREATION, 0, NULL_DRAWABLE_ID )
 {
     addPackable( &color_ );
 }
 
 CubeCreationCommand::CubeCreationCommand( UserID userID, PackableDrawableID drawableID, const std::uint8_t* color ) :
-    DrawableCommand( DrawableCommandType::CUBE_CREATION, userID, drawableID ),
-    color_()
+    DrawableCommand( DrawableCommandType::CUBE_CREATION, userID, drawableID )
 {
     setColor( color );
 

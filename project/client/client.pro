@@ -110,7 +110,8 @@ HEADERS += \
     ../../src/common/packables/packable_array_wrapper.hpp \
     ../../src/common/packables/packable_uint8_array.hpp \
     ../../src/common/packables/packable_vector4.hpp \
-    ../../src/common/packets/packet_header.hpp
+    ../../src/common/packets/packet_header.hpp \
+    ../../src/common/commands/packable_commands_list.hpp
 
 
 
@@ -165,4 +166,5 @@ SOURCES += \
     ../../src/common/commands/selection_commands/selection_command.cpp \
     ../../src/common/commands/selection_commands/selection_deletion_command.cpp \
     ../../src/common/packables/packable_vector4.cpp \
-    ../../src/common/packets/packet_header.cpp
+    ../../src/common/packets/packet_header.cpp \
+    ../../src/common/commands/packable_commands_list.cpp

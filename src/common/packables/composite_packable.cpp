@@ -84,6 +84,12 @@ std::uint16_t CompositePackable::getPacketSize() const
 }
 
 
+std::uint8_t CompositePackable::getNumberOfPackables() const
+{
+    return packables_.size();
+}
+
+
 /***
  * 4. Packables management
  ***/
@@ -93,10 +99,25 @@ void CompositePackable::addPackable( Packable* packable )
     packables_.push_back( PackablePair( packable, packable ) );
 }
 
+
 void CompositePackable::addPackable( const Packable* packable )
 {
     packables_.push_back( PackablePair( packable, nullptr ) );
 }
 
+
+void CompositePackable::removePackables( const Packable* firstPackable, unsigned int nElements )
+{
+    std::vector< PackablePair >::iterator it;
+
+    // Get a iterator to the "firstPackable" element.
+    it = packables_.begin();
+    while( ( it != packables_.end() ) && ( it->constant != firstPackable ) ){
+        it++;
+    }
+
+    // Erase the requested elements.
+    packables_.erase( it, it + nElements );
+}
 
 } // namespace como

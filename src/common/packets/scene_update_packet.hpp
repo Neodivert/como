@@ -22,19 +22,17 @@
 
 #include "packet.hpp"
 #include "../commands/commands.hpp"
+#include "../commands/packable_commands_list.hpp"
 #include <vector>
 #include <list>
 
 namespace como {
 
-typedef std::list< CommandConstPtr > CommandsList;
-
 class SceneUpdatePacket : public Packet
 {
     private:
         PackableUint32< std::uint32_t > nUnsyncCommands_;
-        PackableUint8< std::uint32_t > nCommands_;
-        std::vector< CommandConstPtr > commands_;
+        PackableCommandsList commands_;
 
     public:
         /***
@@ -53,18 +51,10 @@ class SceneUpdatePacket : public Packet
 
 
         /***
-         * 3. Packing and unpacking
-         ***/
-        // TODO: I am not making use of bodyPackables_ for packing/unpacking commands.
-        virtual void* packBody( void* buffer );
-        virtual const void* unpackBody( const void* buffer );
-
-
-        /***
          * 3. Getters
          ***/
         std::uint32_t getUnsyncCommands() const ;
-        const std::vector< CommandConstPtr >* getCommands() const ;
+        const CommandsList* getCommands() const ;
         virtual bool expectedType() const ;
 
 

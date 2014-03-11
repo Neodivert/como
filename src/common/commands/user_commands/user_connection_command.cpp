@@ -60,8 +60,8 @@ UserConnectionCommand::UserConnectionCommand( const UserAcceptancePacket& userAc
 
 UserConnectionCommand::UserConnectionCommand( const UserConnectionCommand& b ) :
     UserCommand( b ),
-    name_({0}),
-    selectionColor_({0})
+    name_( b.name_ ),
+    selectionColor_( b.selectionColor_ )
 {
     const std::uint8_t* selectionColor = nullptr;
     setUserID( b.getUserID() );

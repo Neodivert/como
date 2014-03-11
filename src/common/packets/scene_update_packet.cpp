@@ -31,7 +31,7 @@ SceneUpdatePacket::SceneUpdatePacket() :
     nUnsyncCommands_( 0 )
 {
     addPackable( &nUnsyncCommands_ );
-    addPackable( &nCommands_ );
+    addPackable( &commands_ );
 }
 
 
@@ -41,86 +41,13 @@ SceneUpdatePacket::SceneUpdatePacket( const SceneUpdatePacket& b ) :
     commands_( b.commands_ )
 {
     addPackable( &nUnsyncCommands_ );
-    addPackable( &nCommands_ );
+    addPackable( &commands_ );
 }
 
 
 Packet* SceneUpdatePacket::clone() const
 {
     return new SceneUpdatePacket( *this );
-}
-
-/***
- * 3. Packing and unpacking
- ***/
-
-void* SceneUpdatePacket::packBody( void* buffer )
-{
-    for( unsigned i=0; i<nCommands_.getValue(); i++ ){
-        buffer = commands_[i]->pack( buffer );
-    }
-    return buffer;
-}
-
-const void* SceneUpdatePacket::unpackBody( const void* buffer )
-{
-    unsigned int i = 0;
-    CommandPtr commandPtr;
-
-    // Unpack the packet's body (commands).
-    for( i=0; i<nCommands_.getValue(); i++ ){
-        switch( Command::getTarget( buffer ) ){
-            // User commands
-            case CommandTarget::USER:
-                switch( UserCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 1 ) ){ // TODO: buffer+1 is ugly.
-                    case UserCommandType::USER_CONNECTION:
-                        commandPtr = CommandPtr( new UserConnectionCommand );
-                    break;
-                    case UserCommandType::USER_DISCONNECTION:
-                        commandPtr =  CommandPtr( new UserDisconnectionCommand );
-                    break;
-                    case UserCommandType::PARAMETER_CHANGE:
-                        commandPtr = CommandPtr( new ParameterChangeCommand );
-                    break;
-                }
-            break;
-
-            // Drawable commands
-            case CommandTarget::DRAWABLE:
-                switch( DrawableCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 1 ) ){ // TODO: buffer+1 is ugly.
-                    case DrawableCommandType::CUBE_CREATION:
-                        commandPtr =  CommandPtr( new CubeCreationCommand );
-                    break;
-                    case DrawableCommandType::DRAWABLE_SELECTION:
-                        commandPtr = CommandPtr( new DrawableSelectionCommand );
-                    break;
-                }
-            break;
-
-            // Selection commands
-            case CommandTarget::SELECTION:
-                switch( SelectionCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 1 ) ){ // TODO: buffer+1 is ugly.
-                    case SelectionCommandType::SELECTION_RESPONSE:
-                        commandPtr = CommandPtr( new SelectionResponseCommand );
-                    break;
-                    case SelectionCommandType::FULL_DESELECTION:
-                        commandPtr =  CommandPtr( new FullDeselectionCommand );
-                    break;
-                    case SelectionCommandType::SELECTION_DELETION:
-                        commandPtr = CommandPtr( new SelectionDeletionCommand );
-                    break;
-                    case SelectionCommandType::SELECTION_TRANSFORMATION:
-                        commandPtr = CommandPtr( new SelectionTransformationCommand );
-                    break;
-                }
-            break;
-        }
-        buffer = commandPtr->unpack( buffer );
-        commands_.push_back( commandPtr );
-    }
-
-    // Return the updated buffer ptr.
-    return buffer;
 }
 
 
@@ -134,9 +61,9 @@ std::uint32_t SceneUpdatePacket::getUnsyncCommands() const
 }
 
 
-const std::vector< CommandConstPtr >* SceneUpdatePacket::getCommands() const
+const CommandsList* SceneUpdatePacket::getCommands() const
 {
-    return &commands_;
+    return commands_.getCommands();
 }
 
 
@@ -153,11 +80,7 @@ bool SceneUpdatePacket::expectedType() const
 void SceneUpdatePacket::addCommand( CommandConstPtr command )
 {
     // Push back the given command.
-    commands_.push_back( command );
-    //addBodyPackable( commands_.back().get() );
-
-    // Update the number of commands.
-    nCommands_ = nCommands_.getValue() + 1;
+    commands_.addCommand( command );
 }
 
 
@@ -166,11 +89,7 @@ void SceneUpdatePacket::addCommand( CommandConstPtr command,
                               const std::uint32_t& historicSize )
 {
     // Push back the given command.
-    commands_.push_back( command );
-    //addBodyPackable( commands_.back().get() );
-
-    // Update the number of commands.
-    nCommands_ = nCommands_.getValue() + 1;
+    commands_.addCommand( command );
 
     nUnsyncCommands_ = historicSize - (commandIndex + 1);
 }
@@ -179,9 +98,6 @@ void SceneUpdatePacket::addCommand( CommandConstPtr command,
 void SceneUpdatePacket::clear()
 {
     commands_.clear();
-
-    // Update the number of commands.
-    nCommands_ = 0;
 }
 
 } // namespace como

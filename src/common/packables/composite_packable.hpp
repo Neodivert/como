@@ -44,6 +44,11 @@ struct PackablePair {
         constant( constant_ ),
         variable( variable_ )
     {}
+
+    PackablePair( const PackablePair& b ) :
+        constant( b.constant ),
+        variable( b.variable )
+    {}
 };
 
 class CompositePackable : public Packable
@@ -74,6 +79,9 @@ class CompositePackable : public Packable
          * 3. Getters
          ***/
         virtual std::uint16_t getPacketSize() const;
+    protected:
+        std::uint8_t getNumberOfPackables() const;
+    public:
 
 
         /***
@@ -82,6 +90,7 @@ class CompositePackable : public Packable
     protected:
         void addPackable( Packable* packable );
         void addPackable( const Packable* packable );
+        void removePackables( const Packable* firstPackable, unsigned int nElements );
     public:
 
 

@@ -135,8 +135,8 @@ void ServerInterface::onSceneUpdatePacketReceived( const boost::system::error_co
         return;
     }
 
-    unsigned int i;
-    const std::vector< CommandConstPtr >* sceneCommands = nullptr;
+    const CommandsList* sceneCommands = nullptr;
+    CommandsList::const_iterator commandsInterator;
 
     SceneUpdatePacket* sceneUpdate = dynamic_cast< SceneUpdatePacket *>( packet.get() );
     //const UserConnectionCommand* userConnectedCommand = nullptr;
@@ -148,8 +148,8 @@ void ServerInterface::onSceneUpdatePacketReceived( const boost::system::error_co
     log_->debug( "Scene update received with nCommands: ", sceneUpdate->getCommands()->size(), "\n" );
 
     sceneCommands = sceneUpdate->getCommands();
-    for( i=0; i<sceneCommands->size(); i++ ){
-        emit commandReceived( ( *sceneCommands )[i] );
+    for( commandsInterator = sceneCommands->begin(); commandsInterator != sceneCommands->end(); commandsInterator++ ){
+        emit commandReceived( *commandsInterator );
     }
 
     listen();
