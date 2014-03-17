@@ -57,12 +57,8 @@ const void* PackableCommandsList::unpack( const void* buffer )
     CommandPtr command;
     unsigned int i;
 
-    std::cout << "Unpacking (VARIABLE) 1" << std::endl;
-
     // Unpack the number of commands.
     buffer = nCommands.unpack( buffer );
-
-    std::cout << "Unpacking (VARIABLE) 2" << std::endl;
 
     // Preread each command's type and cast the command to the appropiate
     // derived type. Then unpack.
@@ -70,7 +66,7 @@ const void* PackableCommandsList::unpack( const void* buffer )
         switch( Command::getTarget( buffer ) ){
             // User commands
             case CommandTarget::USER:
-                switch( UserCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 1 ) ){ // TODO: buffer+1 is ugly.
+                switch( UserCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 3 ) ){ // TODO: buffer+1 is ugly.
                     case UserCommandType::USER_CONNECTION:
                         command = CommandPtr( new UserConnectionCommand );
                     break;
@@ -85,7 +81,7 @@ const void* PackableCommandsList::unpack( const void* buffer )
 
             // Drawable commands
             case CommandTarget::DRAWABLE:
-                switch( DrawableCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 1 ) ){ // TODO: buffer+1 is ugly.
+                switch( DrawableCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 3 ) ){ // TODO: buffer+1 is ugly.
                     case DrawableCommandType::CUBE_CREATION:
                         command =  CommandPtr( new CubeCreationCommand );
                     break;
@@ -97,7 +93,7 @@ const void* PackableCommandsList::unpack( const void* buffer )
 
             // Selection commands
             case CommandTarget::SELECTION:
-                switch( SelectionCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 1 ) ){ // TODO: buffer+1 is ugly.
+                switch( SelectionCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 3 ) ){ // TODO: buffer+1 is ugly.
                     case SelectionCommandType::SELECTION_RESPONSE:
                         command = CommandPtr( new SelectionResponseCommand );
                     break;
@@ -118,15 +114,12 @@ const void* PackableCommandsList::unpack( const void* buffer )
         commands_.push_back( command );
     }
 
-    std::cout << "Unpacking (VARIABLE) 3" << std::endl;
     return buffer;
 }
 
 
 const void* PackableCommandsList::unpack( const void* buffer ) const
 {
-    std::cout << "Unpacking (CONSTANT)" << std::endl;
-
     const PackableUint8< std::uint8_t > nCommands( commands_.size() );
     CommandsList::const_iterator it;
 

@@ -22,6 +22,7 @@
 
 #include <cstdint>
 #include <stdexcept>
+#include <iostream>
 
 namespace como {
 

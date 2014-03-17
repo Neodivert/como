@@ -91,7 +91,6 @@ void* PackableUint16<UnpackedType>::pack( void* buffer ) const
 
     // Return a pointer to the next position in buffer.
     return static_cast< void* >( castedBuffer + 1 );
-
 }
 
 

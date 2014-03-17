@@ -18,6 +18,7 @@
 ***/
 
 #include "packet.hpp"
+#include <iostream>
 
 namespace como {
 
