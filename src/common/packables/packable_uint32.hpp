@@ -25,14 +25,14 @@
 namespace como {
 
 template <class UnpackedType>
-class PackableUint32 : public PackableWrapper<UnpackedType>
+class PackableUint32 : public PackableWrapper<std::uint32_t, UnpackedType>
 {
     public:
         /***
          * 1. Construction
          ***/
         PackableUint32() = default;
-        PackableUint32( const UnpackedType& value ) : PackableWrapper<UnpackedType>( value ){}
+        PackableUint32( const UnpackedType& value );
         PackableUint32( const PackableUint32& ) = default;
         PackableUint32( PackableUint32&& ) = default;
 
@@ -50,116 +50,40 @@ class PackableUint32 : public PackableWrapper<UnpackedType>
 
 
         /***
-         * 4. Packing and unpacking
+         * 4. Auxiliar methods
          ***/
-        virtual void* pack( void* buffer ) const ;
-        virtual const void* unpack( const void* buffer );
-        virtual const void* unpack( const void* buffer ) const;
+        virtual std::uint32_t flipByteOrder( const std::uint32_t& value ) const;
 
 
         /***
          * 5. Operators
          ***/
-        PackableUint32<UnpackedType>& operator = ( const PackableUint32<UnpackedType>& b );
-        PackableUint32<UnpackedType>& operator = ( const UnpackedType& value );
-        PackableUint32<UnpackedType>& operator = ( PackableUint32<UnpackedType>&& ) = delete;
+        PackableUint32<UnpackedType>& operator = ( const PackableUint32<UnpackedType>& ) = default;
+        PackableUint32<UnpackedType>& operator = ( PackableUint32<UnpackedType>&& ) = default;
 };
 
 
 /***
- * 5. Packing and unpacking
+ * 1. Construction
  ***/
 
 template <class UnpackedType >
-void* PackableUint32<UnpackedType>::pack( void* buffer ) const
-{
-    std::uint32_t networkValue;
-
-    // Cast the buffer.
-    std::uint32_t* castedBuffer = static_cast< std::uint32_t* >( buffer );
-
-    // Get the wrapper's inner value and translate it to network order.
-    networkValue = static_cast< std::uint32_t >( this->value_ );
-#if LITTLE_ENDIAN
-    networkValue = ( (networkValue & 0xFF000000) >> 24 ) |
-                    ( (networkValue & 0x00FF0000) >> 8 ) |
-                    ( (networkValue & 0x0000FF00) << 8 ) |
-                    ( (networkValue & 0x000000FF) << 24 );
-#endif
-
-    // Pack the wrapper's inner value into the buffer.
-    *castedBuffer = networkValue;
-
-    // Return a pointer to the next position in buffer.
-    return static_cast< void* >( castedBuffer + 1 );
-}
-
-
-template <class UnpackedType>
-const void* PackableUint32<UnpackedType>::unpack( const void* buffer )
-{
-    // Cast buffer to the UnpackedType type.
-    const UnpackedType* castedBuffer = static_cast< const UnpackedType* >( buffer );
-
-    // Unpack the wrapper's inner valued from the buffer and translate it from network order.
-    this->value_ = static_cast< UnpackedType >( *castedBuffer );
-#if LITTLE_ENDIAN
-    this->value_ = ( (this->value_ & 0xFF000000) >> 24 ) |
-            ( (this->value_ & 0x00FF0000) >> 8 ) |
-            ( (this->value_ & 0x0000FF00) << 8 ) |
-            ( (this->value_ & 0x000000FF) << 24 );
-#endif
-
-    // Return a pointer to the next position in buffer.
-    return static_cast< const void* >( castedBuffer + 1 );
-}
-
-
-template <class UnpackedType>
-const void* PackableUint32<UnpackedType>::unpack( const void* buffer ) const
-{
-    UnpackedType unpackedValue;
-
-    // Cast buffer to the UnpackedType type.
-    const UnpackedType* castedBuffer = static_cast< const UnpackedType* >( buffer );
-
-    // Unpack the wrapper's inner valued from the buffer and translate it from network order.
-    unpackedValue = static_cast< UnpackedType >( *castedBuffer );
-#if LITTLE_ENDIAN
-    unpackedValue = ( (unpackedValue & 0xFF000000) >> 24 ) |
-            ( (unpackedValue & 0x00FF0000) >> 8 ) |
-            ( (unpackedValue & 0x0000FF00) << 8 ) |
-            ( (unpackedValue & 0x000000FF) << 24 );
-#endif
-
-    if( unpackedValue != this->value_ ){
-        throw std::runtime_error( "ERROR: Unpacked an unexpected PackableUint32" );
-    }
-
-    // Return a pointer to the next position in buffer.
-    return static_cast< const void* >( castedBuffer + 1 );
-}
+PackableUint32<UnpackedType>::PackableUint32( const UnpackedType& value )
+    : PackableWrapper<std::uint32_t, UnpackedType>( value )
+{}
 
 
 /***
- * 5. Operators
+ * 4. Auxiliar methods
  ***/
 
-template <class UnpackedType>
-PackableUint32<UnpackedType>& PackableUint32<UnpackedType>::operator = ( const PackableUint32<UnpackedType>& b )
+template <class UnpackedType >
+std::uint32_t PackableUint32<UnpackedType>::flipByteOrder( const std::uint32_t& value ) const
 {
-    PackableWrapper<UnpackedType>::operator =( b );
-
-    return *this;
-}
-
-
-template <class UnpackedType>
-PackableUint32<UnpackedType>& PackableUint32<UnpackedType>::operator = ( const UnpackedType& value )
-{
-    PackableWrapper<UnpackedType>::operator =( value );
-
-    return *this;
+    return ( (value & 0xFF000000) >> 24 ) |
+            ( (value & 0x00FF0000) >> 8 ) |
+            ( (value & 0x0000FF00) << 8 ) |
+            ( (value & 0x000000FF) << 24 );
 }
 
 } // namespace como

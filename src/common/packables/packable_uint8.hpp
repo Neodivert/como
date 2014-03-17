@@ -26,14 +26,14 @@
 namespace como {
 
 template <class UnpackedType>
-class PackableUint8 : public PackableWrapper<UnpackedType>
+class PackableUint8 : public PackableWrapper<std::uint8_t, UnpackedType>
 {
     public:
         /***
          * 1. Construction
          ***/
         PackableUint8() = default;
-        PackableUint8( const UnpackedType& value ) : PackableWrapper<UnpackedType>( value ){}
+        PackableUint8( const UnpackedType& value );
         PackableUint8( const PackableUint8& ) = default;
         PackableUint8( PackableUint8&& ) = default;
 
@@ -51,97 +51,37 @@ class PackableUint8 : public PackableWrapper<UnpackedType>
 
 
         /***
-         * 4. Packing and unpacking
+         * 4. Auxiliar methods
          ***/
-        virtual void* pack( void* buffer ) const ;
-        virtual const void* unpack( const void* buffer ) ;
-        virtual const void* unpack( const void* buffer ) const ;
+        virtual std::uint8_t flipByteOrder( const std::uint8_t& value ) const;
 
 
         /***
-         * 6. Operators
+         * 5. Operators
          ***/
-        PackableUint8<UnpackedType>& operator = ( const PackableUint8<UnpackedType>& b );
-        PackableUint8<UnpackedType>& operator = ( const UnpackedType& value );
-        PackableUint8<UnpackedType>& operator = ( PackableUint8<UnpackedType>&& ) = delete;
+        PackableUint8<UnpackedType>& operator = ( const PackableUint8<UnpackedType>& ) = default;
+        PackableUint8<UnpackedType>& operator = ( PackableUint8<UnpackedType>&& ) = default;
 };
 
 
 /***
- * 5. Packing and unpacking
+ * 1. Construction
  ***/
 
 template <class UnpackedType >
-void* PackableUint8<UnpackedType>::pack( void* buffer ) const
-{
-    // Cast the buffer.
-    std::uint8_t* castedBuffer = static_cast< std::uint8_t* >( buffer );
-
-    // Pack the wrapper's inner value into the buffer.
-    *castedBuffer = static_cast< std::uint8_t >( this->value_ );
-
-    // Return a pointer to the next position in buffer.
-    return static_cast< void* >( castedBuffer + 1 );
-}
-
-
-template <class UnpackedType>
-const void* PackableUint8<UnpackedType>::unpack( const void* buffer )
-{
-    // Cast buffer to the UnpackedType type.
-    const UnpackedType* castedBuffer = static_cast< const UnpackedType* >( buffer );
-
-    // Unpack the wrapper's inner valued from the buffer.
-    this->value_ = static_cast< UnpackedType >( *castedBuffer );
-
-    // Return a pointer to the next position in buffer.
-    return static_cast< const void* >( castedBuffer + 1 );
-}
-
-// This "constant unpacking" allows us to automatically throw an exception if
-// we are expecting one value but receive other.
-template <class UnpackedType>
-const void* PackableUint8<UnpackedType>::unpack( const void* buffer ) const
-{
-    char errorMessage[256];
-
-    // Cast buffer to the UnpackedType type.
-    const UnpackedType* castedBuffer = static_cast< const UnpackedType* >( buffer );
-
-    // Check the wrapper's inner valued from the buffer.
-    if( this->value_ != static_cast< UnpackedType >( *castedBuffer ) ){
-        sprintf( errorMessage,
-                 "ERROR: Unexpected value when unpacking uint8 (expected value: %i / unpacked value: %i)",
-                 this->value_,
-                 static_cast< UnpackedType >( *castedBuffer ) );
-
-        throw std::runtime_error( errorMessage );
-    }
-
-    // Return a pointer to the next position in buffer.
-    return static_cast< const void* >( castedBuffer + 1 );
-}
+PackableUint8<UnpackedType>::PackableUint8( const UnpackedType& value )
+    : PackableWrapper<std::uint8_t, UnpackedType>( value )
+{}
 
 
 /***
- * 6. Operators
+ * 4. Auxiliar methods
  ***/
 
-template <class UnpackedType>
-PackableUint8<UnpackedType>& PackableUint8<UnpackedType>::operator = ( const PackableUint8<UnpackedType>& b )
+template <class UnpackedType >
+std::uint8_t PackableUint8<UnpackedType>::flipByteOrder( const std::uint8_t& value ) const
 {
-    PackableWrapper<UnpackedType>::operator =( b );
-
-    return *this;
-}
-
-
-template <class UnpackedType>
-PackableUint8<UnpackedType>& PackableUint8<UnpackedType>::operator = ( const UnpackedType& value )
-{
-    PackableWrapper<UnpackedType>::operator =( value );
-
-    return *this;
+    return value;
 }
 
 } // namespace como
