@@ -116,6 +116,9 @@ class Server
         /*! \brief Start the server's main loop. */
         void run();
 
+        /*! \brief Disconnect from the server. */
+        void disconnect();
+
     private:
         /*! \brief Notify to all the users that there is new commands to synchronize. */
         void broadcast();

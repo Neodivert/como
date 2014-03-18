@@ -67,6 +67,7 @@ std::shared_ptr< const UserAcceptancePacket > ServerInterface::connect( const ch
     socket_->connect( *endpoint_iterator, errorCode );
 
     if( errorCode ){
+        disconnect();
         throw std::runtime_error( std::string( "ERROR: Couldn't connect to server (" ) + errorCode.message() + ")" );
     }
 

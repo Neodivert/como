@@ -74,22 +74,34 @@ void Server::run()
         // User only needs to press any key to stop the server.
         std::cin.get();
 
-        // Stop the I/O processing.
-        io_service_->stop();
+        // User pressed a key; disconnect server.
+        disconnect();
 
-        // TODO: Are these methods called in their corresponding destructors?
-        // boost::system::error_code errorCode;
-        //newSocket_.shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
-        //newSocket_.close( errorCode );
-
-        // Free TCP acceptor.
-        //acceptor_.close( errorCode );
-
-        // Wait for the server's threads to finish.
-        threads_.join_all();
     }catch( std::exception& ex ){
         log_->error( "Exception: ", ex.what(), "\n" );
     }
+}
+
+// TODO: Call this method when exceptions are thrown.
+// TODO: Make use of errorCode?
+void Server::disconnect()
+{
+    boost::system::error_code errorCode;
+
+    // Stop the I/O processing.
+    io_service_->stop();
+
+    // Close the server's socket used for accepting new connections.
+    if( newSocket_.is_open() ){
+        newSocket_.shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
+        newSocket_.close( errorCode );
+    }
+
+    // Free the server's TCP acceptor.
+    acceptor_.close( errorCode );
+
+    // Wait for the server's threads to finish.
+    threads_.join_all();
 }
 
 
