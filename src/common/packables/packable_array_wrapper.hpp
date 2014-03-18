@@ -74,7 +74,7 @@ class PackableArrayWrapper : public Packable {
          ***/
         PackableArrayWrapper<UnpackedType, ARRAY_SIZE>& operator = ( const PackableArrayWrapper<UnpackedType, ARRAY_SIZE>& b );
         PackableArrayWrapper<UnpackedType, ARRAY_SIZE>& operator = ( const UnpackedType* value );
-        PackableArrayWrapper<UnpackedType, ARRAY_SIZE>& operator = ( PackableArrayWrapper<UnpackedType, ARRAY_SIZE>&& ) = delete;
+        PackableArrayWrapper<UnpackedType, ARRAY_SIZE>& operator = ( PackableArrayWrapper<UnpackedType, ARRAY_SIZE>&& b );
 };
 
 
@@ -159,6 +159,20 @@ PackableArrayWrapper<UnpackedType, ARRAY_SIZE>& PackableArrayWrapper<UnpackedTyp
 
     for( i=0; i<ARRAY_SIZE; i++ ){
         values_[i] = values[i];
+    }
+
+    return *this;
+}
+
+template <class UnpackedType, unsigned int ARRAY_SIZE>
+PackableArrayWrapper<UnpackedType, ARRAY_SIZE>& PackableArrayWrapper<UnpackedType, ARRAY_SIZE>::operator = ( PackableArrayWrapper<UnpackedType, ARRAY_SIZE>&& b )
+{
+    unsigned int i;
+
+    if( this != &b ){
+        for( i=0; i<ARRAY_SIZE; i++ ){
+            values_[i] = b.values_[i];
+        }
     }
 
     return *this;

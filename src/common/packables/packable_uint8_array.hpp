@@ -60,9 +60,9 @@ class PackableUint8Array : public PackableArrayWrapper<UnpackedType, ARRAY_SIZE>
         /***
          * 6. Operators
          ***/
-        //PackableUint8Array<UnpackedType, ARRAY_SIZE>& operator = ( const PackableUint8Array<UnpackedType>& b );
+        PackableUint8Array<UnpackedType, ARRAY_SIZE>& operator = ( const PackableUint8Array<UnpackedType, ARRAY_SIZE>& ) = default;
         //PackableUint8Array<UnpackedType, ARRAY_SIZE>& operator = ( const UnpackedType& value );
-        //PackableUint8Array<UnpackedType, ARRAY_SIZE>& operator = ( PackableUint8Array<UnpackedType>&& ) = delete;
+        PackableUint8Array<UnpackedType, ARRAY_SIZE>& operator = ( PackableUint8Array<UnpackedType, ARRAY_SIZE>&& ) = default;
 };
 
 typedef PackableUint8Array<std::uint8_t, 4> PackableRGBA;

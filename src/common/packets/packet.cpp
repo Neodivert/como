@@ -29,7 +29,7 @@ namespace como {
 
 Packet::Packet( PacketType type ) :
     header_( type ),
-    buffer_({0})
+    buffer_{0}
 {
 }
 
