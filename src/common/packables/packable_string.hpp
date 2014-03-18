@@ -21,6 +21,7 @@
 #define PACKABLE_STRING_HPP
 
 #include "packable.hpp"
+#include <cstring>
 
 namespace como {
 
