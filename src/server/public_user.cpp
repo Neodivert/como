@@ -32,7 +32,8 @@ PublicUser::PublicUser( UserID id, const char* name,
             ProcessSceneUpdatePacketCallback processSceneUpdatePacketCallback,
             std::function<void (UserID)> removeUserCallback,
             CommandsHistoricPtr commandsHistoric,
-            LogPtr log ) :
+            LogPtr log,
+            std::uint32_t color ) :
     BasicUser( id, name ),
     io_service_( io_service ),
     socket_( SocketPtr( new Socket( std::move( socket ) ) ) ),
@@ -42,7 +43,8 @@ PublicUser::PublicUser( UserID id, const char* name,
     synchronizing_( false ),
     commandsHistoric_( commandsHistoric ),
     log_( log ),
-    updateRequested_( false )
+    updateRequested_( false ),
+    color_( color )
 {
     selectionResponse_ = SelectionResponseCommandPtr( new SelectionResponseCommand );
 
@@ -197,6 +199,22 @@ void PublicUser::addSelectionResponse( bool selectionResponse )
     requestUpdate();
 
     mutex_.unlock();
+}
+
+
+/***
+ * 7. Getters
+ ***/
+
+std::uint32_t PublicUser::getColor()
+{
+    std::uint32_t color;
+
+    mutex_.lock();
+    color = color_;
+    mutex_.unlock();
+
+    return color;
 }
 
 } // namespace como

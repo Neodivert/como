@@ -51,6 +51,45 @@ Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThre
     log_ = LogPtr( new Log );
 }
 
+// TODO: Generate more colors?
+void Server::initUserColors()
+{
+    std::uint32_t mask = 0xFF;
+    std::uint32_t color = 0;
+
+    // Clear the container of free user colors.
+    std::queue< std::uint32_t > empty;
+    std::swap( freeUserColors_, empty );
+
+    unsigned int partition;
+    unsigned int partitionElement;
+
+    //const unsigned int MAX_USERS = 32;
+    const unsigned int MAX_USER_COLORS = 24;
+    const unsigned int PARTITION_SIZE = 8;
+    const unsigned int N_PARTITIONS = MAX_USER_COLORS / PARTITION_SIZE;
+
+    for( partition = 0; partition < N_PARTITIONS; partition++ ){
+        mask = 0xFF - partition * 0x55;
+        for( partitionElement = 1; partitionElement < PARTITION_SIZE; partitionElement++ ){
+            color = 0;
+            if( partitionElement & 0x1 ){
+                color |= mask;
+            }
+            if( partitionElement & 0x2 ){
+                color |= (mask << 8);
+            }
+            if( partitionElement & 0x4 ){
+                color |= (mask << 16);
+            }
+
+            std::cout << "0x" << std::hex << color << std::endl;
+            std::cout << std::dec;
+            freeUserColors_.push( color );
+        }
+        std::cout << "----" << std::endl;
+    }
+}
 
 
 /***
@@ -64,6 +103,9 @@ void Server::run()
 
     try{
         log_->debug( "Press any key to exit\n" );
+
+        // Initialize the container of free user colors.
+        initUserColors();
 
         // Open the acceptor.
         openAcceptor();
@@ -142,6 +184,8 @@ void Server::onAccept( const boost::system::error_code& errorCode )
     como::UserAcceptancePacket userAcceptedPacket;
     char buffer[128];
 
+    std::uint32_t userColor = 0;
+
     if( errorCode ){
         log_->error( "[", boost::this_thread::get_id(), "]: ERROR(", errorCode.message(), ")\n" );
     }else{
@@ -164,9 +208,15 @@ void Server::onAccept( const boost::system::error_code& errorCode )
             userAcceptedPacket.setName( buffer );
         }
 
-        // Assign the new user a fixed selectionColor.
-        // Change this so every user receives a DIFFERENT color.
-        userAcceptedPacket.setSelectionColor( rand()%255, rand()%255, rand()%255, 255 );
+        // Get a color from the queue of free colors and assign it to the new
+        // user.
+        userColor = freeUserColors_.front();
+        freeUserColors_.pop();
+
+        userAcceptedPacket.setSelectionColor( ( userColor & 0xFF0000 ) >> 16,
+                                              ( userColor & 0xFF00 ) >> 8,
+                                              userColor & 0xFF,
+                                              0xFF );
 
         // Pack the network package and send it synchronously to the client.
         userAcceptedPacket.send( newSocket_ );
@@ -181,7 +231,8 @@ void Server::onAccept( const boost::system::error_code& errorCode )
                         std::bind( &Server::processSceneUpdatePacket, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3 ),
                         std::bind( &Server::deleteUser, this, std::placeholders::_1 ),
                         commandsHistoric_,
-                        log_
+                        log_,
+                        userColor
                     );
 
         // Add an USER_CONNECTION scene command to the server historic.
@@ -299,6 +350,9 @@ void Server::addCommand( CommandConstPtr sceneCommand )
 void Server::deleteUser( UserID id )
 {
     log_->debug( "Server::deleteUser(", id, ")\n" );
+
+    // Return user's color to free colors container.
+    freeUserColors_.push( users_.at( id )->getColor() );
 
     // Delete the requested user.
     users_.erase( id );

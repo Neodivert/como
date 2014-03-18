@@ -32,6 +32,7 @@
 #include "../common/utilities/log.hpp"
 #include "commands_historic.hpp"
 #include <map>
+#include <queue>
 
 using boost::asio::ip::tcp;
 
@@ -88,6 +89,9 @@ class Server
 
         mutable std::recursive_mutex mutex_;
 
+        // Container of colors that aren't in use by any user.
+        std::queue< std::uint32_t > freeUserColors_;
+
     public:
         /***
          * 1. Construction
@@ -103,7 +107,13 @@ class Server
          */
         Server( unsigned int port_, unsigned int maxSessions, unsigned int nThreads = 3 );
 
+    private:
+        /*!
+          * \brief Initialize the server's container of free colors for identifying users.
+          */
+        void initUserColors();
 
+    public:
         /***
          * 2. Destruction
          ***/

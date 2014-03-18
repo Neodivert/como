@@ -75,6 +75,8 @@ class PublicUser : public BasicUser
 
         SelectionResponseCommandPtr selectionResponse_;
 
+        std::uint32_t color_;
+
     public:
         /***
          * 1. Construction
@@ -88,7 +90,8 @@ class PublicUser : public BasicUser
                     ProcessSceneUpdatePacketCallback processSceneUpdatePacketCallback,
                     std::function<void (UserID)> removeUserCallback,
                     CommandsHistoricPtr commandsHistoric,
-                    LogPtr log );
+                    LogPtr log,
+                    std::uint32_t color );
 
 
         /***
@@ -128,7 +131,13 @@ class PublicUser : public BasicUser
 
 
         /***
-         * 7. Operators
+         * 7. Getters
+         ***/
+        std::uint32_t getColor();
+
+
+        /***
+         * 8. Operators
          ***/
         PublicUser& operator = (const PublicUser& ) = delete;
         PublicUser& operator = ( PublicUser&& ) = delete;
