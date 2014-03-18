@@ -38,11 +38,27 @@ UsersList::UsersList( QWidget* parent, LogPtr log ) :
 
 void UsersList::addUser( UserConnectionCommandConstPtr userConnectedPacket )
 {
+    const std::uint8_t* userSelectionColor = nullptr;
+    QPixmap pixmap( 50, 50 );
+
     // Add the new User-ID-to-list-index translation to the map.
     userIDToName_[ userConnectedPacket->getUserID() ] = userConnectedPacket->getName();
 
+    // Retrieve user's selection color.
+    userSelectionColor = userConnectedPacket->getSelectionColor();
+
+    // Generate a "icon" colored in user's color.
+    pixmap.fill( QColor(
+                     userSelectionColor[0],
+                 userSelectionColor[1],
+                userSelectionColor[2],
+                userSelectionColor[3]
+            ));
+    QIcon userIcon ( pixmap );
+
     // Add the user's name to the list.
-    addItem( tr( userConnectedPacket->getName() ) );
+    QListWidgetItem* newUser = new QListWidgetItem( userIcon, tr( userConnectedPacket->getName() ) );
+    addItem( newUser );
 }
 
 
