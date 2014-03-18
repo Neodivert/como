@@ -65,31 +65,33 @@ ConnectServerPage::ConnectServerPage( ScenePtr scene, LogPtr log ) :
 
 bool ConnectServerPage::validatePage()
 {
+    bool connectionEstablished = false;
+
     // We consider this page valid if we can connect to the server with the
     // connection info given by user.
-    try{
-        std::string userName = userNameInput_->text().toLocal8Bit().data();
-        if( !userName.size() ){
-            log_->error( "ERROR: User name can't be empty\n" );
-            return false;
-        }
-        if( ( userName.find( '(' ) != std::string::npos ) ||
-            ( userName.find( ')' ) != std::string::npos ) ){
-            log_->error( "ERROR: User name can't contain parenthesis\n" );
-            return false;
-        }
-
-        // Try to connect to the server scene. The method Scene::connect()
-        // throws an exception in case of error.
-        scene_->connect( ipInput_->text().toLocal8Bit().data(),       // Server IP
-                         portInput_->text().toLocal8Bit().data(),     // Server port
-                         userName.c_str()                             // User name
-                        );
-        return true;
-    }catch( std::runtime_error& ex ){
-        log_->error( ex.what(), "\n" );
+    std::string userName = userNameInput_->text().toLocal8Bit().data();
+    if( !userName.size() ){
+        log_->error( "ERROR: User name can't be empty\n" );
         return false;
     }
+    if( ( userName.find( '(' ) != std::string::npos ) ||
+        ( userName.find( ')' ) != std::string::npos ) ){
+        log_->error( "ERROR: User name can't contain parenthesis\n" );
+        return false;
+    }
+
+    // Try to connect to the server scene.
+    connectionEstablished =
+            scene_->connect( ipInput_->text().toLocal8Bit().data(),         // Server IP
+                                portInput_->text().toLocal8Bit().data(),    // Server port
+                                userName.c_str()                            // User name
+                    );
+
+    // If we couldn't connect to the server, display an error popup.
+    if( !connectionEstablished ){
+        QMessageBox::critical( 0, "Connection error", "Couldn't connect to server" );
+    }
+    return connectionEstablished;
 }
 
 

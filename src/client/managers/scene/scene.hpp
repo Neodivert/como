@@ -109,7 +109,7 @@ class Scene : public QOffscreenSurface
 
         void initOpenGL();
 
-        virtual void connect( const char* host, const char* port, const char* userName ) = 0;
+        virtual bool connect( const char* host, const char* port, const char* userName ) = 0;
 
         void initLinesBuffer();
 

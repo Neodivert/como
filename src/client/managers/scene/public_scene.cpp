@@ -35,7 +35,7 @@ PublicScene::PublicScene( LogPtr log ) :
  * 2. Server connection
  ***/
 
-void PublicScene::connect( const char* host, const char* port, const char* userName )
+bool PublicScene::connect( const char* host, const char* port, const char* userName )
 {
     try{
         std::shared_ptr< const UserAcceptancePacket > userConnectedPacket;
@@ -48,9 +48,11 @@ void PublicScene::connect( const char* host, const char* port, const char* userN
         // Add the local user to the scene and retrieve its ID.
         addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( *userConnectedPacket ) ) );
         localUserID_ = userConnectedPacket->getId();
+
+        return true;
     }catch( std::exception& ex ){
         std::cerr << ex.what() << std::endl;
-        throw ex;
+        return false;
     }
 }
 

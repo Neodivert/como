@@ -43,7 +43,7 @@ class PublicScene : public Scene
         /***
          * 2. Server connection
          ***/
-        virtual void connect( const char* host, const char* port, const char* userName );
+        virtual bool connect( const char* host, const char* port, const char* userName );
 
 
         /***
