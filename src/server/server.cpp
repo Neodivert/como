@@ -83,11 +83,10 @@ void Server::initUserColors()
                 color |= (mask << 16);
             }
 
-            std::cout << "0x" << std::hex << color << std::endl;
-            std::cout << std::dec;
+            // std::cout << "0x" << std::hex << color << std::dec << std::endl;
             freeUserColors_.push( color );
         }
-        std::cout << "----" << std::endl;
+        // std::cout << "----" << std::endl;
     }
 }
 
