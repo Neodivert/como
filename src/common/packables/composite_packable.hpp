@@ -39,9 +39,20 @@ struct PackablePair {
     const Packable* constant;
     Packable* variable;
 
-    PackablePair( const Packable* constant_ = nullptr, Packable* variable_ = nullptr ) :
-        constant( constant_ ),
-        variable( variable_ )
+
+    PackablePair() :
+        constant( nullptr ),
+        variable( nullptr )
+    {}
+
+    PackablePair( const Packable* packable ) :
+        constant( packable ),
+        variable( nullptr )
+    {}
+
+    PackablePair( Packable* packable ) :
+        constant( packable ),
+        variable( packable )
     {}
 
     PackablePair( const PackablePair& b ) :
@@ -49,6 +60,7 @@ struct PackablePair {
         variable( b.variable )
     {}
 };
+
 
 /*!
  * \class CompositePackable

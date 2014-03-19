@@ -97,13 +97,13 @@ std::uint8_t CompositePackable::getNumberOfPackables() const
 
 void CompositePackable::addPackable( Packable* packable )
 {
-    packables_.push_back( PackablePair( packable, packable ) );
+    packables_.push_back( PackablePair( packable ) );
 }
 
 
 void CompositePackable::addPackable( const Packable* packable )
 {
-    packables_.push_back( PackablePair( packable, nullptr ) );
+    packables_.push_back( PackablePair( packable ) );
 }
 
 
