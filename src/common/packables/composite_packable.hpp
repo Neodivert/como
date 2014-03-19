@@ -25,21 +25,20 @@
 
 namespace como {
 
+/*!
+ * \class PackablePair
+ *
+ * \brief Pair consisting of a constant and a variable pointers, both pointing
+ * to the same object. This auxiliar class was made for making CompositePackable
+ * capable of holding both constant and variable packables.
+ */
+// TODO: Move to a separate file. Check if Doxygen recognizes it then.
+
 struct PackablePair {
     // Yes, simple pointers. We are NOT owning the pointed packables.
     const Packable* constant;
     Packable* variable;
 
-    /*
-     * A CompositePackable can hold both constant and non-constant (variable)
-     * packables, so we must save both of them. When adding a packable to
-     * the CompositePackable, we fill one of the two fields:
-     *
-     * When adding a costant packable: we save a pair with the constant
-     * pointer and a null variable one.
-     * Adding a variable packable: we save a pair with both constant and
-     * non-constant variants of the pointer.
-    */
     PackablePair( const Packable* constant_ = nullptr, Packable* variable_ = nullptr ) :
         constant( constant_ ),
         variable( variable_ )
@@ -51,53 +50,144 @@ struct PackablePair {
     {}
 };
 
+/*!
+ * \class CompositePackable
+ *
+ * \brief Packable container which holds a list of PackablePair
+ * elements. Packing / unpacking a CompositePackable means packing /
+ * unpacking all its contained packable elements in the same order in which they
+ * were added to the container.
+ *
+ * IMPORTANT: The packables pointed inside this container AREN'T destroyer
+ * within its destructor, leaving this responsability to the user of this class.
+ */
+
 class CompositePackable : public Packable
 {
     private:
+        /*!
+         * Vector of *pointers* to Packables held by this container. The
+         * pointed objects AREN'T destroyed within this class destructor,
+         * leaving this responsability to this class' user.
+        */
         std::vector< PackablePair > packables_;
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
+
+        /*! \brief Default constructor. */
         CompositePackable() = default;
+
+        /*!
+         * \brief Copy constructor.
+         *
+         * This copy constructor DOESN'T copy the packables held by source
+         * CompositePackable because we don't own them.
+        */
         CompositePackable( const CompositePackable& b ) : Packable( b ){} // We can't copy pointers to packables we don't own.
+
+        /*! \brief Move constructor. */
         CompositePackable( CompositePackable&& ) = delete; // We can't copy pointers to packables we don't own.
 
+
+        /***
+         * 2. Destruction
+         ***/
+
+        /*! \brief Destructor. */
         virtual ~CompositePackable(){}
 
 
         /***
-         * 2. Packing and unpacking
+         * 3. Packing and unpacking
          ***/
+
+        /*!
+         * \brief Packs all the packables held by this class in the same order
+         * in which they were inserted.
+         * \param buffer a pointer to the buffer the data are packed into.
+         * \return a pointer to the next available position in the given buffer.
+         */
         virtual void* pack( void* buffer ) const;
+
+        /*!
+         * \brief Unpacks all the packables held by this class in the same order
+         * in which they were inserted.
+         * \param buffer a pointer to the buffer the data are unpacked from.
+         * \return a pointer to the next position in the given buffer.
+         */
         virtual const void* unpack( const void* buffer );
+
+        /*!
+         * \brief Testing unpacking - Analogous to unpack(), but this one
+         * throws an exception if the unpacked data doesn't match the object's
+         * data.
+         * \param buffer a pointer to the buffer the data are unpacked from.
+         * \return a pointer to the next position in the given buffer.
+         */
         virtual const void* unpack( const void* buffer ) const ;
 
 
         /***
-         * 3. Getters
+         * 4. Getters
          ***/
+
+        /*!
+         * \brief returns the size (in bytes) that the data held by this
+         * container would ocuppy once packed.
+         * \return an integer with the size (in bytes) that this object
+         * would ocuppy once packed.
+         */
         virtual std::uint16_t getPacketSize() const;
     protected:
+
+        /*!
+         * \brief returns the number of packables held by this container.
+         * \return an integer indicating the number of packables held by this
+         * container.
+         */
         std::uint8_t getNumberOfPackables() const;
     public:
 
 
         /***
-         * 4. Packables management
+         * 5. Packables management
          ***/
     protected:
+
+        /*!
+         * \brief adds a mutable packable to this container.
+         * \param packable to be added to the container.
+         */
         void addPackable( Packable* packable );
+
+        /*!
+         * \brief adds a constant packable to this container.
+         * \param packable packable to be added to the container.
+         */
         void addPackable( const Packable* packable );
+
+        /*!
+         * \brief removes nElements packables from this container including
+         * firstPackable.
+         * \param firstPackable the first packable to be removed from
+         * this container
+         * \param nElements Number of elements to be removed.
+         */
         void removePackables( const Packable* firstPackable, unsigned int nElements );
     public:
 
 
         /***
-         * 5. Operators
+         * 6. Operators
          ***/
+
+        /*! \brief Copy assignment operator */
         CompositePackable& operator = (const CompositePackable& b) = delete;
+
+        /*! \brief Move assignment operator */
         CompositePackable& operator = ( CompositePackable&& ) = delete;
 };
 
