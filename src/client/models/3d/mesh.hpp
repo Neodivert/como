@@ -29,8 +29,8 @@
 
 namespace como {
 
-const GLuint COMPONENTS_PER_VERTEX = 3;
-const GLuint N_TRIANGLE_VERTICES = 3;
+const GLuint COMPONENTS_PER_VERTEX_POSITION = 3;
+const GLuint COMPONENTS_PER_VERTEX = 6;
 
 /***
  * File main class
@@ -79,6 +79,7 @@ class Mesh : public Drawable
 
         virtual void setVertices( const GLuint nVertices, const GLfloat* vertices );
         virtual void setElements( const GLuint nElements, const GLubyte* elements );
+
 
 
         /***

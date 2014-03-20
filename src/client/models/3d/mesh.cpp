@@ -25,6 +25,9 @@ namespace como {
 // Initialize the location of the uniform shader variable "color" as unitialized (-1).
 GLint Mesh::uniformColorLocation = -1;
 
+const GLint SHADER_VERTEX_ATTR_LOCATION = 0;
+const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
+
 
 /***
  * 1. Initialization and destruction
@@ -101,9 +104,9 @@ void Mesh::setVertices( const GLuint nVertices, const GLfloat* vertices )
     originalVertices.resize( nVertices );
     for( GLuint i=0; i<nVertices; i++ )
     {
-        originalVertices[i] = glm::vec3( vertices[i*COMPONENTS_PER_VERTEX+X],
-                                         vertices[i*COMPONENTS_PER_VERTEX+Y],
-                                         vertices[i*COMPONENTS_PER_VERTEX+Z] );
+        originalVertices[i] = glm::vec3( vertices[i*COMPONENTS_PER_VERTEX_POSITION+X],
+                                         vertices[i*COMPONENTS_PER_VERTEX_POSITION+Y],
+                                         vertices[i*COMPONENTS_PER_VERTEX_POSITION+Z] );
 
         originalCentroid += glm::vec4( originalVertices[i], 1.0f );
     }
@@ -119,17 +122,25 @@ void Mesh::setVertices( const GLuint nVertices, const GLfloat* vertices )
     checkOpenGL( "Mesh constructor, after setting VBO vertex data" );
 
     // Get the location of the input variable "vPosition" for the current shader program.
-    GLint prog;
-    glGetIntegerv( GL_CURRENT_PROGRAM, &prog );
-    GLint vPosition = glGetAttribLocation( prog, "vPosition" );
+    //GLint prog;
+    //glGetIntegerv( GL_CURRENT_PROGRAM, &prog );
+    //GLint vPosition = glGetAttribLocation( prog, "vPosition" );
+    //GLint vNormal = glGetAttribLocation( prog, "vNormal" );
 
-    // By using the previous "vPosition" position, specify the location and data format of
-    // the array of vertex positions.
+    //std::cout << vNormal << std::endl;
+
+    // Set the organization of the vertex and normals data in the VBO.
+    checkOpenGL( "Mesh::setVertices() - 1" );
     glBindVertexArray( vao );
-    glVertexAttribPointer( vPosition, 3, GL_FLOAT, GL_FALSE, 0, 0 );
+    glVertexAttribPointer( SHADER_VERTEX_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, COMPONENTS_PER_VERTEX*sizeof( GL_FLOAT ), (void *)( 0 ) );
+    checkOpenGL( "Mesh::setVertices() - 2" );
+    glVertexAttribPointer( SHADER_NORMAL_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, COMPONENTS_PER_VERTEX*sizeof( GL_FLOAT ), (void *)( COMPONENTS_PER_VERTEX_POSITION * sizeof( GL_FLOAT ) ) );
 
-    // Enable previous array of vertex positions.
-    glEnableVertexAttribArray( vPosition );
+    checkOpenGL( "Mesh::setVertices() - 3" );
+    // Enable previous vertex data arrays.
+    glEnableVertexAttribArray( SHADER_VERTEX_ATTR_LOCATION );
+    checkOpenGL( "Mesh::setVertices() - 4" );
+    glEnableVertexAttribArray( SHADER_NORMAL_ATTR_LOCATION );
 
     // Update transformed vertices.
     update();
@@ -138,8 +149,10 @@ void Mesh::setVertices( const GLuint nVertices, const GLfloat* vertices )
 
 void Mesh::setElements( const GLuint nElements, const GLubyte* elements )
 {
+    const GLuint VERTICES_PER_TRIANGLE = 3;
+
     // Compute the number of triangles for this mesh.
-    const GLuint nTriangles = nElements / N_TRIANGLE_VERTICES;
+    const GLuint nTriangles = nElements / VERTICES_PER_TRIANGLE;
 
     // Copy the number of elements (indices).
     this->nElements = nElements;
@@ -147,9 +160,9 @@ void Mesh::setElements( const GLuint nElements, const GLubyte* elements )
     // Copy original triangles to this geometry's triangles.
     triangles.resize( nTriangles );
     for( GLuint i = 0; i<nTriangles; i++ ){
-        triangles[i][0] = elements[i*N_TRIANGLE_VERTICES];
-        triangles[i][1] = elements[i*N_TRIANGLE_VERTICES+1];
-        triangles[i][2] = elements[i*N_TRIANGLE_VERTICES+2];
+        triangles[i][0] = elements[i*VERTICES_PER_TRIANGLE];
+        triangles[i][1] = elements[i*VERTICES_PER_TRIANGLE+1];
+        triangles[i][2] = elements[i*VERTICES_PER_TRIANGLE+2];
     }
 
     // Copy the mesh's elements to a EBO.
@@ -178,6 +191,8 @@ glm::vec4 Mesh::getCentroid() const
 
 void Mesh::getTransformedVertices( unsigned int& n, GLfloat* vertices )
 {
+    std::cout << "Mesh::getTransformedVertices" << std::endl;
+
     GLfloat* mappedVBO = nullptr;
 
     // Get the number of vertices of the mesh.
@@ -195,6 +210,7 @@ void Mesh::getTransformedVertices( unsigned int& n, GLfloat* vertices )
     // Unmap the VBO.
     glUnmapBuffer( GL_ARRAY_BUFFER );
 }
+
 
 /***
  * 3. Transformations
@@ -235,9 +251,9 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
     for( unsigned int i = 0; i < triangles.size(); i++ ){
         if( glm::intersectRayTriangle( rayOrigin,
                                        rayDirection,
-                                       glm::vec3( transformedVertices[triangles[i][0]*3+X], transformedVertices[triangles[i][0]*3+Y], transformedVertices[triangles[i][0]*3+Z] ),
-                                       glm::vec3( transformedVertices[triangles[i][1]*3+X], transformedVertices[triangles[i][1]*3+Y], transformedVertices[triangles[i][1]*3+Z] ),
-                                       glm::vec3( transformedVertices[triangles[i][2]*3+X], transformedVertices[triangles[i][2]*3+Y], transformedVertices[triangles[i][2]*3+Z] ),
+                                       glm::vec3( transformedVertices[triangles[i][0]*COMPONENTS_PER_VERTEX+X], transformedVertices[triangles[i][0]*COMPONENTS_PER_VERTEX+Y], transformedVertices[triangles[i][0]*COMPONENTS_PER_VERTEX+Z] ),
+                                       glm::vec3( transformedVertices[triangles[i][1]*COMPONENTS_PER_VERTEX+X], transformedVertices[triangles[i][1]*COMPONENTS_PER_VERTEX+Y], transformedVertices[triangles[i][1]*COMPONENTS_PER_VERTEX+Z] ),
+                                       glm::vec3( transformedVertices[triangles[i][2]*COMPONENTS_PER_VERTEX+X], transformedVertices[triangles[i][2]*COMPONENTS_PER_VERTEX+Y], transformedVertices[triangles[i][2]*COMPONENTS_PER_VERTEX+Z] ),
                                        intersection ) ){
 
             // There was an intersection with this triangle. Get the parameter t.
@@ -297,9 +313,10 @@ void Mesh::update()
     for( GLuint i = 0; i<originalVertices.size(); i++ ){
         transformedVertex = transformationMatrix * glm::vec4( originalVertices[i], 1.0f );
 
-        transformedVertices[i*N_TRIANGLE_VERTICES+X] = transformedVertex.x;
-        transformedVertices[i*N_TRIANGLE_VERTICES+Y] = transformedVertex.y;
-        transformedVertices[i*N_TRIANGLE_VERTICES+Z] = transformedVertex.z;
+        std::cout << "x: " << (i*COMPONENTS_PER_VERTEX+X) << std::endl;
+        transformedVertices[i*COMPONENTS_PER_VERTEX+X] = transformedVertex.x;
+        transformedVertices[i*COMPONENTS_PER_VERTEX+Y] = transformedVertex.y;
+        transformedVertices[i*COMPONENTS_PER_VERTEX+Z] = transformedVertex.z;
     }
 
     checkOpenGL( "Mesh::update() - 5" );
