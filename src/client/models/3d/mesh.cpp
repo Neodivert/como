@@ -143,7 +143,7 @@ void Mesh::setVertices( const GLuint nVertices, const GLfloat* vertices )
     glEnableVertexAttribArray( SHADER_NORMAL_ATTR_LOCATION );
 
     // Update transformed vertices.
-    update();
+    //update();
 }
 
 
@@ -167,6 +167,41 @@ void Mesh::setElements( const GLuint nElements, const GLubyte* elements )
 
     // Copy the mesh's elements to a EBO.
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, nElements*sizeof( GLubyte ), elements, GL_STATIC_DRAW );
+
+    // Compute vertex normals.
+    // TODO: This requires setVertices() to be called before setElements().
+    // Make both methods private and implement a public setVertexData() which
+    // calls them in order.
+    computeVertexNormals();
+
+    // Update transformed vertices.
+    update();
+}
+
+
+void Mesh::computeVertexNormals()
+{
+    unsigned int normalIndex, faceIndex;
+
+    // Allocate space for holding one normal per vertex.
+    originalNormals.resize( originalVertices.size() );
+
+    std::cout << "originalNormals.size(): " << originalNormals.size() << std::endl;
+
+    // Compute every vertex's normal.
+    for( normalIndex = 0; normalIndex < originalNormals.size(); normalIndex++ ){
+        originalNormals[normalIndex] = glm::vec3( 0.0f );
+        for( faceIndex = 0; faceIndex < triangles.size(); faceIndex++ ){
+            if( ( triangles[faceIndex][0] == normalIndex ) ||
+                    ( triangles[faceIndex][1] == normalIndex ) ||
+                    ( triangles[faceIndex][2] == normalIndex ) ){
+
+                // TODO: Is it necessary to normalize here?
+                originalNormals[normalIndex] += glm::normalize( glm::cross( originalVertices[ triangles[faceIndex][2] ] - originalVertices[ triangles[faceIndex][0] ], originalVertices[ triangles[faceIndex][1] ] - originalVertices[ triangles[faceIndex][0] ] ) );
+            }
+        }
+        originalNormals[normalIndex] = glm::normalize( originalNormals[normalIndex] );
+    }
 }
 
 
@@ -283,8 +318,9 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
 
 void Mesh::update()
 {
-    GLfloat* transformedVertices = nullptr;
+    GLfloat* vertexData = nullptr;
     glm::vec4 transformedVertex;
+    glm::vec4 transformedNormal;
 
     checkOpenGL( "Mesh::update() - 1" );
 
@@ -304,19 +340,25 @@ void Mesh::update()
 
     checkOpenGL( "Mesh::update() - 3" );
     // Map the OpenGL's VBO for transformed vertices to client memory, so we can update it.
-    transformedVertices = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
+    vertexData = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
 
     checkOpenGL( "Mesh::update() - 4" );
 
-    // Recompute each transformed vertex by multiplying its corresponding original vertex
-    // by transformation matrix.
+    // Recompute each transformed vertex and normal by multiplying their
+    // corresponding original values by transformation matrix.
     for( GLuint i = 0; i<originalVertices.size(); i++ ){
         transformedVertex = transformationMatrix * glm::vec4( originalVertices[i], 1.0f );
 
-        std::cout << "x: " << (i*COMPONENTS_PER_VERTEX+X) << std::endl;
-        transformedVertices[i*COMPONENTS_PER_VERTEX+X] = transformedVertex.x;
-        transformedVertices[i*COMPONENTS_PER_VERTEX+Y] = transformedVertex.y;
-        transformedVertices[i*COMPONENTS_PER_VERTEX+Z] = transformedVertex.z;
+        vertexData[i*COMPONENTS_PER_VERTEX+X] = transformedVertex.x;
+        vertexData[i*COMPONENTS_PER_VERTEX+Y] = transformedVertex.y;
+        vertexData[i*COMPONENTS_PER_VERTEX+Z] = transformedVertex.z;
+
+        // TODO: w = 1.0f?
+        transformedNormal = transformationMatrix * glm::vec4( originalNormals[i], 0.0f );
+
+        vertexData[i*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+X] = transformedNormal.x;
+        vertexData[i*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+Y] = transformedNormal.y;
+        vertexData[i*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+Z] = transformedNormal.z;
     }
 
     checkOpenGL( "Mesh::update() - 5" );

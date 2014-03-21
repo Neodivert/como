@@ -79,7 +79,9 @@ class Mesh : public Drawable
 
         virtual void setVertices( const GLuint nVertices, const GLfloat* vertices );
         virtual void setElements( const GLuint nElements, const GLubyte* elements );
-
+    protected:
+        void computeVertexNormals();
+    public:
 
 
         /***
