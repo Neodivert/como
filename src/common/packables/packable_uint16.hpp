@@ -24,43 +24,79 @@
 
 namespace como {
 
+/*!
+ * \class PackableUint16
+ *
+ * \brief Uint16 integer that can be packed into / unpacked from a given
+ * buffer.
+ * \tparam UnpackedType type of the inner value that eventually will be casted
+ * to Uint16 before packing, or casted from Uint16 after unpacking.
+ */
 template <class UnpackedType>
 class PackableUint16 : public PackableWrapper<std::uint16_t, UnpackedType>
 {
+    /*! Integer value to be packed / unpacked */
     using PackableWrapper<std::uint16_t, UnpackedType>::value_;
 
     public:
         /***
          * 1. Construction
          ***/
+
+        /*! \brief Default constructor */
         PackableUint16() = default;
+
+        /*!
+         * \brief Constructs a PackableUint16 from a given value
+         * \param value for initializing the PackableUint16's inner value.
+         */
         PackableUint16( const UnpackedType& value );
+
+        /*! \brief Copy constructor */
         PackableUint16( const PackableUint16& ) = default;
+
+        /*! \brief Move constructor */
         PackableUint16( PackableUint16&& ) = default;
 
 
         /***
          * 2. Destruction
          ***/
+
+        /*! \brief Destructor */
         ~PackableUint16() = default;
 
 
         /***
          * 3. Getters
          ***/
+
+        /*! \brief see PackableWrapper::getPacketSize const */
         virtual std::uint16_t getPacketSize() const { return sizeof( std::uint16_t ); }
 
 
         /***
          * 4. Auxiliar methods
          ***/
+
+        /*!
+         * \brief flips the byte order (big endian or little endian) of the
+         * given argument. Used when converting between local and network
+         * endianess.
+         * \param value whose bytes will be flipped.
+         * \return the given value with its byte order flipped.
+         */
         virtual std::uint16_t flipByteOrder( const std::uint16_t& value ) const;
 
 
         /***
          * 5. Operators
          ***/
+
+        /*! Copy assignment operator */
         PackableUint16<UnpackedType>& operator = ( const PackableUint16<UnpackedType>& ) = default;
+
+        /*! Move assignment operator */
         PackableUint16<UnpackedType>& operator = ( PackableUint16<UnpackedType>&& ) = default;
 };
 

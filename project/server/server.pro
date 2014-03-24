@@ -73,7 +73,7 @@ HEADERS += \
     ../../src/common/packables/packable_uint16.hpp \
     ../../src/common/packables/packable_uint32.hpp \
     ../../src/common/packables/packable_string.hpp \
-    ../../src/common/packables/packable_array_wrapper.hpp \
+    ../../src/common/packables/packable_array.hpp \
     ../../src/common/packables/packable_uint8_array.hpp \
     ../../src/common/packables/packable_vector4.hpp \
     ../../src/common/packets/packet_header.hpp \

@@ -20,19 +20,19 @@
 #ifndef PACKABLE_UINT8_ARRAY_HPP
 #define PACKABLE_UINT8_ARRAY_HPP
 
-#include "packable_array_wrapper.hpp"
+#include "packable_array.hpp"
 
 namespace como {
 
 template <class UnpackedType, unsigned int ARRAY_SIZE>
-class PackableUint8Array : public PackableArrayWrapper<UnpackedType, ARRAY_SIZE>
+class PackableUint8Array : public PackableArray<UnpackedType, ARRAY_SIZE>
 {
     public:
         /***
          * 1. Construction
          ***/
         PackableUint8Array() = default;
-        PackableUint8Array( const UnpackedType* values ) : PackableArrayWrapper<UnpackedType, ARRAY_SIZE>( values ){}
+        PackableUint8Array( const UnpackedType* values ) : PackableArray<UnpackedType, ARRAY_SIZE>( values ){}
         PackableUint8Array( const PackableUint8Array& ) = default;
         PackableUint8Array( PackableUint8Array&& ) = default;
 

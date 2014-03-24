@@ -70,7 +70,8 @@ HEADERS += \
     ../../src/client/gui/users_list.hpp \
     ../../src/client/managers/scene/public_scene.hpp \
     ../../src/client/managers/server_interface/server_interface.hpp \
-    ../../src/client/models/3d/drawables_selection.hpp
+    ../../src/client/models/3d/drawables_selection.hpp \
+    ../../src/common/packables/packable_array.hpp
 
 
 
@@ -107,7 +108,6 @@ HEADERS += \
     ../../src/common/packables/packable_uint16.hpp \
     ../../src/common/packables/packable_uint32.hpp \
     ../../src/common/packables/packable_string.hpp \
-    ../../src/common/packables/packable_array_wrapper.hpp \
     ../../src/common/packables/packable_uint8_array.hpp \
     ../../src/common/packables/packable_vector4.hpp \
     ../../src/common/packets/packet_header.hpp \

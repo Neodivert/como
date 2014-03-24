@@ -45,7 +45,7 @@ class Mesh : public Drawable
         // VAO : Vertex Attributes Array.
         GLuint vao;
 
-        // VBO for transformed vertices.
+        // VBO for transformed vertex data.
         GLuint vbo;
 
         // // EBO : Elements-Buffer Array.

@@ -34,7 +34,6 @@ const unsigned int NAME_SIZE = 64;
  * \brief Interface for all entities which can be packed / unpacked and sent
  * through the network.
  */
-
 class Packable
 {   
     public:
