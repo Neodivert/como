@@ -44,7 +44,7 @@ HEADERS += \
 HEADERS += \
     ../../src/common/utilities/packer.hpp \
     ../../src/common/packables/packable.hpp \
-    ../../src/common/packables/packable_wrapper.hpp \
+    ../../src/common/packables/packable_integer.hpp \
     ../../src/common/packables/composite_packable.hpp \
     ../../src/common/packets/packet.hpp \
     ../../src/common/packets/packets.hpp \

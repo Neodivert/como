@@ -20,7 +20,7 @@
 #ifndef PACKABLE_UINT16_HPP
 #define PACKABLE_UINT16_HPP
 
-#include "packable_wrapper.hpp"
+#include "packable_integer.hpp"
 
 namespace como {
 
@@ -33,10 +33,10 @@ namespace como {
  * to Uint16 before packing, or casted from Uint16 after unpacking.
  */
 template <class UnpackedType>
-class PackableUint16 : public PackableWrapper<std::uint16_t, UnpackedType>
+class PackableUint16 : public PackableInteger<std::uint16_t, UnpackedType>
 {
     /*! Integer value to be packed / unpacked */
-    using PackableWrapper<std::uint16_t, UnpackedType>::value_;
+    using PackableInteger<std::uint16_t, UnpackedType>::value_;
 
     public:
         /***
@@ -71,7 +71,7 @@ class PackableUint16 : public PackableWrapper<std::uint16_t, UnpackedType>
          * 3. Getters
          ***/
 
-        /*! \brief see PackableWrapper::getPacketSize const */
+        /*! \brief see PackableInteger::getPacketSize const */
         virtual std::uint16_t getPacketSize() const { return sizeof( std::uint16_t ); }
 
 
@@ -106,7 +106,7 @@ class PackableUint16 : public PackableWrapper<std::uint16_t, UnpackedType>
 
 template <class UnpackedType >
 PackableUint16<UnpackedType>::PackableUint16( const UnpackedType& value )
-    : PackableWrapper<std::uint16_t, UnpackedType>( value )
+    : PackableInteger<std::uint16_t, UnpackedType>( value )
 {}
 
 

@@ -24,6 +24,11 @@
 
 namespace como {
 
+/*!
+ * \class PackableUint8Array
+ *
+ * \brief Array of Uint8 that can be packed into or unpacked from a buffer.
+ */
 template <class UnpackedType, unsigned int ARRAY_SIZE>
 class PackableUint8Array : public PackableArray<UnpackedType, ARRAY_SIZE>
 {
@@ -31,40 +36,87 @@ class PackableUint8Array : public PackableArray<UnpackedType, ARRAY_SIZE>
         /***
          * 1. Construction
          ***/
+
+        /*! \brief Default constructor */
         PackableUint8Array() = default;
+
+        /*!
+         * \brief Constructs a PackableUint8Array by copying a given plain
+         * array.
+         * \param values array of values for initializing the
+         * PackableUint8Array.
+         */
         PackableUint8Array( const UnpackedType* values ) : PackableArray<UnpackedType, ARRAY_SIZE>( values ){}
+
+        /*! \brief Copy constructor */
         PackableUint8Array( const PackableUint8Array& ) = default;
+
+        /*! \brief Move constructor */
         PackableUint8Array( PackableUint8Array&& ) = default;
 
 
         /***
          * 2. Destruction
          ***/
+
+        /*! \brief Destructor */
         ~PackableUint8Array() = default;
 
 
         /***
          * 3. Getters
          ***/
+
+        /*! \brief see PackableArray::getPacketSize const */
         virtual std::uint16_t getPacketSize() const { return sizeof( std::uint8_t ) * ARRAY_SIZE; }
 
 
         /***
          * 4. Packing and unpacking
          ***/
+
+        /*!
+         * \brief Packs the packable array into the given buffer.
+         * \param buffer a pointer to the buffer where this packable array
+         * will be packed into.
+         * \return a pointer to the first position in the buffer after this
+         * packable array's packed data.
+         */
         virtual void* pack( void* buffer ) const;
+
+        /*!
+         * \brief Unpacks the packable array from the given buffer.
+         * \param buffer a pointer to the buffer where this packable array
+         * will be unpacked from.
+         * \return a pointer to the first position in the buffer after this
+         * packable array's packed data.
+         */
         virtual const void* unpack( const void* buffer );
+
+        /*!
+         * \brief Unpacks array data from the given buffer AND THROW AN
+         * EXCEPTION if it is different from this packable's array inner data.
+         * \param buffer a pointer to the buffer where the data will be
+         * unpacked from.
+         * \return a pointer to the first position in the buffer after this
+         * packable array's packed data.
+         */
         virtual const void* unpack( const void* buffer ) const;
 
 
         /***
          * 6. Operators
          ***/
+
+        /*! \brief Copy assignment operator */
         PackableUint8Array<UnpackedType, ARRAY_SIZE>& operator = ( const PackableUint8Array<UnpackedType, ARRAY_SIZE>& ) = default;
         //PackableUint8Array<UnpackedType, ARRAY_SIZE>& operator = ( const UnpackedType& value );
+
+        /*! \brief Move assignment operator */
         PackableUint8Array<UnpackedType, ARRAY_SIZE>& operator = ( PackableUint8Array<UnpackedType, ARRAY_SIZE>&& ) = default;
 };
 
+// TODO: Leave this here?
 typedef PackableUint8Array<std::uint8_t, 4> PackableRGBA;
 
 

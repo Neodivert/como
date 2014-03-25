@@ -71,7 +71,8 @@ HEADERS += \
     ../../src/client/managers/scene/public_scene.hpp \
     ../../src/client/managers/server_interface/server_interface.hpp \
     ../../src/client/models/3d/drawables_selection.hpp \
-    ../../src/common/packables/packable_array.hpp
+    ../../src/common/packables/packable_array.hpp \
+    ../../src/common/packables/packable_integer.hpp
 
 
 
@@ -79,7 +80,6 @@ HEADERS += \
 HEADERS += \
     ../../src/common/utilities/packer.hpp \
     ../../src/common/packables/packable.hpp \
-    ../../src/common/packables/packable_wrapper.hpp \
     ../../src/common/packables/composite_packable.hpp \
     ../../src/common/packets/packet.hpp \
     ../../src/common/packets/packets.hpp \

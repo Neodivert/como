@@ -17,8 +17,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PACKABLE_WRAPPER_HPP
-#define PACKABLE_WRAPPER_HPP
+#ifndef PACKABLE_INTEGER_HPP
+#define PACKABLE_INTEGER_HPP
 
 #include "packable.hpp"
 #include <cstdint>
@@ -26,7 +26,7 @@
 namespace como {
 
 template <class PackedType, class UnpackedType>
-class PackableWrapper : public Packable {
+class PackableInteger : public Packable {
     protected:
         UnpackedType value_;
 
@@ -34,16 +34,16 @@ class PackableWrapper : public Packable {
         /***
          * 1. Construction
          ***/
-        PackableWrapper() = default;
-        PackableWrapper( const UnpackedType& value ) : value_( value ){}
-        PackableWrapper( const PackableWrapper& ) = default;
-        PackableWrapper( PackableWrapper&& ) = default;
+        PackableInteger() = default;
+        PackableInteger( const UnpackedType& value ) : value_( value ){}
+        PackableInteger( const PackableInteger& ) = default;
+        PackableInteger( PackableInteger&& ) = default;
 
 
         /***
          * 2. Destruction
          ***/
-        ~PackableWrapper() = default;
+        ~PackableInteger() = default;
 
 
         /***
@@ -76,9 +76,9 @@ class PackableWrapper : public Packable {
         /***
          * 7. Operators
          ***/
-        PackableWrapper<PackedType, UnpackedType>& operator = ( const PackableWrapper<PackedType, UnpackedType>& b );
-        PackableWrapper<PackedType, UnpackedType>& operator = ( const UnpackedType& value );
-        PackableWrapper<PackedType, UnpackedType>& operator = ( PackableWrapper<PackedType, UnpackedType>&& b );
+        PackableInteger<PackedType, UnpackedType>& operator = ( const PackableInteger<PackedType, UnpackedType>& b );
+        PackableInteger<PackedType, UnpackedType>& operator = ( const UnpackedType& value );
+        PackableInteger<PackedType, UnpackedType>& operator = ( PackableInteger<PackedType, UnpackedType>&& b );
 };
 
 
@@ -87,7 +87,7 @@ class PackableWrapper : public Packable {
  ***/
 
 template <class PackedType, class UnpackedType>
-void* PackableWrapper<PackedType, UnpackedType>::pack( void* buffer ) const
+void* PackableInteger<PackedType, UnpackedType>::pack( void* buffer ) const
 {
     PackedType networkValue;
 
@@ -111,7 +111,7 @@ void* PackableWrapper<PackedType, UnpackedType>::pack( void* buffer ) const
 
 
 template <class PackedType, class UnpackedType>
-const void* PackableWrapper<PackedType, UnpackedType>::unpack( const void* buffer )
+const void* PackableInteger<PackedType, UnpackedType>::unpack( const void* buffer )
 {
     // Cast buffer to the PackedType type.
     const PackedType* castedBuffer = static_cast< const PackedType* >( buffer );
@@ -133,7 +133,7 @@ const void* PackableWrapper<PackedType, UnpackedType>::unpack( const void* buffe
 
 
 template <class PackedType, class UnpackedType>
-const void* PackableWrapper<PackedType, UnpackedType>::unpack( const void* buffer ) const
+const void* PackableInteger<PackedType, UnpackedType>::unpack( const void* buffer ) const
 {
     PackedType networkValue;
 
@@ -163,7 +163,7 @@ const void* PackableWrapper<PackedType, UnpackedType>::unpack( const void* buffe
  ***/
 
 template <class PackedType, class UnpackedType>
-PackableWrapper<PackedType, UnpackedType>& PackableWrapper<PackedType, UnpackedType>::operator = ( const PackableWrapper<PackedType, UnpackedType>& b )
+PackableInteger<PackedType, UnpackedType>& PackableInteger<PackedType, UnpackedType>::operator = ( const PackableInteger<PackedType, UnpackedType>& b )
 {
     if( this != &b ){
         value_ = b.value_;
@@ -173,7 +173,7 @@ PackableWrapper<PackedType, UnpackedType>& PackableWrapper<PackedType, UnpackedT
 
 
 template <class PackedType, class UnpackedType>
-PackableWrapper<PackedType, UnpackedType>& PackableWrapper<PackedType, UnpackedType>::operator = ( const UnpackedType& value )
+PackableInteger<PackedType, UnpackedType>& PackableInteger<PackedType, UnpackedType>::operator = ( const UnpackedType& value )
 {
     value_ = value;
 
@@ -182,7 +182,7 @@ PackableWrapper<PackedType, UnpackedType>& PackableWrapper<PackedType, UnpackedT
 
 
 template <class PackedType, class UnpackedType>
-PackableWrapper<PackedType, UnpackedType>& PackableWrapper<PackedType, UnpackedType>::operator = ( PackableWrapper<PackedType, UnpackedType>&& b )
+PackableInteger<PackedType, UnpackedType>& PackableInteger<PackedType, UnpackedType>::operator = ( PackableInteger<PackedType, UnpackedType>&& b )
 {
     if( this != &b ){
         value_ = b.value_;
@@ -192,4 +192,4 @@ PackableWrapper<PackedType, UnpackedType>& PackableWrapper<PackedType, UnpackedT
 
 } // namespace como
 
-#endif // PACKABLE_WRAPPER_HPP
+#endif // PACKABLE_INTEGER_HPP

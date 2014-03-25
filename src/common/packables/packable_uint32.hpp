@@ -20,45 +20,80 @@
 #ifndef PACKABLE_UINT32_HPP
 #define PACKABLE_UINT32_HPP
 
-#include "packable_wrapper.hpp"
+#include "packable_integer.hpp"
 
 namespace como {
 
+/*!
+ * \class PackableUint32
+ *
+ * \brief Uint16 integer that can be packed into / unpacked from a given
+ * buffer.
+ * \tparam UnpackedType type of the inner value that eventually will be casted
+ * to Uint32 before packing, or casted from Uint32 after unpacking.
+ */
 template <class UnpackedType>
-class PackableUint32 : public PackableWrapper<std::uint32_t, UnpackedType>
+class PackableUint32 : public PackableInteger<std::uint32_t, UnpackedType>
 {
     public:
         /***
          * 1. Construction
          ***/
+
+        /*! \brief Default constructor */
         PackableUint32() = default;
+
+        /*!
+         * \brief Constructs a PackableUint32 by copying the given value.
+         * \param value for initializing the PackableUint32's inner value.
+         */
         PackableUint32( const UnpackedType& value );
+
+        /*! \brief Copy constructor */
         PackableUint32( const PackableUint32& ) = default;
+
+        /*! \brief Move constructor */
         PackableUint32( PackableUint32&& ) = default;
 
 
         /***
          * 2. Destruction
          ***/
+
+        /*! \brief Destructor */
         ~PackableUint32() = default;
 
 
         /***
          * 3. Getters
          ***/
+
+        /*! \brief see PackableInteger::getPacketSize const */
         virtual std::uint16_t getPacketSize() const { return sizeof( std::uint32_t ); }
 
 
         /***
          * 4. Auxiliar methods
          ***/
+
+        /*!
+         * \brief flips the byte order (big endian or little endian) of the
+         * given argument. Used when converting between local and network
+         * endianess.
+         * \param value whose bytes will be flipped.
+         * \return the given value with its byte order flipped.
+         */
         virtual std::uint32_t flipByteOrder( const std::uint32_t& value ) const;
 
 
         /***
          * 5. Operators
          ***/
+
+        /*! \brief Copy assignment operator */
         PackableUint32<UnpackedType>& operator = ( const PackableUint32<UnpackedType>& ) = default;
+
+        /*! \brief Move assignment operator */
         PackableUint32<UnpackedType>& operator = ( PackableUint32<UnpackedType>&& ) = default;
 };
 
@@ -69,7 +104,7 @@ class PackableUint32 : public PackableWrapper<std::uint32_t, UnpackedType>
 
 template <class UnpackedType >
 PackableUint32<UnpackedType>::PackableUint32( const UnpackedType& value )
-    : PackableWrapper<std::uint32_t, UnpackedType>( value )
+    : PackableInteger<std::uint32_t, UnpackedType>( value )
 {}
 
 
