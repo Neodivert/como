@@ -31,6 +31,7 @@
 #include "../../models/utilities/msl/src/shader_loader.hpp"
 #include "../../models/3d/drawables_selection.hpp"
 #include <queue>
+#include "../../models/3d/lamps/lamps.hpp"
 
 Q_DECLARE_METATYPE( como::CommandConstPtr )
 

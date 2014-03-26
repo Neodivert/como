@@ -25,6 +25,7 @@
 
 namespace como {
 
+/*! This defines the format used when packing or unpacking values_ array. */
 const char FLOAT_TO_STRING_FORMAT[32] = "%f#%f#%f#%f";
 
 /***
@@ -95,7 +96,8 @@ void PackableVector4::setValue( float x, float y, float z, float w )
     values_[2] = z;
     values_[3] = w;
 
-    // Create the string representation of the transformation angle and vector.
+    // Write the values_ array to packString_ following the
+    // FLOAT_TO_STRING_FORMAT format.
     snprintf( packString_,
               PACK_STRING_SIZE,
               FLOAT_TO_STRING_FORMAT,

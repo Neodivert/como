@@ -72,7 +72,10 @@ HEADERS += \
     ../../src/client/managers/server_interface/server_interface.hpp \
     ../../src/client/models/3d/drawables_selection.hpp \
     ../../src/common/packables/packable_array.hpp \
-    ../../src/common/packables/packable_integer.hpp
+    ../../src/common/packables/packable_integer.hpp \
+    ../../src/client/models/3d/lamps/lamp.hpp \
+    ../../src/client/models/3d/lamps/directional_lamp.hpp \
+    ../../src/client/models/3d/lamps/lamps.hpp
 
 
 
@@ -139,7 +142,9 @@ SOURCES += \
     ../../src/client/gui/users_list.cpp \
     ../../src/client/managers/scene/public_scene.cpp \
     ../../src/client/managers/server_interface/server_interface.cpp \
-    ../../src/client/models/3d/drawables_selection.cpp
+    ../../src/client/models/3d/drawables_selection.cpp \
+    ../../src/client/models/3d/lamps/lamp.cpp \
+    ../../src/client/models/3d/lamps/directional_lamp.cpp
 
 
 # Common sources (used by both client and server).

@@ -25,59 +25,107 @@
 
 namespace como {
 
+/*!
+ * \class PackableInteger
+ *
+ * \brief Base class for all types of variables that can be packed as integers
+ * into or unpacked from a buffer.
+ * \tparam PackedType integral type of data once packed in the buffer.
+ * \tparam UnpackedType type of data that eventually will be casted to / from
+ * PackedType when packing / unpacking.
+ */
 template <class PackedType, class UnpackedType>
 class PackableInteger : public Packable {
     protected:
+        /*! Value to be packed / unpacked */
         UnpackedType value_;
 
     public:
         /***
          * 1. Construction
          ***/
+
+        /*! \brief Default constructor */
         PackableInteger() = default;
+
+        /*!
+         * \brief Constructs a PackableInteger from the given value.
+         * \param value value to initialize PackableInteger with.
+         */
         PackableInteger( const UnpackedType& value ) : value_( value ){}
+
+        /*! \brief Copy constructor */
         PackableInteger( const PackableInteger& ) = default;
+
+        /*! \brief Move constructor */
         PackableInteger( PackableInteger&& ) = default;
 
 
         /***
          * 2. Destruction
          ***/
+
+        /*! \brief Destructor */
         ~PackableInteger() = default;
 
 
         /***
          * 3. Getters
          ***/
+
+        /*! \brief Returns the valued held by this PackableInteger */
         UnpackedType getValue() const { return this->value_; }
+
+        /*! \brief see Packable::getPacketSize const */
         virtual std::uint16_t getPacketSize() const = 0;
 
 
         /***
          * 4. Setters
          ***/
+
+        /*! \brief Set this PackableInteger's inner value */
         void setValue( UnpackedType value ){ this->value_ = value; }
 
 
         /***
          * 5. Packing and unpacking
          ***/
+
+        /*! \brief see Packable::pack */
         virtual void* pack( void* buffer ) const;
+
+        /*! \brief see Packable::unpack */
         virtual const void* unpack( const void* buffer );
+
+        /*! \brief see Packable::unpack const */
         virtual const void* unpack( const void* buffer ) const;
 
 
         /***
          * 6. Auxiliar methods
          ***/
+
+        /*!
+         * \brief flipByteOrder takes the value given as an argument and
+         * return a copy with its byte order flipped. Used for conversion
+         * between local and network endianess.
+         * \return a copy of the supplied value with its byte order flipped.
+         */
         virtual PackedType flipByteOrder( const PackedType& ) const = 0;
 
 
         /***
          * 7. Operators
          ***/
-        PackableInteger<PackedType, UnpackedType>& operator = ( const PackableInteger<PackedType, UnpackedType>& b );
+
+        /*! \brief Assigns the given value to this PackableInteger */
         PackableInteger<PackedType, UnpackedType>& operator = ( const UnpackedType& value );
+
+        /*! \brief Copy assignment operator */
+        PackableInteger<PackedType, UnpackedType>& operator = ( const PackableInteger<PackedType, UnpackedType>& b );
+
+        /*! \brief Move assignment operator */
         PackableInteger<PackedType, UnpackedType>& operator = ( PackableInteger<PackedType, UnpackedType>&& b );
 };
 
