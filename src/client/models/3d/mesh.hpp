@@ -26,6 +26,8 @@
 #include "drawable.hpp"
 #include <vector>
 #include <array>
+#include <fstream>
+#include <stdexcept>
 
 namespace como {
 
@@ -66,26 +68,34 @@ class Mesh : public Drawable
         glm::vec4 transformedCentroid;
 
         // Number of elements in mesh.
-        GLuint nElements;
+        GLuint nElements; // TODO: Remove / Update?
 
     public:
         /***
          * 1. Initialization and destruction
          ***/
+        Mesh( const char* file, const std::uint8_t* color = nullptr );
         Mesh( const std::uint8_t* color = nullptr );
         Mesh( const Mesh& ) = delete;
         Mesh( Mesh&& ) = delete;
         ~Mesh();
 
-        virtual void setVertices( const GLuint nVertices, const GLfloat* vertices );
-        virtual void setElements( const GLuint nElements, const GLubyte* elements );
+    private:
+        void initMeshBuffers();
+        void initTransformedVertexData();
     protected:
         void computeVertexNormals();
     public:
 
+        /***
+         * 2. Loading
+         ***/
+    private:
+        void LoadFromOBJ( const char* objFile );
+    public:
 
         /***
-         * 2. Getters and setters
+         * 3. Getters and setters
          ***/
         void setColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
         glm::vec4 getCentroid() const ;
