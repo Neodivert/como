@@ -28,52 +28,106 @@ namespace como {
 
 typedef std::list< CommandConstPtr > CommandsList;
 
+/*!
+ * \class PackableCommandsList
+ *
+ * \brief Commands list that can be packed to / unpacked from a buffer.
+ */
 class PackableCommandsList : public Packable
 {
     private:
+        /*! List of commands */
         CommandsList commands_;
 
     public:
         /***
          * 1. Construction.
          ***/
+
+        /*! \brief Default constructor */
         PackableCommandsList() = default;
+
+        /*! \brief Copy constructor */
         PackableCommandsList( const PackableCommandsList& b );
+
+        /*! \brief Move constructor */
         PackableCommandsList( PackableCommandsList&& b ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
+
+        /*! \brief Destructor */
         virtual ~PackableCommandsList(){}
 
 
         /***
          * 3. Packing and unpacking
          ***/
+
+        /*!
+         * \brief Packs all the commands held by this list into the given
+         * buffer.
+         * \param buffer buffer for paking the commands into.
+         * \return a pointer to the next available position in buffer.
+         */
         virtual void* pack( void* buffer ) const;
+
+        /*!
+         * \brief Unpacks a list of commands from the given buffer.
+         * \param buffer buffer for unpaking the commands from.
+         * \return a pointer to the next available position in buffer.
+         */
         virtual const void* unpack( const void* buffer );
+
+        /*!
+         * \brief Unpacks PackableCommandsList data from the given buffer and
+         * throw an exception if it doesn't match this CommandList's contents.
+         * \param buffer buffer for unpaking the commands from.
+         * \return a pointer to the next available position in buffer.
+         */
         virtual const void* unpack( const void* buffer ) const;
 
 
         /***
          * 4. Getters
          ***/
+
+        /*!
+         * \brief Returns the size (in bytes) that this CommandList would
+         * occupy once packed into a buffer.
+         */
         virtual std::uint16_t getPacketSize() const;
+
+        /*!
+         * \brief Returns a pointer to the plain list of commands held by this
+         * instance of PackableCommandsList.
+         * \return a pointer to the plain list of commands held by this
+         * instance of PackableCommandsList
+         */
         const CommandsList* getCommands() const;
 
 
         /***
          * 5. Commands management
          ***/
+
+        /*! \brief Add a command to the list */
         void addCommand( CommandConstPtr command );
+
+        /*! \brief Clear the commands list by removing all its elements */
         void clear();
 
 
         /***
          * 6. Operators
          ***/
-        PackableCommandsList& operator = (const PackableCommandsList& b) = delete;
+
+        /*! \brief Copy assignment operator */
+        PackableCommandsList& operator = (const PackableCommandsList& ) = delete;
+
+        /*! \brief Move assignment operator */
         PackableCommandsList& operator = ( PackableCommandsList&& ) = delete;
 };
 

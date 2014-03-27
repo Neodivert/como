@@ -26,7 +26,12 @@ namespace como {
 PackableCommandsList::PackableCommandsList( const PackableCommandsList& b ) :
     Packable( b ),
     commands_( b.commands_ )
-{}
+{
+    /*
+     * We don't call CompositePackable here because we can't predict which
+     * types of commands we'll read every time.
+     */
+}
 
 
 /***
@@ -66,7 +71,7 @@ const void* PackableCommandsList::unpack( const void* buffer )
         switch( Command::getTarget( buffer ) ){
             // User commands
             case CommandTarget::USER:
-                switch( UserCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 3 ) ){ // TODO: buffer+1 is ugly.
+                switch( UserCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 3 ) ){ // TODO: buffer+3 is ugly.
                     case UserCommandType::USER_CONNECTION:
                         command = CommandPtr( new UserConnectionCommand );
                     break;
@@ -81,7 +86,7 @@ const void* PackableCommandsList::unpack( const void* buffer )
 
             // Drawable commands
             case CommandTarget::DRAWABLE:
-                switch( DrawableCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 3 ) ){ // TODO: buffer+1 is ugly.
+                switch( DrawableCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 3 ) ){ // TODO: buffer+3 is ugly.
                     case DrawableCommandType::CUBE_CREATION:
                         command =  CommandPtr( new CubeCreationCommand );
                     break;
@@ -93,7 +98,7 @@ const void* PackableCommandsList::unpack( const void* buffer )
 
             // Selection commands
             case CommandTarget::SELECTION:
-                switch( SelectionCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 3 ) ){ // TODO: buffer+1 is ugly.
+                switch( SelectionCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 3 ) ){ // TODO: buffer+3 is ugly.
                     case SelectionCommandType::SELECTION_RESPONSE:
                         command = CommandPtr( new SelectionResponseCommand );
                     break;
@@ -142,8 +147,13 @@ const void* PackableCommandsList::unpack( const void* buffer ) const
 std::uint16_t PackableCommandsList::getPacketSize() const
 {
     CommandsList::const_iterator it;
+
+    // The size of the list (Uint8) is packed / unpacked along with the list
+    // itself. Sum its size (in bytes) to the total packet size.
     std::uint16_t packetSize = sizeof( std::uint8_t );
 
+    // Sum the packet size of every command present in this list to the total
+    // packet size.
     for( it = commands_.begin(); it != commands_.end(); it++ ){
         packetSize += (*it)->getPacketSize();
     }

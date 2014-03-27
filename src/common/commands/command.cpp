@@ -29,6 +29,7 @@ Command::Command( CommandTarget commandTarget, UserID userID ) :
     commandTarget_( commandTarget ),
     userID_( userID )
 {
+    // Register the following packables as members of this CompositePackable.
     addPackable( &commandTarget_ );
     addPackable( &userID_ );
 }
@@ -39,6 +40,7 @@ Command::Command( const Command& b ) :
     commandTarget_( b.commandTarget_ ),
     userID_( b.userID_ )
 {
+    // Register the following packables as members of this CompositePackable.
     addPackable( &commandTarget_ );
     addPackable( &userID_ );
 }

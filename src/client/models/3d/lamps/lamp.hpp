@@ -79,6 +79,7 @@ class Lamp : public Mesh
          * 4. Setters
          ***/
 
+        // TODO: Use Mesh::translate.
         /*! \brief Move Lamp to the given position */
         virtual void setPosition( const glm::vec3& position );
 
