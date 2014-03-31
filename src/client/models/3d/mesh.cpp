@@ -124,14 +124,25 @@ void Mesh::initTransformedVertexData()
         glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, 3*i*sizeof( GLuint ), 3*sizeof( GLuint ), &triangles[i] );
     }
 
-    // Compute vertex normals.
-    // TODO: This requires setVertices() to be called before setElements().
-    // Make both methods private and implement a public setVertexData() which
-    // calls them in order.
+    // Compute Mesh's centroid and vertex normals.
+    computeCentroid();
     computeVertexNormals();
 
     // Update transformed vertices.
     update();
+}
+
+
+void Mesh::computeCentroid()
+{
+    unsigned int i = 0;
+
+    originalCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
+    for( i = 0; i < originalVertices.size(); i++ ){
+        originalCentroid += glm::vec4( originalVertices[i], 1.0f );
+    }
+
+    originalCentroid /= originalVertices.size();
 }
 
 

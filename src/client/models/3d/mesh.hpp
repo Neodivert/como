@@ -83,6 +83,7 @@ class Mesh : public Drawable
         void initMeshBuffers();
         void initTransformedVertexData();
     protected:
+        void computeCentroid();
         void computeVertexNormals();
     public:
 
