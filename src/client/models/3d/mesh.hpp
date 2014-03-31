@@ -72,47 +72,58 @@ class Mesh : public Drawable
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction.
          ***/
         Mesh( const char* file, const std::uint8_t* color = nullptr );
         Mesh( const Mesh& ) = delete;
         Mesh( Mesh&& ) = delete;
+
+
+        /***
+         * 2. Destruction.
+         ***/
         ~Mesh();
 
+
+        /***
+         * 3. Initialization.
+         ***/
     private:
         void initMeshBuffers();
         void initTransformedVertexData();
-    protected:
         void computeCentroid();
         void computeVertexNormals();
-    public:
+
 
         /***
-         * 2. Loading
+         * 4. File loading.
          ***/
     private:
         void LoadFromOBJ( const char* objFile );
     public:
 
+
         /***
-         * 3. Getters and setters
+         * 5. Getters.
          ***/
-        void setColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
         glm::vec4 getCentroid() const ;
         void getTransformedVertices( unsigned int& n, GLfloat* vertices );
 
-        /***
-         * 3. Transformations
-         ***/
-        //virtual void rotateAroundCentroid( const GLfloat& angle, const glm::vec3& axis );
 
         /***
-         * 4. Intersections
+         * 6. Setters.
+         ***/
+        void setColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
+
+
+        /***
+         * 7. Intersections.
          ***/
         virtual void intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT, unsigned int* triangle = nullptr ) const ;
 
+
         /***
-         * 5. Update and drawing.
+         * 8. Update and drawing.
          ***/
     protected:
         // Recompute transformed vertices based on original ones and transformation matrix.
@@ -124,7 +135,7 @@ class Mesh : public Drawable
 
 
         /***
-         * 6. Operators
+         * 9. Operators
          ***/
         Mesh& operator=( const Mesh& ) = delete ;
         Mesh& operator=( Mesh&& ) = delete;

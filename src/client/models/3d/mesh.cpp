@@ -30,7 +30,7 @@ const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
 
 
 /***
- * 1. Initialization and destruction
+ * 1. Construction.
  ***/
 
 Mesh::Mesh( const char* fileName, const std::uint8_t* color )
@@ -58,6 +58,10 @@ Mesh::Mesh( const char* fileName, const std::uint8_t* color )
 }
 
 
+/***
+ * 2. Destruction.
+ ***/
+
 Mesh::~Mesh()
 {
     // Tell OpenGL we are done with allocated buffer objects and
@@ -66,6 +70,11 @@ Mesh::~Mesh()
     glDeleteBuffers( 1, &ebo );
     glDeleteVertexArrays( 1, &vao );
 }
+
+
+/***
+ * 3. Initialization.
+ ***/
 
 
 void Mesh::initMeshBuffers()
@@ -171,7 +180,7 @@ void Mesh::computeVertexNormals()
 
 
 /***
- * 2. Loading
+ * 4. File loading.
  ***/
 
 void Mesh::LoadFromOBJ( const char* filePath )
@@ -233,17 +242,8 @@ void Mesh::LoadFromOBJ( const char* filePath )
 
 
 /***
- * 2. Getters and setters
+ * 5. Getters.
  ***/
-
-void Mesh::setColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a )
-{
-    color[0] = r;
-    color[1] = g;
-    color[2] = b;
-    color[3] = a;
-}
-
 
 glm::vec4 Mesh::getCentroid() const
 {
@@ -273,19 +273,20 @@ void Mesh::getTransformedVertices( unsigned int& n, GLfloat* vertices )
 
 
 /***
- * 3. Transformations
+ * 6. Setters.
  ***/
 
-/*
-void Mesh::rotateAroundCentroid( const GLfloat& angle, const glm::vec3& axis )
+void Mesh::setColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a )
 {
-    // Set the transformed centroid as the pivot point and rotate the mesh.
-    rotate( angle, axis, glm::vec3( transformedCentroid ) );
+    color[0] = r;
+    color[1] = g;
+    color[2] = b;
+    color[3] = a;
 }
-*/
+
 
 /***
- * 4. Intersections
+ * 7. Intersections.
  ***/
 
 void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT, unsigned int* triangle ) const
@@ -337,8 +338,9 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
     }
 }
 
+
 /***
- * 5. Update and drawing.
+ * 8. Update and drawing.
  ***/
 
 void Mesh::update()
