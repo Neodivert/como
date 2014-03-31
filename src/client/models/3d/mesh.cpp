@@ -35,6 +35,8 @@ const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
 
 Mesh::Mesh( const char* fileName, const std::uint8_t* color )
 {   
+    checkOpenGL( "Mesh( const char* fileName, const std::uint8_t* color ) - 1" );
+
     // Initialize OpenGL objects (VBO, VAO, EBO, ...) associated to this Mesh.
     initMeshBuffers();
 
@@ -51,6 +53,8 @@ Mesh::Mesh( const char* fileName, const std::uint8_t* color )
 
     // Load vertex data from given file.
     LoadFromOBJ( filePath.c_str() );
+
+    checkOpenGL( "Mesh( const char* fileName, const std::uint8_t* color ) - 2" );
 }
 
 
@@ -66,45 +70,30 @@ Mesh::~Mesh()
 
 void Mesh::initMeshBuffers()
 {
-    //checkOpenGL( "Mesh constructor - 1" );
     GLint currentShaderProgram;
 
     // Generate a VAO for the Mesh and bind it as the active one.
     glGenVertexArrays( 1, &vao );
     glBindVertexArray( vao );
 
-    //checkOpenGL( "Mesh constructor - 2" );
-
     // Generate a VBO and bind it for holding vertex data.
     glGenBuffers( 1, &vbo );
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
-
-    //checkOpenGL( "Mesh constructor - 3" );
 
     // Generate an EBO and bind it for holding vertex indices.
     glGenBuffers( 1, &ebo );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
 
-    //checkOpenGL( "Mesh constructor - 4" );
-
     if( uniformColorLocation == -1 ){
-        checkOpenGL( "Mesh constructor - 4 b1" );
         // Location of uniform shader variable "color" hasn't been initialized yet.
 
         // Get current shader program id.
         glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
 
-        //checkOpenGL( "Mesh constructor - 4 b2" );
-
         // Get location of uniform shader variable "color".
         uniformColorLocation = glGetUniformLocation( currentShaderProgram, "color" );
-
-        //checkOpenGL( "Mesh constructor - 4 b3" );
     }
 
-    //checkOpenGL( "Mesh constructor - 5" );
-
-    //checkOpenGL( "Mesh constructor - 6" );
     // Set both original and transformed centroids.
     originalCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
     transformedCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
@@ -119,41 +108,27 @@ void Mesh::initTransformedVertexData()
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
     glBufferData( GL_ARRAY_BUFFER, originalVertices.size()*COMPONENTS_PER_VERTEX*sizeof( GLfloat ), NULL, GL_DYNAMIC_DRAW );
 
-    checkOpenGL( "Mesh constructor, after setting VBO vertex data" );
-
     // Set the organization of the vertex and normals data in the VBO.
-    checkOpenGL( "Mesh::setVertices() - 1" );
     glBindVertexArray( vao );
     glVertexAttribPointer( SHADER_VERTEX_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, COMPONENTS_PER_VERTEX*sizeof( GL_FLOAT ), (void *)( 0 ) );
-    checkOpenGL( "Mesh::setVertices() - 2" );
     glVertexAttribPointer( SHADER_NORMAL_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, COMPONENTS_PER_VERTEX*sizeof( GL_FLOAT ), (void *)( COMPONENTS_PER_VERTEX_POSITION * sizeof( GL_FLOAT ) ) );
 
-    checkOpenGL( "Mesh::setVertices() - 3" );
     // Enable previous vertex data arrays.
     glEnableVertexAttribArray( SHADER_VERTEX_ATTR_LOCATION );
-    checkOpenGL( "Mesh::setVertices() - 4" );
     glEnableVertexAttribArray( SHADER_NORMAL_ATTR_LOCATION );
 
-    checkOpenGL( "Mesh::setVertices() - 5" );
     // Copy the mesh's elements to a EBO.
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, triangles.size()*3*sizeof( GLuint ), nullptr, GL_STATIC_DRAW );
-    checkOpenGL( "Mesh::setVertices() - 6" );
 
-    char str[124];
     for( i=0; i<triangles.size(); i++ ){
-        sprintf( str, "Mesh::setVertices() - 6.%d", i );
         glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, 3*i*sizeof( GLuint ), 3*sizeof( GLuint ), &triangles[i] );
-        checkOpenGL( str );
     }
-    checkOpenGL( "Mesh::setVertices() - 7" );
 
     // Compute vertex normals.
     // TODO: This requires setVertices() to be called before setElements().
     // Make both methods private and implement a public setVertexData() which
     // calls them in order.
     computeVertexNormals();
-
-    checkOpenGL( "Mesh::setVertices() - 8" );
 
     // Update transformed vertices.
     update();
@@ -166,8 +141,6 @@ void Mesh::computeVertexNormals()
 
     // Allocate space for holding one normal per vertex.
     originalNormals.resize( originalVertices.size() );
-
-    std::cout << "originalNormals.size(): " << originalNormals.size() << std::endl;
 
     // Compute every vertex's normal.
     for( normalIndex = 0; normalIndex < originalNormals.size(); normalIndex++ ){
@@ -192,7 +165,6 @@ void Mesh::computeVertexNormals()
 
 void Mesh::LoadFromOBJ( const char* filePath )
 {
-    int res;
     unsigned int i;
     const unsigned int LINE_SIZE = 250;
     std::ifstream file;
@@ -215,31 +187,28 @@ void Mesh::LoadFromOBJ( const char* filePath )
     // Read vertex data from file.
     // TODO: Accept OBJ files with multiple objects inside.
     while( file.getline( line, LINE_SIZE ) ){
-        std::cout << "Line: " << line << std::endl;
         if( line[0] == 'v' ){
             // Set '.' as the float separator (for parsing floats from a text
             // line).
             setlocale( LC_NUMERIC, "C" );
 
             // Extract the vertex from the line and add it to the Mesh.
-            res = sscanf( line, "v %f %f %f", &vertex[0], &vertex[1], &vertex[2] );
+            sscanf( line, "v %f %f %f", &vertex[0], &vertex[1], &vertex[2] );
 
             // Resize the vertex coordinates.
             vertex *= 0.5f;
 
-            std::cout << "\t(" << res << ") New vertex: (" << vertex[0] << ", " << vertex[1] << ", " << vertex[2] << ")" << std::endl;
             originalVertices.push_back( vertex );
 
         }else if( line[0] == 'f' ){
             // Extract the face from the line and add it to the Mesh.
-            res = sscanf( line, "f %u %u %u", &triangle[0], &triangle[1], &triangle[2] );
+            sscanf( line, "f %u %u %u", &triangle[0], &triangle[1], &triangle[2] );
 
             for( i=0; i<3; i++ ){
                 // Decrement every vertex index because they are 1-based in the .obj file.
                 triangle[i] -= 1;
             }
 
-            std::cout << "\t(" << res << ") New face: (" << (unsigned int)( triangle[0] ) << ", " << (unsigned int)( triangle[1] ) << ", " << (unsigned int)( triangle[2] ) << ")" << std::endl;
             triangles.push_back( triangle );
         }
     }
@@ -273,8 +242,6 @@ glm::vec4 Mesh::getCentroid() const
 
 void Mesh::getTransformedVertices( unsigned int& n, GLfloat* vertices )
 {
-    std::cout << "Mesh::getTransformedVertices" << std::endl;
-
     GLfloat* mappedVBO = nullptr;
 
     // Get the number of vertices of the mesh.
@@ -369,12 +336,8 @@ void Mesh::update()
     glm::vec4 transformedVertex;
     glm::vec4 transformedNormal;
 
-    checkOpenGL( "Mesh::update() - 1" );
-
     // Update mesh's orientation.
     Drawable::update();
-
-    checkOpenGL( "Mesh::update() - 2" );
 
     // Update mesh's centroid.
     transformedCentroid = transformationMatrix * originalCentroid;
@@ -385,11 +348,9 @@ void Mesh::update()
     glBindVertexArray( vao );
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
 
-    checkOpenGL( "Mesh::update() - 3" );
     // Map the OpenGL's VBO for transformed vertices to client memory, so we can update it.
     vertexData = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
 
-    checkOpenGL( "Mesh::update() - 4" );
 
     // Recompute each transformed vertex and normal by multiplying their
     // corresponding original values by transformation matrix.
@@ -408,11 +369,8 @@ void Mesh::update()
         vertexData[i*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+Z] = transformedNormal.z;
     }
 
-    checkOpenGL( "Mesh::update() - 5" );
     // We finished updating the VBO, unmap it so OpenGL can take control over it.
     glUnmapBuffer( GL_ARRAY_BUFFER );
-
-    checkOpenGL( "Mesh::update() - 6" );
 }
 
 void Mesh::draw( const GLfloat* contourColor ) const

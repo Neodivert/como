@@ -69,8 +69,6 @@ class Mesh : public Drawable
         glm::vec4 originalCentroid;
         glm::vec4 transformedCentroid;
 
-        // Number of elements in mesh.
-        //GLuint nElements; // TODO: Remove / Update?
 
     public:
         /***
