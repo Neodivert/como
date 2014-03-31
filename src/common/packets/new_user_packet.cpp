@@ -30,8 +30,10 @@ namespace como {
 NewUserPacket::NewUserPacket() :
     Packet( PacketType::NEW_USER )
 {
+    // Since no user name has been given, set a default one.
     name_ = "Unnamed";
 
+    // Register the user name field as part of this CompositePackable.
     addPackable( &name_ );
 }
 
@@ -39,8 +41,10 @@ NewUserPacket::NewUserPacket() :
 NewUserPacket::NewUserPacket( const char* name ) :
     Packet( PacketType::NEW_USER )
 {
+    // Set the user name field.
     name_ = name;
 
+    // Register the user name field as part of this CompositePackable.
     addPackable( &name_ );
 }
 
@@ -48,8 +52,10 @@ NewUserPacket::NewUserPacket( const char* name ) :
 NewUserPacket::NewUserPacket( const NewUserPacket& b ) :
     Packet( b )
 {
+    // Copy the user name from the source packet.
     name_ = b.name_;
 
+    // Register the user name field as part of this CompositePackable.
     addPackable( &name_ );
 }
 

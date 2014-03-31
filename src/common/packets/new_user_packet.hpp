@@ -25,45 +25,81 @@
 
 namespace como {
 
+/*!
+ * \class NewUserPacket
+ *
+ * \brief Packet sent from user to server when the former tries to connect to
+ * the latter.
+ */
 class NewUserPacket : public Packet
 {  
     public:
+        /*! Name of the user trying to connect to server */
         PackableString<NAME_SIZE> name_;
 
     public:
         /***
          * 1. Construction
          ***/
+
+        /*! \brief Default constructor. */
         NewUserPacket();
+
+        /*! \brief Constructs a NewUserPacket with the given user name. */
         NewUserPacket( const char* name );
+
+        /*! \brief Copy constructor. */
         NewUserPacket( const NewUserPacket& b );
+
+        /*! \brief Move constructor. */
         NewUserPacket( NewUserPacket&& ) = delete;
-        virtual Packet* clone() const ;
+
+        /*! \brief See Packet::clone const. */
+        virtual Packet* clone() const ; // TODO: Memory leack?
 
 
         /***
          * 2. Destruction
          ***/
+
+        /*! \brief Destructor. */
         ~NewUserPacket() = default;
 
 
         /***
          * 3. Getters
          ***/
+
+        // TODO: Move to another "section" (no "Getters")?
+        /*! \brief See Packet::expectedType const */
         virtual bool expectedType() const;
+
+        /*!
+         * \brief Returns the user name field inside this packet.
+         * \return a string with the user name written in this packet.
+         */
         const char* getName() const ;
 
 
         /***
          * 4. Setters
          ***/
+
+        /*!
+         * \brief Sets the user name field of this packet.
+         * \param name new user name.
+         */
         void setName( const char* name );
 
 
         /***
          * 5. Operators
          ***/
-        NewUserPacket& operator = (const NewUserPacket& b);
+
+        /*! \brief Copy assignment operator */
+        NewUserPacket& operator = ( const NewUserPacket& b );
+
+        /*! \brief Move assignment operator */
         NewUserPacket& operator = ( NewUserPacket&& ) = delete;
 };
 
