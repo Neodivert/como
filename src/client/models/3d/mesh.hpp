@@ -33,6 +33,8 @@ namespace como {
 
 const GLuint COMPONENTS_PER_VERTEX_POSITION = 3;
 const GLuint COMPONENTS_PER_VERTEX = 6;
+const char PRIMITIVES_DIR[] = "data/primitives";
+
 
 /***
  * File main class
@@ -50,7 +52,7 @@ class Mesh : public Drawable
         // VBO for transformed vertex data.
         GLuint vbo;
 
-        // // EBO : Elements-Buffer Array.
+        // EBO : Elements-Buffer Array.
         GLuint ebo;
 
         // Colors
@@ -68,7 +70,7 @@ class Mesh : public Drawable
         glm::vec4 transformedCentroid;
 
         // Number of elements in mesh.
-        GLuint nElements; // TODO: Remove / Update?
+        //GLuint nElements; // TODO: Remove / Update?
 
     public:
         /***

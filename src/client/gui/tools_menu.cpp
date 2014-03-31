@@ -148,9 +148,11 @@ QGroupBox* ToolsMenu::createPrimitiveCreationMenu()
 
         // Add one type of drawable or another to the scene according to the
         // button pressed by user.
+        // TODO: Remove DrawableType enum and generate the list of allowed
+        // primitives from the contents of data/primitives directory.
         switch( static_cast< DrawableType >( index ) ){
             case DrawableType::CUBE:
-                comoApp->getScene()->addCube( getCurrentColor() );
+                comoApp->getScene()->addPrimitive( "cube.obj", getCurrentColor() );
             break;
         }
     } );

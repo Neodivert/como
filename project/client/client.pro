@@ -53,12 +53,11 @@ HEADERS += \
     ../../src/client/gui/tools_menu.hpp \
     ../../src/client/gui/render_panel.hpp \
     ../../src/client/gui/main_window.hpp \
-    ../../src/client/managers/tester.hpp \
+    #../../src/client/managers/tester.hpp \ # TODO: Addapt to new Primitives system and reinsert.
     ../../src/client/managers/scene/scene.hpp \
     ../../src/client/managers/como_app.hpp \
     ../../src/client/models/3d/mesh.hpp \
     ../../src/client/models/3d/drawable.hpp \
-    ../../src/client/models/3d/cube.hpp \
     ../../src/client/models/3d/camera.hpp \
     ../../src/client/models/utilities/msl/src/shader_loader.hpp \
     ../../src/client/gui/connection_wizard/connection_wizard.hpp \
@@ -125,12 +124,11 @@ SOURCES += \
     ../../src/client/gui/tools_menu.cpp \
     ../../src/client/gui/render_panel.cpp \
     ../../src/client/gui/main_window.cpp \
-    ../../src/client/managers/tester.cpp \
+    #../../src/client/managers/tester.cpp \ # TODO: Addapt to new Primitives system and reinsert.
     ../../src/client/managers/scene/scene.cpp \
     ../../src/client/managers/como_app.cpp \
     ../../src/client/models/3d/mesh.cpp \
     ../../src/client/models/3d/drawable.cpp \
-    ../../src/client/models/3d/cube.cpp \
     ../../src/client/models/3d/camera.cpp \
     ../../src/client/models/utilities/msl/src/shader_loader.cpp \
     ../../src/client/main.cpp \

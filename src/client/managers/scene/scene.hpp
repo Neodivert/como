@@ -22,7 +22,6 @@
 
 #include <map>
 #include <list>
-#include "../../models/3d/cube.hpp"
 #include "../../models/3d/camera.hpp"
 #include "../../models/users/public_user.hpp"
 #include "../../../common/utilities/log.hpp"
@@ -152,9 +151,9 @@ class Scene : public QOffscreenSurface
         void addDrawable( DrawablePtr drawable, PackableDrawableID drawableID );
         void takeOpenGLContext();
     public:
-        void addCube( QColor color );
-        void addCube( const std::uint8_t* color );
-        void addCube( const std::uint8_t* color, PackableDrawableID drawableID );
+        void addPrimitive( const char* primitiveFile, QColor color );
+        void addPrimitive( const char* primitiveFile, const std::uint8_t* color );
+        void addPrimitive( const char* primitiveFile, const std::uint8_t* color, PackableDrawableID drawableID );
 
         //void addDrawable( DrawableType drawableType );
         //void addDrawable( DrawableType drawableType, PackableDrawableID drawableID );

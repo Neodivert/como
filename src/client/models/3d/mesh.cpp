@@ -33,7 +33,7 @@ const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
  * 1. Initialization and destruction
  ***/
 
-Mesh::Mesh( const char* filePath, const std::uint8_t* color )
+Mesh::Mesh( const char* fileName, const std::uint8_t* color )
 {   
     // Initialize OpenGL objects (VBO, VAO, EBO, ...) associated to this Mesh.
     initMeshBuffers();
@@ -45,8 +45,12 @@ Mesh::Mesh( const char* filePath, const std::uint8_t* color )
         setColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
     }
 
+    std::string filePath = PRIMITIVES_DIR;
+    filePath += '/';
+    filePath += fileName;
+
     // Load vertex data from given file.
-    LoadFromOBJ( filePath );
+    LoadFromOBJ( filePath.c_str() );
 }
 
 
@@ -130,18 +134,26 @@ void Mesh::initTransformedVertexData()
     checkOpenGL( "Mesh::setVertices() - 4" );
     glEnableVertexAttribArray( SHADER_NORMAL_ATTR_LOCATION );
 
+    checkOpenGL( "Mesh::setVertices() - 5" );
     // Copy the mesh's elements to a EBO.
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER, nElements*sizeof( GLubyte ), nullptr, GL_STATIC_DRAW );
+    glBufferData( GL_ELEMENT_ARRAY_BUFFER, triangles.size()*3*sizeof( GLubyte ), nullptr, GL_STATIC_DRAW );
+    checkOpenGL( "Mesh::setVertices() - 6" );
 
+    char str[124];
     for( i=0; i<triangles.size(); i++ ){
+        sprintf( str, "Mesh::setVertices() - 6.%d", i );
         glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, 3*i*sizeof( GLubyte ), 3*sizeof( GLubyte ), &triangles[i] );
+        checkOpenGL( str );
     }
+    checkOpenGL( "Mesh::setVertices() - 7" );
 
     // Compute vertex normals.
     // TODO: This requires setVertices() to be called before setElements().
     // Make both methods private and implement a public setVertexData() which
     // calls them in order.
     computeVertexNormals();
+
+    checkOpenGL( "Mesh::setVertices() - 8" );
 
     // Update transformed vertices.
     update();
@@ -180,10 +192,13 @@ void Mesh::computeVertexNormals()
 
 void Mesh::LoadFromOBJ( const char* filePath )
 {
+    int res;
+    unsigned int i;
     const unsigned int LINE_SIZE = 250;
     std::ifstream file;
     char line[LINE_SIZE];
     glm::vec3 vertex;
+    std::array< int, 3 > integerTriangle;
     std::array< GLubyte, 3 > triangle;
 
     // Initialize original vertex data.
@@ -195,20 +210,39 @@ void Mesh::LoadFromOBJ( const char* filePath )
     file.open( filePath );
 
     if( !file.is_open() ){
-        throw std::runtime_error( "ERROR: File not found" );
+        throw std::runtime_error( std::string( "ERROR: File [" ) + std::string( filePath ) + std::string( "] not found" ) );
     }
 
     // Read vertex data from file.
     // TODO: Accept OBJ files with multiple objects inside.
     while( file.getline( line, LINE_SIZE ) ){
+        std::cout << "Line: " << line << std::endl;
         if( line[0] == 'v' ){
+            // Set '.' as the float separator (for parsing floats from a text
+            // line).
+            setlocale( LC_NUMERIC, "C" );
+
             // Extract the vertex from the line and add it to the Mesh.
-            sscanf( line, "v %f %f %f", &vertex[0], &vertex[1], &vertex[2] );
+            res = sscanf( line, "v %f %f %f", &vertex[0], &vertex[1], &vertex[2] );
+
+            // Resize the vertex coordinates.
+            vertex *= 0.5f;
+
+            std::cout << "\t(" << res << ") New vertex: (" << vertex[0] << ", " << vertex[1] << ", " << vertex[2] << ")" << std::endl;
             originalVertices.push_back( vertex );
+
         }else if( line[0] == 'f' ){
             // Extract the face from the line and add it to the Mesh.
-            sscanf( line, "f %c %c %c", &triangle[0], &triangle[1], &triangle[2] );
+            res = sscanf( line, "f %d %d %d", &integerTriangle[0], &integerTriangle[1], &integerTriangle[2] );
+
+            for( i=0; i<3; i++ ){
+                // Decrement every vertex index because they are 1-based in the .obj file.
+                triangle[i] = static_cast< GLubyte >( integerTriangle[i] ) - 1;
+            }
+
+            std::cout << "\t(" << res << ") New face: (" << (int)( triangle[0] ) << ", " << (int)( triangle[1] ) << ", " << (int)( triangle[2] ) << ")" << std::endl;
             triangles.push_back( triangle );
+
         }
     }
 
@@ -399,7 +433,7 @@ void Mesh::draw( const GLfloat* contourColor ) const
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
 
     // Draw Mesh's interior.
-    glDrawElements( GL_TRIANGLES, nElements, GL_UNSIGNED_BYTE, NULL );
+    glDrawElements( GL_TRIANGLES, triangles.size()*3, GL_UNSIGNED_BYTE, NULL );
 
     // Set the color for the mesh's contour.
     if( contourColor != nullptr ){
@@ -411,7 +445,7 @@ void Mesh::draw( const GLfloat* contourColor ) const
         glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
         // Draw Mesh's contour
-        glDrawElements( GL_TRIANGLES, nElements, GL_UNSIGNED_BYTE, NULL );
+        glDrawElements( GL_TRIANGLES, triangles.size()*3, GL_UNSIGNED_BYTE, NULL );
 
         // Return polygon mode to previos GL_FILL.
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );

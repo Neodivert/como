@@ -324,7 +324,7 @@ void Scene::takeOpenGLContext()
 }
 
 
-void Scene::addCube( QColor color )
+void Scene::addPrimitive( const char* primitiveFile, QColor color )
 {
     std::uint8_t color8[4];
     int r, g, b;
@@ -338,12 +338,12 @@ void Scene::addCube( QColor color )
     color8[2] = static_cast< std::uint8_t >( b );
     color8[3] = 255;
 
-    // Add the cube to the scene.
-    addCube( color8 );
+    // Add the primitive to the scene.
+    addPrimitive( primitiveFile, color8 );
 }
 
 
-void Scene::addCube( const std::uint8_t* color )
+void Scene::addPrimitive( const char* primitiveFile, const std::uint8_t* color )
 {
     PackableDrawableID drawableID;
 
@@ -354,21 +354,21 @@ void Scene::addCube( const std::uint8_t* color )
     // Increment the index for the next local user's drawable.
     localUserNextDrawableIndex_++;
 
-    // Create the cube and add it to the scene.
-    addCube( color, drawableID );
+    // Create the primitive and add it to the scene.
+    addPrimitive( primitiveFile, color, drawableID );
 
     // Send the command to the server.
     server_.sendCommand( CommandConstPtr( new CubeCreationCommand( localUserID_, drawableID, color ) ) );
 }
 
 
-void Scene::addCube( const std::uint8_t* color, PackableDrawableID drawableID )
+void Scene::addPrimitive( const char* primitiveName, const std::uint8_t* color, PackableDrawableID drawableID )
 {
     try {
         takeOpenGLContext();
 
         // Create the cube.
-        DrawablePtr drawable = DrawablePtr( new Cube( color ) );
+        DrawablePtr drawable = DrawablePtr( new Mesh( primitiveName, color ) );
 
         // Add the cube to the scene.
         addDrawable( drawable, drawableID );
@@ -843,7 +843,7 @@ void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
             createCube = dynamic_cast< const CubeCreationCommand* >( command.get() );
 
             // Add cube to the scene.
-            addCube( createCube->getColor(), createCube->getDrawableID() );
+            addPrimitive( "cube.obj", createCube->getColor(), createCube->getDrawableID() );
         break;
 
         case DrawableCommandType::DRAWABLE_SELECTION:
