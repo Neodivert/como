@@ -120,62 +120,45 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
 }
 
 
-QGroupBox* ToolsMenu::createPrimitiveCreationMenu()
+QFrame* ToolsMenu::createPrimitiveCreationMenu()
 {
-    QButtonGroup* primitiveCreationButtonGroup;
-    QGroupBox* primitiveCreationGroupBox;
-    QVBoxLayout* primitiveCreationGroupBoxLayout;
-    QPushButton* primitiveCreationButton;
+    QFrame* primitiveCreationFrame = nullptr;
+    QVBoxLayout* primitiveCreationLayout = nullptr;
+    QComboBox* primitiveCreationSelector = nullptr;
+    QDir primitivesDir( PRIMITIVES_DIR );
+    QStringList primitiveFiles;
+    int i;
 
-    // Create the containers and layouts.
-    primitiveCreationGroupBox = new QGroupBox( QString::fromUtf8( "Create primitive" ) );
-    primitiveCreationButtonGroup = new QButtonGroup( primitiveCreationGroupBox );
-    primitiveCreationGroupBoxLayout = new QVBoxLayout;
+    // Create an empty dropdown list (QComboBox).
+    primitiveCreationSelector = new QComboBox;
 
-    // Add buttons to group box's layout and to buttons' group.
-    for( unsigned int i = 0; i < N_DRAWABLE_TYPES; i++ ){
-        primitiveCreationButton = new QPushButton( tr( drawableTypeStrings[i] ) );
+    // Get a list with all the primitive files that exists in the primitives
+    // directory.
+    primitivesDir.setFilter( QDir::Files | QDir::Hidden | QDir::NoSymLinks );
+    primitiveFiles = primitivesDir.entryList();
 
-        primitiveCreationGroupBoxLayout->addWidget( primitiveCreationButton );
-        primitiveCreationButtonGroup->addButton( primitiveCreationButton, i );
+    // Create, in the primitive dropdown list, an entry for each primitive
+    // file retrieved in the previous step.
+    for( i=0; i < primitiveFiles.size(); i++ ){
+        primitiveCreationSelector->addItem( primitiveFiles.at( i ) );
     }
+
+    // Create the layout of this menu.
+    primitiveCreationLayout = new QVBoxLayout();
+    primitiveCreationLayout->addWidget( primitiveCreationSelector );
+
+    // Create the container frame and set its layout.
+    primitiveCreationFrame = new QFrame();
+    primitiveCreationFrame->setLayout( primitiveCreationLayout );
 
     // Signal / Slot connection: when one of the creation buttons is pressed,
     // create a drawable of the chosen type.
-    void (QButtonGroup::*buttonClicked)( int ) = &QButtonGroup::buttonClicked;
-    connect( primitiveCreationButtonGroup, buttonClicked, [this]( int index ) {
-        Q_UNUSED( index );
-
-        // Add one type of drawable or another to the scene according to the
-        // button pressed by user.
-        // TODO: Remove DrawableType enum and generate the list of allowed
-        // primitives from the contents of data/primitives directory.
-        switch( static_cast< DrawableType >( index ) ){
-            case DrawableType::CUBE:
-                comoApp->getScene()->addPrimitive( "cube.obj", getCurrentColor() );
-            break;
-        }
+    void (QComboBox::*activated)( const QString& ) = &QComboBox::activated;
+    connect( primitiveCreationSelector, activated, [this]( const QString& primitiveName ) {
+        comoApp->getScene()->addPrimitive( primitiveName.toLocal8Bit().data(), getCurrentColor() );
     } );
 
-    /*
-    void (QButtonGroup::*buttonClicked)( int ) = &QButtonGroup::buttonClicked;
-    connect( primitiveCreationButtonGroup, buttonClicked, [=]( int index ) {
-        comoApp->getScene()->addDrawable( static_cast< DrawableType >( index ) );
-    } );
-    */
-
-    /*
-    // Update the current checked button when the user change the current
-    // transformation mode (ie. by keypress).
-    connect( comoApp.get(), &ComoApp::transformationModeIndexChanged, [=]( int index ) {
-        ( ( transformationModeButtonGroup->buttons() )[index] )->toggle();
-    } );
-    */
-
-    // Set the layout.
-    primitiveCreationGroupBox->setLayout( primitiveCreationGroupBoxLayout );
-
-    return primitiveCreationGroupBox;
+    return primitiveCreationFrame;
 }
 
 

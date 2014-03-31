@@ -22,6 +22,7 @@
 
 #include <QFrame>
 #include <QColorDialog>
+#include <QDir>
 #include "../managers/como_app.hpp"
 
 namespace como {
@@ -52,7 +53,7 @@ class ToolsMenu : public QFrame
         ~ToolsMenu() = default;
 
     protected:
-        QGroupBox* createPrimitiveCreationMenu();
+        QFrame* createPrimitiveCreationMenu();
         QGroupBox* createPivotPointModeSelector();
         QFrame* createColorSelector();
 

@@ -242,7 +242,6 @@ void Mesh::LoadFromOBJ( const char* filePath )
 
             std::cout << "\t(" << res << ") New face: (" << (int)( triangle[0] ) << ", " << (int)( triangle[1] ) << ", " << (int)( triangle[2] ) << ")" << std::endl;
             triangles.push_back( triangle );
-
         }
     }
 
