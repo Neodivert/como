@@ -63,7 +63,7 @@ class Mesh : public Drawable
         std::vector< glm::vec3 > originalNormals;
 
         // Mesh's triangles.
-        std::vector< std::array< GLubyte, 3 > > triangles;
+        std::vector< std::array< GLuint, 3 > > triangles;
 
         // Mesh's centroid.
         glm::vec4 originalCentroid;
