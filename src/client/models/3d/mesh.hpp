@@ -75,7 +75,6 @@ class Mesh : public Drawable
          * 1. Initialization and destruction
          ***/
         Mesh( const char* file, const std::uint8_t* color = nullptr );
-        Mesh( const std::uint8_t* color = nullptr );
         Mesh( const Mesh& ) = delete;
         Mesh( Mesh&& ) = delete;
         ~Mesh();

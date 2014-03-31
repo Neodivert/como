@@ -33,20 +33,9 @@ const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
  * 1. Initialization and destruction
  ***/
 
-Mesh::Mesh( const std::uint8_t* color )
-{
-    initMeshBuffers();
-
-    // Set the mesh's color.
-    if( color ){
-        setColor( color[0] / 255.0f, color[1] / 255.0f, color[2] / 255.0f, 1.0f );
-    }else{
-        setColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
-    }
-}
-
 Mesh::Mesh( const char* filePath, const std::uint8_t* color )
 {   
+    // Initialize OpenGL objects (VBO, VAO, EBO, ...) associated to this Mesh.
     initMeshBuffers();
 
     // Set the mesh's color.
@@ -56,6 +45,7 @@ Mesh::Mesh( const char* filePath, const std::uint8_t* color )
         setColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
     }
 
+    // Load vertex data from given file.
     LoadFromOBJ( filePath );
 }
 
@@ -68,6 +58,7 @@ Mesh::~Mesh()
     glDeleteBuffers( 1, &ebo );
     glDeleteVertexArrays( 1, &vao );
 }
+
 
 void Mesh::initMeshBuffers()
 {
