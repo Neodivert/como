@@ -43,7 +43,17 @@ Packet::Packet( const Packet& b ) :
 
 
 /***
- * 2. Socket communication
+ * 3. Getters.
+ ***/
+
+PacketType Packet::getType() const
+{
+    return header_.getType();
+}
+
+
+/***
+ * 4. Synchronous communication.
  ***/
 
 void Packet::updateHeader()
@@ -248,17 +258,6 @@ const void* Packet::unpackBody( const void* buffer ) const
 {
     return CompositePackable::unpack( buffer );
 }
-
-
-/***
- * 4. Getters
- ***/
-
-PacketType Packet::getType() const
-{
-    return header_.getType();
-}
-
 
 /***
  * 5. Operators

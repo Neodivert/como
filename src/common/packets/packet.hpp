@@ -32,57 +32,119 @@ namespace como {
 
 class Packet;
 
+// Convenient typedefs.
 typedef boost::asio::ip::tcp::socket Socket;
 typedef std::shared_ptr< Socket > SocketPtr;
 typedef std::shared_ptr< Packet > PacketPtr;
 typedef std::function<void( const boost::system::error_code& errorCode, PacketPtr)> PacketHandler;
 
-
+// Maximum buffer available size for packing a packet.
 const unsigned int PACKET_BUFFER_SIZE = 512;
 
 
+/*!
+ * \class Packet
+ *
+ * \brief Base class for all type of Packets sent between client and server.
+ */
 class Packet : public CompositePackable
 {
     private:
+        /*! Packet header. */
         PacketHeader header_;
 
+        /*! Buffer where this Packet is read from / written to. */
         char buffer_[PACKET_BUFFER_SIZE];
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction.
          ***/
+
+        /*! \brief Default constructor. */
         Packet() = delete ;
+
+        /*! \brief Constructs a Packet of the given type. */
         Packet( PacketType type );
+
+        /*! \brief Copy constructor. */
         Packet( const Packet& b );
+
+        /*! \brief Default constructor. */
         Packet( Packet&& ) = delete;
+
+        // TODO: Memory leak?
+        /*!
+         * \brief Clone method
+         * \return a pointer to a new copy of this instance of Packet.
+         */
         virtual Packet* clone() const = 0;
 
+
+        /***
+         * 2. Destruction.
+         ***/
         ~Packet() = default;
 
+
+        /***
+         * 3. Getters.
+         ***/
+
+        /*! \brief Returns a PacketType indicating the type of this Packet */
+        PacketType getType() const ;
+
+        /*!
+         * \brief Type checking method.
+         * \return true if this Packet's type matches the expected one (the
+         * latter defined in every inherited class).
+         */
+        virtual bool expectedType() const = 0;
+
+        /*! \brief Returns a pointer to the buffer used for packing /
+         * unpacking this Packet */
         const char* getBuffer() const { return buffer_; }
 
 
         /***
-         * 2. Socket communication
+         * 4. Synchronous communication.
          ***/
+
+        /*!
+         * \brief synchronously sends this packet.
+         * \param socket socket this packet will be sent through.
+         */
         void send( boost::asio::ip::tcp::socket& socket );
-        void asyncSend( SocketPtr socket, PacketHandler packetHandler );
 
+        /*!
+         * \brief synchronously received this packet.
+         * \param socket socket this packet will be received through.
+         */
         void recv( boost::asio::ip::tcp::socket& socket );
-        void asyncRecv( SocketPtr socket, PacketHandler packetHandler );
 
+
+        /***
+         * 5. Asynchronous shipment.
+         ***/
     private:
-        void updateHeader();
+        void asyncSend( SocketPtr socket, PacketHandler packetHandler );
         void asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
+        void onPacketSend( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler );
+
+        /***
+         * 6. Asynchronous reception.
+         ***/
+        void asyncRecv( SocketPtr socket, PacketHandler packetHandler );
         void asyncRecvBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
         void onPacketRecv( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler );
-        void onPacketSend( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler );
+
+        // TODO: Classify.
+        void updateHeader();
     public:
 
 
         /***
-         * 3. Packing and unpacking
+         * 5. Packing and unpacking.
          ***/
         virtual void* pack( void* buffer ) const;
         virtual const void* unpack( const void* buffer );
@@ -98,14 +160,7 @@ class Packet : public CompositePackable
 
 
         /***
-         * 4. Getters
-         ***/
-        PacketType getType() const ;
-        virtual bool expectedType() const = 0;
-
-
-        /***
-         * 5. Operators
+         * 6. Operators.
          ***/
         Packet& operator = ( const Packet& b );
         Packet& operator = ( Packet&& ) = delete;
