@@ -125,7 +125,7 @@ QFrame* ToolsMenu::createPrimitiveCreationMenu()
     QFrame* primitiveCreationFrame = nullptr;
     QVBoxLayout* primitiveCreationLayout = nullptr;
     QComboBox* primitiveCreationSelector = nullptr;
-    QDir primitivesDir( PRIMITIVES_DIR );
+    QDir primitivesDir( SYSTEM_PRIMITIVES_DIR );
     QStringList primitiveFiles;
     int i;
 

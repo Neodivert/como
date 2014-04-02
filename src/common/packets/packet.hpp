@@ -126,15 +126,18 @@ class Packet : public CompositePackable
         /***
          * 5. Asynchronous shipment.
          ***/
-    private:
+    public:
         void asyncSend( SocketPtr socket, PacketHandler packetHandler );
+    private:
         void asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
         void onPacketSend( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler );
 
         /***
          * 6. Asynchronous reception.
          ***/
+    public:
         void asyncRecv( SocketPtr socket, PacketHandler packetHandler );
+    private:
         void asyncRecvBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
         void onPacketRecv( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler );
 

@@ -33,7 +33,7 @@ namespace como {
 
 const GLuint COMPONENTS_PER_VERTEX_POSITION = 3;
 const GLuint COMPONENTS_PER_VERTEX = 6;
-const char PRIMITIVES_DIR[] = "data/primitives";
+const char SYSTEM_PRIMITIVES_DIR[] = "../common/data/primitives/system";
 
 
 /***
