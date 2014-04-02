@@ -97,7 +97,7 @@ class Packet : public CompositePackable
         /*!
          * \brief Type checking method.
          * \return true if this Packet's type matches the expected one (the
-         * latter defined in every inherited class).
+         * latter is defined in every inherited class).
          */
         virtual bool expectedType() const = 0;
 
@@ -111,13 +111,13 @@ class Packet : public CompositePackable
          ***/
 
         /*!
-         * \brief synchronously sends this packet.
+         * \brief Synchronously sends this packet.
          * \param socket socket this packet will be sent through.
          */
         void send( boost::asio::ip::tcp::socket& socket );
 
         /*!
-         * \brief synchronously received this packet.
+         * \brief Synchronously receives this packet.
          * \param socket socket this packet will be received through.
          */
         void recv( boost::asio::ip::tcp::socket& socket );
@@ -127,45 +127,165 @@ class Packet : public CompositePackable
          * 5. Asynchronous shipment.
          ***/
     public:
+        /*!
+         * \brief Asynchronously sends this packet.
+         * \param socket socket this packet will be sent through.
+         * \param packetHandler handler to be invoked once the packet has been
+         * sent. Such handler must accept the sent packet as an argument.
+         */
         void asyncSend( SocketPtr socket, PacketHandler packetHandler );
     private:
+
+        /*!
+         * \brief Asynchronously sends this packet's body.
+         * \param headerErrorCode error code indicating the transfer result of
+         * this packet's header.
+         * \param socket socket this packet's body will be sent through.
+         * \param packetHandler handler to be invocked once the packet body
+         * has been sent. Such handler must accept the sent packet as an
+         * argument.
+         */
         void asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
-        void onPacketSend( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler );
+
+        /*!
+         * \brief Auxiliar method invoked once the current packet has been sent
+         * through the network. It simply calls the packet handler given as an
+         * argument.
+         * \param errorCode error code indicating the transfer result of the
+         * sent packet.
+         * \param packetHandler handler to be invoked once the packet has been
+         * sent. Such handler must accept the sent packet as an argument.
+         */
+        void onPacketSend( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler ); // TODO: Typo in "onPacketSenD".
 
         /***
          * 6. Asynchronous reception.
          ***/
     public:
+        /*!
+         * \brief Asynchronously receives this packet.
+         * \param socket socket this packet will be received through.
+         * \param packetHandler handler to be invoked once the packet has been
+         * received. Such handler must accept the received packet as an
+         * argument.
+         */
         void asyncRecv( SocketPtr socket, PacketHandler packetHandler );
     private:
+
+        /*!
+         * \brief Asynchronously receives this packet's body.
+         * \param headerErrorCode error code indicating the transfer result of
+         * this packet's header.
+         * \param socket socket this packet's body will be received through.
+         * \param packetHandler handler to be invocked once the packet body
+         * has been received. Such handler must accept the received packet as
+         * an argument.
+         */
         void asyncRecvBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
+
+        /*!
+         * \brief Axuliar method invoked once the current packet has been
+         * received through the network. It simply calls the packet handler
+         * given as an argument.
+         * \param errorCode error code indicating the transfer result of the
+         * received packet.
+         * \param packetHandler handler to be invoked once the packet has been
+         * received. Such handler must accept the received packet as an
+         * argument.
+         */
         void onPacketRecv( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler );
 
-        // TODO: Classify.
+        /***
+         * 7. Auxiliar networking methods.
+         ***/
+
+        /*!
+         * \brief Updates the header of this packet by updating its "packet
+         * size" field. Invoked when sending a packet through the network.
+         */
         void updateHeader();
     public:
 
+        /***
+         * 8. Packing.
+         ***/
+
+        /*!
+         * \brief Packs this packet into the given buffer.
+         * See Packable::pack const.
+         */
+        virtual void* pack( void* buffer ) const;
+
+        /*!
+         * \brief Packs this packet's header into the given buffer. See
+         * Packable::pack const.
+         */
+        virtual void* packHeader( void* buffer ) const;
+
+        /*!
+         * \brief Packs this packet's body into the given buffer. See
+         * Packable::pack const.
+         */
+        virtual void* packBody( void* buffer ) const;
+
 
         /***
-         * 5. Packing and unpacking.
+         * 9. Unpacking.
          ***/
-        virtual void* pack( void* buffer ) const;
+
+        /*!
+         * \brief Unpacks this packet from the given buffer.
+         * See Packable::unpack.
+         */
         virtual const void* unpack( const void* buffer );
+
+        /*!
+         * \brief Unpacks this packet's header from the given buffer. See
+         * Packable::unpack.
+         */
+        virtual const void* unpackHeader( const void* buffer );
+
+        /*!
+         * \brief Unpacks this packet's body from the given buffer. See
+         * Packable::unpack.
+         */
+        virtual const void* unpackBody( const void* buffer );
+
+
+        /***
+         * 10. Test unpacking.
+         ***/
+
+        /*!
+         * \brief Unpacks a packet from the given buffer and throw an exception
+         * if the unpacked data doesn't match this packet's data. See
+         * Packable::unpack const.
+         */
         virtual const void* unpack( const void* buffer ) const ;
 
-        virtual void* packHeader( void* buffer ) const;
-        virtual const void* unpackHeader( const void* buffer );
+        /*!
+         * \brief Unpacks a packet's header from the given buffer and throw an
+         * exception if the unpacked data doesn't match this packet's header
+         * data. See Packable::unpack const.
+         */
         virtual const void* unpackHeader( const void* buffer ) const ;
 
-        virtual void* packBody( void* buffer ) const;
-        virtual const void* unpackBody( const void* buffer );
+        /*!
+         * \brief Unpacks a packet's body from the given buffer and throw an
+         * exception if the unpacked data doesn't match this packet's body
+         * data. See Packable::unpack const.
+         */
         virtual const void* unpackBody( const void* buffer ) const ;
 
 
         /***
-         * 6. Operators.
+         * 11. Operators.
          ***/
+
+        /*! \brief Copy assignment operator */
         Packet& operator = ( const Packet& b );
+
+        /*! \brief Move assignment operator */
         Packet& operator = ( Packet&& ) = delete;
 };
 
