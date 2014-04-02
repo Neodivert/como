@@ -56,12 +56,6 @@ PacketType Packet::getType() const
  * 4. Synchronous communication.
  ***/
 
-void Packet::updateHeader()
-{
-    // Update the value for the packet body size to be packed.
-    header_.setBodySize( getPacketSize() );
-}
-
 void Packet::send( boost::asio::ip::tcp::socket& socket )
 {
     char buffer[256] = {};
@@ -86,6 +80,47 @@ void Packet::send( boost::asio::ip::tcp::socket& socket )
         throw std::runtime_error( std::string( "ERROR when sending packet body' (" ) + errorCode.message() + ")" );
     }
 }
+
+
+void Packet::recv( boost::asio::ip::tcp::socket& socket )
+{
+    char buffer[256];
+    boost::system::error_code errorCode;
+
+    // Read synchronously the packet's header from the socket.
+    boost::asio::read( socket, boost::asio::buffer( buffer, (int)( header_.getPacketSize() ) ), errorCode );
+
+    if( errorCode ){
+        throw std::runtime_error( std::string( "ERROR when receiving packet header' (" ) + errorCode.message() + ")" );
+    }
+
+    // Unpack the packet's header from the buffer and check its type.
+    unpackHeader( buffer );
+    if( !expectedType() ){
+        throw std::runtime_error( std::string( "ERROR: Received an unexpected packet" ) );
+    }
+
+    // Read synchronously the packet's body from the socket.
+    boost::asio::read( socket, boost::asio::buffer( buffer, (int)( header_.getBodySize() ) ), errorCode );
+
+    if( errorCode ){
+        throw std::runtime_error( std::string( "ERROR when receiving packet body' (" ) + errorCode.message() + ")" );
+    }
+
+    // Unpack the packet's body.
+    unpackBody( buffer );
+}
+
+
+
+
+void Packet::updateHeader()
+{
+    // Update the value for the packet body size to be packed.
+    header_.setBodySize( getPacketSize() );
+}
+
+
 
 
 void Packet::asyncSend( SocketPtr socket, PacketHandler packetHandler )
@@ -126,36 +161,6 @@ void Packet::onPacketSend( const boost::system::error_code& errorCode, std::size
     // Call the packet handler.
     // FIXME: Is there any way to allow only not null PacketHandlers?
     packetHandler( errorCode, PacketPtr( clone() ) );
-}
-
-
-void Packet::recv( boost::asio::ip::tcp::socket& socket )
-{
-    char buffer[256];
-    boost::system::error_code errorCode;
-
-    // Read synchronously the packet's header from the socket.
-    boost::asio::read( socket, boost::asio::buffer( buffer, (int)( header_.getPacketSize() ) ), errorCode );
-
-    if( errorCode ){
-        throw std::runtime_error( std::string( "ERROR when receiving packet header' (" ) + errorCode.message() + ")" );
-    }
-
-    // Unpack the packet's header from the buffer and check its type.
-    unpackHeader( buffer );
-    if( !expectedType() ){
-        throw std::runtime_error( std::string( "ERROR: Received an unexpected packet" ) );
-    }
-
-    // Read synchronously the packet's body from the socket.
-    boost::asio::read( socket, boost::asio::buffer( buffer, (int)( header_.getBodySize() ) ), errorCode );
-
-    if( errorCode ){
-        throw std::runtime_error( std::string( "ERROR when receiving packet body' (" ) + errorCode.message() + ")" );
-    }
-
-    // Unpack the packet's body.
-    unpackBody( buffer );
 }
 
 
