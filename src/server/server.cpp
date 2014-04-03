@@ -358,8 +358,8 @@ void Server::addCommand( CommandConstPtr sceneCommand )
 
 void Server::createScenePrimitivesDirectory()
 {
-    char scenePrimitivesDirectory[128];
-    char consoleCommand[256];
+    char scenePrimitivesDirectory[128] = {0};
+    char consoleCommand[256] = {0};
     int lastCommandResult = 0;
 
     // Build the path to the scene primitives directory.
@@ -367,9 +367,12 @@ void Server::createScenePrimitivesDirectory()
 
     log_->debug( "Creating scene primitives directory [", scenePrimitivesDirectory, "] ...\n" );
 
-    // Prepare a console command for creating a scene primitives directory and
-    // execute it.
-    sprintf( consoleCommand, "mkdir -p %s", scenePrimitivesDirectory );
+    // Copy the server directory for local primitives as this scene's
+    // primitives directory.
+
+    // TODO: Use a multiplatform alternative (boost::filesystem::copy_directory
+    // doesn't copy directory's contents).
+    sprintf( consoleCommand, "cp -R \"%s\" \"%s\"", LOCAL_PRIMITIVES_DIR, scenePrimitivesDirectory );
     lastCommandResult = system( consoleCommand );
 
     // If there was any error creating the scene primitives directory, throw

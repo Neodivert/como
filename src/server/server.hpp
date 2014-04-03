@@ -33,6 +33,7 @@
 #include "commands_historic.hpp"
 #include <map>
 #include <queue>
+#include <boost/filesystem.hpp>
 
 using boost::asio::ip::tcp;
 
