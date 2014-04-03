@@ -5,8 +5,7 @@ CONFIG -= qt
 
 # Link boost libraries
 LIBS += -lpthread -lGL
-unix|win32: LIBS += -lboost_system
-unix|win32: LIBS += -lboost_thread
+unix|win32: LIBS += -lboost_system -lboost_thread -lboost_filesystem
 
 # TODO: Remove
 LIBS += -L/opt/boost/lib

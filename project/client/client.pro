@@ -19,8 +19,7 @@ QMAKE_CXXFLAGS += -isystem /opt/boost/include
 
 # Libraries
 LIBS += -lpthread
-unix|win32: LIBS += -lboost_system
-unix|win32: LIBS += -lboost_thread
+unix|win32: LIBS += -lboost_system -lboost_thread -lboost_filesystem
 
 # C++11 support (http://qt-project.org/forums/viewthread/19989)
 CONFIG += c++11

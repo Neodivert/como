@@ -110,6 +110,9 @@ void Server::run()
     try{
         log_->debug( "Press any key to exit\n" );
 
+        // Create the primitives directory for the current scene.
+        createScenePrimitivesDirectory();
+
         // Initialize the container of free user colors.
         initUserColors();
 
@@ -352,6 +355,35 @@ void Server::addCommand( CommandConstPtr sceneCommand )
 /***
  * 7. Auxiliar methods
  ***/
+
+void Server::createScenePrimitivesDirectory()
+{
+    char scenePrimitivesDirectory[128];
+    char consoleCommand[256];
+    int lastCommandResult = 0;
+
+    // Build the path to the scene primitives directory.
+    sprintf( scenePrimitivesDirectory, "%s/%s", SCENES_PRIMITIVES_DIR, sceneName_ );
+
+    log_->debug( "Creating scene primitives directory [", scenePrimitivesDirectory, "] ...\n" );
+
+    // Prepare a console command for creating a scene primitives directory and
+    // execute it.
+    sprintf( consoleCommand, "mkdir -p %s", scenePrimitivesDirectory );
+    lastCommandResult = system( consoleCommand );
+
+    // If there was any error creating the scene primitives directory, throw
+    // an exception.
+    if( lastCommandResult ){
+        throw std::runtime_error( std::string( "Error creating scene primitives directory [" ) +
+                                  scenePrimitivesDirectory +
+                                  "]"
+                                  );
+    }
+
+    log_->debug( "Creating scene primitives directory [", scenePrimitivesDirectory, "] ...OK\n" );
+}
+
 
 void Server::deleteUser( UserID id )
 {

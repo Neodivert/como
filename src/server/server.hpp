@@ -176,6 +176,9 @@ class Server
         /***
          * 7. Auxiliar methods
          ***/
+    private:
+        void createScenePrimitivesDirectory();
+    public:
         void deleteUser( UserID id );
         void unselectAll( UserID userID );
         void deleteSelection( UserID userID );

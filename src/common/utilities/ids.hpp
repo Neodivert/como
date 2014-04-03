@@ -25,6 +25,9 @@
 
 namespace como {
 
+// TODO: Move to a config file.
+const char SCENES_PRIMITIVES_DIR[] = "data/primitives/scenes";
+
 typedef std::uint16_t UserID;
 typedef PackableUint16< UserID > PackableUserID;
 
