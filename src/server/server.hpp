@@ -54,6 +54,9 @@ class Server
         // Work object.
         boost::asio::io_service::work work_;
 
+        // Scene name.
+        char sceneName_[NAME_SIZE];
+
         // Users map (ID, user).
         UsersMap users_;
 
@@ -103,9 +106,10 @@ class Server
         /*! \brief Initialize a server.
          * \param port_ port the server will be listening to.
          * \param maxSessions maximum number of allowed simultaneous clients.
+         * \param sceneName name of the scene to be created.
          * \param nThreads number of threads used during server execution.
          */
-        Server( unsigned int port_, unsigned int maxSessions, unsigned int nThreads = 3 );
+        Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, unsigned int nThreads = 3 );
 
     private:
         /*!

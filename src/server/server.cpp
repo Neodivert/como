@@ -26,7 +26,7 @@ namespace como {
  * 1. Construction
  ***/
 
-Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThreads ) :
+Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, unsigned int nThreads ) :
     // Initialize the server parameters.
     io_service_( std::shared_ptr< boost::asio::io_service >( new boost::asio::io_service ) ),
     acceptor_( *io_service_ ),
@@ -39,6 +39,9 @@ Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThre
 {
     unsigned int i;
 
+    // Set the scene name.
+    strncpy( sceneName_, sceneName, NAME_SIZE );
+
     // Create the threads pool.
     for( i=0; i<N_THREADS; i++ ){
         threads_.create_thread( boost::bind( &Server::workerThread, this ) );
@@ -47,9 +50,13 @@ Server::Server( unsigned int port_, unsigned int maxSessions, unsigned int nThre
     // Initialize the commands historic.
     commandsHistoric_ = CommandsHistoricPtr( new CommandsHistoric( std::bind( &Server::broadcast, this ) ) );
 
-    // Initialize the log
+    // Initialize the log.
     log_ = LogPtr( new Log );
+
+    // Debug information.
+    log_->debug( "Scene [", sceneName_, "] created\n" );
 }
+
 
 // TODO: Generate more colors?
 void Server::initUserColors()
@@ -189,9 +196,9 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         log_->error( "[", boost::this_thread::get_id(), "]: ERROR(", errorCode.message(), ")\n" );
     }else{
         // Connection established. Wait synchronously for a NEW_USER package.
-        log_->debug( "[", newUserPacket.getName(), "] (", boost::this_thread::get_id(), "): Connecting!\n" );
+        log_->debug( "New user (", boost::this_thread::get_id(), "): Connecting!\n" );
         newUserPacket.recv( newSocket_ );
-        log_->debug( "[", newUserPacket.getName(), "] (", boost::this_thread::get_id(), "): Connected!\n" );
+        log_->debug( "User [", newUserPacket.getName(), "] (", boost::this_thread::get_id(), "): Connected!\n" );
 
         /*** Prepare an USER_ACCEPTED package in respond to the previous NEW_USER one ***/
 

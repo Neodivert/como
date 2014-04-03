@@ -26,12 +26,12 @@
 int main( int argc, char* argv[] )
 {
     try {
-        if( argc < 3 ){
-            std::cerr << "Usage: server <port> <max_users>" << std::endl;
+        if( argc < 4 ){
+            std::cerr << "Usage: server <port> <max_users> <scene_name>" << std::endl;
             exit( -1 );
         }
 
-        como::Server server( atoi( argv[1] ), atoi( argv[2] ), 1 );
+        como::Server server( atoi( argv[1] ), atoi( argv[2] ), argv[3], 1 );
         server.run();
     }catch (std::exception& e){
         std::cerr << e.what() << std::endl;

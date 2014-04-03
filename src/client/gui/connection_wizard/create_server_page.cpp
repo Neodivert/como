@@ -37,6 +37,9 @@ CreateServerPage::CreateServerPage( ScenePtr scene, LogPtr log ) :
 {
     QFormLayout* layout = nullptr;
 
+    // Create a scene name input.
+    sceneNameInput_ = new QLineEdit;
+
     // Create a port input.
     portInput_ = new QLineEdit;
     portInput_->setText( tr( "7777") );
@@ -53,6 +56,7 @@ CreateServerPage::CreateServerPage( ScenePtr scene, LogPtr log ) :
 
     // Create the page's layout
     layout = new QFormLayout;
+    layout->addRow( tr( "Scene name: " ), sceneNameInput_ );
     layout->addRow( tr( "Port (0 - 65535): " ), portInput_ );
     layout->addRow( tr( "Max users (1 - 16): " ), maxUsersInput_ );
     layout->addRow( tr( "Your user name in the server" ), userNameInput_ );
@@ -69,7 +73,7 @@ CreateServerPage::CreateServerPage( ScenePtr scene, LogPtr log ) :
 
 bool CreateServerPage::validatePage()
 {
-    char serverCommand[128];
+    char serverCommand[256];
     int pid;
 
     // We consider this page valid if we can create the server and connect to
@@ -91,10 +95,11 @@ bool CreateServerPage::validatePage()
         pid = fork();
         if( pid == 0 ){
             // FIXME: This isn't multiplatform.
-            sprintf( serverCommand, "gnome-terminal -e \"%s %d %d\"",
+            sprintf( serverCommand, "gnome-terminal -e \"%s %d %d %s\"",
                                                 SERVER_PATH,                                        // Server bin.
                                                 atoi( portInput_->text().toLocal8Bit().data() ),    // Port.
-                                                maxUsersInput_->value()                             // Max. users.
+                                                maxUsersInput_->value(),                            // Max. users.
+                                                sceneNameInput_->text().toLocal8Bit().data()        // Scene name.
                      );
             log_->debug( "Server command: [", serverCommand, "]\n",
                          "\tReturn value: ", system( serverCommand ), "\n" );
