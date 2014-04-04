@@ -23,6 +23,7 @@
 #include "managers/tester.hpp"
 #include "gui/connection_wizard/connection_wizard.hpp"
 #include "managers/como_app.hpp"
+#include <boost/filesystem.hpp>
 
 //#define TESTING_MODE 1
 
@@ -34,9 +35,26 @@
 
 int main( int argc, char *argv[] )
 {
+    boost::system::error_code errorCode;
+
     // Create a Qt application.
     QApplication app( argc, argv );
     int dialogCode;
+
+    // Variable argv[0] contains the string used for invoking this program
+    // We now retrieve the basename of that string for getting a
+    // relative path to the same directory where the client resides.
+    std::string programRelativePath( argv[0] );
+    programRelativePath = programRelativePath.substr( 0, programRelativePath.rfind( "/" ) );
+
+    // Change directory so now we are in the same directory as the client
+    // executable (we need this because this program uses relative paths).
+    boost::filesystem::current_path( programRelativePath, errorCode );
+    if( errorCode ){
+        throw std::runtime_error( errorCode.message() );
+    }
+
+    std::cout << boost::filesystem::current_path() << std::endl;
 
     // Create the COMO app.
     std::shared_ptr< como::ComoApp > comoApp( new como::ComoApp );
