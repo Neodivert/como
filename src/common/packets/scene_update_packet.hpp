@@ -28,57 +28,118 @@
 
 namespace como {
 
+/*!
+ * \class SceneUpdatePacket
+ *
+ * \brief Unique type of packet sent between client and server once the
+ * connection has been established. Every SceneUpdatePacket consists of
+ * a sequence of commands affecting the current scene being synchronised
+ * by the server.
+ */
 class SceneUpdatePacket : public Packet
 {
     private:
+        /*!
+         * Number of commands to be received from server to be fully
+         * synchronised with it
+         */
         PackableUint32< std::uint32_t > nUnsyncCommands_;
+
+        /*! List of commands attached to this SceneUpdatePacket */
         PackableCommandsList commands_;
 
     public:
         /***
          * 1. Construction
          ***/
+
+        /*!
+         * \brief Default constructor. Constructs an emtpy
+         * SceneUpdatePacket (0 commands).
+         */
         SceneUpdatePacket();
+
+        /*! \brief Copy constructor */
         SceneUpdatePacket( const SceneUpdatePacket& b );
+
+        /*! \brief Move constructor */
         SceneUpdatePacket( SceneUpdatePacket&& ) = delete;
+
+        /*!
+         * \brief Clone method
+         * \return a pointer to a copy of this SceneUpdatePacket.
+         */
         virtual Packet* clone() const ;
 
 
         /***
          * 2. Destruction
          ***/
+
+        /*! \brief Destructor */
         ~SceneUpdatePacket() = default;
 
 
         /***
          * 3. Getters
          ***/
+
+        /*!
+         * \brief Returns the number of commands to be synchronised from
+         * server to be fully synchronised with it.
+         */
         std::uint32_t getUnsyncCommands() const ;
+
+        /*! \brief Get a pointer to the list of commands inside this packet */
         const CommandsList* getCommands() const ;
+
+        /*! \brief see Packet::expectedType const */
         virtual bool expectedType() const ;
 
 
         /***
          * 4. Setters
          ***/
+
+        /*!
+         * \brief Adds the given command to the list of commands held by this
+         * packet.
+         */
         void addCommand( CommandConstPtr command );
+
+        /*!
+         * \brief Adds one command from a command' historic to the list of
+         * commands held by this packet.
+         * \param command command to be added.
+         * \param commandIndex command's index in the historic.
+         * \param historicSize size of the historic where the command was
+         * retrieved from.
+         */
         void addCommand( CommandConstPtr command,
                          const std::uint32_t& commandIndex,
                          const std::uint32_t& historicSize );
-        /*
-        void addCommands( const CommandsList* commandsHistoric,
-                          const std::uint32_t& firstCommand,
-                          const std::uint8_t& maxCommands );*/
+
+
+        /*!
+         * \brief Empty the commands list of this SceneUpdatePacket and set
+         * the number of commands to be synchronised from server to zero.
+         */
         void clear();
 
 
         /***
          * 5. Operators
          ***/
+
+        /*! \brief Copy assignment operator */
         SceneUpdatePacket& operator = (const SceneUpdatePacket& b) = delete;
+
+        /*! \brief Move assignment operator */
         SceneUpdatePacket& operator = ( SceneUpdatePacket&& ) = delete;
 };
 
+
+/*! Convenient typedefs */
 typedef std::shared_ptr< SceneUpdatePacket > SceneUpdatePacketPtr;
 typedef std::shared_ptr< const SceneUpdatePacket > SceneUpdatePacketConstPtr;
 

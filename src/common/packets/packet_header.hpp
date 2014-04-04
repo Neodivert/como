@@ -24,6 +24,11 @@
 
 namespace como {
 
+/*!
+ * \enum PacketType
+ *
+ * \brief List of possibles types of packets sent between client and server.
+ */
 enum class PacketType : std::uint8_t
 {
     NEW_USER = 0,
@@ -31,44 +36,76 @@ enum class PacketType : std::uint8_t
     SCENE_UPDATE = 2
 };
 
+/*!
+ * \class PacketHeader
+ *
+ * \brief Metadata added to every Packet for indicating its type and size.
+ */
 class PacketHeader : public CompositePackable
 {
     private:
+        /*! Type of the packet */
         PackableUint8< PacketType > type_;
+
+        /*! Size of the packet's body */
         PackableUint16< std::uint16_t > bodySize_;
 
     public:
         /***
          * 1. Construction
          ***/
+
+        /*! \brief Constructs a PacketHeader with the given type. */
         PacketHeader( PacketType type );
+
+        /*! \brief Copy constructor. */
         PacketHeader( const PacketHeader& );
+
+        /*! \brief Move constructor. */
         PacketHeader( PacketHeader&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
+
+        /*! \brief Destructor */
         virtual ~PacketHeader(){}
 
 
         /***
          * 3. Getters
          ***/
+
+        /*!
+         * \brief Returns the type of the packet associated with this
+         * PacketHeader
+         */
         PacketType getType() const;
+
+        /*!
+         * \brief Returns the size of the packet body associated with
+         * this PacketHeader
+         */
         std::uint16_t getBodySize() const;
 
 
         /***
          * 4. Setters
          ***/
+
+        /*! \brief Set the value of the body size attribute */
         void setBodySize( std::uint16_t bodySize );
 
 
         /***
          * 5. Operators
          ***/
+
+        /*! \brief Copy assignment operator */
         CompositePackable& operator = (const PacketHeader& b);
+
+        /*! \brief Move assignment operator */
         CompositePackable& operator = ( PacketHeader&& );
 };
 

@@ -28,12 +28,29 @@
 
 namespace como {
 
+/*!
+ * \class UserAcceptancePacket
+ * \brief Packet sent from server to client when the latter connects to the
+ * former. It includes identification information for the client as well
+ * as general information about the scene being synchronised by the server.
+ */
 class UserAcceptancePacket : public Packet
 {
     public:
+        /*! User ID given to the addressee of this packet */
         PackableUserID id_; 
+
+        /*! User Name given to the addressee of this packet */
         PackableString<NAME_SIZE> name_;
+
+        /*! Name of the scene being synchronised by the server */
         PackableString<NAME_SIZE> sceneName_;
+
+        /*!
+         * Selection color given to the addressee of this pacekt. The
+         * drawables selected by the new client will be highlighted
+         * using this color.
+         */
         PackableRGBA selectionColor_; // RGBA format.
 
     public:
