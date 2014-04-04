@@ -26,6 +26,7 @@
 namespace como {
 
 // TODO: Move to a config file.
+const char SYSTEM_PRIMITIVES_DIR[] = "data/primitives/system";
 const char LOCAL_PRIMITIVES_DIR[] = "data/primitives/local";
 const char SCENES_PRIMITIVES_DIR[] = "data/primitives/scenes";
 

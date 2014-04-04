@@ -95,7 +95,7 @@ bool CreateServerPage::validatePage()
         pid = fork();
         if( pid == 0 ){
             // FIXME: This isn't multiplatform.
-            sprintf( serverCommand, "gnome-terminal -e \"%s %d %d %s\"",
+            sprintf( serverCommand, "gnome-terminal -e \"\"%s\" %d %d \"%s\"\"",
                                                 SERVER_PATH,                                        // Server bin.
                                                 atoi( portInput_->text().toLocal8Bit().data() ),    // Port.
                                                 maxUsersInput_->value(),                            // Max. users.

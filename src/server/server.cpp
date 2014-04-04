@@ -369,7 +369,6 @@ void Server::createScenePrimitivesDirectory()
 
     // Copy the server directory for local primitives as this scene's
     // primitives directory.
-
     // TODO: Use a multiplatform alternative (boost::filesystem::copy_directory
     // doesn't copy directory's contents).
     sprintf( consoleCommand, "cp -R \"%s\" \"%s\"", LOCAL_PRIMITIVES_DIR, scenePrimitivesDirectory );
