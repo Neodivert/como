@@ -66,6 +66,9 @@ class Scene : public QOffscreenSurface
     Q_OBJECT
 
     protected:
+        // Scene name
+        char sceneName_[NAME_SIZE];
+
         // Users sharing this scene.
         UsersMap users_;
 
@@ -142,6 +145,8 @@ class Scene : public QOffscreenSurface
         void setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny );
         void setPivotPointMode( PivotPointMode pivotPointMode );
         void setPivotPointMode( PivotPointMode pivotPointMode, UserID userID );
+    protected:
+        void setName( const char* sceneName );
 
 
         /***
@@ -213,6 +218,7 @@ class Scene : public QOffscreenSurface
         void renderNeeded();
         void userConnected( UserConnectionCommandConstPtr command );
         void userDisconnected( UserID userID );
+        void connectedToScene( const QString& sceneName );
 
 
         /***
@@ -225,9 +231,6 @@ class Scene : public QOffscreenSurface
 
     public slots:
         void executeRemoteCommand( CommandConstPtr command );
-
-
-
 
         /***
          * 12. Auxiliar methods

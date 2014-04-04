@@ -29,22 +29,26 @@ UserAcceptancePacket::UserAcceptancePacket() :
     Packet( PacketType::USER_ACCEPTED ),
     id_( 0 ),
     name_( "Unnamed" ),
+    sceneName_( "Unnamed scene" ),
     selectionColor_()
 {
     addPackable( &id_ );
     addPackable( &name_ );
+    addPackable( &sceneName_ );
     addPackable( &selectionColor_ );
 }
 
 
-UserAcceptancePacket::UserAcceptancePacket( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor ) :
+UserAcceptancePacket::UserAcceptancePacket( const std::uint32_t& id, const char* name, const char*sceneName, const std::uint8_t* selectionColor ) :
     Packet( PacketType::USER_ACCEPTED ),
     id_( id ),
     name_( name ),
+    sceneName_( sceneName ),
     selectionColor_( selectionColor )
 {
     addPackable( &id_ );
     addPackable( &name_ );
+    addPackable( &sceneName_ );
     addPackable( &selectionColor_ );
 }
 
@@ -53,10 +57,12 @@ UserAcceptancePacket::UserAcceptancePacket( const UserAcceptancePacket& b ) :
     Packet( b ),
     id_( b.id_ ),
     name_( b.name_ ),
+    sceneName_( b.sceneName_ ),
     selectionColor_( b.selectionColor_ )
 {
     addPackable( &id_ );
     addPackable( &name_ );
+    addPackable( &sceneName_ );
     addPackable( &selectionColor_ );
 }
 
@@ -81,6 +87,12 @@ std::uint32_t UserAcceptancePacket::getId() const
 const char* UserAcceptancePacket::getName() const
 {
     return name_.getValue();
+}
+
+
+const char* UserAcceptancePacket::getSceneName() const
+{
+    return sceneName_.getValue();
 }
 
 
@@ -117,6 +129,12 @@ void UserAcceptancePacket::setId( const std::uint32_t& id )
 void UserAcceptancePacket::setName( const char* name )
 {
     name_ = name;
+}
+
+
+void UserAcceptancePacket::setSceneName( const char* name )
+{
+    sceneName_ = name;
 }
 
 

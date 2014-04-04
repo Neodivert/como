@@ -31,8 +31,9 @@ namespace como {
 class UserAcceptancePacket : public Packet
 {
     public:
-        PackableUserID id_;
+        PackableUserID id_; 
         PackableString<NAME_SIZE> name_;
+        PackableString<NAME_SIZE> sceneName_;
         PackableRGBA selectionColor_; // RGBA format.
 
     public:
@@ -40,7 +41,7 @@ class UserAcceptancePacket : public Packet
          * 1. Construction
          ***/
         UserAcceptancePacket();
-        UserAcceptancePacket( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor );
+        UserAcceptancePacket( const std::uint32_t& id, const char* name, const char*sceneName, const std::uint8_t* selectionColor );
         UserAcceptancePacket( const UserAcceptancePacket& b );
         UserAcceptancePacket( UserAcceptancePacket&& ) = delete;
         virtual Packet* clone() const ;
@@ -57,6 +58,7 @@ class UserAcceptancePacket : public Packet
          ***/
         std::uint32_t getId() const ;
         const char* getName() const ;
+        const char* getSceneName() const ;
         const std::uint8_t* getSelectionColor() const ;
         virtual bool expectedType() const ;
 
@@ -67,6 +69,7 @@ class UserAcceptancePacket : public Packet
         void setData( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor );
         void setId( const std::uint32_t& id );
         void setName( const char* name );
+        void setSceneName( const char* name );
         void setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a );
 
 

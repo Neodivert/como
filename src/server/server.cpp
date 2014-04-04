@@ -217,6 +217,9 @@ void Server::onAccept( const boost::system::error_code& errorCode )
             userAcceptedPacket.setName( buffer );
         }
 
+        // Send the scene name within the UserAcceptancePacket.
+        userAcceptedPacket.setSceneName( sceneName_ );
+
         // Get a color from the queue of free colors and assign it to the new
         // user.
         userColor = freeUserColors_.front();

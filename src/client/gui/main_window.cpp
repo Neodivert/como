@@ -76,6 +76,12 @@ MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     // the GUI user's list.
     connect( comoApp->getScene().get(), &Scene::userDisconnected, usersList, &UsersList::removeUser );
 
+    // Signal / slot: when an user connects to a scene, add the scene name to
+    // the window title.
+    connect( comoApp->getScene().get(), &Scene::connectedToScene, [this]( const QString& sceneName ){
+        setWindowTitle( sceneName + " - Cooperative Modeller" );
+    });
+
     // Set window layout.
     QHBoxLayout *layout = new QHBoxLayout;
 

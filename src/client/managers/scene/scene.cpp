@@ -304,6 +304,12 @@ void Scene::setPivotPointMode( PivotPointMode pivotPointMode, UserID userID )
 }
 
 
+void Scene::setName( const char* sceneName )
+{
+    strncpy( sceneName_, sceneName, NAME_SIZE );
+}
+
+
 /***
  * 5. Drawables administration
  ***/
