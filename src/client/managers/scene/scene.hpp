@@ -238,6 +238,8 @@ class Scene : public QOffscreenSurface
     public:
         void roundTransformationMagnitude( float& vx, float& vy, float& vz );
         void roundTransformationMagnitude( float& angle, float& vx, float& vy, float& vz );
+
+        void createScenePrimitivesDirectory();
 };
 
 typedef std::shared_ptr< Scene > ScenePtr;

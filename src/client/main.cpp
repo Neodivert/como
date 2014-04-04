@@ -44,6 +44,10 @@ int main( int argc, char *argv[] )
     // Variable argv[0] contains the string used for invoking this program
     // We now retrieve the basename of that string for getting a
     // relative path to the same directory where the client resides.
+    // FIXME: This won't work if argv[0] points to a symlink, because we'd go
+    // to the same directory where the symlink resides, not to the same
+    // directory where the actual executable resides.
+    // (The same for server program).
     std::string programRelativePath( argv[0] );
     programRelativePath = programRelativePath.substr( 0, programRelativePath.rfind( "/" ) );
 

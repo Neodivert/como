@@ -972,4 +972,36 @@ void Scene::roundTransformationMagnitude( float& angle, float& vx, float& vy, fl
 }
 
 
+// TODO: Duplicated code in Server::createScenePrimitivesDirectory.
+void Scene::createScenePrimitivesDirectory()
+{
+    char scenePrimitivesDirectory[128] = {0};
+    char consoleCommand[256] = {0};
+    int lastCommandResult = 0;
+
+    // Build the path to the scene primitives directory.
+    sprintf( scenePrimitivesDirectory, "%s/%s", SCENES_PRIMITIVES_DIR, sceneName_ );
+
+    log_->debug( "Creating scene primitives directory [", scenePrimitivesDirectory, "] ...\n" );
+
+    // Copy the server directory for local primitives as this scene's
+    // primitives directory.
+    // TODO: Use a multiplatform alternative (boost::filesystem::copy_directory
+    // doesn't copy directory's contents).
+    sprintf( consoleCommand, "mkdir -p \"%s\"", scenePrimitivesDirectory );
+    lastCommandResult = system( consoleCommand );
+
+    // If there was any error creating the scene primitives directory, throw
+    // an exception.
+    if( lastCommandResult ){
+        throw std::runtime_error( std::string( "Error creating scene primitives directory [" ) +
+                                  scenePrimitivesDirectory +
+                                  "]"
+                                  );
+    }
+
+    log_->debug( "Creating scene primitives directory [", scenePrimitivesDirectory, "] ...OK\n" );
+}
+
+
 } // namespace como

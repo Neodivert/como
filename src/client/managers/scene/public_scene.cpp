@@ -49,6 +49,12 @@ bool PublicScene::connect( const char* host, const char* port, const char* userN
         addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( *userAcceptancePacket ) ) );
         localUserID_ = userAcceptancePacket->getId();
 
+        // Copy the scene name given by the server.
+        setName( userAcceptancePacket->getSceneName() );
+
+        // Create the scene's primitives directory.
+        createScenePrimitivesDirectory();
+
         // Emit a signal indicating that we have connected to a scene.
         emit connectedToScene( tr( userAcceptancePacket->getSceneName() ) );
 
