@@ -395,6 +395,37 @@ void Server::createScenePrimitivesDirectory()
     }
 
     log_->debug( "Creating scene primitives directory [", scenePrimitivesDirectory, "] ...OK\n" );
+
+    initializePrimitives( scenePrimitivesDirectory );
+}
+
+
+void Server::initializePrimitives( const char* primitivesDir )
+{
+    PackableDrawableID primitiveID;
+    const char* fileName = nullptr;
+    const boost::filesystem::directory_iterator endIterator;
+
+    primitiveID.creatorID = 0;
+    primitiveID.drawableIndex = 0;
+
+    log_->debug( "Adding primitives to scene [", primitivesDir, "] ...\n" );
+
+    boost::filesystem::directory_iterator fileIterator( primitivesDir );
+
+    for( ; fileIterator != endIterator; fileIterator++ ){
+        if( boost::filesystem::is_regular_file( *fileIterator ) ){
+            fileName = fileIterator->path().string().c_str();
+
+            log_->debug( "\tAdding primitive [", fileName, "] to scene ...\n" );
+            addCommand( CommandConstPtr( new PrimitiveCreationCommand( fileName, 0, primitiveID ) ) );
+            log_->debug( "\tAdding primitive [", fileName, "] to scene ...OK\n" );
+
+            primitiveID.drawableIndex.setValue( primitiveID.drawableIndex.getValue() + 1 );
+        }
+    }
+
+    log_->debug( "Adding primitives to scene [", primitivesDir, "] ...\n" );
 }
 
 

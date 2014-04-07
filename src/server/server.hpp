@@ -179,6 +179,8 @@ class Server
          ***/
     private:
         void createScenePrimitivesDirectory();
+        void initializePrimitives( const char* primitivesDir );
+
     public:
         void deleteUser( UserID id );
         void unselectAll( UserID userID );
