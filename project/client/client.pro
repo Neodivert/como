@@ -113,7 +113,8 @@ HEADERS += \
     ../../src/common/packables/packable_vector4.hpp \
     ../../src/common/packets/packet_header.hpp \
     ../../src/common/commands/packable_commands_list.hpp \
-    ../../src/common/packables/packable_file.hpp
+    ../../src/common/packables/packable_file.hpp \
+    ../../src/common/commands/drawable_commands/primitive_creation_command.hpp
 
 
 
@@ -171,4 +172,5 @@ SOURCES += \
     ../../src/common/packables/packable_vector4.cpp \
     ../../src/common/packets/packet_header.cpp \
     ../../src/common/commands/packable_commands_list.cpp \
-    ../../src/common/packables/packable_file.cpp
+    ../../src/common/packables/packable_file.cpp \
+    ../../src/common/commands/drawable_commands/primitive_creation_command.cpp

@@ -26,7 +26,8 @@ namespace como {
 
 enum class DrawableCommandType : std::uint8_t {
     CUBE_CREATION = 0,
-    DRAWABLE_SELECTION
+    DRAWABLE_SELECTION,
+    PRIMITIVE_CREATION
 };
 
 typedef PackableUint8< DrawableCommandType > PackableDrawableCommandType;

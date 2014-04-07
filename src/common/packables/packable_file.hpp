@@ -50,6 +50,9 @@ class PackableFile : public CompositePackable {
          * 1. Construction
          ***/
 
+        /*! \brief Default constructor. */
+        PackableFile() = default;
+
         /*!
          * \brief Constructor. Wraps a file (or created, if requested),
          * making it packable.
@@ -120,6 +123,13 @@ class PackableFile : public CompositePackable {
          * PackableFile would ocuppy once packed.
          */
         std::uint32_t getFileSize() const;
+
+
+        /*!
+         * \brief Returns a pointer to the path of the primitive's
+         * specification file.
+         */
+        const PackableString< NAME_SIZE >* getFilePath() const ;
 
 
         /***

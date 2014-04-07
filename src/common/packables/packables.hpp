@@ -26,6 +26,7 @@
 #include "packable_uint16.hpp"
 #include "packable_uint32.hpp"
 #include "packable_vector4.hpp"
+#include "packable_file.hpp"
 #include "composite_packable.hpp"
 
 #endif // PACKABLES_HPP

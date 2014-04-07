@@ -842,6 +842,7 @@ void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
 {
     const CubeCreationCommand* createCube = nullptr;
     const DrawableSelectionCommand* selectDrawable = nullptr;
+    const PrimitiveCreationCommand * primitiveCreationCommand = nullptr;
 
     switch( command->getType() ){
         case DrawableCommandType::CUBE_CREATION:
@@ -858,6 +859,14 @@ void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
 
             // Select drawable.
             this->selectDrawable( selectDrawable->getDrawableID(), selectDrawable->getUserID() );
+        break;
+
+        case DrawableCommandType::PRIMITIVE_CREATION:
+            // Cast to a PRIMITIVE_SELECTION command.
+            primitiveCreationCommand = dynamic_cast< const PrimitiveCreationCommand* >( command.get() );
+
+            // TODO: Complete, make things.
+            log_->debug( "Primitive file received: [", primitiveCreationCommand->getFile()->getFilePath()->getValue(), "]\n" );
         break;
     }
 }

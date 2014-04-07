@@ -93,6 +93,9 @@ const void* PackableCommandsList::unpack( const void* buffer )
                     case DrawableCommandType::DRAWABLE_SELECTION:
                         command = CommandPtr( new DrawableSelectionCommand );
                     break;
+                    case DrawableCommandType::PRIMITIVE_CREATION:
+                        command = CommandPtr( new PrimitiveCreationCommand );
+                    break;
                 }
             break;
 

@@ -197,6 +197,11 @@ std::uint32_t PackableFile::getFileSize() const
 }
 
 
+const PackableString< NAME_SIZE >* PackableFile::getFilePath() const
+{
+    return &filePath_;
+}
+
 
 /***
  * 6. Auxiliar methods

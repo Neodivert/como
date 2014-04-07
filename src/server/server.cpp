@@ -302,6 +302,7 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
 void Server::processSceneCommand( CommandConstPtr sceneCommand )
 {
     const CubeCreationCommand* createCube = nullptr;
+    const PrimitiveCreationCommand* primitiveCreationCommand = nullptr;
     const DrawableSelectionCommand* selectDrawable = nullptr;
 
     switch( sceneCommand->getTarget() ){
@@ -328,6 +329,13 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
                     users_.at( sceneCommand->getUserID() );
                     log_->debug( "Selecting drawable (", (int)( selectDrawable->getDrawableID().creatorID.getValue() ), ", ", (int)( selectDrawable->getDrawableID().drawableIndex.getValue() ), ")\n" );
                     users_.at( sceneCommand->getUserID() )->addSelectionResponse( drawableOwners_.at( selectDrawable->getDrawableID() ) == 0 );
+                break;
+                case DrawableCommandType::PRIMITIVE_CREATION:
+                    // PRIMITIVE_CREATION command received, cast its pointer.
+                    primitiveCreationCommand = dynamic_cast< const PrimitiveCreationCommand* >( sceneCommand.get() );
+
+                    // TODO: Complete, Save new primitive.
+                    log_->debug( "Primitive received [", primitiveCreationCommand->getFile()->getFilePath()->getValue(), "]\n" );
                 break;
             }
         break;
