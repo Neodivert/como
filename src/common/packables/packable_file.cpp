@@ -21,9 +21,21 @@
 
 namespace como {
 
+
 /***
  * 1. Construction
  ***/
+
+PackableFile::PackableFile()
+{
+    // "Register" the filePath and the fileSize as part of this
+    // CompositePackable (for automatic packing / unpacking when calling
+    // CompositePackable packing / unpacking methods).
+    // The file content's are packed / unpacked explicitly in this class.
+    addPackable( &filePath_ );
+    addPackable( &fileSize_ );
+}
+
 
 PackableFile::PackableFile( const PackableString<NAME_SIZE>& filePath, bool createFile ) :
     CompositePackable(),
@@ -59,6 +71,8 @@ PackableFile::PackableFile( const PackableString<NAME_SIZE>& filePath, bool crea
     // The file content's are packed / unpacked explicitly in this class.
     addPackable( &filePath_ );
     addPackable( &fileSize_ );
+
+    std::cout << "PackableFile::PackableFile - [" << filePath_.getValue() << "]" << std::endl;
 }
 
 
@@ -75,6 +89,15 @@ PackableFile::PackableFile( const PackableFile& b ) :
     }
 
     file_.close();
+
+    // "Register" the filePath and the fileSize as part of this
+    // CompositePackable (for automatic packing / unpacking when calling
+    // CompositePackable packing / unpacking methods).
+    // The file content's are packed / unpacked explicitly in this class.
+    addPackable( &filePath_ );
+    addPackable( &fileSize_ );
+
+     std::cout << "PackableFile::PackableFile (copy) - [" << filePath_.getValue() << "]" << std::endl;
 }
 
 

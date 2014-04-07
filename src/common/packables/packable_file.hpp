@@ -51,7 +51,7 @@ class PackableFile : public CompositePackable {
          ***/
 
         /*! \brief Default constructor. */
-        PackableFile() = default;
+        PackableFile();
 
         /*!
          * \brief Constructor. Wraps a file (or created, if requested),
