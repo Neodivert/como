@@ -39,7 +39,7 @@ typedef std::shared_ptr< Packet > PacketPtr;
 typedef std::function<void( const boost::system::error_code& errorCode, PacketPtr)> PacketHandler;
 
 // Maximum buffer available size for packing a packet.
-const unsigned int PACKET_BUFFER_SIZE = 512;
+const unsigned int PACKET_BUFFER_SIZE = 524288; // 512 x 1024 bytes.
 
 
 /*!
