@@ -71,8 +71,6 @@ PackableFile::PackableFile( const PackableString<NAME_SIZE>& filePath, bool crea
     // The file content's are packed / unpacked explicitly in this class.
     addPackable( &filePath_ );
     addPackable( &fileSize_ );
-
-    std::cout << "PackableFile::PackableFile - [" << filePath_.getValue() << "]" << std::endl;
 }
 
 
@@ -96,8 +94,6 @@ PackableFile::PackableFile( const PackableFile& b ) :
     // The file content's are packed / unpacked explicitly in this class.
     addPackable( &filePath_ );
     addPackable( &fileSize_ );
-
-     std::cout << "PackableFile::PackableFile (copy) - [" << filePath_.getValue() << "]" << std::endl;
 }
 
 
@@ -143,8 +139,6 @@ const void* PackableFile::unpack( const void* buffer )
     // Unpack the file path and size, among other packables held by this
     // CompositePackable (parent class), from the given buffer.
     buffer = CompositePackable::unpack( buffer );
-
-    std::cout << "PackableFile::unpack (" << filePath_.getValue() << ")" << std::endl;
 
     // Unpack the file contents from the given buffer and write them to file.
     castedBuffer = static_cast< const char* >( buffer );

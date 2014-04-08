@@ -38,7 +38,7 @@ CreateServerPage::CreateServerPage( ScenePtr scene, LogPtr log ) :
     QFormLayout* layout = nullptr;
 
     // Create a scene name input.
-    sceneNameInput_ = new QLineEdit;
+    sceneNameInput_ = new QLineEdit( tr( "Unnamed scene" ) );
 
     // Create a port input.
     portInput_ = new QLineEdit;

@@ -3,6 +3,8 @@
 # server.
 #-------------------------------------------------
 
+INCLUDEPATH += $$PWD
+DEPENDPATH += $$PWD
 
 # TODO: Remove
 LIBS += -L/usr/local/lib

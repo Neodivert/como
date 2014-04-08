@@ -4,9 +4,6 @@
 #
 #-------------------------------------------------
 
-# Include files and parameters that are common to both client and server.
-include( ../common/common.pri )
-
 # Qt modules
 QT       += core gui opengl
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -30,6 +27,9 @@ OBJECTS_DIR = $$BUILD_DATA_DIR/obj
 MOC_DIR = $$BUILD_DATA_DIR/moc
 RCC_DIR = $$BUILD_DATA_DIR/qrc
 UI_DIR = $$BUILD_DATA_DIR/ui
+
+# Include files and parameters that are common to both client and server.
+include( ../common/common.pri )
 
 # Cliet headers
 HEADERS += \
