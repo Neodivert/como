@@ -850,7 +850,8 @@ void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
             createCube = dynamic_cast< const CubeCreationCommand* >( command.get() );
 
             // Add cube to the scene.
-            addPrimitive( "cube.obj", createCube->getColor(), createCube->getDrawableID() );
+            // TODO: Remove.
+            addPrimitive( "data/primitives/system/camera.obj", createCube->getColor(), createCube->getDrawableID() );
         break;
 
         case DrawableCommandType::DRAWABLE_SELECTION:
@@ -867,6 +868,11 @@ void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
 
             // TODO: Complete, make things.
             log_->debug( "Primitive file received: [", primitiveCreationCommand->getFile()->getFilePath()->getValue(), "]\n" );
+
+            // Emit a signal indicating the primitive insertion. Include
+            // primitive's name and ID in the signal.
+            emit primitiveAdded( tr( primitiveCreationCommand->getFile()->getFilePath()->getValue() ),
+                                 primitiveCreationCommand->getDrawableID() );
         break;
     }
 }

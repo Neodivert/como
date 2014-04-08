@@ -125,23 +125,9 @@ QFrame* ToolsMenu::createPrimitiveCreationMenu()
     QFrame* primitiveCreationFrame = nullptr;
     QVBoxLayout* primitiveCreationLayout = nullptr;
     QComboBox* primitiveCreationSelector = nullptr;
-    QDir primitivesDir( SYSTEM_PRIMITIVES_DIR );
-    QStringList primitiveFiles;
-    int i;
 
     // Create an empty dropdown list (QComboBox).
     primitiveCreationSelector = new QComboBox;
-
-    // Get a list with all the primitive files that exists in the primitives
-    // directory.
-    primitivesDir.setFilter( QDir::Files | QDir::Hidden | QDir::NoSymLinks );
-    primitiveFiles = primitivesDir.entryList();
-
-    // Create, in the primitive dropdown list, an entry for each primitive
-    // file retrieved in the previous step.
-    for( i=0; i < primitiveFiles.size(); i++ ){
-        primitiveCreationSelector->addItem( primitiveFiles.at( i ) );
-    }
 
     // Create the layout of this menu.
     primitiveCreationLayout = new QVBoxLayout();
@@ -157,6 +143,13 @@ QFrame* ToolsMenu::createPrimitiveCreationMenu()
     connect( primitiveCreationSelector, activated, [this]( const QString& primitiveName ) {
         comoApp->getScene()->addPrimitive( primitiveName.toLocal8Bit().data(), getCurrentColor() );
     } );
+
+    // Signal / Slot connection: when a new primitive is created in the scene,
+    // add it to the primitives dropdown list.
+    connect( comoApp->getScene().get(), &Scene::primitiveAdded, [=]( const QString& primitiveName, PackableDrawableID primitiveID ){
+        Q_UNUSED( primitiveID );
+        primitiveCreationSelector->addItem( primitiveName );
+    });
 
     return primitiveCreationFrame;
 }

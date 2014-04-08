@@ -3,7 +3,7 @@
 namespace como {
 
 Camera::Camera( View view ) :
-    Mesh( "camera.obj" ), // TODO: Create a "camera" primitive.
+    Mesh( "data/primitives/system/camera.obj" ), // TODO: Use a constant.
     originalEye     ( 0.0f, 0.0f, 0.0f, 1.0f ),
     originalUp      ( 0.0f, 1.0f, 0.0f, 1.0f ),
     originalCenter  ( 0.0f, 0.0f, -1.0f, 1.0f )

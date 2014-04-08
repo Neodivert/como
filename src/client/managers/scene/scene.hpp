@@ -219,6 +219,7 @@ class Scene : public QOffscreenSurface
         void userConnected( UserConnectionCommandConstPtr command );
         void userDisconnected( UserID userID );
         void connectedToScene( const QString& sceneName );
+        void primitiveAdded( const QString& primitiveName, PackableDrawableID primitiveID );
 
 
         /***

@@ -51,12 +51,8 @@ Mesh::Mesh( const char* fileName, const std::uint8_t* color )
         setColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
     }
 
-    std::string filePath = SYSTEM_PRIMITIVES_DIR;
-    filePath += '/';
-    filePath += fileName;
-
     // Load vertex data from given file.
-    LoadFromOBJ( filePath.c_str() );
+    LoadFromOBJ( fileName );
 
     checkOpenGL( "Mesh( const char* fileName, const std::uint8_t* color ) - 2" );
 }

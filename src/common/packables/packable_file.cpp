@@ -144,10 +144,16 @@ const void* PackableFile::unpack( const void* buffer )
     castedBuffer = static_cast< const char* >( buffer );
 
     file_.open( filePath_.getValue(), std::ios_base::out | std::ios_base::binary );
+
+    if( !file_.is_open() ){
+        sprintf( errorMessage, "ERROR creating file [%s] for unpacking", filePath_.getValue() );
+        throw std::runtime_error( errorMessage );
+    }
+
     file_.write( castedBuffer, fileSize_.getValue() );
 
     if( !file_ ){
-        sprintf( errorMessage, "ERROR unpacking file" );
+        sprintf( errorMessage, "ERROR unpacking file [%s]", filePath_.getValue() );
         throw std::runtime_error( errorMessage );
     }
 
