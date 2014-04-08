@@ -144,6 +144,8 @@ const void* PackableFile::unpack( const void* buffer )
     // CompositePackable (parent class), from the given buffer.
     buffer = CompositePackable::unpack( buffer );
 
+    std::cout << "PackableFile::unpack (" << filePath_.getValue() << ")" << std::endl;
+
     // Unpack the file contents from the given buffer and write them to file.
     castedBuffer = static_cast< const char* >( buffer );
 
