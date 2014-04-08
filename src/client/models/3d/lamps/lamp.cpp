@@ -26,7 +26,7 @@ namespace como {
  ***/
 
 Lamp::Lamp( glm::vec3 position, glm::vec3 lightColor ) :
-    Mesh( "cube.obj" ) // TODO: Create a Lamp primitive.
+    Mesh( "data/primitives/system/camera.obj" ) // TODO: Create a Lamp primitive. And use a constant.
 {
     setPosition( position );
     setLightColor( lightColor );
