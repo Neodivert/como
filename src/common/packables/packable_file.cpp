@@ -135,10 +135,22 @@ const void* PackableFile::unpack( const void* buffer )
 {
     const char* castedBuffer = nullptr;
     char errorMessage[128];
+    char consoleCommand[128];
+    std::string filePathBaseName;
 
     // Unpack the file path and size, among other packables held by this
     // CompositePackable (parent class), from the given buffer.
     buffer = CompositePackable::unpack( buffer );
+
+    // Maybe the file being unpacked will be placed in a directory which
+    // doesn't exist. Create it.
+    filePathBaseName = filePath_.getValue();
+    filePathBaseName = filePathBaseName.substr( 0, filePathBaseName.rfind( '/' ) );
+
+    std::cout << "Creating directory [" << filePathBaseName << "] ..." << std::endl;
+    sprintf( consoleCommand, "mkdir -p \"%s\"", filePathBaseName.c_str() );
+    system( consoleCommand );
+    std::cout << "Creating directory [" << filePathBaseName << "] ...OK" << std::endl;
 
     // Unpack the file contents from the given buffer and write them to file.
     castedBuffer = static_cast< const char* >( buffer );
@@ -180,7 +192,7 @@ const void* PackableFile::unpack( const void* buffer ) const
     // Read the file contents for checking if they match the buffer contents.
     fileContents = new char[fileSize_.getValue()];
 
-    file_.open( filePath_.getValue(), std::ios_base::out | std::ios_base::binary );
+    file_.open( filePath_.getValue(), std::ios_base::in | std::ios_base::binary );
     file_.read( fileContents, fileSize_.getValue() );
 
     if( !file_ ){

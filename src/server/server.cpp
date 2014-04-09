@@ -384,7 +384,7 @@ void Server::createScenePrimitivesDirectory()
     // primitives directory.
     // TODO: Use a multiplatform alternative (boost::filesystem::copy_directory
     // doesn't copy directory's contents).
-    sprintf( consoleCommand, "cp -R \"%s\" \"%s\"", LOCAL_PRIMITIVES_DIR, scenePrimitivesDirectory );
+    sprintf( consoleCommand, "cp -RT \"%s\" \"%s\"", LOCAL_PRIMITIVES_DIR, scenePrimitivesDirectory );
     lastCommandResult = system( consoleCommand );
 
     // If there was any error creating the scene primitives directory, throw
@@ -406,11 +406,10 @@ void Server::initializePrimitives( const char* primitivesDir )
 {
     PrimitiveID primitiveID = 0;
     const char* fileName = nullptr;
-    const boost::filesystem::directory_iterator endIterator;
+    const boost::filesystem::recursive_directory_iterator endIterator;
+    boost::filesystem::recursive_directory_iterator fileIterator( primitivesDir );
 
     log_->debug( "Adding primitives to scene [", primitivesDir, "] ...\n" );
-
-    boost::filesystem::directory_iterator fileIterator( primitivesDir );
 
     for( ; fileIterator != endIterator; fileIterator++ ){
         if( boost::filesystem::is_regular_file( *fileIterator ) ){

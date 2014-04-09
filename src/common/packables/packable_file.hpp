@@ -24,6 +24,7 @@
 #include "packable_string.hpp"
 #include "packable_uint32.hpp"
 #include <fstream>
+#include <boost/filesystem.hpp>
 
 namespace como {
 

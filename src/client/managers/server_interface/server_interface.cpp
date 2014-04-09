@@ -243,6 +243,7 @@ void ServerInterface::work()
             exit = true;
         }catch( std::exception& ex ){
             // TODO: close the server correctly.
+            log_->debug( ex.what(), "\n" );
             throw ex;
         }
     }
