@@ -28,12 +28,14 @@
 // Drawable commands
 #include "drawable_commands/cube_creation_command.hpp"
 #include "drawable_commands/drawable_selection_command.hpp"
-#include "drawable_commands/primitive_creation_command.hpp"
 
 // Selection commands
 #include "selection_commands/full_deselection_command.hpp"
 #include "selection_commands/selection_response_command.hpp"
 #include "selection_commands/selection_transformation_command.hpp"
 #include "selection_commands/selection_deletion_command.hpp"
+
+// Primitive commands
+#include "primitive_commands/primitive_creation_command.hpp"
 
 #endif // COMMANDS_HPP

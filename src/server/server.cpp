@@ -330,19 +330,21 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
                     log_->debug( "Selecting drawable (", (int)( selectDrawable->getDrawableID().creatorID.getValue() ), ", ", (int)( selectDrawable->getDrawableID().drawableIndex.getValue() ), ")\n" );
                     users_.at( sceneCommand->getUserID() )->addSelectionResponse( drawableOwners_.at( selectDrawable->getDrawableID() ) == 0 );
                 break;
-                case DrawableCommandType::PRIMITIVE_CREATION:
-                    // PRIMITIVE_CREATION command received, cast its pointer.
-                    primitiveCreationCommand = dynamic_cast< const PrimitiveCreationCommand* >( sceneCommand.get() );
-
-                    // TODO: Complete, Save new primitive.
-                    log_->debug( "Primitive received [", primitiveCreationCommand->getFile()->getFilePath()->getValue(), "]\n" );
-                break;
             }
         break;
         case CommandTarget::SELECTION:
             if( ( dynamic_cast< const SelectionCommand* >( sceneCommand.get() ) )->getType() == SelectionCommandType::FULL_DESELECTION ){
                 // Unselect all.
                 unselectAll( sceneCommand->getUserID() );
+            }
+        break;
+        case CommandTarget::PRIMITIVE:
+            if( ( dynamic_cast< const PrimitiveCommand* >( sceneCommand.get() ) )->getType() == PrimitiveCommandType::PRIMITIVE_CREATION ){
+                // PRIMITIVE_CREATION command received, cast its pointer.
+                primitiveCreationCommand = dynamic_cast< const PrimitiveCreationCommand* >( sceneCommand.get() );
+
+                // TODO: Complete, Save new primitive.
+                log_->debug( "Primitive received [", primitiveCreationCommand->getFile()->getFilePath()->getValue(), "]\n" );
             }
         break;
     }
@@ -402,12 +404,9 @@ void Server::createScenePrimitivesDirectory()
 
 void Server::initializePrimitives( const char* primitivesDir )
 {
-    PackableDrawableID primitiveID;
+    PrimitiveID primitiveID = 0;
     const char* fileName = nullptr;
     const boost::filesystem::directory_iterator endIterator;
-
-    primitiveID.creatorID = 0;
-    primitiveID.drawableIndex = 0;
 
     log_->debug( "Adding primitives to scene [", primitivesDir, "] ...\n" );
 
@@ -421,7 +420,7 @@ void Server::initializePrimitives( const char* primitivesDir )
             addCommand( CommandConstPtr( new PrimitiveCreationCommand( fileName, 0, primitiveID ) ) );
             log_->debug( "\tAdding primitive [", fileName, "] to scene ...OK\n" );
 
-            primitiveID.drawableIndex.setValue( primitiveID.drawableIndex.getValue() + 1 );
+            primitiveID++;
         }
     }
 

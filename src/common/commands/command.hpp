@@ -35,7 +35,8 @@ enum class CommandTarget : std::uint8_t
 {
     USER = 0,
     DRAWABLE,
-    SELECTION
+    SELECTION,
+    PRIMITIVE
 };
 
 

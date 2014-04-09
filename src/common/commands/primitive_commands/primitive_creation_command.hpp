@@ -20,7 +20,7 @@
 #ifndef PRIMITIVE_CREATION_COMMAND_HPP
 #define PRIMITIVE_CREATION_COMMAND_HPP
 
-#include "drawable_command.hpp"
+#include "primitive_command.hpp"
 
 namespace como {
 
@@ -29,7 +29,7 @@ namespace como {
  *
  * \brief Command for creating a new primitive from a given file.
  */
-class PrimitiveCreationCommand : public DrawableCommand
+class PrimitiveCreationCommand : public PrimitiveCommand
 {
     private:
         /*! Primitive specification file. */
@@ -50,7 +50,7 @@ class PrimitiveCreationCommand : public DrawableCommand
          * \param userID ID of the user who created / shared the primitive.
          * \param drawableID Unique ID given to the new primitive.
          */
-        PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, PackableDrawableID drawableID );
+        PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, PrimitiveID primitiveID );
 
         /*! \brief Copy assignment operator */
         PrimitiveCreationCommand( const PrimitiveCreationCommand& ) = default;
@@ -78,7 +78,11 @@ class PrimitiveCreationCommand : public DrawableCommand
         /***
          * 4. Operators
          ***/
+
+        /*! \brief Copy assignment operator */
         PrimitiveCreationCommand& operator=( const PrimitiveCreationCommand& ) = delete;
+
+        /*! \brief Move assignment operator */
         PrimitiveCreationCommand& operator=( PrimitiveCreationCommand&& ) = delete;
 };
 

@@ -59,9 +59,10 @@ HEADERS += \
     ../../src/common/packets/packet_header.hpp \
     ../../src/common/commands/packable_commands_list.hpp \
     ../../src/common/packables/packable_file.hpp \
-    ../../src/common/commands/drawable_commands/primitive_creation_command.hpp \
+    ../../src/common/commands/primitive_commands/primitive_creation_command.hpp \
     ../../src/common/packables/packable_array.hpp \
     ../../src/common/packables/packable_integer.hpp \
+    ../../src/common/commands/primitive_commands/primitive_command.hpp
 
 
 # Common sources (used by both client and server).
@@ -91,4 +92,5 @@ SOURCES += \
     ../../src/common/packets/packet_header.cpp \
     ../../src/common/commands/packable_commands_list.cpp \
     ../../src/common/packables/packable_file.cpp \
-    ../../src/common/commands/drawable_commands/primitive_creation_command.cpp
+    ../../src/common/commands/primitive_commands/primitive_creation_command.cpp \
+    ../../src/common/commands/primitive_commands/primitive_command.cpp

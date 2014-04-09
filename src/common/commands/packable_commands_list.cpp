@@ -93,9 +93,6 @@ const void* PackableCommandsList::unpack( const void* buffer )
                     case DrawableCommandType::DRAWABLE_SELECTION:
                         command = CommandPtr( new DrawableSelectionCommand );
                     break;
-                    case DrawableCommandType::PRIMITIVE_CREATION:
-                        command = CommandPtr( new PrimitiveCreationCommand );
-                    break;
                 }
             break;
 
@@ -113,6 +110,15 @@ const void* PackableCommandsList::unpack( const void* buffer )
                     break;
                     case SelectionCommandType::SELECTION_TRANSFORMATION:
                         command = CommandPtr( new SelectionTransformationCommand );
+                    break;
+                }
+            break;
+
+            // Primitive commands.
+            case CommandTarget::PRIMITIVE:
+                switch( PrimitiveCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 3 ) ){ // TODO: buffer+3 is ugly.
+                    case PrimitiveCommandType::PRIMITIVE_CREATION:
+                        command = CommandPtr( new PrimitiveCreationCommand );
                     break;
                 }
             break;

@@ -842,7 +842,6 @@ void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
 {
     const CubeCreationCommand* createCube = nullptr;
     const DrawableSelectionCommand* selectDrawable = nullptr;
-    const PrimitiveCreationCommand * primitiveCreationCommand = nullptr;
 
     switch( command->getType() ){
         case DrawableCommandType::CUBE_CREATION:
@@ -860,19 +859,6 @@ void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
 
             // Select drawable.
             this->selectDrawable( selectDrawable->getDrawableID(), selectDrawable->getUserID() );
-        break;
-
-        case DrawableCommandType::PRIMITIVE_CREATION:
-            // Cast to a PRIMITIVE_SELECTION command.
-            primitiveCreationCommand = dynamic_cast< const PrimitiveCreationCommand* >( command.get() );
-
-            // TODO: Complete, make things.
-            log_->debug( "Primitive file received: [", primitiveCreationCommand->getFile()->getFilePath()->getValue(), "]\n" );
-
-            // Emit a signal indicating the primitive insertion. Include
-            // primitive's name and ID in the signal.
-            emit primitiveAdded( tr( primitiveCreationCommand->getFile()->getFilePath()->getValue() ),
-                                 primitiveCreationCommand->getDrawableID() );
         break;
     }
 }
@@ -938,6 +924,27 @@ void Scene::executeRemoteSelectionCommand( SelectionCommandConstPtr command )
     }
 }
 
+void Scene::executeRemotePrimitiveCommand( PrimitiveCommandConstPtr command )
+{
+    const PrimitiveCreationCommand * primitiveCreationCommand = nullptr;
+
+    switch( command->getType() ){
+        case PrimitiveCommandType::PRIMITIVE_CREATION:
+            // Cast to a PRIMITIVE_SELECTION command.
+            primitiveCreationCommand = dynamic_cast< const PrimitiveCreationCommand* >( command.get() );
+
+            // TODO: Complete, make things.
+            log_->debug( "Primitive file received: [", primitiveCreationCommand->getFile()->getFilePath()->getValue(), "]\n" );
+
+            // Emit a signal indicating the primitive insertion. Include
+            // primitive's name and ID in the signal.
+            emit primitiveAdded( tr( primitiveCreationCommand->getFile()->getFilePath()->getValue() ),
+                                 primitiveCreationCommand->getPrimitiveID() );
+        break;
+    }
+}
+
+
 void Scene::executeRemoteCommand( CommandConstPtr command )
 {
     log_->debug( "Scene - Executing remote command(",
@@ -953,6 +960,9 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
         break;
         case CommandTarget::SELECTION:
             executeRemoteSelectionCommand( dynamic_pointer_cast< const SelectionCommand>( command ) );
+        break;
+        case CommandTarget::PRIMITIVE:
+            executeRemotePrimitiveCommand( dynamic_pointer_cast< const PrimitiveCommand>( command ) );
         break;
     }
 
