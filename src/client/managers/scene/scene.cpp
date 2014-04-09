@@ -330,7 +330,7 @@ void Scene::takeOpenGLContext()
 }
 
 
-void Scene::addPrimitive( const char* primitiveFile, QColor color )
+void Scene::addMesh( PrimitiveID primitiveID, QColor color )
 {
     std::uint8_t color8[4];
     int r, g, b;
@@ -345,11 +345,11 @@ void Scene::addPrimitive( const char* primitiveFile, QColor color )
     color8[3] = 255;
 
     // Add the primitive to the scene.
-    addPrimitive( primitiveFile, color8 );
+    addMesh( primitiveID, color8 );
 }
 
 
-void Scene::addPrimitive( const char* primitiveFile, const std::uint8_t* color )
+void Scene::addMesh( PrimitiveID primitiveID, const std::uint8_t* color )
 {
     PackableDrawableID drawableID;
 
@@ -361,20 +361,22 @@ void Scene::addPrimitive( const char* primitiveFile, const std::uint8_t* color )
     localUserNextDrawableIndex_++;
 
     // Create the primitive and add it to the scene.
-    addPrimitive( primitiveFile, color, drawableID );
+    addMesh( primitiveID, color, drawableID );
 
     // Send the command to the server.
-    server_.sendCommand( CommandConstPtr( new CubeCreationCommand( localUserID_, drawableID, color ) ) );
+    server_.sendCommand( CommandConstPtr( new MeshCreationCommand( localUserID_, drawableID, primitiveID, color ) ) );
 }
 
 
-void Scene::addPrimitive( const char* primitiveName, const std::uint8_t* color, PackableDrawableID drawableID )
+void Scene::addMesh( PrimitiveID primitiveID, const std::uint8_t* color, PackableDrawableID drawableID )
 {
     try {
         takeOpenGLContext();
 
+        log_->debug( "Adding primitive (", primitivePaths_.at( primitiveID ), ") to scene\n" );
+
         // Create the cube.
-        DrawablePtr drawable = DrawablePtr( new Mesh( primitiveName, color ) );
+        DrawablePtr drawable = DrawablePtr( new Mesh( primitivePaths_.at( primitiveID ).c_str(), color ) );
 
         // Add the cube to the scene.
         addDrawable( drawable, drawableID );
@@ -840,17 +842,16 @@ void Scene::executeRemoteUserCommand( UserCommandConstPtr command )
 
 void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
 {
-    const CubeCreationCommand* createCube = nullptr;
+    const MeshCreationCommand* meshCreationCommand = nullptr;
     const DrawableSelectionCommand* selectDrawable = nullptr;
 
     switch( command->getType() ){
-        case DrawableCommandType::CUBE_CREATION:
-            // Cast to a CUBE_CREATION command.
-            createCube = dynamic_cast< const CubeCreationCommand* >( command.get() );
+        case DrawableCommandType::MESH_CREATION:
+            // Cast to a MESH_CREATION command.
+            meshCreationCommand = dynamic_cast< const MeshCreationCommand* >( command.get() );
 
-            // Add cube to the scene.
-            // TODO: Remove.
-            addPrimitive( "data/primitives/system/camera.obj", createCube->getColor(), createCube->getDrawableID() );
+            // Add mesh to the scene.
+            addMesh( meshCreationCommand->getPrimitiveID(), meshCreationCommand->getColor(), meshCreationCommand->getDrawableID() );
         break;
 
         case DrawableCommandType::DRAWABLE_SELECTION:
@@ -935,6 +936,10 @@ void Scene::executeRemotePrimitiveCommand( PrimitiveCommandConstPtr command )
 
             // TODO: Complete, make things.
             log_->debug( "Primitive file received: [", primitiveCreationCommand->getFile()->getFilePath()->getValue(), "]\n" );
+
+            // Create a new entry (ID, path) for the recently added primitive.
+            primitivePaths_[primitiveCreationCommand->getPrimitiveID()] =
+                    std::string( primitiveCreationCommand->getFile()->getFilePath()->getValue() );
 
             // Emit a signal indicating the primitive insertion. Include
             // primitive's name and ID in the signal.

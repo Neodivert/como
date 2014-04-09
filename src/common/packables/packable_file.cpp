@@ -147,10 +147,8 @@ const void* PackableFile::unpack( const void* buffer )
     filePathBaseName = filePath_.getValue();
     filePathBaseName = filePathBaseName.substr( 0, filePathBaseName.rfind( '/' ) );
 
-    std::cout << "Creating directory [" << filePathBaseName << "] ..." << std::endl;
     sprintf( consoleCommand, "mkdir -p \"%s\"", filePathBaseName.c_str() );
     system( consoleCommand );
-    std::cout << "Creating directory [" << filePathBaseName << "] ...OK" << std::endl;
 
     // Unpack the file contents from the given buffer and write them to file.
     castedBuffer = static_cast< const char* >( buffer );

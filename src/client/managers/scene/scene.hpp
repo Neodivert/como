@@ -86,6 +86,9 @@ class Scene : public QOffscreenSurface
         // Interface with the server.
         ServerInterface server_;
 
+        // Map ID - PrimitivePath.
+        std::map< PrimitiveID, std::string > primitivePaths_;
+
     private:
         // Scene's non selected drawables.
         DrawablesSelection nonSelectedDrawables;
@@ -156,9 +159,9 @@ class Scene : public QOffscreenSurface
         void addDrawable( DrawablePtr drawable, PackableDrawableID drawableID );
         void takeOpenGLContext();
     public:
-        void addPrimitive( const char* primitiveFile, QColor color );
-        void addPrimitive( const char* primitiveFile, const std::uint8_t* color );
-        void addPrimitive( const char* primitiveFile, const std::uint8_t* color, PackableDrawableID drawableID );
+        void addMesh( PrimitiveID primitiveID, QColor color );
+        void addMesh( PrimitiveID primitiveID, const std::uint8_t* color );
+        void addMesh( PrimitiveID primitiveID, const std::uint8_t* color, PackableDrawableID drawableID );
 
         //void addDrawable( DrawableType drawableType );
         //void addDrawable( DrawableType drawableType, PackableDrawableID drawableID );

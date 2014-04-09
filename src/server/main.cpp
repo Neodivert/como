@@ -51,8 +51,6 @@ int main( int argc, char* argv[] )
             throw std::runtime_error( errorCode.message() );
         }
 
-        std::cout << boost::filesystem::current_path() << std::endl;
-
         // Run the server.
         como::Server server( atoi( argv[1] ), atoi( argv[2] ), argv[3], 1 );
         server.run();

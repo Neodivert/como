@@ -301,7 +301,7 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
 
 void Server::processSceneCommand( CommandConstPtr sceneCommand )
 {
-    const CubeCreationCommand* createCube = nullptr;
+    const MeshCreationCommand* meshCreationCommand = nullptr;
     const PrimitiveCreationCommand* primitiveCreationCommand = nullptr;
     const DrawableSelectionCommand* selectDrawable = nullptr;
 
@@ -310,15 +310,17 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
         break;
         case CommandTarget::DRAWABLE:
             switch( ( dynamic_cast< const DrawableCommand* >( sceneCommand.get() ) )->getType() ){
-                case DrawableCommandType::CUBE_CREATION:
-                    // CUBE_CREATION command received, cast its pointer.
-                    createCube = dynamic_cast< const CubeCreationCommand* >( sceneCommand.get() );
+                case DrawableCommandType::MESH_CREATION:
+                    // MESH_CREATION command received, cast its pointer.
+                    meshCreationCommand = dynamic_cast< const MeshCreationCommand* >( sceneCommand.get() );
 
                     // Add a node to the Drawable Owners map for the recently added
                     // cube. Mark it with a 0 (no owner).
-                    drawableOwners_[createCube->getDrawableID()] = 0;
+                    drawableOwners_[meshCreationCommand->getDrawableID()] = 0;
 
-                    log_->debug( "Cube added! (", (int)( createCube->getDrawableID().creatorID.getValue() ), ", ", (int)( createCube->getDrawableID().drawableIndex.getValue() ), ")\n" );
+                    log_->debug( "Mesh added! (", (int)( meshCreationCommand->getDrawableID().creatorID.getValue() ),
+                                 ", ", (int)( meshCreationCommand->getDrawableID().drawableIndex.getValue() ),
+                                 ") - Primitive: [", (int)( meshCreationCommand->getPrimitiveID() ), "\n" );
                 break;
                 case DrawableCommandType::DRAWABLE_SELECTION:
                     // DRAWABLE_SELECTION command received, cast its pointer.

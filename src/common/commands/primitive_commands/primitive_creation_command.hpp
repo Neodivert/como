@@ -53,7 +53,7 @@ class PrimitiveCreationCommand : public PrimitiveCommand
         PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, PrimitiveID primitiveID );
 
         /*! \brief Copy assignment operator */
-        PrimitiveCreationCommand( const PrimitiveCreationCommand& ) = default;
+        PrimitiveCreationCommand( const PrimitiveCreationCommand& );
 
         /*! \brief Move assignment operator */
         PrimitiveCreationCommand( PrimitiveCreationCommand&& ) = delete;

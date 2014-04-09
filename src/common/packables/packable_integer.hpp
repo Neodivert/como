@@ -22,6 +22,7 @@
 
 #include "packable.hpp"
 #include <cstdint>
+#include <typeinfo> // TODO: Remove.
 
 namespace como {
 
@@ -46,7 +47,7 @@ class PackableInteger : public Packable {
          ***/
 
         /*! \brief Default constructor */
-        PackableInteger() = default;
+        PackableInteger() : value_( static_cast< UnpackedType >( 0 ) ){}
 
         /*!
          * \brief Constructs a PackableInteger from the given value.
@@ -184,6 +185,7 @@ template <class PackedType, class UnpackedType>
 const void* PackableInteger<PackedType, UnpackedType>::unpack( const void* buffer ) const
 {
     PackedType networkValue;
+    char errorMessage[128];
 
     // Cast buffer to the UnpackedType type.
     const PackedType* castedBuffer = static_cast< const PackedType* >( buffer );
@@ -198,7 +200,8 @@ const void* PackableInteger<PackedType, UnpackedType>::unpack( const void* buffe
 
     // If the unpacked value isn't the expected one, throw an exception.
     if( static_cast< UnpackedType >( networkValue ) != value_ ){
-        throw std::runtime_error( "ERROR: Unpacked an unexpected PackableUint16" );
+        sprintf( errorMessage, "ERROR: Unpacked an unexpected unsigned integer. Expected value (%u), unpacked value (%u)", value_, static_cast< UnpackedType >( networkValue ) );
+        throw std::runtime_error( errorMessage );
     }
 
     // Return a pointer to the next position in buffer.

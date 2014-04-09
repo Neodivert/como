@@ -28,8 +28,8 @@ PackableCommandsList::PackableCommandsList( const PackableCommandsList& b ) :
     commands_( b.commands_ )
 {
     /*
-     * We don't call CompositePackable here because we can't predict which
-     * types of commands we'll read every time.
+     * We don't call CompositePackable::addPackable here because we can't
+     * predict which types of commands we'll receive every time.
      */
 }
 
@@ -87,8 +87,8 @@ const void* PackableCommandsList::unpack( const void* buffer )
             // Drawable commands
             case CommandTarget::DRAWABLE:
                 switch( DrawableCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 3 ) ){ // TODO: buffer+3 is ugly.
-                    case DrawableCommandType::CUBE_CREATION:
-                        command =  CommandPtr( new CubeCreationCommand );
+                    case DrawableCommandType::MESH_CREATION:
+                        command =  CommandPtr( new MeshCreationCommand );
                     break;
                     case DrawableCommandType::DRAWABLE_SELECTION:
                         command = CommandPtr( new DrawableSelectionCommand );

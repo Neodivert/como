@@ -22,21 +22,8 @@ glm::mat4 Camera::getViewMatrix() const
 {
     return viewMatrix;
 }
-/*
-void foo( char* str, glm::mat4 M )
-{
-    glm::vec4 eye = M * glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
-    glm::vec4 up = M * glm::vec4( 0.0f, 1.0f, 0.0f, 1.0f );
-    glm::vec4 center = M * glm::vec4( 0.0f, 0.0f, -1.0f, 1.0f );
 
-    cout << str << endl
-         << "---" << endl
-         << "Transformed eye: (" << eye.x << ", " << eye.y << ", " << eye.z << ")" << endl
-         << "Transformed up (" << up.x << ", " << up.y << ", " << up.z << ")" << endl
-         << "Transformed center (" << center.x << ", " << center.y << ", " << center.z << endl
-         << "---" << endl;
-}
-*/
+
 void Camera::setView( View view )
 {
     const glm::vec3 X_AXIS = glm::vec3( 1.0f, 0.0f, 0.0f );

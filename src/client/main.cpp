@@ -58,8 +58,6 @@ int main( int argc, char *argv[] )
         throw std::runtime_error( errorCode.message() );
     }
 
-    std::cout << boost::filesystem::current_path() << std::endl;
-
     // Create the COMO app.
     std::shared_ptr< como::ComoApp > comoApp( new como::ComoApp );
 

@@ -139,9 +139,9 @@ QFrame* ToolsMenu::createPrimitiveCreationMenu()
 
     // Signal / Slot connection: when one of the creation buttons is pressed,
     // create a drawable of the chosen type.
-    void (QComboBox::*activated)( const QString& ) = &QComboBox::activated;
-    connect( primitiveCreationSelector, activated, [this]( const QString& primitiveName ) {
-        comoApp->getScene()->addPrimitive( primitiveName.toLocal8Bit().data(), getCurrentColor() );
+    void (QComboBox::*activated)( int ) = &QComboBox::activated;
+    connect( primitiveCreationSelector, activated, [this]( int primitiveID ) {
+        comoApp->getScene()->addMesh( static_cast< PrimitiveID >( primitiveID ), getCurrentColor() );
     } );
 
     // Signal / Slot connection: when a new primitive is created in the scene,

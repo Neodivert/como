@@ -23,6 +23,15 @@ PrimitiveCreationCommand::PrimitiveCreationCommand( PackableString< NAME_SIZE > 
 }
 
 
+PrimitiveCreationCommand::PrimitiveCreationCommand( const PrimitiveCreationCommand& b ) :
+    PrimitiveCommand( b ),
+    file_( b.file_ )
+{
+    // Register the primitive's file as part of this CompositePackable.
+    addPackable( &file_ );
+}
+
+
 /***
  * 3. Getters
  ***/

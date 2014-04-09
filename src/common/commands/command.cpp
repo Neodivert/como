@@ -36,7 +36,7 @@ Command::Command( CommandTarget commandTarget, UserID userID ) :
 
 
 Command::Command( const Command& b ) :
-    CompositePackable(), // TODO: Maybe is better to implement a empty CompositePackable copy constructor?
+    CompositePackable( b ),
     commandTarget_( b.commandTarget_ ),
     userID_( b.userID_ )
 {

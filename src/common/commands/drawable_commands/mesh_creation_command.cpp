@@ -17,7 +17,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "cube_creation_command.hpp"
+#include "mesh_creation_command.hpp"
 
 namespace como {
 
@@ -26,24 +26,30 @@ namespace como {
  * 1. Construction
  ***/
 
-CubeCreationCommand::CubeCreationCommand() :
-    DrawableCommand( DrawableCommandType::CUBE_CREATION, 0, NULL_DRAWABLE_ID )
+MeshCreationCommand::MeshCreationCommand() :
+    DrawableCommand( DrawableCommandType::MESH_CREATION, 0, NULL_DRAWABLE_ID )
 {
+    addPackable( &primitiveID_ );
     addPackable( &color_ );
 }
 
-CubeCreationCommand::CubeCreationCommand( UserID userID, PackableDrawableID drawableID, const std::uint8_t* color ) :
-    DrawableCommand( DrawableCommandType::CUBE_CREATION, userID, drawableID )
+
+MeshCreationCommand::MeshCreationCommand( UserID userID, PackableDrawableID drawableID, PrimitiveID primitiveID, const std::uint8_t* color ) :
+    DrawableCommand( DrawableCommandType::MESH_CREATION, userID, drawableID ),
+    primitiveID_( primitiveID )
 {
     setColor( color );
 
+    addPackable( &primitiveID_ );
     addPackable( &color_ );
 }
 
-CubeCreationCommand::CubeCreationCommand( const CubeCreationCommand& b ) :
+
+MeshCreationCommand::MeshCreationCommand( const MeshCreationCommand& b ) :
     DrawableCommand( b ),
     color_( b.color_ )
 {
+    addPackable( &primitiveID_ );
     addPackable( &color_ );
 }
 
@@ -52,7 +58,13 @@ CubeCreationCommand::CubeCreationCommand( const CubeCreationCommand& b ) :
  * 3. Getters
  ***/
 
-const std::uint8_t* CubeCreationCommand::getColor() const
+PrimitiveID MeshCreationCommand::getPrimitiveID() const
+{
+    return primitiveID_.getValue();
+}
+
+
+const std::uint8_t* MeshCreationCommand::getColor() const
 {
     return color_.getValue();
 }
@@ -62,7 +74,7 @@ const std::uint8_t* CubeCreationCommand::getColor() const
  * 4. Setters
  ***/
 
-void CubeCreationCommand::setColor( const std::uint8_t* color )
+void MeshCreationCommand::setColor( const std::uint8_t* color )
 {
     color_ = color;
 }
