@@ -24,11 +24,11 @@
 
 namespace como {
 
-const unsigned int PACK_STRING_SIZE = 32;
+const unsigned int PACK_STRING_SIZE = 64; // TODO: Delete this and use a dynamic string.
 
 
 /*!
- * \class PackableUint8
+ * \class PackableVector4
  *
  * \brief Vector of four float values that can be packed into / unpacked from
  * a given buffer.

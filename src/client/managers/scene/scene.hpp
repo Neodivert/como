@@ -36,6 +36,8 @@ Q_DECLARE_METATYPE( como::CommandConstPtr )
 
 namespace como {
 
+const unsigned int TRANSFORMATION_FLOAT_PRECISION = 10000;
+
 // Available drawable types.
 enum class DrawableType
 {

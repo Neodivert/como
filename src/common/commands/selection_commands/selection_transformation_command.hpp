@@ -33,8 +33,6 @@ enum class SelectionTransformationCommandType : std::uint8_t
 };
 typedef PackableUint8< SelectionTransformationCommandType > PackableSelectionTransformationCommandType;
 
-const unsigned int TRANSFORMATION_MAGNITUDE_STR_SIZE = 32;
-
 
 class SelectionTransformationCommand : public SelectionCommand
 {

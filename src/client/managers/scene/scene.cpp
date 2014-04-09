@@ -985,9 +985,9 @@ void Scene::roundTransformationMagnitude( float& vx, float& vy, float& vz )
 {
     // Round transformation magnitude to 3 decimal places.
     // http://stackoverflow.com/questions/1343890/rounding-number-to-2-decimal-places-in-c
-    vx = floorf( vx * 1000 + 0.5f) / 1000;
-    vy = floorf( vy * 1000 + 0.5f) / 1000;
-    vz = floorf( vz * 1000 + 0.5f) / 1000;
+    vx = floorf( vx * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
+    vy = floorf( vy * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
+    vz = floorf( vz * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
 }
 
 
@@ -995,10 +995,10 @@ void Scene::roundTransformationMagnitude( float& angle, float& vx, float& vy, fl
 {
     // Round transformation magnitude to 3 decimal places.
     // http://stackoverflow.com/questions/1343890/rounding-number-to-2-decimal-places-in-c
-    angle = floorf( angle * 1000 + 0.5) / 1000;
-    vx = floorf( vx * 1000 + 0.5f) / 1000;
-    vy = floorf( vy * 1000 + 0.5f) / 1000;
-    vz = floorf( vz * 1000 + 0.5f) / 1000;
+    angle = floorf( angle * TRANSFORMATION_FLOAT_PRECISION + 0.5) / TRANSFORMATION_FLOAT_PRECISION;
+    vx = floorf( vx * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
+    vy = floorf( vy * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
+    vz = floorf( vz * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
 }
 
 
