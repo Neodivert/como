@@ -38,6 +38,9 @@ class ToolsMenu : public QFrame
         // Current color (used when creating new drawables)
         QColor currentColor_;
 
+        // Current ambient light color.
+        QColor currentAmbientLightColor_;
+
         // Label indicating the current color.
         QLabel* currentColorLabel_;
 
@@ -56,6 +59,7 @@ class ToolsMenu : public QFrame
         QFrame* createPrimitiveCreationMenu();
         QGroupBox* createPivotPointModeSelector();
         QFrame* createColorSelector();
+        QFrame* createAmbientLightColorSelector();
 
 
         /***
@@ -79,6 +83,7 @@ class ToolsMenu : public QFrame
         void changeCurrentColor();
 
     signals:
+        void currentAmbientLightColorChanged( QColor newColor );
         void currentColorChanged( QColor newColor );
 };
 

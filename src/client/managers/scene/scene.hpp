@@ -30,7 +30,7 @@
 #include "../../models/utilities/msl/src/shader_loader.hpp"
 #include "../../models/3d/drawables_selection.hpp"
 #include <queue>
-#include "../../models/3d/lamps/lamps.hpp"
+#include "../../models/3d/lights/lights.hpp"
 
 Q_DECLARE_METATYPE( como::CommandConstPtr )
 
@@ -238,6 +238,7 @@ class Scene : public QOffscreenSurface
 
     public slots:
         void executeRemoteCommand( CommandConstPtr command );
+        void setAmbientLight( glm::vec3 ambientLight );
 
         /***
          * 12. Auxiliar methods

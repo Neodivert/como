@@ -17,19 +17,19 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef DIRECTIONAL_LAMP_HPP
-#define DIRECTIONAL_LAMP_HPP
+#ifndef DIRECTIONAL_LIGHT_HPP
+#define DIRECTIONAL_LIGHT_HPP
 
-#include "lamp.hpp"
+#include "light.hpp"
 
 namespace como {
 
 /*!
- * \class DirectionalLamp
+ * \class DirectionalLight
  *
- * \brief A far, far away lamp.
+ * \brief A far, far away Light.
  */
-class DirectionalLamp : public Lamp
+class DirectionalLight : public Light
 {
     public:
         /***
@@ -37,16 +37,16 @@ class DirectionalLamp : public Lamp
          ***/
 
         /*!
-         * \brief Constructs a directional lamp at the given position and with
+         * \brief Constructs a directional Light at the given position and with
          * the specified light color
          */
-        DirectionalLamp( glm::vec3 position, glm::vec3 lightColor );
+        DirectionalLight( glm::vec3 position, glm::vec3 lightColor );
 
         /*! \brief Copy constructor */
-        DirectionalLamp( const DirectionalLamp& ) = default;
+        DirectionalLight( const DirectionalLight& ) = default;
 
         /*! \brief Move constructor */
-        DirectionalLamp( DirectionalLamp&& ) = default;
+        DirectionalLight( DirectionalLight&& ) = default;
 
 
         /***
@@ -54,14 +54,14 @@ class DirectionalLamp : public Lamp
          ***/
 
         /*! \brief Destructor */
-        ~DirectionalLamp() = default; // TODO: Destroy lamp in shader.
+        ~DirectionalLight() = default; // TODO: Destroy Light in shader.
 
 
         /***
          * 3. Setters
          ***/
 
-        /*! \brief Move Lamp to the given position */
+        /*! \brief Move Light to the given position */
         virtual void setPosition( const glm::vec3& position );
 
 
@@ -70,12 +70,12 @@ class DirectionalLamp : public Lamp
          ***/
 
         /*! \brief Copy assignment operator */
-        Lamp& operator=( const Lamp& ) = delete ;
+        DirectionalLight& operator=( const DirectionalLight& ) = delete ;
 
         /*! \brief Move assignment operator */
-        Lamp& operator=( Lamp&& ) = delete;
+        DirectionalLight& operator=( DirectionalLight&& ) = delete;
 };
 
 } // namespace como
 
-#endif // DIRECTIONAL_LAMP_HPP
+#endif // DIRECTIONAL_LIGHT_HPP

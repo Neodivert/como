@@ -17,7 +17,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "directional_lamp.hpp"
+#include "directional_light.hpp"
 
 namespace como {
 
@@ -25,8 +25,8 @@ namespace como {
  * 1. Construction
  ***/
 
-DirectionalLamp::DirectionalLamp( glm::vec3 position, glm::vec3 lightColor ) :
-    Lamp( position, lightColor )
+DirectionalLight::DirectionalLight( glm::vec3 position, glm::vec3 lightColor ) :
+    Light( position, lightColor )
 {}
 
 
@@ -34,7 +34,7 @@ DirectionalLamp::DirectionalLamp( glm::vec3 position, glm::vec3 lightColor ) :
  * 3. Setters
  ***/
 
-void DirectionalLamp::setPosition( const glm::vec3& position )
+void DirectionalLight::setPosition( const glm::vec3& position )
 {
     Q_UNUSED( position );
 }

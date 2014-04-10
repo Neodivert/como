@@ -17,25 +17,25 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef LAMP_HPP
-#define LAMP_HPP
+#ifndef LIGHT_HPP
+#define LIGHT_HPP
 
 #include "../mesh.hpp"
 
 namespace como {
 
 /*!
- * \class Lamp
+ * \class Light
  *
- * \brief Base class for all type of lamps.
+ * \brief Base class for all type of Lights.
  */
-class Lamp : public Mesh
+class Light : public Mesh
 {
     private:
-        /*! Lamp position */
+        /*! Light position */
         glm::vec3 position_;
 
-        /*! Lamp's light color */
+        /*! Light's light color */
         glm::vec3 lightColor_;
 
     public:
@@ -44,16 +44,16 @@ class Lamp : public Mesh
          ***/
 
         /*!
-         * \brief Constructs a lamp at the given position and with the
+         * \brief Constructs a Light at the given position and with the
          * specified light color
          */
-        Lamp( glm::vec3 position, glm::vec3 lightColor );
+        Light( glm::vec3 position, glm::vec3 lightColor );
 
         /*! \brief Copy constructor */
-        Lamp( const Lamp& ) = default;
+        Light( const Light& ) = default;
 
         /*! \brief Move constructor */
-        Lamp( Lamp&& ) = default;
+        Light( Light&& ) = default;
 
 
         /***
@@ -61,17 +61,17 @@ class Lamp : public Mesh
          ***/
 
         /*! \brief Destructor */
-        ~Lamp() = default; // TODO: Destroy lamp in shader.
+        ~Light() = default; // TODO: Destroy Light in shader.
 
 
         /***
          * 3. Getters
          ***/
 
-        /*! \brief Get Lamp's position */
+        /*! \brief Get Light's position */
         glm::vec3 getPosition();
 
-        /*! \brief Get Lamp's light color */
+        /*! \brief Get Light's light color */
         glm::vec3 getLightColor();
 
 
@@ -80,12 +80,15 @@ class Lamp : public Mesh
          ***/
 
         // TODO: Use Mesh::translate.
-        /*! \brief Move Lamp to the given position */
+        /*! \brief Move Light to the given position */
         virtual void setPosition( const glm::vec3& position );
 
 
-        /*! \brief Set Lamp's light color */
+        /*! \brief Set Light's light color */
         void setLightColor( const glm::vec3& color );
+
+        /*! \brief Set Ambient light */
+        static void setAmbientLight( const glm::vec3& color );
 
 
         /***
@@ -93,12 +96,12 @@ class Lamp : public Mesh
          ***/
 
         /*! \brief Copy assignment operator */
-        Lamp& operator=( const Lamp& ) = delete ;
+        Light& operator=( const Light& ) = delete ;
 
         /*! \brief Move assignment operator */
-        Lamp& operator=( Lamp&& ) = delete;
+        Light& operator=( Light&& ) = delete;
 };
 
 } // namespace como
 
-#endif // LAMP_HPP
+#endif // LIGHT_HPP

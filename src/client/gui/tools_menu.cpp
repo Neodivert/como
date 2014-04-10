@@ -29,7 +29,8 @@ namespace como {
 
 ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     QFrame( parent ),
-    currentColor_( 255, 0, 0, 255 )
+    currentColor_( 255, 0, 0, 255 ),
+    currentAmbientLightColor_( 255, 0, 0, 255 )
 {
     QVBoxLayout* layout;
     QLabel* toolsMenuLabel;
@@ -116,6 +117,7 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     layout->addWidget( createPivotPointModeSelector() );
     layout->addWidget( createPrimitiveCreationMenu() );
     layout->addWidget( createColorSelector() );
+    layout->addWidget( createAmbientLightColorSelector() );
     setLayout( layout );
 }
 
@@ -214,6 +216,57 @@ QFrame* ToolsMenu::createColorSelector()
     // Set the frame's layout.
     layout = new QVBoxLayout;
     layout->addWidget( currentColorLabel_ );
+    layout->addWidget( selectColorButton );
+    colorSelectorFrame->setLayout( layout );
+
+    // Return the frame.
+    return colorSelectorFrame;
+}
+
+
+QFrame* ToolsMenu::createAmbientLightColorSelector()
+{
+    QPushButton* selectColorButton = nullptr;
+    QFrame* colorSelectorFrame = nullptr;
+    QVBoxLayout* layout = nullptr;
+    QLabel* currentColorLabel = nullptr;
+
+    // Create the frame that whill hold the color's button and label.
+    colorSelectorFrame = new QFrame( this );
+
+    // Create a label showing the current selected color. The color name will
+    // be colored in that color.
+    currentColorLabel = new QLabel( "Current ambient light color: <font color=\"" + currentAmbientLightColor_.name() + "\">" + currentAmbientLightColor_.name() + "</font>" );
+
+    // Signal / Slot connection. When the current color changes, change the
+    // previous label's text accordingly.
+    QObject::connect( this, &ToolsMenu::currentAmbientLightColorChanged, [=]( QColor newColor ){
+        currentColorLabel->setText( "Current color: <font color=\"" + newColor.name() + "\">" + newColor.name() + "</font>" );
+
+        comoApp->getScene()->setAmbientLight( glm::vec3( newColor.red() / 255.0f, newColor.green() / 255.0f, newColor.blue() / 255.0f ) );
+    });
+
+    // Create a button for changing the current color.
+    selectColorButton = new QPushButton( tr( "Select color" ) );
+
+    // Signal / Slot connection. When previous button is clicked, we invoke the
+    // changeCurrentColor method.
+    QObject::connect( selectColorButton, &QPushButton::clicked, [this](){
+        // Open a dialog for selecting a new color.
+        currentAmbientLightColor_ = QColorDialog::getColor( currentAmbientLightColor_ );
+
+        // If the selected color is not valid, change it to red.
+        if( !( currentAmbientLightColor_.isValid() ) ){
+            currentAmbientLightColor_.setRgb( 255, 0, 0 );
+        }
+
+        // Emit a signal indicating that the current color has changed.
+        emit currentAmbientLightColorChanged( currentAmbientLightColor_ );
+    });
+
+    // Set the frame's layout.
+    layout = new QVBoxLayout;
+    layout->addWidget( currentColorLabel );
     layout->addWidget( selectColorButton );
     colorSelectorFrame->setLayout( layout );
 

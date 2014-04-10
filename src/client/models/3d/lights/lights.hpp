@@ -17,51 +17,9 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "lamp.hpp"
+#ifndef LAMPS_HPP
+#define LAMPS_HPP
 
-namespace como {
+#include "directional_light.hpp"
 
-/***
- * 1. Construction
- ***/
-
-Lamp::Lamp( glm::vec3 position, glm::vec3 lightColor ) :
-    Mesh( "data/primitives/system/camera.obj" ) // TODO: Create a Lamp primitive. And use a constant.
-{
-    setPosition( position );
-    setLightColor( lightColor );
-}
-
-
-/***
- * 3. Getters
- ***/
-
-glm::vec3 Lamp::getPosition()
-{
-    return position_;
-}
-
-
-glm::vec3 Lamp::getLightColor()
-{
-    return lightColor_;
-}
-
-
-/***
- * 4. Setters
- ***/
-
-void Lamp::setPosition( const glm::vec3& position )
-{
-    position_ = position;
-}
-
-
-void Lamp::setLightColor( const glm::vec3& lightColor )
-{
-    lightColor_ = lightColor;
-}
-
-} // namespace como
+#endif // LAMPS_HPP

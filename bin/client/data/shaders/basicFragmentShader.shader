@@ -8,10 +8,12 @@
 #version 420 core
 
 uniform vec4 color;
+uniform vec3 ambientLight;
+
 out vec4 finalColor;
 
 void main()
 {
-	finalColor = color;
+	finalColor = vec4( min( color.rgb * ambientLight, vec3( 1.0 ) ), 1.0 );
 }
 

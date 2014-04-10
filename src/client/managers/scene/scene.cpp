@@ -53,6 +53,9 @@ Scene::Scene( LogPtr log ) :
     // the local scene.
     QObject::connect( &server_, &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
 
+    // TODO: Test code. Remove.
+    Light::setAmbientLight( glm::vec3( 0.5f, 1.0f, 0.5f ) );
+
     checkOpenGL( "Scene - constructor\n" );
 }
 
@@ -984,6 +987,14 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
     log_->debug( "Scene - Executing remote command(",
                  commandTargetStrings[static_cast<unsigned int>( command->getTarget() )],
                  ") ...OK\n" );
+}
+
+
+void Scene::setAmbientLight( glm::vec3 ambientLight )
+{
+    Light::setAmbientLight( ambientLight );
+
+    emit renderNeeded();
 }
 
 
