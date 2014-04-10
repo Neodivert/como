@@ -375,8 +375,12 @@ void Scene::addMesh( PrimitiveID primitiveID, const std::uint8_t* color, Packabl
 
         log_->debug( "Adding primitive (", primitivePaths_.at( primitiveID ), ") to scene\n" );
 
+        // Build the "absolute" path to the specification file of the
+        // primitive used for building this mesh.
+        std::string primitivePath = std::string( SCENES_PRIMITIVES_DIR ) + '/' + sceneName_ + '/' + primitivePaths_.at( primitiveID );
+
         // Create the cube.
-        DrawablePtr drawable = DrawablePtr( new Mesh( primitivePaths_.at( primitiveID ).c_str(), color ) );
+        DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), color ) );
 
         // Add the cube to the scene.
         addDrawable( drawable, drawableID );
@@ -928,22 +932,28 @@ void Scene::executeRemoteSelectionCommand( SelectionCommandConstPtr command )
 void Scene::executeRemotePrimitiveCommand( PrimitiveCommandConstPtr command )
 {
     const PrimitiveCreationCommand * primitiveCreationCommand = nullptr;
+    std::string primitiveRelPath;
 
     switch( command->getType() ){
         case PrimitiveCommandType::PRIMITIVE_CREATION:
             // Cast to a PRIMITIVE_SELECTION command.
             primitiveCreationCommand = dynamic_cast< const PrimitiveCreationCommand* >( command.get() );
 
-            // TODO: Complete, make things.
+            // Debug message.
             log_->debug( "Primitive file received: [", primitiveCreationCommand->getFile()->getFilePath()->getValue(), "]\n" );
 
-            // Create a new entry (ID, path) for the recently added primitive.
-            primitivePaths_[primitiveCreationCommand->getPrimitiveID()] =
-                    std::string( primitiveCreationCommand->getFile()->getFilePath()->getValue() );
+            // Build the primitives relative path, starting from SCENES_PRIMITIVES_DIR/<scene name>/.
+            primitiveRelPath = primitiveCreationCommand->getFile()->getFilePath()->getValue();
+            primitiveRelPath = primitiveRelPath.substr( ( std::string( SCENES_PRIMITIVES_DIR ) + '/' + sceneName_ ).length() + 1 );
+
+            log_->debug( "Primitive relative path: [", primitiveRelPath, "]\n" );
+
+            // Create a new entry (ID, relative path) for the recently added primitive.
+            primitivePaths_[primitiveCreationCommand->getPrimitiveID()] = primitiveRelPath;
 
             // Emit a signal indicating the primitive insertion. Include
             // primitive's name and ID in the signal.
-            emit primitiveAdded( tr( primitiveCreationCommand->getFile()->getFilePath()->getValue() ),
+            emit primitiveAdded( tr( primitiveRelPath.c_str() ),
                                  primitiveCreationCommand->getPrimitiveID() );
         break;
     }

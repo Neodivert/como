@@ -407,7 +407,7 @@ void Server::createScenePrimitivesDirectory()
 void Server::initializePrimitives( const char* primitivesDir )
 {
     PrimitiveID primitiveID = 0;
-    const char* fileName = nullptr;
+    const char* filePath = nullptr;
     const boost::filesystem::recursive_directory_iterator endIterator;
     boost::filesystem::recursive_directory_iterator fileIterator( primitivesDir );
 
@@ -415,11 +415,11 @@ void Server::initializePrimitives( const char* primitivesDir )
 
     for( ; fileIterator != endIterator; fileIterator++ ){
         if( boost::filesystem::is_regular_file( *fileIterator ) ){
-            fileName = fileIterator->path().string().c_str();
+            filePath = fileIterator->path().string().c_str();
 
-            log_->debug( "\tAdding primitive [", fileName, "] to scene ...\n" );
-            addCommand( CommandConstPtr( new PrimitiveCreationCommand( fileName, 0, primitiveID ) ) );
-            log_->debug( "\tAdding primitive [", fileName, "] to scene ...OK\n" );
+            log_->debug( "\tAdding primitive [", filePath, "] to scene ...\n" );
+            addCommand( CommandConstPtr( new PrimitiveCreationCommand( filePath, 0, primitiveID ) ) );
+            log_->debug( "\tAdding primitive [", filePath, "] to scene ...OK\n" );
 
             primitiveID++;
         }

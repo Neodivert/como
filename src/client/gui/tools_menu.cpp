@@ -146,9 +146,8 @@ QFrame* ToolsMenu::createPrimitiveCreationMenu()
 
     // Signal / Slot connection: when a new primitive is created in the scene,
     // add it to the primitives dropdown list.
-    connect( comoApp->getScene().get(), &Scene::primitiveAdded, [=]( const QString& primitiveName, PrimitiveID primitiveID ){
-        //primitiveName.midRef( primiveName.indexOf )
-        primitiveCreationSelector->insertItem( static_cast< int >( primitiveID ), primitiveName );
+    connect( comoApp->getScene().get(), &Scene::primitiveAdded, [=]( const QString& primitiveRelPath, PrimitiveID primitiveID ){
+        primitiveCreationSelector->insertItem( static_cast< int >( primitiveID ), primitiveRelPath );
     });
 
     return primitiveCreationFrame;
