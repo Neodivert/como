@@ -408,8 +408,8 @@ void Viewport::render()
     // Draw scene.
     comoApp->getScene()->draw( projectionMatrix*viewMatrix, static_cast< int >( comoApp->getTransformationMode() ) - 1 );
 
-    // Now we'll draw some objets that are already in world space, so we update
-    // MVP Matrix with a identity model matrix.
+    // Now we'll draw some elements that are already in world space, so we
+    // update MVP Matrix with a identity model matrix.
     Mesh::sendMVPMatrixToShader( projectionMatrix*viewMatrix );
 
     // Draw guide rect

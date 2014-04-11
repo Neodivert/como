@@ -741,6 +741,8 @@ void Scene::draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect ) co
 
     // Draw a guide rect if asked.
     if( drawGuideRect != -1 ){
+        Mesh::sendMVPMatrixToShader( viewProjMatrix );
+
         // Change painting color to white.
         glUniform4fv( uniformColorLocation, 1, WHITE_COLOR );
 
