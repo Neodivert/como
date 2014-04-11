@@ -48,6 +48,9 @@ class Mesh : public Drawable
         // Location of the shader uniform variable for MVP matrix.
         static GLint mvpMatrixLocation_;
 
+        // Location of the shader uniform variable for normal matrix.
+        static GLint normalMatrixLocation_;
+
         // VAO : Vertex Attributes Array.
         GLuint vao;
 

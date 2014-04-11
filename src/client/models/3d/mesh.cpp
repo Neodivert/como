@@ -29,6 +29,7 @@ namespace como {
 // Initialize the location of various uniform shader variables as unitialized (-1).
 GLint Mesh::uniformColorLocation = -1;
 GLint Mesh::mvpMatrixLocation_ = -1;
+GLint Mesh::normalMatrixLocation_ = -1;
 
 const GLint SHADER_VERTEX_ATTR_LOCATION = 0;
 const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
@@ -105,6 +106,9 @@ void Mesh::initMeshBuffers()
 
         // Get location of uniform shader variable "mvpMatrix".
         mvpMatrixLocation_ = glGetUniformLocation( currentShaderProgram, "mvpMatrix" );
+
+        // Get location of uniform shader variable "normalMatrix".
+        normalMatrixLocation_ = glGetUniformLocation( currentShaderProgram, "normalMatrix" );
     }
 
     // Set both original and transformed centroids.
@@ -414,7 +418,12 @@ void Mesh::draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) 
 
 void Mesh::sendMVPMatrixToShader( const glm::mat4& mvpMatrix )
 {
+    // Send the given MVP matrix to shader.
     glUniformMatrix4fv( mvpMatrixLocation_, 1, GL_FALSE, &mvpMatrix[0][0] );
+
+    // Compute normal matrix and send it to shader.
+    glm::mat3 normalMatrix = glm::mat3( glm::transpose( glm::inverse( mvpMatrix ) ) );
+    glUniformMatrix4fv( normalMatrixLocation_, 1, GL_FALSE, &normalMatrix[0][0] );
 }
 
 } // namespace como
