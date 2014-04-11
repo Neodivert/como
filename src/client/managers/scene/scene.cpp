@@ -725,18 +725,18 @@ void Scene::deleteSelection( const unsigned int& userId )
  * 8. Drawing
  ***/
 
-void Scene::draw( const int& drawGuideRect ) const
+void Scene::draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect ) const
 {
     GLfloat WHITE_COLOR[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
     UsersMap::const_iterator usersIterator = users_.begin();
 
     // Draw the non selected drawables.
-    nonSelectedDrawables.draw( defaultContourColor );
+    nonSelectedDrawables.draw( viewProjMatrix, defaultContourColor );
 
     // Draw the user's selections.
     for( ; usersIterator != users_.end(); usersIterator++  ){
-        (usersIterator->second)->selection.draw( (usersIterator->second)->color );
+        (usersIterator->second)->selection.draw( viewProjMatrix, (usersIterator->second)->color );
     }
 
     // Draw a guide rect if asked.

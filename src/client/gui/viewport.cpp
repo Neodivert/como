@@ -386,11 +386,6 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
  * 3. Updating and drawing
  ***/
 
-void Viewport::sendViewProjectionMatrixToShader( const glm::mat4& vpMatrix ) const
-{
-    glUniformMatrix4fv( viewProjectionMatrixLocation, 1, GL_FALSE, &vpMatrix[0][0] );
-}
-
 void Viewport::render()
 {
     // Don't render if surface is not exposed.
@@ -410,11 +405,12 @@ void Viewport::render()
     // Clear buffers.
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-    // Send view-projection matrix to shader.
-    sendViewProjectionMatrixToShader( projectionMatrix*viewMatrix );
-
     // Draw scene.
-    comoApp->getScene()->draw( static_cast< int >( comoApp->getTransformationMode() ) - 1 );
+    comoApp->getScene()->draw( projectionMatrix*viewMatrix, static_cast< int >( comoApp->getTransformationMode() ) - 1 );
+
+    // Now we'll draw some objets that are already in world space, so we update
+    // MVP Matrix with a identity model matrix.
+    Mesh::sendMVPMatrixToShader( projectionMatrix*viewMatrix );
 
     // Draw guide rect
     if( ( comoApp->getTransformationType() == TransformationType::ROTATION ) ||

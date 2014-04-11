@@ -259,13 +259,13 @@ bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, PackableDrawable
  * 8. Drawing
  ***/
 
-void DrawablesSelection::draw( const GLfloat* contourColor ) const
+void DrawablesSelection::draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) const
 {
     DrawablesMap::const_iterator drawable;
 
     // Draw every drawable in current selection.
     for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
-        drawable->second->draw( contourColor );
+        drawable->second->draw( viewProjMatrix, contourColor );
     }
 }
 

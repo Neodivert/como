@@ -1,4 +1,4 @@
-/***
+﻿/***
  * Copyright 2013, 2014 Moises J. Bonilla Caraballo (Neodivert)
  *
  * This file is part of COMO.
@@ -45,6 +45,9 @@ class Mesh : public Drawable
         // Location of the uniform shader variable used for coloring geometries.
         static GLint uniformColorLocation;
 
+        // Location of the shader uniform variable for MVP matrix.
+        static GLint mvpMatrixLocation_;
+
         // VAO : Vertex Attributes Array.
         GLuint vao;
 
@@ -89,7 +92,8 @@ class Mesh : public Drawable
          ***/
     private:
         void initMeshBuffers();
-        void initTransformedVertexData();
+
+        void initVertexData();
         void computeCentroid();
         void computeVertexNormals();
 
@@ -106,7 +110,7 @@ class Mesh : public Drawable
          * 5. Getters.
          ***/
         glm::vec4 getCentroid() const ;
-        void getTransformedVertices( unsigned int& n, GLfloat* vertices );
+        void getVertexData( unsigned int& n, GLfloat* vertices );
 
 
         /***
@@ -130,11 +134,17 @@ class Mesh : public Drawable
 
     public:
         // Send mesh to OpenGL server for rendering it.
-        virtual void draw( const GLfloat* contourColor = nullptr ) const;
+        virtual void draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor = nullptr ) const;
 
 
         /***
-         * 9. Operators
+         * 9. Auxliar methods.
+         ***/
+        static void sendMVPMatrixToShader( const glm::mat4& mvpMatrix );
+
+
+        /***
+         * 10. Operators
          ***/
         Mesh& operator=( const Mesh& ) = delete ;
         Mesh& operator=( Mesh&& ) = delete;

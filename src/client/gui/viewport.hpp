@@ -102,7 +102,6 @@ class Viewport : public QWindow
         /***
          * 3. Updating and drawing
          ***/
-        void sendViewProjectionMatrixToShader( const glm::mat4& vpMatrix ) const ;
         virtual void render();
         void renderGuideRect();
 

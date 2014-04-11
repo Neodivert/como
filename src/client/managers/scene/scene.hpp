@@ -203,7 +203,7 @@ class Scene : public QOffscreenSurface
         /***
          * 8. Drawing
          ***/
-        void draw( const int& drawGuideRect = -1 ) const ;
+        void draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect = -1 ) const ;
         void drawWorldAxis() const ;
         void drawTransformGuideLine() const ;
 

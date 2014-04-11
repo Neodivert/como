@@ -26,8 +26,9 @@
 
 namespace como {
 
-// Initialize the location of the uniform shader variable "color" as unitialized (-1).
+// Initialize the location of various uniform shader variables as unitialized (-1).
 GLint Mesh::uniformColorLocation = -1;
+GLint Mesh::mvpMatrixLocation_ = -1;
 
 const GLint SHADER_VERTEX_ATTR_LOCATION = 0;
 const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
@@ -101,6 +102,9 @@ void Mesh::initMeshBuffers()
 
         // Get location of uniform shader variable "color".
         uniformColorLocation = glGetUniformLocation( currentShaderProgram, "color" );
+
+        // Get location of uniform shader variable "mvpMatrix".
+        mvpMatrixLocation_ = glGetUniformLocation( currentShaderProgram, "mvpMatrix" );
     }
 
     // Set both original and transformed centroids.
@@ -109,9 +113,10 @@ void Mesh::initMeshBuffers()
 }
 
 
-void Mesh::initTransformedVertexData()
+void Mesh::initVertexData()
 {
     unsigned int i;
+    GLfloat* vertexData = nullptr;
 
     // Allocate a VBO for transformed vertices.
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
@@ -126,6 +131,9 @@ void Mesh::initTransformedVertexData()
     glEnableVertexAttribArray( SHADER_VERTEX_ATTR_LOCATION );
     glEnableVertexAttribArray( SHADER_NORMAL_ATTR_LOCATION );
 
+    // Map the OpenGL's VBO for transformed vertices to client memory, so we can initialize it.
+    vertexData = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
+
     // Copy the mesh's elements to a EBO.
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, triangles.size()*3*sizeof( GLuint ), nullptr, GL_STATIC_DRAW );
 
@@ -136,6 +144,22 @@ void Mesh::initTransformedVertexData()
     // Compute Mesh's centroid and vertex normals.
     computeCentroid();
     computeVertexNormals();
+
+    // Copy the vertex data to VBO.
+    for( GLuint i = 0; i<originalVertices.size(); i++ ){
+        // Copy vertex position to VBO.
+        vertexData[i*COMPONENTS_PER_VERTEX+X] = originalVertices[i].x;
+        vertexData[i*COMPONENTS_PER_VERTEX+Y] = originalVertices[i].y;
+        vertexData[i*COMPONENTS_PER_VERTEX+Z] = originalVertices[i].z;
+
+        // Copy vertex normal to VBO.
+        vertexData[i*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+X] = originalNormals[i].x;
+        vertexData[i*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+Y] = originalNormals[i].y;
+        vertexData[i*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+Z] = originalNormals[i].z;
+    }
+
+    // We finished updating the VBO, unmap it so OpenGL can take control over it.
+    glUnmapBuffer( GL_ARRAY_BUFFER );
 
     // Update transformed vertices.
     update();
@@ -237,7 +261,7 @@ void Mesh::LoadFromOBJ( const char* filePath )
     file.close();
 
     // Initialize Mesh transformed vertex data.
-    initTransformedVertexData();
+    initVertexData();
 }
 
 
@@ -251,7 +275,7 @@ glm::vec4 Mesh::getCentroid() const
 }
 
 
-void Mesh::getTransformedVertices( unsigned int& n, GLfloat* vertices )
+void Mesh::getVertexData( unsigned int& n, GLfloat* vertices )
 {
     GLfloat* mappedVBO = nullptr;
 
@@ -297,24 +321,24 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
 
     minT = MAX_T;
 
+    // Transform the ray's origin and direction from world to object
+    // coordinates.
+    rayOrigin = glm::vec3( transformationMatrix * glm::vec4( rayOrigin, 1.0f ) );
+    rayDirection = glm::vec3( transformationMatrix * glm::vec4( rayDirection, 1.0f ) );
+
     // Normalize the direction of the ray.
     rayDirection = glm::normalize( rayDirection );
 
     // Set mesh's vbo as the active one.
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
 
-    // The ray's origind and direction are in world space. We have to map the OpenGL's VBO with
-    // the mesh's transformed vertices (world space) to client memory, so we can intersect them
-    // (the ray and the mesh).
-    GLfloat* transformedVertices = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_READ_ONLY );
-
     // Compute intersections with all triangles in this Mesh.
     for( unsigned int i = 0; i < triangles.size(); i++ ){
         if( glm::intersectRayTriangle( rayOrigin,
                                        rayDirection,
-                                       glm::vec3( transformedVertices[triangles[i][0]*COMPONENTS_PER_VERTEX+X], transformedVertices[triangles[i][0]*COMPONENTS_PER_VERTEX+Y], transformedVertices[triangles[i][0]*COMPONENTS_PER_VERTEX+Z] ),
-                                       glm::vec3( transformedVertices[triangles[i][1]*COMPONENTS_PER_VERTEX+X], transformedVertices[triangles[i][1]*COMPONENTS_PER_VERTEX+Y], transformedVertices[triangles[i][1]*COMPONENTS_PER_VERTEX+Z] ),
-                                       glm::vec3( transformedVertices[triangles[i][2]*COMPONENTS_PER_VERTEX+X], transformedVertices[triangles[i][2]*COMPONENTS_PER_VERTEX+Y], transformedVertices[triangles[i][2]*COMPONENTS_PER_VERTEX+Z] ),
+                                       originalVertices[triangles[i][0]],
+                                       originalVertices[triangles[i][1]],
+                                       originalVertices[triangles[i][2]],
                                        intersection ) ){
 
             // There was an intersection with this triangle. Get the parameter t.
@@ -329,8 +353,6 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
             }
         }
     }
-    // We finished updating the VBO, unmap it so OpenGL can take control over it.
-    glUnmapBuffer( GL_ARRAY_BUFFER );
 
     // If the ray didn't intersect the mesh, we "return" -1.
     if( minT >= MAX_T ){
@@ -345,56 +367,21 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
 
 void Mesh::update()
 {
-    GLfloat* vertexData = nullptr;
-    glm::vec4 transformedVertex;
-    glm::vec4 transformedNormal;
-
     // Update mesh's orientation.
     Drawable::update();
 
     // Update mesh's centroid.
     transformedCentroid = transformationMatrix * originalCentroid;
-
-    //std::cout << "Transformed Centroid: (" << transformedCentroid.x << ", " << transformedCentroid.y << ", " << transformedCentroid.z << ", " << transformedCentroid.w << ")" << std::endl;
-
-    // Set Mesh's VAO and VBO as the current ones.
-    glBindVertexArray( vao );
-    glBindBuffer( GL_ARRAY_BUFFER, vbo );
-
-    // Map the OpenGL's VBO for transformed vertices to client memory, so we can update it.
-    vertexData = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
-
-
-    // Recompute each transformed vertex and normal by multiplying their
-    // corresponding original values by transformation matrix.
-    for( GLuint i = 0; i<originalVertices.size(); i++ ){
-        transformedVertex = transformationMatrix * glm::vec4( originalVertices[i], 1.0f );
-
-        vertexData[i*COMPONENTS_PER_VERTEX+X] = transformedVertex.x;
-        vertexData[i*COMPONENTS_PER_VERTEX+Y] = transformedVertex.y;
-        vertexData[i*COMPONENTS_PER_VERTEX+Z] = transformedVertex.z;
-
-        // TODO: w = 1.0f?
-        transformedNormal = transformationMatrix * glm::vec4( originalNormals[i], 0.0f );
-
-        vertexData[i*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+X] = transformedNormal.x;
-        vertexData[i*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+Y] = transformedNormal.y;
-        vertexData[i*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+Z] = transformedNormal.z;
-    }
-
-    // We finished updating the VBO, unmap it so OpenGL can take control over it.
-    glUnmapBuffer( GL_ARRAY_BUFFER );
 }
 
-void Mesh::draw( const GLfloat* contourColor ) const
+
+void Mesh::draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) const
 {
     // Feed uniform shader variable "color" with Mesh inner color.
-    // I fallen in a common mistake D:.
-    // http://www.opengl.org/wiki/GLSL_:_common_mistakes
-    // The problem is that for count, you set it to 4 while it should be 1 because you
-    // are sending 1 vec4​ to the shader. The count is the number of that type
-    // (4f, which corresponds to vec4​) that you are setting.
     glUniform4fv( uniformColorLocation, 1, color );
+
+    // Compute MVP matrix and pass it to the shader.
+    sendMVPMatrixToShader( viewProjMatrix * transformationMatrix );
 
     // Bind Mesh VAO and VBOs as the active ones.
     glBindVertexArray( vao );
@@ -419,6 +406,15 @@ void Mesh::draw( const GLfloat* contourColor ) const
         // Return polygon mode to previos GL_FILL.
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     }
+}
+
+/***
+ * 9. Auxliar methods.
+ ***/
+
+void Mesh::sendMVPMatrixToShader( const glm::mat4& mvpMatrix )
+{
+    glUniformMatrix4fv( mvpMatrixLocation_, 1, GL_FALSE, &mvpMatrix[0][0] );
 }
 
 } // namespace como

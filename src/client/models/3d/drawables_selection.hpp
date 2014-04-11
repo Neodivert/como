@@ -113,7 +113,7 @@ class DrawablesSelection
         /***
          * 8. Drawing
          ***/
-        void draw( const GLfloat* contourColor = nullptr ) const ;
+        void draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor = nullptr ) const ;
 
 
         /***
