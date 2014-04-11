@@ -423,7 +423,7 @@ void Mesh::sendMVPMatrixToShader( const glm::mat4& mvpMatrix )
 
     // Compute normal matrix and send it to shader.
     glm::mat3 normalMatrix = glm::mat3( glm::transpose( glm::inverse( mvpMatrix ) ) );
-    glUniformMatrix4fv( normalMatrixLocation_, 1, GL_FALSE, &normalMatrix[0][0] );
+    glUniformMatrix3fv( normalMatrixLocation_, 1, GL_FALSE, &normalMatrix[0][0] );
 }
 
 } // namespace como

@@ -11,15 +11,14 @@ layout(location=0) in vec3 vPosition;
 layout(location=1) in vec3 vNormal;
 
 uniform mat4 mvpMatrix;
+uniform mat3 normalMatrix;
 
 out vec3 normal;
 
 void main()
 {
+	// Transform vertex position and normal.
 	gl_Position = mvpMatrix * vec4( vPosition.xyz, 1.0f );
-
-	// The normal is already multiplied by Normal Matrix in the app, so we pass 
-	// it directly to the fragment shader.
-	normal = vNormal;
+	normal = normalize( normalMatrix * vNormal );
 }
 
