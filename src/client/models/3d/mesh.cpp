@@ -327,14 +327,11 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
 
     // Transform the ray's origin and direction from world to object
     // coordinates.
-    rayOrigin = glm::vec3( transformationMatrix * glm::vec4( rayOrigin, 1.0f ) );
-    rayDirection = glm::vec3( transformationMatrix * glm::vec4( rayDirection, 1.0f ) );
+    rayOrigin = glm::vec3( glm::inverse( transformationMatrix ) * glm::vec4( rayOrigin, 1.0f ) );
+    rayDirection = glm::vec3( glm::inverse( transformationMatrix ) * glm::vec4( rayDirection, 1.0f ) );
 
     // Normalize the direction of the ray.
     rayDirection = glm::normalize( rayDirection );
-
-    // Set mesh's vbo as the active one.
-    glBindBuffer( GL_ARRAY_BUFFER, vbo );
 
     // Compute intersections with all triangles in this Mesh.
     for( unsigned int i = 0; i < triangles.size(); i++ ){

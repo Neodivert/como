@@ -14,6 +14,7 @@ out vec4 finalColor;
 
 void main()
 {
-	finalColor = vec4( min( color.rgb * ambientLight, vec3( 1.0 ) ), 1.0 );
+	//finalColor = vec4( min( color.rgb * ambientLight, vec3( 1.0 ) ), 1.0 );
+	finalColor = color;
 }
 
