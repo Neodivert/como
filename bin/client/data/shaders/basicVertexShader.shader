@@ -11,9 +11,16 @@ layout(location=0) in vec3 vPosition;
 layout(location=1) in vec3 vNormal;
 
 uniform mat4 viewProjectionMatrix;
+uniform mat4 viewMatrix;
+
+out vec3 normal;
 
 void main()
 {
-	gl_Position = viewProjectionMatrix * vec4( vPosition.x, vPosition.y, vPosition.z, 1.0f );
+	gl_Position = viewProjectionMatrix * vec4( vPosition.xyz, 1.0f );
+
+	// The normal is already multiplied by Normal Matrix in the app, so we pass 
+	// it directly to the fragment shader.
+	normal = vNormal;
 }
 
