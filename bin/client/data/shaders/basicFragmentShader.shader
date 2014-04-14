@@ -10,20 +10,20 @@
 uniform vec4 color;
 uniform vec3 ambientLight;
 
-const vec3 lightColor = vec3( 0.5f, 0.5f, 0.5f );
+const vec3 lightColor = vec3( 1.0f, 1.0f, 1.0f );
 const vec3 lightDirection = vec3( 0.0f, -1.0f, 0.0f );
 const vec3 halfVector = lightDirection + vec3( 0.0f, 0.0f, 0.0f ); // TODO: H = L + Eye.
 const float shininess = 0.5f;
 const float strength = 0.5f;
 
-in vec3 Normal;
+in vec3 normal;
 
 out vec4 finalColor;
 
 void main()
 {
-	float diffuse = max( 0.0f, dot( vertexNormal, lightDirection ) );
-	float specular = max( 0.0f, dot( vertexNormal, halfVector ) );
+	float diffuse = max( 0.0f, dot( normal, lightDirection ) );
+	float specular = max( 0.0f, dot( normal, halfVector ) );
 
 	// surfaces facing away from the light (negative dot products)
 	// won’t be lit by the directional light
@@ -40,6 +40,5 @@ void main()
 	// only with scattered light
 	vec3 rgb = min (color.rgb * scatteredLight + reflectedLight, vec3( 1.0f ) );
 	finalColor = vec4( rgb, color.a );
-	finalColor = vec4( 1.0f );
 }
 
