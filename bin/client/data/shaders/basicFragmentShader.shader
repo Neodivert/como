@@ -10,6 +10,13 @@
 uniform vec4 color;
 uniform vec3 ambientLight;
 
+// Lights.
+struct Light {
+	vec3 position;
+	vec3 color;
+};
+uniform Light lights[2];
+
 const vec3 lightColor = vec3( 1.0f, 1.0f, 1.0f );
 const vec3 lightDirection = vec3( 0.0f, -1.0f, 0.0f );
 const vec3 halfVector = lightDirection + vec3( 0.0f, 0.0f, 0.0f ); // TODO: H = L + Eye.

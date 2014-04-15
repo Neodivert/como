@@ -25,11 +25,26 @@ namespace como {
  * 1. Construction
  ***/
 
-Light::Light( glm::vec3 position, glm::vec3 lightColor ) :
-    Mesh( "data/primitives/system/camera.obj" ) // TODO: Create a Light primitive. And use a constant.
+Light::Light( const char* meshPath, GLuint lightIndex, glm::vec3 position, glm::vec3 color ) :
+    Mesh( meshPath )
 {
+    GLint currentShaderProgram = -1;
+    char uniformName[64];
+
+    // Get current shader program ID.
+    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+
+    // Get the location of this light's position in the GLSL shader program.
+    sprintf( uniformName, "lights[%u].position", lightIndex );
+    positionLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
+
+    // Get the location of this light's color in the GLSL shader program.
+    sprintf( uniformName, "lights[%u].color", lightIndex );
+    colorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
+
+    // Update light's position and color in the shader.
     setPosition( position );
-    setLightColor( lightColor );
+    setLightColor( color );
 }
 
 
@@ -39,13 +54,21 @@ Light::Light( glm::vec3 position, glm::vec3 lightColor ) :
 
 glm::vec3 Light::getPosition()
 {
-    return position_;
+    glm::vec3 position( 0.0f );
+
+    glGetUniformfv( positionLocation_, 1, &position[0] );
+
+    return position;
 }
 
 
 glm::vec3 Light::getLightColor()
 {
-    return lightColor_;
+    glm::vec3 color( 0.0f );
+
+    glGetUniformfv( positionLocation_, 1, &color[0] );
+
+    return color;
 }
 
 
@@ -55,33 +78,13 @@ glm::vec3 Light::getLightColor()
 
 void Light::setPosition( const glm::vec3& position )
 {
-    position_ = position;
+    glUniform3fv( positionLocation_, 1, &position[0] );
 }
 
 
-void Light::setLightColor( const glm::vec3& lightColor )
+void Light::setLightColor( const glm::vec3& color )
 {
-    lightColor_ = lightColor;
-}
-
-/*! \brief Set Ambient light */
-
-void Light::setAmbientLight( const glm::vec3& ambientLight )
-{
-    GLint currentShaderProgram = -1;
-    GLint uniformLocation = -1;
-
-    // Get current shader program id.
-    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
-    checkOpenGL( "Light::setAmbientLight - After getting current shader program ID");
-
-    // Get location of uniform shader variable "color".
-    uniformLocation = glGetUniformLocation( currentShaderProgram, "ambientLight" );
-    checkOpenGL( "Light::setAmbientLight - After getting location of shader uniform \"ambientLight\"" );
-
-    // Feed uniform shader variable "ambientLight" with given ambient light
-    // argument.
-    glUniform3fv( uniformLocation, 1, &ambientLight[0] );
+    glUniform3fv( positionLocation_, 1, &color[0] );
 }
 
 } // namespace como

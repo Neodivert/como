@@ -32,11 +32,17 @@ namespace como {
 class Light : public Mesh
 {
     private:
-        /*! Light position */
-        glm::vec3 position_;
+        /*!
+         * Location of the GLSL shader uniform variable keeping this light's
+         * position.
+         */
+        GLint positionLocation_;
 
-        /*! Light's light color */
-        glm::vec3 lightColor_;
+        /*!
+         * Location of the GLSL shader uniform variable keeping this light's
+         * color.
+         */
+        GLint colorLocation_;
 
     public:
         /***
@@ -44,16 +50,21 @@ class Light : public Mesh
          ***/
 
         /*!
-         * \brief Constructs a Light at the given position and with the
-         * specified light color
+         * \brief Constructs a light from the given data.
+         * \param primitivePath path to the file containing the specification
+         * for the light's associated mesh.
+         * \param lightIndex index of this light's data into the array of
+         * lights in GLSL shader.
+         * \param position light position.
+         * \param color light color.
          */
-        Light( glm::vec3 position, glm::vec3 lightColor );
+        Light( const char* meshPath, GLuint lightIndex, glm::vec3 position, glm::vec3 color );
 
         /*! \brief Copy constructor */
-        Light( const Light& ) = default;
+        Light( const Light& ) = delete;
 
         /*! \brief Move constructor */
-        Light( Light&& ) = default;
+        Light( Light&& ) = delete;
 
 
         /***
@@ -87,8 +98,6 @@ class Light : public Mesh
         /*! \brief Set Light's light color */
         void setLightColor( const glm::vec3& color );
 
-        /*! \brief Set Ambient light */
-        static void setAmbientLight( const glm::vec3& color );
 
 
         /***
