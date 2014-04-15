@@ -54,7 +54,7 @@ Scene::Scene( LogPtr log ) :
     QObject::connect( &server_, &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
 
     // TODO: Test code. Remove.
-    Light::setAmbientLight( glm::vec3( 0.5f, 1.0f, 0.5f ) );
+    DirectionalLight light( glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
 
     checkOpenGL( "Scene - constructor\n" );
 }
@@ -992,9 +992,10 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
 }
 
 
+// TODO: Remove.
 void Scene::setAmbientLight( glm::vec3 ambientLight )
 {
-    Light::setAmbientLight( ambientLight );
+    Q_UNUSED( ambientLight );
 
     emit renderNeeded();
 }

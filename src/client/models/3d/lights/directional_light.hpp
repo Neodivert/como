@@ -35,6 +35,7 @@ class DirectionalLight : public Light
         /***
          * 1. Construction
          ***/
+        //Light( const char* meshPath, GLuint lightIndex, glm::vec3 position, glm::vec3 color );
 
         /*!
          * \brief Constructs a directional Light at the given position and with

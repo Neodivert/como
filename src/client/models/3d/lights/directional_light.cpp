@@ -26,7 +26,7 @@ namespace como {
  ***/
 
 DirectionalLight::DirectionalLight( glm::vec3 position, glm::vec3 lightColor ) :
-    Light( position, lightColor )
+    Light( "data/primitives/system/camera.obj", 0, position, lightColor )
 {}
 
 

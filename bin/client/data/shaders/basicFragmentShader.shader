@@ -17,11 +17,10 @@ struct Light {
 };
 uniform Light lights[2];
 
-const vec3 lightColor = vec3( 1.0f, 1.0f, 1.0f );
 const vec3 lightDirection = vec3( 0.0f, -1.0f, 0.0f );
-const vec3 halfVector = lightDirection + vec3( 0.0f, 0.0f, 0.0f ); // TODO: H = L + Eye.
-const float shininess = 0.5f;
-const float strength = 0.5f;
+const vec3 halfVector = lightDirection + vec3( 0.0f, 0.0f, 0.0f ); // TODO: H = L + Eye (or L - Eye?).
+const float shininess = 0.9f;
+const float strength = 0.9f;
 
 in vec3 normal;
 
@@ -40,8 +39,8 @@ void main()
 		specular = pow( specular, shininess ); // sharpen the highlight
 	}
 
-	vec3 scatteredLight = ambientLight + lightColor * diffuse;
-	vec3 reflectedLight = lightColor * specular * strength;
+	vec3 scatteredLight = ambientLight + lights[0].color * diffuse;
+	vec3 reflectedLight = lights[0].color * specular * strength;
 	
 	// don’t modulate the underlying color with reflected light,
 	// only with scattered light

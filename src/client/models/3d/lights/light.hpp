@@ -91,9 +91,11 @@ class Light : public Mesh
          ***/
 
         // TODO: Use Mesh::translate.
+
+    protected:
         /*! \brief Move Light to the given position */
         virtual void setPosition( const glm::vec3& position );
-
+    public:
 
         /*! \brief Set Light's light color */
         void setLightColor( const glm::vec3& color );
