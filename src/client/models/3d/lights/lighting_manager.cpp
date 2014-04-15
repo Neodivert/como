@@ -17,9 +17,12 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef LAMPS_HPP
-#define LAMPS_HPP
-
 #include "lighting_manager.hpp"
 
-#endif // LAMPS_HPP
+namespace como {
+
+LightingManager::LightingManager() :
+    directionalLight_( new DirectionalLight( glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) ) )
+{}
+
+} // namespace como

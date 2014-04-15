@@ -17,9 +17,33 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef LAMPS_HPP
-#define LAMPS_HPP
+#ifndef LIGHTING_MANAGER_HPP
+#define LIGHTING_MANAGER_HPP
 
-#include "lighting_manager.hpp"
+#include "directional_light.hpp"
 
-#endif // LAMPS_HPP
+namespace como {
+
+/*!
+ * \class LightingManager
+ *
+ * \brief Container class which holds all the lights associated to a scene.
+ */
+class LightingManager
+{
+    private:
+        DirectionalLightPtr directionalLight_;
+
+    public:
+
+        /***
+         * 1. Construction
+         ***/
+
+        /*! \brief Default constructor. */
+        LightingManager();
+};
+
+} // namespace como
+
+#endif // LIGHTING_MANAGER_HPP

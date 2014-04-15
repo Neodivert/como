@@ -77,6 +77,8 @@ class DirectionalLight : public Light
         DirectionalLight& operator=( DirectionalLight&& ) = delete;
 };
 
+typedef shared_ptr< DirectionalLight > DirectionalLightPtr;
+
 } // namespace como
 
 #endif // DIRECTIONAL_LIGHT_HPP
