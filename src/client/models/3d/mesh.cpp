@@ -124,7 +124,7 @@ void Mesh::initVertexData()
 
     // Allocate a VBO for transformed vertices.
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
-    glBufferData( GL_ARRAY_BUFFER, originalVertices.size()*COMPONENTS_PER_VERTEX*sizeof( GLfloat ), NULL, GL_DYNAMIC_DRAW );
+    glBufferData( GL_ARRAY_BUFFER, originalVertices.size()*COMPONENTS_PER_VERTEX*sizeof( GLfloat ), NULL, GL_STATIC_DRAW );
 
     // Set the organization of the vertex and normals data in the VBO.
     glBindVertexArray( vao );
@@ -134,9 +134,6 @@ void Mesh::initVertexData()
     // Enable previous vertex data arrays.
     glEnableVertexAttribArray( SHADER_VERTEX_ATTR_LOCATION );
     glEnableVertexAttribArray( SHADER_NORMAL_ATTR_LOCATION );
-
-    // Map the OpenGL's VBO for transformed vertices to client memory, so we can initialize it.
-    vertexData = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
 
     // Copy the mesh's elements to a EBO.
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, triangles.size()*3*sizeof( GLuint ), nullptr, GL_STATIC_DRAW );
@@ -148,6 +145,9 @@ void Mesh::initVertexData()
     // Compute Mesh's centroid and vertex normals.
     computeCentroid();
     computeVertexNormals();
+
+    // Map the OpenGL's VBO for original vertex data to client memory, so we can initialize it.
+    vertexData = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
 
     // Copy the vertex data to VBO.
     for( GLuint i = 0; i<originalVertices.size(); i++ ){
@@ -328,7 +328,7 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
     // Transform the ray's origin and direction from world to object
     // coordinates.
     rayOrigin = glm::vec3( glm::inverse( transformationMatrix ) * glm::vec4( rayOrigin, 1.0f ) );
-    rayDirection = glm::vec3( glm::inverse( transformationMatrix ) * glm::vec4( rayDirection, 1.0f ) );
+    rayDirection = glm::vec3( glm::inverse( transformationMatrix ) * glm::vec4( rayDirection, 0.0f ) );
 
     // Normalize the direction of the ray.
     rayDirection = glm::normalize( rayDirection );
