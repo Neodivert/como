@@ -25,4 +25,14 @@ LightingManager::LightingManager() :
     directionalLight_( new DirectionalLight( glm::vec3( 1.0f, 1.0f, 1.0f ) ) )
 {}
 
+
+/***
+ * 3. Getters
+ ***/
+
+DirectionalLightPtr LightingManager::getDirectionalLight()
+{
+    return directionalLight_;
+}
+
 } // namespace como

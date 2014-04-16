@@ -20,12 +20,11 @@ struct DirectionalLight {
 	unsigned int lightIndex;
 	vec3 lightVector;
 	vec3 halfVector;
-} directionalLight;
+};
+uniform DirectionalLight directionalLight;
 
-const vec3 lightDirection = vec3( 0.0f, -1.0f, 0.0f );
-const vec3 halfVector = lightDirection + vec3( 0.0f, 0.0f, 0.0f ); // TODO: H = L + Eye (or L - Eye?).
-const float shininess = 0.9f;
-const float strength = 0.9f;
+const float shininess = 0.5f;
+const float strength = 0.5f;
 
 in vec3 normal;
 
@@ -33,7 +32,9 @@ out vec4 finalColor;
 
 void main()
 {
-	float diffuse = max( 0.0f, dot( normal, lightDirection ) );
+	vec3 halfVector = directionalLight.lightVector + vec3( 0.0f, 0.0f, 0.0f ); // TODO: H = L + Eye (or L - Eye?).
+
+	float diffuse = max( 0.0f, dot( normal, directionalLight.lightVector ) );
 	float specular = max( 0.0f, dot( normal, halfVector ) );
 
 	// surfaces facing away from the light (negative dot products)
@@ -44,7 +45,7 @@ void main()
 		specular = pow( specular, shininess ); // sharpen the highlight
 	}
 
-	vec3 scatteredLight = ambientLight + lights[0].color * diffuse;
+	vec3 scatteredLight = lights[0].color * diffuse;
 	vec3 reflectedLight = lights[0].color * specular * strength;
 	
 	// don’t modulate the underlying color with reflected light,

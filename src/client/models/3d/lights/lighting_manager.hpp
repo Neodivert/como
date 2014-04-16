@@ -42,6 +42,43 @@ class LightingManager
 
         /*! \brief Default constructor. */
         LightingManager();
+
+        /*! \brief Copy constructor. */
+        LightingManager( const LightingManager& ) = delete;
+
+        /*! \brief Move constructor. */
+        LightingManager( LightingManager&& ) = delete;
+
+
+        /***
+         * 2. Destruction
+         ***/
+
+        /*! \brief Destructor */
+        ~LightingManager() = default;
+
+
+        /***
+         * 3. Getters
+         ***/
+
+        /*!
+         * \brief Returns a pointer to the directional light held by this
+         * manager.
+         */
+        DirectionalLightPtr getDirectionalLight();
+
+
+        /***
+         * 4. Operators
+         ***/
+
+        /*! \brief Copy assignment operator */
+        LightingManager& operator=( const LightingManager& ) = delete ;
+
+        /*! \brief Move assignment operator */
+        LightingManager& operator=( LightingManager&& ) = delete;
+
 };
 
 } // namespace como

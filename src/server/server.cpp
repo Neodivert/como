@@ -113,6 +113,15 @@ void Server::run()
         // Create the primitives directory for the current scene.
         createScenePrimitivesDirectory();
 
+        // Add a node to the Drawable Owners map for the recently added
+        // drawable. Mark it with a 0 (no owner).
+        // TODO: Remove this and sync light creation in both client and
+        // server.
+        PackableDrawableID DIRECTIONAL_LIGHT_ID;
+        DIRECTIONAL_LIGHT_ID.creatorID = 0;
+        DIRECTIONAL_LIGHT_ID.drawableIndex = 1;
+        drawableOwners_[DIRECTIONAL_LIGHT_ID] = 0;
+
         // Initialize the container of free user colors.
         initUserColors();
 
@@ -315,7 +324,7 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
                     meshCreationCommand = dynamic_cast< const MeshCreationCommand* >( sceneCommand.get() );
 
                     // Add a node to the Drawable Owners map for the recently added
-                    // cube. Mark it with a 0 (no owner).
+                    // drawable. Mark it with a 0 (no owner).
                     drawableOwners_[meshCreationCommand->getDrawableID()] = 0;
 
                     log_->debug( "Mesh added! (", (int)( meshCreationCommand->getDrawableID().creatorID.getValue() ),

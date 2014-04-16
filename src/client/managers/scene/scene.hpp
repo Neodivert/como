@@ -85,6 +85,8 @@ class Scene : public QOffscreenSurface
 
         shared_ptr< QOpenGLContext > oglContext_;
 
+        shared_ptr< LightingManager > lightingManager_;
+
         // Interface with the server.
         ServerInterface server_;
 

@@ -31,6 +31,11 @@ Scene::Scene( LogPtr log ) :
     localUserNextDrawableIndex_( 1 ),
     server_( log_ )
 {
+    // TODO: Make this constant.
+    PackableDrawableID DIRECTIONAL_LIGHT_ID;
+    DIRECTIONAL_LIGHT_ID.creatorID = 0;
+    DIRECTIONAL_LIGHT_ID.drawableIndex = 1;
+
     initOpenGL();
 
     initLinesBuffer();
@@ -53,8 +58,13 @@ Scene::Scene( LogPtr log ) :
     // the local scene.
     QObject::connect( &server_, &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
 
-    // TODO: Test code. Remove.
-    DirectionalLight light( glm::vec3( 1.0f, 1.0f, 1.0f ) );
+    // Initialize lighting manager.
+    lightingManager_ = shared_ptr< LightingManager >( new LightingManager );
+
+    // Add the directional light from the previous manager to the scene.
+    // TODO: Remove this and sync light creation in both client and
+    // server.
+    addDrawable( lightingManager_->getDirectionalLight(), DIRECTIONAL_LIGHT_ID );
 
     checkOpenGL( "Scene - constructor\n" );
 }

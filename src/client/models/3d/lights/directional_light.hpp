@@ -69,7 +69,7 @@ class DirectionalLight : public Light
          ***/
 
     private:
-        void updateOrientationInShader();
+        void update();
     private:
 
 
