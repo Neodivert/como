@@ -31,6 +31,13 @@ namespace como {
  */
 class DirectionalLight : public Light
 {
+    private:
+        /*! Location of the light vector in GLSL shader. */
+        GLint lightVectorLocation_;
+
+        /*! Location of the half vector in GLSL shader. */
+        GLint halfVectorLocation_;
+
     public:
         /***
          * 1. Construction
@@ -43,10 +50,10 @@ class DirectionalLight : public Light
         DirectionalLight( glm::vec3 lightColor );
 
         /*! \brief Copy constructor */
-        DirectionalLight( const DirectionalLight& ) = default;
+        DirectionalLight( const DirectionalLight& ) = delete;
 
         /*! \brief Move constructor */
-        DirectionalLight( DirectionalLight&& ) = default;
+        DirectionalLight( DirectionalLight&& ) = delete;
 
 
         /***
@@ -55,6 +62,15 @@ class DirectionalLight : public Light
 
         /*! \brief Destructor */
         ~DirectionalLight() = default; // TODO: Destroy Light in shader.
+
+
+        /***
+         * 3. Setters
+         ***/
+
+    private:
+        void updateOrientationInShader();
+    private:
 
 
         /***

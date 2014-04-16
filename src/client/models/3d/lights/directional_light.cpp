@@ -26,7 +26,44 @@ namespace como {
  ***/
 
 DirectionalLight::DirectionalLight( glm::vec3 lightColor ) :
-    Light( "data/primitives/system/camera.obj", 0, lightColor )
-{}
+    Light( "data/primitives/system/directional_light.obj", 0, lightColor )
+{
+    GLint currentShaderProgram = 0;
+    const GLuint lightIndex = 0; // TODO: Retrieve this as an method argument.
+    char uniformName[64];
+    GLint lightIndexLocation = -1;
+
+    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+
+    // Get the location of the DirectionalLight::lightIndex variable in shader.
+    sprintf( uniformName, "directionalLight.lightIndex" );
+    lightIndexLocation = glGetUniformLocation( currentShaderProgram, uniformName );
+
+    // Get the location of the DirectionalLight::lightVector variable in shader.
+    sprintf( uniformName, "directionalLight.lightVector" );
+    lightVectorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
+
+    // Get the location of the DirectionalLight::halfVector variable in shader.
+    sprintf( uniformName, "directionalLight.halfVector" );
+    halfVectorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
+
+    // Set the light index in shader.
+    glUniform1i( lightIndexLocation, lightIndex );
+}
+
+/***
+ * 3. Setters
+ ***/
+
+void DirectionalLight::updateOrientationInShader()
+{
+    // Compute transformed light vector.
+    // TODO: Extract original light vector from DirectionalLight primitive?
+    glm::vec3 lightVector = glm::vec3( transformationMatrix * glm::vec4( 0.0f, -1.0f, 0.0f, 1.0f ) );
+
+    // Update lightVector in shader.
+    glUniform4fv( lightVectorLocation_, 1, &lightVector[0] );
+}
+
 
 } // namespace como
