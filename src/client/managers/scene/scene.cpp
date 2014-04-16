@@ -245,7 +245,6 @@ shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
     return oglContext_;
 }
 
-
 DrawablesSelection* Scene::getUserSelection()
 {
     return getUserSelection( localUserID_ );
@@ -320,6 +319,14 @@ void Scene::setPivotPointMode( PivotPointMode pivotPointMode, UserID userID )
 void Scene::setName( const char* sceneName )
 {
     strncpy( sceneName_, sceneName, NAME_SIZE );
+}
+
+
+void Scene::setDirectionalLightColor( glm::vec3 color )
+{
+    lightingManager_->getDirectionalLight()->setLightColor( color );
+
+    emit renderNeeded();
 }
 
 

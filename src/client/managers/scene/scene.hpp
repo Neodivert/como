@@ -144,6 +144,7 @@ class Scene : public QOffscreenSurface
         const DrawablesSelection* getUserSelection( UserID userID ) const ;
 
 
+
         /***
          * 4. Setters
          ***/
@@ -152,6 +153,8 @@ class Scene : public QOffscreenSurface
         void setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny );
         void setPivotPointMode( PivotPointMode pivotPointMode );
         void setPivotPointMode( PivotPointMode pivotPointMode, UserID userID );
+        void setDirectionalLightColor( glm::vec3 color );
+
     protected:
         void setName( const char* sceneName );
 
