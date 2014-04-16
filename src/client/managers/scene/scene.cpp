@@ -54,7 +54,7 @@ Scene::Scene( LogPtr log ) :
     QObject::connect( &server_, &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
 
     // TODO: Test code. Remove.
-    DirectionalLight light( glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
+    DirectionalLight light( glm::vec3( 1.0f, 1.0f, 1.0f ) );
 
     checkOpenGL( "Scene - constructor\n" );
 }

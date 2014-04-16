@@ -25,7 +25,7 @@ namespace como {
  * 1. Construction
  ***/
 
-Light::Light( const char* meshPath, GLuint lightIndex, glm::vec3 position, glm::vec3 color ) :
+Light::Light( const char* meshPath, GLuint lightIndex, glm::vec3 color ) :
     Mesh( meshPath )
 {
     GLint currentShaderProgram = -1;
@@ -34,18 +34,11 @@ Light::Light( const char* meshPath, GLuint lightIndex, glm::vec3 position, glm::
     // Get current shader program ID.
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
 
-    std::cout << "currentShaderProgram: " << currentShaderProgram << std::endl;
-
-    // Get the location of this light's position in the GLSL shader program.
-    sprintf( uniformName, "lights[%u].position", lightIndex );
-    positionLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
-
     // Get the location of this light's color in the GLSL shader program.
     sprintf( uniformName, "lights[%u].color", lightIndex );
     colorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
 
-    // Update light's position and color in the shader.
-    setPosition( position );
+    // Update light color in the shader.
     setLightColor( color );
 
     checkOpenGL( "Light - Constructor end" );
@@ -55,18 +48,6 @@ Light::Light( const char* meshPath, GLuint lightIndex, glm::vec3 position, glm::
 /***
  * 3. Getters
  ***/
-
-glm::vec3 Light::getPosition()
-{
-    GLint currentShaderProgram = -1;
-    glm::vec3 position( 0.0f );
-
-    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
-    glGetUniformfv( currentShaderProgram, positionLocation_, &position[0] );
-
-    return position;
-}
-
 
 glm::vec3 Light::getLightColor()
 {
@@ -83,12 +64,6 @@ glm::vec3 Light::getLightColor()
 /***
  * 4. Setters
  ***/
-
-void Light::setPosition( const glm::vec3& position )
-{
-    glUniform3fv( positionLocation_, 1, &position[0] );
-}
-
 
 void Light::setLightColor( const glm::vec3& color )
 {

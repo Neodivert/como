@@ -34,12 +34,6 @@ class Light : public Mesh
     private:
         /*!
          * Location of the GLSL shader uniform variable keeping this light's
-         * position.
-         */
-        GLint positionLocation_;
-
-        /*!
-         * Location of the GLSL shader uniform variable keeping this light's
          * color.
          */
         GLint colorLocation_;
@@ -55,10 +49,9 @@ class Light : public Mesh
          * for the light's associated mesh.
          * \param lightIndex index of this light's data into the array of
          * lights in GLSL shader.
-         * \param position light position.
          * \param color light color.
          */
-        Light( const char* meshPath, GLuint lightIndex, glm::vec3 position, glm::vec3 color );
+        Light( const char* meshPath, GLuint lightIndex, glm::vec3 color );
 
         /*! \brief Copy constructor */
         Light( const Light& ) = delete;
@@ -79,9 +72,6 @@ class Light : public Mesh
          * 3. Getters
          ***/
 
-        /*! \brief Get Light's position */
-        glm::vec3 getPosition();
-
         /*! \brief Get Light's light color */
         glm::vec3 getLightColor();
 
@@ -90,16 +80,8 @@ class Light : public Mesh
          * 4. Setters
          ***/
 
-        // TODO: Use Mesh::translate.
-
-    protected:
-        /*! \brief Move Light to the given position */
-        virtual void setPosition( const glm::vec3& position );
-    public:
-
         /*! \brief Set Light's light color */
         void setLightColor( const glm::vec3& color );
-
 
 
         /***

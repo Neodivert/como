@@ -25,18 +25,8 @@ namespace como {
  * 1. Construction
  ***/
 
-DirectionalLight::DirectionalLight( glm::vec3 position, glm::vec3 lightColor ) :
-    Light( "data/primitives/system/camera.obj", 0, position, lightColor )
+DirectionalLight::DirectionalLight( glm::vec3 lightColor ) :
+    Light( "data/primitives/system/camera.obj", 0, lightColor )
 {}
-
-
-/***
- * 3. Setters
- ***/
-
-void DirectionalLight::setPosition( const glm::vec3& position )
-{
-    Q_UNUSED( position );
-}
 
 } // namespace como

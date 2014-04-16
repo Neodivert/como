@@ -35,13 +35,12 @@ class DirectionalLight : public Light
         /***
          * 1. Construction
          ***/
-        //Light( const char* meshPath, GLuint lightIndex, glm::vec3 position, glm::vec3 color );
 
         /*!
-         * \brief Constructs a directional Light at the given position and with
-         * the specified light color
+         * \brief Constructs a directional Light with the specified light
+         * color.
          */
-        DirectionalLight( glm::vec3 position, glm::vec3 lightColor );
+        DirectionalLight( glm::vec3 lightColor );
 
         /*! \brief Copy constructor */
         DirectionalLight( const DirectionalLight& ) = default;
@@ -59,15 +58,7 @@ class DirectionalLight : public Light
 
 
         /***
-         * 3. Setters
-         ***/
-
-        /*! \brief Move Light to the given position */
-        virtual void setPosition( const glm::vec3& position );
-
-
-        /***
-         * 4. Operators
+         * 3. Operators
          ***/
 
         /*! \brief Copy assignment operator */
