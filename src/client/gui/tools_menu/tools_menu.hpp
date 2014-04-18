@@ -57,7 +57,6 @@ class ToolsMenu : public QTabWidget
         ~ToolsMenu() = default;
 
     protected:
-        QGroupBox* createPivotPointModeSelector();
         QFrame* createColorSelector();
         QFrame* createDirectionalLightColorSelector();
 

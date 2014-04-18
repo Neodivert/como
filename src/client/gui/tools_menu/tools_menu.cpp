@@ -19,6 +19,7 @@
 
 #include "tools_menu.hpp"
 #include "creation_tab.hpp"
+#include "transformation_tab.hpp"
 #include <QVBoxLayout>
 
 namespace como {
@@ -34,6 +35,7 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     currentDirectionalLightColor_( 255, 0, 0, 255 )
 {
     addTab( new CreationTab( comoApp->getScene() ), "Creation" );
+    addTab( new TransformationTab( comoApp ), "Transformation" );
 
     /*
     QVBoxLayout* layout;
@@ -80,36 +82,6 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     }
     editionScopeGroupBox->setLayout( editionScopeGroupBoxLayout );
 
-    // Create a transformation mode's selector. The different radio buttons are copied
-    // in two places:
-    // 1 - In a QGroupBox, for GUI output.
-    // 2 - In a QButtonGroup, for giving each button an unique id. This is used for signal
-    // connecting.
-    transformationModeGroupBox = new QGroupBox( tr( "Transformation mode") );
-    transformationModeButtonGroup = new QButtonGroup( transformationModeGroupBox );
-    transformationModeGroupBoxLayout = new QVBoxLayout;
-
-    // Create a QRadioButton for each transformation mode in the app. Copy the button
-    // to the previous QGroupBox and QButtonGroup.
-    for( unsigned int i = 0; i < N_TRANSFORMATION_MODES; i++ ){
-        transformationModeRadioButton = new QRadioButton( tr( transformationModeStrings[i] ) );
-        transformationModeButtonGroup->addButton( transformationModeRadioButton, i );
-        transformationModeGroupBoxLayout->addWidget( transformationModeRadioButton );
-    }
-    transformationModeGroupBox->setLayout( transformationModeGroupBoxLayout );
-
-    // Change current transformation mode when user select it in the GUI.
-    void (QButtonGroup::*buttonClicked)( int ) = &QButtonGroup::buttonClicked;
-    connect( transformationModeButtonGroup, buttonClicked, [=]( int index ) {
-        comoApp->setTransformationMode( static_cast< TransformationMode >( index ) );
-    } );
-
-    // Update the current checked button when the user change the current
-    // transformation mode (ie. by keypress).
-    connect( comoApp.get(), &ComoApp::transformationModeIndexChanged, [=]( int index ) {
-        ( ( transformationModeButtonGroup->buttons() )[index] )->toggle();
-    } );
-
     // Set tools panel layout.
     layout = new QVBoxLayout;
     layout->setSpacing( 1 );
@@ -126,36 +98,6 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     */
 }
 
-
-QGroupBox* ToolsMenu::createPivotPointModeSelector()
-{
-    QGroupBox* pivotPointModeGroupBox = nullptr;
-    QVBoxLayout* pivotPointModeLayout = nullptr;
-    QComboBox* pivotPointModeSelector = nullptr;
-
-    // Create a QComboBox ("selector") with all possible pivot point modes.
-    pivotPointModeSelector = new QComboBox;
-    for( auto pivotPointModeString : pivotPointModeStrings ){
-        pivotPointModeSelector->addItem( tr( pivotPointModeString ) );
-    }
-
-    // When user change pivot point mode in selector, call ComoApp::setPivotPoint().
-    void (QComboBox::*signal)( int ) = &QComboBox::activated;
-    connect( pivotPointModeSelector, signal, [=]( int index ) {
-        comoApp->getScene()->setPivotPointMode( static_cast< PivotPointMode >( index ) );
-    }  );
-
-    // Set pivot point mode frame layout.
-    pivotPointModeLayout = new QVBoxLayout;
-    pivotPointModeLayout->addWidget( pivotPointModeSelector );
-
-    // Set pivot point mode layout.
-    pivotPointModeGroupBox = new QGroupBox( tr( "Pivot point mode" ) );
-    pivotPointModeGroupBox->setLayout( pivotPointModeLayout );
-
-    // Return the created pivot point mode selector.
-    return pivotPointModeGroupBox;
-}
 
 
 QFrame* ToolsMenu::createColorSelector()

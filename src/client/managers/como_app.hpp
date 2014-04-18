@@ -90,12 +90,12 @@ enum class TransformationMode
 const unsigned int N_TRANSFORMATION_MODES = 4;
 
 // Available transformation modes (strings for GUI output).
-const char transformationModeStrings[N_TRANSFORMATION_MODES][16] =
+const char transformationModeStrings[N_TRANSFORMATION_MODES][32] =
 {
-    "Free",
-    "Fixed to X axis",
-    "Fixed to Y axis",
-    "Fixed to Z axis"
+    "None (Free transformation)",
+    "X axis",
+    "Y axis",
+    "Z axis"
 };
 
 class ComoApp : public QObject {
@@ -163,6 +163,9 @@ class ComoApp : public QObject {
         void appModeIndexChanged( int index );
         void transformationModeIndexChanged( int index );
 };
+
+
+typedef shared_ptr< ComoApp > ComoAppPtr;
 
 } // namespace como
 
