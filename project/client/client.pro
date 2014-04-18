@@ -60,7 +60,9 @@ HEADERS += \
     ../../src/client/models/3d/lights/lights.hpp \
     ../../src/client/models/3d/lights/lighting_manager.hpp \
     ../../src/client/gui/tools_menu/creation_tab.hpp \
-    ../../src/client/gui/tools_menu/transformation_tab.hpp
+    ../../src/client/gui/tools_menu/transformation_tab.hpp \
+    ../../src/client/gui/tools_menu/object_properties_tab/object_properties_tab.hpp \
+    ../../src/client/gui/tools_menu/object_properties_tab/general_info_menu.hpp
 
 
 # Client sources
@@ -91,4 +93,6 @@ SOURCES += \
     ../../src/client/models/3d/lights/directional_light.cpp \
     ../../src/client/models/3d/lights/lighting_manager.cpp \
     ../../src/client/gui/tools_menu/creation_tab.cpp \
-    ../../src/client/gui/tools_menu/transformation_tab.cpp
+    ../../src/client/gui/tools_menu/transformation_tab.cpp \
+    ../../src/client/gui/tools_menu/object_properties_tab/object_properties_tab.cpp \
+    ../../src/client/gui/tools_menu/object_properties_tab/general_info_menu.cpp

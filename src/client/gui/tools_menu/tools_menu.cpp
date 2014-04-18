@@ -20,6 +20,7 @@
 #include "tools_menu.hpp"
 #include "creation_tab.hpp"
 #include "transformation_tab.hpp"
+#include "object_properties_tab/object_properties_tab.hpp"
 #include <QVBoxLayout>
 
 namespace como {
@@ -36,6 +37,7 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
 {
     addTab( new CreationTab( comoApp->getScene() ), "Creation" );
     addTab( new TransformationTab( comoApp ), "Transformation" );
+    addTab( new ObjectPropertiesTab, "Object properties" );
 
     /*
     QVBoxLayout* layout;
