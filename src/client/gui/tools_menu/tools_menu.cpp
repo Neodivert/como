@@ -18,6 +18,7 @@
 ***/
 
 #include "tools_menu.hpp"
+#include "creation_tab.hpp"
 #include <QVBoxLayout>
 
 namespace como {
@@ -28,10 +29,13 @@ namespace como {
  ***/
 
 ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
-    QFrame( parent ),
+    QTabWidget( parent ),
     currentColor_( 255, 0, 0, 255 ),
     currentDirectionalLightColor_( 255, 0, 0, 255 )
 {
+    addTab( new CreationTab( comoApp->getScene() ), "Creation" );
+
+    /*
     QVBoxLayout* layout;
     QLabel* toolsMenuLabel;
     QLabel* appModeLabel;
@@ -119,40 +123,7 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     layout->addWidget( createColorSelector() );
     layout->addWidget( createDirectionalLightColorSelector() );
     setLayout( layout );
-}
-
-
-QFrame* ToolsMenu::createPrimitiveCreationMenu()
-{
-    QFrame* primitiveCreationFrame = nullptr;
-    QVBoxLayout* primitiveCreationLayout = nullptr;
-    QComboBox* primitiveCreationSelector = nullptr;
-
-    // Create an empty dropdown list (QComboBox).
-    primitiveCreationSelector = new QComboBox;
-
-    // Create the layout of this menu.
-    primitiveCreationLayout = new QVBoxLayout();
-    primitiveCreationLayout->addWidget( primitiveCreationSelector );
-
-    // Create the container frame and set its layout.
-    primitiveCreationFrame = new QFrame();
-    primitiveCreationFrame->setLayout( primitiveCreationLayout );
-
-    // Signal / Slot connection: when one of the creation buttons is pressed,
-    // create a drawable of the chosen type.
-    void (QComboBox::*activated)( int ) = &QComboBox::activated;
-    connect( primitiveCreationSelector, activated, [this]( int primitiveID ) {
-        comoApp->getScene()->addMesh( static_cast< PrimitiveID >( primitiveID ), getCurrentColor() );
-    } );
-
-    // Signal / Slot connection: when a new primitive is created in the scene,
-    // add it to the primitives dropdown list.
-    connect( comoApp->getScene().get(), &Scene::primitiveAdded, [=]( const QString& primitiveRelPath, PrimitiveID primitiveID ){
-        primitiveCreationSelector->insertItem( static_cast< int >( primitiveID ), primitiveRelPath );
-    });
-
-    return primitiveCreationFrame;
+    */
 }
 
 

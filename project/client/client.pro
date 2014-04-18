@@ -35,7 +35,7 @@ include( ../common/common.pri )
 HEADERS += \
     ../../src/client/gui/viewport.hpp \
     ../../src/client/gui/view_frame.hpp \
-    ../../src/client/gui/tools_menu.hpp \
+    ../../src/client/gui/tools_menu/tools_menu.hpp \
     ../../src/client/gui/render_panel.hpp \
     ../../src/client/gui/main_window.hpp \
     #../../src/client/managers/tester.hpp \ # TODO: Addapt to new Primitives system and reinsert.
@@ -58,14 +58,15 @@ HEADERS += \
     ../../src/client/models/3d/lights/light.hpp \
     ../../src/client/models/3d/lights/directional_light.hpp \
     ../../src/client/models/3d/lights/lights.hpp \
-    ../../src/client/models/3d/lights/lighting_manager.hpp
+    ../../src/client/models/3d/lights/lighting_manager.hpp \
+    ../../src/client/gui/tools_menu/creation_tab.hpp
 
 
 # Client sources
 SOURCES += \
     ../../src/client/gui/viewport.cpp \
     ../../src/client/gui/view_frame.cpp \
-    ../../src/client/gui/tools_menu.cpp \
+    ../../src/client/gui/tools_menu/tools_menu.cpp \
     ../../src/client/gui/render_panel.cpp \
     ../../src/client/gui/main_window.cpp \
     #../../src/client/managers/tester.cpp \ # TODO: Addapt to new Primitives system and reinsert.
@@ -87,4 +88,5 @@ SOURCES += \
     ../../src/client/models/3d/drawables_selection.cpp \
     ../../src/client/models/3d/lights/light.cpp \
     ../../src/client/models/3d/lights/directional_light.cpp \
-    ../../src/client/models/3d/lights/lighting_manager.cpp
+    ../../src/client/models/3d/lights/lighting_manager.cpp \
+    ../../src/client/gui/tools_menu/creation_tab.cpp

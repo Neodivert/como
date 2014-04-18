@@ -21,13 +21,14 @@
 #define TOOLS_MENU_HPP
 
 #include <QFrame>
+#include <QTabWidget>
 #include <QColorDialog>
 #include <QDir>
-#include "../managers/como_app.hpp"
+#include "../../managers/como_app.hpp"
 
 namespace como {
 
-class ToolsMenu : public QFrame
+class ToolsMenu : public QTabWidget
 {
     Q_OBJECT
 
@@ -56,7 +57,6 @@ class ToolsMenu : public QFrame
         ~ToolsMenu() = default;
 
     protected:
-        QFrame* createPrimitiveCreationMenu();
         QGroupBox* createPivotPointModeSelector();
         QFrame* createColorSelector();
         QFrame* createDirectionalLightColorSelector();
