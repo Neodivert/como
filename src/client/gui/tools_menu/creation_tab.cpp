@@ -48,14 +48,18 @@ QFrame* CreationTab::createMeshFromPrimitiveCreationMenu()
     QFrame* frame = nullptr;
     QVBoxLayout* layout = nullptr;
     QComboBox* primitiveSelector = nullptr;
+    QLabel* label = nullptr;
     const QColor DEFAULT_MESH_COLOR( 255, 0, 0, 255 );
 
     // Create an empty dropdown list (QComboBox).
     primitiveSelector = new QComboBox;
 
+    // Create a label for this menu.
+    label = new QLabel( "Create mesh from primitive: " );
+
     // Create the layout of this menu.
     layout = new QVBoxLayout();
-    layout->addWidget( new QLabel( "Create mesh from primitive: " ) );
+    layout->addWidget( label );
     layout->addWidget( primitiveSelector );
 
     // Create the container frame and set its layout.
