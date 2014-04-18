@@ -33,9 +33,14 @@ namespace como {
  */
 class CreationTab : public QFrame
 {
+    Q_OBJECT
+
     private:
         /*! Pointer to the scene we will add elements to */
         ScenePtr scene_;
+
+        /*! New meshes will be created with this color */
+        QColor meshColor_;
 
     public:
         /***
@@ -56,6 +61,7 @@ class CreationTab : public QFrame
          * 2. Initialization
          ***/
     private:
+        QFrame* createMeshColorSelector();
         QFrame* createMeshFromPrimitiveCreationMenu();
     public:
 
@@ -77,6 +83,13 @@ class CreationTab : public QFrame
 
         /*! \brief Move assignment operator */
         CreationTab& operator = ( CreationTab&& ) = delete;
+
+
+        /***
+         * 5. Signals
+         ***/
+    signals:
+        void meshColorChanged( QColor newColor );
 };
 
 } // namespace como

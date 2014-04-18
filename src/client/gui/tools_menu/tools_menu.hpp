@@ -57,7 +57,6 @@ class ToolsMenu : public QTabWidget
         ~ToolsMenu() = default;
 
     protected:
-        QFrame* createColorSelector();
         QFrame* createDirectionalLightColorSelector();
 
 
@@ -83,7 +82,6 @@ class ToolsMenu : public QTabWidget
 
     signals:
         void currentDirectionalLightColorChanged( QColor newColor );
-        void currentColorChanged( QColor newColor );
 };
 
 } // namespace como

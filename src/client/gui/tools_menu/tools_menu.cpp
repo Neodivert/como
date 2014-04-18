@@ -99,44 +99,6 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
 }
 
 
-
-QFrame* ToolsMenu::createColorSelector()
-{
-    QPushButton* selectColorButton = nullptr;
-    QFrame* colorSelectorFrame = nullptr;
-    QVBoxLayout* layout = nullptr;
-
-    // Create the frame that whill hold the color's button and label.
-    colorSelectorFrame = new QFrame( this );
-
-    // Create a label showing the current selected color. The color name will
-    // be colored in that color.
-    currentColorLabel_ = new QLabel( "Current color: <font color=\"" + currentColor_.name() + "\">" + currentColor_.name() + "</font>" );
-
-    // Signal / Slot connection. When the current color changes, change the
-    // previous label's text accordingly.
-    QObject::connect( this, &ToolsMenu::currentColorChanged, [this]( QColor newColor ){
-        currentColorLabel_->setText( "Current color: <font color=\"" + newColor.name() + "\">" + newColor.name() + "</font>" );
-    });
-
-    // Create a button for changing the current color.
-    selectColorButton = new QPushButton( tr( "Select color" ) );
-
-    // Signal / Slot connection. When previous button is clicked, we invoke the
-    // changeCurrentColor method.
-    QObject::connect( selectColorButton, &QPushButton::clicked, this, &ToolsMenu::changeCurrentColor );
-
-    // Set the frame's layout.
-    layout = new QVBoxLayout;
-    layout->addWidget( currentColorLabel_ );
-    layout->addWidget( selectColorButton );
-    colorSelectorFrame->setLayout( layout );
-
-    // Return the frame.
-    return colorSelectorFrame;
-}
-
-
 QFrame* ToolsMenu::createDirectionalLightColorSelector()
 {
     QPushButton* selectColorButton = nullptr;
@@ -198,22 +160,6 @@ QColor ToolsMenu::getCurrentColor() const
 }
 
 
-/***
- * 4. Auxiliar methods
- ***/
 
-void ToolsMenu::changeCurrentColor()
-{
-    // Open a dialog for selecting a new color.
-    currentColor_ = QColorDialog::getColor( currentColor_ );
-
-    // If the selected color is not valid, change it to red.
-    if( !( currentColor_.isValid() ) ){
-        currentColor_.setRgb( 255, 0, 0 );
-    }
-
-    // Emit a signal indicating that the current color has changed.
-    emit currentColorChanged( currentColor_ );
-}
 
 } // namespace como
