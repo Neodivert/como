@@ -51,6 +51,7 @@ GeneralInfoMenu::GeneralInfoMenu( DrawablesSelectionPtr userSelection ) :
 
 void GeneralInfoMenu::refresh()
 {
+    objectName_->setText( userSelection_->getName().c_str() );
     objectType_->setText( userSelection_->getTypeName().c_str() );
 }
 

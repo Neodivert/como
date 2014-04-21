@@ -60,12 +60,14 @@ class Drawable
 
         glm::mat4 transformationMatrix;
 
+        std::string name_;
+
     public:
         /***
          * 1. Initialization and destruction
          ***/
         // Constructor. Initialize transformation matrix to identity matrix.
-        Drawable( DrawableType type );
+        Drawable( DrawableType type, std::string name );
         Drawable( const Drawable& ) = delete;
         Drawable( Drawable&& ) = delete;
 
@@ -78,6 +80,7 @@ class Drawable
         glm::mat4 getTransformationMatrix();
         virtual glm::vec4 getCentroid() const = 0;
         DrawableType getType() const;
+        std::string getName() const;
 
 
         /***

@@ -80,6 +80,7 @@ class DrawablesSelection : public QObject
          ***/
         glm::vec4 getCentroid() const ;
         PivotPointMode getPivotPointMode() const ;
+        std::string getName() const;
         std::string getTypeName() const;
         unsigned int getSize() const;
 

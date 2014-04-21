@@ -40,7 +40,7 @@ const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
  ***/
 
 Mesh::Mesh( MeshType type, const char* fileName, const std::uint8_t* color ) :
-    Drawable( DrawableType::MESH ),
+    Drawable( DrawableType::MESH, "Mesh #" ),
     type_( type )
 {
     initMesh( fileName, color );
@@ -48,7 +48,7 @@ Mesh::Mesh( MeshType type, const char* fileName, const std::uint8_t* color ) :
 
 
 Mesh::Mesh( const char* fileName, const std::uint8_t* color ) :
-    Drawable( DrawableType::MESH ),
+    Drawable( DrawableType::MESH, "Mesh #" ),
     type_( MeshType::MESH )
 {   
     initMesh( fileName, color );

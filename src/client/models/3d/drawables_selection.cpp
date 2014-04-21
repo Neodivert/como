@@ -73,13 +73,27 @@ void DrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
     mutex_.unlock();
 }
 
+std::string DrawablesSelection::getName() const
+{
+    const Drawable* drawable = nullptr;
+
+    if( getSize() == 0 ){
+        return std::string( "Nothing selected" );
+    }else if( getSize() == 1 ){
+        drawable = drawables_.begin()->second.get();
+
+        return std::string( drawable->getName() );
+    }else{
+        return getTypeName();
+    }
+}
 
 std::string DrawablesSelection::getTypeName() const
 {
     const Drawable* drawable = nullptr;
 
     if( getSize() == 0 ){
-        return std::string( "None" );
+        return std::string( "Nothing selected" );
     }else if( getSize() == 1 ){
         drawable = drawables_.begin()->second.get();
         switch( drawable->getType() ){
