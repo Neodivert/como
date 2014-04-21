@@ -23,6 +23,7 @@
 #include <QWidget>
 #include <QLineEdit>
 #include <QLabel>
+#include "../../../models/3d/drawables_selection.hpp"
 
 namespace como {
 
@@ -31,6 +32,9 @@ class GeneralInfoMenu : public QWidget
     Q_OBJECT
 
     private:
+        /*! Local user's (drawables) selection */
+        DrawablesSelectionPtr userSelection_;
+
         /*! Name of the currently selected 3D object. */
         QLineEdit* objectName_;
 
@@ -43,7 +47,7 @@ class GeneralInfoMenu : public QWidget
          ***/
 
         /*! \brief Default constructor */
-        GeneralInfoMenu();
+        GeneralInfoMenu( DrawablesSelectionPtr userSelection );
 
         /*! \brief Copy constructor */
         GeneralInfoMenu( const GeneralInfoMenu& ) = delete;
@@ -65,6 +69,14 @@ class GeneralInfoMenu : public QWidget
 
         /*! \brief Destructor */
         ~GeneralInfoMenu() = default;
+
+
+        /***
+         * 4. Refreshing
+         ***/
+
+        /*! \brief Refresh the info about the user's selection properties */
+        void refresh();
 
 
         /***

@@ -24,7 +24,8 @@
 
 namespace como {
 
-GeneralInfoMenu::GeneralInfoMenu()
+GeneralInfoMenu::GeneralInfoMenu( DrawablesSelectionPtr userSelection ) :
+    userSelection_( userSelection )
 {
     // Create a layout for this widget.
     QFormLayout* layout = new QFormLayout;
@@ -41,6 +42,16 @@ GeneralInfoMenu::GeneralInfoMenu()
     layout->addRow( new QLabel( "Name:" ), objectName_ );
     layout->addRow( new QLabel( "Type:" ), objectType_ );
     setLayout( layout );
+}
+
+
+/***
+ * 4. Refreshing
+ ***/
+
+void GeneralInfoMenu::refresh()
+{
+    objectType_->setText( userSelection_->getTypeName().c_str() );
 }
 
 } // namespace como

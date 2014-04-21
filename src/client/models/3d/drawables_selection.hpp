@@ -21,11 +21,13 @@
 #define DRAWABLES_SELECTION_HPP
 
 #include "drawable.hpp"
+#include "mesh.hpp"
 #include "../../../common/utilities/ids.hpp"
 #include "../../../common/commands/user_commands/parameter_change_command.hpp" // For PivotPointMode type.
 #include <map>
 #include <functional>
 #include <mutex>
+#include <QObject>
 
 namespace como {
 
@@ -44,8 +46,10 @@ const char pivotPointModeStrings[N_PIVOT_POINT_MODES][32] =
 };
 
 
-class DrawablesSelection
+class DrawablesSelection : public QObject
 {
+    Q_OBJECT
+
     private:
         // Drawables in the selection.
         DrawablesMap drawables_;
@@ -127,6 +131,12 @@ class DrawablesSelection
          ***/
         DrawablesSelection& operator=( const DrawablesSelection& ) = delete ;
         DrawablesSelection& operator=( DrawablesSelection&& ) = delete;
+
+        /***
+         * 10. Signals
+         ***/
+    signals:
+        void selectionChanged();
 };
 
 typedef shared_ptr< DrawablesSelection > DrawablesSelectionPtr;

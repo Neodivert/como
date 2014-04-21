@@ -34,18 +34,31 @@ PropertiesTab::PropertiesTab( DrawablesSelectionPtr userSelection ) :
     QVBoxLayout* layout = new QVBoxLayout;
 
     // Construct the General Info menu.
-    generalInfoMenu_ = new GeneralInfoMenu;
+    generalInfoMenu_ = new GeneralInfoMenu( userSelection_ );
 
     // Add required widgets to the layout and set the latter as the current
     // layout.
     layout->addWidget( generalInfoMenu_ );
     setLayout( layout );
+
+    // Every time the user's selection changes, refres this properties tab.
+    connect( userSelection_.get(), &DrawablesSelection::selectionChanged, this, &PropertiesTab::refresh );
 }
 
 
 /***
  * 2. Initialization
  ***/
+
+
+/***
+ * 3. Refreshing
+ ***/
+
+void PropertiesTab::refresh()
+{
+    generalInfoMenu_->refresh();
+}
 
 
 } // namespace como

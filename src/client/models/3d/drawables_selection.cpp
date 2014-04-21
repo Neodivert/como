@@ -69,16 +69,42 @@ void DrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 {
     mutex_.lock();
     pivotPointMode_ = pivotPointMode;
+    emit selectionChanged();
     mutex_.unlock();
 }
 
 
 std::string DrawablesSelection::getTypeName() const
 {
-    if( getSize() > 1 ){
-        return std::string( "selection" );
+    const Drawable* drawable = nullptr;
+
+    if( getSize() == 0 ){
+        return std::string( "None" );
+    }else if( getSize() == 1 ){
+        drawable = drawables_.begin()->second.get();
+        switch( drawable->getType() ){
+            case DrawableType::MESH:
+                switch( ( dynamic_cast< const Mesh* >( drawable ) )->getType() ){
+                    case MeshType::MESH:
+                        return std::string( "Mesh" );
+                    break;
+                    case MeshType::CAMERA:
+                        return std::string( "Camera" );
+                    break;
+                    case MeshType::LIGHT:
+                        return std::string( "Light" );
+                    break;
+                    default:
+                        return std::string( "Error" );
+                    break;
+                }
+            break;
+            default:
+                return std::string( "Error" );
+            break;
+        }
     }else{
-        return std::string( "drawable" );
+        return std::string( "Selection" );
     }
 }
 
@@ -113,6 +139,8 @@ void DrawablesSelection::translate( glm::vec3 direction )
     // Update the selection's centroid.
     updateSelectionCentroid();
 
+    emit selectionChanged();
+
     mutex_.unlock();
 }
 
@@ -146,6 +174,8 @@ void DrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
     // Update the selection's centroid.
     updateSelectionCentroid();
 
+    emit selectionChanged();
+
     mutex_.unlock();
 }
 
@@ -178,6 +208,8 @@ void DrawablesSelection::scale( glm::vec3 scaleFactors )
 
     // Update the selection's centroid.
     updateSelectionCentroid();
+
+    emit selectionChanged();
 
     mutex_.unlock();
 }
@@ -230,6 +262,8 @@ void DrawablesSelection::addDrawable( PackableDrawableID drawableID, DrawablePtr
     // Insert the given pair <ID, drawable> into the selection.
     drawables_[ drawableID ] = drawable;
 
+    emit selectionChanged();
+
     mutex_.unlock();
 }
 
@@ -251,6 +285,7 @@ bool DrawablesSelection::moveDrawable( PackableDrawableID drawableID, DrawablesS
         updateSelectionCentroid();
 
         // Drawable found and moved.
+        emit selectionChanged();
         mutex_.unlock();
         return true;
     }else{
@@ -278,6 +313,7 @@ void DrawablesSelection::moveAll( DrawablesSelection& destinySelection )
     // Clear the current selection.
     clear();
 
+    emit selectionChanged();
     mutex_.unlock();
 }
 
@@ -292,6 +328,7 @@ void DrawablesSelection::clear()
     // Update the selection centroid.
     centroid_ = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
 
+    emit selectionChanged();
     mutex_.unlock();
 }
 

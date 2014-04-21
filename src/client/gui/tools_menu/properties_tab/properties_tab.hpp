@@ -37,7 +37,7 @@ class PropertiesTab : public QFrame
     Q_OBJECT
 
     private:
-        /*! Local user's (drawables) selection */
+        /*! Local user's (drawables) selection. */
         DrawablesSelectionPtr userSelection_;
 
         /*!
@@ -70,9 +70,18 @@ class PropertiesTab : public QFrame
 
 
         /***
-         * 3. Operators
+         * 3. Refreshing
          ***/
 
+        /*! \brief Refresh the info about the user's selection properties */
+    public slots:
+        void refresh();
+
+
+        /***
+         * 4. Operators
+         ***/
+    public:
         /*! \brief Copy assignment operator */
         PropertiesTab& operator = ( const PropertiesTab& ) = delete;
 
