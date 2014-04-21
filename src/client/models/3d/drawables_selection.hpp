@@ -75,6 +75,8 @@ class DrawablesSelection
          ***/
         glm::vec4 getCentroid() const ;
         PivotPointMode getPivotPointMode() const ;
+        std::string getTypeName() const;
+        unsigned int getSize() const;
 
 
         /***

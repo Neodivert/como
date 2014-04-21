@@ -73,6 +73,28 @@ void DrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 }
 
 
+std::string DrawablesSelection::getTypeName() const
+{
+    if( getSize() > 1 ){
+        return std::string( "selection" );
+    }else{
+        return std::string( "drawable" );
+    }
+}
+
+
+unsigned int DrawablesSelection::getSize() const
+{
+    unsigned int size = 0;
+
+    mutex_.lock();
+    size = drawables_.size();
+    mutex_.unlock();
+
+    return size;
+}
+
+
 /***
  * 4. Transformations
  ***/

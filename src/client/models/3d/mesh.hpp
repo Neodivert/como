@@ -34,6 +34,13 @@ namespace como {
 const GLuint COMPONENTS_PER_VERTEX_POSITION = 3;
 const GLuint COMPONENTS_PER_VERTEX = 6;
 
+enum class MeshType : std::uint8_t
+{
+    MESH = 0,
+    CAMERA,
+    LIGHT
+};
+
 
 /***
  * File main class
@@ -42,6 +49,9 @@ const GLuint COMPONENTS_PER_VERTEX = 6;
 class Mesh : public Drawable
 {
     private:
+        // Mesh type
+        MeshType type_;
+
         // Location of the uniform shader variable used for coloring geometries.
         static GLint uniformColorLocation;
 
@@ -75,10 +85,12 @@ class Mesh : public Drawable
         glm::vec4 transformedCentroid;
 
 
-    public:
         /***
          * 1. Construction.
          ***/
+    protected:
+        Mesh( MeshType type, const char* file, const std::uint8_t* color = nullptr );
+    public:
         Mesh( const char* file, const std::uint8_t* color = nullptr );
         Mesh( const Mesh& ) = delete;
         Mesh( Mesh&& ) = delete;
@@ -94,6 +106,8 @@ class Mesh : public Drawable
          * 3. Initialization.
          ***/
     private:
+        void initMesh( const char* file, const std::uint8_t* color = nullptr );
+
         void initMeshBuffers();
 
         void initVertexData();
@@ -112,6 +126,7 @@ class Mesh : public Drawable
         /***
          * 5. Getters.
          ***/
+        MeshType getType() const ;
         glm::vec4 getCentroid() const ;
         void getVertexData( unsigned int& n, GLfloat* vertices );
 

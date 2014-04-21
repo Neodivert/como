@@ -75,7 +75,8 @@ void checkOpenGL( const char* str )
  * 1. Initialization and destruction
  ***/
 
-Drawable::Drawable()
+Drawable::Drawable( DrawableType type ) :
+    type_( type )
 {
     // Initialize transformation matrixes to identity matrix.
     transformationMatrix = glm::mat4( 1.0f );
@@ -88,12 +89,18 @@ Drawable::Drawable()
 
 
 /***
-* 2. Setters and getters
+ * 2. Getters
  ***/
 
 glm::mat4 Drawable::getTransformationMatrix()
 {
     return transformationMatrix;
+}
+
+
+DrawableType Drawable::getType() const
+{
+    return type_;
 }
 
 

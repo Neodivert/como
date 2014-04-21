@@ -39,24 +39,19 @@ const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
  * 1. Construction.
  ***/
 
-Mesh::Mesh( const char* fileName, const std::uint8_t* color )
+Mesh::Mesh( MeshType type, const char* fileName, const std::uint8_t* color ) :
+    Drawable( DrawableType::MESH ),
+    type_( type )
+{
+    initMesh( fileName, color );
+}
+
+
+Mesh::Mesh( const char* fileName, const std::uint8_t* color ) :
+    Drawable( DrawableType::MESH ),
+    type_( MeshType::MESH )
 {   
-    checkOpenGL( "Mesh( const char* fileName, const std::uint8_t* color ) - 1" );
-
-    // Initialize OpenGL objects (VBO, VAO, EBO, ...) associated to this Mesh.
-    initMeshBuffers();
-
-    // Set the mesh's color.
-    if( color ){
-        setColor( color[0] / 255.0f, color[1] / 255.0f, color[2] / 255.0f, 1.0f );
-    }else{
-        setColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
-    }
-
-    // Load vertex data from given file.
-    LoadFromOBJ( fileName );
-
-    checkOpenGL( "Mesh( const char* fileName, const std::uint8_t* color ) - 2" );
+    initMesh( fileName, color );
 }
 
 
@@ -77,6 +72,26 @@ Mesh::~Mesh()
 /***
  * 3. Initialization.
  ***/
+
+void Mesh::initMesh( const char* fileName, const std::uint8_t* color )
+{
+    checkOpenGL( "Mesh( const char* fileName, const std::uint8_t* color ) - 1" );
+
+    // Initialize OpenGL objects (VBO, VAO, EBO, ...) associated to this Mesh.
+    initMeshBuffers();
+
+    // Set the mesh's color.
+    if( color ){
+        setColor( color[0] / 255.0f, color[1] / 255.0f, color[2] / 255.0f, 1.0f );
+    }else{
+        setColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
+    }
+
+    // Load vertex data from given file.
+    LoadFromOBJ( fileName );
+
+    checkOpenGL( "Mesh( const char* fileName, const std::uint8_t* color ) - 2" );
+}
 
 
 void Mesh::initMeshBuffers()
@@ -272,6 +287,12 @@ void Mesh::LoadFromOBJ( const char* filePath )
 /***
  * 5. Getters.
  ***/
+
+MeshType Mesh::getType() const
+{
+    return type_;
+}
+
 
 glm::vec4 Mesh::getCentroid() const
 {

@@ -38,21 +38,6 @@ namespace como {
 
 const unsigned int TRANSFORMATION_FLOAT_PRECISION = 10000;
 
-// Available drawable types.
-enum class DrawableType
-{
-    CUBE = 0
-};
-
-const unsigned int N_DRAWABLE_TYPES = 1;
-
-// Available drawable types (strings for GUI output).
-const char drawableTypeStrings[N_DRAWABLE_TYPES][16] =
-{
-    "Cube"
-};
-
-
 enum LinesBufferOffset {
     WORLD_AXIS = 0,
     GUIDE_AXIS,

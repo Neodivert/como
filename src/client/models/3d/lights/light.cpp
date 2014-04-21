@@ -26,7 +26,7 @@ namespace como {
  ***/
 
 Light::Light( const char* meshPath, GLuint lightIndex, glm::vec3 color ) :
-    Mesh( meshPath )
+    Mesh( MeshType::LIGHT, meshPath )
 {
     GLint currentShaderProgram = -1;
     char uniformName[64];

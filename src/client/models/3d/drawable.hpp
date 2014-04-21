@@ -35,6 +35,11 @@ enum COORDINATES
     Z
 };
 
+enum class DrawableType : std::uint8_t
+{
+    MESH = 0
+};
+
 
 /***
  * Main file class
@@ -45,6 +50,10 @@ void checkOpenGL( const char* str );
 
 class Drawable
 {
+    private:
+        /*! Type of drawable */
+        const DrawableType type_;
+
     protected:
         std::array< glm::vec4, 3 > originalOrientation;
         std::array< glm::vec4, 3 > transformedOrientation;
@@ -56,17 +65,20 @@ class Drawable
          * 1. Initialization and destruction
          ***/
         // Constructor. Initialize transformation matrix to identity matrix.
-        Drawable();
+        Drawable( DrawableType type );
         Drawable( const Drawable& ) = delete;
         Drawable( Drawable&& ) = delete;
 
         virtual ~Drawable(){}
 
+
         /***
-         * 2. Setters and getters
+         * 2. Getters
          ***/
         glm::mat4 getTransformationMatrix();
         virtual glm::vec4 getCentroid() const = 0;
+        DrawableType getType() const;
+
 
         /***
          * 3. Transformations
