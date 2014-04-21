@@ -37,7 +37,11 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
 {
     addTab( new CreationTab( comoApp->getScene() ), "Creation" );
     addTab( new TransformationTab( comoApp ), "Transformation" );
-    addTab( new PropertiesTab, "Properties" );
+
+    connect( comoApp->getScene().get(), &Scene::connectedToScene, [=,this](){
+        addTab( new PropertiesTab( comoApp->getScene()->getUserSelection() ), "Properties" );
+        // TODO: Remove tab when disconnected from scene.
+    });
 
     /*
     QVBoxLayout* layout;

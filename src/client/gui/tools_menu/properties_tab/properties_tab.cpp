@@ -27,7 +27,8 @@ namespace como {
  * 1. Construction
  ***/
 
-PropertiesTab::PropertiesTab()
+PropertiesTab::PropertiesTab( DrawablesSelectionPtr userSelection ) :
+    userSelection_( userSelection )
 {
     // Create the layout for this widget.
     QVBoxLayout* layout = new QVBoxLayout;

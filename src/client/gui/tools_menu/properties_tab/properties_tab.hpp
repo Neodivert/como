@@ -22,6 +22,7 @@
 
 #include <QFrame>
 #include "general_info_menu.hpp"
+#include "../../../models/3d/drawables_selection.hpp"
 
 namespace como {
 
@@ -36,6 +37,9 @@ class PropertiesTab : public QFrame
     Q_OBJECT
 
     private:
+        /*! Local user's (drawables) selection */
+        DrawablesSelectionPtr userSelection_;
+
         /*!
          * Menu for manipulating the general info about the currently selected
          * 3D object.
@@ -48,7 +52,7 @@ class PropertiesTab : public QFrame
          ***/
 
         /*! \brief Default constructor */
-        PropertiesTab();
+        PropertiesTab( DrawablesSelectionPtr userSelection );
 
         /*! \brief Copy constructor */
         PropertiesTab( const PropertiesTab& ) = delete;
