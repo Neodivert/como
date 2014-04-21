@@ -22,6 +22,7 @@
 
 #include "drawable.hpp"
 #include "mesh.hpp"
+#include "lights/light.hpp"
 #include "../../../common/utilities/ids.hpp"
 #include "../../../common/commands/user_commands/parameter_change_command.hpp" // For PivotPointMode type.
 #include <map>

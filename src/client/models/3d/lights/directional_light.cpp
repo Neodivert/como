@@ -26,7 +26,7 @@ namespace como {
  ***/
 
 DirectionalLight::DirectionalLight( glm::vec3 lightColor ) :
-    Light( "data/primitives/system/directional_light.obj", 0, lightColor )
+    Light( LightType::DIRECTIONAL_LIGHT, "data/primitives/system/directional_light.obj", 0, lightColor )
 {
     GLint currentShaderProgram = 0;
     const GLuint lightIndex = 0; // TODO: Retrieve this as an method argument.

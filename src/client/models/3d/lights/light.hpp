@@ -24,6 +24,11 @@
 
 namespace como {
 
+enum class LightType : std::uint8_t
+{
+    DIRECTIONAL_LIGHT = 0
+};
+
 /*!
  * \class Light
  *
@@ -32,6 +37,9 @@ namespace como {
 class Light : public Mesh
 {
     private:
+        /*! Light type */
+        const LightType type_;
+
         /*!
          * Location of the GLSL shader uniform variable keeping this light's
          * color.
@@ -45,13 +53,14 @@ class Light : public Mesh
 
         /*!
          * \brief Constructs a light from the given data.
+         * \param type light type
          * \param primitivePath path to the file containing the specification
          * for the light's associated mesh.
          * \param lightIndex index of this light's data into the array of
          * lights in GLSL shader.
          * \param color light color.
          */
-        Light( const char* meshPath, GLuint lightIndex, glm::vec3 color );
+        Light( LightType type, const char* meshPath, GLuint lightIndex, glm::vec3 color );
 
         /*! \brief Copy constructor */
         Light( const Light& ) = delete;
@@ -73,7 +82,10 @@ class Light : public Mesh
          ***/
 
         /*! \brief Get Light's light color */
-        glm::vec3 getLightColor();
+        glm::vec3 getLightColor() const;
+
+        /*! \brief Get the light type */
+        LightType getType() const;
 
 
         /***

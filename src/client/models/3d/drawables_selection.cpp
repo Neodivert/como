@@ -92,15 +92,22 @@ std::string DrawablesSelection::getTypeName() const
                         return std::string( "Camera" );
                     break;
                     case MeshType::LIGHT:
-                        return std::string( "Light" );
+                        switch( ( dynamic_cast< const Light* >( drawable ) )->getType() ){
+                            case LightType::DIRECTIONAL_LIGHT:
+                                return std::string( "Directional light" );
+                            break;
+                            default:
+                                return std::string( "Undefined light" );
+                            break;
+                        }
                     break;
                     default:
-                        return std::string( "Error" );
+                        return std::string( "Undefined mesh" );
                     break;
                 }
             break;
             default:
-                return std::string( "Error" );
+                return std::string( "Undefined drawable" );
             break;
         }
     }else{

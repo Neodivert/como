@@ -25,8 +25,9 @@ namespace como {
  * 1. Construction
  ***/
 
-Light::Light( const char* meshPath, GLuint lightIndex, glm::vec3 color ) :
-    Mesh( MeshType::LIGHT, meshPath )
+Light::Light( LightType type, const char* meshPath, GLuint lightIndex, glm::vec3 color ) :
+    Mesh( MeshType::LIGHT, meshPath ),
+    type_( type )
 {
     GLint currentShaderProgram = -1;
     char uniformName[64];
@@ -49,7 +50,7 @@ Light::Light( const char* meshPath, GLuint lightIndex, glm::vec3 color ) :
  * 3. Getters
  ***/
 
-glm::vec3 Light::getLightColor()
+glm::vec3 Light::getLightColor() const
 {
     GLint currentShaderProgram = -1;
     glm::vec3 color( 0.0f );
@@ -58,6 +59,12 @@ glm::vec3 Light::getLightColor()
     glGetUniformfv( currentShaderProgram, colorLocation_, &color[0] );
 
     return color;
+}
+
+
+LightType Light::getType() const
+{
+    return type_;
 }
 
 
