@@ -17,7 +17,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "object_properties_tab.hpp"
+#include "properties_tab.hpp"
 #include <QVBoxLayout>
 
 namespace como {
@@ -27,7 +27,7 @@ namespace como {
  * 1. Construction
  ***/
 
-ObjectPropertiesTab::ObjectPropertiesTab()
+PropertiesTab::PropertiesTab()
 {
     // Create the layout for this widget.
     QVBoxLayout* layout = new QVBoxLayout;

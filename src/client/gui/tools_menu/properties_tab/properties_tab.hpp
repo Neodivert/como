@@ -17,8 +17,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef OBJECT_PROPERTIES_TAB_HPP
-#define OBJECT_PROPERTIES_TAB_HPP
+#ifndef PROPERTIES_TAB_HPP
+#define PROPERTIES_TAB_HPP
 
 #include <QFrame>
 #include "general_info_menu.hpp"
@@ -26,12 +26,12 @@
 namespace como {
 
 /*!
- * \class ObjectPropertiesTab
+ * \class PropertiesTab
  *
  * \brief Tools menu's tab that allows the user to view and to modify the
  * properties of the current selected 3D object.
  */
-class ObjectPropertiesTab : public QFrame
+class PropertiesTab : public QFrame
 {
     Q_OBJECT
 
@@ -48,13 +48,13 @@ class ObjectPropertiesTab : public QFrame
          ***/
 
         /*! \brief Default constructor */
-        ObjectPropertiesTab();
+        PropertiesTab();
 
         /*! \brief Copy constructor */
-        ObjectPropertiesTab( const ObjectPropertiesTab& ) = delete;
+        PropertiesTab( const PropertiesTab& ) = delete;
 
         /*! \brief Move constructor */
-        ObjectPropertiesTab( ObjectPropertiesTab&& ) = delete;
+        PropertiesTab( PropertiesTab&& ) = delete;
 
 
         /***
@@ -62,7 +62,7 @@ class ObjectPropertiesTab : public QFrame
          ***/
 
         /*! \brief Destructor */
-        ~ObjectPropertiesTab() = default;
+        ~PropertiesTab() = default;
 
 
         /***
@@ -70,12 +70,12 @@ class ObjectPropertiesTab : public QFrame
          ***/
 
         /*! \brief Copy assignment operator */
-        ObjectPropertiesTab& operator = ( const ObjectPropertiesTab& ) = delete;
+        PropertiesTab& operator = ( const PropertiesTab& ) = delete;
 
         /*! \brief Move assignment operator */
-        ObjectPropertiesTab& operator = ( ObjectPropertiesTab&& ) = delete;
+        PropertiesTab& operator = ( PropertiesTab&& ) = delete;
 };
 
 } // namespace como
 
-#endif // OBJECT_PROPERTIES_TAB_HPP
+#endif // PROPERTIES_TAB_HPP
