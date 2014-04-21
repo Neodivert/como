@@ -26,7 +26,8 @@ namespace como {
  ***/
 
 PublicUser::PublicUser( const UserConnectionCommand* userConnectedPacket ) :
-    BasicUser( userConnectedPacket->getUserID(), userConnectedPacket->getName() )
+    BasicUser( userConnectedPacket->getUserID(), userConnectedPacket->getName() ),
+    selection( new DrawablesSelection )
 {
     unsigned int i = 0;
 

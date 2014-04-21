@@ -127,8 +127,10 @@ class DrawablesSelection
          ***/
         DrawablesSelection& operator=( const DrawablesSelection& ) = delete ;
         DrawablesSelection& operator=( DrawablesSelection&& ) = delete;
-
 };
+
+typedef shared_ptr< DrawablesSelection > DrawablesSelectionPtr;
+typedef shared_ptr< const DrawablesSelection > DrawablesSelectionConstPtr;
 
 } // namespace como
 

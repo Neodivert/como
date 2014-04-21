@@ -31,7 +31,7 @@ class PublicUser : public BasicUser
     // TODO: Change to private and implement getters and setters.
     public:
         GLfloat color[4];
-        DrawablesSelection selection;
+        DrawablesSelectionPtr selection;
 
 
         /***

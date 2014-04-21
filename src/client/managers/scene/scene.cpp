@@ -245,29 +245,17 @@ shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
     return oglContext_;
 }
 
-DrawablesSelection* Scene::getUserSelection()
+
+DrawablesSelectionPtr Scene::getUserSelection() const
 {
     return getUserSelection( localUserID_ );
 }
 
 
-DrawablesSelection* Scene::getUserSelection( UserID userID )
+DrawablesSelectionPtr Scene::getUserSelection( UserID userID ) const
 {
-    return &( users_.at( userID )->selection );
+    return users_.at( userID )->selection;
 }
-
-
-const DrawablesSelection* Scene::getUserSelection() const
-{
-    return getUserSelection( localUserID_ );
-}
-
-
-const DrawablesSelection* Scene::getUserSelection( UserID userID ) const
-{
-    return &( users_.at( userID )->selection );
-}
-
 
 
 /***
@@ -464,18 +452,18 @@ void Scene::selectDrawable( PackableDrawableID drawableID, UserID userID )
     UsersMap::iterator currentUser;
 
     // Retrieve user's selection.
-    DrawablesSelection& userSelection = users_.at( userID )->selection;
+    DrawablesSelectionPtr userSelection = users_.at( userID )->selection;
 
     // Check if the desired drawable is among the non selected ones, and move
     // it to the user's selection in that case.
-    drawableFound = nonSelectedDrawables.moveDrawable( drawableID, userSelection );
+    drawableFound = nonSelectedDrawables.moveDrawable( drawableID, *userSelection );
 
 
     // If not found, search the desired drawable among the user's selections.
     if( !drawableFound ){
         currentUser = users_.begin();
         while( !drawableFound && ( currentUser != users_.end()) ){
-            drawableFound = currentUser->second->selection.moveDrawable( drawableID, userSelection );
+            drawableFound = currentUser->second->selection->moveDrawable( drawableID, *userSelection );
         }
     }
 
@@ -508,10 +496,10 @@ void Scene::unselectAll()
 
 void Scene::unselectAll( const unsigned int& userId )
 {
-    DrawablesSelection& userSelection = users_.at( userId )->selection;
+    DrawablesSelectionPtr userSelection = users_.at( userId )->selection;
 
     // Move all drawables from user selection to non selected set.
-    userSelection.moveAll( nonSelectedDrawables );
+    userSelection->moveAll( nonSelectedDrawables );
 
     emit renderNeeded();
 }
@@ -524,7 +512,7 @@ PackableDrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1
     float minT = MAX_T;
     PackableDrawableID closestObject;
 
-    DrawablesSelection& userSelection = users_.at( localUserID_ )->selection;
+    DrawablesSelectionPtr userSelection = users_.at( localUserID_ )->selection;
 
     r1 = glm::normalize( r1 );
 
@@ -534,7 +522,6 @@ PackableDrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1
     if( !addToSelection ){
         unselectAll();
     }
-
 
     // Check if the given ray intersect any of the non selected drawables.
     if( nonSelectedDrawables.intersect( r0, r1, closestObject, minT ) ){
@@ -552,7 +539,7 @@ PackableDrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1
     }else{
         // If user dind't selected any non-selected drawable, check if he / she
         // clicked on an already selected one.
-        if( userSelection.intersect( r0, r1, closestObject, minT ) ){
+        if( userSelection->intersect( r0, r1, closestObject, minT ) ){
             log_->debug( "RETURN 0\n" );
             emit renderNeeded();
             return NULL_DRAWABLE_ID;
@@ -753,7 +740,7 @@ void Scene::draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect ) co
 
     // Draw the user's selections.
     for( ; usersIterator != users_.end(); usersIterator++  ){
-        (usersIterator->second)->selection.draw( viewProjMatrix, (usersIterator->second)->color );
+        (usersIterator->second)->selection->draw( viewProjMatrix, (usersIterator->second)->color );
     }
 
     // Draw a guide rect if asked.

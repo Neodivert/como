@@ -122,12 +122,8 @@ class Scene : public QOffscreenSurface
         glm::vec3 getPivotPoint() const ;
         glm::vec3 getPivotPoint( UserID userID ) const ;
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
-    private:
-        DrawablesSelection* getUserSelection();
-        DrawablesSelection* getUserSelection( UserID userID );
-        const DrawablesSelection* getUserSelection() const ;
-        const DrawablesSelection* getUserSelection( UserID userID ) const ;
-
+        DrawablesSelectionPtr getUserSelection() const;
+        DrawablesSelectionPtr getUserSelection( UserID userID ) const;
 
 
         /***
