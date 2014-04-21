@@ -25,6 +25,7 @@
 #include "../../../common/commands/user_commands/parameter_change_command.hpp" // For PivotPointMode type.
 #include <map>
 #include <functional>
+#include <mutex>
 
 namespace como {
 
@@ -54,6 +55,9 @@ class DrawablesSelection
 
         // Selection's pivot point mode.
         PivotPointMode pivotPointMode_;
+
+        // Mutex for concurrent access to this selection.
+        mutable std::recursive_mutex mutex_;
 
     public:
         /***

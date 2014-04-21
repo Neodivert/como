@@ -39,13 +39,25 @@ DrawablesSelection::DrawablesSelection() :
 
 glm::vec4 DrawablesSelection::getCentroid() const
 {
-    return centroid_;
+    glm::vec4 centroid;
+
+    mutex_.lock();
+    centroid = centroid_;
+    mutex_.unlock();
+
+    return centroid;
 }
 
 
 PivotPointMode DrawablesSelection::getPivotPointMode() const
 {
-    return pivotPointMode_;
+    PivotPointMode pivotPointMode;
+
+    mutex_.lock();
+    pivotPointMode = pivotPointMode_;
+    mutex_.unlock();
+
+    return pivotPointMode;
 }
 
 
@@ -55,7 +67,9 @@ PivotPointMode DrawablesSelection::getPivotPointMode() const
 
 void DrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 {
+    mutex_.lock();
     pivotPointMode_ = pivotPointMode;
+    mutex_.unlock();
 }
 
 
@@ -64,8 +78,10 @@ void DrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
  ***/
 
 void DrawablesSelection::translate( glm::vec3 direction )
-{
+{   
     DrawablesMap::iterator drawable;
+
+    mutex_.lock();
 
     // Translate every drawable in the selection.
     for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
@@ -74,12 +90,16 @@ void DrawablesSelection::translate( glm::vec3 direction )
 
     // Update the selection's centroid.
     updateSelectionCentroid();
+
+    mutex_.unlock();
 }
 
 
 void DrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
 {
     DrawablesMap::iterator drawable;
+
+    mutex_.lock();
 
     // Rotate every drawable in the selection according to the selected
     // pivot point mode.
@@ -103,12 +123,16 @@ void DrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
 
     // Update the selection's centroid.
     updateSelectionCentroid();
+
+    mutex_.unlock();
 }
 
 
 void DrawablesSelection::scale( glm::vec3 scaleFactors )
 {
     DrawablesMap::iterator drawable;
+
+    mutex_.lock();
 
     // Scale every drawable in the selection according to the selected
     // pivot point mode.
@@ -132,6 +156,8 @@ void DrawablesSelection::scale( glm::vec3 scaleFactors )
 
     // Update the selection's centroid.
     updateSelectionCentroid();
+
+    mutex_.unlock();
 }
 
 
@@ -177,13 +203,20 @@ void DrawablesSelection::updateSelectionCentroid()
 
 void DrawablesSelection::addDrawable( PackableDrawableID drawableID, DrawablePtr drawable )
 {
+    mutex_.lock();
+
     // Insert the given pair <ID, drawable> into the selection.
     drawables_[ drawableID ] = drawable;
+
+    mutex_.unlock();
 }
 
-
+// TODO: ¿Possible dead lock (if A moves a drawable to B and B moves a drawable
+// to A at the same time)?
 bool DrawablesSelection::moveDrawable( PackableDrawableID drawableID, DrawablesSelection& destinySelection )
 {
+    mutex_.lock();
+
     // Check if the required drawable is in this selection.
     if( drawables_.count( drawableID ) ){
         // Move drawable from current selection to destiny one.
@@ -196,17 +229,24 @@ bool DrawablesSelection::moveDrawable( PackableDrawableID drawableID, DrawablesS
         updateSelectionCentroid();
 
         // Drawable found and moved.
+        mutex_.unlock();
         return true;
     }else{
+
         // Drawable not found.
+        mutex_.unlock();
         return false;
     }
 }
 
 
+// TODO: ¿Possible dead lock (if A moves all to B and B moves all to A at the
+// same time)?
 void DrawablesSelection::moveAll( DrawablesSelection& destinySelection )
 {
     DrawablesMap::iterator drawable;
+
+    mutex_.lock();
 
     // COPY every drawable from current selection to destiny.
     for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
@@ -215,16 +255,22 @@ void DrawablesSelection::moveAll( DrawablesSelection& destinySelection )
 
     // Clear the current selection.
     clear();
+
+    mutex_.unlock();
 }
 
 
 void DrawablesSelection::clear()
 {
+    mutex_.lock();
+
     // Clear the current selection.
     drawables_.clear();
 
     // Update the selection centroid.
     centroid_ = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
+
+    mutex_.unlock();
 }
 
 
@@ -237,6 +283,8 @@ bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, PackableDrawable
     DrawablesMap::const_iterator drawable;
     float t;
     bool drawableIntersected = false;
+
+    mutex_.lock();
 
     // Check if the given ray intersects any drawable in the selection.
     for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
@@ -252,6 +300,8 @@ bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, PackableDrawable
     }
 
     return drawableIntersected;
+
+    mutex_.unlock();
 }
 
 
@@ -263,10 +313,14 @@ void DrawablesSelection::draw( const glm::mat4& viewProjMatrix, const GLfloat* c
 {
     DrawablesMap::const_iterator drawable;
 
+    mutex_.lock();
+
     // Draw every drawable in current selection.
     for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
         drawable->second->draw( viewProjMatrix, contourColor );
     }
+
+    mutex_.unlock();
 }
 
 } // namespace como
