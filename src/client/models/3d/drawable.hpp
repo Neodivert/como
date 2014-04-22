@@ -54,13 +54,14 @@ class Drawable
         /*! Type of drawable */
         const DrawableType type_;
 
+        /*! Name given to the drawable */
+        std::string name_;
+
     protected:
         std::array< glm::vec4, 3 > originalOrientation;
         std::array< glm::vec4, 3 > transformedOrientation;
 
         glm::mat4 transformationMatrix;
-
-        std::string name_;
 
     public:
         /***

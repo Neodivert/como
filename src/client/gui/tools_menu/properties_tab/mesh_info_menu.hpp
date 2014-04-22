@@ -17,41 +17,24 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PROPERTIES_TAB_HPP
-#define PROPERTIES_TAB_HPP
+#ifndef MESH_INFO_MENU_HPP
+#define MESH_INFO_MENU_HPP
 
-#include <QFrame>
-#include "general_info_menu.hpp"
-#include "mesh_info_menu.hpp"
+#include <QObject>
 #include "../../../models/3d/drawables_selection.hpp"
 
 namespace como {
 
-/*!
- * \class PropertiesTab
- *
- * \brief Tools menu's tab that allows the user to view and to modify the
- * properties of the current selected 3D object.
- */
-class PropertiesTab : public QFrame
+class MeshInfoMenu : public QWidget
 {
     Q_OBJECT
 
     private:
-        /*! Local user's (drawables) selection. */
+        /*! Local user's (drawables) selection */
         DrawablesSelectionPtr userSelection_;
 
-        /*!
-         * Menu for manipulating the general info about the currently selected
-         * 3D object.
-         */
-        GeneralInfoMenu* generalInfoMenu_;
-
-        /*!
-         * Menu for manipulating the properties of the mesh(es) selected by
-         * user.
-         */
-        MeshInfoMenu* meshInfoMenu_;
+        /*! Position of the user's selection centroid */
+        QLabel* centroidPosition_;
 
     public:
         /***
@@ -59,13 +42,13 @@ class PropertiesTab : public QFrame
          ***/
 
         /*! \brief Default constructor */
-        PropertiesTab( DrawablesSelectionPtr userSelection );
+        MeshInfoMenu( DrawablesSelectionPtr userSelection );
 
         /*! \brief Copy constructor */
-        PropertiesTab( const PropertiesTab& ) = delete;
+        MeshInfoMenu( const MeshInfoMenu& ) = delete;
 
         /*! \brief Move constructor */
-        PropertiesTab( PropertiesTab&& ) = delete;
+        MeshInfoMenu( MeshInfoMenu&& ) = delete;
 
 
         /***
@@ -73,7 +56,7 @@ class PropertiesTab : public QFrame
          ***/
 
         /*! \brief Destructor */
-        ~PropertiesTab() = default;
+        ~MeshInfoMenu() = default;
 
 
         /***
@@ -81,21 +64,20 @@ class PropertiesTab : public QFrame
          ***/
 
         /*! \brief Refresh the info about the user's selection properties */
-    public slots:
         void refresh();
 
 
         /***
          * 4. Operators
          ***/
-    public:
+
         /*! \brief Copy assignment operator */
-        PropertiesTab& operator = ( const PropertiesTab& ) = delete;
+        MeshInfoMenu& operator = ( const MeshInfoMenu& ) = delete;
 
         /*! \brief Move assignment operator */
-        PropertiesTab& operator = ( PropertiesTab&& ) = delete;
+        MeshInfoMenu& operator = ( MeshInfoMenu&& ) = delete;
 };
 
 } // namespace como
 
-#endif // PROPERTIES_TAB_HPP
+#endif // MESH_INFO_MENU_HPP

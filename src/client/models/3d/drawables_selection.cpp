@@ -283,6 +283,9 @@ void DrawablesSelection::addDrawable( PackableDrawableID drawableID, DrawablePtr
     // Insert the given pair <ID, drawable> into the selection.
     drawables_[ drawableID ] = drawable;
 
+    // Update the selection's centroid.
+    updateSelectionCentroid();
+
     emit selectionChanged();
 
     mutex_.unlock();

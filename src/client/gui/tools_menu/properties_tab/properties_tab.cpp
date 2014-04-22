@@ -36,9 +36,13 @@ PropertiesTab::PropertiesTab( DrawablesSelectionPtr userSelection ) :
     // Construct the General Info menu.
     generalInfoMenu_ = new GeneralInfoMenu( userSelection_ );
 
+    // Construct the Mesh Info menu.
+    meshInfoMenu_ = new MeshInfoMenu( userSelection_ );
+
     // Add required widgets to the layout and set the latter as the current
     // layout.
     layout->addWidget( generalInfoMenu_ );
+    layout->addWidget( meshInfoMenu_ );
     setLayout( layout );
 
     // Every time the user's selection changes, refres this properties tab.
@@ -58,6 +62,7 @@ PropertiesTab::PropertiesTab( DrawablesSelectionPtr userSelection ) :
 void PropertiesTab::refresh()
 {
     generalInfoMenu_->refresh();
+    meshInfoMenu_->refresh();
 }
 
 
