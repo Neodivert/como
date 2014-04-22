@@ -53,6 +53,7 @@ class PropertiesTab : public QFrame
          */
         MeshInfoMenu* meshInfoMenu_;
 
+
     public:
         /***
          * 1. Construction

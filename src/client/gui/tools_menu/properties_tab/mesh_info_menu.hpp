@@ -36,6 +36,9 @@ class MeshInfoMenu : public QWidget
         /*! Position of the user's selection centroid */
         QLabel* centroidPosition_;
 
+        /*! Color of the user's mesh selection color */
+        QPushButton* colorInput_;
+
     public:
         /***
          * 1. Construction

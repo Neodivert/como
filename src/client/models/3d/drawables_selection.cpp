@@ -61,6 +61,46 @@ PivotPointMode DrawablesSelection::getPivotPointMode() const
 }
 
 
+bool DrawablesSelection::contains( DrawableType drawableType ) const
+{
+    DrawablesMap::const_iterator it;
+
+    mutex_.lock();
+
+    for( it = drawables_.begin(); it != drawables_.end(); it++ ){
+        if( it->second->getType() == drawableType ){
+            mutex_.unlock();
+            return true;
+        }
+    }
+
+    mutex_.unlock();
+    return false;
+}
+
+
+bool DrawablesSelection::contains( MeshType meshType ) const
+{
+    DrawablesMap::const_iterator it;
+    const Drawable* drawable = nullptr;
+
+    mutex_.lock();
+
+    for( it = drawables_.begin(); it != drawables_.end(); it++ ){
+        drawable = it->second.get();
+
+        if( ( drawable->getType() == DrawableType::MESH ) &&
+                ( dynamic_cast< const Mesh* >( drawable ) )->getType() == meshType ){
+            mutex_.unlock();
+            return true;
+        }
+    }
+
+    mutex_.unlock();
+    return false;
+}
+
+
 /***
  * 3. Setters
  ***/

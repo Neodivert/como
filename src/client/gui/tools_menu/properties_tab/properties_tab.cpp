@@ -47,6 +47,9 @@ PropertiesTab::PropertiesTab( DrawablesSelectionPtr userSelection ) :
 
     // Every time the user's selection changes, refres this properties tab.
     connect( userSelection_.get(), &DrawablesSelection::selectionChanged, this, &PropertiesTab::refresh );
+
+    // Perform a first refreshing.
+    refresh();
 }
 
 
@@ -62,7 +65,15 @@ PropertiesTab::PropertiesTab( DrawablesSelectionPtr userSelection ) :
 void PropertiesTab::refresh()
 {
     generalInfoMenu_->refresh();
-    meshInfoMenu_->refresh();
+
+    // If the user selection contains meshes, make the mesh info menu visible
+    // to user and refresh it.
+    if( userSelection_->contains( DrawableType::MESH ) ){
+        meshInfoMenu_->setVisible( true );
+        meshInfoMenu_->refresh();
+    }else{
+        meshInfoMenu_->setVisible( false );
+    }
 }
 
 

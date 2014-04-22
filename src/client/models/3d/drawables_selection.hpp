@@ -85,6 +85,20 @@ class DrawablesSelection : public QObject
         unsigned int getSize() const;
 
 
+        /*!
+         * \brief Returns true if the selection contains one or more drawables
+         * of the type given as an argument.
+         */
+        bool contains( DrawableType drawableType ) const ;
+
+
+        /*!
+         * \brief Returns true if the selection contains one or more meshes
+         * of the type given as an argument.
+         */
+        bool contains( MeshType meshType ) const ;
+
+
         /***
          * 3. Setters
          ***/
