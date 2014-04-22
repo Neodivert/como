@@ -54,7 +54,7 @@ HEADERS += \
     ../../src/client/gui/users_list.hpp \
     ../../src/client/managers/scene/public_scene.hpp \
     ../../src/client/managers/server_interface/server_interface.hpp \
-    ../../src/client/models/3d/drawables_selection.hpp \
+    ../../src/client/managers/drawables_selection/drawables_selection.hpp \
     ../../src/client/models/3d/lights/light.hpp \
     ../../src/client/models/3d/lights/directional_light.hpp \
     ../../src/client/models/3d/lights/lights.hpp \
@@ -89,7 +89,7 @@ SOURCES += \
     ../../src/client/gui/users_list.cpp \
     ../../src/client/managers/scene/public_scene.cpp \
     ../../src/client/managers/server_interface/server_interface.cpp \
-    ../../src/client/models/3d/drawables_selection.cpp \
+    ../../src/client/managers/drawables_selection/drawables_selection.cpp \
     ../../src/client/models/3d/lights/light.cpp \
     ../../src/client/models/3d/lights/directional_light.cpp \
     ../../src/client/models/3d/lights/lighting_manager.cpp \

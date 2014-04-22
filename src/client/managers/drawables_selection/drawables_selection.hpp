@@ -20,9 +20,9 @@
 #ifndef DRAWABLES_SELECTION_HPP
 #define DRAWABLES_SELECTION_HPP
 
-#include "drawable.hpp"
-#include "mesh.hpp"
-#include "lights/light.hpp"
+#include "../../models/3d/drawable.hpp"
+#include "../../models/3d/mesh.hpp"
+#include "../../models/3d/lights/light.hpp"
 #include "../../../common/utilities/ids.hpp"
 #include "../../../common/commands/user_commands/parameter_change_command.hpp" // For PivotPointMode type.
 #include <map>
@@ -147,6 +147,7 @@ class DrawablesSelection : public QObject
          ***/
         DrawablesSelection& operator=( const DrawablesSelection& ) = delete ;
         DrawablesSelection& operator=( DrawablesSelection&& ) = delete;
+
 
         /***
          * 10. Signals

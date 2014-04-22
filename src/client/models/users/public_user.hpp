@@ -20,7 +20,7 @@
 #ifndef PUBLIC_USER_HPP
 #define PUBLIC_USER_HPP
 
-#include "../3d/drawables_selection.hpp"
+#include "../../managers/drawables_selection/drawables_selection.hpp"
 #include "../../../common/commands/commands.hpp"
 #include "../../../common/users/basic_user.hpp"
 

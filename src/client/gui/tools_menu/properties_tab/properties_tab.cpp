@@ -76,5 +76,4 @@ void PropertiesTab::refresh()
     }
 }
 
-
 } // namespace como

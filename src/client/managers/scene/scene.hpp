@@ -28,7 +28,7 @@
 #include "../../../common/commands/commands.hpp"
 #include "../server_interface/server_interface.hpp"
 #include "../../models/utilities/msl/src/shader_loader.hpp"
-#include "../../models/3d/drawables_selection.hpp"
+#include "../../managers/drawables_selection/drawables_selection.hpp"
 #include <queue>
 #include "../../models/3d/lights/lights.hpp"
 
