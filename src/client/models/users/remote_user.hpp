@@ -17,48 +17,49 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef BASIC_USER_HPP
-#define BASIC_USER_HPP
+#ifndef REMOTE_USER_HPP
+#define REMOTE_USER_HPP
 
-#include "../utilities/ids.hpp"
-#include <memory>
+#include "client_user.hpp"
 
 namespace como {
 
-// TODO: Convert into a monitor.
-class BasicUser : public std::enable_shared_from_this< BasicUser >
+class RemoteUser : public ClientUser
 {
-    private:
-        // User's id and name.
-        UserID id_;
-        std::string name_;
-
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
-        BasicUser() = delete;
-        BasicUser( const BasicUser& ) = delete;
-        BasicUser( BasicUser&& ) = delete;
-        BasicUser( UserID id, std::string name );
 
-        ~BasicUser() = default;
+        /*! \brief Default constructor */
+        RemoteUser() = delete;
+
+        /*! \brief Copy constructor */
+        RemoteUser( const RemoteUser& ) = delete;
+
+        /*! \brief Move constructor */
+        RemoteUser( RemoteUser&& ) = delete;
 
 
         /***
-         * 2. Getters
+         * 2. Destruction
          ***/
-        UserID getID() const ;
-        std::string getName() const ;
+
+        /*! \brief Destructor */
+        ~RemoteUser() = default;
 
 
         /***
          * 3. Operators
          ***/
-        BasicUser& operator = (const BasicUser& ) = delete;
-        BasicUser& operator = ( BasicUser&& ) = delete;
+
+        /*! \brief Copy assignment operator */
+        RemoteUser& operator=( const RemoteUser& ) = delete ;
+
+        /*! \brief Move assignment operator */
+        RemoteUser& operator=( RemoteUser&& ) = delete;
 };
 
 } // namespace como
 
-#endif // BASIC_USER_HPP
+#endif // REMOTE_USER_HPP

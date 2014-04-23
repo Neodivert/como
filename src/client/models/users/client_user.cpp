@@ -25,6 +25,11 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
+ClientUser::ClientUser( UserID id, std::string name ) :
+    BasicUser( id, name )
+{}
+
+
 ClientUser::ClientUser( const UserConnectionCommand* userConnectedPacket ) :
     BasicUser( userConnectedPacket->getUserID(), userConnectedPacket->getName() ),
     selection( new DrawablesSelection )

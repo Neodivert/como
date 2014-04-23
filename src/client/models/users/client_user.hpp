@@ -37,7 +37,7 @@ class ClientUser : public BasicUser
         /***
          * 1. Initialization and destruction
          ***/
-        ClientUser() = delete;
+        ClientUser( UserID id, std::string name );
         ClientUser( const ClientUser& ) = delete;
         ClientUser( ClientUser&& ) = delete;
         ClientUser( const UserConnectionCommand* userConnectedPacket );
