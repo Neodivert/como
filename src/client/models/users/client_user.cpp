@@ -25,21 +25,26 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-ClientUser::ClientUser( UserID id, std::string name ) :
+ClientUser::ClientUser( UserID id, std::string name, const std::uint8_t* selectionColor ) :
     BasicUser( id, name )
-{}
-
-
-ClientUser::ClientUser( const UserConnectionCommand* userConnectedPacket ) :
-    BasicUser( userConnectedPacket->getUserID(), userConnectedPacket->getName() ),
-    selection( new DrawablesSelection )
 {
     unsigned int i = 0;
 
     // Retrieve user's selection color.
     for( i=0; i<4; i++ ){
-        color[i] = ( userConnectedPacket->getSelectionColor() ) [i] / 255.0f;
+        selectionColor_[i] = selectionColor[i] / 255.0f;
     }
 }
+
+
+/***
+ * 3. Getters
+ ***/
+
+const GLfloat* ClientUser::getSelectionColor() const
+{
+    return selectionColor_;
+}
+
 
 } // namespace como

@@ -21,15 +21,23 @@
 #define REMOTE_USER_HPP
 
 #include "client_user.hpp"
+#include "../../../common/commands/user_commands/user_connection_command.hpp"
 
 namespace como {
 
+// TODO: Convert into a monitor.
 class RemoteUser : public ClientUser
 {
     public:
         /***
          * 1. Construction
          ***/
+
+        /*!
+         * \brief Constructor. Constructs a new RemoteUser from a
+         * UserConnection command.
+         */
+        RemoteUser( const UserConnectionCommand& userConnectionCommand );
 
         /*! \brief Default constructor */
         RemoteUser() = delete;

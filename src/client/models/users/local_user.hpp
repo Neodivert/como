@@ -24,6 +24,7 @@
 
 namespace como {
 
+// TODO: Convert into a monitor.
 class LocalUser : public ClientUser
 {
     public:

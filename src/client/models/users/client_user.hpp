@@ -26,27 +26,40 @@
 
 namespace como {
 
+// TODO: Convert into a monitor.
 class ClientUser : public BasicUser
 {
-    // TODO: Change to private and implement getters and setters.
+    private:
+        /*!
+         * \brief Color used for highlighting drawables selected by this
+         * user.
+         */
+        GLfloat selectionColor_[4];
+
     public:
-        GLfloat color[4];
-        DrawablesSelectionPtr selection;
+        /***
+         * 1. Construction
+         ***/
+        ClientUser( UserID id, std::string name, const std::uint8_t* selectionColor );
+        ClientUser( const ClientUser& ) = delete;
+        ClientUser( ClientUser&& ) = delete;
+        //ClientUser( const UserConnectionCommand* userConnectedPacket );
 
 
         /***
-         * 1. Initialization and destruction
+         * 2. Destruction
          ***/
-        ClientUser( UserID id, std::string name );
-        ClientUser( const ClientUser& ) = delete;
-        ClientUser( ClientUser&& ) = delete;
-        ClientUser( const UserConnectionCommand* userConnectedPacket );
-
         ~ClientUser() = default;
 
 
         /***
-         * 2. Operators
+         * 3. Getters
+         ***/
+        const GLfloat* getSelectionColor() const;
+
+
+        /***
+         * 4. Operators
          ***/
         ClientUser& operator=( const ClientUser& ) = delete ;
         ClientUser& operator=( ClientUser&& ) = delete;

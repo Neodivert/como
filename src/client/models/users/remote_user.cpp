@@ -21,4 +21,10 @@
 
 namespace como {
 
+RemoteUser::RemoteUser( const UserConnectionCommand& userConnectionCommand ) :
+    ClientUser( userConnectionCommand.getUserID(),
+                userConnectionCommand.getName(),
+                userConnectionCommand.getSelectionColor() )
+{}
+
 } // namespace como
