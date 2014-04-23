@@ -20,7 +20,7 @@
 #ifndef COMO_APP_HPP
 #define COMO_APP_HPP
 
-#include "scene/public_scene.hpp"
+#include "scene/scene.hpp"
 #include <QOpenGLContext>
 #include <string>
 #include <QObject>

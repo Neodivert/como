@@ -79,6 +79,11 @@ Scene::~Scene()
 }
 
 
+
+/***
+ * 3. Initialization
+ ***/
+
 void Scene::initOpenGL()
 {
     // Create a surface format for OpenGL 4.2 Core.
@@ -200,9 +205,54 @@ void Scene::initLinesBuffer()
 }
 
 
+bool Scene::connect( const char* host, const char* port, const char* userName )
+{
+    try{
+        std::shared_ptr< const UserAcceptancePacket > userAcceptancePacket;
+
+        // Try to connect to the server. If there is any error, the method
+        // ServerInterface::connect() throws an exception.
+        log_->debug( "Connecting to (", host, ":", port, ") with name [", userName, "]...\n" );
+        userAcceptancePacket = server_.connect( host, port, userName );
+
+        // Add the local user to the scene and retrieve its ID.
+        addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( *userAcceptancePacket ) ) );
+        localUserID_ = userAcceptancePacket->getId();
+
+        // Copy the scene name given by the server.
+        setName( userAcceptancePacket->getSceneName() );
+
+        // Create the scene's primitives directory.
+        createScenePrimitivesDirectory();
+
+        // Emit a signal indicating that we have connected to a scene.
+        emit connectedToScene( tr( userAcceptancePacket->getSceneName() ) );
+
+        return true;
+    }catch( std::exception& ex ){
+        std::cerr << ex.what() << std::endl;
+        return false;
+    }
+}
+
+
 /***
- * 2. Users administration
+ * 4. Users administration
  ***/
+
+
+void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnectedCommand )
+{
+    // Create the new user from the given USER_CONNECTION command.
+    PublicUserPtr newUser( new  PublicUser( userConnectedCommand.get() ) );
+
+    // Insert the new user in the users vector.
+    users_.insert( std::pair< unsigned int, PublicUserPtr >( userConnectedCommand->getUserID(), newUser ) );
+
+    // Emit a UserConnectionCommand signal.
+    emit userConnected( userConnectedCommand );
+}
+
 
 void Scene::removeUser( UserID userID )
 {
@@ -216,8 +266,10 @@ void Scene::removeUser( UserID userID )
 }
 
 
+
+
 /***
- * 3. Getters
+ * 5. Getters
  ***/
 
 glm::vec3 Scene::getPivotPoint() const
@@ -259,7 +311,7 @@ DrawablesSelectionPtr Scene::getUserSelection( UserID userID ) const
 
 
 /***
- * 4. Setters
+ * 6. Setters
  ***/
 
 void Scene::setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a )
@@ -319,7 +371,7 @@ void Scene::setDirectionalLightColor( glm::vec3 color )
 
 
 /***
- * 5. Drawables administration
+ * 7. Drawables administration
  ***/
 
 void Scene::addDrawable( DrawablePtr drawable, PackableDrawableID drawableID )
@@ -438,7 +490,7 @@ void Scene::addDrawable( DrawableType drawableType, PackableDrawableID drawableI
 */
 
 /***
- * 6. Drawables selection
+ * 8. Drawables selection
  ***/
 
 void Scene::selectDrawable( PackableDrawableID drawableID )
@@ -611,7 +663,7 @@ PackableDrawableID Scene::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1
 
 
 /***
- * 7. Transformations
+ * 9. Transformations
  ***/
 
 void Scene::translateSelection( glm::vec3 direction )
@@ -726,7 +778,7 @@ void Scene::deleteSelection( const unsigned int& userId )
 
 
 /***
- * 8. Drawing
+ * 10. Drawing
  ***/
 
 void Scene::draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect ) const
@@ -816,7 +868,7 @@ void Scene::emitRenderNeeded()
 
 
 /***
- * 11. Slots
+ * 13. Slots
  ***/
 
 void Scene::executeRemoteUserCommand( UserCommandConstPtr command )
@@ -1006,7 +1058,7 @@ void Scene::setAmbientLight( glm::vec3 ambientLight )
 
 
 /***
- * 12. Auxiliar methods
+ * 14. Auxiliar methods
  ***/
 
 void Scene::roundTransformationMagnitude( float& vx, float& vy, float& vz )

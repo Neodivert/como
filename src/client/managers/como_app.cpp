@@ -35,7 +35,7 @@ ComoApp::ComoApp() :
     log_ = LogPtr( new Log );
 
     // Set default scene.
-    scene = ScenePtr( new PublicScene( log_ ) );
+    scene = ScenePtr( new Scene( log_ ) );
 
     log_->debug( "OpenGL context is valid?: ", getScene()->getOpenGLContext()->isValid(), "\n" );
     checkOpenGL( "ComoApp constructor - after creating OpenGL context and scene" );

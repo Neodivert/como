@@ -93,32 +93,40 @@ class Scene : public QOffscreenSurface
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction.
          ***/
         Scene() = delete;
         Scene( const Scene&  ) = delete;
         Scene( Scene&& ) = delete;
         Scene( LogPtr log );
 
+
+        /***
+         * 2. Destruction
+         ***/
         virtual ~Scene();
-
-        void initOpenGL();
-
-        virtual bool connect( const char* host, const char* port, const char* userName ) = 0;
-
-        void initLinesBuffer();
 
 
         /***
-         * 2. Users administration
+         * 3. Initialization
          ***/
-        virtual void addUser( std::shared_ptr< const UserConnectionCommand > userConnectedCommand ) = 0;
+
+        void initOpenGL();
+        void initLinesBuffer();
+        bool connect( const char* host, const char* port, const char* userName );
+
+
+        /***
+         * 4. Users administration
+         ***/
+        void addUser( std::shared_ptr< const UserConnectionCommand > userConnectedCommand );
         void removeUser( UserID userID );
 
 
         /***
-         * 3. Getters
+         * 5. Getters
          ***/
+
         glm::vec3 getPivotPoint() const ;
         glm::vec3 getPivotPoint( UserID userID ) const ;
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
@@ -127,7 +135,7 @@ class Scene : public QOffscreenSurface
 
 
         /***
-         * 4. Setters
+         * 6. Setters
          ***/
     public:
         void setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a );
@@ -141,7 +149,7 @@ class Scene : public QOffscreenSurface
 
 
         /***
-         * 5. Drawables administration
+         * 7. Drawables administration
          ***/
     private:
         void addDrawable( DrawablePtr drawable, PackableDrawableID drawableID );
@@ -156,7 +164,7 @@ class Scene : public QOffscreenSurface
 
 
         /***
-         * 6. Drawables selection.
+         * 8. Drawables selection.
          ***/
     public:
         void selectDrawable( PackableDrawableID drawableID );
@@ -170,7 +178,7 @@ class Scene : public QOffscreenSurface
 
 
         /***
-         * 7. Transformations
+         * 9. Transformations
          ***/
         void translateSelection( glm::vec3 direction );
         void translateSelection( glm::vec3 direction, UserID userID );
@@ -187,7 +195,7 @@ class Scene : public QOffscreenSurface
 
 
         /***
-         * 8. Drawing
+         * 10. Drawing
          ***/
         void draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect = -1 ) const ;
         void drawWorldAxis() const ;
@@ -195,14 +203,14 @@ class Scene : public QOffscreenSurface
 
 
         /***
-         * 9. Operators
+         * 11. Operators
          ***/
         Scene& operator=( const Scene& ) = delete ;
         Scene& operator=( Scene&& ) = delete;
 
 
         /***
-         * 10. Signals
+         * 12. Signals
          ***/
         void emitRenderNeeded();
     signals:
@@ -214,7 +222,7 @@ class Scene : public QOffscreenSurface
 
 
         /***
-         * 11. Slots
+         * 13. Slots
          ***/
     private:
         void executeRemoteUserCommand( UserCommandConstPtr command );
@@ -227,7 +235,7 @@ class Scene : public QOffscreenSurface
         void setAmbientLight( glm::vec3 ambientLight );
 
         /***
-         * 12. Auxiliar methods
+         * 14. Auxiliar methods
          ***/
     public:
         void roundTransformationMagnitude( float& vx, float& vy, float& vz );
