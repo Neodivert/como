@@ -62,7 +62,8 @@ HEADERS += \
     ../../src/client/gui/tools_menu/transformation_tab.hpp \
     ../../src/client/gui/tools_menu/properties_tab/properties_tab.hpp \
     ../../src/client/gui/tools_menu/properties_tab/general_info_menu.hpp \
-    ../../src/client/gui/tools_menu/properties_tab/mesh_info_menu.hpp
+    ../../src/client/gui/tools_menu/properties_tab/mesh_info_menu.hpp \
+    ../../src/client/models/utilities/changeable.hpp
 
 
 # Client sources
@@ -95,4 +96,5 @@ SOURCES += \
     ../../src/client/gui/tools_menu/transformation_tab.cpp \
     ../../src/client/gui/tools_menu/properties_tab/properties_tab.cpp \
     ../../src/client/gui/tools_menu/properties_tab/general_info_menu.cpp \
-    ../../src/client/gui/tools_menu/properties_tab/mesh_info_menu.cpp
+    ../../src/client/gui/tools_menu/properties_tab/mesh_info_menu.cpp \
+    ../../src/client/models/utilities/changeable.cpp
