@@ -50,7 +50,7 @@ HEADERS += \
     ../../src/client/gui/connection_wizard/create_server_page.hpp \
     ../../src/client/gui/connection_wizard/intro_page.hpp \
     ../../src/client/gui/connection_wizard/page_ids.hpp \
-    ../../src/client/models/users/public_user.hpp \
+    ../../src/client/models/users/client_user.hpp \
     ../../src/client/gui/users_list.hpp \
     ../../src/client/managers/server_interface/server_interface.hpp \
     ../../src/client/managers/drawables_selection/drawables_selection.hpp \
@@ -84,7 +84,7 @@ SOURCES += \
     ../../src/client/gui/connection_wizard/connect_server_page.cpp \
     ../../src/client/gui/connection_wizard/create_server_page.cpp \
     ../../src/client/gui/connection_wizard/intro_page.cpp \
-    ../../src/client/models/users/public_user.cpp \
+    ../../src/client/models/users/client_user.cpp \
     ../../src/client/gui/users_list.cpp \
     ../../src/client/managers/server_interface/server_interface.cpp \
     ../../src/client/managers/drawables_selection/drawables_selection.cpp \

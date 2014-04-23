@@ -23,7 +23,7 @@
 #include <map>
 #include <list>
 #include "../../models/3d/camera.hpp"
-#include "../../models/users/public_user.hpp"
+#include "../../models/users/client_user.hpp"
 #include "../../../common/utilities/log.hpp"
 #include "../../../common/commands/commands.hpp"
 #include "../server_interface/server_interface.hpp"

@@ -244,7 +244,7 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
 void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnectedCommand )
 {
     // Create the new user from the given USER_CONNECTION command.
-    PublicUserPtr newUser( new  PublicUser( userConnectedCommand.get() ) );
+    PublicUserPtr newUser( new  ClientUser( userConnectedCommand.get() ) );
 
     // Insert the new user in the users vector.
     users_.insert( std::pair< unsigned int, PublicUserPtr >( userConnectedCommand->getUserID(), newUser ) );

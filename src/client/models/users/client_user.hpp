@@ -17,8 +17,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PUBLIC_USER_HPP
-#define PUBLIC_USER_HPP
+#ifndef CLIENT_USER_HPP
+#define CLIENT_USER_HPP
 
 #include "../../managers/drawables_selection/drawables_selection.hpp"
 #include "../../../common/commands/commands.hpp"
@@ -26,7 +26,7 @@
 
 namespace como {
 
-class PublicUser : public BasicUser
+class ClientUser : public BasicUser
 {
     // TODO: Change to private and implement getters and setters.
     public:
@@ -37,23 +37,23 @@ class PublicUser : public BasicUser
         /***
          * 1. Initialization and destruction
          ***/
-        PublicUser() = delete;
-        PublicUser( const PublicUser& ) = delete;
-        PublicUser( PublicUser&& ) = delete;
-        PublicUser( const UserConnectionCommand* userConnectedPacket );
+        ClientUser() = delete;
+        ClientUser( const ClientUser& ) = delete;
+        ClientUser( ClientUser&& ) = delete;
+        ClientUser( const UserConnectionCommand* userConnectedPacket );
 
-        ~PublicUser() = default;
+        ~ClientUser() = default;
 
 
         /***
          * 2. Operators
          ***/
-        PublicUser& operator=( const PublicUser& ) = delete ;
-        PublicUser& operator=( PublicUser&& ) = delete;
+        ClientUser& operator=( const ClientUser& ) = delete ;
+        ClientUser& operator=( ClientUser&& ) = delete;
 };
 
-typedef std::shared_ptr< PublicUser > PublicUserPtr;
+typedef std::shared_ptr< ClientUser > PublicUserPtr;
 
 } // namespace como
 
-#endif // PUBLIC_USER_HPP
+#endif // CLIENT_USER_HPP

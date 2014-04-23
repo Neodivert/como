@@ -17,7 +17,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "public_user.hpp"
+#include "client_user.hpp"
 
 namespace como {
 
@@ -25,7 +25,7 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-PublicUser::PublicUser( const UserConnectionCommand* userConnectedPacket ) :
+ClientUser::ClientUser( const UserConnectionCommand* userConnectedPacket ) :
     BasicUser( userConnectedPacket->getUserID(), userConnectedPacket->getName() ),
     selection( new DrawablesSelection )
 {
