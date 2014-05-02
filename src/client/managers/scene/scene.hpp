@@ -66,8 +66,6 @@ class Scene : public QOffscreenSurface
         UserID localUserID_;
         DrawableIndex localUserNextDrawableIndex_;
 
-        std::queue< PackableDrawableID > localUserPendingSelections_;
-
         shared_ptr< QOpenGLContext > oglContext_;
 
         shared_ptr< LightingManager > lightingManager_;
@@ -161,20 +159,6 @@ class Scene : public QOffscreenSurface
 
         //void addDrawable( DrawableType drawableType );
         //void addDrawable( DrawableType drawableType, PackableDrawableID drawableID );
-
-
-        /***
-         * 8. Drawables selection.
-         ***/
-    public:
-        void selectDrawable( PackableDrawableID drawableID );
-        void selectDrawable( PackableDrawableID drawableID, UserID userID );
-        //void selectAll();
-
-        void unselectAll();
-        void unselectAll( const unsigned int& userId );
-
-        PackableDrawableID selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection );
 
 
         /***

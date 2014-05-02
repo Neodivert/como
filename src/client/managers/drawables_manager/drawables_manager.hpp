@@ -21,26 +21,34 @@
 #define DRAWABLES_MANAGER_HPP
 
 #include "../../managers/drawables_selection/drawables_selection.hpp"
+#include "../../managers/server_interface/server_interface.hpp"
+#include "../../models/utilities/changeable.hpp"
 #include <map>
 
 namespace como {
 
 typedef std::map< UserID, DrawablesSelection > DrawablesSelections;
 
-class DrawablesManager
+class DrawablesManager : public Changeable
 {
     private:
         DrawablesSelection nonSelectedDrawables_;
         DrawablesSelections drawablesSelections_;
 
-
         UserID localUserID_;
+
+        ServerInterfacePtr server_;
+
+        // TODO: move this to ServerInterface.
+        std::queue< PackableDrawableID > localUserPendingSelections_;
+
+        LogPtr log_;
 
     public:
         /***
          * 1. Construction
          ***/
-        DrawablesManager( UserID localUserID );
+        DrawablesManager( UserID localUserID, ServerInterfacePtr server, LogPtr log );
         DrawablesManager( const DrawablesManager& ) = delete;
         DrawablesManager( DrawablesManager&& ) = delete;
 
@@ -58,7 +66,19 @@ class DrawablesManager
 
 
         /***
-         * 4. Operators
+         * 4. Drawables (de)seletion.
+         ***/
+        void selectDrawable( PackableDrawableID drawableID );
+        void selectDrawable( PackableDrawableID drawableID, UserID userID );
+
+        void unselectAll();
+        void unselectAll( UserID userId );
+
+        PackableDrawableID selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection );
+
+
+        /***
+         * 5. Operators
          ***/
         DrawablesManager& operator=( const DrawablesManager& ) = delete ;
         DrawablesManager& operator=( DrawablesManager&& ) = delete;
