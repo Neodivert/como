@@ -21,4 +21,13 @@
 
 namespace como {
 
+/***
+ * 3. Getters
+ ***/
+
+LocalDrawablesSelection const * LocalUser::getDrawablesSelection() const
+{
+    return &drawablesSelection_;
+}
+
 } // namespace como

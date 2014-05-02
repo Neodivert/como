@@ -21,12 +21,17 @@
 #define LOCAL_USER_HPP
 
 #include "client_user.hpp"
+#include "../../managers/drawables_selection/local_drawables_selection.hpp"
 
 namespace como {
 
 // TODO: Convert into a monitor.
 class LocalUser : public ClientUser
 {
+    private:
+        /*! \brief Drawables selection owned by this user */
+        LocalDrawablesSelection drawablesSelection_;
+
     public:
         /***
          * 1. Construction
@@ -51,7 +56,14 @@ class LocalUser : public ClientUser
 
 
         /***
-         * 3. Operators
+         * 3. Getters
+         ***/
+
+        LocalDrawablesSelection const * getDrawablesSelection() const ;
+
+
+        /***
+         * 4. Operators
          ***/
 
         /*! \brief Copy assignment operator */
