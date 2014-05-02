@@ -70,8 +70,8 @@ class DrawablesSelection : public Changeable
          * 1. Initialization and destruction
          ***/
         DrawablesSelection();
-        DrawablesSelection( const DrawablesSelection& ) = delete;
-        DrawablesSelection( DrawablesSelection&& ) = delete;
+        DrawablesSelection( const DrawablesSelection& );
+        DrawablesSelection( DrawablesSelection&& );
 
         ~DrawablesSelection() = default;
 

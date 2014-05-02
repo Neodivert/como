@@ -66,7 +66,8 @@ HEADERS += \
     ../../src/client/models/utilities/changeable.hpp \
     ../../src/client/models/users/remote_user.hpp \
     ../../src/client/models/users/local_user.hpp \
-    ../../src/client/managers/drawables_selection/local_drawables_selection.hpp
+    ../../src/client/managers/drawables_selection/local_drawables_selection.hpp \
+    ../../src/client/managers/drawables_manager/drawables_manager.hpp
 
 
 # Client sources
@@ -103,4 +104,5 @@ SOURCES += \
     ../../src/client/models/utilities/changeable.cpp \
     ../../src/client/models/users/remote_user.cpp \
     ../../src/client/models/users/local_user.cpp \
-    ../../src/client/managers/drawables_selection/local_drawables_selection.cpp
+    ../../src/client/managers/drawables_selection/local_drawables_selection.cpp \
+    ../../src/client/managers/drawables_manager/drawables_manager.cpp

@@ -33,6 +33,24 @@ DrawablesSelection::DrawablesSelection() :
 }
 
 
+DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
+    Changeable( b ),
+    drawables_( b.drawables_ ), // TODO: This copies the pointers (DrawablePtr), it must copy the objects.
+    centroid_( b.centroid_ ),
+    pivotPointMode_( b.pivotPointMode_ )
+{
+}
+
+
+DrawablesSelection::DrawablesSelection( DrawablesSelection&& b ) :
+    Changeable( b ),
+    drawables_( b.drawables_ ),
+    centroid_( b.centroid_ ),
+    pivotPointMode_( b.pivotPointMode_ )
+{
+}
+
+
 /***
  * 2. Getters
  ***/
