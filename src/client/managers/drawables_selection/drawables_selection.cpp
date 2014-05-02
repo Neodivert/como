@@ -109,7 +109,10 @@ void DrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 {
     mutex_.lock();
     pivotPointMode_ = pivotPointMode;
-    emit selectionChanged();
+
+    // This selection has changed, so indicate it.
+    setChanged();
+
     mutex_.unlock();
 }
 
@@ -197,10 +200,8 @@ void DrawablesSelection::translate( glm::vec3 direction )
         drawable->second->translate( direction );
     }
 
-    // Update the selection's centroid.
-    updateSelectionCentroid();
-
-    emit selectionChanged();
+    // This selection has changed, so indicate it.
+    setChanged();
 
     mutex_.unlock();
 }
@@ -232,10 +233,8 @@ void DrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
         break;
     }
 
-    // Update the selection's centroid.
-    updateSelectionCentroid();
-
-    emit selectionChanged();
+    // This selection has changed, so indicate it.
+    setChanged();
 
     mutex_.unlock();
 }
@@ -267,22 +266,29 @@ void DrawablesSelection::scale( glm::vec3 scaleFactors )
         break;
     }
 
-    // Update the selection's centroid.
-    updateSelectionCentroid();
-
-    emit selectionChanged();
+    // This selection has changed, so indicate it.
+    setChanged();
 
     mutex_.unlock();
 }
 
 
 /***
- * 5. Centroid updating
+ * 5. Updating
  ***/
+
+void DrawablesSelection::onChange()
+{
+    // This selection has changed, so update its centroid.
+    updateSelectionCentroid();
+}
+
 
 void DrawablesSelection::updateSelectionCentroid()
 {
     DrawablesMap::iterator drawable;
+
+    mutex_.lock();
 
     // Initialize the selection's centroid.
     centroid_ = glm::vec4( 0.0f );
@@ -296,20 +302,8 @@ void DrawablesSelection::updateSelectionCentroid()
     centroid_ /= drawables_.size();
     centroid_.w = 1.0f;
 
-    /*
-    // Map the pivot point VBO to client memory and update the selection centroid
-    // coordinates (for drawing).
-    glBindBuffer( GL_ARRAY_BUFFER, selectionCentroidVBO );
-    selectionCentroidBuffer = (GLfloat *)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
-
-    for( unsigned int i=0; i<3; i++ ){
-        selectionCentroidBuffer[i] = selectionCentroid[i];
-    }
-
-    glUnmapBuffer( GL_ARRAY_BUFFER );
-    */
+    mutex_.unlock();
 }
-
 
 /***
  * 6. Drawables management
@@ -323,10 +317,8 @@ void DrawablesSelection::addDrawable( PackableDrawableID drawableID, DrawablePtr
     // Insert the given pair <ID, drawable> into the selection.
     drawables_[ drawableID ] = drawable;
 
-    // Update the selection's centroid.
-    updateSelectionCentroid();
-
-    emit selectionChanged();
+    // This selection has changed, so indicate it.
+    setChanged();
 
     mutex_.unlock();
 }
@@ -345,11 +337,9 @@ bool DrawablesSelection::moveDrawable( PackableDrawableID drawableID, DrawablesS
         // Erase drawable from current selection.
         drawables_.erase( drawableID );
 
-        // Update the selection centroid.
-        updateSelectionCentroid();
+        // This selection has changed, so indicate it.
+        setChanged();
 
-        // Drawable found and moved.
-        emit selectionChanged();
         mutex_.unlock();
         return true;
     }else{
@@ -377,7 +367,9 @@ void DrawablesSelection::moveAll( DrawablesSelection& destinySelection )
     // Clear the current selection.
     clear();
 
-    emit selectionChanged();
+    // This selection has changed, so indicate it.
+    setChanged();
+
     mutex_.unlock();
 }
 
@@ -389,10 +381,9 @@ void DrawablesSelection::clear()
     // Clear the current selection.
     drawables_.clear();
 
-    // Update the selection centroid.
-    centroid_ = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
+    // This selection has changed, so indicate it.
+    setChanged();
 
-    emit selectionChanged();
     mutex_.unlock();
 }
 

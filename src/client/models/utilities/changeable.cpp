@@ -54,6 +54,8 @@ bool Changeable::hasChangedSinceLastQuery()
 void Changeable::setChanged()
 {
     changedSinceLastQuery_ = true;
+
+    onChange();
 }
 
 } // namespace como

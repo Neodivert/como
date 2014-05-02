@@ -27,4 +27,14 @@ RemoteUser::RemoteUser( const UserConnectionCommand& userConnectionCommand ) :
                 userConnectionCommand.getSelectionColor() )
 {}
 
+
+/***
+ * 3. Getters
+ ***/
+
+DrawablesSelection const * RemoteUser::getDrawablesSelection() const
+{
+    return &drawablesSelection_;
+}
+
 } // namespace como

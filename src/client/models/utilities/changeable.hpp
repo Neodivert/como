@@ -67,9 +67,23 @@ class Changeable
 
         /*!
          * \brief sets this object's internal state to "changed since last
-         * query".
+         * query" and calls onUpdate().
          */
+    protected:
         void setChanged();
+
+
+        /***
+         * 5. Updating
+         ***/
+    private:
+
+        /*!
+         * \brief This method is automatically called when setChanged is
+         * called so inherited objects can perfom actions whenever they
+         * change.
+         */
+        virtual void onChange() = 0;
 
 
         /***

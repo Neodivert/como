@@ -22,12 +22,17 @@
 
 #include "client_user.hpp"
 #include "../../../common/commands/user_commands/user_connection_command.hpp"
+#include "../../managers/drawables_selection/drawables_selection.hpp"
 
 namespace como {
 
 // TODO: Convert into a monitor.
 class RemoteUser : public ClientUser
 {
+    private:
+        /*! Drawables selection owned by this user. */
+        DrawablesSelection drawablesSelection_;
+
     public:
         /***
          * 1. Construction
@@ -58,7 +63,14 @@ class RemoteUser : public ClientUser
 
 
         /***
-         * 3. Operators
+         * 3. Getters
+         ***/
+
+        DrawablesSelection const * getDrawablesSelection() const ;
+
+
+        /***
+         * 4. Operators
          ***/
 
         /*! \brief Copy assignment operator */

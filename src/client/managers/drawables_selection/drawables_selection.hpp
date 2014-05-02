@@ -29,6 +29,7 @@
 #include <functional>
 #include <mutex>
 #include <QObject>
+#include "../../models/utilities/changeable.hpp"
 
 namespace como {
 
@@ -47,7 +48,7 @@ const char pivotPointModeStrings[N_PIVOT_POINT_MODES][32] =
 };
 
 
-class DrawablesSelection : public QObject
+class DrawablesSelection : public Changeable
 {
     Q_OBJECT
 
@@ -114,10 +115,19 @@ class DrawablesSelection : public QObject
 
 
         /***
-         * 5. Centroid updating
+         * 5. Updating
          ***/
     private:
+
+        /*!
+         * \brief This method is automatically called when setChanged is
+         * called so inherited objects can perfom actions whenever they
+         * change.
+         */
+        virtual void onChange();
+
         void updateSelectionCentroid();
+
 
 
         /***
