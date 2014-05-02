@@ -89,6 +89,8 @@ class ServerInterface : public QObject
          ***/
     public:
         void sendCommand( CommandConstPtr sceneCommand );
+        void sendCommand( const Command* sceneCommand );
+
     private:
         void sendPendingCommands();
         void setTimer();

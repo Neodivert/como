@@ -103,7 +103,7 @@ class DrawablesSelection : public Changeable
         /***
          * 3. Setters
          ***/
-        void setPivotPointMode( PivotPointMode pivotPointMode );
+        virtual void setPivotPointMode( PivotPointMode pivotPointMode );
 
 
         /***
@@ -117,7 +117,7 @@ class DrawablesSelection : public Changeable
         /***
          * 5. Updating
          ***/
-    private:
+    protected:
 
         /*!
          * \brief This method is automatically called when setChanged is
@@ -126,6 +126,7 @@ class DrawablesSelection : public Changeable
          */
         virtual void onChange();
 
+    private:
         void updateSelectionCentroid();
 
 
