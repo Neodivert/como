@@ -21,6 +21,7 @@
 #define DRAWABLES_MANAGER_HPP
 
 #include "../../managers/drawables_selection/drawables_selection.hpp"
+#include "../../managers/drawables_selection/local_drawables_selection.hpp"
 #include "../../managers/server_interface/server_interface.hpp"
 #include "../../models/utilities/changeable.hpp"
 #include <map>
@@ -35,6 +36,8 @@ class DrawablesManager : public Changeable
         DrawablesSelection nonSelectedDrawables_;
         DrawablesSelections drawablesSelections_;
 
+        LocalDrawablesSelection* localDrawablesSelection_;
+
         ServerInterfacePtr server_;
 
         UserID localUserID_;
@@ -48,13 +51,15 @@ class DrawablesManager : public Changeable
         // Relative path to the primitives directory.
         std::string primitivesDirPath_;
 
+        shared_ptr< QOpenGLContext > oglContext_;
+
         LogPtr log_;
 
     public:
         /***
          * 1. Construction
          ***/
-        DrawablesManager( ServerInterfacePtr server, UserID localUserID, std::string primitivesDirPath, LogPtr log );
+        DrawablesManager( ServerInterfacePtr server, UserID localUserID, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
         DrawablesManager( const DrawablesManager& ) = delete;
         DrawablesManager( DrawablesManager&& ) = delete;
 
@@ -81,18 +86,29 @@ class DrawablesManager : public Changeable
 
 
         /***
-         * 5. Drawables administration
+         * 5. Changeable
          ***/
-    private:
-        void addDrawable( DrawablePtr drawable, PackableDrawableID drawableID );
-    public:
-        void addMesh( PrimitiveID primitiveID, QColor color );
-        void addMesh( PrimitiveID primitiveID, const std::uint8_t* color );
-        void addMesh( PrimitiveID primitiveID, const std::uint8_t* color, PackableDrawableID drawableID );
+        void onChange(){}
 
 
         /***
-         * 6. Selections management
+         * 6. Drawables administration
+         ***/
+    private:
+        PackableDrawableID addDrawable( DrawablePtr drawable );
+        void addDrawable( UserID userID, DrawablePtr drawable, PackableDrawableID drawableID );
+
+    public:
+        //void addMesh( PrimitiveID primitiveID, QColor color );
+        void addMesh( PrimitiveID primitiveID, const std::uint8_t* color );
+        void addMesh( UserID userID, PrimitiveID primitiveID, const std::uint8_t* color, PackableDrawableID drawableID );
+
+
+        //void addMesh( PrimitiveID, const std::uint8_t* color,  )
+
+
+        /***
+         * 7. Selections management
          ***/
         void addDrawablesSelection( UserID userID );
 
@@ -101,7 +117,7 @@ class DrawablesManager : public Changeable
 
 
         /***
-         * 7. Drawables (de)seletion.
+         * 8. Drawables (de)seletion.
          ***/
         void selectDrawable( PackableDrawableID drawableID );
         void selectDrawable( PackableDrawableID drawableID, UserID userID );
@@ -113,7 +129,7 @@ class DrawablesManager : public Changeable
 
 
         /***
-         * 8. Drawables selection transformations
+         * 9. Drawables selection transformations
          ***/
         void translateSelection( glm::vec3 direction );
         void translateSelection( glm::vec3 direction, UserID userID );
@@ -127,18 +143,20 @@ class DrawablesManager : public Changeable
 
 
         /***
-         * 9. Auxiliar methods
+         * 10. Auxiliar methods
          ***/
         void roundTransformationMagnitude( float& vx, float& vy, float& vz );
         void roundTransformationMagnitude( float& angle, float& vx, float& vy, float& vz );
 
 
         /***
-         * 10. Operators
+         * 11. Operators
          ***/
         DrawablesManager& operator=( const DrawablesManager& ) = delete ;
         DrawablesManager& operator=( DrawablesManager&& ) = delete;
 };
+
+typedef shared_ptr< DrawablesManager > DrawablesManagerPtr;
 
 } // namespace como
 

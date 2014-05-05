@@ -23,6 +23,7 @@
 #include "drawables_selection.hpp"
 #include "../server_interface/server_interface.hpp"
 #include "../../../common/commands/commands.hpp"
+#include "../../../common/utilities/ids.hpp"
 
 namespace como {
 
@@ -40,6 +41,9 @@ class LocalDrawablesSelection : public DrawablesSelection, QObject
         // TODO: Remove
         UserID localUserID_;
 
+        // Unique ID to be given to the next drawable added to this selection.
+        PackableDrawableID nextDrawableID_;
+
     public:
         /***
          * 1. Construction
@@ -53,7 +57,6 @@ class LocalDrawablesSelection : public DrawablesSelection, QObject
         /***
          * 2. Destruction
          ***/
-
         ~LocalDrawablesSelection() = default;
 
 
@@ -61,6 +64,13 @@ class LocalDrawablesSelection : public DrawablesSelection, QObject
          * 3. Setters
          ***/
         virtual void setPivotPointMode( PivotPointMode pivotPointMode );
+
+
+        /***
+         * 4. Drawables management
+         ***/
+
+        PackableDrawableID addDrawable( DrawablePtr drawable );
 
 
         /***

@@ -31,6 +31,7 @@
 #include "../../managers/drawables_selection/drawables_selection.hpp"
 #include <queue>
 #include "../../models/3d/lights/lights.hpp"
+#include "../drawables_manager/drawables_manager.hpp"
 
 Q_DECLARE_METATYPE( como::CommandConstPtr )
 
@@ -56,6 +57,12 @@ class Scene : public QOffscreenSurface
 
         // Users sharing this scene.
         UsersMap users_;
+
+        /*!
+         * \brief Drawables mmanager. This object acts as a container and an
+         * interface to all the drawables present in the scene.
+         */
+        DrawablesManagerPtr drawablesManager_;
 
         // Log
         LogPtr log_;

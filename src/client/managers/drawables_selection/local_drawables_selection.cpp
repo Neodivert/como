@@ -25,7 +25,12 @@ LocalDrawablesSelection::LocalDrawablesSelection( UserID localUserID, ServerInte
     DrawablesSelection(),
     server_( server ),
     localUserID_( localUserID )
-{}
+{
+    // Initialize the unique ID to be given to the mext drawable added to this
+    // selection (bind it to the local user).
+    nextDrawableID_.creatorID = localUserID_;
+    nextDrawableID_.drawableIndex = 0;
+}
 
 
 /***
@@ -41,7 +46,26 @@ void LocalDrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 
 
 /***
- * 4. Transformations
+ * 4. Drawables management
+ ***/
+
+PackableDrawableID LocalDrawablesSelection::addDrawable( DrawablePtr drawable )
+{
+    PackableDrawableID newDrawableID = nextDrawableID_;
+
+    DrawablesSelection::addDrawable( nextDrawableID_, drawable );
+
+    // Increment the drawable index to be given to the next drawable added to
+    // this selection.
+    nextDrawableID_.drawableIndex = nextDrawableID_.drawableIndex.getValue() + 1;
+
+
+    return newDrawableID;
+}
+
+
+/***
+ * 5. Transformations
  ***/
 
 void LocalDrawablesSelection::translate( glm::vec3 direction )
@@ -84,7 +108,7 @@ void LocalDrawablesSelection::scale( glm::vec3 scaleFactors )
 
 
 /***
- * 5. Updating
+ * 6. Updating
  ***/
 
 void LocalDrawablesSelection::onChange()

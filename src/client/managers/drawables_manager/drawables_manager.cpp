@@ -27,15 +27,20 @@ const unsigned int TRANSFORMATION_FLOAT_PRECISION = 10000;
  * 1. Construction
  ***/
 
-DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserID, std::string primitivesDirPath, LogPtr log ) :
+DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserID, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
     Changeable( true ),
     server_( server ),
     localUserID_( localUserID ),
     primitivesDirPath_( primitivesDirPath ),
+    oglContext_( oglContext ),
     log_( log )
 {
     // Create an empty drawables selection for the local user.
     addDrawablesSelection( localUserID_ );
+
+    // The drawables selection for the local user is a inherited type, so
+    // retrieve a pointer to it.
+    localDrawablesSelection_ = dynamic_cast< LocalDrawablesSelection* >( &( drawablesSelections_.at( localUserID_ ) ) );
 }
 
 
@@ -79,16 +84,23 @@ void DrawablesManager::setPivotPointMode( PivotPointMode pivotPointMode, UserID 
  * 5. Drawables administration
  ***/
 
-void DrawablesManager::addDrawable( DrawablePtr drawable, PackableDrawableID drawableID )
+PackableDrawableID DrawablesManager::addDrawable( DrawablePtr drawable )
 {
-    takeOpenGLContext();
+    //takeOpenGLContext();
 
-    nonSelectedDrawables_.addDrawable( drawableID, drawable );
-
-    //emit renderNeeded();
+    return localDrawablesSelection_->addDrawable( drawable );
 }
 
 
+void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, PackableDrawableID drawableID )
+{
+    //takeOpenGLContext();
+
+    drawablesSelections_.at( userID ).addDrawable( drawableID, drawable );
+}
+
+
+/*
 void DrawablesManager::addMesh( PrimitiveID primitiveID, QColor color )
 {
     std::uint8_t color8[4];
@@ -106,31 +118,36 @@ void DrawablesManager::addMesh( PrimitiveID primitiveID, QColor color )
     // Add the primitive to the scene.
     addMesh( primitiveID, color8 );
 }
+*/
 
-
+// FIXME: Duplicated code.
 void DrawablesManager::addMesh( PrimitiveID primitiveID, const std::uint8_t* color )
 {
-    PackableDrawableID drawableID;
+    // FIXME: Is this necessary?
+    //takeOpenGLContext();
 
-    // Give a unique ID to the new drawable (bind it to the local user).
-    drawableID.creatorID = localUserID_;
-    drawableID.drawableIndex = localUserNextDrawableIndex_;
+    log_->debug( "Adding primitive (", primitivePaths_.at( primitiveID ), ") to scene\n" );
 
-    // Increment the index for the next local user's drawable.
-    localUserNextDrawableIndex_++;
+    // Build the "absolute" path to the specification file of the
+    // primitive used for building this mesh.
+    std::string primitivePath = primitivesDirPath_ + '/' + primitivePaths_.at( primitiveID );
 
-    // Create the primitive and add it to the scene.
-    addMesh( primitiveID, color, drawableID );
+    // Create the mesh.
+    DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), color ) );
+
+    // Add the mest to the scene.
+    PackableDrawableID drawableID = addDrawable( drawable );
 
     // Send the command to the server.
     server_->sendCommand( CommandConstPtr( new MeshCreationCommand( localUserID_, drawableID, primitiveID, color ) ) );
 }
 
 
-void DrawablesManager::addMesh( PrimitiveID primitiveID, const std::uint8_t* color, PackableDrawableID drawableID )
+// FIXME: Duplicated code.
+void DrawablesManager::addMesh( UserID userID, PrimitiveID primitiveID, const std::uint8_t* color, PackableDrawableID drawableID )
 {
     try {
-        takeOpenGLContext();
+        //takeOpenGLContext();
 
         log_->debug( "Adding primitive (", primitivePaths_.at( primitiveID ), ") to scene\n" );
 
@@ -138,11 +155,11 @@ void DrawablesManager::addMesh( PrimitiveID primitiveID, const std::uint8_t* col
         // primitive used for building this mesh.
         std::string primitivePath = primitivesDirPath_ + '/' + primitivePaths_.at( primitiveID );
 
-        // Create the cube.
+        // Create the mesh.
         DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), color ) );
 
-        // Add the cube to the scene.
-        addDrawable( drawable, drawableID );
+        // Add the mesh to the scene.
+        addDrawable( userID, drawable, drawableID );
     }catch( std::exception& ex ){
         std::cerr << ex.what() << std::endl;
         throw;

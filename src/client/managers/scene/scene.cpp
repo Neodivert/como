@@ -61,11 +61,6 @@ Scene::Scene( LogPtr log ) :
     // Initialize lighting manager.
     lightingManager_ = shared_ptr< LightingManager >( new LightingManager );
 
-    // Add the directional light from the previous manager to the scene.
-    // TODO: Remove this and sync light creation in both client and
-    // server.
-    addDrawable( lightingManager_->getDirectionalLight(), DIRECTIONAL_LIGHT_ID );
-
     checkOpenGL( "Scene - constructor\n" );
 }
 
@@ -224,6 +219,14 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
 
         // Create the scene's primitives directory.
         createScenePrimitivesDirectory();
+
+        // Initialize the drawables manager.
+        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, localUserID_, std::string( "data/primitives/scenes/" ) + sceneName_, log_ ) );
+
+        // Add the directional light from the previous manager to the scene.
+        // TODO: Remove this and sync light creation in both client and
+        // server.
+        drawablesManager_->addDrawable( lightingManager_->getDirectionalLight(), DIRECTIONAL_LIGHT_ID );
 
         // Emit a signal indicating that we have connected to a scene.
         emit connectedToScene( tr( userAcceptancePacket->getSceneName() ) );
