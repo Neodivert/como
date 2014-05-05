@@ -24,7 +24,7 @@
 
 namespace como {
 
-GeneralInfoMenu::GeneralInfoMenu( DrawablesSelectionPtr userSelection ) :
+GeneralInfoMenu::GeneralInfoMenu( LocalDrawablesSelection* userSelection ) :
     userSelection_( userSelection )
 {
     // Create a layout for this widget.

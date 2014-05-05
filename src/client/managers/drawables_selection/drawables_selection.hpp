@@ -50,11 +50,12 @@ const char pivotPointModeStrings[N_PIVOT_POINT_MODES][32] =
 
 class DrawablesSelection : public Changeable
 {
-    Q_OBJECT
-
     private:
         // Drawables in the selection.
         DrawablesMap drawables_;
+
+        // Selection border color.
+        glm::vec4 borderColor_;
 
         // Selection's centroid.
         glm::vec4 centroid_;
@@ -150,7 +151,7 @@ class DrawablesSelection : public Changeable
         /***
          * 8. Drawing
          ***/
-        void draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor = nullptr ) const ;
+        void draw( const glm::mat4& viewProjMatrix ) const ;
 
 
         /***
@@ -158,13 +159,6 @@ class DrawablesSelection : public Changeable
          ***/
         DrawablesSelection& operator=( const DrawablesSelection& ) = delete ;
         DrawablesSelection& operator=( DrawablesSelection&& ) = delete;
-
-
-        /***
-         * 10. Signals
-         ***/
-    signals:
-        void selectionChanged();
 };
 
 typedef shared_ptr< DrawablesSelection > DrawablesSelectionPtr;

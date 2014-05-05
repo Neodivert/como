@@ -23,7 +23,7 @@
 #include <QWidget>
 #include <QLineEdit>
 #include <QLabel>
-#include "../../../managers/drawables_selection/drawables_selection.hpp"
+#include "../../../managers/drawables_selection/local_drawables_selection.hpp"
 
 namespace como {
 
@@ -33,7 +33,7 @@ class GeneralInfoMenu : public QWidget
 
     private:
         /*! Local user's (drawables) selection */
-        DrawablesSelectionPtr userSelection_;
+        LocalDrawablesSelection* userSelection_;
 
         /*! Name of the currently selected 3D object. */
         QLineEdit* objectName_;
@@ -47,7 +47,7 @@ class GeneralInfoMenu : public QWidget
          ***/
 
         /*! \brief Default constructor */
-        GeneralInfoMenu( DrawablesSelectionPtr userSelection );
+        GeneralInfoMenu( LocalDrawablesSelection* userSelection );
 
         /*! \brief Copy constructor */
         GeneralInfoMenu( const GeneralInfoMenu& ) = delete;

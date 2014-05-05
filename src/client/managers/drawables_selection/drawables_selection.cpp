@@ -27,6 +27,7 @@ namespace como {
  ***/
 
 DrawablesSelection::DrawablesSelection() :
+    borderColor_( 0.0f ),
     centroid_( 0.0f, 0.0f, 0.0f, 1.0f ),
     pivotPointMode_( PivotPointMode::MEDIAN_POINT )
 {
@@ -36,6 +37,7 @@ DrawablesSelection::DrawablesSelection() :
 DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
     Changeable( b ),
     drawables_( b.drawables_ ), // TODO: This copies the pointers (DrawablePtr), it must copy the objects.
+    borderColor_( b.borderColor_ ),
     centroid_( b.centroid_ ),
     pivotPointMode_( b.pivotPointMode_ )
 {
@@ -45,6 +47,7 @@ DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
 DrawablesSelection::DrawablesSelection( DrawablesSelection&& b ) :
     Changeable( b ),
     drawables_( b.drawables_ ),
+    borderColor_( b.borderColor_ ),
     centroid_( b.centroid_ ),
     pivotPointMode_( b.pivotPointMode_ )
 {
@@ -441,7 +444,7 @@ bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, PackableDrawable
  * 8. Drawing
  ***/
 
-void DrawablesSelection::draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) const
+void DrawablesSelection::draw( const glm::mat4& viewProjMatrix ) const
 {
     DrawablesMap::const_iterator drawable;
 
@@ -449,7 +452,7 @@ void DrawablesSelection::draw( const glm::mat4& viewProjMatrix, const GLfloat* c
 
     // Draw every drawable in current selection.
     for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
-        drawable->second->draw( viewProjMatrix, contourColor );
+        drawable->second->draw( viewProjMatrix, &borderColor_[0] );
     }
 
     mutex_.unlock();

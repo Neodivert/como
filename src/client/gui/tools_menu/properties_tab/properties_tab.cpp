@@ -27,7 +27,7 @@ namespace como {
  * 1. Construction
  ***/
 
-PropertiesTab::PropertiesTab( DrawablesSelectionPtr userSelection ) :
+PropertiesTab::PropertiesTab( LocalDrawablesSelection* userSelection ) :
     userSelection_( userSelection )
 {
     // Create the layout for this widget.
@@ -46,7 +46,7 @@ PropertiesTab::PropertiesTab( DrawablesSelectionPtr userSelection ) :
     setLayout( layout );
 
     // Every time the user's selection changes, refres this properties tab.
-    connect( userSelection_.get(), &DrawablesSelection::selectionChanged, this, &PropertiesTab::refresh );
+    connect( userSelection_, &LocalDrawablesSelection::hasChanged, this, &PropertiesTab::refresh );
 
     // Perform a first refreshing.
     refresh();

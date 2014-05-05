@@ -170,7 +170,7 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
         addToSelection = mousePressEvent->modifiers() & Qt::ControlModifier;
 
         // Do the ray picking.
-        comoApp->getScene()->selectDrawableByRayPicking( rayOrigin,
+        comoApp->getScene()->getDrawablesManager()->selectDrawableByRayPicking( rayOrigin,
                                                          rayDirection,
                                                          addToSelection );
     }else{
@@ -215,13 +215,13 @@ void Viewport::keyPressEvent( QKeyEvent *e )
             }
         break;
         case Qt::Key_Left:
-            comoApp->getScene()->rotateSelection( 90.0f, glm::vec3( 0.0f, 0.0f, 1.0f ) );
+            comoApp->getScene()->getDrawablesManager()->rotateSelection( 90.0f, glm::vec3( 0.0f, 0.0f, 1.0f ) );
         break;
         case Qt::Key_Right:
-            comoApp->getScene()->rotateSelection( -90.0f, glm::vec3( 0.0f, 0.0f, 1.0f ) );
+            comoApp->getScene()->getDrawablesManager()->rotateSelection( -90.0f, glm::vec3( 0.0f, 0.0f, 1.0f ) );
         break;
         case Qt::Key_Delete:
-            comoApp->getScene()->deleteSelection();
+            comoApp->getScene()->getDrawablesManager()->deleteSelection();
         break;
         case Qt::Key_0:
             setView( View::FRONT );
@@ -249,7 +249,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     glm::vec4 transformVector;
     float angle;
     // TODO: Not a complete conversion to screen coordinates.
-    glm::vec2 scenePivotPoint = glm::vec2( projectionMatrix * camera->getViewMatrix() * glm::vec4( comoApp->getScene()->getPivotPoint(), 1.0f ) );
+    glm::vec2 scenePivotPoint = glm::vec2( projectionMatrix * camera->getViewMatrix() * glm::vec4( comoApp->getScene()->getDrawablesManager()->getPivotPoint(), 1.0f ) );
     scenePivotPoint.x *= 0.5f;
     scenePivotPoint.y *= -0.5f;
 
@@ -290,7 +290,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 }
 
                 // Do the translation.
-                comoApp->getScene()->translateSelection( glm::vec3( transformVector ) );
+                comoApp->getScene()->getDrawablesManager()->translateSelection( glm::vec3( transformVector ) );
             break;
             case TransformationType::ROTATION:
                 // Compute the angle between the vectors.
@@ -308,16 +308,16 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                     // transformationMode.
                     switch( transformationMode ){
                         case TransformationMode::FIXED_X:
-                            comoApp->getScene()->rotateSelection( angle, xAxis );
+                            comoApp->getScene()->getDrawablesManager()->rotateSelection( angle, xAxis );
                         break;
                         case TransformationMode::FIXED_Y:
-                            comoApp->getScene()->rotateSelection( angle, yAxis );
+                            comoApp->getScene()->getDrawablesManager()->rotateSelection( angle, yAxis );
                         break;
                         case TransformationMode::FIXED_Z:
-                            comoApp->getScene()->rotateSelection( angle, zAxis );
+                            comoApp->getScene()->getDrawablesManager()->rotateSelection( angle, zAxis );
                         break;
                         case TransformationMode::FREE:
-                            comoApp->getScene()->rotateSelection( angle, glm::vec3( -camera->getCenterVector() ) );
+                            comoApp->getScene()->getDrawablesManager()->rotateSelection( angle, glm::vec3( -camera->getCenterVector() ) );
                         break;
                     }
                 }
@@ -365,7 +365,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                         transformVector.y != 0.0f &&
                         transformVector.z != 0.0f ){
                         // Do the scale.
-                        comoApp->getScene()->scaleSelection( glm::vec3( transformVector ) );
+                        comoApp->getScene()->getDrawablesManager()->scaleSelection( glm::vec3( transformVector ) );
                     }
                 }
             break;
@@ -502,7 +502,7 @@ void Viewport::updateTransformGuideLine( const GLfloat& x, const GLfloat& y )
     glm::vec3 destination;
 
     // The scene's current pivot point will be the rect's origin.
-    glm::vec3 origin = comoApp->getScene()->getPivotPoint();
+    glm::vec3 origin = comoApp->getScene()->getDrawablesManager()->getPivotPoint();
 
     // Get the equation of a plane which contains the origin point and whose normal
     // is the opposite of the camera's center vector.

@@ -29,23 +29,11 @@ Scene::Scene( LogPtr log ) :
     log_( log ),
     localUserID_( 1 ), // Will be updated to its final value in Scene::connect().
     localUserNextDrawableIndex_( 1 ),
-    server_( log_ )
+    server_( new ServerInterface( log_ ) )
 {
-    // TODO: Make this constant.
-    PackableDrawableID DIRECTIONAL_LIGHT_ID;
-    DIRECTIONAL_LIGHT_ID.creatorID = 0;
-    DIRECTIONAL_LIGHT_ID.drawableIndex = 1;
-
     initOpenGL();
 
     initLinesBuffer();
-
-    // Set the default contour color for those drawable that are
-    // not selected by any user.
-    defaultContourColor[0] = 0.0f;
-    defaultContourColor[1] = 0.0f;
-    defaultContourColor[2] = 0.0f;
-    defaultContourColor[3] = 0.0f;
 
     // Set the background color.
     setBackgroundColor( 0.9f, 0.9f, 0.9f, 0.9f );
@@ -56,7 +44,7 @@ Scene::Scene( LogPtr log ) :
 
     // Signal / slot: when a command is received from server, execute it on
     // the local scene.
-    QObject::connect( &server_, &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
+    QObject::connect( server_.get(), &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
 
     // Initialize lighting manager.
     lightingManager_ = shared_ptr< LightingManager >( new LightingManager );
@@ -208,7 +196,7 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         // Try to connect to the server. If there is any error, the method
         // ServerInterface::connect() throws an exception.
         log_->debug( "Connecting to (", host, ":", port, ") with name [", userName, "]...\n" );
-        userAcceptancePacket = server_.connect( host, port, userName );
+        userAcceptancePacket = server_->connect( host, port, userName );
 
         // Add the local user to the scene and retrieve its ID.
         addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( *userAcceptancePacket ) ) );
@@ -226,7 +214,11 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         // Add the directional light from the previous manager to the scene.
         // TODO: Remove this and sync light creation in both client and
         // server.
-        drawablesManager_->addDrawable( lightingManager_->getDirectionalLight(), DIRECTIONAL_LIGHT_ID );
+        // TODO: Make this constant.
+        PackableDrawableID DIRECTIONAL_LIGHT_ID;
+        DIRECTIONAL_LIGHT_ID.creatorID = 0;
+        DIRECTIONAL_LIGHT_ID.drawableIndex = 1;
+        //drawablesManager_->addDrawable( lightingManager_->getDirectionalLight(), DIRECTIONAL_LIGHT_ID );
 
         // Emit a signal indicating that we have connected to a scene.
         emit connectedToScene( tr( userAcceptancePacket->getSceneName() ) );
@@ -247,7 +239,7 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
 void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnectedCommand )
 {
     // Create the new user from the given USER_CONNECTION command.
-    BasicUser newUser( new BasicUser( userConnectedCommand->getUserID(), userConnectedCommand->getName() ) );
+    BasicUserPtr newUser( new BasicUser( userConnectedCommand->getUserID(), userConnectedCommand->getName() ) );
 
     // Insert the new user in the users vector.
     users_.insert( std::pair< UserID, BasicUserPtr >( userConnectedCommand->getUserID(), newUser ) );
@@ -278,6 +270,12 @@ void Scene::removeUser( UserID userID )
 shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
 {
     return oglContext_;
+}
+
+
+DrawablesManagerPtr Scene::getDrawablesManager() const
+{
+    return drawablesManager_;
 }
 
 
@@ -338,15 +336,8 @@ void Scene::draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect ) co
 {
     GLfloat WHITE_COLOR[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-    UsersMap::const_iterator usersIterator = users_.begin();
-
-    // Draw the non selected drawables.
-    nonSelectedDrawables.draw( viewProjMatrix, defaultContourColor );
-
-    // Draw the user's selections.
-    for( ; usersIterator != users_.end(); usersIterator++  ){
-        (usersIterator->second)->selection->draw( viewProjMatrix, (usersIterator->second)->color );
-    }
+    // Draw all the drawables.
+    drawablesManager_->drawAll( viewProjMatrix );
 
     // Draw a guide rect if asked.
     if( drawGuideRect != -1 ){
@@ -450,7 +441,7 @@ void Scene::executeRemoteUserCommand( UserCommandConstPtr command )
             // Change parameter.
             switch( changeParameter->getParameterType() ){
                 case ParameterType::PIVOT_POINT_MODE:
-                    setPivotPointMode( changeParameter->getPivotPointMode(), changeParameter->getUserID() );
+                    drawablesManager_->setPivotPointMode( changeParameter->getPivotPointMode(), changeParameter->getUserID() );
                 break;
             }
         break;
@@ -469,7 +460,7 @@ void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
             meshCreationCommand = dynamic_cast< const MeshCreationCommand* >( command.get() );
 
             // Add mesh to the scene.
-            addMesh( meshCreationCommand->getPrimitiveID(), meshCreationCommand->getColor(), meshCreationCommand->getDrawableID() );
+            drawablesManager_->addMesh( meshCreationCommand->getDrawableID().creatorID.getValue(), meshCreationCommand->getPrimitiveID(), meshCreationCommand->getColor(), meshCreationCommand->getDrawableID() );
         break;
 
         case DrawableCommandType::DRAWABLE_SELECTION:
@@ -477,71 +468,12 @@ void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
             selectDrawable = dynamic_cast< const DrawableSelectionCommand* >( command.get() );
 
             // Select drawable.
-            this->selectDrawable( selectDrawable->getDrawableID(), selectDrawable->getUserID() );
+            drawablesManager_->selectDrawable( selectDrawable->getDrawableID(), selectDrawable->getUserID() );
         break;
     }
 }
 
 
-void Scene::executeRemoteSelectionCommand( SelectionCommandConstPtr command )
-{
-    const SelectionResponseCommand* selectionResponse = nullptr;
-    const SelectionTransformationCommand* selectionTransformation = nullptr;
-    const float* transf = nullptr;
-    bool selectionConfirmed;
-    unsigned int i;
-
-    PackableDrawableID pendingSelection;
-
-    switch( command->getType() ){
-        case SelectionCommandType::SELECTION_DELETION:
-            // Delete user selection.
-            deleteSelection( command->getUserID() );
-        break;
-
-        case SelectionCommandType::SELECTION_RESPONSE:
-            // Cast to a SELECTION_RESPONSE command.
-            selectionResponse = dynamic_cast< const SelectionResponseCommand* >( command.get() );
-
-            for( i = 0; i < selectionResponse->getNSelections(); i++ ){
-                selectionConfirmed = selectionResponse->getSelectionConfirmed() & (1 << i);
-                if( selectionConfirmed ){
-                    pendingSelection = localUserPendingSelections_.front();
-                    this->selectDrawable( pendingSelection );
-                    //selectDrawable( selectDrawable->getDrawableID() );
-                }
-                localUserPendingSelections_.pop();
-            }
-        break;
-
-        case SelectionCommandType::FULL_DESELECTION:
-            // Unselect all.
-            unselectAll( command->getUserID() );
-        break;
-
-        case SelectionCommandType::SELECTION_TRANSFORMATION:
-            // Cast to a SELECTION_TRANSFORMATION command.
-            selectionTransformation = dynamic_cast< const SelectionTransformationCommand* >( command.get() );
-
-            // Transform the user's selection.
-            transf = selectionTransformation->getTransformationMagnitude();
-
-            // Execute one transformation or another according to the requested
-            // type.
-            switch( selectionTransformation->getTransformationType() ){
-                case SelectionTransformationCommandType::TRANSLATION:
-                    translateSelection( glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
-                break;
-                case SelectionTransformationCommandType::ROTATION:
-                    rotateSelection( selectionTransformation->getAngle(), glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
-                break;
-                case SelectionTransformationCommandType::SCALE:
-                    scaleSelection( glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
-                break;
-            }
-        break;
-    }
-}
 
 void Scene::executeRemotePrimitiveCommand( PrimitiveCommandConstPtr command )
 {
@@ -562,8 +494,8 @@ void Scene::executeRemotePrimitiveCommand( PrimitiveCommandConstPtr command )
 
             log_->debug( "Primitive relative path: [", primitiveRelPath, "]\n" );
 
-            // Create a new entry (ID, relative path) for the recently added primitive.
-            primitivePaths_[primitiveCreationCommand->getPrimitiveID()] = primitiveRelPath;
+            // Register the new primitive.
+            drawablesManager_->registerPrimitivePath( primitiveCreationCommand->getPrimitiveID(), primitiveRelPath );
 
             // Emit a signal indicating the primitive insertion. Include
             // primitive's name and ID in the signal.
@@ -588,7 +520,7 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
             executeRemoteDrawableCommand( dynamic_pointer_cast< const DrawableCommand>( command ) );
         break;
         case CommandTarget::SELECTION:
-            executeRemoteSelectionCommand( dynamic_pointer_cast< const SelectionCommand>( command ) );
+            drawablesManager_->executeRemoteSelectionCommand( dynamic_pointer_cast< const SelectionCommand>( command ) );
         break;
         case CommandTarget::PRIMITIVE:
             executeRemotePrimitiveCommand( dynamic_pointer_cast< const PrimitiveCommand>( command ) );

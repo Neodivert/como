@@ -48,9 +48,9 @@ DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserI
  * 3. Getters
  ***/
 
-DrawablesSelection* DrawablesManager::getUserSelection()
+LocalDrawablesSelection* DrawablesManager::getLocalUserSelection() const
 {
-    return getUserSelection( localUserID_ );
+    return localDrawablesSelection_;
 }
 
 
@@ -462,6 +462,86 @@ void DrawablesManager::rotateSelection( const GLfloat& angle, const glm::vec3& a
 }
 */
 
+void DrawablesManager::drawAll( const glm::mat4& viewProjMatrix ) const
+{
+    DrawablesSelections::const_iterator it;
+
+    // Draw the non selected drawables.
+    nonSelectedDrawables_.draw( viewProjMatrix );
+
+    // Draw the user's selections.
+    for( it = drawablesSelections_.begin(); it != drawablesSelections_.end(); it++  ){
+        // FIXME: Use selection color.
+        (it->second).draw( viewProjMatrix );
+    }
+}
+
+
+/***
+ * 11. Command execution
+ ***/
+
+void DrawablesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr command )
+{
+    const SelectionResponseCommand* selectionResponse = nullptr;
+    const SelectionTransformationCommand* selectionTransformation = nullptr;
+    const float* transf = nullptr;
+    bool selectionConfirmed;
+    unsigned int i;
+
+    PackableDrawableID pendingSelection;
+
+    switch( command->getType() ){
+        case SelectionCommandType::SELECTION_DELETION:
+            // Delete user selection.
+            deleteSelection( command->getUserID() );
+        break;
+
+        case SelectionCommandType::SELECTION_RESPONSE:
+            // Cast to a SELECTION_RESPONSE command.
+            selectionResponse = dynamic_cast< const SelectionResponseCommand* >( command.get() );
+
+            for( i = 0; i < selectionResponse->getNSelections(); i++ ){
+                selectionConfirmed = selectionResponse->getSelectionConfirmed() & (1 << i);
+                if( selectionConfirmed ){
+                    pendingSelection = localUserPendingSelections_.front();
+                    selectDrawable( pendingSelection );
+                    //selectDrawable( selectDrawable->getDrawableID() );
+                }
+                localUserPendingSelections_.pop();
+            }
+        break;
+
+        case SelectionCommandType::FULL_DESELECTION:
+            // Unselect all.
+            unselectAll( command->getUserID() );
+        break;
+
+        case SelectionCommandType::SELECTION_TRANSFORMATION:
+            // Cast to a SELECTION_TRANSFORMATION command.
+            selectionTransformation = dynamic_cast< const SelectionTransformationCommand* >( command.get() );
+
+            // Transform the user's selection.
+            transf = selectionTransformation->getTransformationMagnitude();
+
+            // Execute one transformation or another according to the requested
+            // type.
+            switch( selectionTransformation->getTransformationType() ){
+                case SelectionTransformationCommandType::TRANSLATION:
+                    translateSelection( glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
+                break;
+                case SelectionTransformationCommandType::ROTATION:
+                    rotateSelection( selectionTransformation->getAngle(), glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
+                break;
+                case SelectionTransformationCommandType::SCALE:
+                    scaleSelection( glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
+                break;
+            }
+        break;
+    }
+}
+
+
 /***
  * 8. Auxiliar methods
  ***/
@@ -484,6 +564,13 @@ void DrawablesManager::roundTransformationMagnitude( float& angle, float& vx, fl
     vx = floorf( vx * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
     vy = floorf( vy * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
     vz = floorf( vz * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
+}
+
+
+void DrawablesManager::registerPrimitivePath( PrimitiveID primitiveID, std::string primitiveRelPath )
+{
+    // Create a new entry (ID, relative path) for the recently added primitive.
+    primitivePaths_[primitiveID] = primitiveRelPath;
 }
 
 } // namespace como

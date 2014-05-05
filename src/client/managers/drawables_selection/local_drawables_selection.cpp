@@ -22,6 +22,7 @@
 namespace como {
 
 LocalDrawablesSelection::LocalDrawablesSelection( UserID localUserID, ServerInterfacePtr server ) :
+    QObject(),
     DrawablesSelection(),
     server_( server ),
     localUserID_( localUserID )

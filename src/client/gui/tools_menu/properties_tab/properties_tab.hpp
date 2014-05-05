@@ -23,7 +23,7 @@
 #include <QFrame>
 #include "general_info_menu.hpp"
 #include "mesh_info_menu.hpp"
-#include "../../../managers/drawables_selection/drawables_selection.hpp"
+#include "../../../managers/drawables_selection/local_drawables_selection.hpp"
 
 namespace como {
 
@@ -39,7 +39,7 @@ class PropertiesTab : public QFrame
 
     private:
         /*! Local user's (drawables) selection. */
-        DrawablesSelectionPtr userSelection_;
+        LocalDrawablesSelection* userSelection_;
 
         /*!
          * Menu for manipulating the general info about the currently selected
@@ -60,7 +60,7 @@ class PropertiesTab : public QFrame
          ***/
 
         /*! \brief Default constructor */
-        PropertiesTab( DrawablesSelectionPtr userSelection );
+        PropertiesTab( LocalDrawablesSelection* userSelection );
 
         /*! \brief Copy constructor */
         PropertiesTab( const PropertiesTab& ) = delete;

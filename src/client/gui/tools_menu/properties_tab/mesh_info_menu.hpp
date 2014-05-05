@@ -21,7 +21,7 @@
 #define MESH_INFO_MENU_HPP
 
 #include <QObject>
-#include "../../../managers/drawables_selection/drawables_selection.hpp"
+#include "../../../managers/drawables_selection/local_drawables_selection.hpp"
 
 namespace como {
 
@@ -31,7 +31,7 @@ class MeshInfoMenu : public QWidget
 
     private:
         /*! Local user's (drawables) selection */
-        DrawablesSelectionPtr userSelection_;
+        LocalDrawablesSelection* userSelection_;
 
         /*! Position of the user's selection centroid */
         QLabel* centroidPosition_;
@@ -45,7 +45,7 @@ class MeshInfoMenu : public QWidget
          ***/
 
         /*! \brief Default constructor */
-        MeshInfoMenu( DrawablesSelectionPtr userSelection );
+        MeshInfoMenu( LocalDrawablesSelection* userSelection );
 
         /*! \brief Copy constructor */
         MeshInfoMenu( const MeshInfoMenu& ) = delete;

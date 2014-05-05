@@ -27,7 +27,7 @@
 
 namespace como {
 
-class LocalDrawablesSelection : public DrawablesSelection, QObject
+class LocalDrawablesSelection : public QObject, public DrawablesSelection
 {
     Q_OBJECT
 
@@ -99,6 +99,8 @@ class LocalDrawablesSelection : public DrawablesSelection, QObject
     signals:
         void hasChanged();
 };
+
+typedef std::shared_ptr< LocalDrawablesSelection > LocalDrawablesSelectionPtr;
 
 } // namespace como
 

@@ -119,7 +119,15 @@ QFrame* CreationTab::createMeshFromPrimitiveCreationMenu()
     // selected, create a mesh from it and add it to the scene.
     void (QComboBox::*activated)( int ) = &QComboBox::activated;
     connect( primitiveSelector, activated, [=,this]( int primitiveID ) {
-        scene_->addMesh( static_cast< PrimitiveID >( primitiveID ), meshColor_ );
+        uint8_t meshColor[4];
+        int auxColor[4];
+        meshColor_.getRgb( &auxColor[0], &auxColor[1], &auxColor[2], &auxColor[3] );
+
+        for( unsigned int i=0; i<4; i++ ){
+            meshColor[i] = auxColor[i];
+        }
+
+        scene_->getDrawablesManager()->addMesh( static_cast< PrimitiveID >( primitiveID ), meshColor );
     } );
 
     // Signal / Slot connection: when a new primitive is created in the scene,

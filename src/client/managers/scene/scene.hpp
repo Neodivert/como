@@ -76,7 +76,7 @@ class Scene : public QOffscreenSurface
         shared_ptr< LightingManager > lightingManager_;
 
         // Interface with the server.
-        ServerInterface server_;
+        ServerInterfacePtr server_;
 
     private:
         // Scene's non selected drawables.
@@ -88,8 +88,6 @@ class Scene : public QOffscreenSurface
         GLuint linesBufferOffsets[N_LINES_BUFFER_OFFSETS];
 
         GLuint uniformColorLocation;
-        GLfloat defaultContourColor[4];
-
 
     public:
         /***
@@ -126,9 +124,8 @@ class Scene : public QOffscreenSurface
         /***
          * 5. Getters
          ***/
-
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
-
+        DrawablesManagerPtr getDrawablesManager() const ;
 
 
         /***
@@ -184,7 +181,6 @@ class Scene : public QOffscreenSurface
     private:
         void executeRemoteUserCommand( UserCommandConstPtr command );
         void executeRemoteDrawableCommand( DrawableCommandConstPtr command );
-        void executeRemoteSelectionCommand( SelectionCommandConstPtr command );
         void executeRemotePrimitiveCommand( PrimitiveCommandConstPtr command );
 
     public slots:

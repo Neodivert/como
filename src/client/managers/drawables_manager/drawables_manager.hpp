@@ -73,8 +73,8 @@ class DrawablesManager : public Changeable
         /***
          * 3. Getters
          ***/
+        LocalDrawablesSelection* getLocalUserSelection() const ;
     private:
-        DrawablesSelection* getUserSelection();
         DrawablesSelection* getUserSelection( UserID userID );
     public:
         glm::vec3 getPivotPoint() const ;
@@ -145,6 +145,18 @@ class DrawablesManager : public Changeable
 
 
         /***
+         * 10. Drawing
+         ***/
+        void drawAll( const glm::mat4& viewProjMatrix ) const ;
+
+
+        /***
+         * 11. Command execution
+         ***/
+        void executeRemoteSelectionCommand( SelectionCommandConstPtr command );
+
+
+        /***
          * 10. Auxiliar methods
          ***/
         void roundTransformationMagnitude( float& vx, float& vy, float& vz );
@@ -156,6 +168,10 @@ class DrawablesManager : public Changeable
          ***/
         DrawablesManager& operator=( const DrawablesManager& ) = delete ;
         DrawablesManager& operator=( DrawablesManager&& ) = delete;
+
+
+        // TODO: Move to a new PrimitivesManager class?
+        void registerPrimitivePath( PrimitiveID primitiveID, std::string primitiveRelPath );
 };
 
 typedef shared_ptr< DrawablesManager > DrawablesManagerPtr;
