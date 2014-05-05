@@ -36,8 +36,6 @@ Q_DECLARE_METATYPE( como::CommandConstPtr )
 
 namespace como {
 
-const unsigned int TRANSFORMATION_FLOAT_PRECISION = 10000;
-
 enum LinesBufferOffset {
     WORLD_AXIS = 0,
     GUIDE_AXIS,
@@ -72,9 +70,6 @@ class Scene : public QOffscreenSurface
 
         // Interface with the server.
         ServerInterface server_;
-
-        // Map ID - PrimitivePath.
-        std::map< PrimitiveID, std::string > primitivePaths_;
 
     private:
         // Scene's non selected drawables.
@@ -128,8 +123,7 @@ class Scene : public QOffscreenSurface
         glm::vec3 getPivotPoint() const ;
         glm::vec3 getPivotPoint( UserID userID ) const ;
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
-        DrawablesSelectionPtr getUserSelection() const;
-        DrawablesSelectionPtr getUserSelection( UserID userID ) const;
+
 
 
         /***
@@ -138,8 +132,7 @@ class Scene : public QOffscreenSurface
     public:
         void setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a );
         void setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny );
-        void setPivotPointMode( PivotPointMode pivotPointMode );
-        void setPivotPointMode( PivotPointMode pivotPointMode, UserID userID );
+
         void setDirectionalLightColor( glm::vec3 color );
 
     protected:
@@ -150,33 +143,8 @@ class Scene : public QOffscreenSurface
          * 7. Drawables administration
          ***/
     private:
-        void addDrawable( DrawablePtr drawable, PackableDrawableID drawableID );
         void takeOpenGLContext();
     public:
-        void addMesh( PrimitiveID primitiveID, QColor color );
-        void addMesh( PrimitiveID primitiveID, const std::uint8_t* color );
-        void addMesh( PrimitiveID primitiveID, const std::uint8_t* color, PackableDrawableID drawableID );
-
-        //void addDrawable( DrawableType drawableType );
-        //void addDrawable( DrawableType drawableType, PackableDrawableID drawableID );
-
-
-        /***
-         * 9. Transformations
-         ***/
-        void translateSelection( glm::vec3 direction );
-        void translateSelection( glm::vec3 direction, UserID userID );
-
-        void rotateSelection( GLfloat angle, glm::vec3 axis );
-        void rotateSelection( GLfloat angle, glm::vec3 axis, UserID userID );
-
-        void scaleSelection( glm::vec3 scaleFactors );
-        void scaleSelection( glm::vec3 scaleFactors, UserID userID );
-        //void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
-
-        void deleteSelection();
-        void deleteSelection( const unsigned int& userId );
-
 
         /***
          * 10. Drawing
@@ -222,9 +190,6 @@ class Scene : public QOffscreenSurface
          * 14. Auxiliar methods
          ***/
     public:
-        void roundTransformationMagnitude( float& vx, float& vy, float& vz );
-        void roundTransformationMagnitude( float& angle, float& vx, float& vy, float& vz );
-
         void createScenePrimitivesDirectory();
 };
 

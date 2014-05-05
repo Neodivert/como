@@ -35,12 +35,18 @@ class DrawablesManager : public Changeable
         DrawablesSelection nonSelectedDrawables_;
         DrawablesSelections drawablesSelections_;
 
-        UserID localUserID_;
-
         ServerInterfacePtr server_;
+
+        UserID localUserID_;
 
         // TODO: move this to ServerInterface.
         std::queue< PackableDrawableID > localUserPendingSelections_;
+
+        // Map ID - PrimitivePath.
+        std::map< PrimitiveID, std::string > primitivePaths_;
+
+        // Relative path to the primitives directory.
+        std::string primitivesDirPath_;
 
         LogPtr log_;
 
@@ -48,7 +54,7 @@ class DrawablesManager : public Changeable
         /***
          * 1. Construction
          ***/
-        DrawablesManager( UserID localUserID, ServerInterfacePtr server, LogPtr log );
+        DrawablesManager( ServerInterfacePtr server, UserID localUserID, std::string primitivesDirPath, LogPtr log );
         DrawablesManager( const DrawablesManager& ) = delete;
         DrawablesManager( DrawablesManager&& ) = delete;
 
@@ -60,13 +66,42 @@ class DrawablesManager : public Changeable
 
 
         /***
-         * 3. Selections management
+         * 3. Getters
          ***/
-        void addDrawablesSelection( UserID userID );
+    private:
+        DrawablesSelection* getUserSelection();
+        DrawablesSelection* getUserSelection( UserID userID );
+    public:
+
+        /***
+         * 4. Setters
+         ***/
+        void setPivotPointMode( PivotPointMode pivotPointMode );
+        void setPivotPointMode( PivotPointMode pivotPointMode, UserID userID );
 
 
         /***
-         * 4. Drawables (de)seletion.
+         * 5. Drawables administration
+         ***/
+    private:
+        void addDrawable( DrawablePtr drawable, PackableDrawableID drawableID );
+    public:
+        void addMesh( PrimitiveID primitiveID, QColor color );
+        void addMesh( PrimitiveID primitiveID, const std::uint8_t* color );
+        void addMesh( PrimitiveID primitiveID, const std::uint8_t* color, PackableDrawableID drawableID );
+
+
+        /***
+         * 6. Selections management
+         ***/
+        void addDrawablesSelection( UserID userID );
+
+        void deleteSelection();
+        void deleteSelection( const unsigned int& userId );
+
+
+        /***
+         * 7. Drawables (de)seletion.
          ***/
         void selectDrawable( PackableDrawableID drawableID );
         void selectDrawable( PackableDrawableID drawableID, UserID userID );
@@ -78,7 +113,28 @@ class DrawablesManager : public Changeable
 
 
         /***
-         * 5. Operators
+         * 8. Drawables selection transformations
+         ***/
+        void translateSelection( glm::vec3 direction );
+        void translateSelection( glm::vec3 direction, UserID userID );
+
+        void rotateSelection( GLfloat angle, glm::vec3 axis );
+        void rotateSelection( GLfloat angle, glm::vec3 axis, UserID userID );
+
+        void scaleSelection( glm::vec3 scaleFactors );
+        void scaleSelection( glm::vec3 scaleFactors, UserID userID );
+        //void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
+
+
+        /***
+         * 9. Auxiliar methods
+         ***/
+        void roundTransformationMagnitude( float& vx, float& vy, float& vz );
+        void roundTransformationMagnitude( float& angle, float& vx, float& vy, float& vz );
+
+
+        /***
+         * 10. Operators
          ***/
         DrawablesManager& operator=( const DrawablesManager& ) = delete ;
         DrawablesManager& operator=( DrawablesManager&& ) = delete;
