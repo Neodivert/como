@@ -221,7 +221,7 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         createScenePrimitivesDirectory();
 
         // Initialize the drawables manager.
-        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, localUserID_, std::string( "data/primitives/scenes/" ) + sceneName_, log_ ) );
+        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, localUserID_, std::string( "data/primitives/scenes/" ) + sceneName_, oglContext_, log_ ) );
 
         // Add the directional light from the previous manager to the scene.
         // TODO: Remove this and sync light creation in both client and
@@ -247,10 +247,10 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
 void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnectedCommand )
 {
     // Create the new user from the given USER_CONNECTION command.
-    PublicUserPtr newUser( new  ClientUser( userConnectedCommand.get() ) );
+    BasicUser newUser( new BasicUser( userConnectedCommand->getUserID(), userConnectedCommand->getName() ) );
 
     // Insert the new user in the users vector.
-    users_.insert( std::pair< unsigned int, PublicUserPtr >( userConnectedCommand->getUserID(), newUser ) );
+    users_.insert( std::pair< UserID, BasicUserPtr >( userConnectedCommand->getUserID(), newUser ) );
 
     // Emit a UserConnectionCommand signal.
     emit userConnected( userConnectedCommand );
@@ -260,7 +260,7 @@ void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnecte
 void Scene::removeUser( UserID userID )
 {
     // Unselect all drawables selected by user.
-    unselectAll( userID );
+    drawablesManager_->unselectAll( userID );
 
     // Remove user from scene.
     if( users_.erase( userID ) ){
@@ -274,26 +274,6 @@ void Scene::removeUser( UserID userID )
 /***
  * 5. Getters
  ***/
-
-glm::vec3 Scene::getPivotPoint() const
-{
-    return getPivotPoint( localUserID_ );
-}
-
-
-glm::vec3 Scene::getPivotPoint( UserID userID ) const
-{
-    switch( getUserSelection( userID )->getPivotPointMode() ){
-        case PivotPointMode::INDIVIDUAL_CENTROIDS:
-        case PivotPointMode::MEDIAN_POINT:
-            return glm::vec3( getUserSelection( userID )->getCentroid() );
-        break;
-        default:
-            return glm::vec3( 0.0f, 0.0f, 0.0f );
-        break;
-    }
-}
-
 
 shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
 {

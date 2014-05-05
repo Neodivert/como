@@ -59,6 +59,25 @@ DrawablesSelection* DrawablesManager::getUserSelection( UserID userID )
     return &( drawablesSelections_.at( userID ) );
 }
 
+glm::vec3 DrawablesManager::getPivotPoint() const
+{
+    return getPivotPoint( localUserID_ );
+}
+
+
+glm::vec3 DrawablesManager::getPivotPoint( UserID userID ) const
+{
+    switch( drawablesSelections_.at( userID ).getPivotPointMode() ){
+        case PivotPointMode::INDIVIDUAL_CENTROIDS:
+        case PivotPointMode::MEDIAN_POINT:
+            return glm::vec3( drawablesSelections_.at( userID ).getCentroid() );
+        break;
+        default:
+            return glm::vec3( 0.0f, 0.0f, 0.0f );
+        break;
+    }
+}
+
 
 /***
  * 4. Setters

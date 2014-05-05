@@ -80,6 +80,8 @@ class RemoteUser : public ClientUser
         RemoteUser& operator=( RemoteUser&& ) = delete;
 };
 
+typedef shared_ptr< RemoteUser > RemoteUserPtr;
+
 } // namespace como
 
 #endif // REMOTE_USER_HPP

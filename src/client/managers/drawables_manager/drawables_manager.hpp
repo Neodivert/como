@@ -77,6 +77,8 @@ class DrawablesManager : public Changeable
         DrawablesSelection* getUserSelection();
         DrawablesSelection* getUserSelection( UserID userID );
     public:
+        glm::vec3 getPivotPoint() const ;
+        glm::vec3 getPivotPoint( UserID userID ) const ;
 
         /***
          * 4. Setters

@@ -48,7 +48,6 @@ class LocalDrawablesSelection : public DrawablesSelection, QObject
         /***
          * 1. Construction
          ***/
-
         LocalDrawablesSelection( UserID localUserID, ServerInterfacePtr server );
         LocalDrawablesSelection( const LocalDrawablesSelection& ) = delete;
         LocalDrawablesSelection( LocalDrawablesSelection&& ) = delete;

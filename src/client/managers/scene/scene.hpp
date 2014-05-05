@@ -45,7 +45,7 @@ enum LinesBufferOffset {
     N_LINES_BUFFER_OFFSETS
 };
 
-typedef std::map< UserID, PublicUserPtr > UsersMap;
+typedef std::map< UserID, BasicUserPtr > UsersMap;
 
 class Scene : public QOffscreenSurface
 {
@@ -127,8 +127,6 @@ class Scene : public QOffscreenSurface
          * 5. Getters
          ***/
 
-        glm::vec3 getPivotPoint() const ;
-        glm::vec3 getPivotPoint( UserID userID ) const ;
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
 
 

@@ -59,6 +59,8 @@ class BasicUser : public std::enable_shared_from_this< BasicUser >
         BasicUser& operator = ( BasicUser&& ) = delete;
 };
 
+typedef std::shared_ptr< BasicUser > BasicUserPtr;
+
 } // namespace como
 
 #endif // BASIC_USER_HPP

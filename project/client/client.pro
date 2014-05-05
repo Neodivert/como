@@ -50,7 +50,6 @@ HEADERS += \
     ../../src/client/gui/connection_wizard/create_server_page.hpp \
     ../../src/client/gui/connection_wizard/intro_page.hpp \
     ../../src/client/gui/connection_wizard/page_ids.hpp \
-    ../../src/client/models/users/client_user.hpp \
     ../../src/client/gui/users_list.hpp \
     ../../src/client/managers/server_interface/server_interface.hpp \
     ../../src/client/managers/drawables_selection/drawables_selection.hpp \
@@ -67,7 +66,8 @@ HEADERS += \
     ../../src/client/models/users/remote_user.hpp \
     ../../src/client/models/users/local_user.hpp \
     ../../src/client/managers/drawables_selection/local_drawables_selection.hpp \
-    ../../src/client/managers/drawables_manager/drawables_manager.hpp
+    ../../src/client/managers/drawables_manager/drawables_manager.hpp \
+    ../../src/client/models/users/client_user.hpp
 
 
 # Client sources
@@ -89,7 +89,6 @@ SOURCES += \
     ../../src/client/gui/connection_wizard/connect_server_page.cpp \
     ../../src/client/gui/connection_wizard/create_server_page.cpp \
     ../../src/client/gui/connection_wizard/intro_page.cpp \
-    ../../src/client/models/users/client_user.cpp \
     ../../src/client/gui/users_list.cpp \
     ../../src/client/managers/server_interface/server_interface.cpp \
     ../../src/client/managers/drawables_selection/drawables_selection.cpp \
@@ -105,4 +104,5 @@ SOURCES += \
     ../../src/client/models/users/remote_user.cpp \
     ../../src/client/models/users/local_user.cpp \
     ../../src/client/managers/drawables_selection/local_drawables_selection.cpp \
-    ../../src/client/managers/drawables_manager/drawables_manager.cpp
+    ../../src/client/managers/drawables_manager/drawables_manager.cpp \
+    ../../src/client/models/users/client_user.cpp
