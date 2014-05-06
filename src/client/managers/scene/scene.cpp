@@ -198,6 +198,9 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         log_->debug( "Connecting to (", host, ":", port, ") with name [", userName, "]...\n" );
         userAcceptancePacket = server_->connect( host, port, userName );
 
+        // Retrieve the local user ID.
+        localUserID_ = userAcceptancePacket->getId();
+
         // Copy the scene name given by the server.
         setName( userAcceptancePacket->getSceneName() );
 
@@ -207,9 +210,8 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         // Initialize the drawables manager.
         drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/primitives/scenes/" ) + sceneName_, oglContext_, log_ ) );
 
-        // Add the local user to the scene and retrieve its ID.
+        // Add the local user to the scene.
         addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( *userAcceptancePacket ) ) );
-        localUserID_ = userAcceptancePacket->getId();
 
         // Add the directional light from the previous manager to the scene.
         // TODO: Remove this and sync light creation in both client and

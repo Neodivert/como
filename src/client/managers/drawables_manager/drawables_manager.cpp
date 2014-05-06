@@ -153,8 +153,6 @@ void DrawablesManager::addMesh( PrimitiveID primitiveID, const std::uint8_t* col
     //takeOpenGLContext();
     //oglContext_->makeCurrent( this );
 
-    log_->debug( "Adding primitive (", primitivePaths_.at( primitiveID ), ") to scene\n" );
-
     // Build the "absolute" path to the specification file of the
     // primitive used for building this mesh.
     std::string primitivePath = primitivesDirPath_ + '/' + primitivePaths_.at( primitiveID );
@@ -175,8 +173,6 @@ void DrawablesManager::addMesh( UserID userID, PrimitiveID primitiveID, const st
 {
     try {
         //takeOpenGLContext();
-
-        log_->debug( "Adding primitive (", primitivePaths_.at( primitiveID ), ") to scene\n" );
 
         // Build the "absolute" path to the specification file of the
         // primitive used for building this mesh.
