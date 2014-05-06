@@ -249,11 +249,11 @@ void DrawablesManager::selectDrawable( PackableDrawableID drawableID, UserID use
     // it to the user's selection in that case.
     drawableFound = nonSelectedDrawables_.moveDrawable( drawableID, userSelection );
 
-    if( !drawableFound ){
-        throw std::runtime_error( "ERROR when selecting drawable. Drawable not found" );
+    // If the drawable was found, and thus moved to user selection, mark this
+    // selection as "changed".
+    if( drawableFound ){
+        setChanged();
     }
-
-    setChanged();
 }
 
 
