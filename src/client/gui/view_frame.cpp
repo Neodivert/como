@@ -81,12 +81,6 @@ ViewFrame::ViewFrame( View view, shared_ptr< ComoApp > comoApp ) :
 
     // When a render is requested, render!
     checkOpenGL( "Viewframe - Constructor" );
-
-    // Set a timer and use it for rendering the scene on this viewframe every
-    // X miliseconds.
-    QTimer* timer = new QTimer( this );
-    connect( timer, &QTimer::timeout, this, &ViewFrame::render );
-    timer->start( 22 );
 }
 
 

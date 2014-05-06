@@ -17,29 +17,26 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef CHANGEABLE_HPP
-#define CHANGEABLE_HPP
+#ifndef ABSTRACT_CHANGEABLE_HPP
+#define ABSTRACT_CHANGEABLE_HPP
 
 namespace como {
 
-class Changeable
+class AbstractChangeable
 {
-    private:
-        bool changedSinceLastQuery_;
-
     public:
         /***
          * 1. Construction
          ***/
 
         /*! \brief Default constructor */
-        Changeable( bool changed = true );
+        AbstractChangeable() = default;
 
         /*! \brief Copy constructor */
-        Changeable( const Changeable& ) = default;
+        AbstractChangeable( const AbstractChangeable& ) = default;
 
         /*! \brief Move constructor */
-        Changeable( Changeable&& ) = default;
+        AbstractChangeable( AbstractChangeable&& ) = default;
 
 
         /***
@@ -47,7 +44,7 @@ class Changeable
          ***/
 
         /*! \brief Destructor */
-        ~Changeable() = default;
+        ~AbstractChangeable() = default;
 
 
         /***
@@ -58,45 +55,20 @@ class Changeable
          * \brief returns true if setChanged() has been called since last
          * call hasChangedSinceLastQuery().
          */
-        bool hasChangedSinceLastQuery();
+        virtual bool hasChangedSinceLastQuery() = 0;
 
 
         /***
-         * 4. Setters
-         ***/
-
-        /*!
-         * \brief sets this object's internal state to "changed since last
-         * query" and calls onUpdate().
-         */
-    protected:
-        void setChanged();
-
-
-        /***
-         * 5. Updating
-         ***/
-    private:
-
-        /*!
-         * \brief This method is automatically called when setChanged is
-         * called so inherited objects can perfom actions whenever they
-         * change.
-         */
-        virtual void onChange() = 0;
-
-
-        /***
-         * 5. Operators
+         * 4. Operators
          ***/
 
         /*! \brief Copy assignment operator */
-        Changeable& operator = ( const Changeable& ) = delete;
+        AbstractChangeable& operator = ( const AbstractChangeable& ) = delete;
 
         /*! \brief Move assignment operator */
-        Changeable& operator = ( Changeable&& ) = delete;
+        AbstractChangeable& operator = ( AbstractChangeable&& ) = delete;
 };
 
 } // namespace como
 
-#endif // CHANGEABLE_HPP
+#endif // ABSTRACT_CHANGEABLE_HPP

@@ -23,14 +23,14 @@
 #include "../../managers/drawables_selection/drawables_selection.hpp"
 #include "../../managers/drawables_selection/local_drawables_selection.hpp"
 #include "../../managers/server_interface/server_interface.hpp"
-#include "../../models/utilities/changeable.hpp"
+#include "../../models/utilities/changeable/changeable.hpp"
 #include <map>
 
 namespace como {
 
 typedef std::map< UserID, DrawablesSelectionPtr > DrawablesSelections;
 
-class DrawablesManager : public QOffscreenSurface, public Changeable
+class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
 {
     Q_OBJECT
 
@@ -149,6 +149,9 @@ class DrawablesManager : public QOffscreenSurface, public Changeable
 
         // TODO: Move to a new PrimitivesManager class?
         void registerPrimitivePath( PrimitiveID primitiveID, std::string primitiveRelPath );
+
+
+        virtual bool hasChangedSinceLastQuery();
 };
 
 typedef shared_ptr< DrawablesManager > DrawablesManagerPtr;

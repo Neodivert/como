@@ -29,7 +29,7 @@
 #include <functional>
 #include <mutex>
 #include <QObject>
-#include "../../models/utilities/changeable.hpp"
+#include "../../models/utilities/changeable/changeable.hpp"
 
 namespace como {
 

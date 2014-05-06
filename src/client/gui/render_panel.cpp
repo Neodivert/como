@@ -27,7 +27,8 @@ namespace como {
  ***/
 
 RenderPanel::RenderPanel( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
-    QFrame( parent )
+    QFrame( parent ),
+    viewFrames_( { nullptr } )
 {
     QSplitter* vSplitter;
     QSplitter* h1Splitter;
@@ -47,25 +48,45 @@ RenderPanel::RenderPanel( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     vSplitter->addWidget( h2Splitter );
 
     // Create the top left ViewFrame.
-    ViewFrame *viewFrame = new ViewFrame( View::FRONT, comoApp );
-    h1Splitter->addWidget( viewFrame );
+    viewFrames_[0] = new ViewFrame( View::FRONT, comoApp );
+    h1Splitter->addWidget( viewFrames_[0] );
 
     // Create the top right ViewFrame.
-    viewFrame = new ViewFrame( View::RIGHT, comoApp );
-    h1Splitter->addWidget( viewFrame );
+    viewFrames_[1] = new ViewFrame( View::RIGHT, comoApp );
+    h1Splitter->addWidget( viewFrames_[1] );
 
     // Create the bottom left ViewFrame.
-    viewFrame = new ViewFrame( View::TOP, comoApp );
-    h2Splitter->addWidget( viewFrame );
+    viewFrames_[2] = new ViewFrame( View::TOP, comoApp );
+    h2Splitter->addWidget( viewFrames_[2] );
 
     // Create the Bottom right ViewFrame.
-    viewFrame = new ViewFrame( View::FRONT, comoApp );
-    h2Splitter->addWidget( viewFrame );
+    viewFrames_[3] = new ViewFrame( View::FRONT, comoApp );
+    h2Splitter->addWidget( viewFrames_[3] );
 
     // Set the render panel layout by using previous splitters.
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addWidget( vSplitter );
     setLayout( layout );
+
+    // Set a timer and use it for rendering the scene on all viewports every
+    // X miliseconds.
+    QTimer* timer = new QTimer( this );
+    connect( timer, &QTimer::timeout, this, &RenderPanel::renderSceneIfChanged );
+    timer->start( 22 );
+}
+
+
+/***
+ * 3. Slots
+ ***/
+
+void RenderPanel::renderSceneIfChanged()
+{
+    if( comoApp->getScene()->hasChangedSinceLastQuery() ){
+        for( unsigned int i=0; i<4; i++ ){
+            viewFrames_[i]->render();
+        }
+    }
 }
 
 } // namespace como

@@ -37,6 +37,9 @@ class RenderPanel : public QFrame
         // Pointer to app's current state.
         shared_ptr< ComoApp > comoApp;
 
+        //
+        ViewFrame* viewFrames_[4];
+
     public:
         /***
          * 1. Initialization
@@ -54,6 +57,13 @@ class RenderPanel : public QFrame
          ***/
         RenderPanel& operator = ( const RenderPanel& ) = delete;
         RenderPanel& operator = ( RenderPanel&& ) = delete;
+
+
+        /***
+         * 3. Slots
+         ***/
+    public slots:
+        void renderSceneIfChanged();
 };
 
 } // namespace como

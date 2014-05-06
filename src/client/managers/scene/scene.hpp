@@ -47,7 +47,7 @@ enum LinesBufferOffset {
 
 typedef std::map< UserID, BasicUserPtr > UsersMap;
 
-class Scene : public QOffscreenSurface
+class Scene : public QOffscreenSurface, public AbstractChangeable
 {
     Q_OBJECT
 
@@ -148,6 +148,7 @@ class Scene : public QOffscreenSurface
         /***
          * 10. Drawing
          ***/
+        void drawIfChanged( const glm::mat4& viewProjMatrix, const int& drawGuideRect = -1 );
         void draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect = -1 ) const ;
         void drawWorldAxis() const ;
         void drawTransformGuideLine() const ;
@@ -189,6 +190,9 @@ class Scene : public QOffscreenSurface
          ***/
     public:
         void createScenePrimitivesDirectory();
+
+
+        virtual bool hasChangedSinceLastQuery();
 };
 
 typedef std::shared_ptr< Scene > ScenePtr;

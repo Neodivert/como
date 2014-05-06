@@ -337,6 +337,13 @@ void Scene::takeOpenGLContext()
  * 10. Drawing
  ***/
 
+void Scene::drawIfChanged( const glm::mat4& viewProjMatrix, const int& drawGuideRect )
+{
+    if( hasChangedSinceLastQuery() ){
+        draw( viewProjMatrix, drawGuideRect );
+    }
+}
+
 void Scene::draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect ) const
 {
     GLfloat WHITE_COLOR[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -569,6 +576,18 @@ void Scene::createScenePrimitivesDirectory()
     }
 
     log_->debug( "Creating scene primitives directory [", scenePrimitivesDirectory, "] ...OK\n" );
+}
+
+
+bool Scene::hasChangedSinceLastQuery()
+{
+    // FIXME: This "if" is necessary because this method is invoked since
+    // Scene is instantiated, but drawablesManager_ ISN'T initialized
+    // until we connect to a server.
+    if( drawablesManager_ ){
+        return drawablesManager_->hasChangedSinceLastQuery();
+    }
+    return false;
 }
 
 

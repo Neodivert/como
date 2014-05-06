@@ -380,6 +380,14 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
  * 3. Updating and drawing
  ***/
 
+void Viewport::renderIfNeeded()
+{
+    if( comoApp->getScene()->hasChangedSinceLastQuery() ){
+        render();
+    }
+}
+
+
 void Viewport::render()
 {
     // Don't render if surface is not exposed.

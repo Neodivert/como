@@ -27,7 +27,7 @@ namespace como {
  ***/
 
 DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserID, const std::uint8_t* localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
-    Changeable( true ),
+    AbstractChangeable(),
     nonSelectedDrawables_( glm::vec4( 0.0f ) ),
     server_( server ),
     localUserID_( localUserID ),
@@ -222,20 +222,12 @@ void DrawablesManager::selectDrawable( PackableDrawableID drawableID )
 
 void DrawablesManager::selectDrawable( PackableDrawableID drawableID, UserID userID )
 {
-    bool drawableFound = false;
-
     // Retrieve user's selection.
     DrawablesSelection& userSelection = *( getUserSelection( userID ) );
 
     // Check if the desired drawable is among the non selected ones, and move
     // it to the user's selection in that case.
-    drawableFound = nonSelectedDrawables_.moveDrawable( drawableID, userSelection );
-
-    // If the drawable was found, and thus moved to user selection, mark this
-    // selection as "changed".
-    if( drawableFound ){
-        setChanged();
-    }
+    nonSelectedDrawables_.moveDrawable( drawableID, userSelection );
 }
 
 
@@ -254,8 +246,6 @@ void DrawablesManager::unselectAll( UserID userID )
 
     // Move all drawables from user selection to non selected set.
     userSelection.moveAll( nonSelectedDrawables_ );
-
-    setChanged();
 }
 
 
@@ -356,8 +346,6 @@ PackableDrawableID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, g
     }
     */
 
-    setChanged();
-
     return closestObject;
 }
 
@@ -456,7 +444,6 @@ void DrawablesManager::executeRemoteParameterChangeCommand( ParameterChangeComma
 }
 
 
-
 /***
  * 8. Auxiliar methods
  ***/
@@ -465,6 +452,20 @@ void DrawablesManager::registerPrimitivePath( PrimitiveID primitiveID, std::stri
 {
     // Create a new entry (ID, relative path) for the recently added primitive.
     primitivePaths_[primitiveID] = primitiveRelPath;
+}
+
+
+bool DrawablesManager::hasChangedSinceLastQuery()
+{
+    DrawablesSelections::iterator it;
+
+    for( it = drawablesSelections_.begin(); it != drawablesSelections_.end(); it++ ){
+        if( it->second->hasChangedSinceLastQuery() ){
+            return true;
+        }
+    }
+
+    return false;
 }
 
 } // namespace como

@@ -102,6 +102,7 @@ class Viewport : public QWindow
         /***
          * 3. Updating and drawing
          ***/
+        virtual void renderIfNeeded();
         virtual void render();
         void renderGuideRect();
 
