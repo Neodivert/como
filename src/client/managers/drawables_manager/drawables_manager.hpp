@@ -77,16 +77,12 @@ class DrawablesManager : public QOffscreenSurface, public Changeable
          ***/
         LocalDrawablesSelectionPtr getLocalUserSelection() const ;
     private:
+        DrawablesSelectionPtr getUserSelection( UserID userID ) const ;
         DrawablesSelectionPtr getUserSelection( UserID userID );
     public:
         glm::vec3 getPivotPoint() const ;
         glm::vec3 getPivotPoint( UserID userID ) const ;
 
-        /***
-         * 4. Setters
-         ***/
-        void setPivotPointMode( PivotPointMode pivotPointMode );
-        void setPivotPointMode( PivotPointMode pivotPointMode, UserID userID );
 
 
         /***
@@ -133,20 +129,6 @@ class DrawablesManager : public QOffscreenSurface, public Changeable
 
 
         /***
-         * 9. Drawables selection transformations
-         ***/
-        void translateSelection( glm::vec3 direction );
-        void translateSelection( glm::vec3 direction, UserID userID );
-
-        void rotateSelection( GLfloat angle, glm::vec3 axis );
-        void rotateSelection( GLfloat angle, glm::vec3 axis, UserID userID );
-
-        void scaleSelection( glm::vec3 scaleFactors );
-        void scaleSelection( glm::vec3 scaleFactors, UserID userID );
-        //void rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
-
-
-        /***
          * 10. Drawing
          ***/
         void drawAll( const glm::mat4& viewProjMatrix ) const ;
@@ -156,13 +138,7 @@ class DrawablesManager : public QOffscreenSurface, public Changeable
          * 11. Command execution
          ***/
         void executeRemoteSelectionCommand( SelectionCommandConstPtr command );
-
-
-        /***
-         * 10. Auxiliar methods
-         ***/
-        void roundTransformationMagnitude( float& vx, float& vy, float& vz );
-        void roundTransformationMagnitude( float& angle, float& vx, float& vy, float& vz );
+        void executeRemoteParameterChangeCommand( ParameterChangeCommandConstPtr command );
 
 
         /***
@@ -170,7 +146,6 @@ class DrawablesManager : public QOffscreenSurface, public Changeable
          ***/
         DrawablesManager& operator=( const DrawablesManager& ) = delete ;
         DrawablesManager& operator=( DrawablesManager&& ) = delete;
-
 
         // TODO: Move to a new PrimitivesManager class?
         void registerPrimitivePath( PrimitiveID primitiveID, std::string primitiveRelPath );

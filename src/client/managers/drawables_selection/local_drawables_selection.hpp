@@ -94,7 +94,15 @@ class LocalDrawablesSelection : public QObject, public DrawablesSelection
 
 
         /***
-         * 7. Signals
+         * 7. Auxiliar methods
+         ***/
+    private:
+        void roundTransformationMagnitude( glm::vec3& v );
+        void roundTransformationMagnitude( float& angle, glm::vec3& v );
+    public:
+
+        /***
+         * 8. Signals
          ***/
     signals:
         void hasChanged();

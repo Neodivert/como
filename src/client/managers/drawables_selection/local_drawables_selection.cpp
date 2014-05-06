@@ -21,6 +21,8 @@
 
 namespace como {
 
+const unsigned int TRANSFORMATION_FLOAT_PRECISION = 10000;
+
 LocalDrawablesSelection::LocalDrawablesSelection( UserID localUserID, glm::vec4 selectionBorderColor, ServerInterfacePtr server ) :
     QObject(),
     DrawablesSelection( selectionBorderColor ),
@@ -72,6 +74,9 @@ void LocalDrawablesSelection::translate( glm::vec3 direction )
 {
     SelectionTransformationCommand translationCommand( localUserID_ );
 
+    // Round the transformation magnitude.
+    roundTransformationMagnitude( direction );
+
     // Translate the selection.
     DrawablesSelection::translate( direction );
 
@@ -85,6 +90,9 @@ void LocalDrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
 {
     SelectionTransformationCommand rotationCommand( localUserID_ );
 
+    // Round the transformation magnitude.
+    roundTransformationMagnitude( angle, axis );
+
     // Rotate the selection.
     DrawablesSelection::rotate( angle, axis );
 
@@ -97,6 +105,9 @@ void LocalDrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
 void LocalDrawablesSelection::scale( glm::vec3 scaleFactors )
 {
     SelectionTransformationCommand scaleCommand( localUserID_ );
+
+    // Round the transformation magnitude.
+    roundTransformationMagnitude( scaleFactors );
 
     // Scale the selection.
     DrawablesSelection::scale( scaleFactors );
@@ -116,6 +127,31 @@ void LocalDrawablesSelection::onChange()
     DrawablesSelection::onChange();
 
     emit hasChanged();
+}
+
+
+/***
+ * 7. Auxiliar methods
+ ***/
+
+void LocalDrawablesSelection::roundTransformationMagnitude( glm::vec3& v )
+{
+    // Round transformation magnitude to 3 decimal places.
+    // http://stackoverflow.com/questions/1343890/rounding-number-to-2-decimal-places-in-c
+    v.x = floorf( v.x * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
+    v.y = floorf( v.y * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
+    v.z = floorf( v.z * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
+}
+
+
+void LocalDrawablesSelection::roundTransformationMagnitude( float& angle, glm::vec3& v )
+{
+    // Round transformation magnitude to 3 decimal places.
+    // http://stackoverflow.com/questions/1343890/rounding-number-to-2-decimal-places-in-c
+    angle = floorf( angle * TRANSFORMATION_FLOAT_PRECISION + 0.5) / TRANSFORMATION_FLOAT_PRECISION;
+    v.x = floorf( v.x * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
+    v.y = floorf( v.y * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
+    v.z = floorf( v.z * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
 }
 
 } // namespace como

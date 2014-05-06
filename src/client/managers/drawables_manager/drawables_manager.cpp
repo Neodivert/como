@@ -21,7 +21,6 @@
 
 namespace como {
 
-const unsigned int TRANSFORMATION_FLOAT_PRECISION = 10000;
 
 /***
  * 1. Construction
@@ -44,7 +43,7 @@ DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserI
                 );
 
     // Create an empty drawables selection for the local user.
-    localDrawablesSelection_ = LocalDrawablesSelectionPtr( new LocalDrawablesSelection( localUserID_, selectionColor, server_ ) );
+    localDrawablesSelection_ = LocalDrawablesSelectionPtr( new LocalDrawablesSelection( localUserID_, selectionColor, server ) );
 
     // Insert the recently created selection to the selections map.
     drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( localUserID_, localDrawablesSelection_ ) );
@@ -61,10 +60,17 @@ LocalDrawablesSelectionPtr DrawablesManager::getLocalUserSelection() const
 }
 
 
+DrawablesSelectionPtr DrawablesManager::getUserSelection( UserID userID ) const
+{
+    return drawablesSelections_.at( userID );
+}
+
+
 DrawablesSelectionPtr DrawablesManager::getUserSelection( UserID userID )
 {
     return drawablesSelections_.at( userID );
 }
+
 
 glm::vec3 DrawablesManager::getPivotPoint() const
 {
@@ -74,35 +80,15 @@ glm::vec3 DrawablesManager::getPivotPoint() const
 
 glm::vec3 DrawablesManager::getPivotPoint( UserID userID ) const
 {
-    switch( drawablesSelections_.at( userID )->getPivotPointMode() ){
+    switch( getUserSelection( userID )->getPivotPointMode() ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
         case PivotPointMode::MEDIAN_POINT:
-            return glm::vec3( drawablesSelections_.at( userID )->getCentroid() );
+            return glm::vec3( getUserSelection( userID )->getCentroid() );
         break;
         default:
             return glm::vec3( 0.0f, 0.0f, 0.0f );
         break;
     }
-}
-
-
-/***
- * 4. Setters
- ***/
-
-void DrawablesManager::setPivotPointMode( PivotPointMode pivotPointMode )
-{
-    // Set user's pivot point mode.
-    setPivotPointMode( pivotPointMode, localUserID_ );
-
-    // Send the command to the server.
-    server_->sendCommand( CommandConstPtr( new ParameterChangeCommand( localUserID_, pivotPointMode ) ) );
-}
-
-
-void DrawablesManager::setPivotPointMode( PivotPointMode pivotPointMode, UserID userID )
-{
-    getUserSelection( userID )->setPivotPointMode( pivotPointMode );
 }
 
 
@@ -122,7 +108,7 @@ void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, Packabl
 {
     //takeOpenGLContext();
 
-    drawablesSelections_.at( userID )->addDrawable( drawableID, drawable );
+    getUserSelection( userID )->addDrawable( drawableID, drawable );
 }
 
 
@@ -239,7 +225,7 @@ void DrawablesManager::selectDrawable( PackableDrawableID drawableID, UserID use
     bool drawableFound = false;
 
     // Retrieve user's selection.
-    DrawablesSelection& userSelection = *( drawablesSelections_.at( userID ) );
+    DrawablesSelection& userSelection = *( getUserSelection( userID ) );
 
     // Check if the desired drawable is among the non selected ones, and move
     // it to the user's selection in that case.
@@ -264,7 +250,7 @@ void DrawablesManager::unselectAll()
 
 void DrawablesManager::unselectAll( UserID userID )
 {
-    DrawablesSelection& userSelection = *( drawablesSelections_.at( userID ) );
+    DrawablesSelection& userSelection = *( getUserSelection( userID ) );
 
     // Move all drawables from user selection to non selected set.
     userSelection.moveAll( nonSelectedDrawables_ );
@@ -280,7 +266,7 @@ PackableDrawableID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, g
     float minT = MAX_T;
     PackableDrawableID closestObject;
 
-    DrawablesSelection& userSelection = *( drawablesSelections_.at( localUserID_ ) );
+    DrawablesSelection& userSelection = *( getUserSelection( localUserID_ ) );
 
     r1 = glm::normalize( r1 );
 
@@ -375,103 +361,9 @@ PackableDrawableID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, g
     return closestObject;
 }
 
-
 /***
- * 7. Drawables selection transformations
+ * 10. Drawing
  ***/
-
-void DrawablesManager::translateSelection( glm::vec3 direction )
-{
-    CommandPtr translationCommand( new SelectionTransformationCommand( localUserID_ ) );
-
-    // Round transformation magnitude to 3 decimal places.
-    roundTransformationMagnitude( direction[0], direction[1], direction[2] );
-
-    // Translate locally (client).
-    translateSelection( direction, localUserID_ );
-
-    // Send command to the server.
-    ( dynamic_cast< SelectionTransformationCommand* >( translationCommand.get() ) )->setTranslation( &direction[0] );
-    server_->sendCommand( translationCommand );
-}
-
-
-void DrawablesManager::translateSelection( glm::vec3 direction, UserID userID )
-{
-    // Get the user's selection and translate it.
-    getUserSelection( userID )->translate( direction );
-
-    // //emit a signal indicating that the DrawablesManager has been changed and so it needs
-    // a render.
-    ////emit renderNeeded();
-}
-
-
-void DrawablesManager::rotateSelection( GLfloat angle, glm::vec3 axis )
-{
-    CommandPtr rotationCommand( new SelectionTransformationCommand( localUserID_ ) );
-
-    // Round transformation magnitude to 3 decimal places.
-    roundTransformationMagnitude( angle, axis[0], axis[1], axis[2] );
-
-    // Rotate locally (client).
-    rotateSelection( angle, axis, localUserID_ );
-
-    // Send command to the server.
-    ( dynamic_cast< SelectionTransformationCommand* >( rotationCommand.get() ) )->setRotation( angle, &axis[0] );
-    server_->sendCommand( rotationCommand );
-}
-
-
-void DrawablesManager::rotateSelection( GLfloat angle, glm::vec3 axis, UserID userID )
-{
-    // Get the user's selection and rotate it.
-    getUserSelection( userID )->rotate( angle, axis );
-
-    // //emit a signal indicating that the DrawablesManager has been changed and so it needs
-    // a render.
-    ////emit renderNeeded();
-}
-
-
-void DrawablesManager::scaleSelection( glm::vec3 scaleFactors )
-{
-    CommandPtr scaleCommand( new SelectionTransformationCommand( localUserID_ ) );
-
-    // Round transformation magnitude to 3 decimal places.
-    roundTransformationMagnitude( scaleFactors[0], scaleFactors[1], scaleFactors[2] );
-
-    // Scale locally (client).
-    scaleSelection( scaleFactors, localUserID_ );
-
-    // Send command to the server.
-    ( dynamic_cast< SelectionTransformationCommand* >( scaleCommand.get() ) )->setScale( &scaleFactors[0] );
-    server_->sendCommand( scaleCommand );
-}
-
-
-void DrawablesManager::scaleSelection( glm::vec3 scaleFactors, UserID userID )
-{
-    // Get the user's selection and scale it.
-    getUserSelection( userID )->scale( scaleFactors );
-
-    // //emit a signal indicating that the DrawablesManager has been changed and so it needs
-    // a render.
-    ////emit renderNeeded();
-}
-
-/*
-void DrawablesManager::rotateSelection( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot )
-{
-    DrawablesSelection::iterator it = selectedDrawables.begin();
-
-    for( ; it != selectedDrawables.end(); it++ )
-    {
-        (*it)->rotate( angle, axis, pivot );
-    }
-    //emit renderNeeded();
-}
-*/
 
 void DrawablesManager::drawAll( const glm::mat4& viewProjMatrix ) const
 {
@@ -539,13 +431,13 @@ void DrawablesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr c
             // type.
             switch( selectionTransformation->getTransformationType() ){
                 case SelectionTransformationCommandType::TRANSLATION:
-                    translateSelection( glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
+                    getUserSelection( selectionTransformation->getUserID() )->translate( glm::vec3( transf[0], transf[1], transf[2] ) );
                 break;
                 case SelectionTransformationCommandType::ROTATION:
-                    rotateSelection( selectionTransformation->getAngle(), glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
+                    getUserSelection( selectionTransformation->getUserID() )->rotate( selectionTransformation->getAngle(), glm::vec3( transf[0], transf[1], transf[2] ) );
                 break;
                 case SelectionTransformationCommandType::SCALE:
-                    scaleSelection( glm::vec3( transf[0], transf[1], transf[2] ), selectionTransformation->getUserID() );
+                    getUserSelection( selectionTransformation->getUserID() )->scale( glm::vec3( transf[0], transf[1], transf[2] ) );
                 break;
             }
         break;
@@ -553,30 +445,21 @@ void DrawablesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr c
 }
 
 
+void DrawablesManager::executeRemoteParameterChangeCommand( ParameterChangeCommandConstPtr command )
+{
+    // Change parameter.
+    switch( command->getParameterType() ){
+        case ParameterType::PIVOT_POINT_MODE:
+            getUserSelection( command->getUserID() )->setPivotPointMode( command->getPivotPointMode() );
+        break;
+    }
+}
+
+
+
 /***
  * 8. Auxiliar methods
  ***/
-
-void DrawablesManager::roundTransformationMagnitude( float& vx, float& vy, float& vz )
-{
-    // Round transformation magnitude to 3 decimal places.
-    // http://stackoverflow.com/questions/1343890/rounding-number-to-2-decimal-places-in-c
-    vx = floorf( vx * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
-    vy = floorf( vy * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
-    vz = floorf( vz * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
-}
-
-
-void DrawablesManager::roundTransformationMagnitude( float& angle, float& vx, float& vy, float& vz )
-{
-    // Round transformation magnitude to 3 decimal places.
-    // http://stackoverflow.com/questions/1343890/rounding-number-to-2-decimal-places-in-c
-    angle = floorf( angle * TRANSFORMATION_FLOAT_PRECISION + 0.5) / TRANSFORMATION_FLOAT_PRECISION;
-    vx = floorf( vx * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
-    vy = floorf( vy * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
-    vz = floorf( vz * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
-}
-
 
 void DrawablesManager::registerPrimitivePath( PrimitiveID primitiveID, std::string primitiveRelPath )
 {

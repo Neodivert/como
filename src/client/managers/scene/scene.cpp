@@ -423,7 +423,6 @@ void Scene::emitRenderNeeded()
 void Scene::executeRemoteUserCommand( UserCommandConstPtr command )
 {
     const UserConnectionCommand* userConnected = nullptr;
-    const ParameterChangeCommand* changeParameter = nullptr;
 
     switch( ( dynamic_pointer_cast< const UserCommand >( command ) )->getType() ){
         case UserCommandType::USER_CONNECTION:
@@ -440,15 +439,9 @@ void Scene::executeRemoteUserCommand( UserCommandConstPtr command )
         break;
 
         case UserCommandType::PARAMETER_CHANGE:
-            // Cast to a PARAMETER_CHANGE command.
-            changeParameter = dynamic_cast< const ParameterChangeCommand* >( command.get() );
-
-            // Change parameter.
-            switch( changeParameter->getParameterType() ){
-                case ParameterType::PIVOT_POINT_MODE:
-                    drawablesManager_->setPivotPointMode( changeParameter->getPivotPointMode(), changeParameter->getUserID() );
-                break;
-            }
+            // TODO: Change the ParameterChange hierarchy for distinguishing
+            // those that affects selections from others.
+            drawablesManager_->executeRemoteParameterChangeCommand( dynamic_pointer_cast< const ParameterChangeCommand >( command ) );
         break;
     }
 }

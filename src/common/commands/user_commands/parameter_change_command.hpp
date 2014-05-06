@@ -50,7 +50,6 @@ class ParameterChangeCommand : public UserCommand
         // Adapt the getPacketSize() method.
         PackablePivotPointMode pivotPointMode_;
 
-
     public:
         /***
          * 1. Construction
@@ -86,6 +85,8 @@ class ParameterChangeCommand : public UserCommand
         ParameterChangeCommand& operator=( const ParameterChangeCommand& ) = delete;
         ParameterChangeCommand& operator=( ParameterChangeCommand&& ) = delete;
 };
+
+typedef std::shared_ptr< const ParameterChangeCommand > ParameterChangeCommandConstPtr;
 
 } // namespace como
 
