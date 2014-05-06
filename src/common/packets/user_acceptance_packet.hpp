@@ -25,6 +25,7 @@
 
 #include "../packables/packables.hpp"
 #include "../utilities/ids.hpp"
+#include <glm/glm.hpp>
 
 namespace como {
 

@@ -27,16 +27,24 @@ const unsigned int TRANSFORMATION_FLOAT_PRECISION = 10000;
  * 1. Construction
  ***/
 
-DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserID, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
+DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserID, const std::uint8_t* localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
     Changeable( true ),
+    nonSelectedDrawables_( glm::vec4( 0.0f ) ),
     server_( server ),
     localUserID_( localUserID ),
     primitivesDirPath_( primitivesDirPath ),
     oglContext_( oglContext ),
     log_( log )
 {
+    glm::vec4 selectionColor(
+                    localSelectionBorderColor[0],
+                    localSelectionBorderColor[1],
+                    localSelectionBorderColor[2],
+                    localSelectionBorderColor[3]
+                );
+
     // Create an empty drawables selection for the local user.
-    localDrawablesSelection_ = LocalDrawablesSelectionPtr( new LocalDrawablesSelection( localUserID_, server_ ) );
+    localDrawablesSelection_ = LocalDrawablesSelectionPtr( new LocalDrawablesSelection( localUserID_, selectionColor, server_ ) );
 
     // Insert the recently created selection to the selections map.
     drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( localUserID_, localDrawablesSelection_ ) );
@@ -207,9 +215,16 @@ void DrawablesManager::deleteSelection( const unsigned int& userId )
  * 5. Selections management
  ***/
 
-void DrawablesManager::addDrawablesSelection( UserID userID )
+void DrawablesManager::addDrawablesSelection( UserID userID, const std::uint8_t* selectionBorderColor )
 {
-    drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( userID, DrawablesSelectionPtr( new DrawablesSelection ) ) );
+    glm::vec4 floatSelectionBorderColor(
+                selectionBorderColor[0],
+                selectionBorderColor[1],
+                selectionBorderColor[2],
+                selectionBorderColor[3]
+            );
+
+    drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( userID, DrawablesSelectionPtr( new DrawablesSelection( floatSelectionBorderColor ) ) ) );
 }
 
 

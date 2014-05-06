@@ -48,7 +48,7 @@ class LocalDrawablesSelection : public QObject, public DrawablesSelection
         /***
          * 1. Construction
          ***/
-        LocalDrawablesSelection( UserID localUserID, ServerInterfacePtr server );
+        LocalDrawablesSelection( UserID localUserID, glm::vec4 selectionBorderColor, ServerInterfacePtr server );
         LocalDrawablesSelection( const LocalDrawablesSelection& ) = delete;
         LocalDrawablesSelection( LocalDrawablesSelection&& ) = delete;
 

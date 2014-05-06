@@ -61,7 +61,7 @@ class DrawablesManager : public QOffscreenSurface, public Changeable
         /***
          * 1. Construction
          ***/
-        DrawablesManager( ServerInterfacePtr server, UserID localUserID, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
+        DrawablesManager( ServerInterfacePtr server, UserID localUserID, const std::uint8_t* localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
         DrawablesManager( const DrawablesManager& ) = delete;
         DrawablesManager( DrawablesManager&& ) = delete;
 
@@ -114,7 +114,7 @@ class DrawablesManager : public QOffscreenSurface, public Changeable
         /***
          * 7. Selections management
          ***/
-        void addDrawablesSelection( UserID userID );
+        void addDrawablesSelection( UserID userID, const std::uint8_t* selectionBorderColor );
 
         void deleteSelection();
         void deleteSelection( const unsigned int& userId );

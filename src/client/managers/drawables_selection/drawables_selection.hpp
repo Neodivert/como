@@ -70,7 +70,7 @@ class DrawablesSelection : public Changeable
         /***
          * 1. Initialization and destruction
          ***/
-        DrawablesSelection();
+        DrawablesSelection( glm::vec4 borderColor );
         DrawablesSelection( const DrawablesSelection& );
         DrawablesSelection( DrawablesSelection&& );
 

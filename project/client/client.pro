@@ -63,11 +63,8 @@ HEADERS += \
     ../../src/client/gui/tools_menu/properties_tab/general_info_menu.hpp \
     ../../src/client/gui/tools_menu/properties_tab/mesh_info_menu.hpp \
     ../../src/client/models/utilities/changeable.hpp \
-    ../../src/client/models/users/remote_user.hpp \
-    ../../src/client/models/users/local_user.hpp \
     ../../src/client/managers/drawables_selection/local_drawables_selection.hpp \
-    ../../src/client/managers/drawables_manager/drawables_manager.hpp \
-    ../../src/client/models/users/client_user.hpp
+    ../../src/client/managers/drawables_manager/drawables_manager.hpp
 
 
 # Client sources
@@ -101,8 +98,5 @@ SOURCES += \
     ../../src/client/gui/tools_menu/properties_tab/general_info_menu.cpp \
     ../../src/client/gui/tools_menu/properties_tab/mesh_info_menu.cpp \
     ../../src/client/models/utilities/changeable.cpp \
-    ../../src/client/models/users/remote_user.cpp \
-    ../../src/client/models/users/local_user.cpp \
     ../../src/client/managers/drawables_selection/local_drawables_selection.cpp \
-    ../../src/client/managers/drawables_manager/drawables_manager.cpp \
-    ../../src/client/models/users/client_user.cpp
+    ../../src/client/managers/drawables_manager/drawables_manager.cpp

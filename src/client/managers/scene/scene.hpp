@@ -23,7 +23,6 @@
 #include <map>
 #include <list>
 #include "../../models/3d/camera.hpp"
-#include "../../models/users/client_user.hpp"
 #include "../../../common/utilities/log.hpp"
 #include "../../../common/commands/commands.hpp"
 #include "../server_interface/server_interface.hpp"
@@ -32,6 +31,7 @@
 #include <queue>
 #include "../../models/3d/lights/lights.hpp"
 #include "../drawables_manager/drawables_manager.hpp"
+#include "../../../common/users/basic_user.hpp"
 
 Q_DECLARE_METATYPE( como::CommandConstPtr )
 
@@ -79,9 +79,6 @@ class Scene : public QOffscreenSurface
         ServerInterfacePtr server_;
 
     private:
-        // Scene's non selected drawables.
-        DrawablesSelection nonSelectedDrawables;
-
         // Lines VAO, VBO and offsets.
         GLuint linesVAO;
         GLuint linesVBO;

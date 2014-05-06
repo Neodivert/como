@@ -198,10 +198,6 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         log_->debug( "Connecting to (", host, ":", port, ") with name [", userName, "]...\n" );
         userAcceptancePacket = server_->connect( host, port, userName );
 
-        // Add the local user to the scene and retrieve its ID.
-        addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( *userAcceptancePacket ) ) );
-        localUserID_ = userAcceptancePacket->getId();
-
         // Copy the scene name given by the server.
         setName( userAcceptancePacket->getSceneName() );
 
@@ -209,7 +205,11 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         createScenePrimitivesDirectory();
 
         // Initialize the drawables manager.
-        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, localUserID_, std::string( "data/primitives/scenes/" ) + sceneName_, oglContext_, log_ ) );
+        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/primitives/scenes/" ) + sceneName_, oglContext_, log_ ) );
+
+        // Add the local user to the scene and retrieve its ID.
+        addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( *userAcceptancePacket ) ) );
+        localUserID_ = userAcceptancePacket->getId();
 
         // Add the directional light from the previous manager to the scene.
         // TODO: Remove this and sync light creation in both client and
@@ -243,6 +243,9 @@ void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnecte
 
     // Insert the new user in the users vector.
     users_.insert( std::pair< UserID, BasicUserPtr >( userConnectedCommand->getUserID(), newUser ) );
+
+    // Create an empty drawables selection for the new user.
+    drawablesManager_->addDrawablesSelection( userConnectedCommand->getUserID(), userConnectedCommand->getSelectionColor() );
 
     // Emit a UserConnectionCommand signal.
     emit userConnected( userConnectedCommand );

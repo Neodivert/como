@@ -21,9 +21,9 @@
 
 namespace como {
 
-LocalDrawablesSelection::LocalDrawablesSelection( UserID localUserID, ServerInterfacePtr server ) :
+LocalDrawablesSelection::LocalDrawablesSelection( UserID localUserID, glm::vec4 selectionBorderColor, ServerInterfacePtr server ) :
     QObject(),
-    DrawablesSelection(),
+    DrawablesSelection( selectionBorderColor ),
     server_( server ),
     localUserID_( localUserID )
 {
