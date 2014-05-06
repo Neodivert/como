@@ -56,10 +56,7 @@ class PackableInteger : public Packable {
         PackableInteger( const UnpackedType& value ) : value_( value ){}
 
         /*! \brief Copy constructor */
-        PackableInteger( const PackableInteger& b ) :
-            Packable( b ),
-            value_( b.value_ )
-        {}
+        PackableInteger( const PackableInteger& ) = default;
 
         /*! \brief Move constructor */
         PackableInteger( PackableInteger&& ) = default;
