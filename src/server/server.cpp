@@ -553,7 +553,7 @@ bool Server::nameInUse( const char* newName ) const
     UsersMap::const_iterator user;
 
     for( user = users_.begin(); user != users_.end(); user++ ){
-        if( !strcmp( newName, user->second->getName() ) ){
+        if( !strcmp( newName, user->second->getName().c_str() ) ){
             return true;
         }
     }

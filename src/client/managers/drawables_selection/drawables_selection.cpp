@@ -198,9 +198,9 @@ unsigned int DrawablesSelection::getSize() const
 {
     unsigned int size = 0;
 
-    mutex_.lock();
+    //mutex_.lock();
     size = drawables_.size();
-    mutex_.unlock();
+    //mutex_.unlock();
 
     return size;
 }

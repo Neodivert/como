@@ -36,7 +36,7 @@ PackableDrawableID::PackableDrawableID() :
 
 
 PackableDrawableID::PackableDrawableID( const PackableDrawableID& b ) :
-    CompositePackable(),
+    CompositePackable( b ),
     creatorID( b.creatorID ),
     drawableIndex( b.drawableIndex )
 {

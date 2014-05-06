@@ -31,7 +31,7 @@ class MeshInfoMenu : public QWidget
 
     private:
         /*! Local user's (drawables) selection */
-        LocalDrawablesSelection* userSelection_;
+        LocalDrawablesSelectionPtr userSelection_;
 
         /*! Position of the user's selection centroid */
         QLabel* centroidPosition_;
@@ -45,7 +45,7 @@ class MeshInfoMenu : public QWidget
          ***/
 
         /*! \brief Default constructor */
-        MeshInfoMenu( LocalDrawablesSelection* userSelection );
+        MeshInfoMenu( LocalDrawablesSelectionPtr userSelection );
 
         /*! \brief Copy constructor */
         MeshInfoMenu( const MeshInfoMenu& ) = delete;

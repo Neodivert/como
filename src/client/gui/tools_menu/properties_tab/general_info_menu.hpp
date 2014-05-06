@@ -33,7 +33,7 @@ class GeneralInfoMenu : public QWidget
 
     private:
         /*! Local user's (drawables) selection */
-        LocalDrawablesSelection* userSelection_;
+        LocalDrawablesSelectionPtr userSelection_;
 
         /*! Name of the currently selected 3D object. */
         QLineEdit* objectName_;
@@ -47,7 +47,7 @@ class GeneralInfoMenu : public QWidget
          ***/
 
         /*! \brief Default constructor */
-        GeneralInfoMenu( LocalDrawablesSelection* userSelection );
+        GeneralInfoMenu( LocalDrawablesSelectionPtr userSelection );
 
         /*! \brief Copy constructor */
         GeneralInfoMenu( const GeneralInfoMenu& ) = delete;

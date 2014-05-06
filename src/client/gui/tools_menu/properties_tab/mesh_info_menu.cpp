@@ -25,7 +25,7 @@ namespace como {
  * 1. Construction
  ***/
 
-MeshInfoMenu::MeshInfoMenu( LocalDrawablesSelection* userSelection ) :
+MeshInfoMenu::MeshInfoMenu( LocalDrawablesSelectionPtr userSelection ) :
     userSelection_( userSelection )
 {
     // Create the layout for this tab.

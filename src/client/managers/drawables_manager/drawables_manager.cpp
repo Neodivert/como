@@ -36,11 +36,10 @@ DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserI
     log_( log )
 {
     // Create an empty drawables selection for the local user.
-    addDrawablesSelection( localUserID_ );
+    localDrawablesSelection_ = LocalDrawablesSelectionPtr( new LocalDrawablesSelection( localUserID_, server_ ) );
 
-    // The drawables selection for the local user is a inherited type, so
-    // retrieve a pointer to it.
-    localDrawablesSelection_ = dynamic_cast< LocalDrawablesSelection* >( &( drawablesSelections_.at( localUserID_ ) ) );
+    // Insert the recently created selection to the selections map.
+    drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( localUserID_, localDrawablesSelection_ ) );
 }
 
 
@@ -48,15 +47,15 @@ DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserI
  * 3. Getters
  ***/
 
-LocalDrawablesSelection* DrawablesManager::getLocalUserSelection() const
+LocalDrawablesSelectionPtr DrawablesManager::getLocalUserSelection() const
 {
     return localDrawablesSelection_;
 }
 
 
-DrawablesSelection* DrawablesManager::getUserSelection( UserID userID )
+DrawablesSelectionPtr DrawablesManager::getUserSelection( UserID userID )
 {
-    return &( drawablesSelections_.at( userID ) );
+    return drawablesSelections_.at( userID );
 }
 
 glm::vec3 DrawablesManager::getPivotPoint() const
@@ -67,10 +66,10 @@ glm::vec3 DrawablesManager::getPivotPoint() const
 
 glm::vec3 DrawablesManager::getPivotPoint( UserID userID ) const
 {
-    switch( drawablesSelections_.at( userID ).getPivotPointMode() ){
+    switch( drawablesSelections_.at( userID )->getPivotPointMode() ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
         case PivotPointMode::MEDIAN_POINT:
-            return glm::vec3( drawablesSelections_.at( userID ).getCentroid() );
+            return glm::vec3( drawablesSelections_.at( userID )->getCentroid() );
         break;
         default:
             return glm::vec3( 0.0f, 0.0f, 0.0f );
@@ -115,7 +114,7 @@ void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, Packabl
 {
     //takeOpenGLContext();
 
-    drawablesSelections_.at( userID ).addDrawable( drawableID, drawable );
+    drawablesSelections_.at( userID )->addDrawable( drawableID, drawable );
 }
 
 
@@ -144,6 +143,7 @@ void DrawablesManager::addMesh( PrimitiveID primitiveID, const std::uint8_t* col
 {
     // FIXME: Is this necessary?
     //takeOpenGLContext();
+    //oglContext_->makeCurrent( this );
 
     log_->debug( "Adding primitive (", primitivePaths_.at( primitiveID ), ") to scene\n" );
 
@@ -209,7 +209,7 @@ void DrawablesManager::deleteSelection( const unsigned int& userId )
 
 void DrawablesManager::addDrawablesSelection( UserID userID )
 {
-    drawablesSelections_.insert( std::pair< UserID, DrawablesSelection >( userID, DrawablesSelection() ) );
+    drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( userID, DrawablesSelectionPtr( new DrawablesSelection ) ) );
 }
 
 
@@ -228,7 +228,7 @@ void DrawablesManager::selectDrawable( PackableDrawableID drawableID, UserID use
     bool drawableFound = false;
 
     // Retrieve user's selection.
-    DrawablesSelection& userSelection = drawablesSelections_.at( userID );
+    DrawablesSelection& userSelection = *( drawablesSelections_.at( userID ) );
 
     // Check if the desired drawable is among the non selected ones, and move
     // it to the user's selection in that case.
@@ -253,7 +253,7 @@ void DrawablesManager::unselectAll()
 
 void DrawablesManager::unselectAll( UserID userID )
 {
-    DrawablesSelection& userSelection = drawablesSelections_.at( userID );
+    DrawablesSelection& userSelection = *( drawablesSelections_.at( userID ) );
 
     // Move all drawables from user selection to non selected set.
     userSelection.moveAll( nonSelectedDrawables_ );
@@ -269,7 +269,7 @@ PackableDrawableID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, g
     float minT = MAX_T;
     PackableDrawableID closestObject;
 
-    DrawablesSelection& userSelection = drawablesSelections_.at( localUserID_ );
+    DrawablesSelection& userSelection = *( drawablesSelections_.at( localUserID_ ) );
 
     r1 = glm::normalize( r1 );
 
@@ -472,7 +472,7 @@ void DrawablesManager::drawAll( const glm::mat4& viewProjMatrix ) const
     // Draw the user's selections.
     for( it = drawablesSelections_.begin(); it != drawablesSelections_.end(); it++  ){
         // FIXME: Use selection color.
-        (it->second).draw( viewProjMatrix );
+        (it->second)->draw( viewProjMatrix );
     }
 }
 

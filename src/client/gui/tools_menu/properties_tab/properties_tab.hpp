@@ -39,7 +39,7 @@ class PropertiesTab : public QFrame
 
     private:
         /*! Local user's (drawables) selection. */
-        LocalDrawablesSelection* userSelection_;
+        LocalDrawablesSelectionPtr userSelection_;
 
         /*!
          * Menu for manipulating the general info about the currently selected
@@ -60,7 +60,7 @@ class PropertiesTab : public QFrame
          ***/
 
         /*! \brief Default constructor */
-        PropertiesTab( LocalDrawablesSelection* userSelection );
+        PropertiesTab( LocalDrawablesSelectionPtr userSelection );
 
         /*! \brief Copy constructor */
         PropertiesTab( const PropertiesTab& ) = delete;

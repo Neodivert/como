@@ -56,7 +56,10 @@ class PackableInteger : public Packable {
         PackableInteger( const UnpackedType& value ) : value_( value ){}
 
         /*! \brief Copy constructor */
-        PackableInteger( const PackableInteger& ) = default;
+        PackableInteger( const PackableInteger& b ) :
+            Packable( b ),
+            value_( b.value_ )
+        {}
 
         /*! \brief Move constructor */
         PackableInteger( PackableInteger&& ) = default;
@@ -75,7 +78,7 @@ class PackableInteger : public Packable {
          ***/
 
         /*! \brief Returns the valued held by this PackableInteger */
-        UnpackedType getValue() const { return this->value_; }
+        UnpackedType getValue() const { return value_; }
 
         /*! \brief see Packable::getPacketSize const */
         virtual std::uint16_t getPacketSize() const = 0;

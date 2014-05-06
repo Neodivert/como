@@ -60,7 +60,6 @@ PackableDrawableID LocalDrawablesSelection::addDrawable( DrawablePtr drawable )
     // this selection.
     nextDrawableID_.drawableIndex = nextDrawableID_.drawableIndex.getValue() + 1;
 
-
     return newDrawableID;
 }
 

@@ -28,15 +28,17 @@
 
 namespace como {
 
-typedef std::map< UserID, DrawablesSelection > DrawablesSelections;
+typedef std::map< UserID, DrawablesSelectionPtr > DrawablesSelections;
 
-class DrawablesManager : public Changeable
+class DrawablesManager : public QOffscreenSurface, public Changeable
 {
+    Q_OBJECT
+
     private:
         DrawablesSelection nonSelectedDrawables_;
         DrawablesSelections drawablesSelections_;
 
-        LocalDrawablesSelection* localDrawablesSelection_;
+        LocalDrawablesSelectionPtr localDrawablesSelection_;
 
         ServerInterfacePtr server_;
 
@@ -73,9 +75,9 @@ class DrawablesManager : public Changeable
         /***
          * 3. Getters
          ***/
-        LocalDrawablesSelection* getLocalUserSelection() const ;
+        LocalDrawablesSelectionPtr getLocalUserSelection() const ;
     private:
-        DrawablesSelection* getUserSelection( UserID userID );
+        DrawablesSelectionPtr getUserSelection( UserID userID );
     public:
         glm::vec3 getPivotPoint() const ;
         glm::vec3 getPivotPoint( UserID userID ) const ;
