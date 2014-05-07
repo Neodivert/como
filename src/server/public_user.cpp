@@ -34,7 +34,7 @@ PublicUser::PublicUser( UserID id, const char* name,
             CommandsHistoricPtr commandsHistoric,
             LogPtr log,
             std::uint32_t color ) :
-    BasicUser( id, name ),
+    User( id, name ),
     io_service_( io_service ),
     socket_( SocketPtr( new Socket( std::move( socket ) ) ) ),
     processSceneUpdatePacketCallback_( processSceneUpdatePacketCallback ),

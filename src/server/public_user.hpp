@@ -28,7 +28,7 @@
 #include <common/utilities/log.hpp>
 #include <list>
 #include "commands_historic.hpp"
-#include <common/users/basic_user.hpp>
+#include <common/users/user.hpp>
 
 namespace como {
 
@@ -43,7 +43,7 @@ typedef std::function< void (const boost::system::error_code& errorCode,
                              UserID userID,
                              SceneUpdatePacketConstPtr sceneUpdate) > ProcessSceneUpdatePacketCallback;
 
-class PublicUser : public BasicUser
+class PublicUser : public User
 {
     private:
         // I/O service.

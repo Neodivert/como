@@ -241,10 +241,10 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
 void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnectedCommand )
 {
     // Create the new user from the given USER_CONNECTION command.
-    BasicUserPtr newUser( new BasicUser( userConnectedCommand->getUserID(), userConnectedCommand->getName() ) );
+    UserPtr newUser( new User( userConnectedCommand->getUserID(), userConnectedCommand->getName() ) );
 
     // Insert the new user in the users vector.
-    users_.insert( std::pair< UserID, BasicUserPtr >( userConnectedCommand->getUserID(), newUser ) );
+    users_.insert( std::pair< UserID, UserPtr >( userConnectedCommand->getUserID(), newUser ) );
 
     // Create an empty drawables selection for the new user.
     drawablesManager_->addDrawablesSelection( userConnectedCommand->getUserID(), userConnectedCommand->getSelectionColor() );

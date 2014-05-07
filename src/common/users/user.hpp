@@ -17,8 +17,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef BASIC_USER_HPP
-#define BASIC_USER_HPP
+#ifndef USER_HPP
+#define USER_HPP
 
 #include <common/utilities/ids.hpp>
 #include <memory>
@@ -26,7 +26,7 @@
 namespace como {
 
 // TODO: Convert into a monitor.
-class BasicUser : public std::enable_shared_from_this< BasicUser >
+class User : public std::enable_shared_from_this< User >
 {
     private:
         // User's id and name.
@@ -37,12 +37,12 @@ class BasicUser : public std::enable_shared_from_this< BasicUser >
         /***
          * 1. Initialization and destruction
          ***/
-        BasicUser() = delete;
-        BasicUser( const BasicUser& ) = delete;
-        BasicUser( BasicUser&& ) = delete;
-        BasicUser( UserID id, std::string name );
+        User() = delete;
+        User( const User& ) = delete;
+        User( User&& ) = delete;
+        User( UserID id, std::string name );
 
-        ~BasicUser() = default;
+        ~User() = default;
 
 
         /***
@@ -55,12 +55,12 @@ class BasicUser : public std::enable_shared_from_this< BasicUser >
         /***
          * 3. Operators
          ***/
-        BasicUser& operator = (const BasicUser& ) = delete;
-        BasicUser& operator = ( BasicUser&& ) = delete;
+        User& operator = (const User& ) = delete;
+        User& operator = ( User&& ) = delete;
 };
 
-typedef std::shared_ptr< BasicUser > BasicUserPtr;
+typedef std::shared_ptr< User > UserPtr;
 
 } // namespace como
 
-#endif // BASIC_USER_HPP
+#endif // USER_HPP

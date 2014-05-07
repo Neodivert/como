@@ -17,7 +17,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "basic_user.hpp"
+#include "user.hpp"
 #include <common/packets/packets.hpp>
 #include <cstring>
 
@@ -27,7 +27,7 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-BasicUser::BasicUser( UserID id, std::string name ) :
+User::User( UserID id, std::string name ) :
     id_( id ),
     name_( name )
 {}
@@ -37,7 +37,7 @@ BasicUser::BasicUser( UserID id, std::string name ) :
  * 2. Getters
  ***/
 
-UserID BasicUser::getID() const
+UserID User::getID() const
 {
     UserID id;
 
@@ -49,7 +49,7 @@ UserID BasicUser::getID() const
 }
 
 
-std::string BasicUser::getName() const
+std::string User::getName() const
 {
     //mutex_.lock();
     //mutex_.unlock();

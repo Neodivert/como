@@ -34,7 +34,6 @@ HEADERS += \
     ../../src/common/packets/scene_update_packet.hpp \
     ../../src/common/utilities/ids.hpp \
     ../../src/common/utilities/log.hpp \
-    ../../src/common/users/basic_user.hpp \
     ../../src/common/commands/command.hpp \
     ../../src/common/commands/commands.hpp \
     ../../src/common/commands/user_commands/user_command.hpp \
@@ -62,7 +61,8 @@ HEADERS += \
     ../../src/common/commands/primitive_commands/primitive_creation_command.hpp \
     ../../src/common/packables/packable_array.hpp \
     ../../src/common/packables/packable_integer.hpp \
-    ../../src/common/commands/primitive_commands/primitive_command.hpp
+    ../../src/common/commands/primitive_commands/primitive_command.hpp \
+    ../../src/common/users/user.hpp
 
 
 # Common sources (used by both client and server).
@@ -74,7 +74,6 @@ SOURCES += \
     ../../src/common/packets/user_acceptance_packet.cpp \
     ../../src/common/packets/scene_update_packet.cpp \
     ../../src/common/utilities/ids.cpp \
-    ../../src/common/users/basic_user.cpp \
     ../../src/common/commands/command.cpp \
     ../../src/common/commands/user_commands/user_command.cpp \
     ../../src/common/commands/user_commands/user_connection_command.cpp \
@@ -93,4 +92,5 @@ SOURCES += \
     ../../src/common/commands/packable_commands_list.cpp \
     ../../src/common/packables/packable_file.cpp \
     ../../src/common/commands/primitive_commands/primitive_creation_command.cpp \
-    ../../src/common/commands/primitive_commands/primitive_command.cpp
+    ../../src/common/commands/primitive_commands/primitive_command.cpp \
+    ../../src/common/users/user.cpp

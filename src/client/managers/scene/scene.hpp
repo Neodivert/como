@@ -31,7 +31,7 @@
 #include <queue>
 #include <client/models/3d/lights/lights.hpp>
 #include <client/managers/drawables_manager/drawables_manager.hpp>
-#include <common/users/basic_user.hpp>
+#include <common/users/user.hpp>
 
 Q_DECLARE_METATYPE( como::CommandConstPtr )
 
@@ -45,7 +45,7 @@ enum LinesBufferOffset {
     N_LINES_BUFFER_OFFSETS
 };
 
-typedef std::map< UserID, BasicUserPtr > UsersMap;
+typedef std::map< UserID, UserPtr > UsersMap;
 
 class Scene : public QOffscreenSurface, public AbstractChangeable
 {
