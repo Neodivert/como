@@ -21,6 +21,7 @@
 #define LIGHTING_MANAGER_HPP
 
 #include "directional_light.hpp"
+#include <client/managers/drawables_manager/drawables_manager.hpp>
 
 namespace como {
 
@@ -34,6 +35,8 @@ class LightingManager
     private:
         DirectionalLightPtr directionalLight_;
 
+        DrawablesManagerPtr drawablesManager_;
+
     public:
 
         /***
@@ -41,7 +44,7 @@ class LightingManager
          ***/
 
         /*! \brief Default constructor. */
-        LightingManager();
+        LightingManager( DrawablesManagerPtr drawablesManager );
 
         /*! \brief Copy constructor. */
         LightingManager( const LightingManager& ) = delete;

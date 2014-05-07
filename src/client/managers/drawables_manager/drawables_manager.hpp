@@ -28,6 +28,8 @@
 
 namespace como {
 
+const UserID NO_USER = 0;
+
 typedef std::map< UserID, DrawablesSelectionPtr > DrawablesSelections;
 
 class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
@@ -35,16 +37,16 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
     Q_OBJECT
 
     private:
-        DrawablesSelection nonSelectedDrawables_;
         DrawablesSelections drawablesSelections_;
 
+        DrawablesSelectionPtr nonSelectedDrawables_;
         LocalDrawablesSelectionPtr localDrawablesSelection_;
 
         ServerInterfacePtr server_;
 
         UserID localUserID_;
 
-        // TODO: move this to ServerInterface.
+        // TODO: move this to ServerInterface?
         std::queue< PackableDrawableID > localUserPendingSelections_;
 
         // Map ID - PrimitivePath.
@@ -149,7 +151,6 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
 
         // TODO: Move to a new PrimitivesManager class?
         void registerPrimitivePath( PrimitiveID primitiveID, std::string primitiveRelPath );
-
 
         virtual bool hasChangedSinceLastQuery();
 };

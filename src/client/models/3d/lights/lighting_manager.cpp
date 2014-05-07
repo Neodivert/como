@@ -21,9 +21,11 @@
 
 namespace como {
 
-LightingManager::LightingManager() :
-    directionalLight_( new DirectionalLight( glm::vec3( 1.0f, 1.0f, 1.0f ) ) )
-{}
+LightingManager::LightingManager( DrawablesManagerPtr drawablesManager ) :
+    directionalLight_( new DirectionalLight( glm::vec3( 1.0f, 1.0f, 1.0f ) ) ),
+    drawablesManager_( drawablesManager )
+{
+}
 
 
 /***

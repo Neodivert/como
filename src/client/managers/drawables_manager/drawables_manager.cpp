@@ -28,7 +28,7 @@ namespace como {
 
 DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserID, const std::uint8_t* localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
     AbstractChangeable(),
-    nonSelectedDrawables_( glm::vec4( 0.0f ) ),
+    nonSelectedDrawables_( new DrawablesSelection( glm::vec4( 0.0f ) ) ),
     server_( server ),
     localUserID_( localUserID ),
     primitivesDirPath_( primitivesDirPath ),
@@ -41,6 +41,10 @@ DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserI
                     localSelectionBorderColor[2],
                     localSelectionBorderColor[3]
                 );
+
+    // Add a selection of unselected drawables to the map of selections as a
+    // selection associated to NO_USER).
+    drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( NO_USER, nonSelectedDrawables_ ) );
 
     // Create an empty drawables selection for the local user.
     localDrawablesSelection_ = LocalDrawablesSelectionPtr( new LocalDrawablesSelection( localUserID_, selectionColor, server ) );
@@ -227,7 +231,7 @@ void DrawablesManager::selectDrawable( PackableDrawableID drawableID, UserID use
 
     // Check if the desired drawable is among the non selected ones, and move
     // it to the user's selection in that case.
-    nonSelectedDrawables_.moveDrawable( drawableID, userSelection );
+    nonSelectedDrawables_->moveDrawable( drawableID, userSelection );
 }
 
 
@@ -245,7 +249,7 @@ void DrawablesManager::unselectAll( UserID userID )
     DrawablesSelection& userSelection = *( getUserSelection( userID ) );
 
     // Move all drawables from user selection to non selected set.
-    userSelection.moveAll( nonSelectedDrawables_ );
+    userSelection.moveAll( *nonSelectedDrawables_ );
 }
 
 
@@ -268,7 +272,7 @@ PackableDrawableID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, g
     }
 
     // Check if the given ray intersect any of the non selected drawables.
-    if( nonSelectedDrawables_.intersect( r0, r1, closestObject, minT ) ){
+    if( nonSelectedDrawables_->intersect( r0, r1, closestObject, minT ) ){
         // A non selected drawable has been intersected.
         log_->debug( "Object picked\n" );
 
@@ -293,59 +297,6 @@ PackableDrawableID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, g
         }
     }
 
-    /*
-    // Iterate over all non selected drawables and check if the given ray intersects
-    // them or not. Get the closest object.
-    DrawablesSelection::iterator it;
-    for( it = nonSelectedDrawables_.begin(); it != nonSelectedDrawables_.end(); it++ ){
-        it->second->intersects( r0, r1, t );
-        if( ( t >= 0.0f ) && (t < minT ) ){
-            // New closest object, get its ID and distance.
-            closestObject = it->first;
-            minT = t;
-        }
-    }
-
-    // If user dind't selected any non-selected drawable, check if he / she
-    // clicked on an already selected one.
-    if( minT == MAX_T ){
-        for( it = userSelection.begin(); it != userSelection.end(); it++ ){
-            it->second->intersects( r0, r1, t );
-            if( ( t > 0.0f ) && (t < minT ) ){
-                // New closest object, get its index and distance.
-                closestObject = it->first;
-                minT = t;
-                log_->debug( "RETURN 0\n" );
-                //emit renderNeeded();
-                return NULL_DRAWABLE_ID;
-            }
-        }
-    }
-
-
-
-    // If there were intersections, select the closest one.
-    if( minT < MAX_T ){
-        log_->debug( "FINAL CLOSEST OBJECT: (", closestObject.creatorID, ", ", closestObject.drawableIndex, ")\n",
-                     "\t min t: ", minT, ")\n",
-                     "\t min distance: ", glm::distance( glm::vec3( 0.0f, 0.0f, 0.0f ), r1 * t ), "\n" );
-
-        // Send a DRAWABLE_SELECTION command to the server.
-        server_->sendCommand( CommandConstPtr(
-                                 new DrawableSelectionCommand( localUserID_,
-                                                     closestObject,
-                                                     addToSelection ) ) );
-
-        // Insert the selected drawable's ID in a queue of pending selections.
-        localUserPendingSelections_.push( closestObject );
-
-        //selectDrawable( closestObject );
-    }else{
-        log_->debug( "NO CLOSEST OBJECT. Unselecting all\n" );
-        unselectAll();
-    }
-    */
-
     return closestObject;
 }
 
@@ -357,12 +308,8 @@ void DrawablesManager::drawAll( const glm::mat4& viewProjMatrix ) const
 {
     DrawablesSelections::const_iterator it;
 
-    // Draw the non selected drawables.
-    nonSelectedDrawables_.draw( viewProjMatrix );
-
     // Draw the user's selections.
     for( it = drawablesSelections_.begin(); it != drawablesSelections_.end(); it++  ){
-        // FIXME: Use selection color.
         (it->second)->draw( viewProjMatrix );
     }
 }
