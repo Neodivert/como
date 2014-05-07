@@ -40,7 +40,6 @@ HEADERS += \
     ../../src/client/gui/tools_menu/tools_menu.hpp \
     ../../src/client/gui/render_panel.hpp \
     ../../src/client/gui/main_window.hpp \
-    #../../src/client/managers/tester.hpp \ # TODO: Addapt to new Primitives system and reinsert.
     ../../src/client/managers/scene/scene.hpp \
     ../../src/client/managers/como_app.hpp \
     ../../src/client/models/3d/mesh.hpp \
@@ -77,7 +76,6 @@ SOURCES += \
     ../../src/client/gui/tools_menu/tools_menu.cpp \
     ../../src/client/gui/render_panel.cpp \
     ../../src/client/gui/main_window.cpp \
-    #../../src/client/managers/tester.cpp \ # TODO: Addapt to new Primitives system and reinsert.
     ../../src/client/managers/scene/scene.cpp \
     ../../src/client/managers/como_app.cpp \
     ../../src/client/models/3d/mesh.cpp \

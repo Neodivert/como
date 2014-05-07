@@ -538,15 +538,6 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
 }
 
 
-// TODO: Remove.
-void Scene::setAmbientLight( glm::vec3 ambientLight )
-{
-    Q_UNUSED( ambientLight );
-
-    emit renderNeeded();
-}
-
-
 // TODO: Duplicated code in Server::createScenePrimitivesDirectory.
 void Scene::createScenePrimitivesDirectory()
 {

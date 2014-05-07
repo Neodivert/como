@@ -183,7 +183,6 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
 
     public slots:
         void executeRemoteCommand( CommandConstPtr command );
-        void setAmbientLight( glm::vec3 ambientLight );
 
         /***
          * 14. Auxiliar methods

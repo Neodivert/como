@@ -20,7 +20,6 @@
 #include <QGuiApplication>
 #include "gui/main_window.hpp"
 #include <glm/gtx/vector_angle.hpp>
-#include "managers/tester.hpp"
 #include "gui/connection_wizard/connection_wizard.hpp"
 #include "managers/como_app.hpp"
 #include <boost/filesystem.hpp>

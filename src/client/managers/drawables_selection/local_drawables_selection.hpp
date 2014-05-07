@@ -38,7 +38,6 @@ class LocalDrawablesSelection : public QObject, public DrawablesSelection
          */
         ServerInterfacePtr server_;
 
-        // TODO: Remove
         UserID localUserID_;
 
         // Unique ID to be given to the next drawable added to this selection.
