@@ -21,7 +21,6 @@
 #define PACKET_HPP
 
 #include <common/packables/packables.hpp>
-#include <common/utilities/packer.hpp>
 #include <stdexcept>
 #include <boost/asio.hpp>
 #include <functional>

@@ -73,7 +73,6 @@ class ConnectServerPage : public QWizardPage
         /***
          * 4. Operators
          ***/
-        // TODO: What whith the "&" before "= delete;" (I had to remove it)?
         ConnectServerPage& operator = ( const ConnectServerPage& ) = delete;
         ConnectServerPage& operator = ( ConnectServerPage&& ) = delete;
 };
