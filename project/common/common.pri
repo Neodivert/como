@@ -24,7 +24,6 @@ QMAKE_CXXFLAGS += -Wall -Werror -Wextra -pthread -pedantic-errors
 
 # Common headers (used by both client and server).
 HEADERS += \
-    ../../src/common/utilities/packer.hpp \
     ../../src/common/packables/packable.hpp \
     ../../src/common/packables/composite_packable.hpp \
     ../../src/common/packets/packet.hpp \
@@ -67,7 +66,6 @@ HEADERS += \
 
 # Common sources (used by both client and server).
 SOURCES += \
-    ../../src/common/utilities/packer.cpp \
     ../../src/common/packables/composite_packable.cpp \
     ../../src/common/packets/packet.cpp \
     ../../src/common/packets/new_user_packet.cpp \
