@@ -6,12 +6,6 @@
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 
-# TODO: Remove
-LIBS += -L/usr/local/lib
-
-# Include boost headers as system headers, so they don't produce warnings.
-QMAKE_CXXFLAGS += -isystem /opt/boost/include
-
 # Common libraries
 LIBS += -lpthread -lboost_system -lboost_thread -lboost_filesystem
 
