@@ -55,6 +55,31 @@ Mesh::Mesh( const char* fileName, const std::uint8_t* color ) :
 }
 
 
+Mesh::Mesh( const Mesh& b ) :
+    Drawable( b ),
+    type_( b.type_ ),
+    originalVertices( b.originalVertices ),
+    originalNormals( b.originalNormals ),
+    triangles( b.triangles ),
+    originalCentroid( b.originalCentroid ),
+    transformedCentroid( b.transformedCentroid )
+{
+    // Initialize and populate Mesh's vertex data.
+    initMeshBuffers();
+    initVertexData();
+
+    for( unsigned int i=0; i<4; i++ ){
+        color[i] = b.color[i];
+    }
+}
+
+
+DrawablePtr Mesh::clone()
+{
+    return DrawablePtr( new Mesh( *this ) );
+}
+
+
 /***
  * 2. Destruction.
  ***/

@@ -36,11 +36,22 @@ DrawablesSelection::DrawablesSelection( glm::vec4 borderColor ) :
 
 DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
     Changeable( b ),
-    drawables_( b.drawables_ ), // TODO: This copies the pointers (DrawablePtr), it must copy the objects.
     borderColor_( b.borderColor_ ),
     centroid_( b.centroid_ ),
     pivotPointMode_( b.pivotPointMode_ )
 {
+    DrawablesMap::const_iterator it;
+
+    // Clone all the drawables held by b.
+    for( it = b.drawables_.begin(); it != b.drawables_.end(); it++ ){
+        drawables_.insert( std::pair< PackableDrawableID, DrawablePtr >(
+                               it->first,
+                               it->second->clone()
+                            ) );
+    }
+
+    // This selection has changed, so indicate it.
+    setChanged();
 }
 
 

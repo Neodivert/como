@@ -92,8 +92,11 @@ class Mesh : public Drawable
         Mesh( MeshType type, const char* file, const std::uint8_t* color = nullptr );
     public:
         Mesh( const char* file, const std::uint8_t* color = nullptr );
-        Mesh( const Mesh& ) = delete;
+        Mesh( const Mesh& b );
         Mesh( Mesh&& ) = delete;
+
+
+        virtual DrawablePtr clone();
 
 
         /***

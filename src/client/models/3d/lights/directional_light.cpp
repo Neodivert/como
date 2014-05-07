@@ -70,6 +70,13 @@ DirectionalLight::DirectionalLight( glm::vec3 lightColor ) :
     checkOpenGL( "DirectionalLight - constructor 4" );
 }
 
+
+DrawablePtr DirectionalLight::clone()
+{
+    return DrawablePtr( new DirectionalLight( *this ) );
+}
+
+
 /***
  * 3. Setters
  ***/

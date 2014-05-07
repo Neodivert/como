@@ -50,10 +50,16 @@ class DirectionalLight : public Light
         DirectionalLight( glm::vec3 lightColor );
 
         /*! \brief Copy constructor */
-        DirectionalLight( const DirectionalLight& ) = delete;
+        // TODO: Define a proper copy constructor when inplementing multiple lights
+        // ("location attributes" would point to different places from light to
+        // light).
+        DirectionalLight( const DirectionalLight& ) = default;
 
         /*! \brief Move constructor */
         DirectionalLight( DirectionalLight&& ) = delete;
+
+
+        virtual DrawablePtr clone();
 
 
         /***

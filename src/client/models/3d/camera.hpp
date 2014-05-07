@@ -68,9 +68,11 @@ class Camera : public Mesh
         /***
          * 1. Initializations
          ***/
-        Camera( const Camera& ) = delete;
-        Camera( Camera&& ) = delete;
+        Camera( const Camera& ) = default;
+        Camera( Camera&& ) = default;
         Camera( View view = View::FRONT );
+
+        virtual DrawablePtr clone();
 
         // TODO: Is this problematic with Drawable's virtual destructor?
         ~Camera() = default;

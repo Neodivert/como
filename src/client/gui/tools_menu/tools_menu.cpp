@@ -41,66 +41,6 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
         addTab( new PropertiesTab( comoApp->getScene()->getDrawablesManager()->getLocalUserSelection() ), "Properties" );
         // TODO: Remove tab when disconnected from scene.
     });
-
-    /*
-    QVBoxLayout* layout;
-    QLabel* toolsMenuLabel;
-    QLabel* appModeLabel;
-    QComboBox* appModeSelector;
-    QGroupBox* editionScopeGroupBox;
-    QVBoxLayout* editionScopeGroupBoxLayout;
-
-    QGroupBox* transformationModeGroupBox;
-    QButtonGroup* transformationModeButtonGroup;
-    QVBoxLayout* transformationModeGroupBoxLayout;
-    QRadioButton* transformationModeRadioButton;
-
-    // Share the given pointer to app's state.
-    this->comoApp = comoApp;
-
-    // Set tools menu's label.
-    toolsMenuLabel = new QLabel( "Tools menu" );
-
-    // Set app mode's label.
-    appModeLabel = new QLabel( "App mode" );
-
-    // Set app mode's selector.
-    appModeSelector = new QComboBox;
-    for( auto appMode : appModeStrings ){
-        appModeSelector->addItem( tr( appMode ) );
-    }
-
-    // When user change app mode in selector, call ComoApp::setAppMode().
-    void (QComboBox::*signal)( int ) = &QComboBox::activated;
-    connect( appModeSelector, signal, [=]( int index ) {
-        comoApp->setAppMode( static_cast< AppMode >( index ) );
-    }  );
-
-    // When comoApp::setAppMode() be invoked, change appMode selector's index.
-    connect( comoApp.get(), &ComoApp::appModeIndexChanged, appModeSelector, &QComboBox::setCurrentIndex );
-
-    // Create and fulfill edition scope's selector.
-    editionScopeGroupBox = new QGroupBox( tr( "Edition scope" ) );
-    editionScopeGroupBoxLayout = new QVBoxLayout;
-    for( auto editionScope : editionScopeStrings ){
-        editionScopeGroupBoxLayout->addWidget( new QRadioButton( tr( editionScope ) ) );
-    }
-    editionScopeGroupBox->setLayout( editionScopeGroupBoxLayout );
-
-    // Set tools panel layout.
-    layout = new QVBoxLayout;
-    layout->setSpacing( 1 );
-    layout->addWidget( toolsMenuLabel );
-    layout->addWidget( appModeLabel );
-    layout->addWidget( appModeSelector );
-    layout->addWidget( editionScopeGroupBox );
-    layout->addWidget( transformationModeGroupBox );
-    layout->addWidget( createPivotPointModeSelector() );
-    layout->addWidget( createPrimitiveCreationMenu() );
-    layout->addWidget( createColorSelector() );
-    layout->addWidget( createDirectionalLightColorSelector() );
-    setLayout( layout );
-    */
 }
 
 

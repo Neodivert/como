@@ -63,10 +63,15 @@ class Light : public Mesh
         Light( LightType type, const char* meshPath, GLuint lightIndex, glm::vec3 color );
 
         /*! \brief Copy constructor */
-        Light( const Light& ) = delete;
+        // TODO: Define a right copy constructor when inplementing multiple lights
+        // (colorLocation_ attribute would point to different places from light to
+        // light).
+        Light( const Light& ) = default;
 
         /*! \brief Move constructor */
         Light( Light&& ) = delete;
+
+        virtual DrawablePtr clone() = 0;
 
 
         /***

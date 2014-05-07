@@ -45,6 +45,10 @@ enum class DrawableType : std::uint8_t
  * Main file class
  ***/
 
+class Drawable;
+typedef std::shared_ptr< Drawable > DrawablePtr;
+typedef std::shared_ptr< const Drawable > DrawableConstPtr;
+
 std::string getOpenGLErrorString( GLenum errorCode );
 void checkOpenGL( const char* str );
 
@@ -69,8 +73,10 @@ class Drawable
          ***/
         // Constructor. Initialize transformation matrix to identity matrix.
         Drawable( DrawableType type, std::string name );
-        Drawable( const Drawable& ) = delete;
+        Drawable( const Drawable& ) = default;
         Drawable( Drawable&& ) = delete;
+
+        virtual DrawablePtr clone() = 0;
 
         virtual ~Drawable(){}
 
@@ -128,8 +134,7 @@ class Drawable
         static glm::vec4 transformScaleVector( glm::vec4 scaleVector, const glm::mat4& transformMatrix );
 };
 
-typedef std::shared_ptr< Drawable > DrawablePtr;
-typedef std::shared_ptr< const Drawable > DrawableConstPtr;
+
 
 } // namespace como
 

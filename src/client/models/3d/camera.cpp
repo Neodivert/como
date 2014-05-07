@@ -13,6 +13,12 @@ Camera::Camera( View view ) :
 }
 
 
+DrawablePtr Camera::clone()
+{
+    return DrawablePtr( new Camera( *this ) );
+}
+
+
 /***
  * 2. Setters and getters
  ***/
