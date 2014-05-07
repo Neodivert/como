@@ -21,7 +21,7 @@
 #define CREATION_TAB_HPP
 
 #include <QFrame>
-#include "../../managers/scene/scene.hpp"
+#include <client/managers/scene/scene.hpp>
 
 namespace como {
 

@@ -20,7 +20,7 @@
 #ifndef CREATE_SERVER_PAGE_HPP
 #define CREATE_SERVER_PAGE_HPP
 
-#include "../../managers/scene/scene.hpp"
+#include <client/managers/scene/scene.hpp>
 #include <QWizardPage>
 #include <QLineEdit>
 #include <QLabel>

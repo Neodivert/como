@@ -23,7 +23,7 @@
 #include <thread>
 
 #include <list>
-#include "../common/packets/packets.hpp"
+#include <common/packets/packets.hpp>
 
 namespace como {
 

@@ -22,16 +22,16 @@
 
 #include <map>
 #include <list>
-#include "../../models/3d/camera.hpp"
-#include "../../../common/utilities/log.hpp"
-#include "../../../common/commands/commands.hpp"
-#include "../server_interface/server_interface.hpp"
-#include "../../models/utilities/msl/src/shader_loader.hpp"
-#include "../../managers/drawables_selection/drawables_selection.hpp"
+#include <client/models/3d/camera.hpp>
+#include <common/utilities/log.hpp>
+#include <common/commands/commands.hpp>
+#include <client/managers/server_interface/server_interface.hpp>
+#include <client/models/utilities/msl/src/shader_loader.hpp>
+#include <client/managers/drawables_selection/drawables_selection.hpp>
 #include <queue>
-#include "../../models/3d/lights/lights.hpp"
-#include "../drawables_manager/drawables_manager.hpp"
-#include "../../../common/users/basic_user.hpp"
+#include <client/models/3d/lights/lights.hpp>
+#include <client/managers/drawables_manager/drawables_manager.hpp>
+#include <common/users/basic_user.hpp>
 
 Q_DECLARE_METATYPE( como::CommandConstPtr )
 

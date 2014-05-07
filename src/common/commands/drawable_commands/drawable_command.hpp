@@ -20,7 +20,7 @@
 #ifndef DRAWABLE_COMMAND_HPP
 #define DRAWABLE_COMMAND_HPP
 
-#include "../command.hpp"
+#include <common/commands/command.hpp>
 
 namespace como {
 

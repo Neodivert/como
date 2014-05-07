@@ -18,9 +18,9 @@
 ***/
 
 #include "server.hpp"
-#include "../common/packets/packets.hpp"
+#include <common/packets/packets.hpp>
 #include <endian.h>
-#include "../common/utilities/log.hpp"
+#include <common/utilities/log.hpp>
 #include <clocale>
 #include <boost/filesystem.hpp>
 

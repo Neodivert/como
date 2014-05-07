@@ -28,7 +28,8 @@
 #include <QFormLayout>
 #include <QRegExpValidator>
 #include <QMessageBox>
-#include "../../managers/scene/scene.hpp"
+
+#include <client/managers/scene/scene.hpp>
 
 namespace como {
 

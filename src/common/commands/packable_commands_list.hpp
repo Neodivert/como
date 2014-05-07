@@ -21,7 +21,7 @@
 #define PACKABLE_COMMANDS_LIST_HPP
 
 #include "commands.hpp"
-#include "../packables/packable.hpp"
+#include <common/packables/packable.hpp>
 #include <list>
 
 namespace como {

@@ -18,7 +18,7 @@
 ***/
 
 #include "basic_user.hpp"
-#include "../packets/packets.hpp"
+#include <common/packets/packets.hpp>
 #include <cstring>
 
 namespace como {

@@ -20,9 +20,9 @@
 #ifndef SERVER_INTERFACE_HPP
 #define SERVER_INTERFACE_HPP
 
-#include "../../../common/packets/packets.hpp"
-#include "../../../common/commands/commands.hpp"
-#include "../../../common/utilities/log.hpp"
+#include <common/packets/packets.hpp>
+#include <common/commands/commands.hpp>
+#include <common/utilities/log.hpp>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 #include <thread>

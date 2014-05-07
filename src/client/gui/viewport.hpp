@@ -26,8 +26,8 @@
  ***/
 
 #include <QWindow>
-#include "../managers/como_app.hpp"
-#include "../models/3d/camera.hpp"
+#include <client/managers/como_app.hpp>
+#include <client/models/3d/camera.hpp>
 
 namespace como {
 

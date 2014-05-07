@@ -20,8 +20,8 @@
 #ifndef PACKET_HPP
 #define PACKET_HPP
 
-#include "../packables/packables.hpp"
-#include "../utilities/packer.hpp"
+#include <common/packables/packables.hpp>
+#include <common/utilities/packer.hpp>
 #include <stdexcept>
 #include <boost/asio.hpp>
 #include <functional>

@@ -26,7 +26,7 @@
 #include <QObject>
 #include <map>
 #include <array>
-#include "../../common/utilities/log.hpp"
+#include <common/utilities/log.hpp>
 
 namespace como {
 

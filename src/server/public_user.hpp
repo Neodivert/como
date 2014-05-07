@@ -24,11 +24,11 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <functional>
-#include "../common/packets/packets.hpp"
-#include "../common/utilities/log.hpp"
+#include <common/packets/packets.hpp>
+#include <common/utilities/log.hpp>
 #include <list>
 #include "commands_historic.hpp"
-#include "../common/users/basic_user.hpp"
+#include <common/users/basic_user.hpp>
 
 namespace como {
 

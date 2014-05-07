@@ -23,8 +23,8 @@
 #include "packet.hpp"
 #include <cstring>
 
-#include "../packables/packables.hpp"
-#include "../utilities/ids.hpp"
+#include <common/packables/packables.hpp>
+#include <common/utilities/ids.hpp>
 #include <glm/glm.hpp>
 
 namespace como {

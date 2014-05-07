@@ -20,8 +20,8 @@
 #ifndef COMMAND_HPP
 #define COMMAND_HPP
 
-#include "../packables/packables.hpp"
-#include "../utilities/ids.hpp"
+#include <common/packables/packables.hpp>
+#include <common/utilities/ids.hpp>
 #include <memory>
 #include <stdexcept>
 

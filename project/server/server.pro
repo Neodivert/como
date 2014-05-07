@@ -19,6 +19,8 @@ MOC_DIR = $$BUILD_DATA_DIR/moc
 RCC_DIR = $$BUILD_DATA_DIR/qrc
 UI_DIR = $$BUILD_DATA_DIR/ui
 
+INCLUDEPATH += ../../src
+
 # Server headers
 HEADERS += \
     ../../src/server/server.hpp \

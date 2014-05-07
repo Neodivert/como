@@ -22,8 +22,9 @@
 
 #include <QWizard>
 #include <QWizardPage>
-#include "../../managers/scene/scene.hpp"
-#include "../../../common/utilities/log.hpp"
+
+#include <client/managers/scene/scene.hpp>
+#include <common/utilities/log.hpp>
 
 
 namespace como {

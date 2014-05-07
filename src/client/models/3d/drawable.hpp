@@ -20,7 +20,7 @@
 #ifndef DRAWABLE_HPP
 #define DRAWABLE_HPP
 
-#include "../dependencies.hpp"
+#include <client/models/dependencies.hpp>
 
 namespace como {
 

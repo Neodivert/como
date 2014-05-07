@@ -20,7 +20,7 @@
 #ifndef LIGHT_HPP
 #define LIGHT_HPP
 
-#include "../mesh.hpp"
+#include <client/models/3d/mesh.hpp>
 
 namespace como {
 

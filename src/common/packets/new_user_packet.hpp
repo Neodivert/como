@@ -20,7 +20,7 @@
 #ifndef NEW_USER_PACKET_HPP
 #define NEW_USER_PACKET_HPP
 
-#include "../packables/packable_string.hpp"
+#include <common/packables/packable_string.hpp>
 #include "packet.hpp"
 
 namespace como {

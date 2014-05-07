@@ -21,7 +21,7 @@
 #define TRANSFORMATION_TAB_HPP
 
 #include <QFrame>
-#include "../../managers/como_app.hpp"
+#include <client/managers/como_app.hpp>
 
 namespace como {
 

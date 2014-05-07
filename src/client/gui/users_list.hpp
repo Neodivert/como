@@ -20,8 +20,8 @@
 #ifndef USERS_LIST_HPP
 #define USERS_LIST_HPP
 
-#include "../../common/commands/commands.hpp"
-#include "../../common/utilities/log.hpp"
+#include <common/commands/commands.hpp>
+#include <common/utilities/log.hpp>
 #include <QListWidget>
 #include <map>
 

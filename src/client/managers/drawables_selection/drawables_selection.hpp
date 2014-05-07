@@ -20,16 +20,16 @@
 #ifndef DRAWABLES_SELECTION_HPP
 #define DRAWABLES_SELECTION_HPP
 
-#include "../../models/3d/drawable.hpp"
-#include "../../models/3d/mesh.hpp"
-#include "../../models/3d/lights/light.hpp"
-#include "../../../common/utilities/ids.hpp"
-#include "../../../common/commands/user_commands/parameter_change_command.hpp" // For PivotPointMode type.
+#include <client/models/3d/drawable.hpp>
+#include <client/models/3d/mesh.hpp>
+#include <client/models/3d/lights/light.hpp>
+#include <common/utilities/ids.hpp>
+#include <common/commands/user_commands/parameter_change_command.hpp> // For PivotPointMode type.
 #include <map>
 #include <functional>
 #include <mutex>
 #include <QObject>
-#include "../../models/utilities/changeable/changeable.hpp"
+#include <client/models/utilities/changeable/changeable.hpp>
 
 namespace como {
 

@@ -21,9 +21,9 @@
 #define LOCAL_DRAWABLES_SELECTION_HPP
 
 #include "drawables_selection.hpp"
-#include "../server_interface/server_interface.hpp"
-#include "../../../common/commands/commands.hpp"
-#include "../../../common/utilities/ids.hpp"
+#include <client/managers/server_interface/server_interface.hpp>
+#include <common/commands/commands.hpp>
+#include <common/utilities/ids.hpp>
 
 namespace como {
 

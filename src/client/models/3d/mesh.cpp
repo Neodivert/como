@@ -22,7 +22,7 @@
 
 // TODO: Remove this once the constants PRIMITIVES_*_DIR be moved to
 // another place.
-#include "../../../common/utilities/ids.hpp"
+#include <common/utilities/ids.hpp>
 
 namespace como {
 

@@ -28,8 +28,8 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/lexical_cast.hpp>
 #include "public_user.hpp"
-#include "../common/packets/packets.hpp"
-#include "../common/utilities/log.hpp"
+#include <common/packets/packets.hpp>
+#include <common/utilities/log.hpp>
 #include "commands_historic.hpp"
 #include <map>
 #include <queue>

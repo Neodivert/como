@@ -24,7 +24,7 @@
 #include <QTabWidget>
 #include <QColorDialog>
 #include <QDir>
-#include "../../managers/como_app.hpp"
+#include <client/managers/como_app.hpp>
 
 namespace como {
 

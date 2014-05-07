@@ -20,10 +20,10 @@
 #ifndef DRAWABLES_MANAGER_HPP
 #define DRAWABLES_MANAGER_HPP
 
-#include "../../managers/drawables_selection/drawables_selection.hpp"
-#include "../../managers/drawables_selection/local_drawables_selection.hpp"
-#include "../../managers/server_interface/server_interface.hpp"
-#include "../../models/utilities/changeable/changeable.hpp"
+#include <client/managers/drawables_selection/drawables_selection.hpp>
+#include <client/managers/drawables_selection/local_drawables_selection.hpp>
+#include <client/managers/server_interface/server_interface.hpp>
+#include <client/models/utilities/changeable/changeable.hpp>
 #include <map>
 
 namespace como {

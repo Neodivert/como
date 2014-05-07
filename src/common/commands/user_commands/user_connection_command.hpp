@@ -21,7 +21,7 @@
 #define USER_CONNECTION_COMMAND_HPP
 
 #include "user_command.hpp"
-#include "../../packets/user_acceptance_packet.hpp"
+#include <common/packets/user_acceptance_packet.hpp>
 
 namespace como {
 

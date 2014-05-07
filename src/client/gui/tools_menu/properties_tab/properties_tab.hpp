@@ -23,7 +23,7 @@
 #include <QFrame>
 #include "general_info_menu.hpp"
 #include "mesh_info_menu.hpp"
-#include "../../../managers/drawables_selection/local_drawables_selection.hpp"
+#include <client/managers/drawables_selection/local_drawables_selection.hpp>
 
 namespace como {
 

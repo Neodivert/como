@@ -21,7 +21,7 @@
 #define MESH_INFO_MENU_HPP
 
 #include <QObject>
-#include "../../../managers/drawables_selection/local_drawables_selection.hpp"
+#include <client/managers/drawables_selection/local_drawables_selection.hpp>
 
 namespace como {
 

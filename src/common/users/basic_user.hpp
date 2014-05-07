@@ -20,7 +20,7 @@
 #ifndef BASIC_USER_HPP
 #define BASIC_USER_HPP
 
-#include "../utilities/ids.hpp"
+#include <common/utilities/ids.hpp>
 #include <memory>
 
 namespace como {

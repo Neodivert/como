@@ -20,7 +20,7 @@
 #ifndef PACKET_HEADER_HPP
 #define PACKET_HEADER_HPP
 
-#include "../packables/packables.hpp"
+#include <common/packables/packables.hpp>
 
 namespace como {
 

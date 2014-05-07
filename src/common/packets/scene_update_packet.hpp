@@ -21,8 +21,8 @@
 #define SCENE_UPDATE_PACKET_HPP
 
 #include "packet.hpp"
-#include "../commands/commands.hpp"
-#include "../commands/packable_commands_list.hpp"
+#include <common/commands/commands.hpp>
+#include <common/commands/packable_commands_list.hpp>
 #include <vector>
 #include <list>
 

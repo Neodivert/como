@@ -21,7 +21,7 @@
 #define RENDER_PANEL_HPP
 
 #include "view_frame.hpp"
-#include "../managers/como_app.hpp"
+#include <client/managers/como_app.hpp>
 
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QSlider)
