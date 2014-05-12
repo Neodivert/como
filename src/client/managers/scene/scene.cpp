@@ -207,9 +207,6 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         // Initialize the drawables manager.
         drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/primitives/scenes/" ) + sceneName_, oglContext_, log_ ) );
 
-        // Initialize lighting manager.
-        lightingManager_ = shared_ptr< LightingManager >( new LightingManager( drawablesManager_ ) );
-
         // Add the local user to the scene.
         addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( *userAcceptancePacket ) ) );
 
@@ -317,14 +314,6 @@ void Scene::setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny )
 void Scene::setName( const char* sceneName )
 {
     strncpy( sceneName_, sceneName, NAME_SIZE );
-}
-
-
-void Scene::setDirectionalLightColor( glm::vec3 color )
-{
-    lightingManager_->getDirectionalLight()->setLightColor( color );
-
-    emit renderNeeded();
 }
 
 void Scene::takeOpenGLContext()

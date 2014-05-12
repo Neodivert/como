@@ -56,9 +56,6 @@ class ToolsMenu : public QTabWidget
 
         ~ToolsMenu() = default;
 
-    protected:
-        QFrame* createDirectionalLightColorSelector();
-
 
         /***
          * 2. Getters

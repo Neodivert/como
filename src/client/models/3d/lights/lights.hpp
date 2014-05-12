@@ -20,6 +20,6 @@
 #ifndef LAMPS_HPP
 #define LAMPS_HPP
 
-#include "lighting_manager.hpp"
+#include "directional_light.hpp"
 
 #endif // LAMPS_HPP

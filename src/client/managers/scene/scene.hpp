@@ -73,8 +73,6 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
 
         shared_ptr< QOpenGLContext > oglContext_;
 
-        shared_ptr< LightingManager > lightingManager_;
-
         // Interface with the server.
         ServerInterfacePtr server_;
 
@@ -131,8 +129,6 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
     public:
         void setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a );
         void setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny );
-
-        void setDirectionalLightColor( glm::vec3 color );
 
     protected:
         void setName( const char* sceneName );

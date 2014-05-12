@@ -43,7 +43,7 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     });
 }
 
-
+/*
 QFrame* ToolsMenu::createDirectionalLightColorSelector()
 {
     QPushButton* selectColorButton = nullptr;
@@ -93,6 +93,7 @@ QFrame* ToolsMenu::createDirectionalLightColorSelector()
     // Return the frame.
     return colorSelectorFrame;
 }
+*/
 
 
 /***

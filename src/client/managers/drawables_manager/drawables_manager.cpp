@@ -179,6 +179,13 @@ void DrawablesManager::addMesh( UserID userID, PrimitiveID primitiveID, const st
     }
 }
 
+
+void DrawablesManager::addDirectionalLight( PackableDrawableID lightID, glm::vec3 lightColor )
+{
+    addDrawable( lightID.creatorID.getValue(), DrawablePtr( new DirectionalLight( lightColor ) ), lightID );
+}
+
+
 void DrawablesManager::deleteSelection()
 {
     deleteSelection( localUserID_ );
@@ -299,6 +306,7 @@ PackableDrawableID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, g
 
     return closestObject;
 }
+
 
 /***
  * 10. Drawing

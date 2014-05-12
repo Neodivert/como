@@ -20,6 +20,7 @@
 #ifndef DRAWABLES_MANAGER_HPP
 #define DRAWABLES_MANAGER_HPP
 
+#include <client/models/3d/lights/lights.hpp>
 #include <client/managers/drawables_selection/drawables_selection.hpp>
 #include <client/managers/drawables_selection/local_drawables_selection.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
@@ -104,6 +105,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
         //void addMesh( PrimitiveID primitiveID, QColor color );
         void addMesh( PrimitiveID primitiveID, const std::uint8_t* color );
         void addMesh( UserID userID, PrimitiveID primitiveID, const std::uint8_t* color, PackableDrawableID drawableID );
+        void addDirectionalLight( PackableDrawableID lightID, glm::vec3 lightColor );
 
 
         //void addMesh( PrimitiveID, const std::uint8_t* color,  )
