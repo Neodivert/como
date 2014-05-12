@@ -28,7 +28,8 @@ enum class SelectionCommandType : std::uint8_t {
     FULL_DESELECTION = 0,
     SELECTION_RESPONSE,
     SELECTION_TRANSFORMATION,
-    SELECTION_DELETION
+    SELECTION_DELETION,
+    MESH_COLOR_CHANGE
 };
 typedef PackableUint8< SelectionCommandType > PackableSelectionCommandType;
 
@@ -39,7 +40,6 @@ class SelectionCommand : public TypeCommand<SelectionCommandType>
         /***
          * 1. Construction
          ***/
-        SelectionCommand() = delete;
         SelectionCommand( SelectionCommandType selectionCommmandType, UserID userID );
         SelectionCommand( const SelectionCommand& b );
         SelectionCommand( SelectionCommand&& ) = delete;

@@ -56,7 +56,8 @@ HEADERS += \
     ../../src/common/packables/packable_integer.hpp \
     ../../src/common/commands/primitive_commands/primitive_command.hpp \
     ../../src/common/users/user.hpp \
-    ../../src/common/commands/type_command.hpp
+    ../../src/common/commands/type_command.hpp \
+    ../../src/common/commands/selection_commands/mesh_color_change_command.hpp
 
 
 # Common sources (used by both client and server).
@@ -86,4 +87,5 @@ SOURCES += \
     ../../src/common/packables/packable_file.cpp \
     ../../src/common/commands/primitive_commands/primitive_creation_command.cpp \
     ../../src/common/commands/primitive_commands/primitive_command.cpp \
-    ../../src/common/users/user.cpp
+    ../../src/common/users/user.cpp \
+    ../../src/common/commands/selection_commands/mesh_color_change_command.cpp

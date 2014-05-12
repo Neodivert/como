@@ -376,6 +376,10 @@ void DrawablesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr c
                 break;
             }
         break;
+
+        case SelectionCommandType::MESH_COLOR_CHANGE:
+            getUserSelection( command->getUserID() )->setMeshColor( dynamic_cast< const MeshColorChangeCommand* >( command.get() )->getMeshColor() );
+        break;
     }
 }
 

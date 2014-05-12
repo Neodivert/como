@@ -111,6 +111,9 @@ const void* PackableCommandsList::unpack( const void* buffer )
                     case SelectionCommandType::SELECTION_TRANSFORMATION:
                         command = CommandPtr( new SelectionTransformationCommand );
                     break;
+                    case SelectionCommandType::MESH_COLOR_CHANGE:
+                        command = CommandPtr( new MeshColorChangeCommand );
+                    break;
                 }
             break;
 

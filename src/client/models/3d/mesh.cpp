@@ -359,6 +359,14 @@ void Mesh::setColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const
 }
 
 
+void Mesh::setMeshColor( const std::uint8_t* meshColor )
+{
+    for( unsigned int i=0; i<4; i++ ){
+        color[i] = static_cast< std::uint8_t >( meshColor[i] * 255 );
+    }
+}
+
+
 /***
  * 7. Intersections.
  ***/

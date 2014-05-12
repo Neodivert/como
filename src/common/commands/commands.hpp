@@ -34,6 +34,7 @@
 #include "selection_commands/selection_response_command.hpp"
 #include "selection_commands/selection_transformation_command.hpp"
 #include "selection_commands/selection_deletion_command.hpp"
+#include "selection_commands/mesh_color_change_command.hpp"
 
 // Primitive commands
 #include "primitive_commands/primitive_creation_command.hpp"

@@ -133,21 +133,6 @@ bool DrawablesSelection::contains( MeshType meshType ) const
 }
 
 
-/***
- * 3. Setters
- ***/
-
-void DrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
-{
-    mutex_.lock();
-    pivotPointMode_ = pivotPointMode;
-
-    // This selection has changed, so indicate it.
-    setChanged();
-
-    mutex_.unlock();
-}
-
 std::string DrawablesSelection::getName() const
 {
     const Drawable* drawable = nullptr;
@@ -214,6 +199,45 @@ unsigned int DrawablesSelection::getSize() const
     //mutex_.unlock();
 
     return size;
+}
+
+
+/***
+ * 3. Setters
+ ***/
+
+void DrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
+{
+    mutex_.lock();
+    pivotPointMode_ = pivotPointMode;
+
+    // This selection has changed, so indicate it.
+    setChanged();
+
+    mutex_.unlock();
+}
+
+
+void DrawablesSelection::setMeshColor( const std::uint8_t* meshColor )
+{
+    DrawablesMap::iterator drawable;
+    Mesh* currentMesh = nullptr;
+
+    mutex_.lock();
+
+    // Change the mesh color for every mesh in the selection.
+    for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
+        currentMesh = (dynamic_cast< Mesh* >( drawable->second.get() ) );
+
+        if( currentMesh ){
+            currentMesh->setMeshColor( meshColor );
+        }
+    }
+
+    // This selection has changed, so indicate it.
+    setChanged();
+
+    mutex_.unlock();
 }
 
 

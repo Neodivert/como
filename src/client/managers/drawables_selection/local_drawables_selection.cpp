@@ -48,6 +48,14 @@ void LocalDrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 }
 
 
+void LocalDrawablesSelection::setMeshColor( const std::uint8_t* meshColor )
+{
+    DrawablesSelection::setMeshColor( meshColor );
+
+    server_->sendCommand( CommandConstPtr( new MeshColorChangeCommand( localUserID_, meshColor ) ) );
+}
+
+
 /***
  * 4. Drawables management
  ***/

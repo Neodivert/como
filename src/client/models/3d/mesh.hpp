@@ -137,7 +137,9 @@ class Mesh : public Drawable
         /***
          * 6. Setters.
          ***/
+        // TODO: Change name.
         void setColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
+        void setMeshColor( const std::uint8_t* meshColor );
 
 
         /***

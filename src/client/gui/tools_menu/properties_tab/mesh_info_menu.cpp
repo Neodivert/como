@@ -45,12 +45,22 @@ MeshInfoMenu::MeshInfoMenu( LocalDrawablesSelectionPtr userSelection ) :
         QColor meshColor = QColorDialog::getColor( meshColor );
 
         // If the selected color is not valid, change it to red.
-        //if( !( meshColor.isValid() ) ){
-        //    meshColor.setRgb( 255, 0, 0 );
-        //}
+        if( !( meshColor.isValid() ) ){
+            meshColor.setRgb( 255, 0, 0 );
+        }
 
         QString qss = QString("background-color: %1").arg(meshColor.name());
         colorInput_->setStyleSheet( qss );
+
+        std::uint8_t auxMeshColor[4] =
+        {
+            static_cast< std::uint8_t >( meshColor.red() ),
+            static_cast< std::uint8_t >( meshColor.green() ),
+            static_cast< std::uint8_t >( meshColor.blue() ),
+            static_cast< std::uint8_t >( meshColor.alpha() )
+        };
+
+        userSelection_->setMeshColor( auxMeshColor );
 
         // Emit a signal indicating that the current color has changed.
         //emit meshColorChanged( meshColor_ );
