@@ -55,7 +55,8 @@ HEADERS += \
     ../../src/common/packables/packable_array.hpp \
     ../../src/common/packables/packable_integer.hpp \
     ../../src/common/commands/primitive_commands/primitive_command.hpp \
-    ../../src/common/users/user.hpp
+    ../../src/common/users/user.hpp \
+    ../../src/common/commands/type_command.hpp
 
 
 # Common sources (used by both client and server).

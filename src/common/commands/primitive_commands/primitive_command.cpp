@@ -26,25 +26,21 @@ namespace como {
  ***/
 
 PrimitiveCommand::PrimitiveCommand( PrimitiveCommandType primitiveCommandType, UserID userID, PrimitiveID primitiveID ) :
-    Command( CommandTarget::PRIMITIVE, userID ),
-    commandType_( primitiveCommandType ),
+    TypeCommand( CommandTarget::PRIMITIVE, primitiveCommandType, userID ),
     primitiveID_( primitiveID )
 {
     // Register the desired packable attributes as part of this
     // CompositePackable.
-    addPackable( &commandType_ );
     addPackable( &primitiveID_ );
 }
 
 
 PrimitiveCommand::PrimitiveCommand( const PrimitiveCommand& b ) :
-    Command( b ),
-    commandType_( b.commandType_ ),
+    TypeCommand( b ),
     primitiveID_( b.primitiveID_ )
 {
     // Register the desired packable attributes as part of this
     // CompositePackable.
-    addPackable( &commandType_ );
     addPackable( &primitiveID_ );
 }
 
@@ -53,25 +49,9 @@ PrimitiveCommand::PrimitiveCommand( const PrimitiveCommand& b ) :
  * 3. Getters
  ***/
 
-PrimitiveCommandType PrimitiveCommand::getType() const
-{
-    return commandType_.getValue();
-}
-
-
 PrimitiveID PrimitiveCommand::getPrimitiveID() const
 {
     return primitiveID_.getValue();
-}
-
-
-/***
- * 5. Buffer pre reading
- ***/
-
-PrimitiveCommandType PrimitiveCommand::getType( const void* buffer )
-{
-    return *( static_cast< const PrimitiveCommandType* >( buffer ) );
 }
 
 } // namespace como

@@ -71,7 +71,7 @@ const void* PackableCommandsList::unpack( const void* buffer )
         switch( Command::getTarget( buffer ) ){
             // User commands
             case CommandTarget::USER:
-                switch( UserCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 3 ) ){ // TODO: buffer+3 is ugly.
+                switch( UserCommand::getType( buffer ) ){
                     case UserCommandType::USER_CONNECTION:
                         command = CommandPtr( new UserConnectionCommand );
                     break;
@@ -86,7 +86,7 @@ const void* PackableCommandsList::unpack( const void* buffer )
 
             // Drawable commands
             case CommandTarget::DRAWABLE:
-                switch( DrawableCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 3 ) ){ // TODO: buffer+3 is ugly.
+                switch( DrawableCommand::getType( buffer ) ){
                     case DrawableCommandType::MESH_CREATION:
                         command =  CommandPtr( new MeshCreationCommand );
                     break;
@@ -98,7 +98,7 @@ const void* PackableCommandsList::unpack( const void* buffer )
 
             // Selection commands
             case CommandTarget::SELECTION:
-                switch( SelectionCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 3 ) ){ // TODO: buffer+3 is ugly.
+                switch( SelectionCommand::getType( buffer ) ){
                     case SelectionCommandType::SELECTION_RESPONSE:
                         command = CommandPtr( new SelectionResponseCommand );
                     break;
@@ -116,7 +116,7 @@ const void* PackableCommandsList::unpack( const void* buffer )
 
             // Primitive commands.
             case CommandTarget::PRIMITIVE:
-                switch( PrimitiveCommand::getType( static_cast< const std::uint8_t* >( buffer ) + 3 ) ){ // TODO: buffer+3 is ugly.
+                switch( PrimitiveCommand::getType( buffer ) ){
                     case PrimitiveCommandType::PRIMITIVE_CREATION:
                         command = CommandPtr( new PrimitiveCreationCommand );
                     break;

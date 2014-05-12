@@ -20,7 +20,7 @@
 #ifndef SELECTION_COMMAND_HPP
 #define SELECTION_COMMAND_HPP
 
-#include <common/commands/command.hpp>
+#include <common/commands/type_command.hpp>
 
 namespace como {
 
@@ -33,11 +33,8 @@ enum class SelectionCommandType : std::uint8_t {
 typedef PackableUint8< SelectionCommandType > PackableSelectionCommandType;
 
 
-class SelectionCommand : public Command
+class SelectionCommand : public TypeCommand<SelectionCommandType>
 {
-    private:
-        const PackableSelectionCommandType commandType_;
-
     public:
         /***
          * 1. Construction
@@ -55,19 +52,7 @@ class SelectionCommand : public Command
 
 
         /***
-         * 3. Getters
-         ***/
-        SelectionCommandType getType() const;
-
-
-        /***
-         * 4. Buffer pre reading
-         ***/
-        static SelectionCommandType getType( const void* buffer );
-
-
-        /***
-         * 5. Operators
+         * 3. Operators
          ***/
         SelectionCommand& operator=( const SelectionCommand& ) = delete;
         SelectionCommand& operator=( SelectionCommand&& ) = delete;

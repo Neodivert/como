@@ -26,39 +26,12 @@ namespace como {
  ***/
 
 UserCommand::UserCommand( UserCommandType userCommandType, UserID userID ) :
-    Command( CommandTarget::USER, userID ),
-    commandType_( userCommandType )
-{
-    addPackable( &commandType_ );
-}
+    TypeCommand( CommandTarget::USER, userCommandType, userID )
+{}
 
 
 UserCommand::UserCommand( const UserCommand& b ) :
-    Command( b ),
-    commandType_( b.commandType_ )
-{
-    addPackable( &commandType_ );
-}
-
-
-/***
- * 3. Getters
- ***/
-
-UserCommandType UserCommand::getType() const
-{
-    return commandType_.getValue();
-}
-
-
-/***
- * 4. Buffer pre reading
- ***/
-
-UserCommandType UserCommand::getType( const void* buffer )
-{
-    return *( static_cast< const UserCommandType* >( buffer ) );
-}
-
+    TypeCommand( b )
+{}
 
 } // namespace como

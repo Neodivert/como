@@ -161,6 +161,14 @@ class CompositePackable : public Packable
          * container.
          */
         std::uint8_t getNumberOfPackables() const;
+
+
+        /*!
+         * \brief returns the offset (in bytes) of the packable given as an
+         * argument.
+         */
+        unsigned int getOffset( Packable* packable ) const;
+
     public:
 
 

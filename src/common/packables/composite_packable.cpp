@@ -91,6 +91,25 @@ std::uint8_t CompositePackable::getNumberOfPackables() const
 }
 
 
+unsigned int CompositePackable::getOffset( Packable* packable ) const
+{
+    unsigned int i = 0;
+    unsigned int offset = 0;
+
+    while( ( i < packables_.size() ) && ( packables_[i].constant != packable ) ){
+        offset += packables_[i].constant->getPacketSize();
+
+        i++;
+    }
+
+    if( i >= packables_.size() ){
+        throw std::runtime_error( "CompositePackable::getOffset() - Packable not found" );
+    }
+
+    return offset;
+}
+
+
 /***
  * 4. Packables management
  ***/

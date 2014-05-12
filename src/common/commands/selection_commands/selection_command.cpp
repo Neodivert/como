@@ -26,39 +26,12 @@ namespace como {
  ***/
 
 SelectionCommand::SelectionCommand( SelectionCommandType selectionCommandType, UserID userID ) :
-    Command( CommandTarget::SELECTION, userID ),
-    commandType_( selectionCommandType )
-{
-    addPackable( &commandType_ );
-}
+    TypeCommand( CommandTarget::SELECTION, selectionCommandType, userID )
+{}
 
 
 SelectionCommand::SelectionCommand( const SelectionCommand& b ) :
-    Command( b ),
-    commandType_( b.commandType_ )
-{
-    addPackable( &commandType_ );
-}
-
-
-/***
- * 3. Getters
- ***/
-
-SelectionCommandType SelectionCommand::getType() const
-{
-    return commandType_.getValue();
-}
-
-
-/***
- * 4. Buffer pre reading
- ***/
-
-SelectionCommandType SelectionCommand::getType( const void* buffer )
-{
-    return *( static_cast< const SelectionCommandType* >( buffer ) );
-}
-
+    TypeCommand( b )
+{}
 
 } // namespace como

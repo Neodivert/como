@@ -20,7 +20,7 @@
 #ifndef USER_COMMAND_HPP
 #define USER_COMMAND_HPP
 
-#include <common/commands/command.hpp>
+#include <common/commands/type_command.hpp>
 
 namespace como {
 
@@ -33,11 +33,8 @@ enum class UserCommandType : std::uint8_t
 typedef PackableUint8< UserCommandType > PackableUserCommandType;
 
 
-class UserCommand : public Command
+class UserCommand : public TypeCommand< UserCommandType >
 {
-    private:
-        const PackableUserCommandType commandType_;
-
     public:
         /***
          * 1. Construction
@@ -55,19 +52,7 @@ class UserCommand : public Command
 
 
         /***
-         * 3. Getters
-         ***/
-        UserCommandType getType() const;
-
-
-        /***
-         * 4. Buffer pre reading
-         ***/
-        static UserCommandType getType( const void* buffer );
-
-
-        /***
-         * 5. Operators
+         * 3. Operators
          ***/
         UserCommand& operator=( const UserCommand& ) = delete;
         UserCommand& operator=( UserCommand&& ) = delete;

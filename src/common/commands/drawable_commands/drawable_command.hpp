@@ -20,7 +20,7 @@
 #ifndef DRAWABLE_COMMAND_HPP
 #define DRAWABLE_COMMAND_HPP
 
-#include <common/commands/command.hpp>
+#include <common/commands/type_command.hpp>
 
 namespace como {
 
@@ -31,10 +31,9 @@ enum class DrawableCommandType : std::uint8_t {
 
 typedef PackableUint8< DrawableCommandType > PackableDrawableCommandType;
 
-class DrawableCommand : public Command
+class DrawableCommand : public TypeCommand< DrawableCommandType >
 {
     private:
-        const PackableDrawableCommandType commandType_;
         PackableDrawableID drawableID_;
 
     public:
@@ -56,24 +55,17 @@ class DrawableCommand : public Command
         /***
          * 3. Getters
          ***/
-        DrawableCommandType getType() const;
         PackableDrawableID getDrawableID() const ;
 
 
         /***
-         * 5. Buffer pre reading
-         ***/
-        static DrawableCommandType getType( const void* buffer );
-
-
-        /***
-         * 6. Setters
+         * 4. Setters
          ***/
         void setDrawableID( const PackableDrawableID& drawableID );
 
 
         /***
-         * 7. Operators
+         * 5. Operators
          ***/
         DrawableCommand& operator=( const DrawableCommand& ) = delete;
         DrawableCommand& operator=( DrawableCommand&& ) = delete;

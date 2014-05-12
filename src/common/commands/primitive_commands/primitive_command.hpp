@@ -20,7 +20,7 @@
 #ifndef PRIMITIVE_COMMAND_HPP
 #define PRIMITIVE_COMMAND_HPP
 
-#include <common/commands/command.hpp>
+#include <common/commands/type_command.hpp>
 
 namespace como {
 
@@ -38,12 +38,9 @@ typedef PackableUint8< PrimitiveCommandType > PackablePrimitiveCommandType;
 typedef std::uint8_t PrimitiveID;
 typedef PackableUint8< PrimitiveID > PackablePrimitiveID;
 
-class PrimitiveCommand : public Command
+class PrimitiveCommand : public TypeCommand< PrimitiveCommandType >
 {
     private:
-        /*! \brief Command type. */
-        const PackablePrimitiveCommandType commandType_;
-
         /*! \brief Primitive ID. */
         PackablePrimitiveID primitiveID_;
 
@@ -83,26 +80,12 @@ class PrimitiveCommand : public Command
          * 3. Getters
          ***/
 
-        /*! \brief Returns this Command's type. */
-        PrimitiveCommandType getType() const;
-
         /*! \brief Get the ID of the primitive affected by this target. */
         PrimitiveID getPrimitiveID() const ;
 
 
         /***
-         * 5. Buffer pre reading
-         ***/
-
-        /*!
-         * \brief Unpacks / reads a PrimitiveCommandType from the given
-         * buffer.
-         */
-        static PrimitiveCommandType getType( const void* buffer );
-
-
-        /***
-         * 6. Operators
+         * 4. Operators
          ***/
 
         /*! \brief Copy assignment operator. */

@@ -26,21 +26,17 @@ namespace como {
  ***/
 
 DrawableCommand::DrawableCommand( DrawableCommandType drawableCommandType, UserID userID, PackableDrawableID drawableID ) :
-    Command( CommandTarget::DRAWABLE, userID ),
-    commandType_( drawableCommandType ),
+    TypeCommand( CommandTarget::DRAWABLE, drawableCommandType, userID ),
     drawableID_( drawableID )
 {
-    addPackable( &commandType_ );
     addPackable( &drawableID_ );
 }
 
 
 DrawableCommand::DrawableCommand( const DrawableCommand& b ) :
-    Command( b ),
-    commandType_( b.commandType_ ),
+    TypeCommand( b ),
     drawableID_( b.drawableID_ )
 {
-    addPackable( &commandType_ );
     addPackable( &drawableID_ );
 }
 
@@ -49,12 +45,6 @@ DrawableCommand::DrawableCommand( const DrawableCommand& b ) :
  * 3. Getters
  ***/
 
-DrawableCommandType DrawableCommand::getType() const
-{
-    return commandType_.getValue();
-}
-
-
 PackableDrawableID DrawableCommand::getDrawableID() const
 {
     return drawableID_;
@@ -62,17 +52,7 @@ PackableDrawableID DrawableCommand::getDrawableID() const
 
 
 /***
- * 5. Buffer pre reading
- ***/
-
-DrawableCommandType DrawableCommand::getType( const void* buffer )
-{
-    return *( static_cast< const DrawableCommandType* >( buffer ) );
-}
-
-
-/***
- * 6. Setters
+ * 4. Setters
  ***/
 
 void DrawableCommand::setDrawableID( const PackableDrawableID& drawableID )
