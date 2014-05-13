@@ -328,8 +328,7 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
                     drawableOwners_[meshCreationCommand->getDrawableID()] = 0;
 
                     log_->debug( "Mesh added! (", (int)( meshCreationCommand->getDrawableID().creatorID.getValue() ),
-                                 ", ", (int)( meshCreationCommand->getDrawableID().drawableIndex.getValue() ),
-                                 ") - Primitive: [", (int)( meshCreationCommand->getPrimitiveID() ), "\n" );
+                                 ", ", (int)( meshCreationCommand->getDrawableID().drawableIndex.getValue() ), "\n" );
                 break;
                 case DrawableCommandType::DRAWABLE_SELECTION:
                     // DRAWABLE_SELECTION command received, cast its pointer.

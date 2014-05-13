@@ -26,31 +26,23 @@ namespace como {
  * 1. Construction
  ***/
 
-MeshCreationCommand::MeshCreationCommand() :
-    DrawableCommand( DrawableCommandType::MESH_CREATION, 0, NULL_DRAWABLE_ID )
+MeshCreationCommand::MeshCreationCommand( MeshType meshType, PackableDrawableID drawableID, const std::uint8_t* color ) :
+    DrawableCommand( DrawableCommandType::MESH_CREATION, drawableID.creatorID.getValue(), drawableID ),
+    meshType_( meshType ),
+    meshColor_( color )
 {
-    addPackable( &primitiveID_ );
-    addPackable( &color_ );
-}
-
-
-MeshCreationCommand::MeshCreationCommand( UserID userID, PackableDrawableID drawableID, PrimitiveID primitiveID, const std::uint8_t* color ) :
-    DrawableCommand( DrawableCommandType::MESH_CREATION, userID, drawableID ),
-    primitiveID_( primitiveID )
-{
-    setColor( color );
-
-    addPackable( &primitiveID_ );
-    addPackable( &color_ );
+    addPackable( &meshType_ );
+    addPackable( &meshColor_ );
 }
 
 
 MeshCreationCommand::MeshCreationCommand( const MeshCreationCommand& b ) :
     DrawableCommand( b ),
-    color_( b.color_ )
+    meshType_( b.meshType_ ),
+    meshColor_( b.meshColor_ )
 {
-    addPackable( &primitiveID_ );
-    addPackable( &color_ );
+    addPackable( &meshType_ );
+    addPackable( &meshColor_ );
 }
 
 
@@ -58,15 +50,15 @@ MeshCreationCommand::MeshCreationCommand( const MeshCreationCommand& b ) :
  * 3. Getters
  ***/
 
-PrimitiveID MeshCreationCommand::getPrimitiveID() const
+MeshType MeshCreationCommand::getMeshType() const
 {
-    return primitiveID_.getValue();
+    return meshType_.getValue();
 }
 
 
-const std::uint8_t* MeshCreationCommand::getColor() const
+const std::uint8_t* MeshCreationCommand::getMeshColor() const
 {
-    return color_.getValue();
+    return meshColor_.getValue();
 }
 
 
@@ -74,9 +66,23 @@ const std::uint8_t* MeshCreationCommand::getColor() const
  * 4. Setters
  ***/
 
-void MeshCreationCommand::setColor( const std::uint8_t* color )
+void MeshCreationCommand::setMeshColor( const std::uint8_t* color )
 {
-    color_ = color;
+    meshColor_ = color;
+}
+
+
+/***
+ * 5. Buffer pre-reading
+ ***/
+
+MeshType MeshCreationCommand::getMeshType( const void* buffer )
+{
+    DrawableCommand drawableCommand( DrawableCommandType::MESH_CREATION, NO_USER, NULL_DRAWABLE_ID );
+
+    // FIXME: Compute packable's offset without creating an extra auxiliar
+    // command.
+    return static_cast< MeshType >( static_cast< const std::uint8_t *>( buffer )[drawableCommand.getPacketSize()] );
 }
 
 } // namespace como

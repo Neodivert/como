@@ -57,7 +57,9 @@ HEADERS += \
     ../../src/common/commands/primitive_commands/primitive_command.hpp \
     ../../src/common/users/user.hpp \
     ../../src/common/commands/type_command.hpp \
-    ../../src/common/commands/selection_commands/mesh_color_change_command.hpp
+    ../../src/common/commands/selection_commands/mesh_color_change_command.hpp \
+    ../../src/common/commands/drawable_commands/primitive_mesh_creation_command.hpp \
+    ../../src/common/commands/drawable_commands/light_creation_command.hpp
 
 
 # Common sources (used by both client and server).
@@ -88,4 +90,6 @@ SOURCES += \
     ../../src/common/commands/primitive_commands/primitive_creation_command.cpp \
     ../../src/common/commands/primitive_commands/primitive_command.cpp \
     ../../src/common/users/user.cpp \
-    ../../src/common/commands/selection_commands/mesh_color_change_command.cpp
+    ../../src/common/commands/selection_commands/mesh_color_change_command.cpp \
+    ../../src/common/commands/drawable_commands/primitive_mesh_creation_command.cpp \
+    ../../src/common/commands/drawable_commands/light_creation_command.cpp

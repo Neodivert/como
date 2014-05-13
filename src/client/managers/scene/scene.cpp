@@ -446,15 +446,28 @@ void Scene::executeRemoteUserCommand( UserCommandConstPtr command )
 void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
 {
     const MeshCreationCommand* meshCreationCommand = nullptr;
+    const PrimitiveMeshCreationCommand* primitiveMeshCreationCommand = nullptr;
     const DrawableSelectionCommand* selectDrawable = nullptr;
 
     switch( command->getType() ){
-        case DrawableCommandType::MESH_CREATION:
-            // Cast to a MESH_CREATION command.
+        case  DrawableCommandType::MESH_CREATION:
             meshCreationCommand = dynamic_cast< const MeshCreationCommand* >( command.get() );
 
-            // Add mesh to the scene.
-            drawablesManager_->addMesh( meshCreationCommand->getDrawableID().creatorID.getValue(), meshCreationCommand->getPrimitiveID(), meshCreationCommand->getColor(), meshCreationCommand->getDrawableID() );
+            switch( meshCreationCommand->getMeshType() ){
+                case MeshType::PRIMITIVE_MESH:
+                    // Cast to a MESH_CREATION command.
+                    primitiveMeshCreationCommand = dynamic_cast< const PrimitiveMeshCreationCommand* >( meshCreationCommand );
+
+                    // Add mesh to the scene.
+                    drawablesManager_->addMesh( primitiveMeshCreationCommand->getDrawableID().creatorID.getValue(),
+                                                primitiveMeshCreationCommand->getPrimitiveID(),
+                                                primitiveMeshCreationCommand->getMeshColor(),
+                                                primitiveMeshCreationCommand->getDrawableID() );
+                break;
+                default:
+                    // TODO: Complete.
+                break;
+            }
         break;
 
         case DrawableCommandType::DRAWABLE_SELECTION:

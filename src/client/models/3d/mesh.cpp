@@ -49,7 +49,7 @@ Mesh::Mesh( MeshType type, const char* fileName, const std::uint8_t* color ) :
 
 Mesh::Mesh( const char* fileName, const std::uint8_t* color ) :
     Drawable( DrawableType::MESH, "Mesh #" ),
-    type_( MeshType::MESH )
+    type_( MeshType::PRIMITIVE_MESH )
 {   
     initMesh( fileName, color );
 }

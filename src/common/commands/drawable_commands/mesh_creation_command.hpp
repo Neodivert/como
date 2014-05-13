@@ -22,24 +22,36 @@
 
 #include "drawable_command.hpp"
 #include <common/commands/primitive_commands/primitive_command.hpp> // PackablePrimitiveID type.
+#include <common/utilities/ids.hpp>
 
 namespace como {
+
+const std::uint8_t DEFAULT_MESH_COLOR[] = { 0, 0, 0, 0 };
+
+
+enum class MeshType : std::uint8_t
+{
+    PRIMITIVE_MESH = 0,
+    CAMERA,
+    LIGHT
+};
+
 
 class MeshCreationCommand : public DrawableCommand
 {
     private:
-        // ID of the primitive we are creating this mesh from.
-        PackablePrimitiveID primitiveID_;
+        // Mesh type.
+        PackableUint8< MeshType > meshType_;
 
         // Mesh color.
-        PackableRGBA color_;
+        PackableRGBA meshColor_;
 
     public:
         /***
          * 1. Construction
          ***/
-        MeshCreationCommand();
-        MeshCreationCommand( UserID userID, PackableDrawableID drawableID, PrimitiveID primitiveID, const std::uint8_t* color );
+        MeshCreationCommand() = delete;
+        MeshCreationCommand( MeshType meshType, PackableDrawableID drawableID, const std::uint8_t* color = DEFAULT_MESH_COLOR );
         MeshCreationCommand( const MeshCreationCommand& b );
         MeshCreationCommand( MeshCreationCommand&& ) = delete;
 
@@ -53,18 +65,24 @@ class MeshCreationCommand : public DrawableCommand
         /***
          * 3. Getters
          ***/
-        PrimitiveID getPrimitiveID() const;
-        const std::uint8_t* getColor() const ;
+        MeshType getMeshType() const;
+        const std::uint8_t* getMeshColor() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setColor( const std::uint8_t* color );
+        void setMeshColor( const std::uint8_t* color );
 
 
         /***
-         * 5. Operators
+         * 5. Buffer pre-reading
+         ***/
+        static MeshType getMeshType( const void* buffer );
+
+
+        /***
+         * 6. Operators
          ***/
         MeshCreationCommand& operator=( const MeshCreationCommand& ) = delete;
         MeshCreationCommand& operator=( MeshCreationCommand&& ) = delete;

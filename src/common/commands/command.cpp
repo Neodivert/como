@@ -67,7 +67,9 @@ UserID Command::getUserID() const
 
 CommandTarget Command::getTarget( const void* buffer )
 {
-    return *( static_cast< const CommandTarget* >( buffer ) );
+    CompositePackable compositePackable;
+
+    return static_cast< const CommandTarget* >( buffer )[compositePackable.getPacketSize()];
 }
 
 

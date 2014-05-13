@@ -33,6 +33,7 @@ const char SCENES_PRIMITIVES_DIR[] = "data/primitives/scenes";
 typedef std::uint16_t UserID;
 typedef PackableUint16< UserID > PackableUserID;
 
+const UserID NO_USER = 0;
 
 typedef std::uint32_t DrawableIndex;
 typedef PackableUint32< DrawableIndex > PackableDrawableIndex;

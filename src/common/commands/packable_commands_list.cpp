@@ -88,7 +88,21 @@ const void* PackableCommandsList::unpack( const void* buffer )
             case CommandTarget::DRAWABLE:
                 switch( DrawableCommand::getType( buffer ) ){
                     case DrawableCommandType::MESH_CREATION:
-                        command =  CommandPtr( new MeshCreationCommand );
+                        switch( MeshCreationCommand::getMeshType( buffer ) ){
+                            case MeshType::PRIMITIVE_MESH:
+                                command = CommandPtr( new PrimitiveMeshCreationCommand );
+                            break;
+                            case MeshType::LIGHT:
+                                throw std::runtime_error( "Unexpected light" );
+                                // TODO: Complete
+                            break;
+                            case MeshType::CAMERA:
+                                throw std::runtime_error( "Unexpected camera" );
+                                // TODO: Complete
+                            break;
+                        }
+
+
                     break;
                     case DrawableCommandType::DRAWABLE_SELECTION:
                         command = CommandPtr( new DrawableSelectionCommand );

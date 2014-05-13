@@ -21,13 +21,9 @@
 #define LIGHT_HPP
 
 #include <client/models/3d/mesh.hpp>
+#include <common/commands/drawable_commands/light_creation_command.hpp>
 
 namespace como {
-
-enum class LightType : std::uint8_t
-{
-    DIRECTIONAL_LIGHT = 0
-};
 
 /*!
  * \class Light

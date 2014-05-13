@@ -154,7 +154,7 @@ void DrawablesManager::addMesh( PrimitiveID primitiveID, const std::uint8_t* col
     PackableDrawableID drawableID = addDrawable( drawable );
 
     // Send the command to the server.
-    server_->sendCommand( CommandConstPtr( new MeshCreationCommand( localUserID_, drawableID, primitiveID, color ) ) );
+    server_->sendCommand( CommandConstPtr( new PrimitiveMeshCreationCommand( drawableID, primitiveID, color ) ) );
 }
 
 

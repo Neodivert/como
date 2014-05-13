@@ -29,8 +29,6 @@
 
 namespace como {
 
-const UserID NO_USER = 0;
-
 typedef std::map< UserID, DrawablesSelectionPtr > DrawablesSelections;
 
 class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
