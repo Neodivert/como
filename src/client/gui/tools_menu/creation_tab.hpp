@@ -63,6 +63,7 @@ class CreationTab : public QFrame
     private:
         QFrame* createMeshColorSelector();
         QFrame* createMeshFromPrimitiveCreationMenu();
+        QFrame* createDirectionalLightMenu();
     public:
 
 

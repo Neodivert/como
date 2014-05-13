@@ -103,7 +103,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
         //void addMesh( PrimitiveID primitiveID, QColor color );
         void addMesh( PrimitiveID primitiveID, const std::uint8_t* color );
         void addMesh( UserID userID, PrimitiveID primitiveID, const std::uint8_t* color, PackableDrawableID drawableID );
-        void addDirectionalLight( PackableDrawableID lightID, glm::vec3 lightColor );
+        void addDirectionalLight( PackableDrawableID lightID, const std::uint8_t* lightColor );
 
 
         //void addMesh( PrimitiveID, const std::uint8_t* color,  )

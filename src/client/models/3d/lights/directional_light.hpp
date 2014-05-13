@@ -47,7 +47,7 @@ class DirectionalLight : public Light
          * \brief Constructs a directional Light with the specified light
          * color.
          */
-        DirectionalLight( glm::vec3 lightColor );
+        DirectionalLight( const std::uint8_t* lightColor );
 
         /*! \brief Copy constructor */
         // TODO: Define a proper copy constructor when inplementing multiple lights

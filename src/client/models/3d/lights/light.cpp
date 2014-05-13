@@ -25,7 +25,7 @@ namespace como {
  * 1. Construction
  ***/
 
-Light::Light( LightType type, const char* meshPath, GLuint lightIndex, glm::vec3 color ) :
+Light::Light( LightType type, const char* meshPath, GLuint lightIndex, const std::uint8_t* color ) :
     Mesh( MeshType::LIGHT, meshPath ),
     type_( type )
 {
@@ -72,9 +72,16 @@ LightType Light::getType() const
  * 4. Setters
  ***/
 
-void Light::setLightColor( const glm::vec3& color )
+void Light::setLightColor( const std::uint8_t* color )
 {
-    glUniform3fv( colorLocation_, 1, &color[0] );
+    // TODO: Use a vec4? (change in shader).
+    glm::vec3 floatColor(
+                color[0] / 255.0f,
+                color[1] / 255.0f,
+                color[2] / 255.0f
+                );
+
+    glUniform3fv( colorLocation_, 1, &floatColor[0] );
 }
 
 } // namespace como

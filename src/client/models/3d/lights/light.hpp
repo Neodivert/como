@@ -56,7 +56,7 @@ class Light : public Mesh
          * lights in GLSL shader.
          * \param color light color.
          */
-        Light( LightType type, const char* meshPath, GLuint lightIndex, glm::vec3 color );
+        Light( LightType type, const char* meshPath, GLuint lightIndex, const std::uint8_t* color );
 
         /*! \brief Copy constructor */
         // TODO: Define a right copy constructor when inplementing multiple lights
@@ -83,7 +83,7 @@ class Light : public Mesh
          ***/
 
         /*! \brief Get Light's light color */
-        glm::vec3 getLightColor() const;
+        glm::vec3 getLightColor() const; // TODO: Return a integer vector.
 
         /*! \brief Get the light type */
         LightType getType() const;
@@ -94,7 +94,7 @@ class Light : public Mesh
          ***/
 
         /*! \brief Set Light's light color */
-        void setLightColor( const glm::vec3& color );
+        void setLightColor( const std::uint8_t* color );
 
 
         /***

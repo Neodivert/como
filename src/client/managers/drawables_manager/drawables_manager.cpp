@@ -180,7 +180,7 @@ void DrawablesManager::addMesh( UserID userID, PrimitiveID primitiveID, const st
 }
 
 
-void DrawablesManager::addDirectionalLight( PackableDrawableID lightID, glm::vec3 lightColor )
+void DrawablesManager::addDirectionalLight( PackableDrawableID lightID, const std::uint8_t* lightColor )
 {
     addDrawable( lightID.creatorID.getValue(), DrawablePtr( new DirectionalLight( lightColor ) ), lightID );
 }

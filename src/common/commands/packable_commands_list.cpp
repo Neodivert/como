@@ -93,8 +93,11 @@ const void* PackableCommandsList::unpack( const void* buffer )
                                 command = CommandPtr( new PrimitiveMeshCreationCommand );
                             break;
                             case MeshType::LIGHT:
-                                throw std::runtime_error( "Unexpected light" );
-                                // TODO: Complete
+                                switch( LightCreationCommand::getLightType( buffer ) ){
+                                    case LightType::DIRECTIONAL_LIGHT:
+                                        command = CommandPtr( new DirectionalLightCreationCommand );
+                                    break;
+                                }
                             break;
                             case MeshType::CAMERA:
                                 throw std::runtime_error( "Unexpected camera" );

@@ -25,7 +25,7 @@ namespace como {
  * 1. Construction
  ***/
 
-DirectionalLight::DirectionalLight( glm::vec3 lightColor ) :
+DirectionalLight::DirectionalLight( const std::uint8_t* lightColor ) :
     Light( LightType::DIRECTIONAL_LIGHT, "data/primitives/system/directional_light.obj", 0, lightColor )
 {
     GLint currentShaderProgram = 0;

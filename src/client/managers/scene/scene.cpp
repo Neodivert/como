@@ -448,6 +448,8 @@ void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
     const MeshCreationCommand* meshCreationCommand = nullptr;
     const PrimitiveMeshCreationCommand* primitiveMeshCreationCommand = nullptr;
     const DrawableSelectionCommand* selectDrawable = nullptr;
+    const LightCreationCommand* lightCreationCommand = nullptr;
+    const DirectionalLightCreationCommand* directionalLightCreationCommand = nullptr;
 
     switch( command->getType() ){
         case  DrawableCommandType::MESH_CREATION:
@@ -463,6 +465,19 @@ void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
                                                 primitiveMeshCreationCommand->getPrimitiveID(),
                                                 primitiveMeshCreationCommand->getMeshColor(),
                                                 primitiveMeshCreationCommand->getDrawableID() );
+                break;
+                case MeshType::LIGHT:
+                    lightCreationCommand = dynamic_cast< const LightCreationCommand* >( meshCreationCommand );
+
+                    switch( lightCreationCommand->getLightType() ){
+                        case LightType::DIRECTIONAL_LIGHT:
+                            directionalLightCreationCommand = dynamic_cast< const DirectionalLightCreationCommand* >( lightCreationCommand  );
+
+                            // Add a directional light to the scene.
+                            drawablesManager_->addDirectionalLight( directionalLightCreationCommand->getDrawableID(),
+                                                                    directionalLightCreationCommand->getLightColor() );
+                        break;
+                    }
                 break;
                 default:
                     // TODO: Complete.
