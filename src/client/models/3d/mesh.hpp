@@ -79,6 +79,8 @@ class Mesh : public Drawable
         glm::vec4 originalCentroid;
         glm::vec4 transformedCentroid;
 
+        // Mesh's material.
+        Material material_;
 
         /***
          * 1. Construction.

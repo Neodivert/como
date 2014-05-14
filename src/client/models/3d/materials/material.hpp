@@ -20,13 +20,24 @@
 #ifndef MATERIAL_HPP
 #define MATERIAL_HPP
 
+#include <glm/glm.hpp>
+
 namespace como {
 
 struct Material
 {
-    float diffusionFactor;
-    float specularFactor;
-    float specularExponent;
+    glm::vec3 ambientReflexivity;   // ("Ka" in a *.mtl file).
+    glm::vec3 diffuseReflectivity;  // ("Kd" in a *.mtl file).
+    glm::vec3 specularReflectivity; // ("Ks" in a *.mtl file).
+    float specularExponent;         // ("Ns" in a *.mtl file).
+
+
+    Material() :
+        ambientReflexivity( 0.5f ),
+        diffuseReflectivity( 0.5f ),
+        specularReflectivity( 0.5f ),
+        specularExponent( 0.5f )
+    {}
 };
 
 } // namespace como
