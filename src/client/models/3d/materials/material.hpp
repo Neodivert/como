@@ -20,24 +20,29 @@
 #ifndef MATERIAL_HPP
 #define MATERIAL_HPP
 
-#include <glm/glm.hpp>
+#include <client/models/dependencies.hpp>
 
 namespace como {
 
-struct Material
+class Material
 {
-    glm::vec3 ambientReflexivity;   // ("Ka" in a *.mtl file).
-    glm::vec3 diffuseReflectivity;  // ("Kd" in a *.mtl file).
-    glm::vec3 specularReflectivity; // ("Ks" in a *.mtl file).
-    float specularExponent;         // ("Ns" in a *.mtl file).
+    public:
+        glm::vec3 ambientReflexivity;   // ("Ka" in a *.mtl file).
+        glm::vec3 diffuseReflectivity;  // ("Kd" in a *.mtl file).
+        glm::vec3 specularReflectivity; // ("Ks" in a *.mtl file).
+        float specularExponent;         // ("Ns" in a *.mtl file).
 
 
-    Material() :
-        ambientReflexivity( 0.5f ),
-        diffuseReflectivity( 0.5f ),
-        specularReflectivity( 0.5f ),
-        specularExponent( 0.5f )
-    {}
+        /***
+         * 1. Construction
+         ***/
+        Material();
+
+
+        /***
+         * 2. Shader comunication
+         ***/
+        void sendToShader() const;
 };
 
 } // namespace como

@@ -438,6 +438,9 @@ void Mesh::draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) 
     // Compute MVP matrix and pass it to the shader.
     sendMVPMatrixToShader( viewProjMatrix * transformationMatrix );
 
+    // Send this mesh's material to shader.
+    material_.sendToShader();
+
     // Bind Mesh VAO and VBOs as the active ones.
     glBindVertexArray( vao );
     glBindBuffer( GL_ARRAY_BUFFER, vbo );

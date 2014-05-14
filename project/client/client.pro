@@ -99,4 +99,5 @@ SOURCES += \
     ../../src/client/gui/tools_menu/properties_tab/mesh_info_menu.cpp \
     ../../src/client/models/utilities/changeable/changeable.cpp \
     ../../src/client/managers/drawables_selection/local_drawables_selection.cpp \
-    ../../src/client/managers/drawables_manager/drawables_manager.cpp
+    ../../src/client/managers/drawables_manager/drawables_manager.cpp \
+    ../../src/client/models/3d/materials/material.cpp

@@ -23,8 +23,14 @@ struct DirectionalLight {
 };
 uniform DirectionalLight directionalLight;
 
-const float shininess = 0.5f;
-const float strength = 0.5f;
+// Material info
+struct Material {
+	vec3 ambientReflexivity;
+	vec3 diffuseReflectivity;
+	vec3 specularReflectivity;
+	float specularExponent;
+};
+uniform Material material;
 
 in vec3 normal;
 
@@ -42,11 +48,11 @@ void main()
 	if( diffuse == 0.0f ){
 		specular = 0.0f;
 	}else{
-		specular = pow( specular, shininess ); // sharpen the highlight
+		specular = pow( specular, material.specularExponent ); // sharpen the highlight
 	}
 
 	vec3 scatteredLight = lights[0].color * diffuse;
-	vec3 reflectedLight = lights[0].color * specular * strength;
+	vec3 reflectedLight = lights[0].color * specular * material.specularReflectivity;
 	
 	// don’t modulate the underlying color with reflected light,
 	// only with scattered light
