@@ -29,6 +29,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <common/commands/drawable_commands/mesh_creation_command.hpp> // For MeshType type.
+#include <client/models/3d/materials/material.hpp>
 
 namespace como {
 

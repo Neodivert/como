@@ -65,7 +65,8 @@ HEADERS += \
     ../../src/client/models/utilities/changeable/changeable.hpp \
     ../../src/client/managers/drawables_selection/local_drawables_selection.hpp \
     ../../src/client/managers/drawables_manager/drawables_manager.hpp \
-    ../../src/client/models/utilities/changeable/abstract_changeable.hpp
+    ../../src/client/models/utilities/changeable/abstract_changeable.hpp \
+    ../../src/client/models/3d/materials/material.hpp
 
 
 # Client sources
