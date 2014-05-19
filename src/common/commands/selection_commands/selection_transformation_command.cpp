@@ -127,7 +127,7 @@ void SelectionTransformationCommand::setTranslation( const float* direction )
     transformationMagnitude_.setValue( direction[0],
                                         direction[1],
                                         direction[2],
-                                        direction[3] );
+                                        0.0f );
 }
 
 
