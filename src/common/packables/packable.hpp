@@ -100,7 +100,7 @@ class Packable
          ***/
 
         /*! \brief Copy assignment operator */
-        Packable& operator = (const Packable& ) = default;
+        Packable& operator = ( const Packable& ) = default;
 
         /*! \brief Move assignment operator */
         Packable& operator = ( Packable&& ) = default;

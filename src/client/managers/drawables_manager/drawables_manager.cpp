@@ -331,7 +331,8 @@ void DrawablesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr c
 {
     const SelectionResponseCommand* selectionResponse = nullptr;
     const SelectionTransformationCommand* selectionTransformation = nullptr;
-    const float* transf = nullptr;
+    std::array< float, 3 > transformationVector;
+
     bool selectionConfirmed;
     unsigned int i;
 
@@ -368,19 +369,19 @@ void DrawablesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr c
             selectionTransformation = dynamic_cast< const SelectionTransformationCommand* >( command.get() );
 
             // Transform the user's selection.
-            transf = selectionTransformation->getTransformationMagnitude();
+            transformationVector = selectionTransformation->getTransformationVector();
 
             // Execute one transformation or another according to the requested
             // type.
             switch( selectionTransformation->getTransformationType() ){
                 case SelectionTransformationCommandType::TRANSLATION:
-                    getUserSelection( selectionTransformation->getUserID() )->translate( glm::vec3( transf[0], transf[1], transf[2] ) );
+                    getUserSelection( selectionTransformation->getUserID() )->translate( glm::vec3( transformationVector[0], transformationVector[1], transformationVector[2] ) );
                 break;
                 case SelectionTransformationCommandType::ROTATION:
-                    getUserSelection( selectionTransformation->getUserID() )->rotate( selectionTransformation->getAngle(), glm::vec3( transf[0], transf[1], transf[2] ) );
+                    getUserSelection( selectionTransformation->getUserID() )->rotate( selectionTransformation->getTransformationAngle(), glm::vec3( transformationVector[0], transformationVector[1], transformationVector[2] ) );
                 break;
                 case SelectionTransformationCommandType::SCALE:
-                    getUserSelection( selectionTransformation->getUserID() )->scale( glm::vec3( transf[0], transf[1], transf[2] ) );
+                    getUserSelection( selectionTransformation->getUserID() )->scale( glm::vec3( transformationVector[0], transformationVector[1], transformationVector[2] ) );
                 break;
             }
         break;

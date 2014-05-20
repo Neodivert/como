@@ -46,13 +46,11 @@ HEADERS += \
     ../../src/common/packables/packable_uint16.hpp \
     ../../src/common/packables/packable_uint32.hpp \
     ../../src/common/packables/packable_string.hpp \
-    # TODO: Remove ../../src/common/packables/packable_uint8_array.hpp \
-    # TODO: Remove../../src/common/packables/packable_vector4.hpp \
     ../../src/common/packets/packet_header.hpp \
     ../../src/common/commands/packable_commands_list.hpp \
     ../../src/common/packables/packable_file.hpp \
     ../../src/common/commands/primitive_commands/primitive_creation_command.hpp \
-    ../../src/common/packables/packable_array.hpp \
+    ../../src/common/packables/array/packable_array.hpp \
     ../../src/common/packables/packable_integer.hpp \
     ../../src/common/commands/primitive_commands/primitive_command.hpp \
     ../../src/common/users/user.hpp \
@@ -62,7 +60,8 @@ HEADERS += \
     ../../src/common/commands/drawable_commands/light_creation_command.hpp \
     ../../src/common/commands/drawable_commands/directional_light_creation_command.hpp \
     ../../src/common/packables/packable_wrapper.hpp \
-    ../../src/common/packables/packable_float.hpp
+    ../../src/common/packables/packable_float.hpp \
+    ../../src/common/packables/array/packable_array_3.hpp
 
 
 # Common sources (used by both client and server).
@@ -86,7 +85,6 @@ SOURCES += \
     ../../src/common/commands/selection_commands/full_deselection_command.cpp \
     ../../src/common/commands/selection_commands/selection_command.cpp \
     ../../src/common/commands/selection_commands/selection_deletion_command.cpp \
-    # TODO: Remove../../src/common/packables/packable_vector4.cpp \
     ../../src/common/packets/packet_header.cpp \
     ../../src/common/commands/packable_commands_list.cpp \
     ../../src/common/packables/packable_file.cpp \

@@ -47,10 +47,12 @@ SelectionTransformationCommand::SelectionTransformationCommand() :
     SelectionCommand( SelectionCommandType::SELECTION_TRANSFORMATION, 0 ),
     transformationType_( SelectionTransformationCommandType::TRANSLATION )
 {
-    transformationMagnitude_.setValue( 0.0f, 0.0f, 0.0f, 0.0f );
+    transformationAngle_.setValue( 0.0f );
+    transformationVector_.setValues( 0.0f, 0.0f, 0.0f );
 
     addPackable( &transformationType_ );
-    addPackable( &transformationMagnitude_ );
+    addPackable( &transformationAngle_ );
+    addPackable( &transformationVector_ );
 }
 
 
@@ -58,20 +60,24 @@ SelectionTransformationCommand::SelectionTransformationCommand( UserID userID ) 
     SelectionCommand( SelectionCommandType::SELECTION_TRANSFORMATION, userID ),
     transformationType_( SelectionTransformationCommandType::TRANSLATION  )
 {
-    transformationMagnitude_.setValue( 0.0f, 0.0f, 0.0f, 0.0f );
+    transformationAngle_.setValue( 0.0f );
+    transformationVector_.setValues( 0.0f, 0.0f, 0.0f );
 
     addPackable( &transformationType_ );
-    addPackable( &transformationMagnitude_ );
+    addPackable( &transformationAngle_ );
+    addPackable( &transformationVector_ );
 }
 
 
 SelectionTransformationCommand::SelectionTransformationCommand( const SelectionTransformationCommand& b ) :
     SelectionCommand( b ),
     transformationType_( b.transformationType_ ),
-    transformationMagnitude_( b.transformationMagnitude_ )
+    transformationAngle_( b.transformationAngle_ ),
+    transformationVector_( b.transformationVector_ )
 {
     addPackable( &transformationType_ );
-    addPackable( &transformationMagnitude_ );
+    addPackable( &transformationAngle_ );
+    addPackable( &transformationVector_ );
 }
 
 
@@ -85,15 +91,15 @@ SelectionTransformationCommandType SelectionTransformationCommand::getTransforma
 }
 
 
-const float* SelectionTransformationCommand::getTransformationMagnitude() const
+const std::array< float, 3 > SelectionTransformationCommand::getTransformationVector() const
 {
-    return transformationMagnitude_.getValue();
+    return transformationVector_.getValues();
 }
 
 
-float SelectionTransformationCommand::getAngle() const
+float SelectionTransformationCommand::getTransformationAngle() const
 {
-    return transformationMagnitude_[3];
+    return transformationAngle_.getValue();
 }
 
 
@@ -114,7 +120,8 @@ void SelectionTransformationCommand::setTranslation( float tx, float ty, float t
     transformationType_ = SelectionTransformationCommandType::TRANSLATION;
 
     // Set the transformation magnitude.
-    transformationMagnitude_.setValue( tx, ty, tz, 0.0f );
+    transformationAngle_.setValue( 0.0f );
+    transformationVector_.setValues( tx, ty, tz );
 }
 
 
@@ -124,10 +131,10 @@ void SelectionTransformationCommand::setTranslation( const float* direction )
     transformationType_ = SelectionTransformationCommandType::TRANSLATION;
 
     // Set the transformation magnitude.
-    transformationMagnitude_.setValue( direction[0],
+    transformationAngle_.setValue( 0.0f );
+    transformationVector_.setValues( direction[0],
                                         direction[1],
-                                        direction[2],
-                                        0.0f );
+                                        direction[2] );
 }
 
 
@@ -137,7 +144,8 @@ void SelectionTransformationCommand::setRotation( float angle, float vx, float v
     transformationType_ = SelectionTransformationCommandType::ROTATION;
 
     // Set the transformation magnitude.
-    transformationMagnitude_.setValue( vx, vy, vz, angle );
+    transformationAngle_.setValue( angle );
+    transformationVector_.setValues( vx, vy, vz );
 }
 
 
@@ -147,7 +155,8 @@ void SelectionTransformationCommand::setRotation( float angle, const float* axis
     transformationType_ = SelectionTransformationCommandType::ROTATION;
 
     // Set the transformation magnitude.
-    transformationMagnitude_.setValue( axis[0], axis[1], axis[2], angle );
+    transformationAngle_.setValue( angle );
+    transformationVector_.setValues( axis[0], axis[1], axis[2] );
 }
 
 
@@ -157,7 +166,8 @@ void SelectionTransformationCommand::setScale( float sx, float sy, float sz )
     transformationType_ = SelectionTransformationCommandType::SCALE;
 
     // Set the transformation magnitude.
-    transformationMagnitude_.setValue( sx, sy, sz, 0.0f );
+    transformationAngle_.setValue( 0.0f );
+    transformationVector_.setValues( sx, sy, sz );
 }
 
 
@@ -167,7 +177,8 @@ void SelectionTransformationCommand::setScale( const float* magnitude )
     transformationType_ = SelectionTransformationCommandType::SCALE;
 
     // Set the transformation magnitude.
-    transformationMagnitude_.setValue( magnitude[0], magnitude[1], magnitude[2], magnitude[3] );
+    transformationAngle_.setValue( 0.0f );
+    transformationVector_.setValues( magnitude[0], magnitude[1], magnitude[2] );
 }
 
 } // namespace como

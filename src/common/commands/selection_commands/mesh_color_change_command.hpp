@@ -21,7 +21,6 @@
 #define MESH_COLOR_CHANGE_COMMAND_HPP
 
 #include "selection_command.hpp"
-#include <common/packables/packable_vector4.hpp>
 
 namespace como {
 

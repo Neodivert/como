@@ -20,7 +20,7 @@
 #ifndef PACKABLE_ARRAY_WRAPPER_HPP
 #define PACKABLE_ARRAY_WRAPPER_HPP
 
-#include "packable.hpp"
+#include <common/packables/packable.hpp>
 #include <common/packables/packable_wrapper.hpp>
 #include <cstdint>
 #include <array>
@@ -39,7 +39,7 @@ class PackableArray : public Packable
         "ElementPackableType must be a descendant of PackableWrapper< ElementPlainType >"
     );
 
-    private:
+    protected:
         std::array< ElementPackableType, ARRAY_SIZE > elements_;
 
     public:
@@ -105,7 +105,13 @@ class PackableArray : public Packable
          * \brief sets the values of the inner array.
          * \param values - a plain array of values to copy from.
          */
-        void setValue( ElementPlainType* values );
+        void setValues( ElementPlainType* values );
+
+
+        void setValues( std::array< ElementPlainType, ARRAY_SIZE > values );
+
+
+
 
 
         /***
@@ -196,7 +202,18 @@ const ElementPackableType& PackableArray<ElementPackableType, ElementPlainType, 
  ***/
 
 template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
-void PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::setValue( ElementPlainType* values )
+void PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::setValues( ElementPlainType* values )
+{
+    unsigned int i;
+
+    for( i=0; i<ARRAY_SIZE; i++ ){
+        elements_[i] = values[i];
+    }
+}
+
+
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+void PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::setValues( std::array< ElementPlainType, ARRAY_SIZE > values )
 {
     unsigned int i;
 

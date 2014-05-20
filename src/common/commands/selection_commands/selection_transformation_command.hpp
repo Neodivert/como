@@ -38,7 +38,9 @@ class SelectionTransformationCommand : public SelectionCommand
 {
     private:
         PackableSelectionTransformationCommandType transformationType_;
-        PackableVector4 transformationMagnitude_;
+        PackableFloat transformationAngle_;
+        PackableArray3< PackableFloat, float > transformationVector_;
+
 
     public:
         /***
@@ -60,8 +62,8 @@ class SelectionTransformationCommand : public SelectionCommand
          * 3. Getters
          ***/
         SelectionTransformationCommandType getTransformationType() const ;
-        const float* getTransformationMagnitude() const ;
-        float getAngle() const ;
+        const std::array< float, 3 > getTransformationVector() const ;
+        float getTransformationAngle() const ;
 
 
         /***
