@@ -31,6 +31,7 @@
 
 #include <clocale>
 
+#include <common/packables/packable_float.hpp>
 
 int main( int argc, char *argv[] )
 {
