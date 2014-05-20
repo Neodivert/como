@@ -36,7 +36,7 @@ template <class UnpackedType>
 class PackableUint16 : public PackableInteger<std::uint16_t, UnpackedType>
 {
     /*! Integer value to be packed / unpacked */
-    using PackableInteger<std::uint16_t, UnpackedType>::value_;
+    //using PackableInteger<std::uint16_t, UnpackedType>::value_;
 
     public:
         /***

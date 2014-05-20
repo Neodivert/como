@@ -100,10 +100,10 @@ class Packable
          ***/
 
         /*! \brief Copy assignment operator */
-        Packable& operator = (const Packable& b) = delete;
+        Packable& operator = (const Packable& ) = default;
 
         /*! \brief Move assignment operator */
-        Packable& operator = ( Packable&& ) = delete;
+        Packable& operator = ( Packable&& ) = default;
 };
 
 } // namespace como

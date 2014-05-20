@@ -24,8 +24,8 @@
 
 namespace como {
 
-template < class PlainType >
-class PackableWrapper
+template <class PlainType>
+class PackableWrapper : public Packable
 {
     private:
         PlainType value_;

@@ -49,7 +49,7 @@ class PackableInteger : public PackableWrapper< UnpackedType > {
          * \brief Constructs a PackableInteger from the given value.
          * \param value value to initialize PackableInteger with.
          */
-        PackableInteger( const UnpackedType& value ) : PackableWrapper< PackedType, UnpakedType>( value ){}
+        PackableInteger( const UnpackedType& value ) : PackableWrapper< UnpackedType >( value ){}
 
         /*! \brief Copy constructor */
         PackableInteger( const PackableInteger& ) = default;
@@ -121,7 +121,7 @@ void* PackableInteger<PackedType, UnpackedType>::pack( void* buffer ) const
     PackedType* castedBuffer = static_cast< PackedType* >( buffer );
 
     // Get the wrapper's inner value.
-    networkValue = static_cast< PackedType >( getValue() );
+    networkValue = static_cast< PackedType >( this->getValue() );
 
     // If necessary, translate value to network order.
 #if LITTLE_ENDIAN
@@ -176,8 +176,8 @@ const void* PackableInteger<PackedType, UnpackedType>::unpack( const void* buffe
 #endif
 
     // If the unpacked value isn't the expected one, throw an exception.
-    if( static_cast< UnpackedType >( networkValue ) != getValue() ){
-        sprintf( errorMessage, "ERROR: Unpacked an unexpected unsigned integer. Expected value (%u), unpacked value (%u)", getValue(), static_cast< UnpackedType >( networkValue ) );
+    if( static_cast< UnpackedType >( networkValue ) != this->getValue() ){
+        sprintf( errorMessage, "ERROR: Unpacked an unexpected unsigned integer. Expected value (%u), unpacked value (%u)", this->getValue(), static_cast< UnpackedType >( networkValue ) );
         throw std::runtime_error( errorMessage );
     }
 

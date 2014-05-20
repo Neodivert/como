@@ -28,6 +28,8 @@ namespace como {
 
 class ColorButton : public QPushButton
 {
+    Q_OBJECT
+
     private:
         QColor color_;
 
