@@ -60,7 +60,8 @@ HEADERS += \
     ../../src/common/commands/selection_commands/mesh_color_change_command.hpp \
     ../../src/common/commands/drawable_commands/primitive_mesh_creation_command.hpp \
     ../../src/common/commands/drawable_commands/light_creation_command.hpp \
-    ../../src/common/commands/drawable_commands/directional_light_creation_command.hpp
+    ../../src/common/commands/drawable_commands/directional_light_creation_command.hpp \
+    ../../src/common/packables/packable_wrapper.hpp
 
 
 # Common sources (used by both client and server).
