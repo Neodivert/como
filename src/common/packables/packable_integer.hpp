@@ -20,7 +20,7 @@
 #ifndef PACKABLE_INTEGER_HPP
 #define PACKABLE_INTEGER_HPP
 
-#include "packable.hpp"
+#include <common/packables/packable_wrapper.hpp>
 #include <cstdint>
 #include <typeinfo> // TODO: Remove.
 
@@ -36,24 +36,20 @@ namespace como {
  * PackedType when packing / unpacking.
  */
 template <class PackedType, class UnpackedType>
-class PackableInteger : public Packable {
-    protected:
-        /*! Value to be packed / unpacked */
-        UnpackedType value_;
-
+class PackableInteger : public PackableWrapper< UnpackedType > {
     public:
         /***
          * 1. Construction
          ***/
 
         /*! \brief Default constructor */
-        PackableInteger() : value_( static_cast< UnpackedType >( 0 ) ){}
+        PackableInteger() = default;
 
         /*!
          * \brief Constructs a PackableInteger from the given value.
          * \param value value to initialize PackableInteger with.
          */
-        PackableInteger( const UnpackedType& value ) : value_( value ){}
+        PackableInteger( const UnpackedType& value ) : PackableWrapper< PackedType, UnpakedType>( value ){}
 
         /*! \brief Copy constructor */
         PackableInteger( const PackableInteger& ) = default;
@@ -71,26 +67,7 @@ class PackableInteger : public Packable {
 
 
         /***
-         * 3. Getters
-         ***/
-
-        /*! \brief Returns the valued held by this PackableInteger */
-        UnpackedType getValue() const { return value_; }
-
-        /*! \brief see Packable::getPacketSize const */
-        virtual std::uint16_t getPacketSize() const = 0;
-
-
-        /***
-         * 4. Setters
-         ***/
-
-        /*! \brief Set this PackableInteger's inner value */
-        void setValue( UnpackedType value ){ this->value_ = value; }
-
-
-        /***
-         * 5. Packing and unpacking
+         * 3. Packing and unpacking
          ***/
 
         /*! \brief see Packable::pack */
@@ -104,7 +81,7 @@ class PackableInteger : public Packable {
 
 
         /***
-         * 6. Auxiliar methods
+         * 4. Auxiliar methods
          ***/
 
         /*!
@@ -117,22 +94,22 @@ class PackableInteger : public Packable {
 
 
         /***
-         * 7. Operators
+         * 5. Operators
          ***/
 
         /*! \brief Assigns the given value to this PackableInteger */
         PackableInteger<PackedType, UnpackedType>& operator = ( const UnpackedType& value );
 
         /*! \brief Copy assignment operator */
-        PackableInteger<PackedType, UnpackedType>& operator = ( const PackableInteger<PackedType, UnpackedType>& b );
+        PackableInteger<PackedType, UnpackedType>& operator = ( const PackableInteger<PackedType, UnpackedType>& ) = default;
 
         /*! \brief Move assignment operator */
-        PackableInteger<PackedType, UnpackedType>& operator = ( PackableInteger<PackedType, UnpackedType>&& b );
+        PackableInteger<PackedType, UnpackedType>& operator = ( PackableInteger<PackedType, UnpackedType>&& ) = default;
 };
 
 
 /***
- * 5. Packing and unpacking
+ * 3. Packing and unpacking
  ***/
 
 template <class PackedType, class UnpackedType>
@@ -144,7 +121,7 @@ void* PackableInteger<PackedType, UnpackedType>::pack( void* buffer ) const
     PackedType* castedBuffer = static_cast< PackedType* >( buffer );
 
     // Get the wrapper's inner value.
-    networkValue = static_cast< PackedType >( this->value_ );
+    networkValue = static_cast< PackedType >( getValue() );
 
     // If necessary, translate value to network order.
 #if LITTLE_ENDIAN
@@ -174,7 +151,7 @@ const void* PackableInteger<PackedType, UnpackedType>::unpack( const void* buffe
 #endif
 
     // Save unpacked vlaue into this instance.
-    this->value_ = static_cast< UnpackedType >( networkValue );
+    setValue( static_cast< UnpackedType >( networkValue ) );
 
     // Return a pointer to the next position in buffer.
     return static_cast< const void* >( castedBuffer + 1 );
@@ -199,8 +176,8 @@ const void* PackableInteger<PackedType, UnpackedType>::unpack( const void* buffe
 #endif
 
     // If the unpacked value isn't the expected one, throw an exception.
-    if( static_cast< UnpackedType >( networkValue ) != value_ ){
-        sprintf( errorMessage, "ERROR: Unpacked an unexpected unsigned integer. Expected value (%u), unpacked value (%u)", value_, static_cast< UnpackedType >( networkValue ) );
+    if( static_cast< UnpackedType >( networkValue ) != getValue() ){
+        sprintf( errorMessage, "ERROR: Unpacked an unexpected unsigned integer. Expected value (%u), unpacked value (%u)", getValue(), static_cast< UnpackedType >( networkValue ) );
         throw std::runtime_error( errorMessage );
     }
 
@@ -214,31 +191,9 @@ const void* PackableInteger<PackedType, UnpackedType>::unpack( const void* buffe
  ***/
 
 template <class PackedType, class UnpackedType>
-PackableInteger<PackedType, UnpackedType>& PackableInteger<PackedType, UnpackedType>::operator = ( const PackableInteger<PackedType, UnpackedType>& b )
-{
-    if( this != &b ){
-        value_ = b.value_;
-    }
-    return *this;
-}
-
-
-template <class PackedType, class UnpackedType>
 PackableInteger<PackedType, UnpackedType>& PackableInteger<PackedType, UnpackedType>::operator = ( const UnpackedType& value )
 {
-    value_ = value;
-
-    return *this;
-}
-
-
-template <class PackedType, class UnpackedType>
-PackableInteger<PackedType, UnpackedType>& PackableInteger<PackedType, UnpackedType>::operator = ( PackableInteger<PackedType, UnpackedType>&& b )
-{
-    if( this != &b ){
-        value_ = b.value_;
-    }
-    return *this;
+    return PackableWrapper< UnpackedType >::operator = ( value );
 }
 
 } // namespace como

@@ -103,6 +103,19 @@ class PackableWrapper
         PackableWrapper<PlainType>& operator = ( PackableWrapper<PlainType>&& ) = default;
 };
 
+
+/***
+ * 7. Operators
+ ***/
+
+/*! \brief Assigns the given value to this PackableWrapper */
+template < class PlainType >
+PackableWrapper<PlainType>& PackableWrapper<PlainType>::operator = ( const PlainType& value )
+{
+    value_ = value;
+}
+
+
 } // namespace como
 
 #endif // PACKABLEWRAPPER_HPP
