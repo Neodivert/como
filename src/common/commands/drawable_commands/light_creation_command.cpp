@@ -58,7 +58,7 @@ LightType LightCreationCommand::getLightType() const
 
 const std::uint8_t* LightCreationCommand::getLightColor() const
 {
-    return lightColor_.getValue();
+    return &( ( lightColor_.getValues() )[0] );
 }
 
 

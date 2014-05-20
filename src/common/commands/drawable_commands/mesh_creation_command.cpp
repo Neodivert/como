@@ -58,7 +58,7 @@ MeshType MeshCreationCommand::getMeshType() const
 
 const std::uint8_t* MeshCreationCommand::getMeshColor() const
 {
-    return meshColor_.getValue();
+    return &( ( meshColor_.getValues() )[0] );
 }
 
 

@@ -98,7 +98,7 @@ const char* UserAcceptancePacket::getSceneName() const
 
 const std::uint8_t* UserAcceptancePacket::getSelectionColor() const
 {
-    return selectionColor_.getValue();
+    return &( ( selectionColor_.getValues() )[0] );
 }
 
 

@@ -46,7 +46,7 @@ MeshColorChangeCommand::MeshColorChangeCommand( UserID userID, const std::uint8_
 
 const std::uint8_t* MeshColorChangeCommand::getMeshColor() const
 {
-    return meshColor_.getValue();
+    return &( ( meshColor_.getValues() )[0] );
 }
 
 } // namespace como

@@ -22,11 +22,18 @@
 
 #include "packable_string.hpp"
 #include "packable_uint8.hpp"
-#include "packable_uint8_array.hpp"
+#include "packable_array.hpp"
 #include "packable_uint16.hpp"
 #include "packable_uint32.hpp"
 #include "packable_vector4.hpp"
 #include "packable_file.hpp"
 #include "composite_packable.hpp"
+
+namespace como {
+
+// TODO: Move to other place?
+typedef PackableArray< PackableUint8< std::uint8_t >, std::uint8_t, 4 > PackableRGBA;
+
+} // namespace como
 
 #endif // PACKABLES_HPP

@@ -21,23 +21,26 @@
 #define PACKABLE_ARRAY_WRAPPER_HPP
 
 #include "packable.hpp"
+#include <common/packables/packable_wrapper.hpp>
 #include <cstdint>
+#include <array>
+#include <memory>
 
 namespace como {
 
-/*!
- * \class PackableArray
- *
- * \brief Base class for all arrays that can be packed into or unpacked from
- * a buffer.
- * \tparam UnpackedType type of the array elements.
- * \tparam ARRAY_SIZE array size (in number of elements).
- */
-template <class UnpackedType, unsigned int ARRAY_SIZE>
-class PackableArray : public Packable {
-    protected:
-        /*! Array of values to be packed / unpacked */
-        UnpackedType values_[ARRAY_SIZE];
+// TODO: Use this?
+//#define PACKABLE_ARRAY template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+class PackableArray : public Packable
+{
+    static_assert(
+        std::is_base_of< PackableWrapper< ElementPlainType >, ElementPackableType>::value,
+        "ElementPackableType must be a descendant of PackableWrapper< ElementPlainType >"
+    );
+
+    private:
+        std::array< ElementPackableType, ARRAY_SIZE > elements_;
 
     public:
         /***
@@ -45,16 +48,16 @@ class PackableArray : public Packable {
          ***/
 
         /*! \brief Default constructor */
-        PackableArray<UnpackedType, ARRAY_SIZE>() = default;
+        PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>() = default;
 
         /*! \brief Constructs an packable array by copying a plain one */
-        PackableArray<UnpackedType, ARRAY_SIZE>( const UnpackedType* values );
+        PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>( const ElementPlainType* values );
 
         /*! \brief Copy constructor */
-        PackableArray<UnpackedType, ARRAY_SIZE>( const PackableArray<UnpackedType, ARRAY_SIZE>& ) = default;
+        PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>( const PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>& ) = default;
 
         /*! \brief Move constructor */
-        PackableArray<UnpackedType, ARRAY_SIZE>( PackableArray<UnpackedType, ARRAY_SIZE>&& ) = default;
+        PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>( PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>&& ) = default;
 
 
         /***
@@ -73,24 +76,25 @@ class PackableArray : public Packable {
          * \brief returns a pointer to the inner array.
          * \return a pointer to the inner array.
          */
-        const UnpackedType* getValue() const ;
+        std::array< ElementPlainType, ARRAY_SIZE > getValues() const;
+
 
         /*! \brief see Packable::getPacketSize */
-        virtual std::uint16_t getPacketSize() const = 0;
+        virtual std::uint16_t getPacketSize() const;
 
         /*!
          * \brief returns a reference to the indexed element.
          * \param index - the index of the requested array element.
          * \return a reference to the indexed element.
          */
-        UnpackedType& operator []( unsigned int index );
+        ElementPackableType& operator []( unsigned int index );
 
         /*!
          * \brief returns a constant reference to the indexed element.
          * \param index - the index of the requested array element.
          * \return a reference to the indexed element.
          */
-        const UnpackedType& operator []( unsigned int index ) const;
+        const ElementPackableType& operator []( unsigned int index ) const;
 
 
         /***
@@ -101,7 +105,7 @@ class PackableArray : public Packable {
          * \brief sets the values of the inner array.
          * \param values - a plain array of values to copy from.
          */
-        void setValue( UnpackedType* values );
+        void setValue( ElementPlainType* values );
 
 
         /***
@@ -109,13 +113,13 @@ class PackableArray : public Packable {
          ***/
 
         /*! \brief see Packable::pack */
-        virtual void* pack( void* buffer ) const = 0;
+        virtual void* pack( void* buffer ) const;
 
         /*! \brief see Packable::unpack */
-        virtual const void* unpack( const void* buffer ) = 0;
+        virtual const void* unpack( const void* buffer );
 
         /*! \brief see Packable::unpack const */
-        virtual const void* unpack( const void* buffer ) const = 0;
+        virtual const void* unpack( const void* buffer ) const;
 
 
         /***
@@ -123,13 +127,13 @@ class PackableArray : public Packable {
          ***/
 
         /*! \brief Assigns a plain array of values to this instance's inner array */
-        PackableArray<UnpackedType, ARRAY_SIZE>& operator = ( const UnpackedType* value );
+        PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>& operator = ( const ElementPlainType* value );
 
         /*! \brief Copy assignment operator */
-        PackableArray<UnpackedType, ARRAY_SIZE>& operator = ( const PackableArray<UnpackedType, ARRAY_SIZE>& b );
+        PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>& operator = ( const PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>& b );
 
         /*! \brief Move assignment operator */
-        PackableArray<UnpackedType, ARRAY_SIZE>& operator = ( PackableArray<UnpackedType, ARRAY_SIZE>&& b );
+        PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>& operator = ( PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>&& b );
 };
 
 
@@ -137,13 +141,13 @@ class PackableArray : public Packable {
  * 1. Construction
  ***/
 
-template <class UnpackedType, unsigned int ARRAY_SIZE>
-PackableArray<UnpackedType, ARRAY_SIZE>::PackableArray( const UnpackedType* values )
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::PackableArray( const ElementPlainType* values )
 {
     unsigned int i;
 
     for( i=0; i<ARRAY_SIZE; i++ ){
-        values_[i] = values[i];
+        elements_[i] = values[i];
     }
 }
 
@@ -152,24 +156,38 @@ PackableArray<UnpackedType, ARRAY_SIZE>::PackableArray( const UnpackedType* valu
  * 3. Getters
  ***/
 
-template <class UnpackedType, unsigned int ARRAY_SIZE>
-const UnpackedType* PackableArray<UnpackedType, ARRAY_SIZE>::getValue() const
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+std::uint16_t PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::getPacketSize() const
 {
-    return values_;
+    return elements_[0].getPacketSize() * ARRAY_SIZE;
 }
 
 
-template <class UnpackedType, unsigned int ARRAY_SIZE>
-UnpackedType& PackableArray<UnpackedType, ARRAY_SIZE>::operator []( unsigned int index )
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+std::array< ElementPlainType, ARRAY_SIZE > PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::getValues() const
 {
-    return values_[index];
+    unsigned int i;
+    std::array< ElementPlainType, ARRAY_SIZE > plainElements;
+
+    for( i=0; i<ARRAY_SIZE; i++ ){
+        plainElements[i] = elements_[i].getValue();
+    }
+
+    return plainElements;
 }
 
 
-template <class UnpackedType, unsigned int ARRAY_SIZE>
-const UnpackedType& PackableArray<UnpackedType, ARRAY_SIZE>::operator []( unsigned int index ) const
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+ElementPackableType& PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::operator []( unsigned int index )
 {
-    return values_[index];
+    return elements_[index];
+}
+
+
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+const ElementPackableType& PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::operator []( unsigned int index ) const
+{
+    return elements_[index];
 }
 
 
@@ -177,14 +195,57 @@ const UnpackedType& PackableArray<UnpackedType, ARRAY_SIZE>::operator []( unsign
  * 4. Setters
  ***/
 
-template <class UnpackedType, unsigned int ARRAY_SIZE>
-void PackableArray<UnpackedType, ARRAY_SIZE>::setValue( UnpackedType* values )
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+void PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::setValue( ElementPlainType* values )
 {
     unsigned int i;
 
     for( i=0; i<ARRAY_SIZE; i++ ){
-        values_[i] = values[i];
+        elements_[i] = values[i];
     }
+}
+
+
+/***
+ * 5. Packing and unpacking
+ ***/
+
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+void* PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::pack( void* buffer ) const
+{
+    unsigned int i;
+
+    for( i=0; i<ARRAY_SIZE; i++ ){
+        buffer = elements_[i].pack( buffer );
+    }
+
+    return buffer;
+}
+
+
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+const void* PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::unpack( const void* buffer )
+{
+    unsigned int i;
+
+    for( i=0; i<ARRAY_SIZE; i++ ){
+        buffer = elements_[i].unpack( buffer );
+    }
+
+    return buffer;
+}
+
+
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+const void* PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::unpack( const void* buffer ) const
+{
+    unsigned int i;
+
+    for( i=0; i<ARRAY_SIZE; i++ ){
+        buffer = elements_[i].unpack( buffer );
+    }
+
+    return buffer;
 }
 
 
@@ -192,14 +253,14 @@ void PackableArray<UnpackedType, ARRAY_SIZE>::setValue( UnpackedType* values )
  * 6. Operators
  ***/
 
-template <class UnpackedType, unsigned int ARRAY_SIZE>
-PackableArray<UnpackedType, ARRAY_SIZE>& PackableArray<UnpackedType, ARRAY_SIZE>::operator = ( const PackableArray<UnpackedType, ARRAY_SIZE>& b )
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>& PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::operator = ( const PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>& b )
 {
     unsigned int i;
 
     if( this != &b ){
         for( i=0; i<ARRAY_SIZE; i++ ){
-            values_[i] = b.values_[i];
+            elements_[i] = b.elements_[i];
         }
     }
 
@@ -207,26 +268,26 @@ PackableArray<UnpackedType, ARRAY_SIZE>& PackableArray<UnpackedType, ARRAY_SIZE>
 }
 
 
-template <class UnpackedType, unsigned int ARRAY_SIZE>
-PackableArray<UnpackedType, ARRAY_SIZE>& PackableArray<UnpackedType, ARRAY_SIZE>::operator = ( const UnpackedType* values )
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>& PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::operator = ( const ElementPlainType* values )
 {
     unsigned int i;
 
     for( i=0; i<ARRAY_SIZE; i++ ){
-        values_[i] = values[i];
+        elements_[i] = values[i];
     }
 
     return *this;
 }
 
-template <class UnpackedType, unsigned int ARRAY_SIZE>
-PackableArray<UnpackedType, ARRAY_SIZE>& PackableArray<UnpackedType, ARRAY_SIZE>::operator = ( PackableArray<UnpackedType, ARRAY_SIZE>&& b )
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>& PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::operator = ( PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>&& b )
 {
     unsigned int i;
 
     if( this != &b ){
         for( i=0; i<ARRAY_SIZE; i++ ){
-            values_[i] = b.values_[i];
+            elements_[i] = b.elements_[i];
         }
     }
 

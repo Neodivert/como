@@ -46,8 +46,8 @@ HEADERS += \
     ../../src/common/packables/packable_uint16.hpp \
     ../../src/common/packables/packable_uint32.hpp \
     ../../src/common/packables/packable_string.hpp \
-    ../../src/common/packables/packable_uint8_array.hpp \
-    ../../src/common/packables/packable_vector4.hpp \
+    # TODO: Remove ../../src/common/packables/packable_uint8_array.hpp \
+    # TODO: Remove../../src/common/packables/packable_vector4.hpp \
     ../../src/common/packets/packet_header.hpp \
     ../../src/common/commands/packable_commands_list.hpp \
     ../../src/common/packables/packable_file.hpp \
@@ -86,7 +86,7 @@ SOURCES += \
     ../../src/common/commands/selection_commands/full_deselection_command.cpp \
     ../../src/common/commands/selection_commands/selection_command.cpp \
     ../../src/common/commands/selection_commands/selection_deletion_command.cpp \
-    ../../src/common/packables/packable_vector4.cpp \
+    # TODO: Remove../../src/common/packables/packable_vector4.cpp \
     ../../src/common/packets/packet_header.cpp \
     ../../src/common/commands/packable_commands_list.cpp \
     ../../src/common/packables/packable_file.cpp \

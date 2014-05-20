@@ -90,7 +90,7 @@ const char* UserConnectionCommand::getName() const
 
 const std::uint8_t* UserConnectionCommand::getSelectionColor() const
 {
-    return selectionColor_.getValue();
+    return &( ( selectionColor_.getValues() )[0] );
 }
 
 
