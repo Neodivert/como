@@ -29,7 +29,9 @@ Scene::Scene( LogPtr log ) :
     log_( log ),
     localUserID_( 1 ), // Will be updated to its final value in Scene::connect().
     localUserNextDrawableIndex_( 1 ),
-    server_( new ServerInterface( log_ ) )
+    server_( new ServerInterface( log_ ) ),
+    uniformColorLocation( -1 ),
+    uniformLightingEnabledLocation( -1 )
 {
     initOpenGL();
 
@@ -166,8 +168,9 @@ void Scene::initLinesBuffer()
     if( vPosition == GL_INVALID_OPERATION ){
         log_->error( "Error getting layout of \"position\"\n" );
     }
-    // Get location of uniform shader variable "color".
+    // Get location of uniform shader variables.
     uniformColorLocation = glGetUniformLocation( currentShaderProgram, "material.color" );
+    uniformLightingEnabledLocation = glGetUniformLocation( currentShaderProgram, "lightingEnabled" );
 
     // Set a VBO for the world axis rects.
     glGenBuffers( 1, &linesVBO );
@@ -338,7 +341,9 @@ void Scene::draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect ) co
     GLfloat WHITE_COLOR[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
     // Draw all the drawables.
+    enableLighting();
     drawablesManager_->drawAll( viewProjMatrix );
+    disableLighting();
 
     // Draw a guide rect if asked.
     if( drawGuideRect != -1 ){
@@ -609,6 +614,21 @@ bool Scene::hasChangedSinceLastQuery()
         return drawablesManager_->hasChangedSinceLastQuery();
     }
     return false;
+}
+
+
+
+void Scene::enableLighting() const
+{
+    glUniform1i( uniformLightingEnabledLocation, 1 );
+    checkOpenGL( "Scene::enableLighting()" );
+}
+
+
+void Scene::disableLighting() const
+{
+    glUniform1i( uniformLightingEnabledLocation, 0 );
+    checkOpenGL( "Scene::disableLighting()" );
 }
 
 

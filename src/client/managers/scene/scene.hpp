@@ -82,7 +82,8 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
         GLuint linesVBO;
         GLuint linesBufferOffsets[N_LINES_BUFFER_OFFSETS];
 
-        GLuint uniformColorLocation;
+        GLint uniformColorLocation;
+        GLint uniformLightingEnabledLocation;
 
     public:
         /***
@@ -185,9 +186,11 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
          ***/
     public:
         void createScenePrimitivesDirectory();
-
-
         virtual bool hasChangedSinceLastQuery();
+
+    private:
+        void enableLighting() const;
+        void disableLighting() const;
 };
 
 typedef std::shared_ptr< Scene > ScenePtr;

@@ -7,6 +7,8 @@
 
 #version 420 core
 
+uniform bool lightingEnabled;
+
 // Lights.
 struct Light {
 	vec3 color;
@@ -37,28 +39,29 @@ out vec4 finalColor;
 
 void main()
 {
-/*
-	vec3 halfVector = directionalLight.lightVector + vec3( 0.0f, 0.0f, 0.0f ); // TODO: H = L + Eye (or L - Eye?).
+	if( lightingEnabled ){
+		vec3 halfVector = directionalLight.lightVector + vec3( 0.0f, 0.0f, 0.0f ); // TODO: H = L + Eye (or L - Eye?).
 
-	float diffuse = max( 0.0f, dot( normal, directionalLight.lightVector ) );
-	float specular = max( 0.0f, dot( normal, halfVector ) );
+		float diffuse = max( 0.0f, dot( normal, directionalLight.lightVector ) );
+		float specular = max( 0.0f, dot( normal, halfVector ) );
 
-	// surfaces facing away from the light (negative dot products)
-	// won’t be lit by the directional light
-	if( diffuse == 0.0f ){
-		specular = 0.0f;
-	}else{
-		specular = pow( specular, material.specularExponent ); // sharpen the highlight
-	}
+		// surfaces facing away from the light (negative dot products)
+		// won’t be lit by the directional light
+		if( diffuse == 0.0f ){
+			specular = 0.0f;
+		}else{
+			specular = pow( specular, material.specularExponent ); // sharpen the highlight
+		}
 
-	vec3 scatteredLight = lights[0].color * diffuse;
-	vec3 reflectedLight = lights[0].color * specular * material.specularReflectivity;
+		vec3 scatteredLight = lights[0].color * diffuse;
+		vec3 reflectedLight = lights[0].color * specular * material.specularReflectivity;
 	
-	// don’t modulate the underlying color with reflected light,
-	// only with scattered light
-	vec3 rgb = min (color.rgb * scatteredLight + reflectedLight, vec3( 1.0f ) );
-	finalColor = vec4( rgb, color.a );
-*/
-	finalColor = material.color;
+		// don’t modulate the underlying color with reflected light,
+		// only with scattered light
+		vec3 rgb = min ( material.color.rgb * scatteredLight + reflectedLight, vec3( 1.0f ) );
+		finalColor = vec4( rgb, material.color.a );
+	}else{
+		finalColor = material.color;
+	}
 }
 
