@@ -21,12 +21,15 @@
 #define MATERIAL_HPP
 
 #include <client/models/dependencies.hpp>
+#include <common/packables/array/packable_color.hpp>
 
 namespace como {
 
 class Material
 {
     public:
+        glm::vec4 color;
+
         glm::vec3 ambientReflexivity;   // ("Ka" in a *.mtl file).
         glm::vec3 diffuseReflectivity;  // ("Kd" in a *.mtl file).
         glm::vec3 specularReflectivity; // ("Ks" in a *.mtl file).
@@ -37,6 +40,7 @@ class Material
          * 1. Construction
          ***/
         Material();
+        Material( PackableColor color );
 
 
         /***

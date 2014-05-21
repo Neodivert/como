@@ -25,8 +25,8 @@ namespace como {
  * 1. Construction
  ***/
 
-DirectionalLight::DirectionalLight( const std::uint8_t* lightColor ) :
-    Light( LightType::DIRECTIONAL_LIGHT, "data/primitives/system/directional_light.obj", 0, lightColor )
+DirectionalLight::DirectionalLight( const PackableColor& meshColor, const PackableColor& lightColor ) :
+    Light( LightType::DIRECTIONAL_LIGHT, "data/primitives/system/directional_light.obj", 0, meshColor, lightColor )
 {
     GLint currentShaderProgram = 0;
     const GLuint lightIndex = 0; // TODO: Retrieve this as an method argument.

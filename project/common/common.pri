@@ -61,7 +61,8 @@ HEADERS += \
     ../../src/common/commands/drawable_commands/directional_light_creation_command.hpp \
     ../../src/common/packables/packable_wrapper.hpp \
     ../../src/common/packables/packable_float.hpp \
-    ../../src/common/packables/array/packable_array_3.hpp
+    ../../src/common/packables/array/packable_array_3.hpp \
+    ../../src/common/packables/array/packable_color.hpp
 
 
 # Common sources (used by both client and server).
@@ -95,4 +96,5 @@ SOURCES += \
     ../../src/common/commands/drawable_commands/primitive_mesh_creation_command.cpp \
     ../../src/common/commands/drawable_commands/light_creation_command.cpp \
     ../../src/common/commands/drawable_commands/directional_light_creation_command.cpp \
-    ../../src/common/packables/packable_float.cpp
+    ../../src/common/packables/packable_float.cpp \
+    ../../src/common/packables/array/packable_color.cpp

@@ -53,7 +53,7 @@ std::shared_ptr< const UserAcceptancePacket > ServerInterface::connect( const ch
     boost::system::error_code errorCode;
     como::NewUserPacket newUserPacket;
     como::UserAcceptancePacket userAcceptedPacket;
-    const std::uint8_t* selectionColor = nullptr;
+    PackableColor selectionColor;
 
     // Create the TCP resolver and query needed for connecting to the server.
     boost::asio::ip::tcp::resolver resolver( io_service_ );
@@ -85,10 +85,10 @@ std::shared_ptr< const UserAcceptancePacket > ServerInterface::connect( const ch
     log_->debug( "User accepted: \n",
                  "\tID: [", userAcceptedPacket.getId(), "]\n",
                  "\tName: [", userAcceptedPacket.getName(), "]\n",
-                 "\tSelection color: [", (int)selectionColor[0], ", ",
-                 (int)selectionColor[1], ", ",
-                 (int)selectionColor[2], ", ",
-                 (int)selectionColor[3], ")\n\n" );
+                 "\tSelection color: [", (int)( selectionColor[0].getValue() ), ", ",
+                 (int)( selectionColor[1].getValue() ), ", ",
+                 (int)( selectionColor[2].getValue() ), ", ",
+                 (int)( selectionColor[3].getValue() ), ")\n\n" );
 
     if( errorCode ){
         throw std::runtime_error( std::string( "ERROR when receiving USER_ACCEPTED package from server (" ) + errorCode.message() + ")" );

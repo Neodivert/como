@@ -24,17 +24,11 @@
 #include "packable_uint8.hpp"
 #include "array/packable_array.hpp"
 #include "array/packable_array_3.hpp"
+#include "array/packable_color.hpp"
 #include "packable_uint16.hpp"
 #include "packable_uint32.hpp"
 #include "packable_file.hpp"
 #include "packable_float.hpp"
 #include "composite_packable.hpp"
-
-namespace como {
-
-// TODO: Move to other place?
-typedef PackableArray< PackableUint8< std::uint8_t >, std::uint8_t, 4 > PackableRGBA;
-
-} // namespace como
 
 #endif // PACKABLES_HPP

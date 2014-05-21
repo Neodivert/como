@@ -44,7 +44,8 @@ void ColorButton::setColor( const QColor& color )
     setStyleSheet( qss );
 
     // Emit a signal indicating that the current color has changed.
-    emit colorChanged( color_ );
+    // TODO: Complete.
+    //emit colorChanged( color_ );
 }
 
 

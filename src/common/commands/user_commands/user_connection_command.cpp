@@ -39,20 +39,9 @@ UserConnectionCommand::UserConnectionCommand( UserID userID ) :
 
 UserConnectionCommand::UserConnectionCommand( const UserAcceptancePacket& userAcceptedPacket ) :
     UserCommand( UserCommandType::USER_CONNECTION, userAcceptedPacket.getId() ),
-    name_( "Unnamed" ),
-    selectionColor_()
+    name_( userAcceptedPacket.getName() ),
+    selectionColor_( userAcceptedPacket.getSelectionColor() )
 {
-    const std::uint8_t* selectionColor;
-
-    setUserID( userAcceptedPacket.getId() );
-    setName( userAcceptedPacket.getName() );
-
-    selectionColor = userAcceptedPacket.getSelectionColor();
-    setSelectionColor( selectionColor[0],
-                       selectionColor[1],
-                       selectionColor[2],
-                       selectionColor[3] );
-
     addPackable( &name_ );
     addPackable( &selectionColor_ );
 }
@@ -63,16 +52,6 @@ UserConnectionCommand::UserConnectionCommand( const UserConnectionCommand& b ) :
     name_( b.name_ ),
     selectionColor_( b.selectionColor_ )
 {
-    const std::uint8_t* selectionColor = nullptr;
-    setUserID( b.getUserID() );
-    setName( b.getName() );
-
-    selectionColor = b.getSelectionColor();
-    setSelectionColor( selectionColor[0],
-                       selectionColor[1],
-                       selectionColor[2],
-                       selectionColor[3] );
-
     addPackable( &name_ );
     addPackable( &selectionColor_ );
 }
@@ -88,9 +67,9 @@ const char* UserConnectionCommand::getName() const
 }
 
 
-const std::uint8_t* UserConnectionCommand::getSelectionColor() const
+const PackableColor& UserConnectionCommand::getSelectionColor() const
 {
-    return &( ( selectionColor_.getValues() )[0] );
+    return selectionColor_;
 }
 
 

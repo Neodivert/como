@@ -26,7 +26,7 @@ namespace como {
  * 1. Construction
  ***/
 
-LightCreationCommand::LightCreationCommand( LightType lightType, PackableDrawableID drawableID, const std::uint8_t* meshColor, const std::uint8_t* lightColor ) :
+LightCreationCommand::LightCreationCommand( LightType lightType, PackableDrawableID drawableID, const PackableColor& meshColor, const PackableColor& lightColor ) :
     MeshCreationCommand( MeshType::LIGHT, drawableID, meshColor ),
     lightType_( lightType ),
     lightColor_( lightColor )
@@ -56,9 +56,9 @@ LightType LightCreationCommand::getLightType() const
 }
 
 
-const std::uint8_t* LightCreationCommand::getLightColor() const
+const PackableColor& LightCreationCommand::getLightColor() const
 {
-    return &( ( lightColor_.getValues() )[0] );
+    return lightColor_;
 }
 
 
@@ -68,7 +68,7 @@ const std::uint8_t* LightCreationCommand::getLightColor() const
 
 LightType LightCreationCommand::getLightType( const void* buffer )
 {
-    MeshCreationCommand meshCreationCommand( MeshType::LIGHT, NULL_DRAWABLE_ID );
+    MeshCreationCommand meshCreationCommand( MeshType::LIGHT, NULL_DRAWABLE_ID, DEFAULT_PACKABLE_COLOR );
 
     return static_cast< LightType >( static_cast< const std::uint8_t* >( buffer )[meshCreationCommand.getPacketSize()] );
 }

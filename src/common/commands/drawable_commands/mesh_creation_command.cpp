@@ -26,7 +26,7 @@ namespace como {
  * 1. Construction
  ***/
 
-MeshCreationCommand::MeshCreationCommand( MeshType meshType, PackableDrawableID drawableID, const std::uint8_t* color ) :
+MeshCreationCommand::MeshCreationCommand( MeshType meshType, PackableDrawableID drawableID, const PackableColor& color ) :
     DrawableCommand( DrawableCommandType::MESH_CREATION, drawableID.creatorID.getValue(), drawableID ),
     meshType_( meshType ),
     meshColor_( color )
@@ -56,9 +56,9 @@ MeshType MeshCreationCommand::getMeshType() const
 }
 
 
-const std::uint8_t* MeshCreationCommand::getMeshColor() const
+const PackableColor& MeshCreationCommand::getMeshColor() const
 {
-    return &( ( meshColor_.getValues() )[0] );
+    return meshColor_;
 }
 
 
@@ -66,7 +66,7 @@ const std::uint8_t* MeshCreationCommand::getMeshColor() const
  * 4. Setters
  ***/
 
-void MeshCreationCommand::setMeshColor( const std::uint8_t* color )
+void MeshCreationCommand::setMeshColor( const PackableColor& color )
 {
     meshColor_ = color;
 }

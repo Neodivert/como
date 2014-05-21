@@ -24,6 +24,9 @@
 // another place.
 #include <common/utilities/ids.hpp>
 
+
+#include <iostream>
+
 namespace como {
 
 // Initialize the location of various uniform shader variables as unitialized (-1).
@@ -39,19 +42,21 @@ const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
  * 1. Construction.
  ***/
 
-Mesh::Mesh( MeshType type, const char* fileName, const std::uint8_t* color ) :
+Mesh::Mesh( MeshType type, const char* fileName, PackableColor meshColor ) :
     Drawable( DrawableType::MESH, "Mesh #" ),
-    type_( type )
+    type_( type ),
+    material_( meshColor )
 {
-    initMesh( fileName, color );
+    initMesh( fileName );
 }
 
 
-Mesh::Mesh( const char* fileName, const std::uint8_t* color ) :
+Mesh::Mesh( const char* fileName, PackableColor meshColor ) :
     Drawable( DrawableType::MESH, "Mesh #" ),
-    type_( MeshType::PRIMITIVE_MESH )
+    type_( MeshType::PRIMITIVE_MESH ),
+    material_( meshColor )
 {   
-    initMesh( fileName, color );
+    initMesh( fileName );
 }
 
 
@@ -62,15 +67,12 @@ Mesh::Mesh( const Mesh& b ) :
     originalNormals( b.originalNormals ),
     triangles( b.triangles ),
     originalCentroid( b.originalCentroid ),
-    transformedCentroid( b.transformedCentroid )
+    transformedCentroid( b.transformedCentroid ),
+    material_( b.material_ )
 {
     // Initialize and populate Mesh's vertex data.
     initMeshBuffers();
     initVertexData();
-
-    for( unsigned int i=0; i<4; i++ ){
-        color[i] = b.color[i];
-    }
 }
 
 
@@ -98,24 +100,17 @@ Mesh::~Mesh()
  * 3. Initialization.
  ***/
 
-void Mesh::initMesh( const char* fileName, const std::uint8_t* color )
+void Mesh::initMesh( const char* fileName )
 {
-    checkOpenGL( "Mesh( const char* fileName, const std::uint8_t* color ) - 1" );
+    checkOpenGL( "Mesh( const char* fileName ) - 1" );
 
     // Initialize OpenGL objects (VBO, VAO, EBO, ...) associated to this Mesh.
     initMeshBuffers();
 
-    // Set the mesh's color.
-    if( color ){
-        setColor( color[0] / 255.0f, color[1] / 255.0f, color[2] / 255.0f, 1.0f );
-    }else{
-        setColor( (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, (100+rand()%100)/(float)255, 1.0f );
-    }
-
     // Load vertex data from given file.
     LoadFromOBJ( fileName );
 
-    checkOpenGL( "Mesh( const char* fileName, const std::uint8_t* color ) - 2" );
+    checkOpenGL( "Mesh( const char* fileName ) - 2" );
 }
 
 
@@ -142,7 +137,7 @@ void Mesh::initMeshBuffers()
         glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
 
         // Get location of uniform shader variable "color".
-        uniformColorLocation = glGetUniformLocation( currentShaderProgram, "color" );
+        uniformColorLocation = glGetUniformLocation( currentShaderProgram, "material.color" );
 
         // Get location of uniform shader variable "mvpMatrix".
         mvpMatrixLocation_ = glGetUniformLocation( currentShaderProgram, "mvpMatrix" );
@@ -350,20 +345,9 @@ void Mesh::getVertexData( unsigned int& n, GLfloat* vertices )
  * 6. Setters.
  ***/
 
-void Mesh::setColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a )
+void Mesh::setMeshColor( PackableColor meshColor )
 {
-    color[0] = r;
-    color[1] = g;
-    color[2] = b;
-    color[3] = a;
-}
-
-
-void Mesh::setMeshColor( const std::uint8_t* meshColor )
-{
-    for( unsigned int i=0; i<4; i++ ){
-        color[i] = static_cast< std::uint8_t >( meshColor[i] * 255 );
-    }
+    material_.color = meshColor.toVec4();
 }
 
 
@@ -432,9 +416,6 @@ void Mesh::update()
 
 void Mesh::draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) const
 {
-    // Feed uniform shader variable "color" with Mesh inner color.
-    glUniform4fv( uniformColorLocation, 1, color );
-
     // Compute MVP matrix and pass it to the shader.
     sendMVPMatrixToShader( viewProjMatrix * transformationMatrix );
 

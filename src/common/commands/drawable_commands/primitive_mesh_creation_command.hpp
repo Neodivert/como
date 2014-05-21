@@ -35,7 +35,7 @@ class PrimitiveMeshCreationCommand : public MeshCreationCommand
          * 1. Construction
          ***/
         PrimitiveMeshCreationCommand();
-        PrimitiveMeshCreationCommand( PackableDrawableID drawableID, PrimitiveID primitiveID, const std::uint8_t* meshColor );
+        PrimitiveMeshCreationCommand( PackableDrawableID drawableID, PrimitiveID primitiveID, const PackableColor& meshColor );
         PrimitiveMeshCreationCommand( const PrimitiveMeshCreationCommand& b );
         PrimitiveMeshCreationCommand( PrimitiveMeshCreationCommand&& ) = delete;
 

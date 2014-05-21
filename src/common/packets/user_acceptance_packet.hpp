@@ -52,14 +52,14 @@ class UserAcceptancePacket : public Packet
          * drawables selected by the new client will be highlighted
          * using this color.
          */
-        PackableRGBA selectionColor_; // RGBA format.
+        PackableColor selectionColor_; // RGBA format.
 
     public:
         /***
          * 1. Construction
          ***/
         UserAcceptancePacket();
-        UserAcceptancePacket( const std::uint32_t& id, const char* name, const char*sceneName, const std::uint8_t* selectionColor );
+        UserAcceptancePacket( const std::uint32_t& id, const char* name, const char*sceneName, const PackableColor& selectionColor );
         UserAcceptancePacket( const UserAcceptancePacket& b );
         UserAcceptancePacket( UserAcceptancePacket&& ) = delete;
         virtual Packet* clone() const ;
@@ -77,14 +77,14 @@ class UserAcceptancePacket : public Packet
         std::uint32_t getId() const ;
         const char* getName() const ;
         const char* getSceneName() const ;
-        const std::uint8_t* getSelectionColor() const ;
+        const PackableColor& getSelectionColor() const ;
         virtual bool expectedType() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setData( const std::uint32_t& id, const char* name, const std::uint8_t* selectionColor );
+        void setData( const std::uint32_t& id, const char* name, const PackableColor& selectionColor );
         void setId( const std::uint32_t& id );
         void setName( const char* name );
         void setSceneName( const char* name );

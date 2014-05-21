@@ -17,47 +17,48 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef MESH_COLOR_CHANGE_COMMAND_HPP
-#define MESH_COLOR_CHANGE_COMMAND_HPP
+#ifndef PACKABLE_COLOR_HPP
+#define PACKABLE_COLOR_HPP
 
-#include "selection_command.hpp"
+#include <common/packables/array/packable_array.hpp>
+#include <common/packables/packable_uint8.hpp>
+#include <common/packables/array/packable_color.hpp>
+#include <glm/glm.hpp>
 
 namespace como {
 
-class MeshColorChangeCommand : public SelectionCommand
+class PackableColor : public PackableArray< PackableUint8< std::uint8_t >, std::uint8_t, 4 >
 {
-    private:
-        PackableColor meshColor_;
-
     public:
         /***
          * 1. Construction
          ***/
-        MeshColorChangeCommand();
-        MeshColorChangeCommand( UserID userID, const PackableColor& color );
-        MeshColorChangeCommand( const MeshColorChangeCommand& b ) = delete;
-        MeshColorChangeCommand( MeshColorChangeCommand&& ) = delete;
+        PackableColor();
+        PackableColor( const std::uint8_t* channels );
+        PackableColor( std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a );
+        PackableColor( const PackableColor& ) = default;
+        PackableColor( PackableColor&& ) = default;
 
 
         /***
          * 2. Destruction
          ***/
-        ~MeshColorChangeCommand() = default;
+        ~PackableColor() = default;
 
 
         /***
-         * 3. Getters
+         * 3. Conversions
          ***/
-        const PackableColor& getMeshColor() const;
+        glm::vec4 toVec4() const ;
 
 
         /***
          * 4. Operators
          ***/
-        MeshColorChangeCommand& operator=( const MeshColorChangeCommand& ) = delete;
-        MeshColorChangeCommand& operator=( MeshColorChangeCommand&& ) = delete;
-};
+        PackableColor& operator = ( const PackableColor& ) = default;
+        PackableColor& operator = ( PackableColor&& ) = default;
+} const DEFAULT_PACKABLE_COLOR;
 
 } // namespace como
 
-#endif // MESH_COLOR_CHANGE_COMMAND_HPP
+#endif // PACKABLE_COLOR_HPP

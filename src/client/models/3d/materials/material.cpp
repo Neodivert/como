@@ -28,11 +28,22 @@ namespace como {
  ***/
 
 Material::Material() :
+    color( 1.0f, 1.0f, 1.0f, 1.0f ),
     ambientReflexivity( 0.9f ),
     diffuseReflectivity( 0.9f ),
     specularReflectivity( 0.9f ),
     specularExponent( 0.9f )
 {}
+
+
+Material::Material( PackableColor color ) :
+    ambientReflexivity( 0.9f ),
+    diffuseReflectivity( 0.9f ),
+    specularReflectivity( 0.9f ),
+    specularExponent( 0.9f )
+{
+    this->color = color.toVec4();
+}
 
 
 /***
@@ -46,6 +57,12 @@ void Material::sendToShader() const
 
     // Get current shader program ID.
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+
+    // Send material color to shader.
+    uniformLocation = glGetUniformLocation( currentShaderProgram, "material.color" );
+    checkOpenGL( "Getting location of material.color in shader" );
+    glUniform4fv( uniformLocation, 1, &color[0] );
+    checkOpenGL( "Sending material.color to shader" );
 
     // Send ambient reflexivity to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.ambientReflexivity" );

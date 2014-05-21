@@ -62,7 +62,7 @@ class LocalDrawablesSelection : public QObject, public DrawablesSelection
          * 3. Setters
          ***/
         virtual void setPivotPointMode( PivotPointMode pivotPointMode );
-        virtual void setMeshColor( const std::uint8_t* meshColor );
+        virtual void setMeshColor( const PackableColor& meshColor );
 
 
         /***

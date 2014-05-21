@@ -35,13 +35,13 @@ class LightCreationCommand : public MeshCreationCommand
 {
     private:
         const PackableUint8< LightType > lightType_;
-        PackableRGBA lightColor_;
+        PackableColor lightColor_;
 
     protected:
         /***
          * 1. Construction
          ***/
-        LightCreationCommand( LightType lightType, PackableDrawableID drawableID, const std::uint8_t* meshColor, const std::uint8_t* lightColor );
+        LightCreationCommand( LightType lightType, PackableDrawableID drawableID, const PackableColor& meshColor, const PackableColor& lightColor );
         LightCreationCommand( const LightCreationCommand& b );
         LightCreationCommand( LightCreationCommand&& ) = delete;
 
@@ -56,7 +56,7 @@ class LightCreationCommand : public MeshCreationCommand
          * 3. Getters
          ***/
         LightType getLightType() const;
-        const std::uint8_t* getLightColor() const;
+        const PackableColor& getLightColor() const;
 
 
         /***

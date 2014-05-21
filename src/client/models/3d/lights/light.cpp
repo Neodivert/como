@@ -25,8 +25,8 @@ namespace como {
  * 1. Construction
  ***/
 
-Light::Light( LightType type, const char* meshPath, GLuint lightIndex, const std::uint8_t* color ) :
-    Mesh( MeshType::LIGHT, meshPath ),
+Light::Light( LightType type, const char* meshPath, GLuint lightIndex, PackableColor meshColor, PackableColor lightColor ) :
+    Mesh( MeshType::LIGHT, meshPath, meshColor ),
     type_( type )
 {
     GLint currentShaderProgram = -1;
@@ -40,7 +40,7 @@ Light::Light( LightType type, const char* meshPath, GLuint lightIndex, const std
     colorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
 
     // Update light color in the shader.
-    setLightColor( color );
+    setLightColor( lightColor );
 
     checkOpenGL( "Light - Constructor end" );
 }
@@ -72,13 +72,13 @@ LightType Light::getType() const
  * 4. Setters
  ***/
 
-void Light::setLightColor( const std::uint8_t* color )
+void Light::setLightColor( PackableColor color )
 {
     // TODO: Use a vec4? (change in shader).
     glm::vec3 floatColor(
-                color[0] / 255.0f,
-                color[1] / 255.0f,
-                color[2] / 255.0f
+                color[0].getValue() / 255.0f,
+                color[1].getValue() / 255.0f,
+                color[2].getValue() / 255.0f
                 );
 
     glUniform3fv( colorLocation_, 1, &floatColor[0] );

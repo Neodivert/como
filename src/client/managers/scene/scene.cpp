@@ -167,7 +167,7 @@ void Scene::initLinesBuffer()
         log_->error( "Error getting layout of \"position\"\n" );
     }
     // Get location of uniform shader variable "color".
-    uniformColorLocation = glGetUniformLocation( currentShaderProgram, "color" );
+    uniformColorLocation = glGetUniformLocation( currentShaderProgram, "material.color" );
 
     // Set a VBO for the world axis rects.
     glGenBuffers( 1, &linesVBO );
@@ -425,6 +425,12 @@ void Scene::executeRemoteUserCommand( UserCommandConstPtr command )
             // Cast to an USER_CONNECTION command.
             userConnected = dynamic_cast< const UserConnectionCommand* >( command.get() );
 
+            std::cout << "USER CONNECTED("
+                      << (int)( userConnected->getSelectionColor()[0].getValue() ) << ", "
+                      << (int)( userConnected->getSelectionColor()[1].getValue() ) << ", "
+                      << (int)( userConnected->getSelectionColor()[2].getValue() ) << ", "
+                      << (int)( userConnected->getSelectionColor()[3].getValue() ) << ")" << std::endl;
+
             // Add user to the scene.
             addUser( std::shared_ptr< const UserConnectionCommand>( new UserConnectionCommand( *userConnected ) ) );
         break;
@@ -460,6 +466,12 @@ void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
                     // Cast to a MESH_CREATION command.
                     primitiveMeshCreationCommand = dynamic_cast< const PrimitiveMeshCreationCommand* >( meshCreationCommand );
 
+                    std::cout << "Executing remote mesh creation command: ("
+                              << primitiveMeshCreationCommand->getMeshColor()[0].getValue() << ", "
+                              << primitiveMeshCreationCommand->getMeshColor()[1].getValue() << ", "
+                              << primitiveMeshCreationCommand->getMeshColor()[2].getValue() << ", "
+                              << primitiveMeshCreationCommand->getMeshColor()[3].getValue() << ")" << std::endl;
+
                     // Add mesh to the scene.
                     drawablesManager_->addMesh( primitiveMeshCreationCommand->getDrawableID().creatorID.getValue(),
                                                 primitiveMeshCreationCommand->getPrimitiveID(),
@@ -475,7 +487,8 @@ void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
 
                             // Add a directional light to the scene.
                             drawablesManager_->addDirectionalLight( directionalLightCreationCommand->getDrawableID(),
-                                                                    directionalLightCreationCommand->getLightColor() );
+                                                                    PackableColor( directionalLightCreationCommand->getLightColor() ),
+                                                                    PackableColor( directionalLightCreationCommand->getMeshColor() ) );
                         break;
                     }
                 break;

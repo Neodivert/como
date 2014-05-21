@@ -22,6 +22,7 @@
 
 #include <common/packables/packables.hpp>
 #include <common/utilities/ids.hpp>
+#include <common/packables/array/packable_color.hpp>
 #include <memory>
 #include <stdexcept>
 

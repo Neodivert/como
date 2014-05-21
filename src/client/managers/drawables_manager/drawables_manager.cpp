@@ -26,7 +26,7 @@ namespace como {
  * 1. Construction
  ***/
 
-DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserID, const std::uint8_t* localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
+DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
     AbstractChangeable(),
     nonSelectedDrawables_( new DrawablesSelection( glm::vec4( 0.0f ) ) ),
     server_( server ),
@@ -35,12 +35,7 @@ DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserI
     oglContext_( oglContext ),
     log_( log )
 {
-    glm::vec4 selectionColor(
-                    localSelectionBorderColor[0],
-                    localSelectionBorderColor[1],
-                    localSelectionBorderColor[2],
-                    localSelectionBorderColor[3]
-                );
+    glm::vec4 selectionColor = localSelectionBorderColor.toVec4();
 
     // Add a selection of unselected drawables to the map of selections as a
     // selection associated to NO_USER).
@@ -137,7 +132,7 @@ void DrawablesManager::addMesh( PrimitiveID primitiveID, QColor color )
 */
 
 // FIXME: Duplicated code.
-void DrawablesManager::addMesh( PrimitiveID primitiveID, const std::uint8_t* color )
+void DrawablesManager::addMesh( PrimitiveID primitiveID, const PackableColor& color )
 {
     // FIXME: Is this necessary?
     //takeOpenGLContext();
@@ -159,7 +154,7 @@ void DrawablesManager::addMesh( PrimitiveID primitiveID, const std::uint8_t* col
 
 
 // FIXME: Duplicated code.
-void DrawablesManager::addMesh( UserID userID, PrimitiveID primitiveID, const std::uint8_t* color, PackableDrawableID drawableID )
+void DrawablesManager::addMesh( UserID userID, PrimitiveID primitiveID, const PackableColor& color, PackableDrawableID drawableID )
 {
     try {
         //takeOpenGLContext();
@@ -180,9 +175,9 @@ void DrawablesManager::addMesh( UserID userID, PrimitiveID primitiveID, const st
 }
 
 
-void DrawablesManager::addDirectionalLight( PackableDrawableID lightID, const std::uint8_t* lightColor )
+void DrawablesManager::addDirectionalLight( PackableDrawableID lightID, const PackableColor& lightColor, const PackableColor& meshColor )
 {
-    addDrawable( lightID.creatorID.getValue(), DrawablePtr( new DirectionalLight( lightColor ) ), lightID );
+    addDrawable( lightID.creatorID.getValue(), DrawablePtr( new DirectionalLight( meshColor, lightColor ) ), lightID );
 }
 
 
@@ -208,16 +203,9 @@ void DrawablesManager::deleteSelection( const unsigned int& userId )
  * 5. Selections management
  ***/
 
-void DrawablesManager::addDrawablesSelection( UserID userID, const std::uint8_t* selectionBorderColor )
+void DrawablesManager::addDrawablesSelection( UserID userID, const PackableColor& selectionBorderColor )
 {
-    glm::vec4 floatSelectionBorderColor(
-                selectionBorderColor[0],
-                selectionBorderColor[1],
-                selectionBorderColor[2],
-                selectionBorderColor[3]
-            );
-
-    drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( userID, DrawablesSelectionPtr( new DrawablesSelection( floatSelectionBorderColor ) ) ) );
+    drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( userID, DrawablesSelectionPtr( new DrawablesSelection( selectionBorderColor.toVec4() ) ) ) );
 }
 
 

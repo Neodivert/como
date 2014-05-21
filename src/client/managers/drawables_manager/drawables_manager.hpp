@@ -62,7 +62,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
         /***
          * 1. Construction
          ***/
-        DrawablesManager( ServerInterfacePtr server, UserID localUserID, const std::uint8_t* localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
+        DrawablesManager( ServerInterfacePtr server, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
         DrawablesManager( const DrawablesManager& ) = delete;
         DrawablesManager( DrawablesManager&& ) = delete;
 
@@ -101,18 +101,15 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
 
     public:
         //void addMesh( PrimitiveID primitiveID, QColor color );
-        void addMesh( PrimitiveID primitiveID, const std::uint8_t* color );
-        void addMesh( UserID userID, PrimitiveID primitiveID, const std::uint8_t* color, PackableDrawableID drawableID );
-        void addDirectionalLight( PackableDrawableID lightID, const std::uint8_t* lightColor );
-
-
-        //void addMesh( PrimitiveID, const std::uint8_t* color,  )
+        void addMesh( PrimitiveID primitiveID, const PackableColor& color );
+        void addMesh( UserID userID, PrimitiveID primitiveID, const PackableColor& color, PackableDrawableID drawableID );
+        void addDirectionalLight( PackableDrawableID lightID, const PackableColor& lightColor, const PackableColor& meshColor );
 
 
         /***
          * 7. Selections management
          ***/
-        void addDrawablesSelection( UserID userID, const std::uint8_t* selectionBorderColor );
+        void addDrawablesSelection( UserID userID, const PackableColor& selectionBorderColor );
 
         void deleteSelection();
         void deleteSelection( const unsigned int& userId );

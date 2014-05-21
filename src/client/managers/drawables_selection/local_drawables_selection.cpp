@@ -48,7 +48,7 @@ void LocalDrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 }
 
 
-void LocalDrawablesSelection::setMeshColor( const std::uint8_t* meshColor )
+void LocalDrawablesSelection::setMeshColor( const PackableColor& meshColor )
 {
     DrawablesSelection::setMeshColor( meshColor );
 

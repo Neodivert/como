@@ -60,7 +60,7 @@ MeshInfoMenu::MeshInfoMenu( LocalDrawablesSelectionPtr userSelection ) :
             static_cast< std::uint8_t >( meshColor.alpha() )
         };
 
-        userSelection_->setMeshColor( auxMeshColor );
+        userSelection_->setMeshColor( PackableColor( &auxMeshColor[0] ) );
 
         // Emit a signal indicating that the current color has changed.
         //emit meshColorChanged( meshColor_ );

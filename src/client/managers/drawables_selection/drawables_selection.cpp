@@ -218,7 +218,7 @@ void DrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 }
 
 
-void DrawablesSelection::setMeshColor( const std::uint8_t* meshColor )
+void DrawablesSelection::setMeshColor( PackableColor meshColor )
 {
     DrawablesMap::iterator drawable;
     Mesh* currentMesh = nullptr;

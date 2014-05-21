@@ -7,8 +7,6 @@
 
 #version 420 core
 
-uniform vec4 color;
-
 // Lights.
 struct Light {
 	vec3 color;
@@ -25,6 +23,7 @@ uniform DirectionalLight directionalLight;
 
 // Material info
 struct Material {
+	vec4 color;
 	vec3 ambientReflexivity;
 	vec3 diffuseReflectivity;
 	vec3 specularReflectivity;
@@ -38,6 +37,7 @@ out vec4 finalColor;
 
 void main()
 {
+/*
 	vec3 halfVector = directionalLight.lightVector + vec3( 0.0f, 0.0f, 0.0f ); // TODO: H = L + Eye (or L - Eye?).
 
 	float diffuse = max( 0.0f, dot( normal, directionalLight.lightVector ) );
@@ -58,5 +58,7 @@ void main()
 	// only with scattered light
 	vec3 rgb = min (color.rgb * scatteredLight + reflectedLight, vec3( 1.0f ) );
 	finalColor = vec4( rgb, color.a );
+*/
+	finalColor = material.color;
 }
 

@@ -29,7 +29,7 @@ class UserConnectionCommand : public UserCommand
 {
     private:
         PackableString<NAME_SIZE> name_;
-        PackableRGBA selectionColor_;
+        PackableColor selectionColor_;
 
     public:
         /***
@@ -51,7 +51,7 @@ class UserConnectionCommand : public UserCommand
          * 3. Getters
          ***/
         const char* getName() const ;
-        const std::uint8_t* getSelectionColor() const ;
+        const PackableColor& getSelectionColor() const ;
 
 
         /***

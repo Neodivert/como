@@ -26,9 +26,6 @@
 
 namespace como {
 
-const std::uint8_t DEFAULT_MESH_COLOR[] = { 0, 0, 0, 0 };
-
-
 enum class MeshType : std::uint8_t
 {
     PRIMITIVE_MESH = 0,
@@ -44,14 +41,14 @@ class MeshCreationCommand : public DrawableCommand
         PackableUint8< MeshType > meshType_;
 
         // Mesh color.
-        PackableRGBA meshColor_;
+        PackableColor meshColor_;
 
     public:
         /***
          * 1. Construction
          ***/
         MeshCreationCommand() = delete;
-        MeshCreationCommand( MeshType meshType, PackableDrawableID drawableID, const std::uint8_t* color = DEFAULT_MESH_COLOR );
+        MeshCreationCommand( MeshType meshType, PackableDrawableID drawableID, const PackableColor& color );
         MeshCreationCommand( const MeshCreationCommand& b );
         MeshCreationCommand( MeshCreationCommand&& ) = delete;
 
@@ -66,13 +63,13 @@ class MeshCreationCommand : public DrawableCommand
          * 3. Getters
          ***/
         MeshType getMeshType() const;
-        const std::uint8_t* getMeshColor() const ;
+        const PackableColor& getMeshColor() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setMeshColor( const std::uint8_t* color );
+        void setMeshColor( const PackableColor& color );
 
 
         /***

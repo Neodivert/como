@@ -38,7 +38,7 @@ UsersList::UsersList( QWidget* parent, LogPtr log ) :
 
 void UsersList::addUser( UserConnectionCommandConstPtr userConnectedPacket )
 {
-    const std::uint8_t* userSelectionColor = nullptr;
+    PackableColor userSelectionColor;
     QPixmap pixmap( 50, 50 );
 
     // Add the new User-ID-to-list-index translation to the map.
@@ -49,10 +49,10 @@ void UsersList::addUser( UserConnectionCommandConstPtr userConnectedPacket )
 
     // Generate a "icon" colored in user's color.
     pixmap.fill( QColor(
-                     userSelectionColor[0],
-                 userSelectionColor[1],
-                userSelectionColor[2],
-                userSelectionColor[3]
+                     userSelectionColor[0].getValue(),
+                 userSelectionColor[1].getValue(),
+                userSelectionColor[2].getValue(),
+                userSelectionColor[3].getValue()
             ));
     QIcon userIcon ( pixmap );
 

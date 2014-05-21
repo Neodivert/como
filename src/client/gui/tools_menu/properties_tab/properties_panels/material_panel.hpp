@@ -22,7 +22,7 @@
 
 #include <QFrame>
 #include <client/managers/drawables_selection/local_drawables_selection.hpp>
-#include <client/models/utilities/color.hpp>
+#include <common/packables/array/packable_color.hpp>
 
 namespace como {
 
@@ -51,7 +51,7 @@ class MaterialPanel : public QFrame
          * 4. Signals
          ***/
     signals:
-        void MaterialDiffuseReflexivityChanged( const Color& );
+        void MaterialDiffuseReflexivityChanged( const PackableColor& );
 
 
         /***

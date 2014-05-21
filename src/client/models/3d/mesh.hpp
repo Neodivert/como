@@ -30,6 +30,7 @@
 #include <stdexcept>
 #include <common/commands/drawable_commands/mesh_creation_command.hpp> // For MeshType type.
 #include <client/models/3d/materials/material.hpp>
+#include <common/packables/array/packable_color.hpp>
 
 namespace como {
 
@@ -65,9 +66,6 @@ class Mesh : public Drawable
         // EBO : Elements-Buffer Array.
         GLuint ebo;
 
-        // Colors
-        GLfloat color[4];
-
         // Original vertex attribues.
         std::vector< glm::vec3 > originalVertices;
         std::vector< glm::vec3 > originalNormals;
@@ -86,9 +84,9 @@ class Mesh : public Drawable
          * 1. Construction.
          ***/
     protected:
-        Mesh( MeshType type, const char* file, const std::uint8_t* color = nullptr );
+        Mesh( MeshType type, const char* file, PackableColor meshColor );
     public:
-        Mesh( const char* file, const std::uint8_t* color = nullptr );
+        Mesh( const char* file, PackableColor meshColor );
         Mesh( const Mesh& b );
         Mesh( Mesh&& ) = delete;
 
@@ -106,7 +104,7 @@ class Mesh : public Drawable
          * 3. Initialization.
          ***/
     private:
-        void initMesh( const char* file, const std::uint8_t* color = nullptr );
+        void initMesh( const char* file );
 
         void initMeshBuffers();
 
@@ -134,9 +132,8 @@ class Mesh : public Drawable
         /***
          * 6. Setters.
          ***/
-        // TODO: Change name.
-        void setColor( const GLfloat& r, const GLfloat& g, const GLfloat& b, const GLfloat& a );
-        void setMeshColor( const std::uint8_t* meshColor );
+
+        void setMeshColor( PackableColor meshColor );
 
 
         /***

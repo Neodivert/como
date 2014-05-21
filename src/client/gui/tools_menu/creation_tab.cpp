@@ -128,7 +128,7 @@ QFrame* CreationTab::createMeshFromPrimitiveCreationMenu()
             meshColor[i] = auxColor[i];
         }
 
-        scene_->getDrawablesManager()->addMesh( static_cast< PrimitiveID >( primitiveID ), meshColor );
+        scene_->getDrawablesManager()->addMesh( static_cast< PrimitiveID >( primitiveID ), PackableColor( const_cast< const std::uint8_t* >( &meshColor[0] ) ) );
     } );
 
     // Signal / Slot connection: when a new primitive is created in the scene,

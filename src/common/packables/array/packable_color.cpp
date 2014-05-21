@@ -17,7 +17,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "directional_light_creation_command.hpp"
+#include "packable_color.hpp"
 
 namespace como {
 
@@ -25,13 +25,39 @@ namespace como {
  * 1. Construction
  ***/
 
-DirectionalLightCreationCommand::DirectionalLightCreationCommand() :
-    LightCreationCommand( LightType::DIRECTIONAL_LIGHT, NULL_DRAWABLE_ID, PackableColor(), PackableColor() ) // TODO: Remove PackableColor()
+
+PackableColor::PackableColor()
+{
+    for( unsigned int i=0; i<4; i++ ){
+        (*this)[i] = 0;
+    }
+}
+
+
+PackableColor::PackableColor( const std::uint8_t* channels ) :
+    PackableArray( channels )
 {}
 
 
-DirectionalLightCreationCommand::DirectionalLightCreationCommand( PackableDrawableID drawableID, const PackableColor& lightColor, const PackableColor& meshColor ) :
-    LightCreationCommand( LightType::DIRECTIONAL_LIGHT, drawableID, meshColor, lightColor )
-{}
+PackableColor::PackableColor( std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a )
+{
+    std::array< std::uint8_t, 4 > values = {{ r, g, b, a }};
+    this->setValues( values );
+}
+
+
+/***
+ * 3. Conversions
+ ***/
+
+glm::vec4 PackableColor::toVec4() const
+{
+    return glm::vec4(
+                (*this)[0].getValue() / 255.0f,
+                (*this)[1].getValue() / 255.0f,
+                (*this)[2].getValue() / 255.0f,
+                (*this)[3].getValue() / 255.0f
+                );
+}
 
 } // namespace como

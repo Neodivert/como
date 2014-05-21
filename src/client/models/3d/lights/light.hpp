@@ -54,9 +54,9 @@ class Light : public Mesh
          * for the light's associated mesh.
          * \param lightIndex index of this light's data into the array of
          * lights in GLSL shader.
-         * \param color light color.
+         * TODO: Complete
          */
-        Light( LightType type, const char* meshPath, GLuint lightIndex, const std::uint8_t* color );
+        Light( LightType type, const char* meshPath, GLuint lightIndex, PackableColor meshColor, PackableColor lightColor );
 
         /*! \brief Copy constructor */
         // TODO: Define a right copy constructor when inplementing multiple lights
@@ -94,7 +94,7 @@ class Light : public Mesh
          ***/
 
         /*! \brief Set Light's light color */
-        void setLightColor( const std::uint8_t* color );
+        void setLightColor( PackableColor color );
 
 
         /***

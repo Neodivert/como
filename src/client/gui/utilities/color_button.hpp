@@ -22,7 +22,7 @@
 
 #include <QPushButton>
 #include <QColorDialog>
-#include <client/models/utilities/color.hpp>
+#include <common/packables/array/packable_color.hpp>
 
 namespace como {
 
@@ -65,7 +65,7 @@ class ColorButton : public QPushButton
          * 5. Signals
          ***/
     signals:
-        void colorChanged( const Color& color );
+        void colorChanged( const PackableColor& color );
 
 
         /***

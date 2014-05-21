@@ -26,14 +26,14 @@ namespace como {
  ***/
 
 PrimitiveMeshCreationCommand::PrimitiveMeshCreationCommand() :
-    MeshCreationCommand( MeshType::PRIMITIVE_MESH, NULL_DRAWABLE_ID ),
+    MeshCreationCommand( MeshType::PRIMITIVE_MESH, NULL_DRAWABLE_ID, PackableColor() ), // TODO: Remove PackableColor()
     primitiveID_( 0 )
 {
     addPackable( &primitiveID_ );
 }
 
 
-PrimitiveMeshCreationCommand::PrimitiveMeshCreationCommand( PackableDrawableID drawableID, PrimitiveID primitiveID, const std::uint8_t* meshColor ) :
+PrimitiveMeshCreationCommand::PrimitiveMeshCreationCommand( PackableDrawableID drawableID, PrimitiveID primitiveID, const PackableColor& meshColor ) :
     MeshCreationCommand( MeshType::PRIMITIVE_MESH, drawableID, meshColor ),
     primitiveID_( primitiveID )
 {

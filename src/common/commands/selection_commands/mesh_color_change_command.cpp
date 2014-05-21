@@ -32,7 +32,7 @@ MeshColorChangeCommand::MeshColorChangeCommand() :
 }
 
 
-MeshColorChangeCommand::MeshColorChangeCommand( UserID userID, const std::uint8_t* color ) :
+MeshColorChangeCommand::MeshColorChangeCommand( UserID userID, const PackableColor& color ) :
     SelectionCommand( SelectionCommandType::MESH_COLOR_CHANGE, userID ),
     meshColor_( color )
 {
@@ -44,9 +44,9 @@ MeshColorChangeCommand::MeshColorChangeCommand( UserID userID, const std::uint8_
  * 3. Getters
  ***/
 
-const std::uint8_t* MeshColorChangeCommand::getMeshColor() const
+const PackableColor& MeshColorChangeCommand::getMeshColor() const
 {
-    return &( ( meshColor_.getValues() )[0] );
+    return meshColor_;
 }
 
 } // namespace como
