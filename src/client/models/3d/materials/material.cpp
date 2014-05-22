@@ -29,7 +29,7 @@ namespace como {
 
 Material::Material() :
     color( 1.0f, 1.0f, 1.0f, 1.0f ),
-    ambientReflexivity( 0.9f ),
+    ambientReflectivity( 0.9f ),
     diffuseReflectivity( 0.9f ),
     specularReflectivity( 0.9f ),
     specularExponent( 0.9f )
@@ -37,7 +37,7 @@ Material::Material() :
 
 
 Material::Material( PackableColor color ) :
-    ambientReflexivity( 0.9f ),
+    ambientReflectivity( 0.9f ),
     diffuseReflectivity( 0.9f ),
     specularReflectivity( 0.9f ),
     specularExponent( 0.9f )
@@ -64,19 +64,19 @@ void Material::sendToShader() const
     glUniform4fv( uniformLocation, 1, &color[0] );
     checkOpenGL( "Sending material.color to shader" );
 
-    // Send ambient reflexivity to shader.
-    uniformLocation = glGetUniformLocation( currentShaderProgram, "material.ambientReflexivity" );
-    checkOpenGL( "Getting location of material.ambientReflexivity in shader" );
-    glUniform3fv( uniformLocation, 1, &ambientReflexivity[0] );
-    checkOpenGL( "Sending material.ambientReflexivity to shader" );
+    // Send ambient reflectivity to shader.
+    uniformLocation = glGetUniformLocation( currentShaderProgram, "material.ambientReflectivity" );
+    checkOpenGL( "Getting location of material.ambientReflectivity in shader" );
+    glUniform3fv( uniformLocation, 1, &ambientReflectivity[0] );
+    checkOpenGL( "Sending material.ambientReflectivity to shader" );
 
-    // Send diffuse reflexivity to shader.
+    // Send diffuse reflectivity to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.diffuseReflectivity" );
     checkOpenGL( "Getting location of material.diffuseReflectivity in shader" );
     glUniform3fv( uniformLocation, 1, &diffuseReflectivity[0] );
     checkOpenGL( "Sending material.diffuseReflectivity to shader" );
 
-    // Send diffuse reflexivity to shader.
+    // Send diffuse reflectivity to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.specularReflectivity" );
     checkOpenGL( "Getting location of material.specularReflectivity in shader" );
     glUniform3fv( uniformLocation, 1, &specularReflectivity[0] );

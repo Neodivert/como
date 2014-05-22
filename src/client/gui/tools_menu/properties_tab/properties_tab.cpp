@@ -39,10 +39,14 @@ PropertiesTab::PropertiesTab( LocalDrawablesSelectionPtr userSelection ) :
     // Construct the Mesh Info menu.
     meshInfoMenu_ = new MeshInfoMenu( userSelection_ );
 
+    // Construct the Material Panel.
+    materialPanel_ = new MaterialPanel( userSelection_ );
+
     // Add required widgets to the layout and set the latter as the current
     // layout.
     layout->addWidget( generalInfoMenu_ );
     layout->addWidget( meshInfoMenu_ );
+    layout->addWidget( materialPanel_ );
     setLayout( layout );
 
     // Every time the user's selection changes, refres this properties tab.
@@ -66,13 +70,16 @@ void PropertiesTab::refresh()
 {
     generalInfoMenu_->refresh();
 
-    // If the user selection contains meshes, make the mesh info menu visible
-    // to user and refresh it.
+    // If the user selection contains meshes, make the mesh and material panels
+    // visible to user and refresh it.
     if( userSelection_->contains( DrawableType::MESH ) ){
         meshInfoMenu_->setVisible( true );
+        materialPanel_->setVisible( true );
         meshInfoMenu_->refresh();
+        materialPanel_->refresh();
     }else{
         meshInfoMenu_->setVisible( false );
+        materialPanel_->setVisible( false );
     }
 }
 

@@ -35,7 +35,7 @@ class PackableColor : public PackableArray< PackableUint8< std::uint8_t >, std::
          ***/
         PackableColor();
         PackableColor( const std::uint8_t* channels );
-        PackableColor( std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a );
+        PackableColor( std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a = 255 );
         PackableColor( const PackableColor& ) = default;
         PackableColor( PackableColor&& ) = default;
 
@@ -49,6 +49,7 @@ class PackableColor : public PackableArray< PackableUint8< std::uint8_t >, std::
         /***
          * 3. Conversions
          ***/
+        glm::vec3 toVec3() const ;
         glm::vec4 toVec4() const ;
 
 

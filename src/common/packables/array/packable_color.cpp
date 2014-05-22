@@ -50,6 +50,16 @@ PackableColor::PackableColor( std::uint8_t r, std::uint8_t g, std::uint8_t b, st
  * 3. Conversions
  ***/
 
+glm::vec3 PackableColor::toVec3() const
+{
+    return glm::vec3(
+                (*this)[0].getValue() / 255.0f,
+                (*this)[1].getValue() / 255.0f,
+                (*this)[2].getValue() / 255.0f
+                );
+}
+
+
 glm::vec4 PackableColor::toVec4() const
 {
     return glm::vec4(

@@ -24,6 +24,7 @@
 #include "general_info_menu.hpp"
 #include "mesh_info_menu.hpp"
 #include <client/managers/drawables_selection/local_drawables_selection.hpp>
+#include "properties_panels/material_panel.hpp"
 
 namespace como {
 
@@ -41,17 +42,26 @@ class PropertiesTab : public QFrame
         /*! Local user's (drawables) selection. */
         LocalDrawablesSelectionPtr userSelection_;
 
+
         /*!
          * Menu for manipulating the general info about the currently selected
          * 3D object.
          */
         GeneralInfoMenu* generalInfoMenu_;
 
+
         /*!
          * Menu for manipulating the properties of the mesh(es) selected by
          * user.
          */
         MeshInfoMenu* meshInfoMenu_;
+
+
+        /*!
+         * \brief Panel for manipulating the material properties of the current
+         * selected selection.
+         */
+        MaterialPanel* materialPanel_;
 
 
     public:

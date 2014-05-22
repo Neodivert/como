@@ -19,17 +19,41 @@
 
 #include "material_panel.hpp"
 
-namespace como {
-
 #include <QFormLayout>
+#include <client/gui/utilities/color_button.hpp>
 
 
 /***
  * 1. Construction
  ***/
 
+namespace como {
+
 MaterialPanel::MaterialPanel( LocalDrawablesSelectionPtr userSelection ) :
     userSelection_( userSelection )
-{}
+{
+    QFormLayout* layout = new QFormLayout;
+    ColorButton* diffuseReflectivityButton = new ColorButton( QColor( 255, 0, 0, 255 ) );
+
+    layout->addWidget( new QLabel( "Material properties" ) );
+    layout->addRow( "Diffuse reflexivity: ", diffuseReflectivityButton );
+
+    setLayout( layout );
+
+    QObject::connect( diffuseReflectivityButton, &ColorButton::colorChanged, [=,this]( const PackableColor& diffuseReflectivity )
+    {
+        userSelection->setMaterialDiffuseReflexivity( diffuseReflectivity );
+    });
+}
+
+
+/***
+ * 3. Refreshing
+ ***/
+
+void MaterialPanel::refresh()
+{
+
+}
 
 } // namespace como

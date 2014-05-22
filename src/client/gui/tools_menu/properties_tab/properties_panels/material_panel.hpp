@@ -48,6 +48,12 @@ class MaterialPanel : public QFrame
 
 
         /***
+         * 3. Refreshing
+         ***/
+        void refresh();
+
+
+        /***
          * 4. Signals
          ***/
     signals:
@@ -55,7 +61,7 @@ class MaterialPanel : public QFrame
 
 
         /***
-         * 3. Operators
+         * 5. Operators
          ***/
         MaterialPanel& operator = ( const MaterialPanel& ) = delete;
         MaterialPanel& operator = ( MaterialPanel&& ) = delete;

@@ -90,7 +90,6 @@ glm::vec3 DrawablesManager::getPivotPoint( UserID userID ) const
     }
 }
 
-
 /***
  * 5. Drawables administration
  ***/

@@ -74,14 +74,7 @@ LightType Light::getType() const
 
 void Light::setLightColor( PackableColor color )
 {
-    // TODO: Use a vec4? (change in shader).
-    glm::vec3 floatColor(
-                color[0].getValue() / 255.0f,
-                color[1].getValue() / 255.0f,
-                color[2].getValue() / 255.0f
-                );
-
-    glUniform3fv( colorLocation_, 1, &floatColor[0] );
+    glUniform3fv( colorLocation_, 1, &color.toVec3()[0] );
 }
 
 } // namespace como

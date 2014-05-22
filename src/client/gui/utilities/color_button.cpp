@@ -45,7 +45,14 @@ void ColorButton::setColor( const QColor& color )
 
     // Emit a signal indicating that the current color has changed.
     // TODO: Complete.
-    //emit colorChanged( color_ );
+    PackableColor packableColor(
+                static_cast< std::uint8_t >( color.red() ),
+                static_cast< std::uint8_t >( color.blue() ),
+                static_cast< std::uint8_t >( color.green() ),
+                static_cast< std::uint8_t >( color.alpha() )
+                );
+
+    emit colorChanged( packableColor );
 }
 
 

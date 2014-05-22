@@ -351,6 +351,12 @@ void Mesh::setMeshColor( PackableColor meshColor )
 }
 
 
+void Mesh::setMaterialDiffuseReflexivity( const PackableColor& diffuseReflexivity )
+{
+    material_.diffuseReflectivity = diffuseReflexivity.toVec3();
+}
+
+
 /***
  * 7. Intersections.
  ***/

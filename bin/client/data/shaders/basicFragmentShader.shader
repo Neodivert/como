@@ -53,7 +53,7 @@ void main()
 			specular = pow( specular, material.specularExponent ); // sharpen the highlight
 		}
 
-		vec3 scatteredLight = lights[0].color * diffuse;
+		vec3 scatteredLight = lights[0].color * diffuse * material.diffuseReflectivity;
 		vec3 reflectedLight = lights[0].color * specular * material.specularReflectivity;
 	
 		// don’t modulate the underlying color with reflected light,

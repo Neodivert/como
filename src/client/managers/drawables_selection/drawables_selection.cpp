@@ -241,6 +241,28 @@ void DrawablesSelection::setMeshColor( PackableColor meshColor )
 }
 
 
+void DrawablesSelection::setMaterialDiffuseReflexivity( const PackableColor& diffuseReflexivity )
+{
+    DrawablesMap::iterator drawable;
+    Mesh* currentMesh = nullptr;
+
+    mutex_.lock();
+
+    // Change the mesh color for every mesh in the selection.
+    for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
+        currentMesh = (dynamic_cast< Mesh* >( drawable->second.get() ) );
+
+        if( currentMesh ){
+            currentMesh->setMaterialDiffuseReflexivity( diffuseReflexivity );
+        }
+    }
+
+    // This selection has changed, so indicate it.
+    setChanged();
+
+    mutex_.unlock();
+}
+
 /***
  * 4. Transformations
  ***/

@@ -30,7 +30,7 @@ class Material
     public:
         glm::vec4 color;
 
-        glm::vec3 ambientReflexivity;   // ("Ka" in a *.mtl file).
+        glm::vec3 ambientReflectivity;  // ("Ka" in a *.mtl file).
         glm::vec3 diffuseReflectivity;  // ("Kd" in a *.mtl file).
         glm::vec3 specularReflectivity; // ("Ks" in a *.mtl file).
         float specularExponent;         // ("Ns" in a *.mtl file).
