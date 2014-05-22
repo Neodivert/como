@@ -241,7 +241,7 @@ void DrawablesSelection::setMeshColor( PackableColor meshColor )
 }
 
 
-void DrawablesSelection::setMaterialDiffuseReflexivity( const PackableColor& diffuseReflexivity )
+void DrawablesSelection::setMaterialDiffuseReflectivity( const PackableColor& diffuseReflectivity )
 {
     DrawablesMap::iterator drawable;
     Mesh* currentMesh = nullptr;
@@ -253,7 +253,7 @@ void DrawablesSelection::setMaterialDiffuseReflexivity( const PackableColor& dif
         currentMesh = (dynamic_cast< Mesh* >( drawable->second.get() ) );
 
         if( currentMesh ){
-            currentMesh->setMaterialDiffuseReflexivity( diffuseReflexivity );
+            currentMesh->setMaterialDiffuseReflectivity( diffuseReflectivity );
         }
     }
 
@@ -262,6 +262,30 @@ void DrawablesSelection::setMaterialDiffuseReflexivity( const PackableColor& dif
 
     mutex_.unlock();
 }
+
+
+void DrawablesSelection::setMaterialSpecularReflectivity( const PackableColor& specularReflectivity )
+{
+    DrawablesMap::iterator drawable;
+    Mesh* currentMesh = nullptr;
+
+    mutex_.lock();
+
+    // Change the mesh color for every mesh in the selection.
+    for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
+        currentMesh = (dynamic_cast< Mesh* >( drawable->second.get() ) );
+
+        if( currentMesh ){
+            currentMesh->setMaterialSpecularReflectivity( specularReflectivity );
+        }
+    }
+
+    // This selection has changed, so indicate it.
+    setChanged();
+
+    mutex_.unlock();
+}
+
 
 /***
  * 4. Transformations

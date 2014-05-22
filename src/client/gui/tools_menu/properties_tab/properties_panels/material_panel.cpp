@@ -34,15 +34,22 @@ MaterialPanel::MaterialPanel( LocalDrawablesSelectionPtr userSelection ) :
 {
     QFormLayout* layout = new QFormLayout;
     ColorButton* diffuseReflectivityButton = new ColorButton( QColor( 255, 0, 0, 255 ) );
+    ColorButton* specularReflectivityButton = new ColorButton( QColor( 255, 0, 0, 255 ) );
 
     layout->addWidget( new QLabel( "Material properties" ) );
-    layout->addRow( "Diffuse reflexivity: ", diffuseReflectivityButton );
+    layout->addRow( "Diffuse reflectivity: ", diffuseReflectivityButton );
+    layout->addRow( "Specular reflectivity: ", specularReflectivityButton );
 
     setLayout( layout );
 
     QObject::connect( diffuseReflectivityButton, &ColorButton::colorChanged, [=,this]( const PackableColor& diffuseReflectivity )
     {
-        userSelection->setMaterialDiffuseReflexivity( diffuseReflectivity );
+        userSelection->setMaterialDiffuseReflectivity( diffuseReflectivity );
+    });
+
+    QObject::connect( specularReflectivityButton, &ColorButton::colorChanged, [=,this]( const PackableColor& specularReflectivity )
+    {
+        userSelection->setMaterialSpecularReflectivity( specularReflectivity );
     });
 }
 

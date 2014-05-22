@@ -54,14 +54,7 @@ class MaterialPanel : public QFrame
 
 
         /***
-         * 4. Signals
-         ***/
-    signals:
-        void MaterialDiffuseReflexivityChanged( const PackableColor& );
-
-
-        /***
-         * 5. Operators
+         * 4. Operators
          ***/
         MaterialPanel& operator = ( const MaterialPanel& ) = delete;
         MaterialPanel& operator = ( MaterialPanel&& ) = delete;

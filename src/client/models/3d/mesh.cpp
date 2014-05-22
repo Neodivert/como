@@ -351,9 +351,15 @@ void Mesh::setMeshColor( PackableColor meshColor )
 }
 
 
-void Mesh::setMaterialDiffuseReflexivity( const PackableColor& diffuseReflexivity )
+void Mesh::setMaterialDiffuseReflectivity( const PackableColor& diffuseReflectivity )
 {
-    material_.diffuseReflectivity = diffuseReflexivity.toVec3();
+    material_.diffuseReflectivity = diffuseReflectivity.toVec3();
+}
+
+
+void Mesh::setMaterialSpecularReflectivity( const PackableColor& specularReflectivity )
+{
+    material_.specularReflectivity = specularReflectivity.toVec3();
 }
 
 
