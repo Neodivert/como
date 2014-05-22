@@ -88,7 +88,7 @@ void DirectionalLight::update()
 
     // Compute transformed light vector.
     // TODO: Extract original light vector from DirectionalLight primitive?
-    glm::vec3 lightVector = glm::vec3( transformationMatrix * glm::vec4( 0.0f, -1.0f, 0.0f, 1.0f ) );
+    glm::vec3 lightVector = glm::normalize( glm::vec3( transformationMatrix * glm::vec4( 0.0f, -1.0f, 0.0f, 1.0f ) ) );
 
     // Update lightVector in shader.
     glUniform3fv( lightVectorLocation_, 1, &lightVector[0] );
