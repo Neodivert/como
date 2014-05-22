@@ -287,6 +287,30 @@ void DrawablesSelection::setMaterialSpecularReflectivity( const PackableColor& s
 }
 
 
+void DrawablesSelection::setMaterialSpecularExponent( float specularExponent )
+{
+    DrawablesMap::iterator drawable;
+    Mesh* currentMesh = nullptr;
+
+    mutex_.lock();
+
+    // Change the mesh color for every mesh in the selection.
+    for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
+        currentMesh = (dynamic_cast< Mesh* >( drawable->second.get() ) );
+
+        if( currentMesh ){
+            currentMesh->setMaterialSpecularExponent( specularExponent );
+        }
+    }
+
+    // This selection has changed, so indicate it.
+    setChanged();
+
+    mutex_.unlock();
+}
+
+
+
 /***
  * 4. Transformations
  ***/

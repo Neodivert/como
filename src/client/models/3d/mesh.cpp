@@ -363,6 +363,12 @@ void Mesh::setMaterialSpecularReflectivity( const PackableColor& specularReflect
 }
 
 
+void Mesh::setMaterialSpecularExponent( float specularExponent )
+{
+    material_.specularExponent = specularExponent;
+}
+
+
 /***
  * 7. Intersections.
  ***/

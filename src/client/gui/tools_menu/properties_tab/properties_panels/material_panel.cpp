@@ -20,6 +20,7 @@
 #include "material_panel.hpp"
 
 #include <QFormLayout>
+#include <QDoubleSpinBox>
 #include <client/gui/utilities/color_button.hpp>
 
 
@@ -32,16 +33,27 @@ namespace como {
 MaterialPanel::MaterialPanel( LocalDrawablesSelectionPtr userSelection ) :
     userSelection_( userSelection )
 {
+    // Create the widgets for modifying material properties.
     QFormLayout* layout = new QFormLayout;
     ColorButton* diffuseReflectivityButton = new ColorButton( QColor( 255, 0, 0, 255 ) );
     ColorButton* specularReflectivityButton = new ColorButton( QColor( 255, 0, 0, 255 ) );
+    QDoubleSpinBox* specularExponentSpinBox = new QDoubleSpinBox();
 
+    // Set the parameters for the widget used for modifying material
+    // specular exponent.
+    specularExponentSpinBox->setDecimals( 2 );
+    specularExponentSpinBox->setSingleStep( 1.0 );
+    specularExponentSpinBox->setRange( 0.0, 100.0 );
+
+    // Set this panel's layout.
     layout->addWidget( new QLabel( "Material properties" ) );
     layout->addRow( "Diffuse reflectivity: ", diffuseReflectivityButton );
     layout->addRow( "Specular reflectivity: ", specularReflectivityButton );
-
+    layout->addRow( "Specular exponent: ", specularExponentSpinBox );
     setLayout( layout );
 
+    // Connect the signals emitted when user changes a material parameter to
+    // the corresponding methods which change those parameters.
     QObject::connect( diffuseReflectivityButton, &ColorButton::colorChanged, [=,this]( const PackableColor& diffuseReflectivity )
     {
         userSelection->setMaterialDiffuseReflectivity( diffuseReflectivity );
@@ -50,6 +62,11 @@ MaterialPanel::MaterialPanel( LocalDrawablesSelectionPtr userSelection ) :
     QObject::connect( specularReflectivityButton, &ColorButton::colorChanged, [=,this]( const PackableColor& specularReflectivity )
     {
         userSelection->setMaterialSpecularReflectivity( specularReflectivity );
+    });
+
+    void (QDoubleSpinBox::*spinBoxValueChanged)(double) = &QDoubleSpinBox::valueChanged;
+    QObject::connect( specularExponentSpinBox, spinBoxValueChanged, [=,this]( double specularExponent ){
+        userSelection->setMaterialSpecularExponent( static_cast< float >( specularExponent ) );
     });
 }
 

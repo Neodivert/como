@@ -108,6 +108,7 @@ class DrawablesSelection : public Changeable
         virtual void setMeshColor( PackableColor meshColor );
         virtual void setMaterialDiffuseReflectivity( const PackableColor& diffuseReflectivity );
         virtual void setMaterialSpecularReflectivity( const PackableColor& diffuseReflectivity );
+        virtual void setMaterialSpecularExponent( float specularExponent );
 
 
         /***

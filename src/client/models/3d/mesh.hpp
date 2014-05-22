@@ -136,6 +136,7 @@ class Mesh : public Drawable
         void setMeshColor( PackableColor meshColor );
         void setMaterialDiffuseReflectivity( const PackableColor& diffuseReflectivity );
         void setMaterialSpecularReflectivity( const PackableColor& specularReflectivity );
+        void setMaterialSpecularExponent( float specularExponent );
 
 
         /***
