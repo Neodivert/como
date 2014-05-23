@@ -77,7 +77,7 @@ MaterialPanel::MaterialPanel( LocalDrawablesSelectionPtr userSelection ) :
 
 void MaterialPanel::refresh()
 {
-
+    // TODO: Complete.
 }
 
 } // namespace como

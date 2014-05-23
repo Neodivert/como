@@ -61,6 +61,10 @@ class SelectionParameterChangeCommand : public AbstractSelectionParameterChangeC
 };
 
 typedef SelectionParameterChangeCommand< SelectionParameterName::MATERIAL_COLOR, PackableColor, std::array< std::uint8_t, 4 > > SelectionMaterialColorChangeCommand;
+typedef SelectionParameterChangeCommand< SelectionParameterName::MATERIAL_COLOR, PackableColor, std::array< std::uint8_t, 4 > > SelectionMaterialDiffuseReflectivityChangeCommand;
+typedef SelectionParameterChangeCommand< SelectionParameterName::MATERIAL_COLOR, PackableColor, std::array< std::uint8_t, 4 > > SelectionMaterialSpecularReflectivityChangeCommand;
+typedef SelectionParameterChangeCommand< SelectionParameterName::MATERIAL_COLOR, PackableFloat, float > SelectionMaterialSpecularExponentChangeCommand;
+
 
 /***
  * 1. Construction

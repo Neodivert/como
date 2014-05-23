@@ -63,6 +63,9 @@ class LocalDrawablesSelection : public QObject, public DrawablesSelection
          ***/
         virtual void setPivotPointMode( PivotPointMode pivotPointMode );
         virtual void setMeshColor( const PackableColor& meshColor );
+        virtual void setMaterialDiffuseReflectivity( const PackableColor& diffuseReflectivity );
+        virtual void setMaterialSpecularReflectivity( const PackableColor& diffuseReflectivity );
+        virtual void setMaterialSpecularExponent( float specularExponent );
 
 
         /***

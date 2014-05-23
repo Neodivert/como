@@ -25,7 +25,10 @@
 namespace como {
 
 enum class SelectionParameterName : std::uint8_t {
-    MATERIAL_COLOR = 0
+    MATERIAL_COLOR = 0,
+    MATERIAL_DIFFUSE_REFLECTIVITY,
+    MATERIAL_SPECULAR_REFLECTIVITY,
+    MATERIAL_SPECULAR_EXPONENT
 };
 typedef PackableUint8< SelectionParameterName > PackableSelectionParameterName;
 

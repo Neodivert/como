@@ -133,6 +133,15 @@ const void* PackableCommandsList::unpack( const void* buffer )
                             case SelectionParameterName::MATERIAL_COLOR:
                                 command = CommandPtr( new SelectionMaterialColorChangeCommand );
                             break;
+                            case SelectionParameterName::MATERIAL_DIFFUSE_REFLECTIVITY:
+                                command = CommandPtr( new SelectionMaterialDiffuseReflectivityChangeCommand );
+                            break;
+                            case SelectionParameterName::MATERIAL_SPECULAR_REFLECTIVITY:
+                                command = CommandPtr( new SelectionMaterialSpecularReflectivityChangeCommand );
+                            break;
+                            case SelectionParameterName::MATERIAL_SPECULAR_EXPONENT:
+                                command = CommandPtr( new SelectionMaterialSpecularExponentChangeCommand );
+                            break;
                         }
                     break;
                 }

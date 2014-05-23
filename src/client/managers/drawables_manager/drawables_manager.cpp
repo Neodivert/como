@@ -379,10 +379,41 @@ void DrawablesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr c
 
             switch( abstractSelectionParameterChangeCommand->getParameterName() ){
                 case SelectionParameterName::MATERIAL_COLOR:
+                {
                     const SelectionMaterialColorChangeCommand* materialColorChange =
                             dynamic_cast< const SelectionMaterialColorChangeCommand* >( abstractSelectionParameterChangeCommand );
 
                     getUserSelection( command->getUserID() )->setMeshColor( materialColorChange->getParameterValue() );
+                    break;
+                }
+
+                case SelectionParameterName::MATERIAL_DIFFUSE_REFLECTIVITY:
+                {
+                    const SelectionMaterialDiffuseReflectivityChangeCommand* diffuseReflexitivyChange =
+                            dynamic_cast< const SelectionMaterialDiffuseReflectivityChangeCommand* >( abstractSelectionParameterChangeCommand );
+
+                    getUserSelection( command->getUserID() )->setMaterialDiffuseReflectivity( diffuseReflexitivyChange->getParameterValue() );
+                    break;
+                }
+
+                case SelectionParameterName::MATERIAL_SPECULAR_REFLECTIVITY:
+                {
+                    const SelectionMaterialSpecularReflectivityChangeCommand* specularReflexitivyChange =
+                            dynamic_cast< const SelectionMaterialSpecularReflectivityChangeCommand* >( abstractSelectionParameterChangeCommand );
+
+                    getUserSelection( command->getUserID() )->setMaterialSpecularReflectivity( specularReflexitivyChange->getParameterValue() );
+                    break;
+                }
+
+                case SelectionParameterName::MATERIAL_SPECULAR_EXPONENT:
+                {
+                    const SelectionMaterialSpecularExponentChangeCommand* specularExponentChange =
+                            dynamic_cast< const SelectionMaterialSpecularExponentChangeCommand* >( abstractSelectionParameterChangeCommand );
+
+                    getUserSelection( command->getUserID() )->setMaterialSpecularExponent( specularExponentChange->getParameterValue() );
+                    break;
+                }
+
             }
         break;
     }
