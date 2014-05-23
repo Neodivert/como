@@ -29,7 +29,7 @@ enum class SelectionCommandType : std::uint8_t {
     SELECTION_RESPONSE,
     SELECTION_TRANSFORMATION,
     SELECTION_DELETION,
-    MESH_COLOR_CHANGE
+    PARAMETER_CHANGE
 };
 typedef PackableUint8< SelectionCommandType > PackableSelectionCommandType;
 

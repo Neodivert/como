@@ -52,7 +52,7 @@ void LocalDrawablesSelection::setMeshColor( const PackableColor& meshColor )
 {
     DrawablesSelection::setMeshColor( meshColor );
 
-    server_->sendCommand( CommandConstPtr( new MeshColorChangeCommand( localUserID_, meshColor ) ) );
+    server_->sendCommand( CommandConstPtr( new SelectionMaterialColorChangeCommand( localUserID_, meshColor ) ) );
 }
 
 

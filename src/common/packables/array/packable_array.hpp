@@ -20,7 +20,7 @@
 #ifndef PACKABLE_ARRAY_WRAPPER_HPP
 #define PACKABLE_ARRAY_WRAPPER_HPP
 
-#include <common/packables/packable.hpp>
+#include <common/packables/abstract_packable_wrapper.hpp>
 #include <common/packables/packable_wrapper.hpp>
 #include <cstdint>
 #include <array>
@@ -32,7 +32,7 @@ namespace como {
 //#define PACKABLE_ARRAY template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
 
 template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
-class PackableArray : public Packable
+class PackableArray : public AbstractPackableWrapper< std::array< ElementPlainType, ARRAY_SIZE > >
 {
     static_assert(
         std::is_base_of< PackableWrapper< ElementPlainType >, ElementPackableType>::value,
@@ -72,6 +72,8 @@ class PackableArray : public Packable
          * 3. Getters
          ***/
 
+        std::array< ElementPlainType, ARRAY_SIZE > getValue() const;
+
         /*!
          * \brief returns a pointer to the inner array.
          * \return a pointer to the inner array.
@@ -97,6 +99,9 @@ class PackableArray : public Packable
         const ElementPackableType& operator []( unsigned int index ) const;
 
 
+
+
+
         /***
          * 4. Setters
          ***/
@@ -107,6 +112,8 @@ class PackableArray : public Packable
          */
         void setValues( ElementPlainType* values );
 
+
+        void setValue( std::array< ElementPlainType, ARRAY_SIZE > values );
 
         void setValues( std::array< ElementPlainType, ARRAY_SIZE > values );
 
@@ -170,6 +177,12 @@ std::uint16_t PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::
 
 
 template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+std::array< ElementPlainType, ARRAY_SIZE > PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::getValue() const
+{
+    return getValues();
+}
+
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
 std::array< ElementPlainType, ARRAY_SIZE > PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::getValues() const
 {
     unsigned int i;
@@ -209,6 +222,13 @@ void PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::setValues
     for( i=0; i<ARRAY_SIZE; i++ ){
         elements_[i] = values[i];
     }
+}
+
+
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+void PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::setValue( std::array< ElementPlainType, ARRAY_SIZE > values )
+{
+    setValues( values );
 }
 
 

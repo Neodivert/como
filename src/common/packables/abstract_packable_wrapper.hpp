@@ -17,35 +17,29 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PACKABLE_WRAPPER_HPP
-#define PACKABLE_WRAPPER_HPP
+#ifndef ABSTRACT_PACKABLE_WRAPPER_HPP
+#define ABSTRACT_PACKABLE_WRAPPER_HPP
 
-#include <common/packables/abstract_packable_wrapper.hpp>
+#include "packable.hpp"
 
 namespace como {
 
 template <class PlainType>
-class PackableWrapper : public AbstractPackableWrapper< PlainType >
+class AbstractPackableWrapper : public Packable
 {
-    private:
-        PlainType value_;
-
     public:
         /***
          * 1. Construction
          ***/
 
         /*! \brief Default constructor */
-        PackableWrapper() = default;
-
-        /*! \brief Constructs a PackableWrapper around the given value. */
-        PackableWrapper( const PlainType& value ) : value_( value ){}
+        AbstractPackableWrapper() = default;
 
         /*! \brief Copy constructor */
-        PackableWrapper( const PackableWrapper& ) = default;
+        AbstractPackableWrapper( const AbstractPackableWrapper& ) = default;
 
         /*! \brief Move constructor */
-        PackableWrapper( PackableWrapper&& ) = default;
+        AbstractPackableWrapper( AbstractPackableWrapper&& ) = default;
 
 
         /***
@@ -53,15 +47,15 @@ class PackableWrapper : public AbstractPackableWrapper< PlainType >
          ***/
 
         /*! \brief Destructor */
-        ~PackableWrapper() = default;
+        ~AbstractPackableWrapper() = default;
 
 
         /***
          * 3. Getters
          ***/
 
-        /*! \brief Returns the valued held by this PackableWrapper */
-        PlainType getValue() const { return value_; }
+        /*! \brief Returns the valued held by this AbstractPackableWrapper */
+        virtual PlainType getValue() const = 0;
 
         /*! \brief see Packable::getPacketSize const */
         virtual std::uint16_t getPacketSize() const = 0;
@@ -71,8 +65,8 @@ class PackableWrapper : public AbstractPackableWrapper< PlainType >
          * 4. Setters
          ***/
 
-        /*! \brief Set this PackableWrapper's inner value */
-        void setValue( PlainType value ){ this->value_ = value; }
+        /*! \brief Set this AbstractPackableWrapper's inner value */
+        virtual void setValue( PlainType value ) = 0;
 
 
         /***
@@ -93,29 +87,26 @@ class PackableWrapper : public AbstractPackableWrapper< PlainType >
          * 7. Operators
          ***/
 
-        /*! \brief Assigns the given value to this PackableWrapper */
-        PackableWrapper<PlainType>& operator = ( const PlainType& value );
+        /*! \brief Assigns the given value to this AbstractPackableWrapper */
+        AbstractPackableWrapper<PlainType>& operator = ( const PlainType& value );
 
         /*! \brief Copy assignment operator */
-        PackableWrapper<PlainType>& operator = ( const PackableWrapper<PlainType>& ) = default;
+        AbstractPackableWrapper<PlainType>& operator = ( const AbstractPackableWrapper<PlainType>& ) = default;
 
         /*! \brief Move assignment operator */
-        PackableWrapper<PlainType>& operator = ( PackableWrapper<PlainType>&& ) = default;
+        AbstractPackableWrapper<PlainType>& operator = ( AbstractPackableWrapper<PlainType>&& ) = default;
 };
-
 
 /***
  * 7. Operators
  ***/
 
-/*! \brief Assigns the given value to this PackableWrapper */
-template < class PlainType >
-PackableWrapper<PlainType>& PackableWrapper<PlainType>::operator = ( const PlainType& value )
+template <class PlainType>
+AbstractPackableWrapper<PlainType>& AbstractPackableWrapper<PlainType>::operator = ( const PlainType& value )
 {
-    value_ = value;
+    setValue( value );
 }
-
 
 } // namespace como
 
-#endif // PACKABLEWRAPPER_HPP
+#endif // ABSTRACT_PACKABLE_WRAPPER_HPP

@@ -128,8 +128,12 @@ const void* PackableCommandsList::unpack( const void* buffer )
                     case SelectionCommandType::SELECTION_TRANSFORMATION:
                         command = CommandPtr( new SelectionTransformationCommand );
                     break;
-                    case SelectionCommandType::MESH_COLOR_CHANGE:
-                        command = CommandPtr( new MeshColorChangeCommand );
+                    case SelectionCommandType::PARAMETER_CHANGE:
+                        switch( AbstractSelectionParameterChangeCommand::getParameterName( buffer ) ){
+                            case SelectionParameterName::MATERIAL_COLOR:
+                                command = CommandPtr( new SelectionMaterialColorChangeCommand );
+                            break;
+                        }
                     break;
                 }
             break;

@@ -39,6 +39,11 @@ PackableColor::PackableColor( const std::uint8_t* channels ) :
 {}
 
 
+PackableColor::PackableColor( const std::array< std::uint8_t, 4>& channels ) :
+    PackableArray( &channels[0] )
+{}
+
+
 PackableColor::PackableColor( std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a )
 {
     std::array< std::uint8_t, 4 > values = {{ r, g, b, a }};
