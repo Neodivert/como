@@ -47,6 +47,9 @@ class Material
          * 2. Shader comunication
          ***/
         void sendToShader() const;
+
+
+        void print() const;
 };
 
 } // namespace como

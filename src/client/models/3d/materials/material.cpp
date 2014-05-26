@@ -89,4 +89,17 @@ void Material::sendToShader() const
     checkOpenGL( "Sending material.specularExponent to shader" );
 }
 
+
+void Material::print() const
+{
+    std::cout << "Material" << std::endl
+              << "----------------------------------------------" << std::endl
+              << "Color: (" << color[0] << ", " << color[1] << ", " << color[2] << ", " << color[3] << ")" << std::endl
+              << "Ambient reflectivity: (" << ambientReflectivity[0] << ", " << ambientReflectivity[1] << ", " << ambientReflectivity[2] << ")" << std::endl
+              << "Diffuse reflectivity: (" << diffuseReflectivity[0] << ", " << diffuseReflectivity[1] << ", " << diffuseReflectivity[2] << ")" << std::endl
+              << "Specular reflectivity: (" << specularReflectivity[0] << ", " << specularReflectivity[1] << ", " << specularReflectivity[2] << ")" << std::endl
+              << "Specular exponent: (" << specularExponent << ")" << std::endl
+              << "----------------------------------------------" << std::endl;
+}
+
 } // namespace como
