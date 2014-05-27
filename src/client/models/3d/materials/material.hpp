@@ -42,6 +42,8 @@ class Material
     public:
         Material();
         Material( PackableColor color );
+        Material( const Material& ) = default;
+        Material( Material&& ) = default;
 
 
         /***
@@ -85,8 +87,8 @@ class Material
         /***
          * 7. Operators
          ***/
-        Material& operator = ( const Material& ) = delete;
-        Material& operator = ( Material&& ) = delete;
+        Material& operator = ( const Material& ) = default;
+        Material& operator = ( Material&& ) = default;
 };
 
 } // namespace como
