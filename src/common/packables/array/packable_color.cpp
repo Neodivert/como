@@ -34,6 +34,32 @@ PackableColor::PackableColor()
 }
 
 
+PackableColor::PackableColor( const glm::vec3& channels )
+{
+    std::array< std::uint8_t, 4 > values = {{
+                                                static_cast< std::uint8_t >( channels[0] * 255.0f ),
+                                                static_cast< std::uint8_t >( channels[1] * 255.0f ),
+                                                static_cast< std::uint8_t >( channels[2] * 255.0f ),
+                                                255
+                                            }};
+
+    this->setValues( values );
+}
+
+
+PackableColor::PackableColor( const glm::vec4& channels )
+{
+    std::array< std::uint8_t, 4 > values = {{
+                                                static_cast< std::uint8_t >( channels[0] * 255.0f ),
+                                                static_cast< std::uint8_t >( channels[1] * 255.0f ),
+                                                static_cast< std::uint8_t >( channels[2] * 255.0f ),
+                                                static_cast< std::uint8_t >( channels[3] * 255.0f )
+                                            }};
+
+    this->setValues( values );
+}
+
+
 PackableColor::PackableColor( const std::uint8_t* channels ) :
     PackableArray( channels )
 {}

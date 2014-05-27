@@ -27,29 +27,66 @@ namespace como {
 
 class Material
 {
-    public:
-        glm::vec4 color;
+    private:
+        glm::vec4 color_;
 
-        glm::vec3 ambientReflectivity;  // ("Ka" in a *.mtl file).
-        glm::vec3 diffuseReflectivity;  // ("Kd" in a *.mtl file).
-        glm::vec3 specularReflectivity; // ("Ks" in a *.mtl file).
-        float specularExponent;         // ("Ns" in a *.mtl file).
+        glm::vec3 ambientReflectivity_;  // ("Ka" in a *.mtl file).
+        glm::vec3 diffuseReflectivity_;  // ("Kd" in a *.mtl file).
+        glm::vec3 specularReflectivity_; // ("Ks" in a *.mtl file).
+        float specularExponent_;         // ("Ns" in a *.mtl file).
 
 
         /***
          * 1. Construction
          ***/
+    public:
         Material();
         Material( PackableColor color );
 
 
         /***
-         * 2. Shader comunication
+         * 2. Destruction
+         ***/
+        ~Material() = default;
+
+
+        /***
+         * 3. Getters
+         ***/
+        PackableColor getColor() const;
+        PackableColor getAmbientReflectivity() const;
+        PackableColor getDiffuseReflectivity() const;
+        PackableColor getSpecularReflectivity() const;
+        float getSpecularExponent() const;
+
+
+        /***
+         * 4. Setters
+         ***/
+        void setColor( const PackableColor& color );
+        void setAmbientReflectivity( const PackableColor& ambientReflectivity );
+        void setDiffuseReflectivity( const PackableColor& diffuseReflectivity );
+        void setSpecularReflectivity( const PackableColor& specularReflectivity );
+        void setSpecularExponent( float specularExponent );
+
+
+        /***
+         * 5. Shader comunication
          ***/
         void sendToShader() const;
 
 
+        /***
+         * 6. Auxiliar methods
+         ***/
         void print() const;
+
+
+        /***
+         * 7. Operators
+         ***/
+        Material& operator = ( const Material& ) = delete;
+        Material& operator = ( Material&& ) = delete;
 };
 
 } // namespace como

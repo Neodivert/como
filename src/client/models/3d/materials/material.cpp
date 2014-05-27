@@ -28,26 +28,86 @@ namespace como {
  ***/
 
 Material::Material() :
-    color( 1.0f, 1.0f, 1.0f, 1.0f ),
-    ambientReflectivity( 0.9f ),
-    diffuseReflectivity( 0.9f ),
-    specularReflectivity( 0.9f ),
-    specularExponent( 0.9f )
+    color_( 1.0f, 1.0f, 1.0f, 1.0f ),
+    ambientReflectivity_( 0.9f ),
+    diffuseReflectivity_( 0.9f ),
+    specularReflectivity_( 0.9f ),
+    specularExponent_( 0.9f )
 {}
 
 
 Material::Material( PackableColor color ) :
-    ambientReflectivity( 0.9f ),
-    diffuseReflectivity( 0.9f ),
-    specularReflectivity( 0.9f ),
-    specularExponent( 0.9f )
+    ambientReflectivity_( 0.9f ),
+    diffuseReflectivity_( 0.9f ),
+    specularReflectivity_( 0.9f ),
+    specularExponent_( 0.9f )
 {
-    this->color = color.toVec4();
+    color_ = color.toVec4();
 }
 
 
 /***
- * 2. Shader comunication
+ * 3. Getters
+ ***/
+
+PackableColor Material::getColor() const
+{
+    return PackableColor( color_ );
+}
+
+PackableColor Material::getAmbientReflectivity() const
+{
+    return PackableColor( ambientReflectivity_ );
+}
+
+PackableColor Material::getDiffuseReflectivity() const
+{
+    return PackableColor( diffuseReflectivity_ );
+}
+
+PackableColor Material::getSpecularReflectivity() const
+{
+    return PackableColor( specularReflectivity_ );
+}
+
+float Material::getSpecularExponent() const
+{
+    return specularExponent_;
+}
+
+
+/***
+ * 4. Setters
+ ***/
+
+void Material::setColor( const PackableColor& color )
+{
+    color_ = color.toVec4();
+}
+
+void Material::setAmbientReflectivity( const PackableColor& ambientReflectivity )
+{
+    ambientReflectivity_ = ambientReflectivity.toVec3();
+}
+
+void Material::setDiffuseReflectivity( const PackableColor& diffuseReflectivity )
+{
+    diffuseReflectivity_ = diffuseReflectivity.toVec3();
+}
+
+void Material::setSpecularReflectivity( const PackableColor& specularReflectivity )
+{
+    specularReflectivity_ = specularReflectivity.toVec3();
+}
+
+void Material::setSpecularExponent( float specularExponent )
+{
+    specularExponent_ = specularExponent;
+}
+
+
+/***
+ * 5. Shader comunication
  ***/
 
 void Material::sendToShader() const
@@ -61,44 +121,48 @@ void Material::sendToShader() const
     // Send material color to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.color" );
     checkOpenGL( "Getting location of material.color in shader" );
-    glUniform4fv( uniformLocation, 1, &color[0] );
+    glUniform4fv( uniformLocation, 1, &color_[0] );
     checkOpenGL( "Sending material.color to shader" );
 
     // Send ambient reflectivity to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.ambientReflectivity" );
     checkOpenGL( "Getting location of material.ambientReflectivity in shader" );
-    glUniform3fv( uniformLocation, 1, &ambientReflectivity[0] );
+    glUniform3fv( uniformLocation, 1, &ambientReflectivity_[0] );
     checkOpenGL( "Sending material.ambientReflectivity to shader" );
 
     // Send diffuse reflectivity to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.diffuseReflectivity" );
     checkOpenGL( "Getting location of material.diffuseReflectivity in shader" );
-    glUniform3fv( uniformLocation, 1, &diffuseReflectivity[0] );
+    glUniform3fv( uniformLocation, 1, &diffuseReflectivity_[0] );
     checkOpenGL( "Sending material.diffuseReflectivity to shader" );
 
     // Send diffuse reflectivity to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.specularReflectivity" );
     checkOpenGL( "Getting location of material.specularReflectivity in shader" );
-    glUniform3fv( uniformLocation, 1, &specularReflectivity[0] );
+    glUniform3fv( uniformLocation, 1, &specularReflectivity_[0] );
     checkOpenGL( "Sending material.specularReflectivity to shader" );
 
     // Send specular exponent to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.specularExponent" );
     checkOpenGL( "Getting location of material.specularExponent in shader" );
-    glUniform1f( uniformLocation, specularExponent );
+    glUniform1f( uniformLocation, specularExponent_ );
     checkOpenGL( "Sending material.specularExponent to shader" );
 }
 
+
+/***
+ * 6. Auxiliar methods
+ ***/
 
 void Material::print() const
 {
     std::cout << "Material" << std::endl
               << "----------------------------------------------" << std::endl
-              << "Color: (" << color[0] << ", " << color[1] << ", " << color[2] << ", " << color[3] << ")" << std::endl
-              << "Ambient reflectivity: (" << ambientReflectivity[0] << ", " << ambientReflectivity[1] << ", " << ambientReflectivity[2] << ")" << std::endl
-              << "Diffuse reflectivity: (" << diffuseReflectivity[0] << ", " << diffuseReflectivity[1] << ", " << diffuseReflectivity[2] << ")" << std::endl
-              << "Specular reflectivity: (" << specularReflectivity[0] << ", " << specularReflectivity[1] << ", " << specularReflectivity[2] << ")" << std::endl
-              << "Specular exponent: (" << specularExponent << ")" << std::endl
+              << "Color: (" << color_[0] << ", " << color_[1] << ", " << color_[2] << ", " << color_[3] << ")" << std::endl
+              << "Ambient reflectivity: (" << ambientReflectivity_[0] << ", " << ambientReflectivity_[1] << ", " << ambientReflectivity_[2] << ")" << std::endl
+              << "Diffuse reflectivity: (" << diffuseReflectivity_[0] << ", " << diffuseReflectivity_[1] << ", " << diffuseReflectivity_[2] << ")" << std::endl
+              << "Specular reflectivity: (" << specularReflectivity_[0] << ", " << specularReflectivity_[1] << ", " << specularReflectivity_[2] << ")" << std::endl
+              << "Specular exponent: (" << specularExponent_ << ")" << std::endl
               << "----------------------------------------------" << std::endl;
 }
 

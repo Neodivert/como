@@ -34,6 +34,8 @@ class PackableColor : public PackableArray< PackableUint8< std::uint8_t >, std::
          * 1. Construction
          ***/
         PackableColor();
+        PackableColor( const glm::vec3& channels );
+        PackableColor( const glm::vec4& channels );
         PackableColor( const std::uint8_t* channels );
         PackableColor( const std::array< std::uint8_t, 4>& channels );
         PackableColor( std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a = 255 );

@@ -347,7 +347,7 @@ void Mesh::getVertexData( unsigned int& n, GLfloat* vertices )
 
 void Mesh::setMeshColor( PackableColor meshColor )
 {
-    material_.color = meshColor.toVec4();
+    material_.setColor( meshColor );
 
     std::cout << "Mesh::setMeshColor" << std::endl;
     material_.print();
@@ -356,7 +356,7 @@ void Mesh::setMeshColor( PackableColor meshColor )
 
 void Mesh::setMaterialDiffuseReflectivity( const PackableColor& diffuseReflectivity )
 {
-    material_.diffuseReflectivity = diffuseReflectivity.toVec3();
+    material_.setDiffuseReflectivity( diffuseReflectivity );
 
     std::cout << "Mesh::setMaterialDiffuseReflectivity" << std::endl;
     material_.print();
@@ -365,7 +365,7 @@ void Mesh::setMaterialDiffuseReflectivity( const PackableColor& diffuseReflectiv
 
 void Mesh::setMaterialSpecularReflectivity( const PackableColor& specularReflectivity )
 {
-    material_.specularReflectivity = specularReflectivity.toVec3();
+    material_.setSpecularReflectivity( specularReflectivity );
 
     std::cout << "Mesh::setMaterialSpecularReflectivity" << std::endl;
     material_.print();
@@ -374,7 +374,7 @@ void Mesh::setMaterialSpecularReflectivity( const PackableColor& specularReflect
 
 void Mesh::setMaterialSpecularExponent( float specularExponent )
 {
-    material_.specularExponent = specularExponent;
+    material_.setSpecularExponent( specularExponent );
 
     std::cout << "Mesh::setMaterialSpecularExponent" << std::endl;
     material_.print();
