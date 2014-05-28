@@ -25,7 +25,7 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
     QFrame(),
     materialsManager_( materialsManager )
 {
-    QHBoxLayout* layout = new QHBoxLayout();
+    QVBoxLayout* layout = new QVBoxLayout();
 
     layout->addWidget( new QLabel( "Materials Editor" ) );
     layout->addWidget( new MaterialsList( materialsManager ) );

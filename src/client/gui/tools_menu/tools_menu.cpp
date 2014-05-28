@@ -40,6 +40,8 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     connect( comoApp->getScene().get(), &Scene::connectedToScene, [=,this](){
         addTab( new PropertiesTab( comoApp->getScene()->getDrawablesManager()->getLocalUserSelection() ), "Properties" );
         // TODO: Remove tab when disconnected from scene.
+
+        addTab( new MaterialsEditor( comoApp->getScene()->getMaterialsManager() ), "Materials" );
     });
 }
 

@@ -25,6 +25,7 @@
 #include <QColorDialog>
 #include <QDir>
 #include <client/managers/como_app.hpp>
+#include <client/gui/materials/materials_editor.hpp>
 
 namespace como {
 
