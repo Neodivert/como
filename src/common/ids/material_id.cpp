@@ -56,4 +56,30 @@ bool MaterialID::operator < ( const MaterialID& b ) const
              ));
 }
 
+
+MaterialID MaterialID::operator ++ ()
+{
+    // Save current material index for futher overflow check.
+    MaterialIndex oldMaterialIndex = materialIndex_;
+
+    // Increment the material index and throw an exception if a overflow
+    // occurs.
+    materialIndex_++;
+    if( materialIndex_ < oldMaterialIndex ){
+        throw std::overflow_error( "Overflow occured when incrementing MaterialID" );
+    }
+
+    return *this;
+}
+
+
+MaterialID MaterialID::operator ++ (int)
+{
+    MaterialID resMaterialID( *this );
+
+    ++( *this );
+
+    return resMaterialID;
+}
+
 } // namespace como

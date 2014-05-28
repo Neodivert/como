@@ -23,6 +23,9 @@
 #include <list>
 #include <map>
 #include <client/models/3d/materials/material.hpp>
+#include <client/managers/server_interface/server_interface.hpp>
+#include <common/ids/material_id.hpp>
+#include <string>
 
 namespace como {
 
@@ -31,11 +34,43 @@ typedef std::map< MaterialID, Material > MaterialsOwnershipMap;
 class MaterialsManager
 {
     private:
-        std::list< Material > materials_;
+        std::map< MaterialID, MaterialPtr > materials_;
         MaterialsOwnershipMap materialsOwners_;
 
+        MaterialID nextLocalMaterialID_;
+        ServerInterfacePtr server_;
+        LogPtr log_;
+
     public:
-        MaterialsManager();
+        /***
+         * 1. Creation
+         ***/
+        MaterialsManager() = delete;
+        MaterialsManager( UserID localUserID, ServerInterfacePtr server, LogPtr log );
+        MaterialsManager( const MaterialsManager& ) = delete;
+        MaterialsManager( MaterialsManager&& ) = delete;
+
+
+        /***
+         * 2. Destruction
+         ***/
+        ~MaterialsManager() = delete;
+
+
+        /***
+         * 3. Materials creation
+         ***/
+    public:
+        MaterialID createMaterial( const std::string& namePrefix );
+    private:
+        void createMaterial( const MaterialID& id, const std::string& namePrefix );
+
+
+        /***
+         * 4. Operators
+         ***/
+        MaterialsManager& operator = ( const MaterialsManager& ) = delete;
+        MaterialsManager& operator = ( MaterialsManager&& ) = delete;
 };
 
 } // namespace como

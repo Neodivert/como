@@ -91,6 +91,9 @@ class Material
         Material& operator = ( Material&& ) = default;
 };
 
+typedef std::shared_ptr< Material > MaterialPtr;
+typedef std::shared_ptr< const Material > MaterialConstPtr;
+
 } // namespace como
 
 #endif // MATERIAL_HPP

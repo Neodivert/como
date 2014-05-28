@@ -21,8 +21,36 @@
 
 namespace como {
 
-MaterialsManager::MaterialsManager()
+/***
+ * 1. Creation
+ ***/
+
+MaterialsManager::MaterialsManager( UserID localUserID, ServerInterfacePtr server, LogPtr log ) :
+    nextLocalMaterialID_( localUserID, 0 ),
+    server_( server ),
+    log_( log )
+{}
+
+
+/***
+ * 3. Materials creation
+ ***/
+
+MaterialID MaterialsManager::createMaterial( const std::string& namePrefix )
 {
+    createMaterial( nextLocalMaterialID_, namePrefix );
+
+    return nextLocalMaterialID_++;
+}
+
+void MaterialsManager::createMaterial( const MaterialID& id, const std::string& namePrefix )
+{
+    Q_UNUSED( namePrefix );
+
+    materials_.insert( std::pair< MaterialID, MaterialPtr >(
+                           id,
+                           MaterialPtr( new Material() )
+                           ) );
 }
 
 } // namespace como

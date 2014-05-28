@@ -22,6 +22,8 @@
 
 #include <common/utilities/ids.hpp>
 #include <common/packables/packable_uint16.hpp>
+#include <memory>
+#include <stdexcept>
 
 namespace como {
 
@@ -59,6 +61,9 @@ class MaterialID
 
         bool operator == ( const MaterialID& b ) const;
         bool operator < ( const MaterialID& b ) const;
+
+        MaterialID operator ++ ();      // Prefix
+        MaterialID operator ++ (int);   // Postfix
 };
 
 } // namespace como
