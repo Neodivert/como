@@ -51,6 +51,10 @@ void MaterialsManager::createMaterial( const MaterialID& id, const std::string& 
                            id,
                            MaterialPtr( new Material() )
                            ) );
+
+    materials_[id] = MaterialPtr( new Material() );
+
+    materialsOwners_[id] = id.getCreatorID();
 }
 
 } // namespace como

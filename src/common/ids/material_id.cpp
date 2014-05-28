@@ -37,7 +37,22 @@ MaterialID::MaterialID( UserID creatorID, MaterialIndex materialIndex ) :
 
 
 /***
- * 3. Operators
+ * 3. Getters
+ ***/
+
+UserID MaterialID::getCreatorID() const
+{
+    return creatorID_;
+}
+
+MaterialIndex MaterialID::getMaterialIndex() const
+{
+    return materialIndex_;
+}
+
+
+/***
+ * 4. Operators
  ***/
 
 bool MaterialID::operator == ( const MaterialID& b ) const

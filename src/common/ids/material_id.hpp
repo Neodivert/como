@@ -54,7 +54,14 @@ class MaterialID
 
 
         /***
-         * 3. Operators
+         * 3. Getters
+         ***/
+        UserID getCreatorID() const;
+        MaterialIndex getMaterialIndex() const;
+
+
+        /***
+         * 4. Operators
          ***/
         MaterialID& operator = ( const MaterialID& ) = default;
         MaterialID& operator = ( MaterialID&& ) = default;

@@ -29,7 +29,7 @@
 
 namespace como {
 
-typedef std::map< MaterialID, Material > MaterialsOwnershipMap;
+typedef std::map< MaterialID, UserID > MaterialsOwnershipMap;
 
 class MaterialsManager
 {
