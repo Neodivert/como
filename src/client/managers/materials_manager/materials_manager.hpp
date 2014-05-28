@@ -26,13 +26,16 @@
 #include <client/managers/server_interface/server_interface.hpp>
 #include <common/ids/material_id.hpp>
 #include <string>
+#include <QObject>
 
 namespace como {
 
 typedef std::map< MaterialID, UserID > MaterialsOwnershipMap;
 
-class MaterialsManager
+class MaterialsManager : public QObject
 {
+    Q_OBJECT
+
     private:
         std::map< MaterialID, MaterialPtr > materials_;
         MaterialsOwnershipMap materialsOwners_;
@@ -54,7 +57,7 @@ class MaterialsManager
         /***
          * 2. Destruction
          ***/
-        ~MaterialsManager() = delete;
+        ~MaterialsManager() = default;
 
 
         /***
@@ -71,6 +74,13 @@ class MaterialsManager
          ***/
         MaterialsManager& operator = ( const MaterialsManager& ) = delete;
         MaterialsManager& operator = ( MaterialsManager&& ) = delete;
+
+
+        /***
+         * 5. Signals
+         ***/
+    signals:
+        void materialCreated( MaterialID id, const std::string& name );
 };
 
 } // namespace como

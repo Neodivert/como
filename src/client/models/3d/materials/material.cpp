@@ -23,24 +23,44 @@
 
 namespace como {
 
+const std::string DEFAULT_MATERIAL_NAME = "Unnamed material";
+const glm::vec4 DEFAULT_MATERIAL_COLOR = glm::vec4( 1.0f );
+const glm::vec3 DEFAULT_MATERIAL_AMBIENT_REFLECTIVITY = glm::vec3( 0.9f );
+const glm::vec3 DEFAULT_MATERIAL_DIFFUSE_REFLECTIVITY = glm::vec3( 0.9f );
+const glm::vec3 DEFAULT_MATERIAL_SPECULAR_REFLECTIVITY = glm::vec3( 0.9f );
+const float DEFAULT_MATERIAL_SPECULAR_EXPONENT = 0.9f;
+
+
 /***
  * 1. Construction
  ***/
 
 Material::Material() :
-    color_( 1.0f, 1.0f, 1.0f, 1.0f ),
-    ambientReflectivity_( 0.9f ),
-    diffuseReflectivity_( 0.9f ),
-    specularReflectivity_( 0.9f ),
-    specularExponent_( 0.9f )
+    name_( DEFAULT_MATERIAL_NAME ),
+    color_( DEFAULT_MATERIAL_COLOR ),
+    ambientReflectivity_( DEFAULT_MATERIAL_AMBIENT_REFLECTIVITY ),
+    diffuseReflectivity_( DEFAULT_MATERIAL_DIFFUSE_REFLECTIVITY ),
+    specularReflectivity_( DEFAULT_MATERIAL_SPECULAR_REFLECTIVITY ),
+    specularExponent_( DEFAULT_MATERIAL_SPECULAR_EXPONENT )
+{}
+
+
+Material::Material( const std::string& name ) :
+    name_( name ),
+    color_( DEFAULT_MATERIAL_COLOR ),
+    ambientReflectivity_( DEFAULT_MATERIAL_AMBIENT_REFLECTIVITY ),
+    diffuseReflectivity_( DEFAULT_MATERIAL_DIFFUSE_REFLECTIVITY ),
+    specularReflectivity_( DEFAULT_MATERIAL_SPECULAR_REFLECTIVITY ),
+    specularExponent_( DEFAULT_MATERIAL_SPECULAR_EXPONENT )
 {}
 
 
 Material::Material( PackableColor color ) :
-    ambientReflectivity_( 0.9f ),
-    diffuseReflectivity_( 0.9f ),
-    specularReflectivity_( 0.9f ),
-    specularExponent_( 0.9f )
+    name_( DEFAULT_MATERIAL_NAME ),
+    ambientReflectivity_( DEFAULT_MATERIAL_AMBIENT_REFLECTIVITY ),
+    diffuseReflectivity_( DEFAULT_MATERIAL_DIFFUSE_REFLECTIVITY ),
+    specularReflectivity_( DEFAULT_MATERIAL_SPECULAR_REFLECTIVITY ),
+    specularExponent_( DEFAULT_MATERIAL_SPECULAR_EXPONENT )
 {
     color_ = color.toVec4();
 }
@@ -49,6 +69,11 @@ Material::Material( PackableColor color ) :
 /***
  * 3. Getters
  ***/
+
+std::string Material::getName() const
+{
+    return name_;
+}
 
 PackableColor Material::getColor() const
 {

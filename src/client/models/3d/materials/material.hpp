@@ -28,6 +28,8 @@ namespace como {
 class Material
 {
     private:
+        std::string name_;
+
         glm::vec4 color_;
 
         glm::vec3 ambientReflectivity_;  // ("Ka" in a *.mtl file).
@@ -41,6 +43,7 @@ class Material
          ***/
     public:
         Material();
+        Material( const std::string& name );
         Material( PackableColor color );
         Material( const Material& ) = default;
         Material( Material&& ) = default;
@@ -55,6 +58,7 @@ class Material
         /***
          * 3. Getters
          ***/
+        std::string getName() const;
         PackableColor getColor() const;
         PackableColor getAmbientReflectivity() const;
         PackableColor getDiffuseReflectivity() const;

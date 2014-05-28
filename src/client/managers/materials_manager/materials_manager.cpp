@@ -18,6 +18,7 @@
 ***/
 
 #include "materials_manager.hpp"
+#include <boost/lexical_cast.hpp>
 
 namespace como {
 
@@ -45,16 +46,22 @@ MaterialID MaterialsManager::createMaterial( const std::string& namePrefix )
 
 void MaterialsManager::createMaterial( const MaterialID& id, const std::string& namePrefix )
 {
-    Q_UNUSED( namePrefix );
+    // Generate a name for the new material from the given ID and name prefix.
+    std::string materialName =
+            namePrefix +
+            std::string( " # " ) +
+            boost::lexical_cast< std::string >( static_cast< int >( id.getCreatorID() ) ) +
+            std::string( "," ) +
+            boost::lexical_cast< std::string >( static_cast< int >( id.getMaterialIndex() ) );
 
-    materials_.insert( std::pair< MaterialID, MaterialPtr >(
-                           id,
-                           MaterialPtr( new Material() )
-                           ) );
+    // Create the new material and insert it in the materials container.
+    materials_[id] = MaterialPtr( new Material( materialName ) );
 
-    materials_[id] = MaterialPtr( new Material() );
-
+    // Set the creator of the material as its current owner.
     materialsOwners_[id] = id.getCreatorID();
+
+    // Emit a signal indicating that a new material has been created.
+    emit materialCreated( id, materials_.at( id )->getName() );
 }
 
 } // namespace como
