@@ -23,6 +23,7 @@
 #include <QListWidget>
 #include <client/managers/materials_manager/materials_manager.hpp>
 #include <map>
+#include "materials_list_item.hpp"
 
 namespace como {
 
@@ -31,9 +32,6 @@ namespace como {
 class MaterialsList : public QListWidget
 {
     Q_OBJECT
-
-    private:
-        std::map< int, MaterialID > materialsIndicesToIDs_;
 
     public:
         /***
@@ -62,14 +60,14 @@ class MaterialsList : public QListWidget
          * 4. Slots
          ***/
     public slots:
-        void addMaterial( const MaterialID& id, const std::string& materialName );
+        void addMaterial( const MaterialID& id, const std::string& name );
 
 
         /***
          * 5. Signals
          ***/
     signals:
-        void materialSelected( const MaterialID& id );
+        void materialSelected( MaterialID id );
 };
 
 } // namespace como

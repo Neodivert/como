@@ -31,8 +31,16 @@ MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager )
     QObject::connect( materialsManager.get(), &MaterialsManager::materialCreated,
                       this, &MaterialsList::addMaterial );
 
-    QObject::connect( this, &MaterialsList::currentRowChanged, [this]( int index ){
-        emit materialSelected( materialsIndicesToIDs_[index] );
+    QObject::connect( this, &MaterialsList::itemActivated, [=]( QListWidgetItem * item ){
+        emit materialSelected( ( dynamic_cast< MaterialsListItem* >( item ) )->getMaterialID() );
+    });
+
+    QObject::connect( this, &MaterialsList::itemClicked, [=]( QListWidgetItem * item ){
+        emit materialSelected( ( dynamic_cast< MaterialsListItem* >( item ) )->getMaterialID() );
+    });
+
+    QObject::connect( this, &MaterialsList::materialSelected, [=]( MaterialID materialID ){
+        materialsManager->selectMaterial( materialID );
     });
 }
 
@@ -41,11 +49,9 @@ MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager )
  * 4. Slots
  ***/
 
-void MaterialsList::addMaterial( const MaterialID& id, const std::string& materialName )
+void MaterialsList::addMaterial( const MaterialID& id, const std::string& name )
 {
-    QListWidgetItem *newListItem = new QListWidgetItem( materialName.c_str() );
-
-    materialsIndicesToIDs_[count()] = id;
+    MaterialsListItem* newListItem = new MaterialsListItem( id, name );
 
     insertItem( count(), newListItem );
 }

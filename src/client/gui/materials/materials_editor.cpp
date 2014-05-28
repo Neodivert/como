@@ -34,6 +34,9 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
     layout->addWidget( materialPanel );
 
     setLayout( layout );
+
+    QObject::connect( materialsManager_.get(), &MaterialsManager::materialSelectionConfirmed,
+                      materialPanel, &MaterialPanel::openMaterial );
 }
 
 } // namespace como

@@ -42,6 +42,7 @@ class MaterialsManager : public QObject
         MaterialsOwnershipMap materialsOwners_;
 
         MaterialID nextLocalMaterialID_;
+        const UserID& localUserID_;
         ServerInterfacePtr server_;
         LogPtr log_;
 
@@ -62,7 +63,7 @@ class MaterialsManager : public QObject
 
 
         /***
-         * 3. Materials creation
+         * 3. Material creation
          ***/
     public:
         MaterialID createMaterial( const std::string& namePrefix );
@@ -71,24 +72,35 @@ class MaterialsManager : public QObject
 
 
         /***
-         * 4. Getters
+         * 4. Material selection
+         ***/
+    public:
+        void selectMaterial( const MaterialID& id );
+    private:
+        void selectMaterial( UserID userID, const MaterialID& id );
+
+
+        /***
+         * 5. Getters
          ***/
     public:
         MaterialConstPtr getMaterial( const MaterialID& id ) const;
 
 
         /***
-         * 5. Operators
+         * 6. Operators
          ***/
         MaterialsManager& operator = ( const MaterialsManager& ) = delete;
         MaterialsManager& operator = ( MaterialsManager&& ) = delete;
 
 
         /***
-         * 6. Signals
+         * 7. Signals
          ***/
     signals:
         void materialCreated( MaterialID id, const std::string& name );
+        void materialSelectionConfirmed( MaterialPtr material );
+        void materialSelectionDenied( MaterialID material );
 };
 
 typedef std::shared_ptr< MaterialsManager > MaterialsManagerPtr;

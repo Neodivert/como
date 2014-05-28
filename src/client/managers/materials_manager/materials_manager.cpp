@@ -28,13 +28,14 @@ namespace como {
 
 MaterialsManager::MaterialsManager( UserID localUserID, ServerInterfacePtr server, LogPtr log ) :
     nextLocalMaterialID_( localUserID, 0 ),
+    localUserID_( nextLocalMaterialID_.getCreatorID() ),
     server_( server ),
     log_( log )
 {}
 
 
 /***
- * 3. Materials creation
+ * 3. Material creation
  ***/
 
 MaterialID MaterialsManager::createMaterial( const std::string& namePrefix )
@@ -66,7 +67,31 @@ void MaterialsManager::createMaterial( const MaterialID& id, const std::string& 
 
 
 /***
- * 4. Getters
+ * 4. Material selection
+ ***/
+
+void MaterialsManager::selectMaterial( const MaterialID& id )
+{
+    MaterialsManager::selectMaterial( localUserID_, id );
+
+    // TODO: Send command to server.
+
+    // TODO: Remove this when interaction with server is completed.
+    emit materialSelectionConfirmed( materials_.at( id ) );
+}
+
+
+void MaterialsManager::selectMaterial( UserID userID, const MaterialID& id )
+{
+    Q_UNUSED( userID );
+    Q_UNUSED( id );
+
+    // TODO: Complete this method.
+}
+
+
+/***
+ * 5. Getters
  ***/
 
 MaterialConstPtr MaterialsManager::getMaterial( const MaterialID& id ) const

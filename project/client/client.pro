@@ -71,7 +71,8 @@ HEADERS += \
     ../../src/client/managers/materials_manager/materials_manager.hpp \
     ../../src/client/gui/materials/materials_editor.hpp \
     ../../src/client/gui/materials/materials_list.hpp \
-    ../../src/client/gui/materials/material_panel.hpp
+    ../../src/client/gui/materials/material_panel.hpp \
+    ../../src/client/gui/materials/materials_list_item.hpp
 
 
 # Client sources
@@ -110,4 +111,5 @@ SOURCES += \
     ../../src/client/managers/materials_manager/materials_manager.cpp \
     ../../src/client/gui/materials/materials_editor.cpp \
     ../../src/client/gui/materials/materials_list.cpp \
-    ../../src/client/gui/materials/material_panel.cpp
+    ../../src/client/gui/materials/material_panel.cpp \
+    ../../src/client/gui/materials/materials_list_item.cpp

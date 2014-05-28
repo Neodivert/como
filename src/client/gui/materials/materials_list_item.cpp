@@ -17,35 +17,27 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "material_panel.hpp"
-#include <QFormLayout>
+#include "materials_list_item.hpp"
 
 namespace como {
 
-MaterialPanel::MaterialPanel() :
-    QFrame(),
-    currentMaterial_( nullptr )
-{
-    QFormLayout* layout = new QFormLayout();
+/***
+ * 1. Construction
+ ***/
 
-    nameInput_ = new QLineEdit();
-
-    layout->addWidget( new QLabel( "Material panel" ) );
-    layout->addRow( new QLabel( "Material name" ), nameInput_ ); 
-
-    setLayout( layout );
-}
+MaterialsListItem::MaterialsListItem( const MaterialID& id, const std::string& name ) :
+    QListWidgetItem( name.c_str() ),
+    materialID_( id )
+{}
 
 
 /***
- * 4. Slots
+ * 3. Getters
  ***/
 
-void MaterialPanel::openMaterial( MaterialPtr material )
+MaterialID MaterialsListItem::getMaterialID() const
 {
-    currentMaterial_ = material;
-
-    nameInput_->setText( currentMaterial_->getName().c_str() );
+    return materialID_;
 }
 
 } // namespace como
