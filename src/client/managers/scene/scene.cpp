@@ -207,6 +207,9 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         // Create the scene's primitives directory.
         createScenePrimitivesDirectory();
 
+        // Initialize the materials manager.
+        materialsManager_ = MaterialsManagerPtr( new MaterialsManager( localUserID_, server_, log_ ) );
+
         // Initialize the drawables manager.
         drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/primitives/scenes/" ) + sceneName_, oglContext_, log_ ) );
 
@@ -281,6 +284,12 @@ shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
 DrawablesManagerPtr Scene::getDrawablesManager() const
 {
     return drawablesManager_;
+}
+
+
+MaterialsManagerPtr Scene::getMaterialsManager() const
+{
+    return materialsManager_;
 }
 
 
