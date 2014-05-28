@@ -78,7 +78,7 @@ class Mesh : public Drawable
         glm::vec4 transformedCentroid;
 
         // Mesh's material.
-        Material material_;
+        MaterialConstPtr material_;
 
         /***
          * 1. Construction.
@@ -86,7 +86,7 @@ class Mesh : public Drawable
     protected:
         Mesh( MeshType type, const char* file, PackableColor meshColor );
     public:
-        Mesh( const char* file, PackableColor meshColor );
+        Mesh( const char* file, MaterialConstPtr material );
         Mesh( const Mesh& b );
         Mesh( Mesh&& ) = delete;
 
@@ -166,7 +166,7 @@ class Mesh : public Drawable
         /***
          * 10. Operators
          ***/
-        Mesh& operator=( const Mesh& ) = delete ;
+        Mesh& operator=( const Mesh& ) = delete;
         Mesh& operator=( Mesh&& ) = delete;
 };
 

@@ -26,6 +26,7 @@
 #include <client/managers/server_interface/server_interface.hpp>
 #include <client/models/utilities/changeable/changeable.hpp>
 #include <map>
+#include <client/managers/materials_manager/materials_manager.hpp>
 
 namespace como {
 
@@ -45,6 +46,8 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
 
         UserID localUserID_;
 
+        MaterialsManagerPtr materialsManager_;
+
         // TODO: move this to ServerInterface?
         std::queue< PackableDrawableID > localUserPendingSelections_;
 
@@ -62,7 +65,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
         /***
          * 1. Construction
          ***/
-        DrawablesManager( ServerInterfacePtr server, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
+        DrawablesManager( ServerInterfacePtr server, MaterialsManagerPtr materialsManager, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
         DrawablesManager( const DrawablesManager& ) = delete;
         DrawablesManager( DrawablesManager&& ) = delete;
 
@@ -101,8 +104,8 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
 
     public:
         //void addMesh( PrimitiveID primitiveID, QColor color );
-        void addMesh( PrimitiveID primitiveID, const PackableColor& color );
-        void addMesh( UserID userID, PrimitiveID primitiveID, const PackableColor& color, PackableDrawableID drawableID );
+        void addMesh( PrimitiveID primitiveID );
+        void addMesh( UserID userID, PrimitiveID primitiveID, PackableDrawableID drawableID );
         void addDirectionalLight( PackableDrawableID lightID, const PackableColor& lightColor, const PackableColor& meshColor );
 
 

@@ -42,19 +42,20 @@ const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
  * 1. Construction.
  ***/
 
+// TODO: Replace meshColor argument by a MaterialConstPtr.
 Mesh::Mesh( MeshType type, const char* fileName, PackableColor meshColor ) :
     Drawable( DrawableType::MESH, "Mesh #" ),
     type_( type ),
-    material_( meshColor )
+    material_( MaterialConstPtr( new Material( meshColor ) ) )
 {
     initMesh( fileName );
 }
 
 
-Mesh::Mesh( const char* fileName, PackableColor meshColor ) :
+Mesh::Mesh( const char* fileName, MaterialConstPtr material ) :
     Drawable( DrawableType::MESH, "Mesh #" ),
     type_( MeshType::PRIMITIVE_MESH ),
-    material_( meshColor )
+    material_( material )
 {   
     initMesh( fileName );
 }
@@ -347,37 +348,52 @@ void Mesh::getVertexData( unsigned int& n, GLfloat* vertices )
 
 void Mesh::setMeshColor( PackableColor meshColor )
 {
-    material_.setColor( meshColor );
+    Q_UNUSED( meshColor );
+    /*
+    material_->setColor( meshColor );
 
     std::cout << "Mesh::setMeshColor" << std::endl;
-    material_.print();
+    material_->print();
+    */
 }
 
 
 void Mesh::setMaterialDiffuseReflectivity( const PackableColor& diffuseReflectivity )
 {
-    material_.setDiffuseReflectivity( diffuseReflectivity );
+    Q_UNUSED( diffuseReflectivity );
+
+    /*
+    material_->setDiffuseReflectivity( diffuseReflectivity );
 
     std::cout << "Mesh::setMaterialDiffuseReflectivity" << std::endl;
-    material_.print();
+    material_->print();
+    */
 }
 
 
 void Mesh::setMaterialSpecularReflectivity( const PackableColor& specularReflectivity )
 {
-    material_.setSpecularReflectivity( specularReflectivity );
+    Q_UNUSED( specularReflectivity );
+
+    /*
+    material_->setSpecularReflectivity( specularReflectivity );
 
     std::cout << "Mesh::setMaterialSpecularReflectivity" << std::endl;
-    material_.print();
+    material_->print();
+    */
 }
 
 
 void Mesh::setMaterialSpecularExponent( float specularExponent )
 {
-    material_.setSpecularExponent( specularExponent );
+    Q_UNUSED( specularExponent );
+
+    /*
+    material_->setSpecularExponent( specularExponent );
 
     std::cout << "Mesh::setMaterialSpecularExponent" << std::endl;
-    material_.print();
+    material_->print();
+    */
 }
 
 
@@ -450,7 +466,7 @@ void Mesh::draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) 
     sendMVPMatrixToShader( viewProjMatrix * transformationMatrix );
 
     // Send this mesh's material to shader.
-    material_.sendToShader();
+    material_->sendToShader();
 
     // Bind Mesh VAO and VBOs as the active ones.
     glBindVertexArray( vao );

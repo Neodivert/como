@@ -26,11 +26,12 @@ namespace como {
  * 1. Construction
  ***/
 
-DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
+DrawablesManager::DrawablesManager( ServerInterfacePtr server, MaterialsManagerPtr materialsManager, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
     AbstractChangeable(),
     nonSelectedDrawables_( new DrawablesSelection( glm::vec4( 0.0f ) ) ),
     server_( server ),
     localUserID_( localUserID ),
+    materialsManager_( materialsManager ),
     primitivesDirPath_( primitivesDirPath ),
     oglContext_( oglContext ),
     log_( log )
@@ -131,39 +132,51 @@ void DrawablesManager::addMesh( PrimitiveID primitiveID, QColor color )
 */
 
 // FIXME: Duplicated code.
-void DrawablesManager::addMesh( PrimitiveID primitiveID, const PackableColor& color )
+void DrawablesManager::addMesh( PrimitiveID primitiveID )
 {
     // FIXME: Is this necessary?
     //takeOpenGLContext();
     //oglContext_->makeCurrent( this );
+    MaterialID newMaterialID;
+    MaterialConstPtr newMaterial;
 
     // Build the "absolute" path to the specification file of the
     // primitive used for building this mesh.
     std::string primitivePath = primitivesDirPath_ + '/' + primitivePaths_.at( primitiveID );
 
+    // Create a material for this mesh.
+    newMaterialID = materialsManager_->createMaterial( "Mesh material" );
+    newMaterial = materialsManager_->getMaterial( newMaterialID );
+
     // Create the mesh.
-    DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), color ) );
+    DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), newMaterial ) );
 
     // Add the mest to the scene.
     PackableDrawableID drawableID = addDrawable( drawable );
 
     // Send the command to the server.
-    server_->sendCommand( CommandConstPtr( new PrimitiveMeshCreationCommand( drawableID, primitiveID, color ) ) );
+    server_->sendCommand( CommandConstPtr( new PrimitiveMeshCreationCommand( drawableID, primitiveID, newMaterial->getColor() ) ) );
 }
 
 
 // FIXME: Duplicated code.
-void DrawablesManager::addMesh( UserID userID, PrimitiveID primitiveID, const PackableColor& color, PackableDrawableID drawableID )
+void DrawablesManager::addMesh( UserID userID, PrimitiveID primitiveID, PackableDrawableID drawableID )
 {
     try {
         //takeOpenGLContext();
+        MaterialID newMaterialID;
+        MaterialConstPtr newMaterial;
 
         // Build the "absolute" path to the specification file of the
         // primitive used for building this mesh.
         std::string primitivePath = primitivesDirPath_ + '/' + primitivePaths_.at( primitiveID );
 
+        // Create a material for this mesh.
+        newMaterialID = materialsManager_->createMaterial( "Mesh material" );
+        newMaterial = materialsManager_->getMaterial( newMaterialID );
+
         // Create the mesh.
-        DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), color ) );
+        DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), newMaterial ) );
 
         // Add the mesh to the scene.
         addDrawable( userID, drawable, drawableID );

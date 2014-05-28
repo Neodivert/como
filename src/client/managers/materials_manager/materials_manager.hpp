@@ -71,14 +71,21 @@ class MaterialsManager : public QObject
 
 
         /***
-         * 4. Operators
+         * 4. Getters
+         ***/
+    public:
+        MaterialConstPtr getMaterial( const MaterialID& id ) const;
+
+
+        /***
+         * 5. Operators
          ***/
         MaterialsManager& operator = ( const MaterialsManager& ) = delete;
         MaterialsManager& operator = ( MaterialsManager&& ) = delete;
 
 
         /***
-         * 5. Signals
+         * 6. Signals
          ***/
     signals:
         void materialCreated( MaterialID id, const std::string& name );

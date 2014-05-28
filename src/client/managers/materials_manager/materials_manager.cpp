@@ -64,4 +64,15 @@ void MaterialsManager::createMaterial( const MaterialID& id, const std::string& 
     emit materialCreated( id, materials_.at( id )->getName() );
 }
 
+
+/***
+ * 4. Getters
+ ***/
+
+MaterialConstPtr MaterialsManager::getMaterial( const MaterialID& id ) const
+{
+    return materials_.at( id );
+}
+
+
 } // namespace como
