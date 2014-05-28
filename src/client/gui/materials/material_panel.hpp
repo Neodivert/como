@@ -21,6 +21,7 @@
 #define MATERIAL_PANEL_HPP
 
 #include <QFrame>
+#include <QLineEdit>
 #include <client/models/3d/materials/material.hpp>
 
 namespace como {
@@ -31,6 +32,8 @@ class MaterialPanel : public QFrame
 
     private:
         MaterialPtr currentMaterial_;
+
+        QLineEdit* nameInput_;
 
     public:
         /***
@@ -52,6 +55,13 @@ class MaterialPanel : public QFrame
          ***/
         MaterialPanel& operator = ( const MaterialPanel& ) = delete;
         MaterialPanel& operator = ( MaterialPanel&& ) = delete;
+
+
+        /***
+         * 4. Slots
+         ***/
+    public slots:
+        void openMaterial( MaterialPtr material );
 };
 
 } // namespace como

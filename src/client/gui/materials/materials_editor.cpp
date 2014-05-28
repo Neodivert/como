@@ -26,10 +26,12 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
     materialsManager_( materialsManager )
 {
     QVBoxLayout* layout = new QVBoxLayout();
+    MaterialsList* materialsList = new MaterialsList( materialsManager );
+    MaterialPanel* materialPanel = new MaterialPanel();
 
     layout->addWidget( new QLabel( "Materials Editor" ) );
-    layout->addWidget( new MaterialsList( materialsManager ) );
-    layout->addWidget( new MaterialPanel() );
+    layout->addWidget( materialsList );
+    layout->addWidget( materialPanel );
 
     setLayout( layout );
 }

@@ -18,7 +18,7 @@
 ***/
 
 #include "material_panel.hpp"
-#include <QVBoxLayout>
+#include <QFormLayout>
 
 namespace como {
 
@@ -26,11 +26,26 @@ MaterialPanel::MaterialPanel() :
     QFrame(),
     currentMaterial_( nullptr )
 {
-    QVBoxLayout* layout = new QVBoxLayout();
+    QFormLayout* layout = new QFormLayout();
+
+    nameInput_ = new QLineEdit();
 
     layout->addWidget( new QLabel( "Material panel" ) );
+    layout->addRow( new QLabel( "Material name" ), nameInput_ );
 
     setLayout( layout );
+}
+
+
+/***
+ * 4. Slots
+ ***/
+
+void MaterialPanel::openMaterial( MaterialPtr material )
+{
+    currentMaterial_ = material;
+
+    nameInput_->setText( currentMaterial_->getName().c_str() );
 }
 
 } // namespace como

@@ -63,6 +63,13 @@ class MaterialsList : public QListWidget
          ***/
     public slots:
         void addMaterial( const MaterialID& id, const std::string& materialName );
+
+
+        /***
+         * 5. Signals
+         ***/
+    signals:
+        void materialSelected( const MaterialID& id );
 };
 
 } // namespace como

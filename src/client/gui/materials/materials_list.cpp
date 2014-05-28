@@ -30,6 +30,10 @@ MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager )
 {
     QObject::connect( materialsManager.get(), &MaterialsManager::materialCreated,
                       this, &MaterialsList::addMaterial );
+
+    QObject::connect( this, &MaterialsList::currentRowChanged, [this]( int index ){
+        emit materialSelected( materialsIndicesToIDs_[index] );
+    });
 }
 
 
