@@ -22,7 +22,9 @@
 
 #include <QFrame>
 #include <client/managers/materials_manager/materials_manager.hpp>
+
 #include "materials_list.hpp"
+#include "material_panel.hpp"
 
 namespace como {
 

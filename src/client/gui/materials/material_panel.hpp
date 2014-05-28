@@ -21,22 +21,22 @@
 #define MATERIAL_PANEL_HPP
 
 #include <QFrame>
-#include <client/managers/drawables_selection/local_drawables_selection.hpp>
-#include <common/packables/array/packable_color.hpp>
+#include <client/models/3d/materials/material.hpp>
 
 namespace como {
 
 class MaterialPanel : public QFrame
 {
+    Q_OBJECT
+
     private:
-        /*! Local user's (drawables) selection */
-        LocalDrawablesSelectionPtr userSelection_;
+        MaterialPtr currentMaterial_;
 
     public:
         /***
          * 1. Construction
          ***/
-        MaterialPanel( LocalDrawablesSelectionPtr userSelection );
+        MaterialPanel();
         MaterialPanel( const MaterialPanel& ) = delete;
         MaterialPanel( MaterialPanel&& ) = delete;
 
@@ -48,13 +48,7 @@ class MaterialPanel : public QFrame
 
 
         /***
-         * 3. Refreshing
-         ***/
-        void refresh();
-
-
-        /***
-         * 4. Operators
+         * 3. Operators
          ***/
         MaterialPanel& operator = ( const MaterialPanel& ) = delete;
         MaterialPanel& operator = ( MaterialPanel&& ) = delete;

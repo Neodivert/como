@@ -67,11 +67,11 @@ HEADERS += \
     ../../src/client/managers/drawables_manager/drawables_manager.hpp \
     ../../src/client/models/utilities/changeable/abstract_changeable.hpp \
     ../../src/client/models/3d/materials/material.hpp \
-    ../../src/client/gui/tools_menu/properties_tab/properties_panels/material_panel.hpp \
     ../../src/client/gui/utilities/color_button.hpp \
     ../../src/client/managers/materials_manager/materials_manager.hpp \
     ../../src/client/gui/materials/materials_editor.hpp \
-    ../../src/client/gui/materials/materials_list.hpp
+    ../../src/client/gui/materials/materials_list.hpp \
+    ../../src/client/gui/materials/material_panel.hpp
 
 
 # Client sources
@@ -106,8 +106,8 @@ SOURCES += \
     ../../src/client/managers/drawables_selection/local_drawables_selection.cpp \
     ../../src/client/managers/drawables_manager/drawables_manager.cpp \
     ../../src/client/models/3d/materials/material.cpp \
-    ../../src/client/gui/tools_menu/properties_tab/properties_panels/material_panel.cpp \
     ../../src/client/gui/utilities/color_button.cpp \
     ../../src/client/managers/materials_manager/materials_manager.cpp \
     ../../src/client/gui/materials/materials_editor.cpp \
-    ../../src/client/gui/materials/materials_list.cpp
+    ../../src/client/gui/materials/materials_list.cpp \
+    ../../src/client/gui/materials/material_panel.cpp

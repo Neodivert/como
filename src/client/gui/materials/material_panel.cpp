@@ -17,19 +17,18 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "materials_editor.hpp"
+#include "material_panel.hpp"
+#include <QVBoxLayout>
 
 namespace como {
 
-MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
+MaterialPanel::MaterialPanel() :
     QFrame(),
-    materialsManager_( materialsManager )
+    currentMaterial_( nullptr )
 {
     QVBoxLayout* layout = new QVBoxLayout();
 
-    layout->addWidget( new QLabel( "Materials Editor" ) );
-    layout->addWidget( new MaterialsList( materialsManager ) );
-    layout->addWidget( new MaterialPanel() );
+    layout->addWidget( new QLabel( "Material panel" ) );
 
     setLayout( layout );
 }
