@@ -23,6 +23,7 @@
 #include <QFrame>
 #include <QLineEdit>
 #include <client/models/3d/materials/material.hpp>
+#include <client/gui/utilities/color_button.hpp>
 
 namespace como {
 
