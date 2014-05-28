@@ -47,8 +47,8 @@ void ColorButton::setColor( const QColor& color )
     // TODO: Complete.
     PackableColor packableColor(
                 static_cast< std::uint8_t >( color.red() ),
-                static_cast< std::uint8_t >( color.blue() ),
                 static_cast< std::uint8_t >( color.green() ),
+                static_cast< std::uint8_t >( color.blue() ),
                 static_cast< std::uint8_t >( color.alpha() )
                 );
 

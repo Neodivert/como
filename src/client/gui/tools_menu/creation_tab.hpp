@@ -39,9 +39,6 @@ class CreationTab : public QFrame
         /*! Pointer to the scene we will add elements to */
         ScenePtr scene_;
 
-        /*! New meshes will be created with this color */
-        QColor meshColor_;
-
     public:
         /***
          * 1. Construction
@@ -61,7 +58,6 @@ class CreationTab : public QFrame
          * 2. Initialization
          ***/
     private:
-        QFrame* createMeshColorSelector();
         QFrame* createMeshFromPrimitiveCreationMenu();
         QFrame* createDirectionalLightMenu();
     public:
