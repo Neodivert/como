@@ -27,6 +27,7 @@
 #include <common/ids/material_id.hpp>
 #include <string>
 #include <QObject>
+#include <memory>
 
 namespace como {
 
@@ -82,6 +83,8 @@ class MaterialsManager : public QObject
     signals:
         void materialCreated( MaterialID id, const std::string& name );
 };
+
+typedef std::shared_ptr< MaterialsManager > MaterialsManagerPtr;
 
 } // namespace como
 
