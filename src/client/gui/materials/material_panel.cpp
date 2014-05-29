@@ -28,59 +28,81 @@ MaterialPanel::MaterialPanel() :
     // Create the widgets for modifying material properties.
     QFormLayout* layout = new QFormLayout();
     nameInput_ = new QLineEdit();
-    ColorButton* colorButton = new ColorButton( QColor( 255, 0, 0, 255 ) );
-    ColorButton* diffuseReflectivityButton = new ColorButton( QColor( 255, 0, 0, 255 ) );
-    ColorButton* specularReflectivityButton = new ColorButton( QColor( 255, 0, 0, 255 ) );
-    QDoubleSpinBox* specularExponentSpinBox = new QDoubleSpinBox();
+    colorButton_ = new ColorButton( QColor( 255, 0, 0, 255 ) );
+    ambientReflectivityButton_ = new ColorButton( QColor( 255, 0, 0, 255 ) );
+    diffuseReflectivityButton_ = new ColorButton( QColor( 255, 0, 0, 255 ) );
+    specularReflectivityButton_ = new ColorButton( QColor( 255, 0, 0, 255 ) );
+    specularExponentSpinBox_ = new QDoubleSpinBox();
 
     // Set the parameters for the widget used for modifying material
     // specular exponent.
-    specularExponentSpinBox->setDecimals( 2 );
-    specularExponentSpinBox->setSingleStep( 1.0 );
-    specularExponentSpinBox->setRange( 0.0, 100.0 );
+    specularExponentSpinBox_->setDecimals( 2 );
+    specularExponentSpinBox_->setSingleStep( 1.0 );
+    specularExponentSpinBox_->setRange( 0.0, 100.0 );
 
     // Set this panel's layout.
     layout->addWidget( new QLabel( "Material panel" ) );
     layout->addRow( "Material name", nameInput_ );
-    layout->addRow( "Color: ", colorButton );
-    layout->addRow( "Diffuse reflectivity: ", diffuseReflectivityButton );
-    layout->addRow( "Specular reflectivity: ", specularReflectivityButton );
-    layout->addRow( "Specular exponent: ", specularExponentSpinBox );
+    layout->addRow( "Color: ", colorButton_ );
+    layout->addRow( "Ambient reflectivity: ", ambientReflectivityButton_ );
+    layout->addRow( "Diffuse reflectivity: ", diffuseReflectivityButton_ );
+    layout->addRow( "Specular reflectivity: ", specularReflectivityButton_ );
+    layout->addRow( "Specular exponent: ", specularExponentSpinBox_ );
     setLayout( layout );
 
     // Connect the signals emitted when user changes a material parameter to
     // the corresponding methods which change those parameters.
-    QObject::connect( colorButton, &ColorButton::colorChanged, [=]( const PackableColor& color )
+    QObject::connect( colorButton_, &ColorButton::colorChanged, [=]( const PackableColor& color )
     {
         currentMaterial_->setColor( color );
     });
 
-    QObject::connect( diffuseReflectivityButton, &ColorButton::colorChanged, [=]( const PackableColor& diffuseReflectivity )
+    QObject::connect( ambientReflectivityButton_, &ColorButton::colorChanged, [=]( const PackableColor& ambientReflectivity )
+    {
+        currentMaterial_->setAmbientReflectivity( ambientReflectivity );
+    });
+
+    QObject::connect( diffuseReflectivityButton_, &ColorButton::colorChanged, [=]( const PackableColor& diffuseReflectivity )
     {
         currentMaterial_->setDiffuseReflectivity( diffuseReflectivity );
     });
 
-    QObject::connect( diffuseReflectivityButton, &ColorButton::colorChanged, [=]( const PackableColor& diffuseReflectivity )
+    QObject::connect( diffuseReflectivityButton_, &ColorButton::colorChanged, [=]( const PackableColor& diffuseReflectivity )
     {
         currentMaterial_->setDiffuseReflectivity( diffuseReflectivity );
     });
 
-    QObject::connect( specularReflectivityButton, &ColorButton::colorChanged, [=]( const PackableColor& specularReflectivity )
+    QObject::connect( specularReflectivityButton_, &ColorButton::colorChanged, [=]( const PackableColor& specularReflectivity )
     {
         currentMaterial_->setSpecularReflectivity( specularReflectivity );
     });
 
     void (QDoubleSpinBox::*spinBoxValueChanged)(double) = &QDoubleSpinBox::valueChanged;
-    QObject::connect( specularExponentSpinBox, spinBoxValueChanged, [this]( double specularExponent ){
+    QObject::connect( specularExponentSpinBox_, spinBoxValueChanged, [this]( double specularExponent ){
         currentMaterial_->setSpecularExponent( static_cast< float >( specularExponent ) );
     });
 
     setEnabled( false );
 }
 
+/***
+ * 4. Refreshing
+ ***/
+
+void MaterialPanel::refresh()
+{
+    nameInput_->setText( currentMaterial_->getName().c_str() );
+
+    colorButton_->setColor( currentMaterial_->getColor() );
+    ambientReflectivityButton_->setColor( currentMaterial_->getAmbientReflectivity() );
+    diffuseReflectivityButton_->setColor( currentMaterial_->getDiffuseReflectivity() );
+    specularReflectivityButton_->setColor( currentMaterial_->getSpecularReflectivity() );
+    specularExponentSpinBox_->setValue( currentMaterial_->getSpecularExponent() );
+}
+
 
 /***
- * 4. Slots
+ * 5. Slots
  ***/
 
 void MaterialPanel::openMaterial( MaterialHandlerPtr material )
@@ -89,7 +111,7 @@ void MaterialPanel::openMaterial( MaterialHandlerPtr material )
 
     setEnabled( true );
 
-    nameInput_->setText( currentMaterial_->getName().c_str() );
+    refresh();
 }
 
 } // namespace como

@@ -130,10 +130,10 @@ void MaterialsManager::executeRemoteCommand( MaterialCommandConstPtr command )
                 }break;
 
                 case MaterialParameterName::AMBIENT_REFLECTIVITY:{
-                    const MaterialDiffuseReflectivityChangeCommand* diffuseReflexitivyChange =
-                            dynamic_cast< const MaterialDiffuseReflectivityChangeCommand* >( materialModificationCommand );
+                    const MaterialAmbientReflectivityChangeCommand* ambientReflexitivyChange =
+                            dynamic_cast< const MaterialAmbientReflectivityChangeCommand* >( materialModificationCommand );
 
-                    materials_.at( command->getMaterialID() )->setAmbientReflectivity( diffuseReflexitivyChange->getParameterValue() );
+                    materials_.at( command->getMaterialID() )->setAmbientReflectivity( ambientReflexitivyChange->getParameterValue() );
                 }break;
 
                 case MaterialParameterName::DIFFUSE_REFLECTIVITY:{

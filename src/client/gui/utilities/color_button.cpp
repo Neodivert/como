@@ -56,6 +56,24 @@ void ColorButton::setColor( const QColor& color )
 }
 
 
+void ColorButton::setColor(const PackableColor &color)
+{
+    color_.setRgb(
+                color[0].getValue(),
+                color[1].getValue(),
+                color[2].getValue(),
+                color[3].getValue() );
+
+    // Set the button's background to the color given as an argument.
+    QString qss = QString( "background-color: %1" ).arg( color_.name() );
+    setStyleSheet( qss );
+
+    // Emit a signal indicating that the current color has changed.
+    // TODO: Possible infinite loop?.
+    //emit colorChanged( color );
+}
+
+
 /***
  * 6. Slots
  ***/

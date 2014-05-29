@@ -52,6 +52,7 @@ class ColorButton : public QPushButton
          * 3. Setters
          ***/
         void setColor( const QColor& color );
+        void setColor( const PackableColor& color );
 
 
         /***

@@ -35,6 +35,11 @@ class MaterialPanel : public QFrame
         MaterialHandlerPtr currentMaterial_;
 
         QLineEdit* nameInput_;
+        ColorButton* colorButton_;
+        ColorButton* ambientReflectivityButton_;
+        ColorButton* diffuseReflectivityButton_;
+        ColorButton* specularReflectivityButton_;
+        QDoubleSpinBox* specularExponentSpinBox_;
 
     public:
         /***
@@ -59,7 +64,13 @@ class MaterialPanel : public QFrame
 
 
         /***
-         * 4. Slots
+         * 4. Refreshing
+         ***/
+        void refresh();
+
+
+        /***
+         * 5. Slots
          ***/
     public slots:
         void openMaterial( MaterialHandlerPtr material );
