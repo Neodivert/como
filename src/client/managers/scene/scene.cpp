@@ -574,6 +574,9 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
         case CommandTarget::PRIMITIVE:
             executeRemotePrimitiveCommand( dynamic_pointer_cast< const PrimitiveCommand>( command ) );
         break;
+        case CommandTarget::MATERIAL:
+            materialsManager_->executeRemoteCommand( dynamic_pointer_cast< const MaterialCommand >( command ) );
+        break;
     }
 
     log_->debug( "Scene - Executing remote command(",

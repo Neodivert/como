@@ -40,4 +40,7 @@
 // Primitive commands
 #include "primitive_commands/primitive_creation_command.hpp"
 
+// Material commands
+#include "material_commands/material_commands.hpp" // TODO: Make this with the rest of commands.
+
 #endif // COMMANDS_HPP

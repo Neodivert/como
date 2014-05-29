@@ -22,7 +22,6 @@
 
 #include <common/utilities/ids.hpp>
 #include <common/packables/packable_uint16.hpp>
-#include <memory>
 #include <stdexcept>
 
 namespace como {

@@ -28,6 +28,7 @@
 #include <string>
 #include <QObject>
 #include <memory>
+#include <common/commands/material_commands/material_commands.hpp>
 
 namespace como {
 
@@ -88,14 +89,20 @@ class MaterialsManager : public QObject
 
 
         /***
-         * 6. Operators
+         * 6. Remote command execution
+         ***/
+        void executeRemoteCommand( MaterialCommandConstPtr command );
+
+
+        /***
+         * 7. Operators
          ***/
         MaterialsManager& operator = ( const MaterialsManager& ) = delete;
         MaterialsManager& operator = ( MaterialsManager&& ) = delete;
 
 
         /***
-         * 7. Signals
+         * 8. Signals
          ***/
     signals:
         void materialCreated( MaterialID id, const std::string& name );

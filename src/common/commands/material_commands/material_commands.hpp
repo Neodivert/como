@@ -17,19 +17,9 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PACKABLES_HPP
-#define PACKABLES_HPP
+#ifndef MATERIAL_COMMANDS_HPP
+#define MATERIAL_COMMANDS_HPP
 
-#include "packable_string.hpp"
-#include "packable_uint8.hpp"
-#include "array/packable_array.hpp"
-#include "array/packable_array_3.hpp"
-#include "array/packable_color.hpp"
-#include "packable_uint16.hpp"
-#include "packable_uint32.hpp"
-#include "packable_file.hpp"
-#include "packable_float.hpp"
-#include "composite_packable.hpp"
-#include "ids/packable_material_id.hpp"
+#include "material_creation_command.hpp"
 
-#endif // PACKABLES_HPP
+#endif // MATERIAL_COMMANDS_HPP

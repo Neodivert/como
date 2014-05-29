@@ -65,7 +65,11 @@ HEADERS += \
     ../../src/common/commands/selection_commands/selection_parameter_change_command.hpp \
     ../../src/common/packables/abstract_packable_wrapper.hpp \
     ../../src/common/commands/selection_commands/abstract_selection_parameter_change_command.hpp \
-    ../../src/common/ids/material_id.hpp
+    ../../src/common/ids/material_id.hpp \
+    ../../src/common/commands/material_commands/material_command.hpp \
+    ../../src/common/commands/material_commands/material_creation_command.hpp \
+    ../../src/common/packables/ids/packable_material_id.hpp \
+    ../../src/common/commands/material_commands/material_commands.hpp
 
 
 # Common sources (used by both client and server).
@@ -101,4 +105,7 @@ SOURCES += \
     ../../src/common/packables/packable_float.cpp \
     ../../src/common/packables/array/packable_color.cpp \
     ../../src/common/commands/selection_commands/abstract_selection_parameter_change_command.cpp \
-    ../../src/common/ids/material_id.cpp
+    ../../src/common/ids/material_id.cpp \
+    ../../src/common/commands/material_commands/material_command.cpp \
+    ../../src/common/commands/material_commands/material_creation_command.cpp \
+    ../../src/common/packables/ids/packable_material_id.cpp

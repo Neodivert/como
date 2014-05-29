@@ -358,6 +358,9 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
                 log_->debug( "Primitive received [", primitiveCreationCommand->getFile()->getFilePath()->getValue(), "]\n" );
             }
         break;
+        case CommandTarget::MATERIAL:
+            // TODO: Complete.
+        break;
     }
 
     // Add the command to the historic.

@@ -100,4 +100,18 @@ MaterialConstPtr MaterialsManager::getMaterial( const MaterialID& id ) const
 }
 
 
+/***
+ * 6. Remote command execution
+ ***/
+
+void MaterialsManager::executeRemoteCommand( MaterialCommandConstPtr command )
+{
+    switch( command->getType() ){
+        case MaterialCommandType::MATERIAL_CREATION:
+            createMaterial( command->getMaterialID(), "Unnamed material" ); // TODO: Complete with name prefix.
+        break;
+    }
+}
+
+
 } // namespace como

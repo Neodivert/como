@@ -155,6 +155,14 @@ const void* PackableCommandsList::unpack( const void* buffer )
                     break;
                 }
             break;
+
+            case CommandTarget::MATERIAL:
+                switch( MaterialCommand::getType( buffer ) ){
+                    case MaterialCommandType::MATERIAL_CREATION:
+                        command = CommandPtr( new MaterialCreationCommand );
+                    break;
+                }
+            break;
         }
 
         buffer = command->unpack( buffer );
