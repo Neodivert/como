@@ -14,7 +14,7 @@ CONFIG += c++11
 
 # C++ flags
 QMAKE_CXXFLAGS_WARN_ON += -Wall -Werror
-QMAKE_CXXFLAGS += -Wall -Werror -Wextra -pthread -pedantic-errors
+QMAKE_CXXFLAGS += -Wall -Werror -Wextra -pthread -pedantic-errors -std=c++11
 
 # Common headers (used by both client and server).
 HEADERS += \

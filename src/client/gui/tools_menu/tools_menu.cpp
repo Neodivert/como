@@ -37,7 +37,7 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
 {
     addTab( new CreationTab( comoApp->getScene() ), "Creation" );
     addTab( new TransformationTab( comoApp ), "Transformation" );
-    connect( comoApp->getScene().get(), &Scene::connectedToScene, [=,this](){
+    connect( comoApp->getScene().get(), &Scene::connectedToScene, [=](){
         addTab( new PropertiesTab( comoApp->getScene()->getDrawablesManager()->getLocalUserSelection() ), "Properties" );
         // TODO: Remove tab when disconnected from scene.
 

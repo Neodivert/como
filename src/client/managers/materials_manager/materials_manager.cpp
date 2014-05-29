@@ -79,7 +79,7 @@ void MaterialsManager::selectMaterial( const MaterialID& id )
     // TODO: Send command to server.
 
     // TODO: Remove this when interaction with server is completed.
-    emit materialSelectionConfirmed( MaterialHandlerPtr( new MaterialHandler( id, materials_.at( id ), server_ ) ) );
+    emit materialSelectionConfirmed( MaterialHandlerPtr( new MaterialHandler( id, materials_.at( id ), server_, std::bind( &MaterialsManager::setChanged, this ) ) ) );
 }
 
 
@@ -157,6 +157,8 @@ void MaterialsManager::executeRemoteCommand( MaterialCommandConstPtr command )
                     materials_.at( command->getMaterialID() )->setSpecularExponent( specularExponentChange->getParameterValue() );
                 }break;
             }
+
+            setChanged();
         break;
     }
 }

@@ -50,22 +50,22 @@ MaterialPanel::MaterialPanel() :
 
     // Connect the signals emitted when user changes a material parameter to
     // the corresponding methods which change those parameters.
-    QObject::connect( colorButton, &ColorButton::colorChanged, [=,this]( const PackableColor& color )
+    QObject::connect( colorButton, &ColorButton::colorChanged, [=]( const PackableColor& color )
     {
         currentMaterial_->setColor( color );
     });
 
-    QObject::connect( diffuseReflectivityButton, &ColorButton::colorChanged, [=,this]( const PackableColor& diffuseReflectivity )
+    QObject::connect( diffuseReflectivityButton, &ColorButton::colorChanged, [=]( const PackableColor& diffuseReflectivity )
     {
         currentMaterial_->setDiffuseReflectivity( diffuseReflectivity );
     });
 
-    QObject::connect( diffuseReflectivityButton, &ColorButton::colorChanged, [=,this]( const PackableColor& diffuseReflectivity )
+    QObject::connect( diffuseReflectivityButton, &ColorButton::colorChanged, [=]( const PackableColor& diffuseReflectivity )
     {
         currentMaterial_->setDiffuseReflectivity( diffuseReflectivity );
     });
 
-    QObject::connect( specularReflectivityButton, &ColorButton::colorChanged, [=,this]( const PackableColor& specularReflectivity )
+    QObject::connect( specularReflectivityButton, &ColorButton::colorChanged, [=]( const PackableColor& specularReflectivity )
     {
         currentMaterial_->setSpecularReflectivity( specularReflectivity );
     });
@@ -74,6 +74,8 @@ MaterialPanel::MaterialPanel() :
     QObject::connect( specularExponentSpinBox, spinBoxValueChanged, [this]( double specularExponent ){
         currentMaterial_->setSpecularExponent( static_cast< float >( specularExponent ) );
     });
+
+    setEnabled( false );
 }
 
 
@@ -84,6 +86,8 @@ MaterialPanel::MaterialPanel() :
 void MaterialPanel::openMaterial( MaterialHandlerPtr material )
 {
     currentMaterial_ = material;
+
+    setEnabled( true );
 
     nameInput_->setText( currentMaterial_->getName().c_str() );
 }

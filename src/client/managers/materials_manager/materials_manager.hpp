@@ -29,12 +29,14 @@
 #include <QObject>
 #include <memory>
 #include <common/commands/material_commands/material_commands.hpp>
+#include <client/models/utilities/changeable/changeable.hpp>
+#include <functional>
 
 namespace como {
 
 typedef std::map< MaterialID, UserID > MaterialsOwnershipMap;
 
-class MaterialsManager : public QObject
+class MaterialsManager : public QObject, public Changeable
 {
     Q_OBJECT
 
@@ -43,9 +45,10 @@ class MaterialsManager : public QObject
         MaterialsOwnershipMap materialsOwners_;
 
         MaterialID nextLocalMaterialID_;
-        const UserID& localUserID_;
+        UserID localUserID_; // TODO: Use a reference or pointer to nextLocalMaterialID_.getCreatorID();
         ServerInterfacePtr server_;
         LogPtr log_;
+
 
     public:
         /***
@@ -92,6 +95,13 @@ class MaterialsManager : public QObject
          * 6. Remote command execution
          ***/
         void executeRemoteCommand( MaterialCommandConstPtr command );
+
+
+        /***
+         * 7. Updating
+         ***/
+    private:
+        virtual void onChange(){}
 
 
         /***

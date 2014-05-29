@@ -151,7 +151,7 @@ const void* PackableInteger<PackedType, UnpackedType>::unpack( const void* buffe
 #endif
 
     // Save unpacked vlaue into this instance.
-    setValue( static_cast< UnpackedType >( networkValue ) );
+    this->setValue( static_cast< UnpackedType >( networkValue ) );
 
     // Return a pointer to the next position in buffer.
     return static_cast< const void* >( castedBuffer + 1 );

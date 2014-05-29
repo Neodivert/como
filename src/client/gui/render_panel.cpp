@@ -28,7 +28,7 @@ namespace como {
 
 RenderPanel::RenderPanel( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     QFrame( parent ),
-    viewFrames_( { nullptr } )
+    viewFrames_{ nullptr }
 {
     QSplitter* vSplitter;
     QSplitter* h1Splitter;

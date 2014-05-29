@@ -69,7 +69,7 @@ QFrame* CreationTab::createMeshFromPrimitiveCreationMenu()
     // Signal / Slot connection: when one of the available primitives is
     // selected, create a mesh from it and add it to the scene.
     void (QComboBox::*activated)( int ) = &QComboBox::activated;
-    connect( primitiveSelector, activated, [=,this]( int primitiveID ) {
+    connect( primitiveSelector, activated, [=]( int primitiveID ) {
         scene_->getDrawablesManager()->createMeshAndMaterial( static_cast< PrimitiveID >( primitiveID ) );
     });
 

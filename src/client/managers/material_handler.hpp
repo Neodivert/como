@@ -23,6 +23,7 @@
 #include <client/managers/server_interface/server_interface.hpp>
 #include <client/models/3d/materials/material.hpp>
 #include <common/commands/material_commands/material_commands.hpp>
+#include <functional>
 
 namespace como {
 
@@ -34,12 +35,15 @@ class MaterialHandler
         MaterialPtr material_;
         ServerInterfacePtr server_;
 
+        // Call this method when a notification has changed.
+        std::function< void(void) > notifyChange_;
+
     public:
         /***
          * 1. Construction
          ***/
         MaterialHandler() = default;
-        MaterialHandler( MaterialID materialID, MaterialPtr material, ServerInterfacePtr server );
+        MaterialHandler( MaterialID materialID, MaterialPtr material, ServerInterfacePtr server, std::function< void(void) > notifyChange );
         MaterialHandler( const MaterialHandler& ) = delete;
         MaterialHandler( MaterialHandler&& );
 

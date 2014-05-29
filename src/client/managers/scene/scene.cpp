@@ -61,7 +61,6 @@ Scene::~Scene()
 }
 
 
-
 /***
  * 3. Initialization
  ***/
@@ -557,12 +556,17 @@ void Scene::createScenePrimitivesDirectory()
 
 bool Scene::hasChangedSinceLastQuery()
 {
-    // FIXME: This "if" is necessary because this method is invoked since
-    // Scene is instantiated, but drawablesManager_ ISN'T initialized
-    // until we connect to a server.
-    if( drawablesManager_ ){
-        return drawablesManager_->hasChangedSinceLastQuery();
+    if( materialsManager_ && materialsManager_->hasChangedSinceLastQuery() ){
+        return true;
     }
+
+    // FIXME: This "if( drawablesManager_)" is necessary because this method
+    // is invoked since Scene is instantiated, but drawablesManager_ ISN'T
+    // initialized until we connect to a server.
+    if( drawablesManager_ && drawablesManager_->hasChangedSinceLastQuery() ){
+        return true;
+    }
+
     return false;
 }
 
