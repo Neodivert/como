@@ -130,16 +130,6 @@ class Mesh : public Drawable
 
 
         /***
-         * 6. Setters.
-         ***/
-
-        void setMeshColor( PackableColor meshColor );
-        void setMaterialDiffuseReflectivity( const PackableColor& diffuseReflectivity );
-        void setMaterialSpecularReflectivity( const PackableColor& specularReflectivity );
-        void setMaterialSpecularExponent( float specularExponent );
-
-
-        /***
          * 7. Intersections.
          ***/
         virtual void intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT, unsigned int* triangle = nullptr ) const ;

@@ -22,7 +22,7 @@
 
 #include <QFrame>
 #include <QLineEdit>
-#include <client/models/3d/materials/material.hpp>
+#include <client/managers/material_handler.hpp>
 #include <client/gui/utilities/color_button.hpp>
 
 namespace como {
@@ -32,7 +32,7 @@ class MaterialPanel : public QFrame
     Q_OBJECT
 
     private:
-        MaterialPtr currentMaterial_;
+        MaterialHandlerPtr currentMaterial_;
 
         QLineEdit* nameInput_;
 
@@ -62,7 +62,7 @@ class MaterialPanel : public QFrame
          * 4. Slots
          ***/
     public slots:
-        void openMaterial( MaterialPtr material );
+        void openMaterial( MaterialHandlerPtr material );
 };
 
 } // namespace como

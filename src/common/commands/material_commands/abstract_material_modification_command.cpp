@@ -17,7 +17,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "abstract_selection_parameter_change_command.hpp"
+#include "abstract_material_modification_command.hpp"
 
 namespace como {
 
@@ -26,24 +26,24 @@ namespace como {
  * 1. Construction
  ***/
 
-AbstractSelectionParameterChangeCommand::AbstractSelectionParameterChangeCommand( SelectionParameterName parameterName ) :
-    SelectionCommand( SelectionCommandType::PARAMETER_CHANGE, NO_USER ),
+AbstractMaterialModificationCommand::AbstractMaterialModificationCommand( PackableMaterialParameterName parameterName ) :
+    MaterialCommand( MaterialCommandType::MATERIAL_MODIFICATION ),
     parameterName_( parameterName )
 {
     addPackable( &parameterName_ );
 }
 
 
-AbstractSelectionParameterChangeCommand::AbstractSelectionParameterChangeCommand( SelectionParameterName parameterName, UserID userID ) :
-    SelectionCommand( SelectionCommandType::PARAMETER_CHANGE, userID ),
+AbstractMaterialModificationCommand::AbstractMaterialModificationCommand( MaterialID materialID, PackableMaterialParameterName parameterName ) :
+    MaterialCommand( MaterialCommandType::MATERIAL_MODIFICATION, materialID ),
     parameterName_( parameterName )
 {
     addPackable( &parameterName_ );
 }
 
 
-AbstractSelectionParameterChangeCommand::AbstractSelectionParameterChangeCommand( const AbstractSelectionParameterChangeCommand& b ) :
-    SelectionCommand( b ),
+AbstractMaterialModificationCommand::AbstractMaterialModificationCommand( const AbstractMaterialModificationCommand& b ) :
+    MaterialCommand( b ),
     parameterName_( b.parameterName_ )
 {
     addPackable( &parameterName_ );
@@ -54,7 +54,7 @@ AbstractSelectionParameterChangeCommand::AbstractSelectionParameterChangeCommand
  * 3. Getters
  ***/
 
-SelectionParameterName AbstractSelectionParameterChangeCommand::getParameterName() const
+MaterialParameterName AbstractMaterialModificationCommand::getParameterName() const
 {
     return parameterName_.getValue();
 }
@@ -64,11 +64,11 @@ SelectionParameterName AbstractSelectionParameterChangeCommand::getParameterName
  * 4. Buffer pre-reading
  ***/
 
-SelectionParameterName AbstractSelectionParameterChangeCommand::getParameterName( const void* buffer )
+MaterialParameterName AbstractMaterialModificationCommand::getParameterName( const void* buffer )
 {
-    SelectionCommand selectionCommand( SelectionCommandType::SELECTION_RESPONSE, NO_USER );
+    MaterialCommand materialCommand( MaterialCommandType::MATERIAL_CREATION );
 
-    return static_cast< SelectionParameterName>( (static_cast< const std::uint8_t* >( buffer ))[selectionCommand.getPacketSize()] );
+    return static_cast< MaterialParameterName >( (static_cast< const std::uint8_t* >( buffer ))[materialCommand.getPacketSize()] );
 }
 
 } // namespace como

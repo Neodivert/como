@@ -21,5 +21,6 @@
 #define MATERIAL_COMMANDS_HPP
 
 #include "material_creation_command.hpp"
+#include "material_modification_command.hpp"
 
 #endif // MATERIAL_COMMANDS_HPP

@@ -23,8 +23,7 @@
 namespace como {
 
 MaterialPanel::MaterialPanel() :
-    QFrame(),
-    currentMaterial_( nullptr )
+    QFrame()
 {
     // Create the widgets for modifying material properties.
     QFormLayout* layout = new QFormLayout();
@@ -72,7 +71,7 @@ MaterialPanel::MaterialPanel() :
     });
 
     void (QDoubleSpinBox::*spinBoxValueChanged)(double) = &QDoubleSpinBox::valueChanged;
-    QObject::connect( specularExponentSpinBox, spinBoxValueChanged, [=,this]( double specularExponent ){
+    QObject::connect( specularExponentSpinBox, spinBoxValueChanged, [this]( double specularExponent ){
         currentMaterial_->setSpecularExponent( static_cast< float >( specularExponent ) );
     });
 }
@@ -82,7 +81,7 @@ MaterialPanel::MaterialPanel() :
  * 4. Slots
  ***/
 
-void MaterialPanel::openMaterial( MaterialPtr material )
+void MaterialPanel::openMaterial( MaterialHandlerPtr material )
 {
     currentMaterial_ = material;
 

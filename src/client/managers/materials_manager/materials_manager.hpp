@@ -22,7 +22,7 @@
 
 #include <list>
 #include <map>
-#include <client/models/3d/materials/material.hpp>
+#include <client/managers/material_handler.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
 #include <common/ids/material_id.hpp>
 #include <string>
@@ -106,7 +106,7 @@ class MaterialsManager : public QObject
          ***/
     signals:
         void materialCreated( MaterialID id, const std::string& name );
-        void materialSelectionConfirmed( MaterialPtr material );
+        void materialSelectionConfirmed( MaterialHandlerPtr material );
         void materialSelectionDenied( MaterialID material );
 };
 

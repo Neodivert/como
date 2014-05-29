@@ -28,8 +28,7 @@ enum class SelectionCommandType : std::uint8_t {
     FULL_DESELECTION = 0,
     SELECTION_RESPONSE,
     SELECTION_TRANSFORMATION,
-    SELECTION_DELETION,
-    PARAMETER_CHANGE
+    SELECTION_DELETION
 };
 typedef PackableUint8< SelectionCommandType > PackableSelectionCommandType;
 

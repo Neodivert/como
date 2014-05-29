@@ -38,7 +38,7 @@ MaterialCommand::MaterialCommand( MaterialCommandType commandType, const Materia
     addPackable( &materialID_ );
 }
 
-MaterialCommand::MaterialCommand( MaterialCommand& b ) :
+MaterialCommand::MaterialCommand( const MaterialCommand& b ) :
     TypeCommand( b ),
     materialID_( b.materialID_ )
 {

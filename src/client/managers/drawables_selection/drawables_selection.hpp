@@ -105,10 +105,6 @@ class DrawablesSelection : public Changeable
          * 3. Setters
          ***/
         virtual void setPivotPointMode( PivotPointMode pivotPointMode );
-        virtual void setMeshColor( PackableColor meshColor );
-        virtual void setMaterialDiffuseReflectivity( const PackableColor& diffuseReflectivity );
-        virtual void setMaterialSpecularReflectivity( const PackableColor& diffuseReflectivity );
-        virtual void setMaterialSpecularExponent( float specularExponent );
 
 
         /***

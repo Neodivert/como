@@ -48,38 +48,6 @@ void LocalDrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 }
 
 
-void LocalDrawablesSelection::setMeshColor( const PackableColor& meshColor )
-{
-    DrawablesSelection::setMeshColor( meshColor );
-
-    server_->sendCommand( CommandConstPtr( new SelectionMaterialColorChangeCommand( localUserID_, meshColor ) ) );
-}
-
-
-void LocalDrawablesSelection::setMaterialDiffuseReflectivity( const PackableColor& diffuseReflectivity )
-{
-    DrawablesSelection::setMaterialDiffuseReflectivity( diffuseReflectivity );
-
-    server_->sendCommand( CommandConstPtr( new SelectionMaterialDiffuseReflectivityChangeCommand( localUserID_, diffuseReflectivity ) ) );
-}
-
-
-void LocalDrawablesSelection::setMaterialSpecularReflectivity( const PackableColor& specularReflectivity )
-{
-    DrawablesSelection::setMaterialSpecularReflectivity( specularReflectivity );
-
-    server_->sendCommand( CommandConstPtr( new SelectionMaterialSpecularReflectivityChangeCommand( localUserID_, specularReflectivity ) ) );
-}
-
-
-void LocalDrawablesSelection::setMaterialSpecularExponent( float specularExponent )
-{
-    DrawablesSelection::setMaterialSpecularExponent( specularExponent );
-
-    server_->sendCommand( CommandConstPtr( new SelectionMaterialSpecularExponentChangeCommand( localUserID_, specularExponent ) ) );
-}
-
-
 /***
  * 4. Drawables management
  ***/

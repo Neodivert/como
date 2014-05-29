@@ -128,22 +128,6 @@ const void* PackableCommandsList::unpack( const void* buffer )
                     case SelectionCommandType::SELECTION_TRANSFORMATION:
                         command = CommandPtr( new SelectionTransformationCommand );
                     break;
-                    case SelectionCommandType::PARAMETER_CHANGE:
-                        switch( AbstractSelectionParameterChangeCommand::getParameterName( buffer ) ){
-                            case SelectionParameterName::MATERIAL_COLOR:
-                                command = CommandPtr( new SelectionMaterialColorChangeCommand );
-                            break;
-                            case SelectionParameterName::MATERIAL_DIFFUSE_REFLECTIVITY:
-                                command = CommandPtr( new SelectionMaterialDiffuseReflectivityChangeCommand );
-                            break;
-                            case SelectionParameterName::MATERIAL_SPECULAR_REFLECTIVITY:
-                                command = CommandPtr( new SelectionMaterialSpecularReflectivityChangeCommand );
-                            break;
-                            case SelectionParameterName::MATERIAL_SPECULAR_EXPONENT:
-                                command = CommandPtr( new SelectionMaterialSpecularExponentChangeCommand );
-                            break;
-                        }
-                    break;
                 }
             break;
 
@@ -160,6 +144,25 @@ const void* PackableCommandsList::unpack( const void* buffer )
                 switch( MaterialCommand::getType( buffer ) ){
                     case MaterialCommandType::MATERIAL_CREATION:
                         command = CommandPtr( new MaterialCreationCommand );
+                    break;
+                    case MaterialCommandType::MATERIAL_MODIFICATION:
+                        switch( AbstractMaterialModificationCommand::getParameterName( buffer ) ){
+                            case MaterialParameterName::COLOR:
+                                command = CommandPtr( new MaterialColorChangeCommand );
+                            break;
+                            case MaterialParameterName::AMBIENT_REFLECTIVITY:
+                                command = CommandPtr( new MaterialAmbientReflectivityChangeCommand );
+                            break;
+                            case MaterialParameterName::DIFFUSE_REFLECTIVITY:
+                                command = CommandPtr( new MaterialDiffuseReflectivityChangeCommand );
+                            break;
+                            case MaterialParameterName::SPECULAR_REFLECTIVITY:
+                                command = CommandPtr( new MaterialSpecularReflectivityChangeCommand );
+                            break;
+                            case MaterialParameterName::SPECULAR_EXPONENT:
+                                command = CommandPtr( new MaterialSpecularExponentChangeCommand );
+                            break;
+                        }
                     break;
                 }
             break;

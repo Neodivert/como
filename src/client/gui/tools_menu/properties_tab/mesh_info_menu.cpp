@@ -34,51 +34,11 @@ MeshInfoMenu::MeshInfoMenu( LocalDrawablesSelectionPtr userSelection ) :
     // Create a label for displaying the centroid of the user's selection.
     centroidPosition_ = new QLabel( "Undefined" );
 
-    // Create a button for selecting the color of the meshes selected by user.
-    colorInput_ = new QPushButton("");
-    colorInput_->setStyleSheet( "background-color: red" );
-
-    // Signal / Slot connection. When previous button is clicked, we invoke the
-    // changeCurrentColor method.
-    QObject::connect( colorInput_, &QPushButton::clicked, [=,this](){
-        // Open a dialog for selecting a new color.
-        QColor meshColor = QColorDialog::getColor( meshColor );
-
-        // If the selected color is not valid, change it to red.
-        if( !( meshColor.isValid() ) ){
-            meshColor.setRgb( 255, 0, 0 );
-        }
-
-        QString qss = QString("background-color: %1").arg(meshColor.name());
-        colorInput_->setStyleSheet( qss );
-
-        std::uint8_t auxMeshColor[4] =
-        {
-            static_cast< std::uint8_t >( meshColor.red() ),
-            static_cast< std::uint8_t >( meshColor.green() ),
-            static_cast< std::uint8_t >( meshColor.blue() ),
-            static_cast< std::uint8_t >( meshColor.alpha() )
-        };
-
-        userSelection_->setMeshColor( PackableColor( &auxMeshColor[0] ) );
-
-        // Emit a signal indicating that the current color has changed.
-        //emit meshColorChanged( meshColor_ );
-    });
-
     // Add widgets to the layout and set it as the current one.
     layout->addRow( "Centroid position:", centroidPosition_ );
-    layout->addRow( "Mesh color:", colorInput_ );
     setLayout( layout );
 }
 
-/*
-QColor col = QColorDialog::getColor(Qt::white, this);
-if(col.isValid()) {
-    QString qss = QString("background-color: %1").arg(col.name());
-    ui->pushButton->setStyleSheet(qss);
-}
-*/
 
 /***
  * 3. Refreshing

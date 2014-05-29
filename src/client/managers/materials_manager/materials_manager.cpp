@@ -79,7 +79,7 @@ void MaterialsManager::selectMaterial( const MaterialID& id )
     // TODO: Send command to server.
 
     // TODO: Remove this when interaction with server is completed.
-    emit materialSelectionConfirmed( materials_.at( id ) );
+    emit materialSelectionConfirmed( MaterialHandlerPtr( new MaterialHandler( id, materials_.at( id ), server_ ) ) );
 }
 
 
@@ -116,6 +116,48 @@ void MaterialsManager::executeRemoteCommand( MaterialCommandConstPtr command )
             createMaterial( materialCreationCommand->getMaterialID(),
                             materialCreationCommand->getMaterialName() );
         }break;
+
+        case MaterialCommandType::MATERIAL_MODIFICATION:
+            const AbstractMaterialModificationCommand* materialModificationCommand =
+                    dynamic_cast< const AbstractMaterialModificationCommand* >( command.get() );
+
+            switch( materialModificationCommand->getParameterName() ){
+                case MaterialParameterName::COLOR:{
+                    const MaterialColorChangeCommand* materialColorChange =
+                            dynamic_cast< const MaterialColorChangeCommand* >( materialModificationCommand );
+
+                    materials_.at( command->getMaterialID() )->setColor( materialColorChange->getParameterValue() );
+                }break;
+
+                case MaterialParameterName::AMBIENT_REFLECTIVITY:{
+                    const MaterialDiffuseReflectivityChangeCommand* diffuseReflexitivyChange =
+                            dynamic_cast< const MaterialDiffuseReflectivityChangeCommand* >( materialModificationCommand );
+
+                    materials_.at( command->getMaterialID() )->setAmbientReflectivity( diffuseReflexitivyChange->getParameterValue() );
+                }break;
+
+                case MaterialParameterName::DIFFUSE_REFLECTIVITY:{
+                    const MaterialDiffuseReflectivityChangeCommand* diffuseReflexitivyChange =
+                            dynamic_cast< const MaterialDiffuseReflectivityChangeCommand* >( materialModificationCommand );
+
+                    materials_.at( command->getMaterialID() )->setDiffuseReflectivity( diffuseReflexitivyChange->getParameterValue() );
+                }break;
+
+                case MaterialParameterName::SPECULAR_REFLECTIVITY:{
+                    const MaterialSpecularReflectivityChangeCommand* specularReflexitivyChange =
+                            dynamic_cast< const MaterialSpecularReflectivityChangeCommand* >( materialModificationCommand );
+
+                    materials_.at( command->getMaterialID() )->setSpecularReflectivity( specularReflexitivyChange->getParameterValue() );
+                }break;
+
+                case MaterialParameterName::SPECULAR_EXPONENT:{
+                    const MaterialSpecularExponentChangeCommand* specularExponentChange =
+                            dynamic_cast< const MaterialSpecularExponentChangeCommand* >( materialModificationCommand );
+
+                    materials_.at( command->getMaterialID() )->setSpecularExponent( specularExponentChange->getParameterValue() );
+                }break;
+            }
+        break;
     }
 }
 

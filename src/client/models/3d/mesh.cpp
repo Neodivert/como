@@ -343,61 +343,6 @@ void Mesh::getVertexData( unsigned int& n, GLfloat* vertices )
 
 
 /***
- * 6. Setters.
- ***/
-
-void Mesh::setMeshColor( PackableColor meshColor )
-{
-    Q_UNUSED( meshColor );
-    /*
-    material_->setColor( meshColor );
-
-    std::cout << "Mesh::setMeshColor" << std::endl;
-    material_->print();
-    */
-}
-
-
-void Mesh::setMaterialDiffuseReflectivity( const PackableColor& diffuseReflectivity )
-{
-    Q_UNUSED( diffuseReflectivity );
-
-    /*
-    material_->setDiffuseReflectivity( diffuseReflectivity );
-
-    std::cout << "Mesh::setMaterialDiffuseReflectivity" << std::endl;
-    material_->print();
-    */
-}
-
-
-void Mesh::setMaterialSpecularReflectivity( const PackableColor& specularReflectivity )
-{
-    Q_UNUSED( specularReflectivity );
-
-    /*
-    material_->setSpecularReflectivity( specularReflectivity );
-
-    std::cout << "Mesh::setMaterialSpecularReflectivity" << std::endl;
-    material_->print();
-    */
-}
-
-
-void Mesh::setMaterialSpecularExponent( float specularExponent )
-{
-    Q_UNUSED( specularExponent );
-
-    /*
-    material_->setSpecularExponent( specularExponent );
-
-    std::cout << "Mesh::setMaterialSpecularExponent" << std::endl;
-    material_->print();
-    */
-}
-
-
-/***
  * 7. Intersections.
  ***/
 

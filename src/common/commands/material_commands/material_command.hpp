@@ -26,7 +26,8 @@
 namespace como {
 
 enum class MaterialCommandType : std::uint8_t {
-    MATERIAL_CREATION = 0
+    MATERIAL_CREATION = 0,
+    MATERIAL_MODIFICATION
 };
 typedef PackableUint8< MaterialCommandType > PackableMaterialCommandType;
 
@@ -40,11 +41,11 @@ class MaterialCommand : public TypeCommand< MaterialCommandType >
      ***/
     public:
         MaterialCommand() = delete;
-    protected:
         MaterialCommand( MaterialCommandType commandType );
+    protected:
         MaterialCommand( MaterialCommandType commandType, const MaterialID& materialID );
     public:
-        MaterialCommand( MaterialCommand& b );
+        MaterialCommand( const MaterialCommand& b );
         MaterialCommand( MaterialCommand&& ) = delete;
 
     /***
