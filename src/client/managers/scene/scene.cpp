@@ -462,68 +462,6 @@ void Scene::executeRemoteUserCommand( UserCommandConstPtr command )
     }
 }
 
-
-void Scene::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
-{
-    const MeshCreationCommand* meshCreationCommand = nullptr;
-    const PrimitiveMeshCreationCommand* primitiveMeshCreationCommand = nullptr;
-    const DrawableSelectionCommand* selectDrawable = nullptr;
-    const LightCreationCommand* lightCreationCommand = nullptr;
-    const DirectionalLightCreationCommand* directionalLightCreationCommand = nullptr;
-
-    switch( command->getType() ){
-        case  DrawableCommandType::MESH_CREATION:
-            meshCreationCommand = dynamic_cast< const MeshCreationCommand* >( command.get() );
-
-            switch( meshCreationCommand->getMeshType() ){
-                case MeshType::PRIMITIVE_MESH:
-                    // Cast to a MESH_CREATION command.
-                    primitiveMeshCreationCommand = dynamic_cast< const PrimitiveMeshCreationCommand* >( meshCreationCommand );
-
-                    std::cout << "Executing remote mesh creation command: ("
-                              << primitiveMeshCreationCommand->getMeshColor()[0].getValue() << ", "
-                              << primitiveMeshCreationCommand->getMeshColor()[1].getValue() << ", "
-                              << primitiveMeshCreationCommand->getMeshColor()[2].getValue() << ", "
-                              << primitiveMeshCreationCommand->getMeshColor()[3].getValue() << ")" << std::endl;
-
-                    // Add mesh to the scene.
-                    drawablesManager_->addMesh( primitiveMeshCreationCommand->getDrawableID().creatorID.getValue(),
-                                                primitiveMeshCreationCommand->getPrimitiveID(),
-                                                //primitiveMeshCreationCommand->getMeshColor(), TODO: Use Material.
-                                                primitiveMeshCreationCommand->getDrawableID() );
-                break;
-                case MeshType::LIGHT:
-                    lightCreationCommand = dynamic_cast< const LightCreationCommand* >( meshCreationCommand );
-
-                    switch( lightCreationCommand->getLightType() ){
-                        case LightType::DIRECTIONAL_LIGHT:
-                            directionalLightCreationCommand = dynamic_cast< const DirectionalLightCreationCommand* >( lightCreationCommand  );
-
-                            // Add a directional light to the scene.
-                            drawablesManager_->addDirectionalLight( directionalLightCreationCommand->getDrawableID(),
-                                                                    PackableColor( directionalLightCreationCommand->getLightColor() ),
-                                                                    PackableColor( directionalLightCreationCommand->getMeshColor() ) );
-                        break;
-                    }
-                break;
-                default:
-                    // TODO: Complete.
-                break;
-            }
-        break;
-
-        case DrawableCommandType::DRAWABLE_SELECTION:
-            // Cast to a DRAWABLE_SELECTION command.
-            selectDrawable = dynamic_cast< const DrawableSelectionCommand* >( command.get() );
-
-            // Select drawable.
-            drawablesManager_->selectDrawable( selectDrawable->getDrawableID(), selectDrawable->getUserID() );
-        break;
-    }
-}
-
-
-
 void Scene::executeRemotePrimitiveCommand( PrimitiveCommandConstPtr command )
 {
     const PrimitiveCreationCommand * primitiveCreationCommand = nullptr;
@@ -566,7 +504,7 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
             executeRemoteUserCommand( dynamic_pointer_cast< const UserCommand >( command ) );
         break;
         case CommandTarget::DRAWABLE:
-            executeRemoteDrawableCommand( dynamic_pointer_cast< const DrawableCommand>( command ) );
+            drawablesManager_->executeRemoteDrawableCommand( dynamic_pointer_cast< const DrawableCommand>( command ) );
         break;
         case CommandTarget::SELECTION:
             drawablesManager_->executeRemoteSelectionCommand( dynamic_pointer_cast< const SelectionCommand>( command ) );

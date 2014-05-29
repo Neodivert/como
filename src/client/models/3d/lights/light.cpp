@@ -25,8 +25,8 @@ namespace como {
  * 1. Construction
  ***/
 
-Light::Light( LightType type, const char* meshPath, GLuint lightIndex, PackableColor meshColor, PackableColor lightColor ) :
-    Mesh( MeshType::LIGHT, meshPath, meshColor ),
+Light::Light( LightType type, const char* meshPath, GLuint lightIndex, MaterialConstPtr material, PackableColor lightColor ) :
+    Mesh( MeshType::LIGHT, meshPath, material ),
     type_( type )
 {
     GLint currentShaderProgram = -1;

@@ -72,7 +72,7 @@ struct PackableDrawableID : public CompositePackable {
     bool operator == ( const PackableDrawableID& b ) const ;
 
     PackableDrawableID& operator = (const PackableDrawableID& b );
-    PackableDrawableID& operator = ( PackableDrawableID&& ) = delete;
+    PackableDrawableID& operator = ( PackableDrawableID&& );
 };
 
 const PackableDrawableID NULL_DRAWABLE_ID;

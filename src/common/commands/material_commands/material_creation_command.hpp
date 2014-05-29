@@ -26,14 +26,15 @@ namespace como {
 
 class MaterialCreationCommand : public MaterialCommand
 {
+    private:
+        PackableString<64> materialName_;
+
     /***
      * 1. Construction
      ***/
     public:
         MaterialCreationCommand();
-    protected:
-        MaterialCreationCommand( const MaterialID& materialID );
-    public:
+        MaterialCreationCommand( const MaterialID& materialID, const std::string& materialName  );
         MaterialCreationCommand( MaterialCreationCommand& b );
         MaterialCreationCommand( MaterialCreationCommand&& ) = delete;
 
@@ -42,12 +43,23 @@ class MaterialCreationCommand : public MaterialCommand
      ***/
         ~MaterialCreationCommand() = default;
 
+
     /***
-     * 3. Operators
+     * 3. Getters
+     ***/
+        std::string getMaterialName() const;
+
+
+    /***
+     * 4. Operators
      ***/
         MaterialCreationCommand& operator = ( const MaterialCreationCommand& ) = delete;
         MaterialCreationCommand& operator = ( MaterialCreationCommand&& ) = delete;
 };
+
+
+typedef std::shared_ptr< MaterialCreationCommand > MaterialCreationCommandPtr;
+typedef std::shared_ptr< const MaterialCreationCommand > MaterialCreationCommandConstPtr;
 
 } // namespace como
 

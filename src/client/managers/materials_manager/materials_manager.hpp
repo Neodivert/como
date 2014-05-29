@@ -69,7 +69,7 @@ class MaterialsManager : public QObject
     public:
         MaterialID createMaterial( const std::string& namePrefix );
     private:
-        void createMaterial( const MaterialID& id, const std::string& namePrefix );
+        void createMaterial( const MaterialID& id, const std::string& name );
 
 
         /***

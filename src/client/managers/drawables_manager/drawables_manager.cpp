@@ -131,65 +131,61 @@ void DrawablesManager::addMesh( PrimitiveID primitiveID, QColor color )
 }
 */
 
-// FIXME: Duplicated code.
-void DrawablesManager::addMesh( PrimitiveID primitiveID )
+void DrawablesManager::createMeshAndMaterial( PrimitiveID primitiveID )
 {
-    // FIXME: Is this necessary?
-    //takeOpenGLContext();
-    //oglContext_->makeCurrent( this );
-    MaterialID newMaterialID;
-    MaterialConstPtr newMaterial;
-
     // Build the "absolute" path to the specification file of the
     // primitive used for building this mesh.
     std::string primitivePath = primitivesDirPath_ + '/' + primitivePaths_.at( primitiveID );
 
-    // Create a material for this mesh.
-    newMaterialID = materialsManager_->createMaterial( "Mesh material" );
-    newMaterial = materialsManager_->getMaterial( newMaterialID );
+    // Create the material.
+    MaterialID materialID = materialsManager_->createMaterial( "Unnamed material" ); // TODO: Use another name.
 
     // Create the mesh.
-    DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), newMaterial ) );
-
-    // Add the mest to the scene.
+    DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
     PackableDrawableID drawableID = addDrawable( drawable );
 
-    // Send the command to the server.
-    server_->sendCommand( CommandConstPtr( new PrimitiveMeshCreationCommand( drawableID, primitiveID, newMaterial->getColor() ) ) );
+    // Send the command to the server (the MaterialCreationCommand command was
+    // already sent in previous call to materialsManager_->createMaterial() ).
+    server_->sendCommand( CommandConstPtr( new PrimitiveMeshCreationCommand( drawableID, primitiveID, materialID ) ) );
 }
 
 
 // FIXME: Duplicated code.
-void DrawablesManager::addMesh( UserID userID, PrimitiveID primitiveID, PackableDrawableID drawableID )
+void DrawablesManager::createMesh( PrimitiveID primitiveID, MaterialID materialID )
 {
-    try {
-        //takeOpenGLContext();
-        MaterialID newMaterialID;
-        MaterialConstPtr newMaterial;
+    // Build the "absolute" path to the specification file of the
+    // primitive used for building this mesh.
+    std::string primitivePath = primitivesDirPath_ + '/' + primitivePaths_.at( primitiveID );
 
-        // Build the "absolute" path to the specification file of the
-        // primitive used for building this mesh.
-        std::string primitivePath = primitivesDirPath_ + '/' + primitivePaths_.at( primitiveID );
+    // Create the mesh.
+    DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
 
-        // Create a material for this mesh.
-        newMaterialID = materialsManager_->createMaterial( "Mesh material" );
-        newMaterial = materialsManager_->getMaterial( newMaterialID );
+    // Add the mesh to the scene and retrieve its ID.
+    PackableDrawableID drawableID = addDrawable( drawable );
 
-        // Create the mesh.
-        DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), newMaterial ) );
-
-        // Add the mesh to the scene.
-        addDrawable( userID, drawable, drawableID );
-    }catch( std::exception& ex ){
-        std::cerr << ex.what() << std::endl;
-        throw;
-    }
+    // Send the command to the server.
+    server_->sendCommand( CommandConstPtr( new PrimitiveMeshCreationCommand( drawableID, primitiveID, materialID ) ) );
 }
 
 
-void DrawablesManager::addDirectionalLight( PackableDrawableID lightID, const PackableColor& lightColor, const PackableColor& meshColor )
+// FIXME: Duplicated code.
+void DrawablesManager::createRemoteMesh( PrimitiveID primitiveID, PackableDrawableID drawableID, MaterialID materialID )
 {
-    addDrawable( lightID.creatorID.getValue(), DrawablePtr( new DirectionalLight( meshColor, lightColor ) ), lightID );
+    // Build the "absolute" path to the specification file of the
+    // primitive used for building this mesh.
+    std::string primitivePath = primitivesDirPath_ + '/' + primitivePaths_.at( primitiveID );
+
+    // Create the mesh.
+    DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
+
+    // Add the mesh to the scene.
+    addDrawable( drawableID.creatorID.getValue(), drawable, drawableID );
+}
+
+
+void DrawablesManager::addDirectionalLight( PackableDrawableID lightID, const PackableColor& lightColor, MaterialID materialID )
+{
+    addDrawable( lightID.creatorID.getValue(), DrawablePtr( new DirectionalLight( materialsManager_->getMaterial( materialID ), lightColor ) ), lightID );
 }
 
 
@@ -326,6 +322,57 @@ void DrawablesManager::drawAll( const glm::mat4& viewProjMatrix ) const
 /***
  * 11. Command execution
  ***/
+
+void DrawablesManager::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
+{
+    const MeshCreationCommand* meshCreationCommand = nullptr;
+    const PrimitiveMeshCreationCommand* primitiveMeshCreationCommand = nullptr;
+    const DrawableSelectionCommand* selectDrawable = nullptr;
+    const LightCreationCommand* lightCreationCommand = nullptr;
+    const DirectionalLightCreationCommand* directionalLightCreationCommand = nullptr;
+
+    switch( command->getType() ){
+        case  DrawableCommandType::MESH_CREATION:
+            meshCreationCommand = dynamic_cast< const MeshCreationCommand* >( command.get() );
+
+            switch( meshCreationCommand->getMeshType() ){
+                case MeshType::PRIMITIVE_MESH:
+                    // Cast to a MESH_CREATION command.
+                    primitiveMeshCreationCommand = dynamic_cast< const PrimitiveMeshCreationCommand* >( meshCreationCommand );
+
+                    createRemoteMesh( primitiveMeshCreationCommand->getPrimitiveID(),
+                                      primitiveMeshCreationCommand->getDrawableID(),
+                                      primitiveMeshCreationCommand->getMaterialID() );
+                break;
+                case MeshType::LIGHT:
+                    lightCreationCommand = dynamic_cast< const LightCreationCommand* >( meshCreationCommand );
+
+                    switch( lightCreationCommand->getLightType() ){
+                        case LightType::DIRECTIONAL_LIGHT:
+                            directionalLightCreationCommand = dynamic_cast< const DirectionalLightCreationCommand* >( lightCreationCommand );
+
+                            // Add a directional light to the scene.
+                            addDirectionalLight( directionalLightCreationCommand->getDrawableID(),
+                                                                    PackableColor( directionalLightCreationCommand->getLightColor() ),
+                                                                    directionalLightCreationCommand->getMaterialID() );
+                        break;
+                    }
+                break;
+                default:
+                    // TODO: Complete.
+                break;
+            }
+        break;
+
+        case DrawableCommandType::DRAWABLE_SELECTION:
+            // Cast to a DRAWABLE_SELECTION command.
+            selectDrawable = dynamic_cast< const DrawableSelectionCommand* >( command.get() );
+
+            // Select drawable.
+            this->selectDrawable( selectDrawable->getDrawableID(), selectDrawable->getUserID() );
+        break;
+    }
+}
 
 void DrawablesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr command )
 {

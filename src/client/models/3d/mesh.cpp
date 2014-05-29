@@ -43,10 +43,10 @@ const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
  ***/
 
 // TODO: Replace meshColor argument by a MaterialConstPtr.
-Mesh::Mesh( MeshType type, const char* fileName, PackableColor meshColor ) :
+Mesh::Mesh( MeshType type, const char* fileName, MaterialConstPtr material ) :
     Drawable( DrawableType::MESH, "Mesh #" ),
     type_( type ),
-    material_( MaterialConstPtr( new Material( meshColor ) ) )
+    material_( material )
 {
     initMesh( fileName );
 }

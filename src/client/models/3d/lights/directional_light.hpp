@@ -47,7 +47,7 @@ class DirectionalLight : public Light
          * \brief Constructs a directional Light with the specified light
          * color.
          */
-        DirectionalLight( const PackableColor& meshColor, const PackableColor& lightColor );
+        DirectionalLight( MaterialConstPtr material, const PackableColor& lightColor );
 
         /*! \brief Copy constructor */
         // TODO: Define a proper copy constructor when inplementing multiple lights

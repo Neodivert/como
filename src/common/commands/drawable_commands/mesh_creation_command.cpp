@@ -26,23 +26,23 @@ namespace como {
  * 1. Construction
  ***/
 
-MeshCreationCommand::MeshCreationCommand( MeshType meshType, PackableDrawableID drawableID, const PackableColor& color ) :
+MeshCreationCommand::MeshCreationCommand( MeshType meshType, PackableDrawableID drawableID, const MaterialID& materialID ) :
     DrawableCommand( DrawableCommandType::MESH_CREATION, drawableID.creatorID.getValue(), drawableID ),
     meshType_( meshType ),
-    meshColor_( color )
+    materialID_( materialID )
 {
     addPackable( &meshType_ );
-    addPackable( &meshColor_ );
+    addPackable( &materialID_ );
 }
 
 
 MeshCreationCommand::MeshCreationCommand( const MeshCreationCommand& b ) :
     DrawableCommand( b ),
     meshType_( b.meshType_ ),
-    meshColor_( b.meshColor_ )
+    materialID_( b.materialID_ )
 {
     addPackable( &meshType_ );
-    addPackable( &meshColor_ );
+    addPackable( &materialID_ );
 }
 
 
@@ -56,9 +56,9 @@ MeshType MeshCreationCommand::getMeshType() const
 }
 
 
-const PackableColor& MeshCreationCommand::getMeshColor() const
+MaterialID MeshCreationCommand::getMaterialID() const
 {
-    return meshColor_;
+    return materialID_.getValue();
 }
 
 
@@ -66,9 +66,9 @@ const PackableColor& MeshCreationCommand::getMeshColor() const
  * 4. Setters
  ***/
 
-void MeshCreationCommand::setMeshColor( const PackableColor& color )
+void MeshCreationCommand::setMaterialID( const MaterialID& id )
 {
-    meshColor_ = color;
+    materialID_ = id;
 }
 
 

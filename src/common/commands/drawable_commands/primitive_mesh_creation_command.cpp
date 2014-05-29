@@ -26,15 +26,15 @@ namespace como {
  ***/
 
 PrimitiveMeshCreationCommand::PrimitiveMeshCreationCommand() :
-    MeshCreationCommand( MeshType::PRIMITIVE_MESH, NULL_DRAWABLE_ID, PackableColor() ), // TODO: Remove PackableColor()
+    MeshCreationCommand( MeshType::PRIMITIVE_MESH, NULL_DRAWABLE_ID, MaterialID() ), // TODO: Remove MaterialID()
     primitiveID_( 0 )
 {
     addPackable( &primitiveID_ );
 }
 
 
-PrimitiveMeshCreationCommand::PrimitiveMeshCreationCommand( PackableDrawableID drawableID, PrimitiveID primitiveID, const PackableColor& meshColor ) :
-    MeshCreationCommand( MeshType::PRIMITIVE_MESH, drawableID, meshColor ),
+PrimitiveMeshCreationCommand::PrimitiveMeshCreationCommand( PackableDrawableID drawableID, PrimitiveID primitiveID, const MaterialID& materialID ) :
+    MeshCreationCommand( MeshType::PRIMITIVE_MESH, drawableID, materialID ),
     primitiveID_( primitiveID )
 {
     addPackable( &primitiveID_ );

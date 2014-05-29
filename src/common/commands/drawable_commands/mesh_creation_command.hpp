@@ -40,15 +40,15 @@ class MeshCreationCommand : public DrawableCommand
         // Mesh type.
         PackableUint8< MeshType > meshType_;
 
-        // Mesh color.
-        PackableColor meshColor_;
+        // Mesh material ID.
+        PackableMaterialID materialID_;
 
     public:
         /***
          * 1. Construction
          ***/
         MeshCreationCommand() = delete;
-        MeshCreationCommand( MeshType meshType, PackableDrawableID drawableID, const PackableColor& color );
+        MeshCreationCommand( MeshType meshType, PackableDrawableID drawableID, const MaterialID& materialID );
         MeshCreationCommand( const MeshCreationCommand& b );
         MeshCreationCommand( MeshCreationCommand&& ) = delete;
 
@@ -63,13 +63,13 @@ class MeshCreationCommand : public DrawableCommand
          * 3. Getters
          ***/
         MeshType getMeshType() const;
-        const PackableColor& getMeshColor() const ;
+        MaterialID getMaterialID() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setMeshColor( const PackableColor& color );
+        void setMaterialID( const MaterialID& id );
 
 
         /***

@@ -40,23 +40,25 @@ MaterialsManager::MaterialsManager( UserID localUserID, ServerInterfacePtr serve
 
 MaterialID MaterialsManager::createMaterial( const std::string& namePrefix )
 {
-    createMaterial( nextLocalMaterialID_, namePrefix );
-
-    return nextLocalMaterialID_++;
-}
-
-void MaterialsManager::createMaterial( const MaterialID& id, const std::string& namePrefix )
-{
     // Generate a name for the new material from the given ID and name prefix.
     std::string materialName =
             namePrefix +
             std::string( " # " ) +
-            boost::lexical_cast< std::string >( static_cast< int >( id.getCreatorID() ) ) +
+            boost::lexical_cast< std::string >( static_cast< int >( nextLocalMaterialID_.getCreatorID() ) ) +
             std::string( "," ) +
-            boost::lexical_cast< std::string >( static_cast< int >( id.getMaterialIndex() ) );
+            boost::lexical_cast< std::string >( static_cast< int >( nextLocalMaterialID_.getMaterialIndex() ) );
 
+    createMaterial( nextLocalMaterialID_, materialName );
+
+    server_->sendCommand( CommandConstPtr( new MaterialCreationCommand( nextLocalMaterialID_, materialName ) ) );
+
+    return nextLocalMaterialID_++;
+}
+
+void MaterialsManager::createMaterial( const MaterialID& id, const std::string& name )
+{
     // Create the new material and insert it in the materials container.
-    materials_[id] = MaterialPtr( new Material( materialName ) );
+    materials_[id] = MaterialPtr( new Material( name ) );
 
     // Set the creator of the material as its current owner.
     materialsOwners_[id] = id.getCreatorID();
@@ -107,9 +109,13 @@ MaterialConstPtr MaterialsManager::getMaterial( const MaterialID& id ) const
 void MaterialsManager::executeRemoteCommand( MaterialCommandConstPtr command )
 {
     switch( command->getType() ){
-        case MaterialCommandType::MATERIAL_CREATION:
-            createMaterial( command->getMaterialID(), "Unnamed material" ); // TODO: Complete with name prefix.
-        break;
+        case MaterialCommandType::MATERIAL_CREATION:{
+            const MaterialCreationCommand* materialCreationCommand =
+                    dynamic_cast< const MaterialCreationCommand* >( command.get() );
+
+            createMaterial( materialCreationCommand->getMaterialID(),
+                            materialCreationCommand->getMaterialName() );
+        }break;
     }
 }
 

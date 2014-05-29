@@ -84,7 +84,7 @@ class Mesh : public Drawable
          * 1. Construction.
          ***/
     protected:
-        Mesh( MeshType type, const char* file, PackableColor meshColor );
+        Mesh( MeshType type, const char* file, MaterialConstPtr materia );
     public:
         Mesh( const char* file, MaterialConstPtr material );
         Mesh( const Mesh& b );

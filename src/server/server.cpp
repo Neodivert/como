@@ -113,15 +113,20 @@ void Server::run()
         // Create the primitives directory for the current scene.
         createScenePrimitivesDirectory();
 
-        // Create a directional light with no owner and synchronise it in the
+        // Create a material with no owner and synchronise it in the
         // commands historic.
+        MaterialID lightMaterialID( NO_USER, 0 );
+        addCommand( CommandConstPtr( new MaterialCreationCommand( lightMaterialID, "DirectionalLight material" ) ) );
+
+        // Create a directional light with the previous material and with no
+        // owner and synchronise it in the commands historic.
         PackableDrawableID DIRECTIONAL_LIGHT_ID;
         DIRECTIONAL_LIGHT_ID.creatorID = NO_USER;
         DIRECTIONAL_LIGHT_ID.drawableIndex = 1;
         drawableOwners_[DIRECTIONAL_LIGHT_ID] = 0;
-        const std::uint8_t lightColor[4] = { 255, 255, 255, 255 };
+        std::uint8_t lightColor[4] = { 255, 255, 255, 0 };
 
-        addCommand( CommandConstPtr( new DirectionalLightCreationCommand( DIRECTIONAL_LIGHT_ID, lightColor, lightColor ) ) );
+        addCommand( CommandConstPtr( new DirectionalLightCreationCommand( DIRECTIONAL_LIGHT_ID, lightMaterialID, lightColor ) ) );
 
         // Initialize the container of free user colors.
         initUserColors();

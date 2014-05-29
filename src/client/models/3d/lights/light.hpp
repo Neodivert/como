@@ -56,7 +56,7 @@ class Light : public Mesh
          * lights in GLSL shader.
          * TODO: Complete
          */
-        Light( LightType type, const char* meshPath, GLuint lightIndex, PackableColor meshColor, PackableColor lightColor );
+        Light( LightType type, const char* meshPath, GLuint lightIndex, MaterialConstPtr material, PackableColor lightColor );
 
         /*! \brief Copy constructor */
         // TODO: Define a right copy constructor when inplementing multiple lights

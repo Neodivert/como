@@ -72,7 +72,18 @@ bool PackableDrawableID::operator == ( const PackableDrawableID& b ) const
 }
 
 
-PackableDrawableID& PackableDrawableID::operator = (const PackableDrawableID& b )
+PackableDrawableID& PackableDrawableID::operator = ( const PackableDrawableID& b )
+{
+    if( this != &b ){
+        creatorID = b.creatorID;
+        drawableIndex = b.drawableIndex;
+    }
+
+    return *this;
+}
+
+
+PackableDrawableID& PackableDrawableID::operator = ( PackableDrawableID&& b )
 {
     if( this != &b ){
         creatorID = b.creatorID;

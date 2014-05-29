@@ -41,7 +41,7 @@ class LightCreationCommand : public MeshCreationCommand
         /***
          * 1. Construction
          ***/
-        LightCreationCommand( LightType lightType, PackableDrawableID drawableID, const PackableColor& meshColor, const PackableColor& lightColor );
+        LightCreationCommand( LightType lightType, PackableDrawableID drawableID, const MaterialID& materialID, const PackableColor& lightColor );
         LightCreationCommand( const LightCreationCommand& b );
         LightCreationCommand( LightCreationCommand&& ) = delete;
 

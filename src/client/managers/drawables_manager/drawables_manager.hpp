@@ -104,9 +104,15 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
 
     public:
         //void addMesh( PrimitiveID primitiveID, QColor color );
-        void addMesh( PrimitiveID primitiveID );
-        void addMesh( UserID userID, PrimitiveID primitiveID, PackableDrawableID drawableID );
-        void addDirectionalLight( PackableDrawableID lightID, const PackableColor& lightColor, const PackableColor& meshColor );
+        void createMeshAndMaterial( PrimitiveID primitiveID );
+
+    public:
+        void createMesh( PrimitiveID primitiveID, MaterialID materialID );
+    private:
+        void createRemoteMesh( PrimitiveID primitiveID, PackableDrawableID drawableID, MaterialID materialID );
+
+    public:
+        void addDirectionalLight( PackableDrawableID lightID, const PackableColor& lightColor, MaterialID materialID );
 
 
         /***
@@ -139,6 +145,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
         /***
          * 11. Command execution
          ***/
+        void executeRemoteDrawableCommand( DrawableCommandConstPtr command );
         void executeRemoteSelectionCommand( SelectionCommandConstPtr command );
         void executeRemoteParameterChangeCommand( ParameterChangeCommandConstPtr command );
 
@@ -146,7 +153,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
         /***
          * 11. Operators
          ***/
-        DrawablesManager& operator=( const DrawablesManager& ) = delete ;
+        DrawablesManager& operator=( const DrawablesManager& ) = delete;
         DrawablesManager& operator=( DrawablesManager&& ) = delete;
 
         // TODO: Move to a new PrimitivesManager class?
