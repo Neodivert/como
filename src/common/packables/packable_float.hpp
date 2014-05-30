@@ -74,7 +74,7 @@ class PackableFloat : public PackableWrapper< float >
          ***/
 
         /*! \brief see Packable::getPacketSize const */
-        virtual std::uint16_t getPacketSize() const;
+        virtual PacketSize getPacketSize() const;
 
 
         /***

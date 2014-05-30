@@ -72,9 +72,9 @@ const void* CompositePackable::unpack( const void* buffer ) const
  ***/
 
 
-std::uint16_t CompositePackable::getPacketSize() const
+PacketSize CompositePackable::getPacketSize() const
 {
-    std::uint16_t packetSize = 0;
+    PacketSize packetSize = 0;
     std::vector< PackablePair >::const_iterator it;
 
     for( it = packables_.begin(); it != packables_.end(); it++ ){

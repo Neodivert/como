@@ -442,7 +442,7 @@ void Server::initializePrimitives( const char* primitivesDir )
         }
     }
 
-    log_->debug( "Adding primitives to scene [", primitivesDir, "] ...\n" );
+    log_->debug( "Adding primitives to scene [", primitivesDir, "] ...OK\n" );
 }
 
 

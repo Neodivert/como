@@ -89,7 +89,7 @@ class PackableString : public Packable
         const char* getValue() const { return str_; }
 
         /*! \brief see Packable::getPacketSize const */
-        virtual std::uint16_t getPacketSize() const { return STRING_SIZE; }
+        virtual PacketSize getPacketSize() const { return STRING_SIZE; }
 
         /*! \brief see PackableArrayWrapper::operator[] */
         char& operator []( unsigned int index ){ return str_[index]; }

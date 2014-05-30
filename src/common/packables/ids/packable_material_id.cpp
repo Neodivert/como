@@ -25,15 +25,31 @@ namespace como {
  * 1. Construction
  ***/
 
+PackableMaterialID::PackableMaterialID() :
+    CompositePackable()
+{
+    addPackable( &creatorID_ );
+    addPackable( &materialIndex_ );
+}
+
+
 PackableMaterialID::PackableMaterialID( const MaterialID& materialID ) :
-    AbstractPackableWrapper<MaterialID>(),
-    materialID_( materialID )
-{}
+    CompositePackable(),
+    creatorID_( materialID.getCreatorID() ),
+    materialIndex_( materialID.getMaterialIndex() )
+{
+    addPackable( &creatorID_ );
+    addPackable( &materialIndex_ );
+}
 
 PackableMaterialID::PackableMaterialID( const PackableMaterialID& b ) :
-    AbstractPackableWrapper<MaterialID>( b ),
-    materialID_( b.materialID_ )
-{}
+    CompositePackable( b ),
+    creatorID_( b.creatorID_ ),
+    materialIndex_( b.materialIndex_ )
+{
+    addPackable( &creatorID_ );
+    addPackable( &materialIndex_ );
+}
 
 
 /***
@@ -42,12 +58,7 @@ PackableMaterialID::PackableMaterialID( const PackableMaterialID& b ) :
 
 MaterialID PackableMaterialID::getValue() const
 {
-    return materialID_;
-}
-
-std::uint16_t PackableMaterialID::getPacketSize() const
-{
-    return sizeof( materialID_.getCreatorID() ) + sizeof( materialID_.getMaterialIndex() );
+    return MaterialID( creatorID_.getValue(), materialIndex_.getValue() );
 }
 
 
@@ -55,57 +66,20 @@ std::uint16_t PackableMaterialID::getPacketSize() const
  * 4. Setters
  ***/
 
-void PackableMaterialID::setValue( MaterialID value )
+void PackableMaterialID::setValue( MaterialID materialID )
 {
-    materialID_ = value;
+    creatorID_ = materialID.getCreatorID();
+    materialIndex_ = materialID.getMaterialIndex();
 }
 
 
 /***
- * 5. Packing and unpacking
- ***/
-
-void* PackableMaterialID::pack( void* buffer ) const
-{
-    PackableUserID userID( materialID_.getCreatorID() );
-    PackableMaterialIndex materialIndex( materialID_.getMaterialIndex() );
-
-    buffer = userID.pack( buffer );
-    buffer = materialIndex.pack( buffer );
-
-    return buffer;
-}
-
-const void* PackableMaterialID::unpack( const void* buffer )
-{
-    PackableUserID userID( materialID_.getCreatorID() );
-    PackableMaterialIndex materialIndex( materialID_.getMaterialIndex() );
-
-    buffer = userID.unpack( buffer );
-    buffer = materialIndex.unpack( buffer );
-
-    return buffer;
-}
-
-const void* PackableMaterialID::unpack( const void* buffer ) const
-{
-    const PackableUserID userID( materialID_.getCreatorID() );
-    const PackableMaterialIndex materialIndex( materialID_.getMaterialIndex() );
-
-    buffer = userID.unpack( buffer );
-    buffer = materialIndex.unpack( buffer );
-
-    return buffer;
-}
-
-
-/***
- * 6. Operators
+ * 5. Operators
  ***/
 
 PackableMaterialID& PackableMaterialID::operator = ( const MaterialID& materialID )
 {
-    materialID_ = materialID;
+    setValue( materialID );
 
     return *this;
 }

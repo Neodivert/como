@@ -206,6 +206,10 @@ void Packet::updateHeader()
 {
     // Update the value for the packet body size to be packed.
     header_.setBodySize( getPacketSize() );
+
+    if( getPacketSize() > PACKET_BUFFER_SIZE ){
+        throw std::runtime_error( "ERROR: Packet is too big" );
+    }
 }
 
 

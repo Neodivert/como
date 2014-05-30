@@ -152,7 +152,7 @@ class CompositePackable : public Packable
          * \return an integer with the size (in bytes) that this object
          * would ocuppy once packed.
          */
-        virtual std::uint16_t getPacketSize() const;
+        virtual PacketSize getPacketSize() const;
     protected:
 
         /*!

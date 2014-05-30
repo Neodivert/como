@@ -220,7 +220,7 @@ const void* PackableFile::unpack( const void* buffer ) const
  * 4. Getters
  ***/
 
-std::uint16_t PackableFile::getPacketSize() const
+PacketSize PackableFile::getPacketSize() const
 {
     return CompositePackable::getPacketSize() + getFileSize();
 }

@@ -144,6 +144,9 @@ void DrawablesManager::createMeshAndMaterial( PrimitiveID primitiveID )
     DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
     PackableDrawableID drawableID = addDrawable( drawable );
 
+    log_->debug( "Creating local mesh - Drawable ID (", drawableID,
+                 ") MaterialID ", materialID, "\n" );
+
     // Send the command to the server (the MaterialCreationCommand command was
     // already sent in previous call to materialsManager_->createMaterial() ).
     server_->sendCommand( CommandConstPtr( new PrimitiveMeshCreationCommand( drawableID, primitiveID, materialID ) ) );
@@ -177,6 +180,9 @@ void DrawablesManager::createRemoteMesh( PrimitiveID primitiveID, PackableDrawab
 
     // Create the mesh.
     DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
+
+    log_->debug( "Creating remote mesh - Drawable ID (", drawableID,
+                     ") MaterialID ", materialID, "\n" );
 
     // Add the mesh to the scene.
     addDrawable( drawableID.creatorID.getValue(), drawable, drawableID );
@@ -339,6 +345,9 @@ void DrawablesManager::executeRemoteDrawableCommand( DrawableCommandConstPtr com
                 case MeshType::PRIMITIVE_MESH:
                     // Cast to a MESH_CREATION command.
                     primitiveMeshCreationCommand = dynamic_cast< const PrimitiveMeshCreationCommand* >( meshCreationCommand );
+
+                    log_->debug( "Creating remote mesh - Drawable ID (", primitiveMeshCreationCommand->getDrawableID(),
+                                 ") MaterialID (", primitiveMeshCreationCommand->getMaterialID(), ")\n" );
 
                     createRemoteMesh( primitiveMeshCreationCommand->getPrimitiveID(),
                                       primitiveMeshCreationCommand->getDrawableID(),

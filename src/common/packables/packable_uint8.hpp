@@ -70,7 +70,7 @@ class PackableUint8 : public PackableInteger<std::uint8_t, UnpackedType>
          ***/
 
         /*! \brief see PackableInteger::getPacketSize const */
-        virtual std::uint16_t getPacketSize() const { return sizeof( std::uint8_t ); }
+        virtual PacketSize getPacketSize() const { return sizeof( std::uint8_t ); }
 
 
         /***

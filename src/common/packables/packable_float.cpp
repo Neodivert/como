@@ -90,7 +90,7 @@ const void* PackableFloat::unpack( const void* buffer ) const
  * 4. Getters
  ***/
 
-std::uint16_t PackableFloat::getPacketSize() const
+PacketSize PackableFloat::getPacketSize() const
 {
     return 8;   // Two 4 bytes integers for value's both integral and
                 // fractional parts.

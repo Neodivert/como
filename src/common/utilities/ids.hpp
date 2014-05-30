@@ -72,8 +72,13 @@ struct PackableDrawableID : public CompositePackable {
     bool operator == ( const PackableDrawableID& b ) const ;
 
     PackableDrawableID& operator = (const PackableDrawableID& b );
-    PackableDrawableID& operator = ( PackableDrawableID&& );
+    PackableDrawableID& operator = ( PackableDrawableID&& );    
 };
+
+/***
+ * 4. Console output
+ ***/
+std::ostream& operator << ( std::ostream& os, const PackableDrawableID& id );
 
 const PackableDrawableID NULL_DRAWABLE_ID;
 

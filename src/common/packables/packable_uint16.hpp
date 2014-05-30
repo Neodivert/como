@@ -72,7 +72,7 @@ class PackableUint16 : public PackableInteger<std::uint16_t, UnpackedType>
          ***/
 
         /*! \brief see PackableInteger::getPacketSize const */
-        virtual std::uint16_t getPacketSize() const { return sizeof( std::uint16_t ); }
+        virtual PacketSize getPacketSize() const { return sizeof( std::uint16_t ); }
 
 
         /***

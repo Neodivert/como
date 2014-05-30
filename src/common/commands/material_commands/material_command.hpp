@@ -42,7 +42,7 @@ class MaterialCommand : public TypeCommand< MaterialCommandType >
     public:
         MaterialCommand() = delete;
         MaterialCommand( MaterialCommandType commandType );
-    protected:
+    //protected:
         MaterialCommand( MaterialCommandType commandType, const MaterialID& materialID );
     public:
         MaterialCommand( const MaterialCommand& b );

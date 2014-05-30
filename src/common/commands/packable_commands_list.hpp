@@ -98,7 +98,7 @@ class PackableCommandsList : public Packable
          * \brief Returns the size (in bytes) that this CommandList would
          * occupy once packed into a buffer.
          */
-        virtual std::uint16_t getPacketSize() const;
+        virtual PacketSize getPacketSize() const;
 
         /*!
          * \brief Returns a pointer to the plain list of commands held by this

@@ -197,13 +197,13 @@ const void* PackableCommandsList::unpack( const void* buffer ) const
  * 4. Getters
  ***/
 
-std::uint16_t PackableCommandsList::getPacketSize() const
+PacketSize PackableCommandsList::getPacketSize() const
 {
     CommandsList::const_iterator it;
 
     // The size of the list (Uint8) is packed / unpacked along with the list
     // itself. Sum its size (in bytes) to the total packet size.
-    std::uint16_t packetSize = sizeof( std::uint8_t );
+    PacketSize packetSize = sizeof( std::uint8_t );
 
     // Sum the packet size of every command present in this list to the total
     // packet size.

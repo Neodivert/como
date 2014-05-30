@@ -36,6 +36,9 @@ enum class PacketType : std::uint8_t
     SCENE_UPDATE = 2
 };
 
+
+typedef PackableUint32< PacketSize > PackablePacketSize;
+
 /*!
  * \class PacketHeader
  *
@@ -48,7 +51,7 @@ class PacketHeader : public CompositePackable
         PackableUint8< PacketType > type_;
 
         /*! Size of the packet's body */
-        PackableUint16< std::uint16_t > bodySize_;
+        PackablePacketSize bodySize_;
 
     public:
         /***
@@ -87,7 +90,7 @@ class PacketHeader : public CompositePackable
          * \brief Returns the size of the packet body associated with
          * this PacketHeader
          */
-        std::uint16_t getBodySize() const;
+        PacketSize getBodySize() const;
 
 
         /***
@@ -95,7 +98,7 @@ class PacketHeader : public CompositePackable
          ***/
 
         /*! \brief Set the value of the body size attribute */
-        void setBodySize( std::uint16_t bodySize );
+        void setBodySize( PacketSize bodySize );
 
 
         /***

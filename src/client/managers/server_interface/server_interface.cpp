@@ -71,15 +71,20 @@ std::shared_ptr< const UserAcceptancePacket > ServerInterface::connect( const ch
         throw std::runtime_error( std::string( "ERROR: Couldn't connect to server (" ) + errorCode.message() + ")" );
     }
 
-    log_->debug( "Connecting to the server...OK\n" );
+    log_->debug( "Connecting to the server ...OK\n" );
 
+    log_->debug( "Sending NEW_USER packet ...\n" );
     // Prepare a NEW_USER network package with the user name, and send it to
     // the server.
     newUserPacket.setName( userName );
     newUserPacket.send( *socket_ );
 
+    log_->debug( "Sending NEW_USER packet ...OK\n" );
+
+    log_->debug( "Receiving USER_ACCEPTANCE packet ...\n" );
     // Read from the server an USER_ACCEPTED network package and unpack it.
     userAcceptedPacket.recv( *socket_ );
+    log_->debug( "Receiving USER_ACCEPTANCE packet ...OK\n" );
 
     selectionColor = userAcceptedPacket.getSelectionColor();
     log_->debug( "User accepted: \n",

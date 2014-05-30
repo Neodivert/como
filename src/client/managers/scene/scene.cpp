@@ -438,11 +438,11 @@ void Scene::executeRemoteUserCommand( UserCommandConstPtr command )
             // Cast to an USER_CONNECTION command.
             userConnected = dynamic_cast< const UserConnectionCommand* >( command.get() );
 
-            std::cout << "USER CONNECTED("
-                      << (int)( userConnected->getSelectionColor()[0].getValue() ) << ", "
-                      << (int)( userConnected->getSelectionColor()[1].getValue() ) << ", "
-                      << (int)( userConnected->getSelectionColor()[2].getValue() ) << ", "
-                      << (int)( userConnected->getSelectionColor()[3].getValue() ) << ")" << std::endl;
+            log_->debug( "USER CONNECTED(",
+                         (int)( userConnected->getSelectionColor()[0].getValue() ), ", ",
+                         (int)( userConnected->getSelectionColor()[1].getValue() ), ", ",
+                         (int)( userConnected->getSelectionColor()[2].getValue() ), ", ",
+                         (int)( userConnected->getSelectionColor()[3].getValue() ), ")\n" );
 
             // Add user to the scene.
             addUser( std::shared_ptr< const UserConnectionCommand>( new UserConnectionCommand( *userConnected ) ) );

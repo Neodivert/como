@@ -58,7 +58,7 @@ class AbstractPackableWrapper : public Packable
         virtual PlainType getValue() const = 0;
 
         /*! \brief see Packable::getPacketSize const */
-        virtual std::uint16_t getPacketSize() const = 0;
+        virtual PacketSize getPacketSize() const = 0;
 
 
         /***

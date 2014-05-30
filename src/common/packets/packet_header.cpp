@@ -54,7 +54,7 @@ PacketType PacketHeader::getType() const
 }
 
 
-std::uint16_t PacketHeader::getBodySize() const
+PacketSize PacketHeader::getBodySize() const
 {
     return bodySize_.getValue();
 }
@@ -64,7 +64,7 @@ std::uint16_t PacketHeader::getBodySize() const
  * 4. Setters
  ***/
 
-void PacketHeader::setBodySize( std::uint16_t bodySize )
+void PacketHeader::setBodySize( PacketSize bodySize )
 {
     bodySize_ = bodySize;
 }

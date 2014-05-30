@@ -97,4 +97,17 @@ MaterialID MaterialID::operator ++ (int)
     return resMaterialID;
 }
 
+
+/***
+ * 5. Console output
+ ***/
+
+std::ostream& operator << ( std::ostream& os, const MaterialID& id )
+{
+    os << "(" << static_cast<int>( id.getCreatorID() )
+       << ", " << static_cast<int>( id.getMaterialIndex() ) << ")";
+
+    return os;
+}
+
 } // namespace como

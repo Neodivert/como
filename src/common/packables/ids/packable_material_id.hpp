@@ -21,7 +21,6 @@
 #define PACKABLE_MATERIAL_ID_HPP
 
 #include <common/ids/material_id.hpp>
-#include <common/packables/abstract_packable_wrapper.hpp>
 #include <common/packables/composite_packable.hpp>
 
 namespace como {
@@ -29,17 +28,20 @@ namespace como {
 // TODO: Create a AbstractPackableWrapper which works also with pointers
 // (PackableWrapper<MaterialID>( &materialID_ ) ) and inherit this from
 // CompositePackable too?
-class PackableMaterialID : public AbstractPackableWrapper< MaterialID >
+// TODO: Create and use a Wrapper class.
+class PackableMaterialID : public CompositePackable//, public virtual AbstractPackableWrapper< MaterialID >
 {
     private:
-        MaterialID materialID_;
+        PackableUserID creatorID_;
+        PackableMaterialIndex materialIndex_;
+
 
     public:
         /***
          * 1. Construction
          ***/
 
-        PackableMaterialID() = default;
+        PackableMaterialID();
 
         /*! \brief Default constructor */
         PackableMaterialID( const MaterialID& materialID );
@@ -66,34 +68,17 @@ class PackableMaterialID : public AbstractPackableWrapper< MaterialID >
         /*! \brief Returns the valued held by this PackableMaterialID */
         virtual MaterialID getValue() const;
 
-        /*! \brief see Packable::getPacketSize const */
-        virtual std::uint16_t getPacketSize() const;
-
 
         /***
          * 4. Setters
          ***/
 
         /*! \brief Set this PackableMaterialID's inner value */
-        virtual void setValue( MaterialID value );
+        virtual void setValue( MaterialID materialID );
 
 
         /***
-         * 5. Packing and unpacking
-         ***/
-
-        /*! \brief see Packable::pack */
-        virtual void* pack( void* buffer ) const;
-
-        /*! \brief see Packable::unpack */
-        virtual const void* unpack( const void* buffer );
-
-        /*! \brief see Packable::unpack const */
-        virtual const void* unpack( const void* buffer ) const;
-
-
-        /***
-         * 6. Operators
+         * 5. Operators
          ***/
 
         /*! \brief Assigns the given value to this PackableMaterialID */

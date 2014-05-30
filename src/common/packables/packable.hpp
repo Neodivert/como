@@ -28,6 +28,8 @@ namespace como {
 
 const unsigned int NAME_SIZE = 64;
 
+typedef std::uint32_t PacketSize;
+
 /*!
  * \class Packable
  *
@@ -92,7 +94,7 @@ class Packable
          * \brief Returns the size that this packable's data would occupy once packed.
          * \return the size that this packable's data would occupy once packed.
          */
-        virtual std::uint16_t getPacketSize() const = 0;
+        virtual PacketSize getPacketSize() const = 0;
 
 
         /***

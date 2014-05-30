@@ -58,7 +58,8 @@ const char commandTargetStrings[][32]
     "USER",
     "DRAWABLE",
     "SELECTION",
-    "PRIMITIVE"
+    "PRIMITIVE",
+    "MATERIAL"
 };
 
 

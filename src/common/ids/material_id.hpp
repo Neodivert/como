@@ -72,6 +72,11 @@ class MaterialID
         MaterialID operator ++ (int);   // Postfix
 };
 
+/***
+ * 5. Console output
+ ***/
+std::ostream& operator << ( std::ostream& os, const MaterialID& id );
+
 } // namespace como
 
 #endif // MATERIAL_ID_HPP

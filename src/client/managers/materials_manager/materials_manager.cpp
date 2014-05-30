@@ -50,6 +50,8 @@ MaterialID MaterialsManager::createMaterial( const std::string& namePrefix )
 
     createMaterial( nextLocalMaterialID_, materialName );
 
+    log_->debug( "Creating material - Material ID: ", nextLocalMaterialID_, "\n" );
+
     server_->sendCommand( CommandConstPtr( new MaterialCreationCommand( nextLocalMaterialID_, materialName ) ) );
 
     return nextLocalMaterialID_++;
@@ -108,10 +110,14 @@ MaterialConstPtr MaterialsManager::getMaterial( const MaterialID& id ) const
 
 void MaterialsManager::executeRemoteCommand( MaterialCommandConstPtr command )
 {
+    log_->debug( "MaterialsManager - executing remote command - Material ID: ", command->getMaterialID(), "\n" );
+
     switch( command->getType() ){
         case MaterialCommandType::MATERIAL_CREATION:{
             const MaterialCreationCommand* materialCreationCommand =
                     dynamic_cast< const MaterialCreationCommand* >( command.get() );
+
+            log_->debug( "\tMaterial name: ", materialCreationCommand->getMaterialName(), "\n" );
 
             createMaterial( materialCreationCommand->getMaterialID(),
                             materialCreationCommand->getMaterialName() );

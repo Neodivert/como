@@ -117,7 +117,7 @@ class PackableFile : public CompositePackable {
          * \return an integer with the size (in bytes) that this object
          * would ocuppy once packed.
          */
-        virtual std::uint16_t getPacketSize() const;
+        virtual PacketSize getPacketSize() const;
 
         /*!
          * \brief Returns the size (in bytes) that the file held by this

@@ -82,7 +82,7 @@ class PackableArray : public AbstractPackableWrapper< std::array< ElementPlainTy
 
 
         /*! \brief see Packable::getPacketSize */
-        virtual std::uint16_t getPacketSize() const;
+        virtual PacketSize getPacketSize() const;
 
         /*!
          * \brief returns a reference to the indexed element.
@@ -170,7 +170,7 @@ PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::PackableArray(
  ***/
 
 template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
-std::uint16_t PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::getPacketSize() const
+PacketSize PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::getPacketSize() const
 {
     return elements_[0].getPacketSize() * ARRAY_SIZE;
 }

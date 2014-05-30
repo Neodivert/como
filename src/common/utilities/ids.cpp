@@ -93,4 +93,16 @@ PackableDrawableID& PackableDrawableID::operator = ( PackableDrawableID&& b )
     return *this;
 }
 
+/***
+ * 4. Console output
+ ***/
+
+std::ostream& operator << ( std::ostream& os, const PackableDrawableID& id )
+{
+    os << "(" << static_cast< int >( id.creatorID.getValue() ) << ", "
+       << static_cast<int>( id.drawableIndex.getValue() ) << ")";
+
+    return os;
+}
+
 } // namespace como

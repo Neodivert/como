@@ -26,6 +26,7 @@
 #include <functional>
 #include <boost/bind.hpp>
 #include "packet_header.hpp"
+#include <common/utilities/log.hpp>
 
 namespace como {
 
@@ -38,7 +39,7 @@ typedef std::shared_ptr< Packet > PacketPtr;
 typedef std::function<void( const boost::system::error_code& errorCode, PacketPtr)> PacketHandler;
 
 // Maximum buffer available size for packing a packet.
-const unsigned int PACKET_BUFFER_SIZE = 524288; // 512 x 1024 bytes.
+const PacketSize PACKET_BUFFER_SIZE = 4 * 524288; // 4 x 512 x 1024 bytes.
 
 
 /*!
