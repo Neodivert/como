@@ -37,10 +37,6 @@ MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
 
     // Set window's title and dimensions.
     setWindowTitle( tr( "Cooperative Modeller" ) );
-    setFixedSize( 800, 600 );
-
-    // Set background color.
-    setStyleSheet( "background-color: #F3E2A9;" );
 
     // Create a instance of Log.
     log_ = LogPtr( new Log );
