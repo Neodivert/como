@@ -69,6 +69,6 @@ COMO makes use of the following APIs and libraries:
 
 5. Open "project/server/server.pro" file with Qt Creator and set the build directory to "../../bin/server".
 
-6. Optionally add "-j <n>" to "make additional arguments" in both project's properties. <n> is the desired number of concurrent threads that will be used for building.
+6. Optionally add "-j (n)" to "make additional arguments" in both project's properties. (n) is the desired number of concurrent threads that will be used for building.
 
 7. Build both projects and enjoy!
