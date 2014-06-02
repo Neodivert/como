@@ -16,9 +16,6 @@ By now, COMO allows users to have fun with cubes :). Each user can do the follow
 * Selecting multiple cubes.
 * Translating, rotating and scalling selections of cubes. The rotations and scales can be made relative to three different pivot points: selection centroid, individual origins and world origin.
 
-
-## Instalation
-
 ### Dependencies
 COMO makes use of the following APIs and libraries:
 * Qt 5.2.
@@ -26,28 +23,50 @@ COMO makes use of the following APIs and libraries:
 * OpenGL 4.2 and GLSL.
 * GLM.
 
+## Instalation (Ubuntu 14.04)
 
-### Steps
+### Dependencies
+1. Install Qt 5.2 or above. You can dowload the online installer from [here](http://qt-project.org/downloads) or install Qt from [this Ubuntu repository](https://launchpad.net/~ubuntu-sdk-team/+archive/ppa) issuing the following commands in a terminal.
+```
+sudo add-apt-repository ppa:ubuntu-sdk-team/ppa
+sudo apt-get update
+sudo apt-get install qtdeclarative5-dev qtcreator
+```
 
-* Clone this repository in local:
+2. Check that your OpenGL version is 4.2 or greater.
+```
+sudo apt-get install mesa-utils  
+glxinfo | grep OpenGL  
+```
+
+3. Install the rest of dependencies
+```
+sudo apt-get install libglm-dev libboost1.55-dev libboost-system1.55.0 libboost-filesystem1.55.0 libboost-thread1.55.0 libboost-system1.55-dev libboost-thread1.55-dev libboost-filesystem1.55-dev
+```
+
+### Building
+
+1. Clone this repository in local:
 
 ```
-	git clone git@github.com:Neodivert/como <directory>
+	git clone git@github.com:moisesjbc/como <directory>
 ```
 
-* Enter in the previous local directory.
+2. Enter in the previous local directory.
 
 ```
 	cd <directory>
 ```
 
-* Initialize and update the repository's submodules:
+3. Initialize and update the repository's submodules:
 
 ```
 	git submodule init  
 	git submodule update  
 ```
 
-* For compiling the client: enter into "project/client" subdirectory and compile project "como_project.pro" (Qt creator). The binary will be placed in "bin/client" directory.
+4. Open "project/client/como_project.pro" file with Qt Creator and set the build directory to "../../bin/client".
 
-* For compiling the server: enter into "project/server" subdirectory and compile project "server.pro" (Qt creator). The binary will appear in "bin/server" directory.
+5. Open "project/server/server.pro" file with Qt Creator and set the build directory to "../../bin/server".
+
+6. Build both projects and enjoy!
