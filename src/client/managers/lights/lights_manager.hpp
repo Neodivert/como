@@ -16,51 +16,51 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef LIGHTS_LIST_ITEM_HPP
-#define LIGHTS_LIST_ITEM_HPP
+#ifndef LIGHTS_MANAGER_HPP
+#define LIGHTS_MANAGER_HPP
 
-#include <QListWidgetItem>
-#include <common/utilities/ids.hpp>
-#include <client/managers/lights/lights_manager.hpp>
+#include <client/managers/drawables_manager/drawables_manager.hpp>
+#include <client/models/3d/lights/lights.hpp>
+#include <map>
 
 namespace como {
 
-class LightsListItem : public QObject, public QListWidgetItem
+typedef PackableDrawableID LightID;
+
+class LightsManager : public QObject
 {
     Q_OBJECT
 
     private:
-        LightID lightID_;
+        // Lights are drawables, so the drawables manager is also implied in
+        // lights management.
+        DrawablesManagerPtr drawablesManager_;
+
+        std::map< LightID, LightPtr > lights_;
 
     public:
         /***
          * 1. Construction
          ***/
-        LightsListItem() = delete;
-        LightsListItem( const LightID& id, const std::string& name );
-        LightsListItem( const LightsListItem& ) = delete;
-        LightsListItem( LightsListItem&& ) = delete;
+        LightsManager();
+        LightsManager( DrawablesManagerPtr drawablesManager );
+        LightsManager( const LightsManager& ) = delete;
+        LightsManager( LightsManager&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~LightsListItem() = default;
+        ~LightsManager() = default;
 
 
         /***
-         * 3. Getters
+         * 3. Operators
          ***/
-        LightID getLightID() const;
-
-
-        /***
-         * 4. Operators
-         ***/
-        LightsListItem& operator = ( const LightsListItem& ) = delete;
-        LightsListItem& operator = ( LightsListItem&& ) = delete;
+        LightsManager& operator = ( const LightsManager& ) = delete;
+        LightsManager& operator = ( LightsManager&& ) = delete;
 };
 
 } // namespace como
 
-#endif // LIGHTS_LIST_ITEM_HPP
+#endif // LIGHTS_MANAGER_HPP

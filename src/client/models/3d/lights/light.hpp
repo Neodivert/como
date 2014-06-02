@@ -107,6 +107,9 @@ class Light : public Mesh
         Light& operator=( Light&& ) = delete;
 };
 
+typedef std::shared_ptr< Light > LightPtr;
+typedef std::shared_ptr< const Light > LightConstPtr;
+
 } // namespace como
 
 #endif // LIGHT_HPP

@@ -76,7 +76,8 @@ HEADERS += \
     ../../src/client/managers/material_handler.hpp \
     ../../src/client/gui/lights/lights_editor.hpp \
     ../../src/client/gui/lights/lights_list_item.hpp \
-    ../../src/client/gui/lights/lights_list.hpp
+    ../../src/client/gui/lights/lights_list.hpp \
+    ../../src/client/managers/lights/lights_manager.hpp
 
 
 # Client sources
@@ -120,4 +121,5 @@ SOURCES += \
     ../../src/client/managers/material_handler.cpp \
     ../../src/client/gui/lights/lights_editor.cpp \
     ../../src/client/gui/lights/lights_list_item.cpp \
-    ../../src/client/gui/lights/lights_list.cpp
+    ../../src/client/gui/lights/lights_list.cpp \
+    ../../src/client/managers/lights/lights_manager.cpp

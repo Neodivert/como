@@ -16,35 +16,16 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef LIGHTS_EDITOR_HPP
-#define LIGHTS_EDITOR_HPP
+#include "lights_manager.hpp"
 
-#include <QFrame>
+namespace como {
 
-class LightsEditor : public QFrame
-{
-    Q_OBJECT
+/***
+ * 1. Construction
+ ***/
 
-    public:
-        /***
-         * 1. Construction
-         ***/
-        LightsEditor();
-        LightsEditor( const LightsEditor& ) = delete;
-        LightsEditor( LightsEditor&& ) = delete;
+LightsManager::LightsManager( DrawablesManagerPtr drawablesManager ) :
+    drawablesManager_( drawablesManager )
+{}
 
-
-        /***
-         * 2. Destruction
-         ***/
-        ~LightsEditor() = default;
-
-
-        /***
-         * 3. Operators
-         ***/
-        LightsEditor& operator = ( const LightsEditor& ) = delete;
-        LightsEditor& operator = ( LightsEditor&& ) = delete;
-};
-
-#endif // LIGHTS_EDITOR_HPP
+} // namespace como
