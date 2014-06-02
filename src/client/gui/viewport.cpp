@@ -19,6 +19,8 @@
 
 #include "viewport.hpp"
 #include <cmath>
+
+#define GLM_FORCE_RADIANS
 #include <glm/gtx/vector_angle.hpp>
 
 namespace como {

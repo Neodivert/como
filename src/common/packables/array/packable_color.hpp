@@ -23,6 +23,8 @@
 #include <common/packables/array/packable_array.hpp>
 #include <common/packables/packable_uint8.hpp>
 #include <common/packables/array/packable_color.hpp>
+
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 namespace como {

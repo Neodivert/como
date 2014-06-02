@@ -18,6 +18,8 @@
 ***/
 
 #include "mesh.hpp"
+
+#define GLM_FORCE_RADIANS
 #include <glm/gtx/intersect.hpp>
 
 // TODO: Remove this once the constants PRIMITIVES_*_DIR be moved to
@@ -178,10 +180,6 @@ void Mesh::initVertexData()
         glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, 3*i*sizeof( GLuint ), 3*sizeof( GLuint ), &triangles[i] );
     }
 
-    // Compute Mesh's centroid and vertex normals.
-    computeCentroid();
-    computeVertexNormals();
-
     // Map the OpenGL's VBO for original vertex data to client memory, so we can initialize it.
     vertexData = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
 
@@ -234,10 +232,10 @@ void Mesh::computeVertexNormals()
                     ( triangles[faceIndex][1] == normalIndex ) ||
                     ( triangles[faceIndex][2] == normalIndex ) ){
 
-                // TODO: Is it necessary to normalize here?
-                originalNormals[normalIndex] += glm::normalize( glm::cross( originalVertices[ triangles[faceIndex][2] ] - originalVertices[ triangles[faceIndex][0] ], originalVertices[ triangles[faceIndex][1] ] - originalVertices[ triangles[faceIndex][0] ] ) );
+                originalNormals[normalIndex] += glm::cross( originalVertices[ triangles[faceIndex][2] ] - originalVertices[ triangles[faceIndex][0] ], originalVertices[ triangles[faceIndex][1] ] - originalVertices[ triangles[faceIndex][0] ] );
             }
         }
+        // TODO: Do I have to divide or something first?
         originalNormals[normalIndex] = glm::normalize( originalNormals[normalIndex] );
     }
 }
@@ -299,6 +297,10 @@ void Mesh::LoadFromOBJ( const char* filePath )
 
     // Close the input file and finish initializing the mesh.
     file.close();
+
+    // Compute Mesh's centroid and vertex normals.
+    computeCentroid();
+    computeVertexNormals();
 
     // Initialize Mesh transformed vertex data.
     initVertexData();

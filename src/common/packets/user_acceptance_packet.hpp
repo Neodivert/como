@@ -25,6 +25,8 @@
 
 #include <common/packables/packables.hpp>
 #include <common/utilities/ids.hpp>
+
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 namespace como {

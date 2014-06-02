@@ -19,6 +19,8 @@
 
 #include <QGuiApplication>
 #include "gui/main_window.hpp"
+
+#define GLM_FORCE_RADIANS
 #include <glm/gtx/vector_angle.hpp>
 #include "gui/connection_wizard/connection_wizard.hpp"
 #include "managers/como_app.hpp"
