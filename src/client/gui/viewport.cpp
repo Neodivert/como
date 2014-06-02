@@ -300,6 +300,8 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 
                     angle = glm::orientedAngle( pivotPointToMousePosVector, lastPivotPointToMousePosVector );
 
+                    angle = angle * ( 180 / 3.1415926f );
+
                     // Make the rotation about an axis or another depending on the current
                     // transformationMode.
                     switch( transformationMode ){
