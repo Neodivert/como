@@ -27,22 +27,22 @@ COMO makes use of the following APIs and libraries:
 
 ### Dependencies
 1. Install Qt 5.2 or above. You can dowload and use the online installer [from here](http://qt-project.org/downloads) or you can also install Qt from [this Ubuntu repository](https://launchpad.net/~ubuntu-sdk-team/+archive/ppa) issuing the following commands in a terminal.
-```
-sudo add-apt-repository ppa:ubuntu-sdk-team/ppa
-sudo apt-get update
-sudo apt-get install qtdeclarative5-dev qtcreator
-```
+   ```
+   sudo add-apt-repository ppa:ubuntu-sdk-team/ppa
+   sudo apt-get update
+   sudo apt-get install qtdeclarative5-dev qtcreator
+   ```
 
 2. Use following commands to display your OpenGL version and check that it is 4.2 or greater.
-```
-sudo apt-get install mesa-utils
-glxinfo | grep OpenGL
-```
+   ```
+   sudo apt-get install mesa-utils
+   glxinfo | grep OpenGL
+   ```
 
 3. Install the rest of dependencies
-```
-sudo apt-get install libglm-dev libboost1.55-dev libboost-system1.55.0 libboost-filesystem1.55.0 libboost-thread1.55.0 libboost-system1.55-dev libboost-thread1.55-dev libboost-filesystem1.55-dev
-```
+   ```
+   sudo apt-get install libglm-dev libboost1.55-dev libboost-system1.55.0 libboost-filesystem1.55.0    libboost-thread1.55.0 libboost-system1.55-dev libboost-thread1.55-dev libboost-filesystem1.55-dev
+   ```
 
 ### Building
 
