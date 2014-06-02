@@ -48,25 +48,27 @@ sudo apt-get install libglm-dev libboost1.55-dev libboost-system1.55.0 libboost-
 
 1. Clone this repository in local:
 
-```
-	git clone git@github.com:moisesjbc/como <directory>
-```
+   ```
+   git clone git@github.com:moisesjbc/como <directory>
+   ```
 
 2. Enter in the previous local directory.
 
-```
-	cd <directory>
-```
+   ```
+   cd <directory>
+   ```
 
 3. Initialize and update the repository's submodules:
 
-```
-	git submodule init
-	git submodule update
-```
+   ```
+   git submodule init
+   git submodule update
+  ```
 
 4. Open "project/client/como_project.pro" file with Qt Creator and set the build directory to "../../bin/client".
 
 5. Open "project/server/server.pro" file with Qt Creator and set the build directory to "../../bin/server".
 
-6. Build both projects and enjoy!
+6. Optionally add "-j <n>" to "make additional arguments" in both project's properties. <n> is the desired number of concurrent threads that will be used for building.
+
+7. Build both projects and enjoy!
