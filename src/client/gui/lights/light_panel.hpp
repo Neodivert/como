@@ -16,50 +16,45 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef MATERIAL_PANEL_HPP
-#define MATERIAL_PANEL_HPP
+#ifndef LIGHT_PANEL_HPP
+#define LIGHT_PANEL_HPP
 
 #include <QFrame>
 #include <QLineEdit>
-#include <client/managers/material_handler.hpp>
+#include <client/managers/lights/light_handler.hpp>
 #include <client/gui/utilities/color_button.hpp>
 
 namespace como {
 
-class MaterialPanel : public QFrame
+class LightPanel : public QFrame
 {
     Q_OBJECT
 
     private:
-        MaterialHandlerPtr currentMaterial_;
+        LightHandlerPtr currentLight_;
 
-        QLineEdit* nameInput_;
-        ColorButton* colorButton_;
-        ColorButton* ambientReflectivityButton_;
-        ColorButton* diffuseReflectivityButton_;
-        ColorButton* specularReflectivityButton_;
-        QDoubleSpinBox* specularExponentSpinBox_;
+        ColorButton* lightColorButton_;
 
     public:
         /***
          * 1. Construction
          ***/
-        MaterialPanel();
-        MaterialPanel( const MaterialPanel& ) = delete;
-        MaterialPanel( MaterialPanel&& ) = delete;
+        LightPanel();
+        LightPanel( const LightPanel& ) = delete;
+        LightPanel( LightPanel&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~MaterialPanel() = default;
+        ~LightPanel() = default;
 
 
         /***
          * 3. Operators
          ***/
-        MaterialPanel& operator = ( const MaterialPanel& ) = delete;
-        MaterialPanel& operator = ( MaterialPanel&& ) = delete;
+        LightPanel& operator = ( const LightPanel& ) = delete;
+        LightPanel& operator = ( LightPanel&& ) = delete;
 
 
         /***
@@ -72,9 +67,9 @@ class MaterialPanel : public QFrame
          * 5. Slots
          ***/
     public slots:
-        void openMaterial( MaterialHandlerPtr material );
+        void openLight( LightHandlerPtr light );
 };
 
 } // namespace como
 
-#endif // MATERIAL_PANEL_HPP
+#endif // LIGHT_PANEL_HPP

@@ -16,22 +16,41 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "lights_editor.hpp"
-#include <QVBoxLayout>
-#include "lights_list.hpp"
-#include "light_panel.hpp"
+#include "light_handler.hpp"
 
 namespace como {
 
-LightsEditor::LightsEditor( LightsManagerPtr lightsManager )
+/***
+ * 1. Construction
+ ***/
+
+LightHandler::LightHandler( LightPtr light, LightID lightID, ServerInterfacePtr server ) :
+    light_( light ),
+    lightID_( lightID ),
+    server_( server )
+{}
+
+
+/***
+ * 3. Getters
+ ***/
+
+PackableColor LightHandler::getLightColor() const
 {
-    QVBoxLayout* layout = new QVBoxLayout;
-
-    layout->addWidget( new QLabel( "Lights editor" ) );
-    layout->addWidget( new LightsList( lightsManager ) );
-    layout->addWidget( new LightPanel );
-
-    setLayout( layout );
+    return light_->getLightColor();
 }
 
-} // namepsace como
+
+/***
+ * 4. Seters
+ ***/
+
+void LightHandler::setLightColor( const PackableColor& lightColor)
+{
+    light_->setLightColor( lightColor );
+}
+
+
+
+
+} // namespace como
