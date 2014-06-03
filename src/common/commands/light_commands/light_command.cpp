@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "directional_light_creation_command.hpp"
+#include "light_command.hpp"
 
 namespace como {
 
@@ -24,13 +24,27 @@ namespace como {
  * 1. Construction
  ***/
 
-DirectionalLightCreationCommand::DirectionalLightCreationCommand() :
-    LightCreationCommand( LightType::DIRECTIONAL_LIGHT, NULL_DRAWABLE_ID, MaterialID(), PackableColor() ) // TODO: Remove MaterialID() and PackableColor()
-{}
+LightCommand::LightCommand( LightCommandType commandType, const PackableLightID& lightID ) :
+    TypeCommand( CommandTarget::LIGHT, commandType, lightID.creatorID.getValue() ),
+    lightID_( lightID )
+{
+    addPackable( &lightID_ );
+}
 
+LightCommand::LightCommand( const LightCommand &b ) :
+    TypeCommand( b ),
+    lightID_( b.lightID_ )
+{
+    addPackable( &lightID_ );
+}
 
-DirectionalLightCreationCommand::DirectionalLightCreationCommand( PackableDrawableID drawableID, const MaterialID& materialID, const PackableColor& lightColor ) :
-    LightCreationCommand( LightType::DIRECTIONAL_LIGHT, drawableID, materialID, lightColor )
-{}
+/***
+ * 3. Getters
+ ***/
+
+LightID LightCommand::getLightID() const
+{
+    return lightID_;
+}
 
 } // namespace como

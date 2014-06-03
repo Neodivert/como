@@ -158,7 +158,7 @@ std::string DrawablesSelection::getTypeName() const
         switch( drawable->getType() ){
             case DrawableType::MESH:
                 switch( ( dynamic_cast< const Mesh* >( drawable ) )->getType() ){
-                    case MeshType::PRIMITIVE_MESH:
+                    case MeshType::MESH:
                         return std::string( "Primitive mesh" );
                     break;
                     case MeshType::CAMERA:

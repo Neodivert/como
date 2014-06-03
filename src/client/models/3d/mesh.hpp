@@ -27,14 +27,20 @@
 #include <array>
 #include <fstream>
 #include <stdexcept>
-#include <common/commands/drawable_commands/mesh_creation_command.hpp> // For MeshType type.
 #include <client/models/3d/materials/material.hpp>
 #include <common/packables/array/packable_color.hpp>
+#include <common/commands/drawable_commands/mesh_creation_command.hpp> // For MeshType.
 
 namespace como {
 
 const GLuint COMPONENTS_PER_VERTEX_POSITION = 3;
 const GLuint COMPONENTS_PER_VERTEX = 6;
+
+enum class MeshType : std::uint8_t {
+    MESH = 0,
+    LIGHT,
+    CAMERA
+};
 
 
 /***

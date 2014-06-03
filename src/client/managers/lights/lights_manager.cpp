@@ -24,8 +24,50 @@ namespace como {
  * 1. Construction
  ***/
 
-LightsManager::LightsManager( DrawablesManagerPtr drawablesManager ) :
-    drawablesManager_( drawablesManager )
+LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server ) :
+    drawablesManager_( drawablesManager ),
+    server_( server )
 {}
+
+
+/***
+ * 3. Lights management
+ ***/
+
+void LightsManager::addDirectionalLight( const LightID& lightID, const PackableColor& lightColor )
+{
+    MaterialConstPtr lightMaterial( new Material( PackableColor( 255, 0, 0, 255 ) ) );
+
+    drawablesManager_->addDrawable( lightID.creatorID.getValue(),
+                                    DrawablePtr( new DirectionalLight( lightMaterial, lightColor ) ),
+                                    lightID );
+}
+
+
+/***
+ * 4. Remote command execution
+ ***/
+
+// TODO: Change this and use a LightCommandConstPtr
+void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
+{
+    switch( command->getType() ){
+        case LightCommandType::LIGHT_CREATION:{
+            const LightCreationCommand* lightCreationCommand =
+                    dynamic_cast< const LightCreationCommand* >( command.get() );
+
+            switch( lightCreationCommand->getLightType() ){
+                case LightType::DIRECTIONAL_LIGHT:{
+                    const DirectionalLightCreationCommand* directionalLightCreationCommand =
+                            dynamic_cast< const DirectionalLightCreationCommand* >( command.get() );
+
+                    addDirectionalLight( directionalLightCreationCommand->getLightID(),
+                                         directionalLightCreationCommand->getLightColor()
+                                         );
+                }break;
+            }
+        }break;
+    }
+}
 
 } // namespace como

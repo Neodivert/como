@@ -5,7 +5,7 @@ namespace como {
 const PackableColor DEFAULT_CAMERA_MESH_COLOR( 255, 255, 255, 0 );
 
 Camera::Camera( View view ) :
-    Mesh( MeshType::CAMERA, "data/primitives/system/camera.obj", MaterialConstPtr( new Material ) ), // TODO: Use a constant.
+    Mesh( MeshType::CAMERA, "data/primitives/system/camera.obj", MaterialConstPtr( new Material ) ), // TODO: Use a constant. AND remove MeshType::PRIMITIVE_MESH
     originalEye     ( 0.0f, 0.0f, 0.0f, 1.0f ),
     originalUp      ( 0.0f, 1.0f, 0.0f, 1.0f ),
     originalCenter  ( 0.0f, 0.0f, -1.0f, 1.0f )

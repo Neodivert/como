@@ -56,8 +56,8 @@ HEADERS += \
     ../../src/common/users/user.hpp \
     ../../src/common/commands/type_command.hpp \
     ../../src/common/commands/drawable_commands/primitive_mesh_creation_command.hpp \
-    ../../src/common/commands/drawable_commands/light_creation_command.hpp \
-    ../../src/common/commands/drawable_commands/directional_light_creation_command.hpp \
+    ../../src/common/commands/light_commands/light_creation_command.hpp \
+    ../../src/common/commands/light_commands/directional_light_creation_command.hpp \
     ../../src/common/packables/packable_wrapper.hpp \
     ../../src/common/packables/packable_float.hpp \
     ../../src/common/packables/array/packable_array_3.hpp \
@@ -69,7 +69,9 @@ HEADERS += \
     ../../src/common/packables/ids/packable_material_id.hpp \
     ../../src/common/commands/material_commands/material_commands.hpp \
     ../../src/common/commands/material_commands/material_modification_command.hpp \
-    ../../src/common/commands/material_commands/abstract_material_modification_command.hpp
+    ../../src/common/commands/material_commands/abstract_material_modification_command.hpp \
+    ../../src/common/commands/light_commands/light_command.hpp \
+    ../../src/common/commands/light_commands/light_commands.hpp
 
 
 # Common sources (used by both client and server).
@@ -100,12 +102,13 @@ SOURCES += \
     ../../src/common/commands/primitive_commands/primitive_command.cpp \
     ../../src/common/users/user.cpp \
     ../../src/common/commands/drawable_commands/primitive_mesh_creation_command.cpp \
-    ../../src/common/commands/drawable_commands/light_creation_command.cpp \
-    ../../src/common/commands/drawable_commands/directional_light_creation_command.cpp \
+    ../../src/common/commands/light_commands/light_creation_command.cpp \
+    ../../src/common/commands/light_commands/directional_light_creation_command.cpp \
     ../../src/common/packables/packable_float.cpp \
     ../../src/common/packables/array/packable_color.cpp \
     ../../src/common/ids/material_id.cpp \
     ../../src/common/commands/material_commands/material_command.cpp \
     ../../src/common/commands/material_commands/material_creation_command.cpp \
     ../../src/common/packables/ids/packable_material_id.cpp \
-    ../../src/common/commands/material_commands/abstract_material_modification_command.cpp
+    ../../src/common/commands/material_commands/abstract_material_modification_command.cpp \
+    ../../src/common/commands/light_commands/light_command.cpp

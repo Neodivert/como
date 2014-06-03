@@ -21,11 +21,10 @@
 
 #include <client/managers/drawables_manager/drawables_manager.hpp>
 #include <client/models/3d/lights/lights.hpp>
+#include <common/commands/commands.hpp>
 #include <map>
 
 namespace como {
-
-typedef PackableDrawableID LightID;
 
 class LightsManager : public QObject
 {
@@ -36,6 +35,9 @@ class LightsManager : public QObject
         // lights management.
         DrawablesManagerPtr drawablesManager_;
 
+        // Interface with the server.
+        ServerInterfacePtr server_;
+
         std::map< LightID, LightPtr > lights_;
 
     public:
@@ -43,7 +45,7 @@ class LightsManager : public QObject
          * 1. Construction
          ***/
         LightsManager();
-        LightsManager( DrawablesManagerPtr drawablesManager );
+        LightsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server );
         LightsManager( const LightsManager& ) = delete;
         LightsManager( LightsManager&& ) = delete;
 
@@ -55,11 +57,27 @@ class LightsManager : public QObject
 
 
         /***
-         * 3. Operators
+         * 3. Lights management
+         ***/
+    private:
+        void addDirectionalLight( const LightID& lightID, const PackableColor& lightColor );
+
+
+        /***
+         * 4. Remote command execution
+         ***/
+    public:
+        void executeRemoteCommand( LightCommandConstPtr command );
+
+
+        /***
+         * 5. Operators
          ***/
         LightsManager& operator = ( const LightsManager& ) = delete;
         LightsManager& operator = ( LightsManager&& ) = delete;
 };
+
+typedef std::shared_ptr< LightsManager > LightsManagerPtr;
 
 } // namespace como
 

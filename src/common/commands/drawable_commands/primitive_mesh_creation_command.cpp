@@ -25,7 +25,7 @@ namespace como {
  ***/
 
 PrimitiveMeshCreationCommand::PrimitiveMeshCreationCommand() :
-    MeshCreationCommand( MeshType::PRIMITIVE_MESH, NULL_DRAWABLE_ID, MaterialID() ), // TODO: Remove MaterialID()
+    MeshCreationCommand( MaterialMeshType::PRIMITIVE_MESH, NULL_DRAWABLE_ID, MaterialID() ), // TODO: Remove MaterialID()
     primitiveID_( 0 )
 {
     addPackable( &primitiveID_ );
@@ -33,7 +33,7 @@ PrimitiveMeshCreationCommand::PrimitiveMeshCreationCommand() :
 
 
 PrimitiveMeshCreationCommand::PrimitiveMeshCreationCommand( PackableDrawableID drawableID, PrimitiveID primitiveID, const MaterialID& materialID ) :
-    MeshCreationCommand( MeshType::PRIMITIVE_MESH, drawableID, materialID ),
+    MeshCreationCommand( MaterialMeshType::PRIMITIVE_MESH, drawableID, materialID ),
     primitiveID_( primitiveID )
 {
     addPackable( &primitiveID_ );

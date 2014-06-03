@@ -31,6 +31,7 @@
 #include <client/models/3d/lights/lights.hpp>
 #include <client/managers/drawables_manager/drawables_manager.hpp>
 #include <client/managers/materials_manager/materials_manager.hpp>
+#include <client/managers/lights/lights_manager.hpp>
 #include <common/users/user.hpp>
 
 Q_DECLARE_METATYPE( como::CommandConstPtr )
@@ -65,6 +66,8 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
         DrawablesManagerPtr drawablesManager_;
 
         MaterialsManagerPtr materialsManager_;
+
+        LightsManagerPtr lightsManager_;
 
 
         // Log

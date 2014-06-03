@@ -88,19 +88,8 @@ const void* PackableCommandsList::unpack( const void* buffer )
                 switch( DrawableCommand::getType( buffer ) ){
                     case DrawableCommandType::MESH_CREATION:
                         switch( MeshCreationCommand::getMeshType( buffer ) ){
-                            case MeshType::PRIMITIVE_MESH:
+                            case MaterialMeshType::PRIMITIVE_MESH:
                                 command = CommandPtr( new PrimitiveMeshCreationCommand );
-                            break;
-                            case MeshType::LIGHT:
-                                switch( LightCreationCommand::getLightType( buffer ) ){
-                                    case LightType::DIRECTIONAL_LIGHT:
-                                        command = CommandPtr( new DirectionalLightCreationCommand );
-                                    break;
-                                }
-                            break;
-                            case MeshType::CAMERA:
-                                throw std::runtime_error( "Unexpected camera" );
-                                // TODO: Complete
                             break;
                         }
 
@@ -160,6 +149,18 @@ const void* PackableCommandsList::unpack( const void* buffer )
                             break;
                             case MaterialParameterName::SPECULAR_EXPONENT:
                                 command = CommandPtr( new MaterialSpecularExponentChangeCommand );
+                            break;
+                        }
+                    break;
+                }
+            break;
+
+            case CommandTarget::LIGHT:
+                switch( LightCommand::getType( buffer ) ){
+                    case LightCommandType::LIGHT_CREATION:
+                        switch( LightCreationCommand::getLightType( buffer ) ){
+                            case LightType::DIRECTIONAL_LIGHT:
+                                command = CommandPtr( new DirectionalLightCreationCommand );
                             break;
                         }
                     break;

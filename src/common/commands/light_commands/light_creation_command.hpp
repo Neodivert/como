@@ -19,7 +19,7 @@
 #ifndef LIGHT_CREATION_COMMAND_HPP
 #define LIGHT_CREATION_COMMAND_HPP
 
-#include <common/commands/drawable_commands/mesh_creation_command.hpp>
+#include "light_command.hpp"
 #include <common/packables/packables.hpp>
 
 namespace como {
@@ -28,19 +28,19 @@ enum class LightType : std::uint8_t
 {
     DIRECTIONAL_LIGHT = 0
 };
+typedef PackableUint8< LightType > PackableLightType;
 
-
-class LightCreationCommand : public MeshCreationCommand
+class LightCreationCommand : public LightCommand
 {
     private:
-        const PackableUint8< LightType > lightType_;
+        const PackableLightType lightType_;
         PackableColor lightColor_;
 
     protected:
         /***
          * 1. Construction
          ***/
-        LightCreationCommand( LightType lightType, PackableDrawableID drawableID, const MaterialID& materialID, const PackableColor& lightColor );
+        LightCreationCommand( LightType lightType, PackableLightID lightID, const PackableColor& lightColor );
         LightCreationCommand( const LightCreationCommand& b );
         LightCreationCommand( LightCreationCommand&& ) = delete;
 
@@ -70,6 +70,9 @@ class LightCreationCommand : public MeshCreationCommand
         LightCreationCommand& operator=( const LightCreationCommand& ) = delete;
         LightCreationCommand& operator=( LightCreationCommand&& ) = delete;
 };
+
+typedef std::shared_ptr< LightCreationCommand > LightCreationCommandPtr;
+typedef std::shared_ptr< const LightCreationCommand > LightCreationCommandConstPtr;
 
 } // namespace como
 

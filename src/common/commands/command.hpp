@@ -37,7 +37,8 @@ enum class CommandTarget : std::uint8_t
     DRAWABLE,
     SELECTION,
     PRIMITIVE,
-    MATERIAL
+    MATERIAL,
+    LIGHT
 };
 
 

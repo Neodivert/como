@@ -16,8 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef DIRECTIONALLIGHTCREATIONCOMMAND_HPP
-#define DIRECTIONALLIGHTCREATIONCOMMAND_HPP
+#ifndef DIRECTIONAL_LIGHT_CREATIONCOMMAND_HPP
+#define DIRECTIONAL_LIGHT_CREATIONCOMMAND_HPP
 
 #include "light_creation_command.hpp"
 
@@ -30,7 +30,7 @@ class DirectionalLightCreationCommand : public LightCreationCommand
          * 1. Construction
          ***/
         DirectionalLightCreationCommand();
-        DirectionalLightCreationCommand( PackableDrawableID drawableID, const MaterialID& materialID, const PackableColor& lightColor );
+        DirectionalLightCreationCommand( LightID lightID, const PackableColor& lightColor );
         DirectionalLightCreationCommand( const DirectionalLightCreationCommand& ) = default;
         DirectionalLightCreationCommand( DirectionalLightCreationCommand&& ) = delete;
 
@@ -50,4 +50,4 @@ class DirectionalLightCreationCommand : public LightCreationCommand
 
 } // namespace como
 
-#endif // DIRECTIONALLIGHTCREATIONCOMMAND_HPP
+#endif // DIRECTIONAL_LIGHT_CREATIONCOMMAND_HPP

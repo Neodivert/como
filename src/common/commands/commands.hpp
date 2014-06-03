@@ -26,7 +26,6 @@
 
 // Drawable commands
 #include "drawable_commands/primitive_mesh_creation_command.hpp"
-#include "drawable_commands/directional_light_creation_command.hpp"
 #include "drawable_commands/drawable_selection_command.hpp"
 
 // Selection commands
@@ -40,5 +39,8 @@
 
 // Material commands
 #include "material_commands/material_commands.hpp" // TODO: Make this with the rest of commands.
+
+// Light commands
+#include "light_commands/light_commands.hpp"
 
 #endif // COMMANDS_HPP

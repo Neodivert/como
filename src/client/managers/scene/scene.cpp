@@ -211,6 +211,9 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         // Initialize the drawables manager.
         drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, materialsManager_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/primitives/scenes/" ) + sceneName_, oglContext_, log_ ) );
 
+        // Initialize the lights manager.
+        lightsManager_ = LightsManagerPtr( new LightsManager( drawablesManager_, server_ ) );
+
         // Add the local user to the scene.
         addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( *userAcceptancePacket ) ) );
 
@@ -512,6 +515,9 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
         break;
         case CommandTarget::MATERIAL:
             materialsManager_->executeRemoteCommand( dynamic_pointer_cast< const MaterialCommand >( command ) );
+        break;
+        case CommandTarget::LIGHT:
+            lightsManager_->executeRemoteCommand( dynamic_pointer_cast< const LightCommand >( command ) );
         break;
     }
 

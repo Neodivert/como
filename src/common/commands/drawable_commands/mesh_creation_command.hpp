@@ -25,11 +25,9 @@
 
 namespace como {
 
-enum class MeshType : std::uint8_t
+enum class MaterialMeshType : std::uint8_t
 {
-    PRIMITIVE_MESH = 0,
-    CAMERA,
-    LIGHT
+    PRIMITIVE_MESH = 0
 };
 
 
@@ -37,7 +35,7 @@ class MeshCreationCommand : public DrawableCommand
 {
     private:
         // Mesh type.
-        PackableUint8< MeshType > meshType_;
+        PackableUint8< MaterialMeshType > meshType_;
 
         // Mesh material ID.
         PackableMaterialID materialID_;
@@ -47,7 +45,7 @@ class MeshCreationCommand : public DrawableCommand
          * 1. Construction
          ***/
         MeshCreationCommand() = delete;
-        MeshCreationCommand( MeshType meshType, PackableDrawableID drawableID, const MaterialID& materialID );
+        MeshCreationCommand( MaterialMeshType meshType, PackableDrawableID drawableID, const MaterialID& materialID );
         MeshCreationCommand( const MeshCreationCommand& b );
         MeshCreationCommand( MeshCreationCommand&& ) = delete;
 
@@ -61,7 +59,7 @@ class MeshCreationCommand : public DrawableCommand
         /***
          * 3. Getters
          ***/
-        MeshType getMeshType() const;
+        MaterialMeshType getMeshType() const;
         MaterialID getMaterialID() const ;
 
 
@@ -74,7 +72,7 @@ class MeshCreationCommand : public DrawableCommand
         /***
          * 5. Buffer pre-reading
          ***/
-        static MeshType getMeshType( const void* buffer );
+        static MaterialMeshType getMeshType( const void* buffer );
 
 
         /***

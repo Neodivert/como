@@ -333,15 +333,13 @@ void DrawablesManager::executeRemoteDrawableCommand( DrawableCommandConstPtr com
     const MeshCreationCommand* meshCreationCommand = nullptr;
     const PrimitiveMeshCreationCommand* primitiveMeshCreationCommand = nullptr;
     const DrawableSelectionCommand* selectDrawable = nullptr;
-    const LightCreationCommand* lightCreationCommand = nullptr;
-    const DirectionalLightCreationCommand* directionalLightCreationCommand = nullptr;
 
     switch( command->getType() ){
         case  DrawableCommandType::MESH_CREATION:
             meshCreationCommand = dynamic_cast< const MeshCreationCommand* >( command.get() );
 
             switch( meshCreationCommand->getMeshType() ){
-                case MeshType::PRIMITIVE_MESH:
+                case MaterialMeshType::PRIMITIVE_MESH:
                     // Cast to a MESH_CREATION command.
                     primitiveMeshCreationCommand = dynamic_cast< const PrimitiveMeshCreationCommand* >( meshCreationCommand );
 
@@ -351,23 +349,6 @@ void DrawablesManager::executeRemoteDrawableCommand( DrawableCommandConstPtr com
                     createRemoteMesh( primitiveMeshCreationCommand->getPrimitiveID(),
                                       primitiveMeshCreationCommand->getDrawableID(),
                                       primitiveMeshCreationCommand->getMaterialID() );
-                break;
-                case MeshType::LIGHT:
-                    lightCreationCommand = dynamic_cast< const LightCreationCommand* >( meshCreationCommand );
-
-                    switch( lightCreationCommand->getLightType() ){
-                        case LightType::DIRECTIONAL_LIGHT:
-                            directionalLightCreationCommand = dynamic_cast< const DirectionalLightCreationCommand* >( lightCreationCommand );
-
-                            // Add a directional light to the scene.
-                            addDirectionalLight( directionalLightCreationCommand->getDrawableID(),
-                                                                    PackableColor( directionalLightCreationCommand->getLightColor() ),
-                                                                    directionalLightCreationCommand->getMaterialID() );
-                        break;
-                    }
-                break;
-                default:
-                    // TODO: Complete.
                 break;
             }
         break;

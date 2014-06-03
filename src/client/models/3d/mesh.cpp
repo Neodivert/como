@@ -55,7 +55,7 @@ Mesh::Mesh( MeshType type, const char* fileName, MaterialConstPtr material ) :
 
 Mesh::Mesh( const char* fileName, MaterialConstPtr material ) :
     Drawable( DrawableType::MESH, "Mesh #" ),
-    type_( MeshType::PRIMITIVE_MESH ),
+    type_( MeshType::MESH ),
     material_( material )
 {   
     initMesh( fileName );

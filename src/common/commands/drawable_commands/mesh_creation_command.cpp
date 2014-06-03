@@ -25,7 +25,7 @@ namespace como {
  * 1. Construction
  ***/
 
-MeshCreationCommand::MeshCreationCommand( MeshType meshType, PackableDrawableID drawableID, const MaterialID& materialID ) :
+MeshCreationCommand::MeshCreationCommand( MaterialMeshType meshType, PackableDrawableID drawableID, const MaterialID& materialID ) :
     DrawableCommand( DrawableCommandType::MESH_CREATION, drawableID.creatorID.getValue(), drawableID ),
     meshType_( meshType ),
     materialID_( materialID )
@@ -49,7 +49,7 @@ MeshCreationCommand::MeshCreationCommand( const MeshCreationCommand& b ) :
  * 3. Getters
  ***/
 
-MeshType MeshCreationCommand::getMeshType() const
+MaterialMeshType MeshCreationCommand::getMeshType() const
 {
     return meshType_.getValue();
 }
@@ -75,13 +75,13 @@ void MeshCreationCommand::setMaterialID( const MaterialID& id )
  * 5. Buffer pre-reading
  ***/
 
-MeshType MeshCreationCommand::getMeshType( const void* buffer )
+MaterialMeshType MeshCreationCommand::getMeshType( const void* buffer )
 {
     DrawableCommand drawableCommand( DrawableCommandType::MESH_CREATION, NO_USER, NULL_DRAWABLE_ID );
 
     // FIXME: Compute packable's offset without creating an extra auxiliar
     // command.
-    return static_cast< MeshType >( static_cast< const std::uint8_t *>( buffer )[drawableCommand.getPacketSize()] );
+    return static_cast< MaterialMeshType >( static_cast< const std::uint8_t *>( buffer )[drawableCommand.getPacketSize()] );
 }
 
 } // namespace como
