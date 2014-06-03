@@ -27,7 +27,7 @@
 
 namespace como {
 
-class LightsManager : public QObject
+class LightsManager : public QObject, public Changeable
 {
     Q_OBJECT
 
@@ -87,6 +87,13 @@ class LightsManager : public QObject
     signals:
         void lightCreated( const LightID& id, const std::string& name );
         void lightSelected( LightHandlerPtr light );
+
+
+        /***
+         * 7. Updating
+         ***/
+    private:
+        virtual void onChange(){}
 };
 
 typedef std::shared_ptr< LightsManager > LightsManagerPtr;

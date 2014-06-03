@@ -57,7 +57,7 @@ void LightsManager::addDirectionalLight( const LightID& lightID, const PackableC
 
 void LightsManager::selectLight( const LightID lightID )
 {
-    emit lightSelected( LightHandlerPtr( new LightHandler( lights_.at( lightID ), lightID, server_ ) ) );
+    emit lightSelected( LightHandlerPtr( new LightHandler( lights_.at( lightID ), lightID, server_, std::bind( &LightsManager::setChanged, this ) ) ) );
 }
 
 

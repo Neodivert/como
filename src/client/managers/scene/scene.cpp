@@ -566,14 +566,18 @@ void Scene::createScenePrimitivesDirectory()
 
 bool Scene::hasChangedSinceLastQuery()
 {
-    if( materialsManager_ && materialsManager_->hasChangedSinceLastQuery() ){
-        return true;
-    }
-
     // FIXME: This "if( drawablesManager_)" is necessary because this method
     // is invoked since Scene is instantiated, but drawablesManager_ ISN'T
     // initialized until we connect to a server.
     if( drawablesManager_ && drawablesManager_->hasChangedSinceLastQuery() ){
+        return true;
+    }
+
+    if( materialsManager_ && materialsManager_->hasChangedSinceLastQuery() ){
+        return true;
+    }
+
+    if( lightsManager_ && lightsManager_->hasChangedSinceLastQuery() ){
         return true;
     }
 

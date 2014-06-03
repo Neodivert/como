@@ -84,6 +84,7 @@ MaterialPanel::MaterialPanel() :
     setEnabled( false );
 }
 
+
 /***
  * 4. Refreshing
  ***/

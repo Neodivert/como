@@ -24,10 +24,11 @@ namespace como {
  * 1. Construction
  ***/
 
-LightHandler::LightHandler( LightPtr light, LightID lightID, ServerInterfacePtr server ) :
+LightHandler::LightHandler( LightPtr light, LightID lightID, ServerInterfacePtr server, std::function< void(void) > notifyChange ) :
     light_( light ),
     lightID_( lightID ),
-    server_( server )
+    server_( server ),
+    notifyChange_( notifyChange )
 {}
 
 
@@ -48,6 +49,8 @@ PackableColor LightHandler::getLightColor() const
 void LightHandler::setLightColor( const PackableColor& lightColor)
 {
     light_->setLightColor( lightColor );
+
+    notifyChange_();
 }
 
 
