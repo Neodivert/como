@@ -293,6 +293,11 @@ MaterialsManagerPtr Scene::getMaterialsManager() const
     return materialsManager_;
 }
 
+LightsManagerPtr Scene::getLightsManager() const
+{
+    return lightsManager_;
+}
+
 
 /***
  * 6. Setters

@@ -25,8 +25,8 @@ namespace como {
  * 1. Construction
  ***/
 
-LightsList::LightsList( DrawablesManagerPtr drawablesManager ) :
-    drawablesManager_( drawablesManager )
+LightsList::LightsList( LightsManagerPtr lightsManager ) :
+    lightsManager_( lightsManager )
 {
     /*
     QObject::connect( materialsManager.get(), &MaterialsManager::materialCreated,

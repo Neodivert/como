@@ -17,7 +17,19 @@
 ***/
 
 #include "lights_editor.hpp"
+#include <QVBoxLayout>
+#include "lights_list.hpp"
 
-LightsEditor::LightsEditor()
+namespace como {
+
+LightsEditor::LightsEditor( LightsManagerPtr lightsManager )
 {
+    QVBoxLayout* layout = new QVBoxLayout;
+
+    layout->addWidget( new QLabel( "Lights editor" ) );
+    layout->addWidget( new LightsList( lightsManager ) );
+
+    setLayout( layout );
 }
+
+} // namepsace como

@@ -33,14 +33,14 @@ class LightsList : public QListWidget
     Q_OBJECT
 
     private:
-        DrawablesManagerPtr drawablesManager_;
+        LightsManagerPtr lightsManager_;
 
     public:
         /***
          * 1. Construction
          ***/
         LightsList() = delete;
-        LightsList( DrawablesManagerPtr drawablesManager );
+        LightsList( LightsManagerPtr lightsManager );
         LightsList( const LightsList& ) = delete;
         LightsList( LightsList&& ) = delete;
 

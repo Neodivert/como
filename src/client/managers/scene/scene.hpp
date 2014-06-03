@@ -129,6 +129,7 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
         DrawablesManagerPtr getDrawablesManager() const ;
         MaterialsManagerPtr getMaterialsManager() const;
+        LightsManagerPtr getLightsManager() const;
 
 
         /***

@@ -20,6 +20,9 @@
 #define LIGHTS_EDITOR_HPP
 
 #include <QFrame>
+#include <client/managers/lights/lights_manager.hpp>
+
+namespace como {
 
 class LightsEditor : public QFrame
 {
@@ -29,7 +32,7 @@ class LightsEditor : public QFrame
         /***
          * 1. Construction
          ***/
-        LightsEditor();
+        LightsEditor( LightsManagerPtr lightsManager );
         LightsEditor( const LightsEditor& ) = delete;
         LightsEditor( LightsEditor&& ) = delete;
 
@@ -46,5 +49,7 @@ class LightsEditor : public QFrame
         LightsEditor& operator = ( const LightsEditor& ) = delete;
         LightsEditor& operator = ( LightsEditor&& ) = delete;
 };
+
+} // namespace como
 
 #endif // LIGHTS_EDITOR_HPP
