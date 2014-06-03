@@ -32,14 +32,15 @@ class LightsManager : public QObject
     Q_OBJECT
 
     private:
+        // Lights vector.
+        std::map< LightID, LightPtr > lights_;
+
         // Lights are drawables, so the drawables manager is also implied in
         // lights management.
         DrawablesManagerPtr drawablesManager_;
 
         // Interface with the server.
         ServerInterfacePtr server_;
-
-        std::map< LightID, LightPtr > lights_;
 
     public:
         /***
@@ -63,7 +64,7 @@ class LightsManager : public QObject
     private:
         void addDirectionalLight( const LightID& lightID, const PackableColor& lightColor );
     public:
-        //void selectLight( const LightID lightID );
+        void selectLight( const LightID lightID );
 
 
         /***
@@ -85,6 +86,7 @@ class LightsManager : public QObject
          ***/
     signals:
         void lightCreated( const LightID& id, const std::string& name );
+        void lightSelected( LightHandlerPtr light );
 };
 
 typedef std::shared_ptr< LightsManager > LightsManagerPtr;

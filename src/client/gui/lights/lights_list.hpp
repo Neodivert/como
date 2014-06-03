@@ -69,7 +69,7 @@ class LightsList : public QListWidget
          * 5. Signals
          ***/
     signals:
-        void materialSelected( MaterialID id );
+        void lightSelected( LightID id );
 };
 
 } // namespace como

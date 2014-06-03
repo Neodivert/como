@@ -35,8 +35,8 @@ LightsEditor::LightsEditor( LightsManagerPtr lightsManager )
 
     setLayout( layout );
 
-    QObject::connect( lightsManager.get(), &LightsManager::lightCreated,
-                      lightsList, &LightsList::addLight );
+    QObject::connect( lightsManager.get(), &LightsManager::lightSelected,
+                      lightPanel, &LightPanel::openLight );
 }
 
 } // namepsace como

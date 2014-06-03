@@ -46,10 +46,19 @@ void LightsManager::addDirectionalLight( const LightID& lightID, const PackableC
                                     light,
                                     lightID );
 
+    lights_.insert( std::pair< LightID, LightPtr >(
+                        lightID,
+                        dynamic_pointer_cast< Light >( light )
+                        ));
 
     emit lightCreated( lightID, light->getName() );
 }
 
+
+void LightsManager::selectLight( const LightID lightID )
+{
+    emit lightSelected( LightHandlerPtr( new LightHandler( lights_.at( lightID ), lightID, server_ ) ) );
+}
 
 
 /***

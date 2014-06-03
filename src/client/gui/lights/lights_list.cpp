@@ -28,22 +28,20 @@ namespace como {
 LightsList::LightsList( LightsManagerPtr lightsManager ) :
     lightsManager_( lightsManager )
 {
-    /*
-    QObject::connect( materialsManager.get(), &MaterialsManager::materialCreated,
-                      this, &LightsList::addMaterial );
+    QObject::connect( lightsManager.get(), &LightsManager::lightCreated,
+                      this, &LightsList::addLight );
 
     QObject::connect( this, &LightsList::itemActivated, [=]( QListWidgetItem * item ){
-        emit materialSelected( ( dynamic_cast< LightsListItem* >( item ) )->getMaterialID() );
+        emit lightSelected( ( dynamic_cast< LightsListItem* >( item ) )->getLightID() );
     });
 
     QObject::connect( this, &LightsList::itemClicked, [=]( QListWidgetItem * item ){
-        emit materialSelected( ( dynamic_cast< LightsListItem* >( item ) )->getMaterialID() );
+        emit lightSelected( ( dynamic_cast< LightsListItem* >( item ) )->getLightID() );
     });
 
-    QObject::connect( this, &LightsList::materialSelected, [=]( MaterialID materialID ){
-        materialsManager->selectMaterial( materialID );
+    QObject::connect( this, &LightsList::lightSelected, [=]( LightID lightID ){
+        lightsManager_->selectLight( lightID );
     });
-    */
 }
 
 
