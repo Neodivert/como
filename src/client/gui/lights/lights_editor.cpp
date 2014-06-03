@@ -26,12 +26,17 @@ namespace como {
 LightsEditor::LightsEditor( LightsManagerPtr lightsManager )
 {
     QVBoxLayout* layout = new QVBoxLayout;
+    LightsList* lightsList = new LightsList( lightsManager );
+    LightPanel* lightPanel = new LightPanel;
 
     layout->addWidget( new QLabel( "Lights editor" ) );
-    layout->addWidget( new LightsList( lightsManager ) );
-    layout->addWidget( new LightPanel );
+    layout->addWidget( lightsList );
+    layout->addWidget( lightPanel );
 
     setLayout( layout );
+
+    QObject::connect( lightsManager.get(), &LightsManager::lightCreated,
+                      lightsList, &LightsList::addLight );
 }
 
 } // namepsace como

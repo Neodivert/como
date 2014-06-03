@@ -21,6 +21,7 @@
 
 #include <client/managers/drawables_manager/drawables_manager.hpp>
 #include <client/models/3d/lights/lights.hpp>
+#include <client/managers/lights/light_handler.hpp>
 #include <common/commands/commands.hpp>
 #include <map>
 
@@ -58,9 +59,11 @@ class LightsManager : public QObject
 
         /***
          * 3. Lights management
-         ***/
+         ***/ 
     private:
         void addDirectionalLight( const LightID& lightID, const PackableColor& lightColor );
+    public:
+        //void selectLight( const LightID lightID );
 
 
         /***
@@ -75,6 +78,13 @@ class LightsManager : public QObject
          ***/
         LightsManager& operator = ( const LightsManager& ) = delete;
         LightsManager& operator = ( LightsManager&& ) = delete;
+
+
+        /***
+         * 6. Signals
+         ***/
+    signals:
+        void lightCreated( const LightID& id, const std::string& name );
 };
 
 typedef std::shared_ptr< LightsManager > LightsManagerPtr;

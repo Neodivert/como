@@ -30,6 +30,8 @@ LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterf
 {}
 
 
+
+
 /***
  * 3. Lights management
  ***/
@@ -38,10 +40,16 @@ void LightsManager::addDirectionalLight( const LightID& lightID, const PackableC
 {
     MaterialConstPtr lightMaterial( new Material( PackableColor( 255, 0, 0, 255 ) ) );
 
+    DrawablePtr light = DrawablePtr( new DirectionalLight( lightMaterial, lightColor ) );
+
     drawablesManager_->addDrawable( lightID.creatorID.getValue(),
-                                    DrawablePtr( new DirectionalLight( lightMaterial, lightColor ) ),
+                                    light,
                                     lightID );
+
+
+    emit lightCreated( lightID, light->getName() );
 }
+
 
 
 /***
