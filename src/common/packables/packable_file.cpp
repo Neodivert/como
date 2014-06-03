@@ -147,7 +147,10 @@ const void* PackableFile::unpack( const void* buffer )
     filePathBaseName = filePathBaseName.substr( 0, filePathBaseName.rfind( '/' ) );
 
     sprintf( consoleCommand, "mkdir -p \"%s\"", filePathBaseName.c_str() );
-    system( consoleCommand );
+
+    // TODO: The std::cout << call is a trick for discarging system return
+    // value. Remove this.
+    std::cout << system( consoleCommand ) << std::endl;
 
     // Unpack the file contents from the given buffer and write them to file.
     castedBuffer = static_cast< const char* >( buffer );

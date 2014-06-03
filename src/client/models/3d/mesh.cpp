@@ -213,6 +213,7 @@ void Mesh::computeCentroid()
     }
 
     originalCentroid /= originalVertices.size();
+    originalCentroid.w = 1.0f;
 }
 
 
