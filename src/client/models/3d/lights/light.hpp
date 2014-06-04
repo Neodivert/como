@@ -36,6 +36,11 @@ class Light : public Mesh
         const LightType type_;
 
         /*!
+         * Location of the GLSL shader uniform "isEnabled".
+         */
+        GLint isEnabledLocation_;
+
+        /*!
          * Location of the GLSL shader uniform variable keeping this light's
          * color.
          */

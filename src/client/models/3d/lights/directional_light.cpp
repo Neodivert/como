@@ -59,7 +59,7 @@ DirectionalLight::DirectionalLight( MaterialConstPtr material, const PackableCol
     checkOpenGL( "DirectionalLight - constructor 2" );
 
     // Set the light index in shader.
-    glUniform1i( lightIndexLocation, lightIndex );
+    glUniform1ui( lightIndexLocation, lightIndex );
 
     checkOpenGL( "DirectionalLight - constructor 3" );
 

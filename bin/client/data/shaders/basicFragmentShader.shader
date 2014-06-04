@@ -14,7 +14,7 @@ const unsigned int MAX_LIGHTS = MAX_DIRECTIONAL_LIGHTS;
 
 // Lights.
 struct Light {
-	//bool isEnabled;
+	bool isEnabled;
 	vec3 color;
 };
 uniform Light lights[MAX_LIGHTS];
@@ -48,7 +48,7 @@ void main()
 	unsigned int i;
 	if( lightingEnabled ){
 		for( i=0; i<MAX_DIRECTIONAL_LIGHTS; i++ ){
-			//if( lights[ directionalLights[i].lightIndex ].isEnabled ){
+			if( lights[ directionalLights[i].lightIndex ].isEnabled ){
 				vec3 halfVector = directionalLights[i].lightVector + vec3( 0.0f, 0.0f, 0.0f ); // TODO: H = L + Eye (or L - Eye?).
 
 				float diffuse = max( 0.0f, dot( normal, directionalLights[i].lightVector ) );
@@ -69,7 +69,7 @@ void main()
 				// only with scattered light
 				vec3 rgb = min ( material.color.rgb * scatteredLight + reflectedLight, vec3( 1.0f ) );
 				finalColor += vec4( rgb, material.color.a );
-			//}
+			}
 		}
 	}else{
 		finalColor = material.color;
