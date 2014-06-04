@@ -40,6 +40,7 @@ Light::Light( LightType type, const char* meshPath, GLuint lightIndex, MaterialC
 
     std::cout << "Light \"isEnabled\" location (" << uniformName << "): " << isEnabledLocation_ << std::endl;
 
+    // Enable this light in fragment shader.
     glUniform1i( isEnabledLocation_, 1 );
 
     // Get the location of this light's color in the GLSL shader program.
@@ -52,6 +53,12 @@ Light::Light( LightType type, const char* meshPath, GLuint lightIndex, MaterialC
     setLightColor( lightColor );
 
     checkOpenGL( "Light - Constructor end" );
+}
+
+Light::~Light()
+{
+    // Disable this light in fragment shader.
+    glUniform1i( isEnabledLocation_, 0 );
 }
 
 

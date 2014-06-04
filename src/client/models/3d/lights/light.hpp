@@ -79,7 +79,7 @@ class Light : public Mesh
          ***/
 
         /*! \brief Destructor */
-        ~Light() = default; // TODO: Destroy Light in shader.
+        ~Light();
 
 
         /***
