@@ -30,15 +30,15 @@ LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterf
 {
     GLint i=0;
 
-    // TODO: Remove the "4" and retrieve it from shader
-    // (MAX_LIGHTS).
-    for( i=4; i>=0; i-- ){
+    // TODO: Remove the "3" and retrieve it from shader
+    // (MAX_LIGHTS - 1).
+    for( i=3; i>=0; i-- ){
         freeLightIndices_.push( i );
     }
 
-    // TODO: Remove the "4" and retrieve it from shader
-    // (MAX_DIRECTIONAL_LIGHTS).
-    for( i=4; i>=0; i-- ){
+    // TODO: Remove the "3" and retrieve it from shader
+    // (MAX_DIRECTIONAL_LIGHTS - 1).
+    for( i=3; i>=0; i-- ){
         freeDirectionalLightIndices_.push( i );
     }
 }
