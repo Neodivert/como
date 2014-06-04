@@ -32,7 +32,6 @@ CreationTab::CreationTab( ScenePtr scene ) :
 
     // Add widgets to the previous layout.
     layout->addWidget( createMeshFromPrimitiveCreationMenu() );
-    layout->addWidget( createDirectionalLightMenu() );
 
     // Set the previous layout as this tab's layout.
     setLayout( layout );
@@ -77,27 +76,6 @@ QFrame* CreationTab::createMeshFromPrimitiveCreationMenu()
     connect( scene_.get(), &Scene::primitiveAdded, [=]( const QString& primitiveRelPath, PrimitiveID primitiveID ){
         primitiveSelector->insertItem( static_cast< int >( primitiveID ), primitiveRelPath );
     });
-
-    return frame;
-}
-
-
-QFrame* CreationTab::createDirectionalLightMenu()
-{
-    QFrame* frame = nullptr;
-    QVBoxLayout* layout = nullptr;
-    QPushButton* directionalLightCreationButton = nullptr;
-
-    // Create this frame's widgets.
-    directionalLightCreationButton = new QPushButton( "Create directional light" );
-
-    // Create the frame.
-    frame = new QFrame;
-
-    // Set this frame's layout.
-    layout = new QVBoxLayout;
-    layout->addWidget( directionalLightCreationButton );
-    frame->setLayout( layout );
 
     return frame;
 }

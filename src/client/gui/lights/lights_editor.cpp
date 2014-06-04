@@ -27,10 +27,12 @@ LightsEditor::LightsEditor( LightsManagerPtr lightsManager )
 {
     QVBoxLayout* layout = new QVBoxLayout;
     LightsList* lightsList = new LightsList( lightsManager );
+    QPushButton* directionalLightCreationButton = new QPushButton( "Create directional light" );
     LightPanel* lightPanel = new LightPanel;
 
     layout->addWidget( new QLabel( "Lights editor" ) );
     layout->addWidget( lightsList );
+    layout->addWidget( directionalLightCreationButton );
     layout->addWidget( lightPanel );
 
     setLayout( layout );
