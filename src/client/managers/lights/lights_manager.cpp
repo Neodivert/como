@@ -55,7 +55,11 @@ void LightsManager::createDirectionalLight()
     GLuint directionalLightIndex;
 
     if( !freeDirectionalLightIndices_.size() ){
-        throw std::runtime_error( "Can't create more directional lights!" );
+        QMessageBox errorMsg( QMessageBox::Warning,
+                              "Could't create a directional light",
+                              "Reached the limit of allowed directional lights" );
+        errorMsg.exec();
+        return;
     }
 
     // Reserve both directional and light indices for the new light.
@@ -95,7 +99,11 @@ void LightsManager::addDirectionalLight( const LightID& lightID, const PackableC
     GLuint directionalLightIndex;
 
     if( !freeDirectionalLightIndices_.size() ){
-        throw std::runtime_error( "Can't create more directional lights!" );
+        QMessageBox errorMsg( QMessageBox::Critical,
+                              "Could't create a directional light",
+                              "Remote attempt to create a directional light with no room for it!" );
+        errorMsg.exec();
+        return;
     }
 
     // Reserve both directional and light indices for the new light.
