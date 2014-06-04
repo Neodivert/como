@@ -39,6 +39,10 @@ LightsEditor::LightsEditor( LightsManagerPtr lightsManager )
 
     QObject::connect( lightsManager.get(), &LightsManager::lightSelected,
                       lightPanel, &LightPanel::openLight );
+
+    QObject::connect( directionalLightCreationButton, &QPushButton::pressed,
+                      lightsManager.get(), &LightsManager::createDirectionalLight );
+
 }
 
 } // namepsace como

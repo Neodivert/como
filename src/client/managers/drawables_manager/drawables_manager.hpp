@@ -87,7 +87,6 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
         glm::vec3 getPivotPoint( UserID userID ) const ;
 
 
-
         /***
          * 5. Changeable
          ***/
@@ -111,7 +110,6 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
         void createRemoteMesh( PrimitiveID primitiveID, PackableDrawableID drawableID, MaterialID materialID );
 
     public:
-        void addDirectionalLight( PackableDrawableID lightID, const PackableColor& lightColor, MaterialID materialID );
 
 
         /***

@@ -24,11 +24,10 @@ namespace como {
  * 1. Construction
  ***/
 
-DirectionalLight::DirectionalLight( MaterialConstPtr material, const PackableColor& lightColor ) :
-    Light( LightType::DIRECTIONAL_LIGHT, "data/primitives/system/directional_light.obj", 0, material, lightColor )
+DirectionalLight::DirectionalLight( GLuint directionalLightIndex, GLint lightIndex, MaterialConstPtr material, const PackableColor& lightColor ) :
+    Light( LightType::DIRECTIONAL_LIGHT, "data/primitives/system/directional_light.obj", lightIndex, material, lightColor )
 {
     GLint currentShaderProgram = 0;
-    const GLuint lightIndex = 0; // TODO: Retrieve this as an method argument.
     char uniformName[64];
 
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
@@ -38,19 +37,19 @@ DirectionalLight::DirectionalLight( MaterialConstPtr material, const PackableCol
     std::cout << "currentShaderProgram: " << currentShaderProgram << std::endl;
 
     // Get the location of the DirectionalLight::lightIndex variable in shader.
-    sprintf( uniformName, "directionalLights[0].lightIndex" );
+    sprintf( uniformName, "directionalLights[%u].lightIndex", directionalLightIndex );
     lightIndexLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
 
     std::cout << "lightIndexLocation: (" << uniformName << "): " << lightIndexLocation_ << std::endl;
 
     // Get the location of the DirectionalLight::lightVector variable in shader.
-    sprintf( uniformName, "directionalLights[0].lightVector" );
+    sprintf( uniformName, "directionalLights[%u].lightVector", directionalLightIndex );
     lightVectorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
 
     std::cout << "lightVectorLocation_ (" << uniformName << "): " << lightVectorLocation_ << std::endl;
 
     // Get the location of the DirectionalLight::halfVector variable in shader.
-    sprintf( uniformName, "directionalLights[0].halfVector" );
+    sprintf( uniformName, "directionalLights[%u].halfVector", directionalLightIndex );
     halfVectorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
 
     std::cout << "halfVectorLocation_ (" << uniformName << "): " << halfVectorLocation_ << std::endl;
@@ -103,5 +102,15 @@ void DirectionalLight::update()
     glUniform3fv( lightVectorLocation_, 1, &lightVector[0] );
 }
 
+
+/***
+ * 5. Lights management
+ ***/
+
+unsigned int DirectionalLight::getMaxLights()
+{
+    // TODO: Retrieve value from shader.
+    return 4;
+}
 
 } // namespace como

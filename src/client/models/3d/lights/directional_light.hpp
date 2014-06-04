@@ -49,7 +49,7 @@ class DirectionalLight : public Light
          * \brief Constructs a directional Light with the specified light
          * color.
          */
-        DirectionalLight( MaterialConstPtr material, const PackableColor& lightColor );
+        DirectionalLight( GLuint directionalLightIndex, GLint lightIndex, MaterialConstPtr material, const PackableColor& lightColor );
 
         /*! \brief Copy constructor */
         // TODO: Define a proper copy constructor when inplementing multiple lights
@@ -78,11 +78,17 @@ class DirectionalLight : public Light
 
     private:
         void update();
-    private:
+    public:
 
 
         /***
-         * 3. Operators
+         * 5. Lights management
+         ***/
+        static unsigned int getMaxLights();
+
+
+        /***
+         * 6. Operators
          ***/
 
         /*! \brief Copy assignment operator */

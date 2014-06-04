@@ -27,24 +27,61 @@ namespace como {
 LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server ) :
     drawablesManager_( drawablesManager ),
     server_( server )
-{}
+{
+    GLint i=0;
+
+    // TODO: Remove the "4" and retrieve it from shader
+    // (MAX_LIGHTS).
+    for( i=4; i>=0; i-- ){
+        freeLightIndices_.push( i );
+    }
+
+    // TODO: Remove the "4" and retrieve it from shader
+    // (MAX_DIRECTIONAL_LIGHTS).
+    for( i=4; i>=0; i-- ){
+        freeDirectionalLightIndices_.push( i );
+    }
+}
 
 
 /***
  * 3. Lights management
  ***/
 
-void LightsManager::createDirectionalLight(const PackableColor &lightColor)
+void LightsManager::createDirectionalLight()
 {
+    // FIXME: Duplicated code.
+    GLint lightIndex;
+    GLuint directionalLightIndex;
+
+    if( !freeDirectionalLightIndices_.size() ){
+        throw std::runtime_error( "Can't create more directional lights!" );
+    }
+
+    // Reserve both directional and light indices for the new light.
+    lightIndex = freeLightIndices_.top();
+    directionalLightIndex = freeDirectionalLightIndices_.top();
+    freeLightIndices_.pop();
+    freeDirectionalLightIndices_.pop();
+
     // Create a default material for the light.
     MaterialConstPtr lightMaterial( new Material( PackableColor( 255, 0, 0, 255 ) ) );
 
+    PackableColor lightColor( 255, 0, 0, 255 );
+
     // Create a light with the previous material and the given light color.
-    DrawablePtr light = DrawablePtr( new DirectionalLight( lightMaterial, lightColor ) );
+    DrawablePtr light = DrawablePtr( new DirectionalLight( directionalLightIndex, lightIndex, lightMaterial, lightColor ) );
 
     // Add the created light to the Drawables Manager and retrieve the ID given
     // to it.
     LightID lightID = drawablesManager_->addDrawable( light );
+
+    lights_.insert( std::pair< LightID, LightPtr >(
+                        lightID,
+                        dynamic_pointer_cast< Light >( light )
+                        ));
+
+    server_->sendCommand( CommandConstPtr( new DirectionalLightCreationCommand( lightID, lightColor ) ) );
 
     // Indicate to the GUI that a new light has been created.
     emit lightCreated( lightID, light->getName() );
@@ -53,9 +90,23 @@ void LightsManager::createDirectionalLight(const PackableColor &lightColor)
 
 void LightsManager::addDirectionalLight( const LightID& lightID, const PackableColor& lightColor )
 {
+    // FIXME: Duplicated code.
+    GLint lightIndex;
+    GLuint directionalLightIndex;
+
+    if( !freeDirectionalLightIndices_.size() ){
+        throw std::runtime_error( "Can't create more directional lights!" );
+    }
+
+    // Reserve both directional and light indices for the new light.
+    lightIndex = freeLightIndices_.top();
+    directionalLightIndex = freeDirectionalLightIndices_.top();
+    freeLightIndices_.pop();
+    freeDirectionalLightIndices_.pop();
+
     MaterialConstPtr lightMaterial( new Material( PackableColor( 255, 0, 0, 255 ) ) );
 
-    DrawablePtr light = DrawablePtr( new DirectionalLight( lightMaterial, lightColor ) );
+    DrawablePtr light = DrawablePtr( new DirectionalLight( directionalLightIndex, lightIndex, lightMaterial, lightColor ) );
 
     drawablesManager_->addDrawable( lightID.creatorID.getValue(),
                                     light,
@@ -108,6 +159,11 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
 
 unsigned int LightsManager::getNextFreeLightIndex( LightType lightType )
 {
+    switch( lightType ){
+        case LightType::DIRECTIONAL_LIGHT:
+        break;
+    }
+
     Q_UNUSED( lightType )
 
     /*

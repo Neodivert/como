@@ -360,9 +360,17 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
         case CommandTarget::MATERIAL:
             // TODO: Complete.
         break;
-        case CommandTarget::LIGHT:
-            // TODO: Complete.
-        break;
+        case CommandTarget::LIGHT:{
+            const LightCommand* lightCommand = dynamic_cast< const LightCommand* >( sceneCommand.get() );
+
+            switch( lightCommand->getType() ){
+                case LightCommandType::LIGHT_CREATION:{
+                    // Add a node to the Drawable Owners map for the recently added
+                    // drawable. Mark it with a 0 (no owner).
+                    drawableOwners_[lightCommand->getLightID()] = 0;
+                }break;
+            }
+        }break;
     }
 
     // Add the command to the historic.

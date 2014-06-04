@@ -110,26 +110,6 @@ void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, Packabl
 }
 
 
-/*
-void DrawablesManager::addMesh( PrimitiveID primitiveID, QColor color )
-{
-    std::uint8_t color8[4];
-    int r, g, b;
-
-    // Get the RGB components (int) of the color.
-    color.getRgb( &r, &g, &b );
-
-    // Turn the previous RGB components into a UINT8 vector.
-    color8[0] = static_cast< std::uint8_t >( r );
-    color8[1] = static_cast< std::uint8_t >( g );
-    color8[2] = static_cast< std::uint8_t >( b );
-    color8[3] = 255;
-
-    // Add the primitive to the scene.
-    addMesh( primitiveID, color8 );
-}
-*/
-
 void DrawablesManager::createMeshAndMaterial( PrimitiveID primitiveID )
 {
     // Build the "absolute" path to the specification file of the
@@ -185,12 +165,6 @@ void DrawablesManager::createRemoteMesh( PrimitiveID primitiveID, PackableDrawab
 
     // Add the mesh to the scene.
     addDrawable( drawableID.creatorID.getValue(), drawable, drawableID );
-}
-
-
-void DrawablesManager::addDirectionalLight( PackableDrawableID lightID, const PackableColor& lightColor, MaterialID materialID )
-{
-    addDrawable( lightID.creatorID.getValue(), DrawablePtr( new DirectionalLight( materialsManager_->getMaterial( materialID ), lightColor ) ), lightID );
 }
 
 

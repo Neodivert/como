@@ -59,7 +59,8 @@ const char commandTargetStrings[][32]
     "DRAWABLE",
     "SELECTION",
     "PRIMITIVE",
-    "MATERIAL"
+    "MATERIAL",
+    "LIGHT"
 };
 
 

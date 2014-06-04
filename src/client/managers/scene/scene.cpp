@@ -170,6 +170,8 @@ void Scene::initLinesBuffer()
     uniformColorLocation = glGetUniformLocation( currentShaderProgram, "material.color" );
     uniformLightingEnabledLocation = glGetUniformLocation( currentShaderProgram, "lightingEnabled" );
 
+    log_->debug( "uniformLightingEnabledLocation: ", uniformLightingEnabledLocation, "\n" );
+
     // Set a VBO for the world axis rects.
     glGenBuffers( 1, &linesVBO );
     glBindBuffer( GL_ARRAY_BUFFER, linesVBO );

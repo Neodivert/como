@@ -42,6 +42,13 @@ class LightsManager : public QObject, public Changeable
         // Interface with the server.
         ServerInterfacePtr server_;
 
+        // A stack holding all the free light indices allowed in shader.
+        std::stack< GLint > freeLightIndices_;
+
+        // A stack holding all the free directional light indices allowed in shader.
+        std::stack< GLuint > freeDirectionalLightIndices_;
+
+
     public:
         /***
          * 1. Construction
@@ -60,8 +67,9 @@ class LightsManager : public QObject, public Changeable
 
         /***
          * 3. Lights management
-         ***/ 
-        void createDirectionalLight( const PackableColor& lightColor );
+         ***/
+    public slots:
+        void createDirectionalLight();
     private:
         void addDirectionalLight( const LightID& lightID, const PackableColor& lightColor );
     public:
