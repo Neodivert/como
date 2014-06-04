@@ -38,6 +38,8 @@ Light::Light( LightType type, const char* meshPath, GLuint lightIndex, MaterialC
     sprintf( uniformName, "lights[%u].color", lightIndex );
     colorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
 
+    std::cout << "Light color location (" << uniformName << "): " << colorLocation_ << std::endl;
+
     // Update light color in the shader.
     setLightColor( lightColor );
 

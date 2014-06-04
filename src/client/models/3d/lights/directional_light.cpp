@@ -39,22 +39,22 @@ DirectionalLight::DirectionalLight( MaterialConstPtr material, const PackableCol
     std::cout << "currentShaderProgram: " << currentShaderProgram << std::endl;
 
     // Get the location of the DirectionalLight::lightIndex variable in shader.
-    sprintf( uniformName, "directionalLight.lightIndex" );
+    sprintf( uniformName, "directionalLights[0].lightIndex" );
     lightIndexLocation = glGetUniformLocation( currentShaderProgram, uniformName );
 
-    std::cout << "lightIndexLocation: " << lightIndexLocation << std::endl;
+    std::cout << "lightIndexLocation: (" << uniformName << "): " << lightIndexLocation << std::endl;
 
     // Get the location of the DirectionalLight::lightVector variable in shader.
-    sprintf( uniformName, "directionalLight.lightVector" );
+    sprintf( uniformName, "directionalLights[0].lightVector" );
     lightVectorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
 
     std::cout << "lightVectorLocation_ (" << uniformName << "): " << lightVectorLocation_ << std::endl;
 
     // Get the location of the DirectionalLight::halfVector variable in shader.
-    sprintf( uniformName, "directionalLight.halfVector" );
+    sprintf( uniformName, "directionalLights[0].halfVector" );
     halfVectorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
 
-    std::cout << "halfVectorLocation_: " << halfVectorLocation_ << std::endl;
+    std::cout << "halfVectorLocation_ (" << uniformName << "): " << halfVectorLocation_ << std::endl;
 
     checkOpenGL( "DirectionalLight - constructor 2" );
 
