@@ -26,6 +26,7 @@
 #include <client/models/utilities/changeable/changeable.hpp>
 #include <map>
 #include <client/managers/materials_manager/materials_manager.hpp>
+#include <QOffscreenSurface>
 
 namespace como {
 

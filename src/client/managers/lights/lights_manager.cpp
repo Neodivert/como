@@ -50,7 +50,7 @@ LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterf
 
 void LightsManager::createDirectionalLight()
 {
-    // FIXME: Duplicated code.
+    // FIXME: Duplicated code (except for error message).
     GLint lightIndex;
     GLuint directionalLightIndex;
 
@@ -94,7 +94,7 @@ void LightsManager::createDirectionalLight()
 
 void LightsManager::addDirectionalLight( const LightID& lightID, const PackableColor& lightColor )
 {
-    // FIXME: Duplicated code.
+    // FIXME: Duplicated code (except for error message).
     GLint lightIndex;
     GLuint directionalLightIndex;
 

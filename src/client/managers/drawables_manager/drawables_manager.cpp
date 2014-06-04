@@ -180,7 +180,7 @@ void DrawablesManager::deleteSelection()
 
 void DrawablesManager::deleteSelection( const unsigned int& userId )
 {
-    getUserSelection( userId )->clear();
+    getUserSelection( userId )->erase();
 
     //emit renderNeeded();
 }

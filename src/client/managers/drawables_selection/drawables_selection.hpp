@@ -138,7 +138,10 @@ class DrawablesSelection : public Changeable
         void addDrawable( PackableDrawableID drawableID, DrawablePtr drawable );
         bool moveDrawable( PackableDrawableID drawableID, DrawablesSelection& destinySelection );
         void moveAll( DrawablesSelection& destinySelection );
+    private:
         void clear();
+    public:
+        void erase();
 
 
         /***

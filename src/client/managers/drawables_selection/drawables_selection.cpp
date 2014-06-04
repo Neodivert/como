@@ -420,6 +420,16 @@ void DrawablesSelection::clear()
 }
 
 
+void DrawablesSelection::erase()
+{
+    mutex_.unlock();
+
+    clear();
+
+    mutex_.lock();
+}
+
+
 /***
  * 7. Ray picking
  ***/
