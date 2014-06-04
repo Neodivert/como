@@ -97,9 +97,8 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
         /***
          * 6. Drawables administration
          ***/
-    private:
-        PackableDrawableID addDrawable( DrawablePtr drawable );
     public:
+        PackableDrawableID addDrawable( DrawablePtr drawable );
         void addDrawable( UserID userID, DrawablePtr drawable, PackableDrawableID drawableID );
 
     public:

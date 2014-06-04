@@ -30,7 +30,6 @@ DirectionalLight::DirectionalLight( MaterialConstPtr material, const PackableCol
     GLint currentShaderProgram = 0;
     const GLuint lightIndex = 0; // TODO: Retrieve this as an method argument.
     char uniformName[64];
-    GLint lightIndexLocation = -1;
 
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
 
@@ -40,9 +39,9 @@ DirectionalLight::DirectionalLight( MaterialConstPtr material, const PackableCol
 
     // Get the location of the DirectionalLight::lightIndex variable in shader.
     sprintf( uniformName, "directionalLights[0].lightIndex" );
-    lightIndexLocation = glGetUniformLocation( currentShaderProgram, uniformName );
+    lightIndexLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
 
-    std::cout << "lightIndexLocation: (" << uniformName << "): " << lightIndexLocation << std::endl;
+    std::cout << "lightIndexLocation: (" << uniformName << "): " << lightIndexLocation_ << std::endl;
 
     // Get the location of the DirectionalLight::lightVector variable in shader.
     sprintf( uniformName, "directionalLights[0].lightVector" );
@@ -59,7 +58,7 @@ DirectionalLight::DirectionalLight( MaterialConstPtr material, const PackableCol
     checkOpenGL( "DirectionalLight - constructor 2" );
 
     // Set the light index in shader.
-    glUniform1ui( lightIndexLocation, lightIndex );
+    glUniform1i( lightIndexLocation_, lightIndex );
 
     checkOpenGL( "DirectionalLight - constructor 3" );
 
@@ -73,6 +72,17 @@ DirectionalLight::DirectionalLight( MaterialConstPtr material, const PackableCol
 DrawablePtr DirectionalLight::clone()
 {
     return DrawablePtr( new DirectionalLight( *this ) );
+}
+
+
+/***
+ * 2. Destruction
+ ***/
+
+DirectionalLight::~DirectionalLight()
+{
+    // Disable this light in shader.
+    glUniform1i( lightIndexLocation_, -1 );
 }
 
 

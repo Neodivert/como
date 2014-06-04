@@ -61,6 +61,7 @@ class LightsManager : public QObject, public Changeable
         /***
          * 3. Lights management
          ***/ 
+        void createDirectionalLight( const PackableColor& lightColor );
     private:
         void addDirectionalLight( const LightID& lightID, const PackableColor& lightColor );
     public:
@@ -94,6 +95,12 @@ class LightsManager : public QObject, public Changeable
          ***/
     private:
         virtual void onChange(){}
+
+
+        /***
+         * 8. Auxiliar methods
+         ***/
+        unsigned int getNextFreeLightIndex( LightType lightType );
 };
 
 typedef std::shared_ptr< LightsManager > LightsManagerPtr;

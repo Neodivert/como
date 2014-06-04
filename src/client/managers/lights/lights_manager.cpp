@@ -30,11 +30,26 @@ LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterf
 {}
 
 
-
-
 /***
  * 3. Lights management
  ***/
+
+void LightsManager::createDirectionalLight(const PackableColor &lightColor)
+{
+    // Create a default material for the light.
+    MaterialConstPtr lightMaterial( new Material( PackableColor( 255, 0, 0, 255 ) ) );
+
+    // Create a light with the previous material and the given light color.
+    DrawablePtr light = DrawablePtr( new DirectionalLight( lightMaterial, lightColor ) );
+
+    // Add the created light to the Drawables Manager and retrieve the ID given
+    // to it.
+    LightID lightID = drawablesManager_->addDrawable( light );
+
+    // Indicate to the GUI that a new light has been created.
+    emit lightCreated( lightID, light->getName() );
+}
+
 
 void LightsManager::addDirectionalLight( const LightID& lightID, const PackableColor& lightColor )
 {
@@ -85,6 +100,24 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
             }
         }break;
     }
+}
+
+/***
+ * 8. Auxiliar methods
+ ***/
+
+unsigned int LightsManager::getNextFreeLightIndex( LightType lightType )
+{
+    Q_UNUSED( lightType )
+
+    /*
+    // TODO: Retrieve this value from shader depending on the value of
+    // lightType.
+    Q_UNUSED( lightType )
+    const unsigned int MAX_REQUESTED_LIGHTS = 4;
+    */
+
+    return 0;
 }
 
 } // namespace como

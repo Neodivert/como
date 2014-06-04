@@ -31,6 +31,9 @@ namespace como {
 class DirectionalLight : public Light
 {
     private:
+        /*! Location of the light index in GLSL shader. */
+        GLint lightIndexLocation_;
+
         /*! Location of the light vector in GLSL shader. */
         GLint lightVectorLocation_;
 
@@ -66,7 +69,7 @@ class DirectionalLight : public Light
          ***/
 
         /*! \brief Destructor */
-        ~DirectionalLight() = default; // TODO: Destroy Light in shader.
+        ~DirectionalLight();
 
 
         /***

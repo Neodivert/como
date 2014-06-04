@@ -14,14 +14,13 @@ const unsigned int MAX_LIGHTS = MAX_DIRECTIONAL_LIGHTS;
 
 // Lights.
 struct Light {
-	bool isEnabled;
 	vec3 color;
 };
 uniform Light lights[MAX_LIGHTS];
 
 // Directional light.
 struct DirectionalLight {
-	unsigned int lightIndex;
+	int lightIndex;
 	vec3 lightVector;
 	vec3 halfVector;
 };
@@ -48,7 +47,7 @@ void main()
 	unsigned int i;
 	if( lightingEnabled ){
 		for( i=0; i<MAX_DIRECTIONAL_LIGHTS; i++ ){
-			if( lights[ directionalLights[i].lightIndex ].isEnabled ){
+			if( directionalLights[i].lightIndex >= 0 ){
 				vec3 halfVector = directionalLights[i].lightVector + vec3( 0.0f, 0.0f, 0.0f ); // TODO: H = L + Eye (or L - Eye?).
 
 				float diffuse = max( 0.0f, dot( normal, directionalLights[i].lightVector ) );
