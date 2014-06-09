@@ -80,7 +80,8 @@ HEADERS += \
     ../../src/client/gui/lights/light_panel.hpp \
     ../../src/client/managers/lights/light_handler.hpp \
     ../../src/client/models/3d/lights/abstract_light.hpp \
-    ../../src/client/models/3d/lights/mesh_light.hpp
+    ../../src/client/models/3d/lights/mesh_light.hpp \
+    ../../src/client/models/3d/lights/light_properties.hpp
 
 
 # Client sources
@@ -127,4 +128,5 @@ SOURCES += \
     ../../src/client/managers/lights/lights_manager.cpp \
     ../../src/client/gui/lights/light_panel.cpp \
     ../../src/client/managers/lights/light_handler.cpp \
-    ../../src/client/models/3d/lights/mesh_light.cpp
+    ../../src/client/models/3d/lights/mesh_light.cpp \
+    ../../src/client/models/3d/lights/light_properties.cpp
