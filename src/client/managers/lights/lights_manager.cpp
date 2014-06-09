@@ -71,19 +71,27 @@ void LightsManager::createDirectionalLight()
     // Create a default material for the light.
     MaterialConstPtr lightMaterial( new Material( PackableColor( 255, 0, 0, 255 ) ) );
 
+    // Create a default light color.
     PackableColor lightColor( 255, 0, 0, 255 );
 
-    // Create a light with the previous material and the given light color.
-    DrawablePtr light = DrawablePtr( new DirectionalLight( directionalLightIndex, lightIndex, lightMaterial, lightColor ) );
+    // Create a struct with the light's properties.
+    DirectionalLightPropertiesSharedPtr lightProperties(
+                new DirectionalLightProperties( directionalLightIndex, lightIndex, lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ) ) );
+
+    // Create a light with the previous light and material properties.
+    DrawablePtr light = DrawablePtr( new DirectionalLight( lightProperties, lightMaterial ) );
 
     // Add the created light to the Drawables Manager and retrieve the ID given
     // to it.
     LightID lightID = drawablesManager_->addDrawable( light );
 
-    lights_.insert( std::pair< LightID, MeshLightPtr >(
+    // Insert the light's properties into the lights map.
+    lights_.insert( std::pair< LightID, LightPropertiesSharedPtr >(
                         lightID,
-                        dynamic_pointer_cast< MeshLight >( light )
+                        lightProperties
                         ));
+
+
 
     server_->sendCommand( CommandConstPtr( new DirectionalLightCreationCommand( lightID, lightColor ) ) );
 
@@ -114,15 +122,20 @@ void LightsManager::addDirectionalLight( const LightID& lightID, const PackableC
 
     MaterialConstPtr lightMaterial( new Material( PackableColor( 255, 0, 0, 255 ) ) );
 
-    DrawablePtr light = DrawablePtr( new DirectionalLight( directionalLightIndex, lightIndex, lightMaterial, lightColor ) );
+    // Create a struct with the light's properties.
+    DirectionalLightPropertiesSharedPtr lightProperties(
+                new DirectionalLightProperties( directionalLightIndex, lightIndex, lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ) ) );
+
+    DrawablePtr light = DrawablePtr( new DirectionalLight( lightProperties, lightMaterial ) );
 
     drawablesManager_->addDrawable( lightID.creatorID.getValue(),
                                     light,
                                     lightID );
 
-    lights_.insert( std::pair< LightID, MeshLightPtr >(
+    // Insert the light's properties into the lights map.
+    lights_.insert( std::pair< LightID, LightPropertiesSharedPtr >(
                         lightID,
-                        dynamic_pointer_cast< MeshLight >( light )
+                        lightProperties
                         ));
 
     emit lightCreated( lightID, light->getName() );

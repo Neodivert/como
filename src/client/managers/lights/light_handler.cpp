@@ -24,7 +24,7 @@ namespace como {
  * 1. Construction
  ***/
 
-LightHandler::LightHandler( MeshLightPtr light, LightID lightID, ServerInterfacePtr server, std::function< void(void) > notifyChange ) :
+LightHandler::LightHandler( LightPropertiesSharedPtr light, LightID lightID, ServerInterfacePtr server, std::function< void(void) > notifyChange ) :
     light_( light ),
     lightID_( lightID ),
     server_( server ),

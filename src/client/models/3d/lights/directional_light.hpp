@@ -19,37 +19,29 @@
 #ifndef DIRECTIONAL_LIGHT_HPP
 #define DIRECTIONAL_LIGHT_HPP
 
-#include "mesh_light.hpp"
+#include <client/models/3d/mesh.hpp>
+#include "directional_light_properties.hpp"
 
 namespace como {
 
 /*!
  * \class DirectionalLight
  *
- * \brief A far, far away MeshLight.
+ * \brief A far, far away light.
  */
-class DirectionalLight : public MeshLight
+class DirectionalLight : public Mesh
 {
     private:
-        /*! Location of the light index in GLSL shader. */
-        GLint lightIndexLocation_;
+        DirectionalLightPropertiesSharedPtr lightProperties_;
 
-        /*! Location of the light vector in GLSL shader. */
-        GLint lightVectorLocation_;
-
-        /*! Location of the half vector in GLSL shader. */
-        GLint halfVectorLocation_;
 
     public:
         /***
          * 1. Construction
          ***/
 
-        /*!
-         * \brief Constructs a directional MeshLight with the specified light
-         * color.
-         */
-        DirectionalLight( GLuint directionalLightIndex, GLint lightIndex, MaterialConstPtr material, const PackableColor& lightColor );
+        DirectionalLight() = delete;
+        DirectionalLight( DirectionalLightPropertiesSharedPtr lightProperties, MaterialConstPtr meshMaterial );
 
         /*! \brief Copy constructor */
         // TODO: Define a proper copy constructor and a clone() method when
@@ -69,7 +61,7 @@ class DirectionalLight : public MeshLight
          ***/
 
         /*! \brief Destructor */
-        ~DirectionalLight();
+        ~DirectionalLight() = default;
 
 
         /***

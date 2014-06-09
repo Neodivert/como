@@ -33,7 +33,7 @@ class LightsManager : public QObject, public Changeable
 
     private:
         // Lights vector.
-        std::map< LightID, MeshLightPtr > lights_;
+        std::map< LightID, LightPropertiesSharedPtr > lights_;
 
         // Lights are drawables, so the drawables manager is also implied in
         // lights management.

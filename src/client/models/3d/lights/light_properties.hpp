@@ -76,6 +76,9 @@ class LightProperties : public AbstractLight
         LightProperties& operator = ( LightProperties&& ) = delete;
 };
 
+typedef std::shared_ptr< LightProperties > LightPropertiesSharedPtr;
+typedef std::shared_ptr< const LightProperties > LightPropertiesConstSharedPtr;
+
 } // namespace como
 
 #endif // LIGHT_PROPERTIES_HPP

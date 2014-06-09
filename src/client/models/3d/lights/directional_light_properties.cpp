@@ -71,6 +71,17 @@ DirectionalLightProperties::DirectionalLightProperties(
 
 
 /***
+ * 2. Destruction
+ ***/
+
+DirectionalLightProperties::~DirectionalLightProperties()
+{
+    // Disable this light in shader.
+    glUniform1i( lightIndexLocation_, -1 );
+}
+
+
+/***
  * 3. Getters
  ***/
 
@@ -101,7 +112,7 @@ glm::vec3 DirectionalLightProperties::getHalfVector() const
  * 4. Setters
  ***/
 
-void DirectionalLightProperties::setLightVector( const glm::vec3 &lightVector )
+void DirectionalLightProperties::setLightVector( const glm::vec3& lightVector )
 {
     glUniform3fv( lightVectorLocation_, 1, &lightVector[0] );
 

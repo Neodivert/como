@@ -48,7 +48,7 @@ class DirectionalLightProperties : public LightProperties
         /***
          * 2. Destruction
          ***/
-        ~DirectionalLightProperties() = default;
+        ~DirectionalLightProperties();
 
 
         /***
@@ -70,6 +70,9 @@ class DirectionalLightProperties : public LightProperties
         DirectionalLightProperties& operator = ( const DirectionalLightProperties& ) = delete;
         DirectionalLightProperties& operator = ( DirectionalLightProperties&& ) = delete;
 };
+
+typedef std::shared_ptr< DirectionalLightProperties > DirectionalLightPropertiesSharedPtr;
+typedef std::shared_ptr< const DirectionalLightProperties > DirectionalLightPropertiesConstSharedPtr;
 
 } // namespace como
 
