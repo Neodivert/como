@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "light.hpp"
+#include "mesh_light.hpp"
 
 namespace como {
 
@@ -24,7 +24,7 @@ namespace como {
  * 1. Construction
  ***/
 
-Light::Light( LightType type, const char* meshPath, GLuint lightIndex, MaterialConstPtr material, PackableColor lightColor ) :
+MeshLight::MeshLight( LightType type, const char* meshPath, GLuint lightIndex, MaterialConstPtr material, PackableColor lightColor ) :
     Mesh( MeshType::LIGHT, meshPath, material ),
     type_( type )
 {
@@ -38,12 +38,12 @@ Light::Light( LightType type, const char* meshPath, GLuint lightIndex, MaterialC
     sprintf( uniformName, "lights[%u].color", lightIndex );
     colorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
 
-    std::cout << "Light color location (" << uniformName << "): " << colorLocation_ << std::endl;
+    std::cout << "MeshLight color location (" << uniformName << "): " << colorLocation_ << std::endl;
 
     // Update light color in the shader.
     setLightColor( lightColor );
 
-    checkOpenGL( "Light - Constructor end" );
+    checkOpenGL( "MeshLight - Constructor end" );
 }
 
 
@@ -51,7 +51,7 @@ Light::Light( LightType type, const char* meshPath, GLuint lightIndex, MaterialC
  * 3. Getters
  ***/
 
-glm::vec3 Light::getLightColor() const
+glm::vec3 MeshLight::getLightColor() const
 {
     GLint currentShaderProgram = -1;
     glm::vec3 color( 0.0f );
@@ -63,7 +63,7 @@ glm::vec3 Light::getLightColor() const
 }
 
 
-LightType Light::getType() const
+LightType MeshLight::getType() const
 {
     return type_;
 }
@@ -73,7 +73,7 @@ LightType Light::getType() const
  * 4. Setters
  ***/
 
-void Light::setLightColor( PackableColor color )
+void MeshLight::setLightColor( PackableColor color )
 {
     glUniform3fv( colorLocation_, 1, &color.toVec3()[0] );
 }

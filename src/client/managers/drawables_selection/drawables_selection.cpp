@@ -165,7 +165,7 @@ std::string DrawablesSelection::getTypeName() const
                         return std::string( "Camera" );
                     break;
                     case MeshType::LIGHT:
-                        switch( ( dynamic_cast< const Light* >( drawable ) )->getType() ){
+                        switch( ( dynamic_cast< const MeshLight* >( drawable ) )->getType() ){
                             case LightType::DIRECTIONAL_LIGHT:
                                 return std::string( "Directional light" );
                             break;

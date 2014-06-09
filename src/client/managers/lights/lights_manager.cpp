@@ -80,9 +80,9 @@ void LightsManager::createDirectionalLight()
     // to it.
     LightID lightID = drawablesManager_->addDrawable( light );
 
-    lights_.insert( std::pair< LightID, LightPtr >(
+    lights_.insert( std::pair< LightID, MeshLightPtr >(
                         lightID,
-                        dynamic_pointer_cast< Light >( light )
+                        dynamic_pointer_cast< MeshLight >( light )
                         ));
 
     server_->sendCommand( CommandConstPtr( new DirectionalLightCreationCommand( lightID, lightColor ) ) );
@@ -120,9 +120,9 @@ void LightsManager::addDirectionalLight( const LightID& lightID, const PackableC
                                     light,
                                     lightID );
 
-    lights_.insert( std::pair< LightID, LightPtr >(
+    lights_.insert( std::pair< LightID, MeshLightPtr >(
                         lightID,
-                        dynamic_pointer_cast< Light >( light )
+                        dynamic_pointer_cast< MeshLight >( light )
                         ));
 
     emit lightCreated( lightID, light->getName() );

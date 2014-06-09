@@ -40,7 +40,7 @@
 // Material commands
 #include "material_commands/material_commands.hpp" // TODO: Make this with the rest of commands.
 
-// Light commands
+// MeshLight commands
 #include "light_commands/light_commands.hpp"
 
 #endif // COMMANDS_HPP

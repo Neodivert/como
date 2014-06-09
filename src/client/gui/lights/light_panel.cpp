@@ -29,8 +29,8 @@ LightPanel::LightPanel() :
     lightColorButton_ = new ColorButton( QColor( 255, 0, 0, 255 ) );
 
     // Set this panel's layout.
-    layout->addWidget( new QLabel( "Light panel" ) );
-    layout->addRow( "Light color", lightColorButton_ );
+    layout->addWidget( new QLabel( "MeshLight panel" ) );
+    layout->addRow( "MeshLight color", lightColorButton_ );
     setLayout( layout );
 
     // Connect the signals emitted when user changes a material parameter to

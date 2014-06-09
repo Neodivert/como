@@ -20,7 +20,7 @@
 #define LIGHT_HANDLER_HPP
 
 #include <client/managers/server_interface/server_interface.hpp>
-#include <client/models/3d/lights/light.hpp>
+#include <client/models/3d/lights/mesh_light.hpp>
 #include <functional>
 
 namespace como {
@@ -28,7 +28,7 @@ namespace como {
 class LightHandler
 {
     private:
-        LightPtr light_;
+        MeshLightPtr light_;
         LightID lightID_;
         ServerInterfacePtr server_;
 
@@ -39,7 +39,7 @@ class LightHandler
         /***
          * 1. Construction
          ***/
-        LightHandler( LightPtr light, LightID lightID, ServerInterfacePtr server, std::function< void(void) > notifyChange );
+        LightHandler( MeshLightPtr light, LightID lightID, ServerInterfacePtr server, std::function< void(void) > notifyChange );
         LightHandler( const LightHandler& ) = delete;
         LightHandler( LightHandler&& ) = delete;
 

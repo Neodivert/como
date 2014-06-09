@@ -25,7 +25,7 @@ namespace como {
  ***/
 
 DirectionalLight::DirectionalLight( GLuint directionalLightIndex, GLint lightIndex, MaterialConstPtr material, const PackableColor& lightColor ) :
-    Light( LightType::DIRECTIONAL_LIGHT, "data/primitives/system/directional_light.obj", lightIndex, material, lightColor )
+    MeshLight( LightType::DIRECTIONAL_LIGHT, "data/primitives/system/directional_light.obj", lightIndex, material, lightColor )
 {
     GLint currentShaderProgram = 0;
     char uniformName[64];

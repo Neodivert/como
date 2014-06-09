@@ -16,8 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef LIGHT_HPP
-#define LIGHT_HPP
+#ifndef MESH_LIGHT_HPP
+#define MESH_LIGHT_HPP
 
 #include <client/models/3d/mesh.hpp>
 #include <common/commands/light_commands/light_creation_command.hpp>
@@ -25,14 +25,14 @@
 namespace como {
 
 /*!
- * \class Light
+ * \class MeshLight
  *
  * \brief Base class for all type of Lights.
  */
-class Light : public Mesh
+class MeshLight : public Mesh
 {
     private:
-        /*! Light type */
+        /*! MeshLight type */
         const LightType type_;
 
         /*!
@@ -55,16 +55,16 @@ class Light : public Mesh
          * lights in GLSL shader.
          * TODO: Complete
          */
-        Light( LightType type, const char* meshPath, GLuint lightIndex, MaterialConstPtr material, PackableColor lightColor );
+        MeshLight( LightType type, const char* meshPath, GLuint lightIndex, MaterialConstPtr material, PackableColor lightColor );
 
         /*! \brief Copy constructor */
         // TODO: Define a right copy constructor when inplementing multiple lights
         // (colorLocation_ attribute would point to different places from light to
         // light).
-        Light( const Light& ) = default;
+        MeshLight( const MeshLight& ) = default;
 
         /*! \brief Move constructor */
-        Light( Light&& ) = delete;
+        MeshLight( MeshLight&& ) = delete;
 
         virtual DrawablePtr clone() = 0;
 
@@ -74,14 +74,14 @@ class Light : public Mesh
          ***/
 
         /*! \brief Destructor */
-        ~Light() = default;
+        ~MeshLight() = default;
 
 
         /***
          * 3. Getters
          ***/
 
-        /*! \brief Get Light's light color */
+        /*! \brief Get MeshLight's light color */
         glm::vec3 getLightColor() const; // TODO: Return a integer vector.
 
         /*! \brief Get the light type */
@@ -92,7 +92,7 @@ class Light : public Mesh
          * 4. Setters
          ***/
 
-        /*! \brief Set Light's light color */
+        /*! \brief Set MeshLight's light color */
         void setLightColor( PackableColor color );
 
 
@@ -101,15 +101,15 @@ class Light : public Mesh
          ***/
 
         /*! \brief Copy assignment operator */
-        Light& operator=( const Light& ) = delete ;
+        MeshLight& operator=( const MeshLight& ) = delete ;
 
         /*! \brief Move assignment operator */
-        Light& operator=( Light&& ) = delete;
+        MeshLight& operator=( MeshLight&& ) = delete;
 };
 
-typedef std::shared_ptr< Light > LightPtr;
-typedef std::shared_ptr< const Light > LightConstPtr;
+typedef std::shared_ptr< MeshLight > MeshLightPtr;
+typedef std::shared_ptr< const MeshLight > MeshLightConstPtr;
 
 } // namespace como
 
-#endif // LIGHT_HPP
+#endif // MESH_LIGHT_HPP

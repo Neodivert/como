@@ -21,7 +21,7 @@
 
 #include <client/models/3d/drawable.hpp>
 #include <client/models/3d/mesh.hpp>
-#include <client/models/3d/lights/light.hpp>
+#include <client/models/3d/lights/mesh_light.hpp>
 #include <common/utilities/ids.hpp>
 #include <common/commands/user_commands/parameter_change_command.hpp> // For PivotPointMode type.
 #include <map>

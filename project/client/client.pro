@@ -54,7 +54,6 @@ HEADERS += \
     ../../src/client/gui/users_list.hpp \
     ../../src/client/managers/server_interface/server_interface.hpp \
     ../../src/client/managers/drawables_selection/drawables_selection.hpp \
-    ../../src/client/models/3d/lights/light.hpp \
     ../../src/client/models/3d/lights/directional_light.hpp \
     ../../src/client/models/3d/lights/lights.hpp \
     ../../src/client/gui/tools_menu/creation_tab.hpp \
@@ -80,7 +79,8 @@ HEADERS += \
     ../../src/client/managers/lights/lights_manager.hpp \
     ../../src/client/gui/lights/light_panel.hpp \
     ../../src/client/managers/lights/light_handler.hpp \
-    ../../src/client/models/3d/lights/abstract_light.hpp
+    ../../src/client/models/3d/lights/abstract_light.hpp \
+    ../../src/client/models/3d/lights/mesh_light.hpp
 
 
 # Client sources
@@ -104,7 +104,6 @@ SOURCES += \
     ../../src/client/gui/users_list.cpp \
     ../../src/client/managers/server_interface/server_interface.cpp \
     ../../src/client/managers/drawables_selection/drawables_selection.cpp \
-    ../../src/client/models/3d/lights/light.cpp \
     ../../src/client/models/3d/lights/directional_light.cpp \
     ../../src/client/gui/tools_menu/creation_tab.cpp \
     ../../src/client/gui/tools_menu/transformation_tab.cpp \
@@ -127,4 +126,5 @@ SOURCES += \
     ../../src/client/gui/lights/lights_list.cpp \
     ../../src/client/managers/lights/lights_manager.cpp \
     ../../src/client/gui/lights/light_panel.cpp \
-    ../../src/client/managers/lights/light_handler.cpp
+    ../../src/client/managers/lights/light_handler.cpp \
+    ../../src/client/models/3d/lights/mesh_light.cpp
