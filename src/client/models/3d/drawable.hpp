@@ -105,21 +105,14 @@ class Drawable
 
 
         /***
-         * 4. Selection
-         ***/
-        void select();
-        void unselect();
-
-
-        /***
-         * 5. Operators
+         * 4. Operators
          ***/
         Drawable& operator=( const Drawable& ) = delete ;
         Drawable& operator=( Drawable&& ) = delete;
 
 
         /***
-         * 6. Updating and drawing
+         * 5. Updating and drawing
          ***/
     protected:
         virtual void update();
@@ -128,7 +121,7 @@ class Drawable
         virtual void draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor = nullptr ) const = 0;
 
         /***
-         * 7. Auxiliar methods
+         * 6. Auxiliar methods
          ***/
         static glm::vec4 transformScaleVector( glm::vec4 scaleVector, const glm::mat4& transformMatrix );
 };

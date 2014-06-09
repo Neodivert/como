@@ -154,28 +154,6 @@ void Drawable::rotate( const GLfloat& angle, glm::vec3 axis, const glm::vec3& pi
     translate( -pivot );
     rotate( angle, axis );
     translate( pivot );
-    /*
-    // Normalize the vector "axis".
-    axis = glm::normalize( axis );
-
-    // Compute the rotation matrix for the given angle and the axis converted to
-    // object space.
-    glm::mat4 newRotation = glm::rotate( glm::mat4( 1.0f ), angle, axis );
-
-    // Compute the translation matrix for moving the drawable to the pivot point.
-    //glm::mat4 pivotTranslation = glm::translate( glm::mat4( 1.0f ), -pivot );
-
-    // Move the drawable from object to world space, then apply the rotation
-    // around the pivot point and finally move back the drawable from world
-    // to object space.
-    translate( -pivot );
-    transformationMatrix = transformationMatrix * glm::inverse( transformationMatrix ) * newRotation * transformationMatrix;
-    translate( pivot );
-
-    // Update the transformed vertices using the original ones and the
-    // previous transformation matrix.
-    update();
-    */
 }
 
 
@@ -202,7 +180,7 @@ void Drawable::scale( glm::vec3 scaleFactors, const glm::vec3& pivotPoint )
 
 
 /***
- * 6. Updating and drawing
+ * 5. Updating and drawing
  ***/
 
 void Drawable::update()
@@ -216,7 +194,7 @@ void Drawable::update()
 
 
 /***
- * 7. Auxiliar methods
+ * 6. Auxiliar methods
  ***/
 
 glm::vec4 Drawable::transformScaleVector( glm::vec4 scaleVector, const glm::mat4& transformMatrix )
