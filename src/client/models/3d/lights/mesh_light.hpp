@@ -19,6 +19,7 @@
 #ifndef MESH_LIGHT_HPP
 #define MESH_LIGHT_HPP
 
+#include <client/models/3d/lights/abstract_light.hpp>
 #include <client/models/3d/mesh.hpp>
 #include <common/commands/light_commands/light_creation_command.hpp>
 
@@ -29,7 +30,7 @@ namespace como {
  *
  * \brief Base class for all type of Lights.
  */
-class MeshLight : public Mesh
+class MeshLight : public AbstractLight, public Mesh
 {
     private:
         /*! MeshLight type */
@@ -82,7 +83,7 @@ class MeshLight : public Mesh
          ***/
 
         /*! \brief Get MeshLight's light color */
-        glm::vec3 getLightColor() const; // TODO: Return a integer vector.
+        virtual PackableColor getLightColor() const;
 
         /*! \brief Get the light type */
         LightType getType() const;
@@ -93,7 +94,7 @@ class MeshLight : public Mesh
          ***/
 
         /*! \brief Set MeshLight's light color */
-        void setLightColor( PackableColor color );
+        virtual void setLightColor( const PackableColor& color );
 
 
         /***

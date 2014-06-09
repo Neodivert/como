@@ -51,7 +51,7 @@ MeshLight::MeshLight( LightType type, const char* meshPath, GLuint lightIndex, M
  * 3. Getters
  ***/
 
-glm::vec3 MeshLight::getLightColor() const
+PackableColor MeshLight::getLightColor() const
 {
     GLint currentShaderProgram = -1;
     glm::vec3 color( 0.0f );
@@ -59,7 +59,7 @@ glm::vec3 MeshLight::getLightColor() const
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
     glGetUniformfv( currentShaderProgram, colorLocation_, &color[0] );
 
-    return color;
+    return PackableColor( color );
 }
 
 
@@ -73,7 +73,7 @@ LightType MeshLight::getType() const
  * 4. Setters
  ***/
 
-void MeshLight::setLightColor( PackableColor color )
+void MeshLight::setLightColor( const PackableColor& color )
 {
     glUniform3fv( colorLocation_, 1, &color.toVec3()[0] );
 }
