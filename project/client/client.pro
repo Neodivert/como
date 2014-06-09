@@ -79,7 +79,8 @@ HEADERS += \
     ../../src/client/gui/lights/lights_list.hpp \
     ../../src/client/managers/lights/lights_manager.hpp \
     ../../src/client/gui/lights/light_panel.hpp \
-    ../../src/client/managers/lights/light_handler.hpp
+    ../../src/client/managers/lights/light_handler.hpp \
+    ../../src/client/models/3d/lights/abstract_light.hpp
 
 
 # Client sources
