@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "light_handler.hpp"
+#include "light_color_change_command.hpp"
 
 namespace como {
 
@@ -24,41 +24,28 @@ namespace como {
  * 1. Construction
  ***/
 
-LightHandler::LightHandler( LightPropertiesSharedPtr light, LightID lightID, ServerInterfacePtr server, std::function< void(void) > notifyChange ) :
-    light_( light ),
-    lightID_( lightID ),
-    server_( server ),
-    notifyChange_( notifyChange )
-{}
+LightColorChangeCommand::LightColorChangeCommand() :
+    LightCommand( LightCommandType::LIGHT_COLOR_CHANGE, NULL_DRAWABLE_ID )
+{
+    addPackable( &lightColor_ );
+}
+
+
+LightColorChangeCommand::LightColorChangeCommand( PackableLightID lightID, PackableColor lightColor ) :
+    LightCommand( LightCommandType::LIGHT_COLOR_CHANGE, lightID ),
+    lightColor_( lightColor )
+{
+    addPackable( &lightColor_ );
+}
 
 
 /***
  * 3. Getters
  ***/
 
-PackableDrawableID LightHandler::getLightID() const
+PackableColor LightColorChangeCommand::getLightColor() const
 {
-    return lightID_;
-}
-
-
-PackableColor LightHandler::getLightColor() const
-{
-    return light_->getLightColor();
-}
-
-
-/***
- * 4. Seters
- ***/
-
-void LightHandler::setLightColor( const PackableColor& lightColor)
-{
-    light_->setLightColor( lightColor );
-
-    server_->sendCommand( CommandConstPtr( new LightColorChangeCommand( lightID_, lightColor ) ) );
-
-    notifyChange_();
+    return lightColor_;
 }
 
 } // namespace como

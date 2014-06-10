@@ -197,6 +197,16 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
                 }break;
             }
         }break;
+        case LightCommandType::LIGHT_COLOR_CHANGE:{
+            const LightColorChangeCommand* lightCommand =
+                    dynamic_cast< const LightColorChangeCommand* >( command.get() );
+
+            lights_.at( lightCommand->getLightID() )->setLightColor( lightCommand->getLightColor() );
+
+            emit lightModified( lightCommand->getLightID() );
+
+            setChanged();
+        }break;
     }
 }
 

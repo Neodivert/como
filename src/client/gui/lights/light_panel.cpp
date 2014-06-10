@@ -48,6 +48,12 @@ LightPanel::LightPanel( LightsManagerPtr lightsManager ) :
         }
     });
 
+    QObject::connect( lightsManager_.get(), &LightsManager::lightModified, [this]( PackableDrawableID lightID ){
+        if( currentLight_ && ( lightID == currentLight_->getLightID() ) ){
+            refresh();
+        }
+    });
+
     // Initially there is no light selected, so disable this panel.
     setEnabled( false );
 }

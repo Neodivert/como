@@ -105,6 +105,7 @@ class LightsManager : public QObject, public Changeable, public Observer
         void lightCreated( LightID id, std::string name );
         void lightSelected( LightHandlerPtr light );
         void lightRemoved( PackableDrawableID id );
+        void lightModified( PackableDrawableID id );
 
 
         /***

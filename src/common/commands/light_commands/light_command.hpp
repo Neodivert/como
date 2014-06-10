@@ -27,7 +27,8 @@ namespace como {
 
 enum class LightCommandType : std::uint8_t
 {
-    LIGHT_CREATION = 0
+    LIGHT_CREATION = 0,
+    LIGHT_COLOR_CHANGE
 };
 
 typedef PackableDrawableID LightID; // TODO: Change this.

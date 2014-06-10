@@ -369,6 +369,9 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
                     // drawable. Mark it with a 0 (no owner).
                     drawableOwners_[lightCommand->getLightID()] = 0;
                 }break;
+                case LightCommandType::LIGHT_COLOR_CHANGE:
+                    // TODO: Make something or delete this.
+                break;
             }
         }break;
     }
