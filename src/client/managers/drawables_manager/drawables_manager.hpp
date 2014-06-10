@@ -27,12 +27,14 @@
 #include <map>
 #include <client/managers/materials_manager/materials_manager.hpp>
 #include <QOffscreenSurface>
+#include <common/utilities/observer_pattern/observable.hpp>
 
 namespace como {
 
 typedef std::map< UserID, DrawablesSelectionPtr > DrawablesSelections;
 
-class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
+// TODO: Remove AbstractChangeable and use only Observable.
+class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, public Observable
 {
     Q_OBJECT
 
@@ -86,6 +88,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable
     public:
         glm::vec3 getPivotPoint() const ;
         glm::vec3 getPivotPoint( UserID userID ) const ;
+        bool existsDrawable( const PackableDrawableID& id ) const;
 
 
         /***

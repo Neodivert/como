@@ -75,6 +75,7 @@ class ServerInterface : public QObject
         std::shared_ptr< const UserAcceptancePacket > connect( const char* host, const char* port, const char* userName );
         void disconnect();
 
+
         /***
          * 3. Handlers
          ***/

@@ -36,14 +36,14 @@ LightPanel::LightPanel( LightsManagerPtr lightsManager ) :
 
     // Connect the signals emitted when user changes a material parameter to
     // the corresponding methods which change those parameters.
-    QObject::connect( lightColorButton_, &ColorButton::colorChanged, [=]( const PackableColor& color )
+    QObject::connect( lightColorButton_, &ColorButton::colorChanged, [=]( PackableColor color )
     {
         currentLight_->setLightColor( color );
     });
 
 
-    QObject::connect( lightsManager_.get(), &LightsManager::lightRemoved, [this]( const PackableDrawableID& lightID ){
-        if( lightID == currentLight_->getLightID() ){
+    QObject::connect( lightsManager_.get(), &LightsManager::lightRemoved, [this]( PackableDrawableID lightID ){
+        if( currentLight_ && ( lightID == currentLight_->getLightID() ) ){
             closeLight();
         }
     });

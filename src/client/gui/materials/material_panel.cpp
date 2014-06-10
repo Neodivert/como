@@ -51,27 +51,27 @@ MaterialPanel::MaterialPanel() :
 
     // Connect the signals emitted when user changes a material parameter to
     // the corresponding methods which change those parameters.
-    QObject::connect( colorButton_, &ColorButton::colorChanged, [=]( const PackableColor& color )
+    QObject::connect( colorButton_, &ColorButton::colorChanged, [=]( PackableColor color )
     {
         currentMaterial_->setColor( color );
     });
 
-    QObject::connect( ambientReflectivityButton_, &ColorButton::colorChanged, [=]( const PackableColor& ambientReflectivity )
+    QObject::connect( ambientReflectivityButton_, &ColorButton::colorChanged, [=]( PackableColor ambientReflectivity )
     {
         currentMaterial_->setAmbientReflectivity( ambientReflectivity );
     });
 
-    QObject::connect( diffuseReflectivityButton_, &ColorButton::colorChanged, [=]( const PackableColor& diffuseReflectivity )
+    QObject::connect( diffuseReflectivityButton_, &ColorButton::colorChanged, [=]( PackableColor diffuseReflectivity )
     {
         currentMaterial_->setDiffuseReflectivity( diffuseReflectivity );
     });
 
-    QObject::connect( diffuseReflectivityButton_, &ColorButton::colorChanged, [=]( const PackableColor& diffuseReflectivity )
+    QObject::connect( diffuseReflectivityButton_, &ColorButton::colorChanged, [=]( PackableColor diffuseReflectivity )
     {
         currentMaterial_->setDiffuseReflectivity( diffuseReflectivity );
     });
 
-    QObject::connect( specularReflectivityButton_, &ColorButton::colorChanged, [=]( const PackableColor& specularReflectivity )
+    QObject::connect( specularReflectivityButton_, &ColorButton::colorChanged, [=]( PackableColor specularReflectivity )
     {
         currentMaterial_->setSpecularReflectivity( specularReflectivity );
     });

@@ -24,16 +24,19 @@
 #include <client/managers/lights/light_handler.hpp>
 #include <common/commands/commands.hpp>
 #include <map>
+#include <common/utilities/observer_pattern/observer.hpp>
 
 namespace como {
 
-class LightsManager : public QObject, public Changeable
+typedef std::map< LightID, LightPropertiesSharedPtr > LightsMap;
+
+class LightsManager : public QObject, public Changeable, public Observer
 {
     Q_OBJECT
 
     private:
         // Lights vector.
-        std::map< LightID, LightPropertiesSharedPtr > lights_;
+        LightsMap lights_;
 
         // Lights are drawables, so the drawables manager is also implied in
         // lights management.
@@ -49,12 +52,15 @@ class LightsManager : public QObject, public Changeable
         std::stack< GLuint > freeDirectionalLightIndices_;
 
 
+        LogPtr log_;
+
+
     public:
         /***
          * 1. Construction
          ***/
-        LightsManager();
-        LightsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server );
+        LightsManager() = delete;
+        LightsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server, LogPtr log );
         LightsManager( const LightsManager& ) = delete;
         LightsManager( LightsManager&& ) = delete;
 
@@ -74,6 +80,8 @@ class LightsManager : public QObject, public Changeable
         void addDirectionalLight( const LightID& lightID, const PackableColor& lightColor );
     public:
         void selectLight( const LightID lightID );
+    private:
+        void removeLight( PackableDrawableID lightID );
 
 
         /***
@@ -94,9 +102,9 @@ class LightsManager : public QObject, public Changeable
          * 6. Signals
          ***/
     signals:
-        void lightCreated( const LightID& id, const std::string& name );
+        void lightCreated( LightID id, std::string name );
         void lightSelected( LightHandlerPtr light );
-        void lightRemoved( const PackableDrawableID& id );
+        void lightRemoved( PackableDrawableID id );
 
 
         /***
@@ -104,6 +112,7 @@ class LightsManager : public QObject, public Changeable
          ***/
     private:
         virtual void onChange(){}
+        virtual void update();
 
 
         /***

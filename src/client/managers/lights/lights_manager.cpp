@@ -24,9 +24,10 @@ namespace como {
  * 1. Construction
  ***/
 
-LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server ) :
+LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server, LogPtr log ) :
     drawablesManager_( drawablesManager ),
-    server_( server )
+    server_( server ),
+    log_( log )
 {
     GLint i=0;
 
@@ -95,6 +96,8 @@ void LightsManager::createDirectionalLight()
 
     server_->sendCommand( CommandConstPtr( new DirectionalLightCreationCommand( lightID, lightColor ) ) );
 
+    log_->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
+
     // Indicate to the GUI that a new light has been created.
     emit lightCreated( lightID, light->getName() );
 }
@@ -138,6 +141,8 @@ void LightsManager::addDirectionalLight( const LightID& lightID, const PackableC
                         lightProperties
                         ));
 
+    log_->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
+
     emit lightCreated( lightID, light->getName() );
 }
 
@@ -145,6 +150,32 @@ void LightsManager::addDirectionalLight( const LightID& lightID, const PackableC
 void LightsManager::selectLight( const LightID lightID )
 {
     emit lightSelected( LightHandlerPtr( new LightHandler( lights_.at( lightID ), lightID, server_, std::bind( &LightsManager::setChanged, this ) ) ) );
+}
+
+
+void LightsManager::removeLight( PackableDrawableID lightID )
+{
+    log_->debug( "LightsManager - removing ID ", lightID, "\n" );
+
+    // Retrieve the light to be removed.
+    LightPropertiesSharedPtr light = lights_.at( lightID );
+
+    // Free the indices held by the light.
+    freeLightIndices_.push( light->getBaseLightIndex() );
+    switch( light->getLightType() ){
+        case LightType::DIRECTIONAL_LIGHT:
+            freeDirectionalLightIndices_.push( light->getLightIndex() );
+        break;
+    }
+
+    // Remove the light from lights_ vector and signal it.
+    lights_.erase( lightID );
+    emit lightRemoved( lightID );
+
+    //
+    if( !light.unique() ){
+        throw std::runtime_error( "LightProperty was expected to be deleted here, but it is not unique" );
+    }
 }
 
 
@@ -173,6 +204,23 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
         }break;
     }
 }
+
+
+void LightsManager::update()
+{
+    LightsMap::iterator it;
+
+    log_->debug( "LightsManager::update()\n" );
+
+    // Remove all the lights that are not longer present in the drawables
+    // manager.
+    for( it = lights_.begin(); it != lights_.end(); it++ ){
+        if( !( drawablesManager_->existsDrawable( it->first ) ) ){
+            removeLight( it->first );
+        }
+    }
+}
+
 
 /***
  * 8. Auxiliar methods

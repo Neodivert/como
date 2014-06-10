@@ -59,7 +59,7 @@ class MaterialsList : public QListWidget
          * 4. Slots
          ***/
     public slots:
-        void addMaterial( const MaterialID& id, const std::string& name );
+        void addMaterial( MaterialID id, std::string name );
 
 
         /***

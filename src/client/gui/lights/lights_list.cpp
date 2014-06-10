@@ -42,6 +42,8 @@ LightsList::LightsList( LightsManagerPtr lightsManager ) :
     QObject::connect( this, &LightsList::lightSelected, [=]( LightID lightID ){
         lightsManager_->selectLight( lightID );
     });
+
+    QObject::connect( lightsManager_.get(), &LightsManager::lightRemoved, this, &LightsList::removeLight );
 }
 
 
@@ -49,11 +51,29 @@ LightsList::LightsList( LightsManagerPtr lightsManager ) :
  * 4. Slots
  ***/
 
-void LightsList::addLight( const LightID& id, const std::string& name )
+void LightsList::addLight( LightID id, std::string name )
 {
     LightsListItem* newListItem = new LightsListItem( id, name );
 
     insertItem( count(), newListItem );
+}
+
+
+void LightsList::removeLight( PackableDrawableID id )
+{
+    QListWidgetItem* uncastedListItem;
+    LightsListItem* castedListItem;
+    int i;
+
+    for( i=0; i<count(); i++ ){
+        uncastedListItem = item( i );
+        if( uncastedListItem ){
+            castedListItem = dynamic_cast< LightsListItem * >( uncastedListItem );
+            if( castedListItem->getLightID() == id ){
+                takeItem( i );
+            }
+        }
+    }
 }
 
 } // namespace como

@@ -26,7 +26,8 @@ namespace como {
  ***/
 
 LightProperties::LightProperties( LightType type, GLuint index, const PackableColor& color ) :
-    type_( type )
+    type_( type ),
+    index_( index )
 {
     GLint currentShaderProgram = -1;
     char uniformName[64];
@@ -35,7 +36,7 @@ LightProperties::LightProperties( LightType type, GLuint index, const PackableCo
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
 
     // Get the location of this light's color in the GLSL shader program.
-    sprintf( uniformName, "lights[%u].color", index );
+    sprintf( uniformName, "lights[%u].color", index_ );
     colorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
 
     std::cout << "MeshLight color location (" << uniformName << "): " << colorLocation_ << std::endl;
@@ -51,6 +52,11 @@ LightProperties::LightProperties( LightType type, GLuint index, const PackableCo
  * 3. Getters
  ***/
 
+LightType LightProperties::getLightType() const
+{
+    return type_;
+}
+
 PackableColor LightProperties::getLightColor() const
 {
     GLint currentShaderProgram = -1;
@@ -60,6 +66,12 @@ PackableColor LightProperties::getLightColor() const
     glGetUniformfv( currentShaderProgram, colorLocation_, &color[0] );
 
     return PackableColor( color );
+}
+
+
+GLuint LightProperties::getBaseLightIndex() const
+{
+    return index_;
 }
 
 

@@ -132,6 +132,12 @@ bool DrawablesSelection::contains( MeshType meshType ) const
 }
 
 
+bool DrawablesSelection::existsDrawable( const PackableDrawableID &id ) const
+{
+    return drawables_.count( id );
+}
+
+
 std::string DrawablesSelection::getName() const
 {
     const Drawable* drawable = nullptr;

@@ -65,7 +65,7 @@ class ColorButton : public QPushButton
          * 5. Signals
          ***/
     signals:
-        void colorChanged( const PackableColor& color );
+        void colorChanged( PackableColor color );
 
 
         /***

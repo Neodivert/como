@@ -98,6 +98,8 @@ class DrawablesSelection : public Changeable
          */
         bool contains( MeshType meshType ) const ;
 
+        bool existsDrawable( const PackableDrawableID& id ) const;
+
 
         /***
          * 3. Setters

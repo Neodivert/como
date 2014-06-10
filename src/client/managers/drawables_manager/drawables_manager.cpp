@@ -90,6 +90,19 @@ glm::vec3 DrawablesManager::getPivotPoint( UserID userID ) const
     }
 }
 
+
+bool DrawablesManager::existsDrawable( const PackableDrawableID& id ) const
+{
+    DrawablesSelections::const_iterator it;
+
+    for( it = drawablesSelections_.begin(); it != drawablesSelections_.end(); it++ ){
+        if( it->second->existsDrawable( id ) ){
+            return true;
+        }
+    }
+    return false;
+}
+
 /***
  * 5. Drawables administration
  ***/
@@ -181,6 +194,8 @@ void DrawablesManager::deleteSelection()
 void DrawablesManager::deleteSelection( const unsigned int& userId )
 {
     getUserSelection( userId )->erase();
+
+    notifyObservers();
 
     //emit renderNeeded();
 }

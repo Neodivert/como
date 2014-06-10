@@ -73,7 +73,7 @@ MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
 
     // Signal / slot: when an user connects to a scene, add the scene name to
     // the window title.
-    connect( comoApp->getScene().get(), &Scene::connectedToScene, [this]( const QString& sceneName ){
+    connect( comoApp->getScene().get(), &Scene::connectedToScene, [this]( QString sceneName ){
         setWindowTitle( sceneName + " - Cooperative Modeller" );
     });
 

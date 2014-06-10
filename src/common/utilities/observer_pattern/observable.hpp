@@ -33,7 +33,7 @@ class Observable
         /***
          * 1. Construction
          ***/
-        Observable();
+        Observable() = default;
         Observable( const Observable& ) = default;
         Observable( Observable& ) = default;
 

@@ -48,7 +48,7 @@ MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager )
  * 4. Slots
  ***/
 
-void MaterialsList::addMaterial( const MaterialID& id, const std::string& name )
+void MaterialsList::addMaterial( MaterialID id, std::string name )
 {
     MaterialsListItem* newListItem = new MaterialsListItem( id, name );
 

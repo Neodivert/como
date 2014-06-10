@@ -56,6 +56,7 @@ class DirectionalLightProperties : public LightProperties
          ***/
         glm::vec3 getLightVector() const;
         glm::vec3 getHalfVector() const;
+        virtual GLint getLightIndex() const;
 
 
         /***

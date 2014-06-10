@@ -114,7 +114,7 @@ class MaterialsManager : public QObject, public Changeable
          * 8. Signals
          ***/
     signals:
-        void materialCreated( MaterialID id, const std::string& name );
+        void materialCreated( MaterialID id, std::string name );
         void materialSelectionConfirmed( MaterialHandlerPtr material );
         void materialSelectionDenied( MaterialID material );
 };

@@ -108,6 +108,18 @@ glm::vec3 DirectionalLightProperties::getHalfVector() const
 }
 
 
+GLint DirectionalLightProperties::getLightIndex() const
+{
+    GLint currentShaderProgram = -1;
+    GLint index = -1;
+
+    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+    glGetUniformiv( currentShaderProgram, lightIndexLocation_, &index );
+
+    return index;
+}
+
+
 /***
  * 4. Setters
  ***/

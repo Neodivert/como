@@ -29,7 +29,7 @@ class Observer
         /***
          * 1. Construction
          ***/
-        Observer();
+        Observer() = default;
         Observer( const Observer& ) = default;
         Observer( Observer&& ) = default;
 

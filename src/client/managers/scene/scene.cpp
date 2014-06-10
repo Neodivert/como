@@ -214,19 +214,12 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, materialsManager_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/primitives/scenes/" ) + sceneName_, oglContext_, log_ ) );
 
         // Initialize the lights manager.
-        lightsManager_ = LightsManagerPtr( new LightsManager( drawablesManager_, server_ ) );
+        lightsManager_ = LightsManagerPtr( new LightsManager( drawablesManager_, server_, log_ ) );
+
+        drawablesManager_->addObserver( lightsManager_ );
 
         // Add the local user to the scene.
         addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( *userAcceptancePacket ) ) );
-
-        // Add the directional light from the previous manager to the scene.
-        // TODO: Remove this and sync light creation in both client and
-        // server.
-        // TODO: Make this constant.
-        PackableDrawableID DIRECTIONAL_LIGHT_ID;
-        DIRECTIONAL_LIGHT_ID.creatorID = 0;
-        DIRECTIONAL_LIGHT_ID.drawableIndex = 1;
-        //drawablesManager_->addDrawable( lightingManager_->getDirectionalLight(), DIRECTIONAL_LIGHT_ID );
 
         // Emit a signal indicating that we have connected to a scene.
         emit connectedToScene( tr( userAcceptancePacket->getSceneName() ) );

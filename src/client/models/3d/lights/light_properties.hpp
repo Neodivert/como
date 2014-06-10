@@ -33,6 +33,9 @@ class LightProperties : public AbstractLight
         /*! MeshLight type */
         const LightType type_;
 
+        /*! Light index in the GLSL shader */
+        GLuint index_;
+
         /*!
          * Location of the GLSL shader uniform variable keeping this light's
          * color.
@@ -60,7 +63,10 @@ class LightProperties : public AbstractLight
         /***
          * 3. Getters
          ***/
+        virtual LightType getLightType() const;
         virtual PackableColor getLightColor() const;
+        virtual GLint getLightIndex() const = 0;
+        virtual GLuint getBaseLightIndex() const;
 
 
         /***

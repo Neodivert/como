@@ -62,7 +62,8 @@ class LightsList : public QListWidget
          * 4. Slots
          ***/
     public slots:
-        void addLight( const LightID& id, const std::string& name );
+        void addLight( LightID id, std::string name );
+        void removeLight( PackableDrawableID id );
 
 
         /***
