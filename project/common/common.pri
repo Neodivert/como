@@ -71,7 +71,9 @@ HEADERS += \
     ../../src/common/commands/material_commands/material_modification_command.hpp \
     ../../src/common/commands/material_commands/abstract_material_modification_command.hpp \
     ../../src/common/commands/light_commands/light_command.hpp \
-    ../../src/common/commands/light_commands/light_commands.hpp
+    ../../src/common/commands/light_commands/light_commands.hpp \
+    ../../src/common/utilities/observer_pattern/observer.hpp \
+    ../../src/common/utilities/observer_pattern/observable.hpp
 
 
 # Common sources (used by both client and server).
@@ -111,4 +113,5 @@ SOURCES += \
     ../../src/common/commands/material_commands/material_creation_command.cpp \
     ../../src/common/packables/ids/packable_material_id.cpp \
     ../../src/common/commands/material_commands/abstract_material_modification_command.cpp \
-    ../../src/common/commands/light_commands/light_command.cpp
+    ../../src/common/commands/light_commands/light_command.cpp \
+    ../../src/common/utilities/observer_pattern/observable.cpp
