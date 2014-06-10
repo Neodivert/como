@@ -16,8 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PARAMETER_CHANGE_COMMAND_HPP
-#define PARAMETER_CHANGE_COMMAND_HPP
+#ifndef USER_PARAMETER_CHANGE_COMMAND_HPP
+#define USER_PARAMETER_CHANGE_COMMAND_HPP
 
 #include "user_command.hpp"
 
@@ -89,4 +89,4 @@ typedef std::shared_ptr< const UserParameterChangeCommand > UserParameterChangeC
 
 } // namespace como
 
-#endif // PARAMETER_CHANGE_COMMAND_HPP
+#endif // USER_PARAMETER_CHANGE_COMMAND_HPP
