@@ -22,7 +22,7 @@
 // User commands
 #include "user_commands/user_connection_command.hpp"
 #include "user_commands/user_disconnection_command.hpp"
-#include "user_commands/parameter_change_command.hpp"
+#include "user_commands/user_parameter_change_command.hpp"
 
 // Drawable commands
 #include "drawable_commands/primitive_mesh_creation_command.hpp"

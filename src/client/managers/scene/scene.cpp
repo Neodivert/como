@@ -458,7 +458,7 @@ void Scene::executeRemoteUserCommand( UserCommandConstPtr command )
         case UserCommandType::PARAMETER_CHANGE:
             // TODO: Change the ParameterChange hierarchy for distinguishing
             // those that affects selections from others.
-            drawablesManager_->executeRemoteParameterChangeCommand( dynamic_pointer_cast< const ParameterChangeCommand >( command ) );
+            drawablesManager_->executeRemoteParameterChangeCommand( dynamic_pointer_cast< const UserParameterChangeCommand >( command ) );
         break;
     }
 }

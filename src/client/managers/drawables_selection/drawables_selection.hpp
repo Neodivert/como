@@ -22,7 +22,7 @@
 #include <client/models/3d/drawable.hpp>
 #include <client/models/3d/mesh.hpp>
 #include <common/utilities/ids.hpp>
-#include <common/commands/user_commands/parameter_change_command.hpp> // For PivotPointMode type.
+#include <common/commands/user_commands/user_parameter_change_command.hpp> // For PivotPointMode type.
 #include <map>
 #include <functional>
 #include <mutex>

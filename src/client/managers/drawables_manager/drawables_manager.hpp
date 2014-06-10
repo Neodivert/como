@@ -148,7 +148,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
          ***/
         void executeRemoteDrawableCommand( DrawableCommandConstPtr command );
         void executeRemoteSelectionCommand( SelectionCommandConstPtr command );
-        void executeRemoteParameterChangeCommand( ParameterChangeCommandConstPtr command );
+        void executeRemoteParameterChangeCommand( UserParameterChangeCommandConstPtr command );
 
 
         /***

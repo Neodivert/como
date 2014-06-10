@@ -78,7 +78,7 @@ const void* PackableCommandsList::unpack( const void* buffer )
                         command =  CommandPtr( new UserDisconnectionCommand );
                     break;
                     case UserCommandType::PARAMETER_CHANGE:
-                        command = CommandPtr( new ParameterChangeCommand );
+                        command = CommandPtr( new UserParameterChangeCommand );
                     break;
                 }
             break;

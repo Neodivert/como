@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "parameter_change_command.hpp"
+#include "user_parameter_change_command.hpp"
 
 namespace como {
 
@@ -24,7 +24,7 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-ParameterChangeCommand::ParameterChangeCommand( UserID userID ) :
+UserParameterChangeCommand::UserParameterChangeCommand( UserID userID ) :
     UserCommand( UserCommandType::PARAMETER_CHANGE, userID ),
     parameterType_( ParameterType::PIVOT_POINT_MODE )
 {
@@ -35,7 +35,7 @@ ParameterChangeCommand::ParameterChangeCommand( UserID userID ) :
 }
 
 
-ParameterChangeCommand::ParameterChangeCommand( UserID userID, PivotPointMode pivotPointMode ) :
+UserParameterChangeCommand::UserParameterChangeCommand( UserID userID, PivotPointMode pivotPointMode ) :
     UserCommand( UserCommandType::PARAMETER_CHANGE, userID ),
     parameterType_( ParameterType::PIVOT_POINT_MODE )
 {
@@ -46,7 +46,7 @@ ParameterChangeCommand::ParameterChangeCommand( UserID userID, PivotPointMode pi
 }
 
 
-ParameterChangeCommand::ParameterChangeCommand( const ParameterChangeCommand& b ) :
+UserParameterChangeCommand::UserParameterChangeCommand( const UserParameterChangeCommand& b ) :
     UserCommand( b ),
     parameterType_( b.parameterType_ )
 {
@@ -61,13 +61,13 @@ ParameterChangeCommand::ParameterChangeCommand( const ParameterChangeCommand& b 
  * 4. Getters
  ***/
 
-ParameterType ParameterChangeCommand::getParameterType() const
+ParameterType UserParameterChangeCommand::getParameterType() const
 {
     return parameterType_.getValue();
 }
 
 
-PivotPointMode ParameterChangeCommand::getPivotPointMode() const
+PivotPointMode UserParameterChangeCommand::getPivotPointMode() const
 {
     return pivotPointMode_.getValue();
 }
@@ -77,7 +77,7 @@ PivotPointMode ParameterChangeCommand::getPivotPointMode() const
  * 5. Setters
  ***/
 
-void ParameterChangeCommand::setPivotPointMode( PivotPointMode pivotPointMode )
+void UserParameterChangeCommand::setPivotPointMode( PivotPointMode pivotPointMode )
 {
     // Set parameter type.
     parameterType_ = ParameterType::PIVOT_POINT_MODE;

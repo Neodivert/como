@@ -39,7 +39,7 @@ enum class ParameterType : std::uint8_t
 typedef PackableUint8< ParameterType > PackableParameterType;
 
 
-class ParameterChangeCommand : public UserCommand
+class UserParameterChangeCommand : public UserCommand
 {
     private:
         PackableParameterType parameterType_;
@@ -53,16 +53,16 @@ class ParameterChangeCommand : public UserCommand
         /***
          * 1. Construction
          ***/
-        ParameterChangeCommand( UserID userID = 0 );
-        ParameterChangeCommand( UserID userID, PivotPointMode pivotPointMode );
-        ParameterChangeCommand( const ParameterChangeCommand& b );
-        ParameterChangeCommand( ParameterChangeCommand&& ) = delete;
+        UserParameterChangeCommand( UserID userID = 0 );
+        UserParameterChangeCommand( UserID userID, PivotPointMode pivotPointMode );
+        UserParameterChangeCommand( const UserParameterChangeCommand& b );
+        UserParameterChangeCommand( UserParameterChangeCommand&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~ParameterChangeCommand() = default;
+        ~UserParameterChangeCommand() = default;
 
 
         /***
@@ -81,11 +81,11 @@ class ParameterChangeCommand : public UserCommand
         /***
          * 5. Operators
          ***/
-        ParameterChangeCommand& operator=( const ParameterChangeCommand& ) = delete;
-        ParameterChangeCommand& operator=( ParameterChangeCommand&& ) = delete;
+        UserParameterChangeCommand& operator=( const UserParameterChangeCommand& ) = delete;
+        UserParameterChangeCommand& operator=( UserParameterChangeCommand&& ) = delete;
 };
 
-typedef std::shared_ptr< const ParameterChangeCommand > ParameterChangeCommandConstPtr;
+typedef std::shared_ptr< const UserParameterChangeCommand > UserParameterChangeCommandConstPtr;
 
 } // namespace como
 

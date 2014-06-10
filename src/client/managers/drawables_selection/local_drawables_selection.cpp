@@ -43,7 +43,7 @@ void LocalDrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 {
     DrawablesSelection::setPivotPointMode( pivotPointMode );
 
-    server_->sendCommand( CommandConstPtr( new ParameterChangeCommand( localUserID_, pivotPointMode ) ) );
+    server_->sendCommand( CommandConstPtr( new UserParameterChangeCommand( localUserID_, pivotPointMode ) ) );
 }
 
 

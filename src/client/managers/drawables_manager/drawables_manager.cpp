@@ -414,7 +414,7 @@ void DrawablesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr c
 }
 
 
-void DrawablesManager::executeRemoteParameterChangeCommand( ParameterChangeCommandConstPtr command )
+void DrawablesManager::executeRemoteParameterChangeCommand( UserParameterChangeCommandConstPtr command )
 {
     // Change parameter.
     switch( command->getParameterType() ){

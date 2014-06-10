@@ -32,7 +32,6 @@ HEADERS += \
     ../../src/common/commands/user_commands/user_command.hpp \
     ../../src/common/commands/user_commands/user_connection_command.hpp \
     ../../src/common/commands/user_commands/user_disconnection_command.hpp \
-    ../../src/common/commands/user_commands/parameter_change_command.hpp \
     ../../src/common/commands/drawable_commands/drawable_command.hpp \
     ../../src/common/commands/drawable_commands/mesh_creation_command.hpp \
     ../../src/common/commands/drawable_commands/drawable_selection_command.hpp \
@@ -73,7 +72,8 @@ HEADERS += \
     ../../src/common/commands/light_commands/light_command.hpp \
     ../../src/common/commands/light_commands/light_commands.hpp \
     ../../src/common/utilities/observer_pattern/observer.hpp \
-    ../../src/common/utilities/observer_pattern/observable.hpp
+    ../../src/common/utilities/observer_pattern/observable.hpp \
+    ../../src/common/commands/user_commands/user_parameter_change_command.hpp
 
 
 # Common sources (used by both client and server).
@@ -88,7 +88,6 @@ SOURCES += \
     ../../src/common/commands/user_commands/user_command.cpp \
     ../../src/common/commands/user_commands/user_connection_command.cpp \
     ../../src/common/commands/user_commands/user_disconnection_command.cpp \
-    ../../src/common/commands/user_commands/parameter_change_command.cpp \
     ../../src/common/commands/drawable_commands/drawable_command.cpp \
     ../../src/common/commands/drawable_commands/mesh_creation_command.cpp \
     ../../src/common/commands/drawable_commands/drawable_selection_command.cpp \
@@ -114,4 +113,5 @@ SOURCES += \
     ../../src/common/packables/ids/packable_material_id.cpp \
     ../../src/common/commands/material_commands/abstract_material_modification_command.cpp \
     ../../src/common/commands/light_commands/light_command.cpp \
-    ../../src/common/utilities/observer_pattern/observable.cpp
+    ../../src/common/utilities/observer_pattern/observable.cpp \
+    ../../src/common/commands/user_commands/user_parameter_change_command.cpp
