@@ -96,6 +96,7 @@ class LightsManager : public QObject, public Changeable
     signals:
         void lightCreated( const LightID& id, const std::string& name );
         void lightSelected( LightHandlerPtr light );
+        void lightRemoved( const PackableDrawableID& id );
 
 
         /***

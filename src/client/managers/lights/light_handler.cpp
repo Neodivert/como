@@ -36,6 +36,12 @@ LightHandler::LightHandler( LightPropertiesSharedPtr light, LightID lightID, Ser
  * 3. Getters
  ***/
 
+PackableDrawableID LightHandler::getLightID() const
+{
+    return lightID_;
+}
+
+
 PackableColor LightHandler::getLightColor() const
 {
     return light_->getLightColor();
@@ -52,8 +58,5 @@ void LightHandler::setLightColor( const PackableColor& lightColor)
 
     notifyChange_();
 }
-
-
-
 
 } // namespace como

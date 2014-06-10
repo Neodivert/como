@@ -21,8 +21,9 @@
 
 namespace como {
 
-LightPanel::LightPanel() :
-    QFrame()
+LightPanel::LightPanel( LightsManagerPtr lightsManager ) :
+    QFrame(),
+    lightsManager_( lightsManager )
 {
     // Create the widgets for modifying light properties.
     QFormLayout* layout = new QFormLayout();
@@ -38,6 +39,13 @@ LightPanel::LightPanel() :
     QObject::connect( lightColorButton_, &ColorButton::colorChanged, [=]( const PackableColor& color )
     {
         currentLight_->setLightColor( color );
+    });
+
+
+    QObject::connect( lightsManager_.get(), &LightsManager::lightRemoved, [this]( const PackableDrawableID& lightID ){
+        if( lightID == currentLight_->getLightID() ){
+            closeLight();
+        }
     });
 
     // Initially there is no light selected, so disable this panel.
@@ -65,6 +73,14 @@ void LightPanel::openLight( LightHandlerPtr light )
     setEnabled( true );
 
     refresh();
+}
+
+
+void LightPanel::closeLight()
+{
+    currentLight_ = nullptr;
+
+    setEnabled( false );
 }
 
 } // namespace como

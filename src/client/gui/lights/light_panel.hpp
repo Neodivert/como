@@ -21,6 +21,7 @@
 
 #include <QFrame>
 #include <QLineEdit>
+#include <client/managers/lights/lights_manager.hpp>
 #include <client/managers/lights/light_handler.hpp>
 #include <client/gui/utilities/color_button.hpp>
 
@@ -31,6 +32,8 @@ class LightPanel : public QFrame
     Q_OBJECT
 
     private:
+        LightsManagerPtr lightsManager_;
+
         LightHandlerPtr currentLight_;
 
         ColorButton* lightColorButton_;
@@ -39,7 +42,7 @@ class LightPanel : public QFrame
         /***
          * 1. Construction
          ***/
-        LightPanel();
+        LightPanel( LightsManagerPtr lightsManager );
         LightPanel( const LightPanel& ) = delete;
         LightPanel( LightPanel&& ) = delete;
 
@@ -68,6 +71,7 @@ class LightPanel : public QFrame
          ***/
     public slots:
         void openLight( LightHandlerPtr light );
+        void closeLight();
 };
 
 } // namespace como

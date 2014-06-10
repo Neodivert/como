@@ -52,6 +52,7 @@ class LightHandler
         /***
          * 3. Getters
          ***/
+        PackableDrawableID getLightID() const;
         PackableColor getLightColor() const;
 
 
