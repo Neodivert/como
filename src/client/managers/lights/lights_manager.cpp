@@ -171,11 +171,6 @@ void LightsManager::removeLight( PackableDrawableID lightID )
     // Remove the light from lights_ vector and signal it.
     lights_.erase( lightID );
     emit lightRemoved( lightID );
-
-    //
-    if( !light.unique() ){
-        throw std::runtime_error( "LightProperty was expected to be deleted here, but it is not unique" );
-    }
 }
 
 
