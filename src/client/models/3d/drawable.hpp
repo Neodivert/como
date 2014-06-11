@@ -20,6 +20,7 @@
 #define DRAWABLE_HPP
 
 #include <client/models/dependencies.hpp>
+#include <client/models/utilities/open_gl.hpp>
 
 namespace como {
 
@@ -48,8 +49,6 @@ class Drawable;
 typedef std::shared_ptr< Drawable > DrawablePtr;
 typedef std::shared_ptr< const Drawable > DrawableConstPtr;
 
-std::string getOpenGLErrorString( GLenum errorCode );
-void checkOpenGL( const char* str );
 
 class Drawable
 {

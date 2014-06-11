@@ -21,54 +21,6 @@
 
 namespace como {
 
-std::string getOpenGLErrorString( GLenum errorCode )
-{
-    switch( errorCode ){
-        case GL_NO_ERROR:
-            return std::string( "No error" );
-        break;
-        case GL_INVALID_ENUM:
-            return std::string( "Invalid enum" );
-        break;
-        case GL_INVALID_VALUE:
-            return std::string( "Invalid value" );
-        break;
-        case GL_INVALID_OPERATION:
-            return std::string( "Invalid operation" );
-        break;
-        case GL_INVALID_FRAMEBUFFER_OPERATION:
-            return std::string( "Invalid framebuffer operation" );
-        break;
-        case GL_OUT_OF_MEMORY:
-            return std::string( "Out of memory" );
-        break;
-        case GL_STACK_UNDERFLOW:
-            return std::string( "Stack underflow" );
-        break;
-        case GL_STACK_OVERFLOW:
-            return std::string( "Stack overflow" );
-        break;
-        default:
-            return std::string( "Unknown error" );
-        break;
-    }
-}
-
-
-void checkOpenGL( const char* str )
-{
-    GLenum errorCode = glGetError();
-
-    if( errorCode != GL_NO_ERROR ){
-        throw std::runtime_error( std::string( "OpenGL ERROR at [" ) +
-                                  std::string( str ) +
-                                  std::string( "]: " ) +
-                                  getOpenGLErrorString( errorCode ) +
-                                  std::string( "\n" )
-                                  );
-    }
-}
-
 
 /***
  * 1. Initialization and destruction

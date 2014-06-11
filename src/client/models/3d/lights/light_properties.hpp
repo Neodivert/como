@@ -20,7 +20,7 @@
 #define LIGHT_PROPERTIES_HPP
 
 
-#include "client/models/3d/drawable.hpp" // checkOpenGL() funciton and GL types.
+#include "client/models/3d/drawable.hpp" // OpenGL::checkStatus() funciton and GL types.
 
 #include <common/commands/light_commands/light_creation_command.hpp> // "LightType" type.
 #include "abstract_light.hpp"

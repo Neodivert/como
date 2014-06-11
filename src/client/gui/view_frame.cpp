@@ -79,7 +79,7 @@ ViewFrame::ViewFrame( View view, shared_ptr< ComoApp > comoApp ) :
     setLayout(layout);
 
     // When a render is requested, render!
-    checkOpenGL( "Viewframe - Constructor" );
+    OpenGL::checkStatus( "Viewframe - Constructor" );
 }
 
 

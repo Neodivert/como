@@ -37,7 +37,7 @@ DirectionalLightProperties::DirectionalLightProperties(
 
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
 
-    checkOpenGL( "DirectionalLight - constructor begin" );
+    OpenGL::checkStatus( "DirectionalLight - constructor begin" );
 
     std::cout << "currentShaderProgram: " << currentShaderProgram << std::endl;
 
@@ -66,7 +66,7 @@ DirectionalLightProperties::DirectionalLightProperties(
     setLightVector( lightVector );
     //setHalfVector( halfVector ); // TODO: Uncomment.
 
-    checkOpenGL( "DirectionalLight - constructor end" );
+    OpenGL::checkStatus( "DirectionalLight - constructor end" );
 }
 
 

@@ -70,6 +70,9 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
         LightsManagerPtr lightsManager_;
 
 
+        OpenGLPtr openGL_;
+
+
         // Log
         LogPtr log_;
 
@@ -195,10 +198,6 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
     public:
         void createScenePrimitivesDirectory();
         virtual bool hasChangedSinceLastQuery();
-
-    private:
-        void enableLighting() const;
-        void disableLighting() const;
 };
 
 typedef std::shared_ptr< Scene > ScenePtr;

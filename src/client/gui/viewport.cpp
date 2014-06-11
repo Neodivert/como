@@ -51,7 +51,7 @@ Viewport::Viewport( View view, shared_ptr< ComoApp > comoApp ) :
 
         comoApp->getScene()->getOpenGLContext()->makeCurrent( this );
 
-        checkOpenGL( "Viewport constructor, before creating the camera" );
+        OpenGL::checkStatus( "Viewport constructor, before creating the camera" );
 
         // Get location of uniform shader modelview matrix.
         if( viewProjectionMatrixLocation == -1 ){
@@ -64,9 +64,9 @@ Viewport::Viewport( View view, shared_ptr< ComoApp > comoApp ) :
         // Create the camera.
         camera = new Camera( view );
 
-        checkOpenGL( "Viewport constructor, after creating the camera" );
+        OpenGL::checkStatus( "Viewport constructor, after creating the camera" );
 
-        //checkOpenGL( "Viewport constructor, before computing dimension inverses" );
+        //OpenGL::checkStatus( "Viewport constructor, before computing dimension inverses" );
 
         // Compute dimensions' inverses.
         if( width() ){
@@ -79,7 +79,7 @@ Viewport::Viewport( View view, shared_ptr< ComoApp > comoApp ) :
         // Set default projection.
         setProjection( Projection::ORTHO );
 
-        checkOpenGL( "Viewport constructor - end" );
+        OpenGL::checkStatus( "Viewport constructor - end" );
     }catch( std::exception& ex ){
         comoApp->getLog()->error( ex.what() );
         throw ex;

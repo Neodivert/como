@@ -37,7 +37,7 @@ void Camera::setView( View view )
     const glm::vec3 X_AXIS = glm::vec3( 1.0f, 0.0f, 0.0f );
     const glm::vec3 Y_AXIS = glm::vec3( 0.0f, 1.0f, 0.0f );
 
-    checkOpenGL( "Camera::setView - 1" );
+    OpenGL::checkStatus( "Camera::setView - 1" );
 
     switch( view ){
         case View::LEFT:
@@ -62,10 +62,10 @@ void Camera::setView( View view )
         break;
     }
 
-    checkOpenGL( "Camera::setView - 2" );
+    OpenGL::checkStatus( "Camera::setView - 2" );
     update();
 
-    checkOpenGL( "Camera::setView - 3" );
+    OpenGL::checkStatus( "Camera::setView - 3" );
 }
 
 

@@ -144,33 +144,33 @@ void Material::sendToShader() const
 
     // Send material color to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.color" );
-    checkOpenGL( "Getting location of material.color in shader" );
+    OpenGL::checkStatus( "Getting location of material.color in shader" );
     glUniform4fv( uniformLocation, 1, &color_[0] );
-    checkOpenGL( "Sending material.color to shader" );
+    OpenGL::checkStatus( "Sending material.color to shader" );
 
     // Send ambient reflectivity to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.ambientReflectivity" );
-    checkOpenGL( "Getting location of material.ambientReflectivity in shader" );
+    OpenGL::checkStatus( "Getting location of material.ambientReflectivity in shader" );
     glUniform3fv( uniformLocation, 1, &ambientReflectivity_[0] );
-    checkOpenGL( "Sending material.ambientReflectivity to shader" );
+    OpenGL::checkStatus( "Sending material.ambientReflectivity to shader" );
 
     // Send diffuse reflectivity to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.diffuseReflectivity" );
-    checkOpenGL( "Getting location of material.diffuseReflectivity in shader" );
+    OpenGL::checkStatus( "Getting location of material.diffuseReflectivity in shader" );
     glUniform3fv( uniformLocation, 1, &diffuseReflectivity_[0] );
-    checkOpenGL( "Sending material.diffuseReflectivity to shader" );
+    OpenGL::checkStatus( "Sending material.diffuseReflectivity to shader" );
 
     // Send diffuse reflectivity to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.specularReflectivity" );
-    checkOpenGL( "Getting location of material.specularReflectivity in shader" );
+    OpenGL::checkStatus( "Getting location of material.specularReflectivity in shader" );
     glUniform3fv( uniformLocation, 1, &specularReflectivity_[0] );
-    checkOpenGL( "Sending material.specularReflectivity to shader" );
+    OpenGL::checkStatus( "Sending material.specularReflectivity to shader" );
 
     // Send specular exponent to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.specularExponent" );
-    checkOpenGL( "Getting location of material.specularExponent in shader" );
+    OpenGL::checkStatus( "Getting location of material.specularExponent in shader" );
     glUniform1f( uniformLocation, specularExponent_ );
-    checkOpenGL( "Sending material.specularExponent to shader" );
+    OpenGL::checkStatus( "Sending material.specularExponent to shader" );
 }
 
 

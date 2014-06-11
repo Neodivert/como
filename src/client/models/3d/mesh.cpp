@@ -104,7 +104,7 @@ Mesh::~Mesh()
 
 void Mesh::initMesh( const char* fileName )
 {
-    checkOpenGL( "Mesh( const char* fileName ) - 1" );
+    OpenGL::checkStatus( "Mesh( const char* fileName ) - 1" );
 
     // Initialize OpenGL objects (VBO, VAO, EBO, ...) associated to this Mesh.
     initMeshBuffers();
@@ -112,7 +112,7 @@ void Mesh::initMesh( const char* fileName )
     // Load vertex data from given file.
     LoadFromOBJ( fileName );
 
-    checkOpenGL( "Mesh( const char* fileName ) - 2" );
+    OpenGL::checkStatus( "Mesh( const char* fileName ) - 2" );
 }
 
 

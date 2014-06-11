@@ -47,7 +47,7 @@ Scene::Scene( LogPtr log ) :
     // the local scene.
     QObject::connect( server_.get(), &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
 
-    checkOpenGL( "Scene - constructor\n" );
+    OpenGL::checkStatus( "Scene - constructor\n" );
 }
 
 
@@ -106,6 +106,8 @@ void Scene::initOpenGL()
     // Set OpenGL depth test.
     glEnable( GL_DEPTH_TEST );
     glDepthFunc( GL_LEQUAL );
+
+    openGL_ = OpenGLPtr( new OpenGL );
 }
 
 
@@ -311,7 +313,7 @@ void Scene::setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny )
 
     glBindBuffer( GL_ARRAY_BUFFER, linesVBO );
     guideRectsBuffer = (GLfloat *)glMapBufferRange( GL_ARRAY_BUFFER, linesBufferOffsets[TRANSFORM_GUIDE_LINE]*3*sizeof( GLfloat ), 6*sizeof( GLfloat ), GL_MAP_WRITE_BIT );
-    checkOpenGL( "Scene::setTransformGuideLine" );
+    OpenGL::checkStatus( "Scene::setTransformGuideLine" );
 
     for( ; i<3; i++ ){
         guideRectsBuffer[i] = origin[i];
@@ -351,9 +353,9 @@ void Scene::draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect ) co
     GLfloat WHITE_COLOR[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
     // Draw all the drawables.
-    enableLighting();
+    openGL_->enableLighting();
     drawablesManager_->drawAll( viewProjMatrix );
-    disableLighting();
+    openGL_->disableLighting();
 
     // Draw a guide rect if asked.
     if( drawGuideRect != -1 ){
@@ -370,7 +372,7 @@ void Scene::draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect ) co
         glDrawArrays( GL_LINES, linesBufferOffsets[GUIDE_AXIS] + (drawGuideRect << 1), 2 );
     }
 
-    checkOpenGL( "Scene::draw" );
+    OpenGL::checkStatus( "Scene::draw" );
 }
 
 
@@ -578,21 +580,5 @@ bool Scene::hasChangedSinceLastQuery()
 
     return false;
 }
-
-
-
-void Scene::enableLighting() const
-{
-    glUniform1i( uniformLightingEnabledLocation, 1 );
-    checkOpenGL( "Scene::enableLighting()" );
-}
-
-
-void Scene::disableLighting() const
-{
-    glUniform1i( uniformLightingEnabledLocation, 0 );
-    checkOpenGL( "Scene::disableLighting()" );
-}
-
 
 } // namespace como
