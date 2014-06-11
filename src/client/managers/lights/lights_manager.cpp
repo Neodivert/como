@@ -98,6 +98,8 @@ void LightsManager::createDirectionalLight()
 
     log_->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
 
+    print();
+
     // Indicate to the GUI that a new light has been created.
     emit lightCreated( lightID, light->getName() );
 }
@@ -142,6 +144,7 @@ void LightsManager::addDirectionalLight( const LightID& lightID, const PackableC
                         ));
 
     log_->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
+    print();
 
     emit lightCreated( lightID, light->getName() );
 }
@@ -213,16 +216,20 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
 
 void LightsManager::update()
 {
-    LightsMap::iterator it;
-
-    log_->debug( "LightsManager::update()\n" );
+    LightsMap::iterator currentIt, nextIt;
 
     // Remove all the lights that are not longer present in the drawables
     // manager.
-    for( it = lights_.begin(); it != lights_.end(); it++ ){
-        if( !( drawablesManager_->existsDrawable( it->first ) ) ){
-            removeLight( it->first );
+    currentIt = nextIt = lights_.begin();
+
+    while( currentIt != lights_.end() ){
+        nextIt++;
+
+        if( !( drawablesManager_->existsDrawable( currentIt->first ) ) ){
+            removeLight( currentIt->first );
         }
+
+        currentIt = nextIt;
     }
 }
 
@@ -248,6 +255,20 @@ unsigned int LightsManager::getNextFreeLightIndex( LightType lightType )
     */
 
     return 0;
+}
+
+
+void LightsManager::print()
+{
+    log_->lock();
+
+    log_->debug( "LightsManager - lights\n" );
+
+    for( auto it : lights_ ){
+        log_->debug( "\t", it.first, "\n" );
+    }
+
+    log_->unlock();
 }
 
 } // namespace como

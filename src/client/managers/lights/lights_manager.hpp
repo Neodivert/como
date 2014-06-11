@@ -120,6 +120,7 @@ class LightsManager : public QObject, public Changeable, public Observer
          * 8. Auxiliar methods
          ***/
         unsigned int getNextFreeLightIndex( LightType lightType );
+        void print();
 };
 
 typedef std::shared_ptr< LightsManager > LightsManagerPtr;
