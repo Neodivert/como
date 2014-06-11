@@ -40,6 +40,8 @@ void UsersList::addUser( UserConnectionCommandConstPtr userConnectedPacket )
     PackableColor userSelectionColor;
     QPixmap pixmap( 50, 50 );
 
+    log_->debug( "\n\n\nAdded user [", userConnectedPacket->getUserID(), "] to users list (GUI)\n\n\n" );
+
     // Add the new User-ID-to-list-index translation to the map.
     userIDToName_[ userConnectedPacket->getUserID() ] = userConnectedPacket->getName();
 
@@ -75,7 +77,7 @@ void UsersList::removeUser( UserID userID )
     while( ( currentUser != users.end() ) &&
            strcmp(
                (*currentUser)->text().toLocal8Bit().data(),
-               ( userIDToName_[userID] ).c_str()
+               ( userIDToName_.at( userID ) ).c_str()
             )
     ){
         currentUser++;
@@ -83,8 +85,11 @@ void UsersList::removeUser( UserID userID )
 
     // If found, delete the user.
     if( currentUser != users.end() ){
+        log_->debug( "\n\n\nRemoved user [", userID, "] from users list (GUI)\n\n\n" );
+
         userToBeDeleted = takeItem( row( *currentUser ) );
         delete userToBeDeleted;
+        userIDToName_.erase( userID );
     }else{
         log_->error( "GUI users list - removing user [", ( userIDToName_[ userID ] ).c_str(), "] (id: ", userID, ") ...USER NOT FOUND\n" );
     }

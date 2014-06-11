@@ -51,7 +51,7 @@ HEADERS += \
     ../../src/client/gui/connection_wizard/create_server_page.hpp \
     ../../src/client/gui/connection_wizard/intro_page.hpp \
     ../../src/client/gui/connection_wizard/page_ids.hpp \
-    ../../src/client/gui/users_list.hpp \
+    ../../src/client/gui/users/users_list.hpp \
     ../../src/client/managers/server_interface/server_interface.hpp \
     ../../src/client/managers/drawables_selection/drawables_selection.hpp \
     ../../src/client/models/3d/lights/directional_light.hpp \
@@ -103,7 +103,7 @@ SOURCES += \
     ../../src/client/gui/connection_wizard/connect_server_page.cpp \
     ../../src/client/gui/connection_wizard/create_server_page.cpp \
     ../../src/client/gui/connection_wizard/intro_page.cpp \
-    ../../src/client/gui/users_list.cpp \
+    ../../src/client/gui/users/users_list.cpp \
     ../../src/client/managers/server_interface/server_interface.cpp \
     ../../src/client/managers/drawables_selection/drawables_selection.cpp \
     ../../src/client/models/3d/lights/directional_light.cpp \

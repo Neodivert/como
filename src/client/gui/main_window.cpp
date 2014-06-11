@@ -20,7 +20,7 @@
 #include "render_panel.hpp"
 #include "tools_menu/tools_menu.hpp"
 #include "connection_wizard/connection_wizard.hpp"
-#include "users_list.hpp"
+#include <client/gui/users/users_list.hpp>
 
 namespace como {
 
