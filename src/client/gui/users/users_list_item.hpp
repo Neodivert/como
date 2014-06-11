@@ -34,7 +34,7 @@ class UsersListItem : public QListWidgetItem
          * 1. Construction
          ***/
         UsersListItem() = delete;
-        UsersListItem( UserID id );
+        UsersListItem( UserID id, std::string name, QIcon icon );
         UsersListItem( const UsersListItem& ) = delete;
         UsersListItem( UsersListItem&& ) = delete;
 

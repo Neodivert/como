@@ -24,7 +24,8 @@ namespace como {
  * 1. Construction
  ***/
 
-UsersListItem::UsersListItem( UserID id ) :
+UsersListItem::UsersListItem( UserID id , std::string name, QIcon icon ) :
+    QListWidgetItem( icon, name.c_str() ),
     userID_( id )
 {}
 

@@ -42,9 +42,6 @@ void UsersList::addUser( UserConnectionCommandConstPtr userConnectedPacket )
 
     log_->debug( "\n\n\nAdded user [", userConnectedPacket->getUserID(), "] to users list (GUI)\n\n\n" );
 
-    // Add the new User-ID-to-list-index translation to the map.
-    userIDToName_[ userConnectedPacket->getUserID() ] = userConnectedPacket->getName();
-
     // Retrieve user's selection color.
     userSelectionColor = userConnectedPacket->getSelectionColor();
 
@@ -58,7 +55,7 @@ void UsersList::addUser( UserConnectionCommandConstPtr userConnectedPacket )
     QIcon userIcon ( pixmap );
 
     // Add the user's name to the list.
-    QListWidgetItem* newUser = new QListWidgetItem( userIcon, tr( userConnectedPacket->getName() ) );
+    UsersListItem* newUser = new UsersListItem( userConnectedPacket->getUserID(), userConnectedPacket->getName(), userIcon );
     addItem( newUser );
 }
 
@@ -75,11 +72,8 @@ void UsersList::removeUser( UserID userID )
     // Iterate over the previous list and find the user to be deleted.
     currentUser = users.begin();
     while( ( currentUser != users.end() ) &&
-           strcmp(
-               (*currentUser)->text().toLocal8Bit().data(),
-               ( userIDToName_.at( userID ) ).c_str()
-            )
-    ){
+           dynamic_cast< UsersListItem* >( *currentUser )->getUserID() != userID )
+    {
         currentUser++;
     }
 
@@ -89,9 +83,8 @@ void UsersList::removeUser( UserID userID )
 
         userToBeDeleted = takeItem( row( *currentUser ) );
         delete userToBeDeleted;
-        userIDToName_.erase( userID );
     }else{
-        log_->error( "GUI users list - removing user [", ( userIDToName_[ userID ] ).c_str(), "] (id: ", userID, ") ...USER NOT FOUND\n" );
+        log_->error( "GUI users list - removing user (", userID, ") ...USER NOT FOUND\n" );
     }
 }
 

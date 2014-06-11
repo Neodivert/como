@@ -23,6 +23,7 @@
 #include <common/utilities/log.hpp>
 #include <QListWidget>
 #include <map>
+#include "users_list_item.hpp"
 
 namespace como {
 
@@ -31,8 +32,6 @@ class UsersList : public QListWidget
     Q_OBJECT
 
     private:
-        std::map< UserID, std::string > userIDToName_;
-
         // Log
         LogPtr log_;
 
