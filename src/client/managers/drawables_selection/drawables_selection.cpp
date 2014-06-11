@@ -465,7 +465,7 @@ bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, PackableDrawable
  * 8. Drawing
  ***/
 
-void DrawablesSelection::draw( const glm::mat4& viewProjMatrix ) const
+void DrawablesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix ) const
 {
     DrawablesMap::const_iterator drawable;
 
@@ -473,7 +473,7 @@ void DrawablesSelection::draw( const glm::mat4& viewProjMatrix ) const
 
     // Draw every drawable in current selection.
     for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
-        drawable->second->draw( viewProjMatrix, &borderColor_[0] );
+        drawable->second->draw( openGL, viewProjMatrix, &borderColor_[0] );
     }
 
     mutex_.unlock();

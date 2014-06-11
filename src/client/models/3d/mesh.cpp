@@ -407,7 +407,7 @@ void Mesh::update()
 }
 
 
-void Mesh::draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) const
+void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) const
 {
     // Compute MVP matrix and pass it to the shader.
     sendMVPMatrixToShader( viewProjMatrix * transformationMatrix );
@@ -425,6 +425,8 @@ void Mesh::draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) 
 
     // Set the color for the mesh's contour.
     if( contourColor != nullptr ){
+        openGL->disableLighting();
+
         glUniform4fv( uniformColorLocation, 1, contourColor );
 
         // Now we'll draw mesh's contour. Set polygon mode for rendering
@@ -437,6 +439,8 @@ void Mesh::draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) 
 
         // Return polygon mode to previos GL_FILL.
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+
+        openGL->enableLighting();
     }
 }
 

@@ -302,13 +302,13 @@ PackableDrawableID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, g
  * 10. Drawing
  ***/
 
-void DrawablesManager::drawAll( const glm::mat4& viewProjMatrix ) const
+void DrawablesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewProjMatrix ) const
 {
     DrawablesSelections::const_iterator it;
 
     // Draw the user's selections.
     for( it = drawablesSelections_.begin(); it != drawablesSelections_.end(); it++  ){
-        (it->second)->draw( viewProjMatrix );
+        (it->second)->draw( openGL, viewProjMatrix );
     }
 }
 

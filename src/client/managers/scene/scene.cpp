@@ -354,7 +354,7 @@ void Scene::draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect ) co
 
     // Draw all the drawables.
     openGL_->enableLighting();
-    drawablesManager_->drawAll( viewProjMatrix );
+    drawablesManager_->drawAll( openGL_, viewProjMatrix );
     openGL_->disableLighting();
 
     // Draw a guide rect if asked.

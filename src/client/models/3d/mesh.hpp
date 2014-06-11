@@ -149,7 +149,7 @@ class Mesh : public Drawable
 
     public:
         // Send mesh to OpenGL server for rendering it.
-        virtual void draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor = nullptr ) const;
+        virtual void draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloat* contourColor = nullptr ) const;
 
 
         /***

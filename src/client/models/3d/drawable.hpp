@@ -1,4 +1,4 @@
-/***
+﻿/***
  * Copyright 2013, 2014 Moises J. Bonilla Caraballo (Neodivert)
  *
  * This file is part of COMO.
@@ -117,7 +117,7 @@ class Drawable
         virtual void update();
 
     public:
-        virtual void draw( const glm::mat4& viewProjMatrix, const GLfloat* contourColor = nullptr ) const = 0;
+        virtual void draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloat* contourColor = nullptr ) const = 0;
 
         /***
          * 6. Auxiliar methods

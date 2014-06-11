@@ -140,7 +140,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         /***
          * 10. Drawing
          ***/
-        void drawAll( const glm::mat4& viewProjMatrix ) const ;
+        void drawAll( OpenGLPtr openGL, const glm::mat4& viewProjMatrix ) const ;
 
 
         /***
