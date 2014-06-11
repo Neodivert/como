@@ -82,7 +82,8 @@ HEADERS += \
     ../../src/client/models/3d/lights/abstract_light.hpp \
     ../../src/client/models/3d/lights/light_properties.hpp \
     ../../src/client/models/3d/lights/directional_light_properties.hpp \
-    ../../src/client/models/utilities/open_gl.hpp
+    ../../src/client/models/utilities/open_gl.hpp \
+    ../../src/client/gui/users/users_list_item.hpp
 
 
 # Client sources
@@ -131,4 +132,5 @@ SOURCES += \
     ../../src/client/managers/lights/light_handler.cpp \
     ../../src/client/models/3d/lights/light_properties.cpp \
     ../../src/client/models/3d/lights/directional_light_properties.cpp \
-    ../../src/client/models/utilities/open_gl.cpp
+    ../../src/client/models/utilities/open_gl.cpp \
+    ../../src/client/gui/users/users_list_item.cpp
