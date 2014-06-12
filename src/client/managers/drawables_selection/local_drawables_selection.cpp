@@ -71,49 +71,58 @@ PackableDrawableID LocalDrawablesSelection::addDrawable( DrawablePtr drawable )
 
 void LocalDrawablesSelection::translate( glm::vec3 direction )
 {
-    SelectionTransformationCommand translationCommand( localUserID_ );
+    // Only aplly the transformation if there are drawables selected.
+    if( getSize() ){
+        SelectionTransformationCommand translationCommand( localUserID_ );
 
-    // Round the transformation magnitude.
-    roundTransformationMagnitude( direction );
+        // Round the transformation magnitude.
+        roundTransformationMagnitude( direction );
 
-    // Translate the selection.
-    DrawablesSelection::translate( direction );
+        // Translate the selection.
+        DrawablesSelection::translate( direction );
 
-    // Send the translation command to server.
-    translationCommand.setTranslation( &direction[0] );
-    server_->sendCommand( CommandConstPtr( new SelectionTransformationCommand( translationCommand ) ) );
+        // Send the translation command to server.
+        translationCommand.setTranslation( &direction[0] );
+        server_->sendCommand( CommandConstPtr( new SelectionTransformationCommand( translationCommand ) ) );
+    }
 }
 
 
 void LocalDrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
 {
-    SelectionTransformationCommand rotationCommand( localUserID_ );
+    // Only aplly the transformation if there are drawables selected.
+    if( getSize() ){
+        SelectionTransformationCommand rotationCommand( localUserID_ );
 
-    // Round the transformation magnitude.
-    roundTransformationMagnitude( angle, axis );
+        // Round the transformation magnitude.
+        roundTransformationMagnitude( angle, axis );
 
-    // Rotate the selection.
-    DrawablesSelection::rotate( angle, axis );
+        // Rotate the selection.
+        DrawablesSelection::rotate( angle, axis );
 
-    // Send the rotation command to server.
-    rotationCommand.setRotation( angle, &axis[0] );
-    server_->sendCommand( CommandConstPtr( new SelectionTransformationCommand( rotationCommand ) ) );
+        // Send the rotation command to server.
+        rotationCommand.setRotation( angle, &axis[0] );
+        server_->sendCommand( CommandConstPtr( new SelectionTransformationCommand( rotationCommand ) ) );
+    }
 }
 
 
 void LocalDrawablesSelection::scale( glm::vec3 scaleFactors )
 {
-    SelectionTransformationCommand scaleCommand( localUserID_ );
+    // Only aplly the transformation if there are drawables selected.
+    if( getSize() ){
+        SelectionTransformationCommand scaleCommand( localUserID_ );
 
-    // Round the transformation magnitude.
-    roundTransformationMagnitude( scaleFactors );
+        // Round the transformation magnitude.
+        roundTransformationMagnitude( scaleFactors );
 
-    // Scale the selection.
-    DrawablesSelection::scale( scaleFactors );
+        // Scale the selection.
+        DrawablesSelection::scale( scaleFactors );
 
-    // Send the scale command to server.
-    scaleCommand.setScale( &scaleFactors[0] );
-    server_->sendCommand( CommandConstPtr( new SelectionTransformationCommand( scaleCommand ) ) );
+        // Send the scale command to server.
+        scaleCommand.setScale( &scaleFactors[0] );
+        server_->sendCommand( CommandConstPtr( new SelectionTransformationCommand( scaleCommand ) ) );
+    }
 }
 
 
