@@ -28,7 +28,6 @@ Scene::Scene( LogPtr log ) :
     log_( log ),
     localUserID_( 1 ), // Will be updated to its final value in Scene::connect().
     localUserNextDrawableIndex_( 1 ),
-    server_( new ServerInterface( log_ ) ),
     uniformColorLocation( -1 ),
     uniformLightingEnabledLocation( -1 )
 {
@@ -43,9 +42,13 @@ Scene::Scene( LogPtr log ) :
     qRegisterMetaType< CommandConstPtr >();
     qRegisterMetaType< CommandConstPtr >( "CommandConstPtr" );
 
+    server_ = ServerInterfacePtr( new ServerInterface( log_ ) );
+
     // Signal / slot: when a command is received from server, execute it on
     // the local scene.
     QObject::connect( server_.get(), &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
+
+
 
     OpenGL::checkStatus( "Scene - constructor\n" );
 }
