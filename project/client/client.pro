@@ -72,7 +72,7 @@ HEADERS += \
     ../../src/client/gui/materials/materials_list.hpp \
     ../../src/client/gui/materials/material_panel.hpp \
     ../../src/client/gui/materials/materials_list_item.hpp \
-    ../../src/client/managers/material_handler.hpp \
+    ../../src/client/managers/materials/material_handler.hpp \
     ../../src/client/gui/lights/lights_editor.hpp \
     ../../src/client/gui/lights/lights_list_item.hpp \
     ../../src/client/gui/lights/lights_list.hpp \
@@ -123,7 +123,7 @@ SOURCES += \
     ../../src/client/gui/materials/materials_list.cpp \
     ../../src/client/gui/materials/material_panel.cpp \
     ../../src/client/gui/materials/materials_list_item.cpp \
-    ../../src/client/managers/material_handler.cpp \
+    ../../src/client/managers/materials/material_handler.cpp \
     ../../src/client/gui/lights/lights_editor.cpp \
     ../../src/client/gui/lights/lights_list_item.cpp \
     ../../src/client/gui/lights/lights_list.cpp \
