@@ -76,7 +76,8 @@ HEADERS += \
     ../../src/common/commands/user_commands/user_parameter_change_command.hpp \
     ../../src/common/commands/parameter_change_command.hpp \
     ../../src/common/commands/light_commands/light_color_change_command.hpp \
-    ../../src/common/utilities/observer_pattern/observable_container.hpp
+    ../../src/common/utilities/observer_pattern/observable_container.hpp \
+    ../../src/common/utilities/observer_pattern/container_observer.hpp
 
 
 # Common sources (used by both client and server).

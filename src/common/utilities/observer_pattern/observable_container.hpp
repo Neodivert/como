@@ -20,6 +20,7 @@
 #define OBSERVABLE_CONTAINER_HPP
 
 #include <unordered_set>
+#include "container_observer.hpp"
 
 namespace como {
 
