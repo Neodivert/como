@@ -20,6 +20,8 @@
 
 namespace como {
 
+const unsigned int TIME_BETWEEN_SHIPMENTS = 1000 / SHIPMENTS_PER_SECOND;
+
 
 /***
  * 1. Initialization and destruction
@@ -216,7 +218,7 @@ void ServerInterface::sendPendingCommands()
 void ServerInterface::setTimer()
 {
     // Set a timer for sending pending commands to the server.
-    timer_.expires_from_now( boost::posix_time::milliseconds( 100 ) );
+    timer_.expires_from_now( boost::posix_time::milliseconds( TIME_BETWEEN_SHIPMENTS ) );
     timer_.async_wait( boost::bind( &ServerInterface::sendPendingCommands, this ) );
 }
 
