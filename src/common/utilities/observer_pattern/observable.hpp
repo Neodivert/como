@@ -27,7 +27,7 @@ namespace como {
 class Observable
 {
     private:
-        std::unordered_set< ObserverPtr > observers_;
+        std::unordered_set< Observer* > observers_;
 
     public:
         /***
@@ -47,8 +47,8 @@ class Observable
         /***
          * 3. Observers management
          ***/
-        bool addObserver( ObserverPtr observer );
-        void removeObserver( ObserverPtr observerToBeRemoved );
+        bool addObserver( Observer* observer );
+        void removeObserver( Observer* observerToBeRemoved );
 
 
         /***

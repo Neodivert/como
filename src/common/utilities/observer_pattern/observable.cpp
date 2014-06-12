@@ -24,15 +24,15 @@ namespace como {
  * 3. Observers management
  ***/
 
-bool Observable::addObserver( ObserverPtr observer )
+bool Observable::addObserver( Observer* observer )
 {
-    std::pair< std::unordered_set< ObserverPtr >::iterator, bool > res = observers_.insert( observer );
+    std::pair< std::unordered_set< Observer* >::iterator, bool > res = observers_.insert( observer );
 
     return res.second;
 }
 
 
-void Observable::removeObserver( ObserverPtr observerToBeRemoved )
+void Observable::removeObserver( Observer* observerToBeRemoved )
 {
     observers_.erase( observerToBeRemoved );
 }

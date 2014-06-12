@@ -221,7 +221,7 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         // Initialize the lights manager.
         lightsManager_ = LightsManagerPtr( new LightsManager( drawablesManager_, server_, log_ ) );
 
-        drawablesManager_->addObserver( lightsManager_ );
+        drawablesManager_->addObserver( lightsManager_.get() );
 
         // Add the local user to the scene.
         addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( *userAcceptancePacket ) ) );

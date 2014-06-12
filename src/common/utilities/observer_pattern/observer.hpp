@@ -53,9 +53,6 @@ class Observer
         Observer& operator = ( Observer&& ) = default;
 };
 
-typedef std::shared_ptr< Observer > ObserverPtr;
-typedef std::shared_ptr< const Observer > ObserverConstPtr;
-
 }
 
 #endif // OBSERVER_HPP
