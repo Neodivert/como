@@ -86,6 +86,16 @@ MaterialPanel::MaterialPanel() :
 
 
 /***
+ * 3. Getters
+ ***/
+
+MaterialID MaterialPanel::getMaterialID() const
+{
+    return currentMaterial_->getID();
+}
+
+
+/***
  * 4. Refreshing
  ***/
 

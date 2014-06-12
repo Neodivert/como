@@ -64,8 +64,7 @@ void MaterialsManager::createMaterial( const MaterialID& id, const std::string& 
     // Set the creator of the material as its current owner.
     materialsOwners_[id] = id.getCreatorID();
 
-    // Emit a signal indicating that a new material has been created.
-    emit materialCreated( id, materials_.at( id )->getName() );
+    notifyElementInsertion( id );
 }
 
 
@@ -80,7 +79,15 @@ void MaterialsManager::selectMaterial( const MaterialID& id )
     // TODO: Send command to server.
 
     // TODO: Remove this when interaction with server is completed.
-    emit materialSelectionConfirmed( MaterialHandlerPtr( new MaterialHandler( id, materials_.at( id ), server_, std::bind( &MaterialsManager::setChanged, this ) ) ) );
+    if( materialHandler_ ){
+        materialHandler_->removeObserver( this );
+    }
+
+    materialHandler_ = MaterialHandlerPtr( new MaterialHandler( id, materials_.at( id ), server_ ) );
+
+    materialHandler_->addObserver( this );
+
+    emit materialSelectionConfirmed( materialHandler_ );
 }
 
 
@@ -122,7 +129,7 @@ void MaterialsManager::executeRemoteCommand( MaterialCommandConstPtr command )
                             materialCreationCommand->getMaterialName() );
         }break;
 
-        case MaterialCommandType::MATERIAL_MODIFICATION:
+        case MaterialCommandType::MATERIAL_MODIFICATION:{
             const AbstractMaterialModificationCommand* materialModificationCommand =
                     dynamic_cast< const AbstractMaterialModificationCommand* >( command.get() );
 
@@ -163,9 +170,19 @@ void MaterialsManager::executeRemoteCommand( MaterialCommandConstPtr command )
                 }break;
             }
 
+            notifyElementModification( command->getMaterialID() );
+
             setChanged();
-        break;
+        }break;
     }
+}
+
+
+void MaterialsManager::update()
+{
+    notifyElementModification( materialHandler_->getID() );
+
+    setChanged();
 }
 
 

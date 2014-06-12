@@ -56,6 +56,12 @@ class MaterialPanel : public QFrame
 
 
         /***
+         * 3. Getters
+         ***/
+        MaterialID getMaterialID() const;
+
+
+        /***
          * 3. Operators
          ***/
         MaterialPanel& operator = ( const MaterialPanel& ) = delete;

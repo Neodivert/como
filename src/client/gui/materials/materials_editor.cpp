@@ -25,17 +25,43 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
     materialsManager_( materialsManager )
 {
     QVBoxLayout* layout = new QVBoxLayout();
-    MaterialsList* materialsList = new MaterialsList( materialsManager );
-    MaterialPanel* materialPanel = new MaterialPanel();
+    materialsList_ = new MaterialsList( materialsManager );
+    materialPanel_ = new MaterialPanel();
 
     layout->addWidget( new QLabel( "Materials Editor" ) );
-    layout->addWidget( materialsList );
-    layout->addWidget( materialPanel );
+    layout->addWidget( materialsList_ );
+    layout->addWidget( materialPanel_ );
 
     setLayout( layout );
 
     QObject::connect( materialsManager_.get(), &MaterialsManager::materialSelectionConfirmed,
-                      materialPanel, &MaterialPanel::openMaterial );
+                      materialPanel_, &MaterialPanel::openMaterial );
+
+    materialsManager_->addObserver( this, ContainerActionType::ALL );
+}
+
+
+/***
+ * 3. ContainerObserver interface
+ ***/
+
+void MaterialsEditor::onElementInsertion( MaterialID materialID )
+{
+    materialsList_->addMaterial( materialID,
+                                 materialsManager_->getMaterial( materialID )->getName() );
+}
+
+void MaterialsEditor::onElementDeletion( MaterialID materialID )
+{
+    // TODO: Complete.
+    Q_UNUSED( materialID );
+}
+
+void MaterialsEditor::onElementModification( MaterialID materialID )
+{
+    if( materialPanel_->isEnabled() && materialPanel_->getMaterialID() == materialID ){
+        materialPanel_->refresh();
+    }
 }
 
 } // namespace como

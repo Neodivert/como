@@ -23,26 +23,24 @@
 #include <client/models/3d/materials/material.hpp>
 #include <common/commands/material_commands/material_commands.hpp>
 #include <functional>
+#include <common/utilities/observer_pattern/observable.hpp>
 
 namespace como {
 
 // TODO: Inherit this class and Material from a common MaterialInterface.
-class MaterialHandler
+class MaterialHandler : public Observable
 {
     private:
         MaterialID materialID_;
         MaterialPtr material_;
         ServerInterfacePtr server_;
 
-        // Call this method when a notification has changed.
-        std::function< void(void) > notifyChange_;
-
     public:
         /***
          * 1. Construction
          ***/
         MaterialHandler() = default;
-        MaterialHandler( MaterialID materialID, MaterialPtr material, ServerInterfacePtr server, std::function< void(void) > notifyChange );
+        MaterialHandler( MaterialID materialID, MaterialPtr material, ServerInterfacePtr server );
         MaterialHandler( const MaterialHandler& ) = delete;
         MaterialHandler( MaterialHandler&& );
 
@@ -56,6 +54,7 @@ class MaterialHandler
         /***
          * 3. Getters
          ***/
+        MaterialID getID() const;
         std::string getName() const;
         PackableColor getColor() const;
         PackableColor getAmbientReflectivity() const;

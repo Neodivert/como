@@ -29,8 +29,8 @@ class ContainerObserver
          * 1. Construction
          ***/
         ContainerObserver() = default;
-        ContainerObserver( const ContainerObserver& ) = delete;
-        ContainerObserver( ContainerObserver&& ) = delete;
+        ContainerObserver( const ContainerObserver<IDType>& ) = delete;
+        ContainerObserver( const ContainerObserver<IDType>&& ) = delete;
 
 
         /***
@@ -41,16 +41,16 @@ class ContainerObserver
         /***
          * 3. Updating
          ***/
-        virtual void onElementInsertion( IDtype element ) = 0;
-        virtual void onElementDeletion( IDtype element ) = 0;
-        virtual void onElementModification( IDtype element ) = 0;
+        virtual void onElementInsertion( IDType element ) = 0;
+        virtual void onElementDeletion( IDType element ) = 0;
+        virtual void onElementModification( IDType element ) = 0;
 
 
         /***
          * 4. Operators
          ***/
-        ContainerObserver& operator = ( const ContainerObserver& ) = delete;
-        ContainerObserver& operator = ( ContainerObserver&& ) = delete;
+        ContainerObserver& operator = ( const ContainerObserver<IDType>& ) = delete;
+        ContainerObserver& operator = ( ContainerObserver<IDType>&& ) = delete;
 };
 
 } // namespace como

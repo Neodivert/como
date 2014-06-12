@@ -34,17 +34,17 @@ enum class ContainerActionType {
 template <class IDType>
 class ObservableContainer {
     private:
-        std::unordered_set< ContainerObserver< IDType > > insertionObservers_;
-        std::unordered_set< ContainerObserver< IDType > > modificationObservers_;
-        std::unordered_set< ContainerObserver< IDType > > deletionObservers_;
+        std::unordered_set< ContainerObserver< IDType >* > insertionObservers_;
+        std::unordered_set< ContainerObserver< IDType >* > modificationObservers_;
+        std::unordered_set< ContainerObserver< IDType >* > deletionObservers_;
 
     public:
         /***
          * 1. Construction
          ***/
         ObservableContainer() = default;
-        ObservableContainer( const ObservableContainer& ) = delete;
-        ObservableContainer( ObservableContainer&& ) = delete;
+        ObservableContainer( const ObservableContainer<IDType>& ) = delete;
+        ObservableContainer( ObservableContainer<IDType>&& ) = delete;
 
 
         /***
@@ -71,8 +71,8 @@ class ObservableContainer {
         /***
          * 5. Operators
          ***/
-        ObservableContainer& operator = ( const ObservableContainer& ) = delete;
-        ObservableContainer& operator = ( ObservableContainer&& ) = delete;
+        ObservableContainer& operator = ( const ObservableContainer<IDType>& ) = delete;
+        ObservableContainer& operator = ( ObservableContainer<IDType>&& ) = delete;
 };
 
 /***
@@ -80,44 +80,44 @@ class ObservableContainer {
  ***/
 
 template <class IDType>
-void ObservableContainer<IDType>::addObserver( ContainerObserver<como::IDType> *observer, ContainerActionType observedAction )
+void ObservableContainer<IDType>::addObserver( ContainerObserver<IDType> *observer, ContainerActionType observedAction )
 {
     switch( observedAction ){
         case ContainerActionType::ELEMENT_INSERTION:
-            insertionObservers_.insert( observer );
+            this->insertionObservers_.insert( observer );
         break;
         case ContainerActionType::ELEMENT_DELETION:
-            deletionObservers_.insert( observer );
+            this->deletionObservers_.insert( observer );
         break;
         case ContainerActionType::ELEMENT_MODIFICATION:
-            modificationObservers_.insert( observer );
+            this->modificationObservers_.insert( observer );
         break;
         case ContainerActionType::ALL:
-            insertionObservers_.insert( observer );
-            deletionObservers_.insert( observer );
-            modificationObservers_.insert( observer );
+            this->insertionObservers_.insert( observer );
+            this->deletionObservers_.insert( observer );
+            this->modificationObservers_.insert( observer );
         break;
     }
 }
 
 
 template <class IDType>
-void ObservableContainer<IDType>::removeObserver(ContainerObserver<como::IDType> *observer, ContainerActionType observedAction)
+void ObservableContainer<IDType>::removeObserver(ContainerObserver<IDType> *observer, ContainerActionType observedAction)
 {
     switch( observedAction ){
         case ContainerActionType::ELEMENT_INSERTION:
-            insertionObservers_.erase( observer );
+            this->insertionObservers_.erase( observer );
         break;
         case ContainerActionType::ELEMENT_DELETION:
-            deletionObservers_.erase( observer );
+            this->deletionObservers_.erase( observer );
         break;
         case ContainerActionType::ELEMENT_MODIFICATION:
-            modificationObservers_.erase( observer );
+            this->modificationObservers_.erase( observer );
         break;
         case ContainerActionType::ALL:
-            insertionObservers_.erase( observer );
-            deletionObservers_.erase( observer );
-            modificationObservers_.erase( observer );
+            this->insertionObservers_.erase( observer );
+            this->deletionObservers_.erase( observer );
+            this->modificationObservers_.erase( observer );
         break;
     }
 }
@@ -127,9 +127,10 @@ void ObservableContainer<IDType>::removeObserver(ContainerObserver<como::IDType>
  * 4. Notifications
  ***/
 
+template <class IDType>
 void ObservableContainer<IDType>::notifyElementInsertion( IDType id ) const
 {
-    for( auto observer : insertionObservers_ ){
+    for( auto observer : this->insertionObservers_ ){
         observer->onElementInsertion( id );
     }
 }
@@ -138,7 +139,7 @@ void ObservableContainer<IDType>::notifyElementInsertion( IDType id ) const
 template <class IDType>
 void ObservableContainer<IDType>::notifyElementDeletion( IDType id ) const
 {
-    for( auto observer : deletionObservers_ ){
+    for( auto observer : this->deletionObservers_ ){
         observer->onElementDeletion( id );
     }
 }
@@ -147,7 +148,7 @@ void ObservableContainer<IDType>::notifyElementDeletion( IDType id ) const
 template <class IDType>
 void ObservableContainer<IDType>::notifyElementModification( IDType id) const
 {
-    for( auto observer : modificationObservers_ ){
+    for( auto observer : this->modificationObservers_ ){
         observer->onElementModification( id );
     }
 }

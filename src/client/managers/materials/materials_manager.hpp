@@ -30,12 +30,13 @@
 #include <common/commands/material_commands/material_commands.hpp>
 #include <client/models/utilities/changeable/changeable.hpp>
 #include <functional>
+#include <common/utilities/observer_pattern/observable_container.hpp>
 
 namespace como {
 
 typedef std::map< MaterialID, UserID > MaterialsOwnershipMap;
 
-class MaterialsManager : public QObject, public Changeable
+class MaterialsManager : public QObject, public Changeable, public ObservableContainer< MaterialID >, public Observer
 {
     Q_OBJECT
 
@@ -48,6 +49,7 @@ class MaterialsManager : public QObject, public Changeable
         ServerInterfacePtr server_;
         LogPtr log_;
 
+        MaterialHandlerPtr materialHandler_;
 
     public:
         /***
@@ -101,6 +103,7 @@ class MaterialsManager : public QObject, public Changeable
          ***/
     private:
         virtual void onChange(){}
+        virtual void update();
 
 
         /***
@@ -114,7 +117,6 @@ class MaterialsManager : public QObject, public Changeable
          * 8. Signals
          ***/
     signals:
-        void materialCreated( MaterialID id, std::string name );
         void materialSelectionConfirmed( MaterialHandlerPtr material );
         void materialSelectionDenied( MaterialID material );
 };

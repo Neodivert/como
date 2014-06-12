@@ -27,9 +27,6 @@ namespace como {
 
 MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager )
 {
-    QObject::connect( materialsManager.get(), &MaterialsManager::materialCreated,
-                      this, &MaterialsList::addMaterial );
-
     QObject::connect( this, &MaterialsList::itemActivated, [=]( QListWidgetItem * item ){
         emit materialSelected( ( dynamic_cast< MaterialsListItem* >( item ) )->getMaterialID() );
     });

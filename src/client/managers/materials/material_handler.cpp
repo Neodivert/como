@@ -24,24 +24,29 @@ namespace como {
  * 1. Construction
  ***/
 
-MaterialHandler::MaterialHandler( MaterialID materialID, MaterialPtr material, ServerInterfacePtr server, std::function< void(void) > notifyChange ) :
+MaterialHandler::MaterialHandler( MaterialID materialID, MaterialPtr material, ServerInterfacePtr server ) :
     materialID_( materialID ),
     material_( material ),
-    server_( server ),
-    notifyChange_( notifyChange )
+    server_( server )
 {}
 
 
 MaterialHandler::MaterialHandler( MaterialHandler&& b ) :
     materialID_( b.materialID_ ),
     material_( b.material_ ),
-    server_( b.server_ ),
-    notifyChange_( b.notifyChange_ )
+    server_( b.server_ )
 {}
+
 
 /***
  * 3. Getters
  ***/
+
+MaterialID MaterialHandler::getID() const
+{
+    return materialID_;
+}
+
 
 std::string MaterialHandler::getName() const
 {
@@ -84,7 +89,7 @@ void MaterialHandler::setColor( const PackableColor& color )
 
     server_->sendCommand( CommandConstPtr( new MaterialColorChangeCommand( materialID_, color ) ) );
 
-    notifyChange_();
+    notifyObservers();
 }
 
 void MaterialHandler::setAmbientReflectivity( const PackableColor& ambientReflectivity )
@@ -93,7 +98,7 @@ void MaterialHandler::setAmbientReflectivity( const PackableColor& ambientReflec
 
     server_->sendCommand( CommandConstPtr( new MaterialAmbientReflectivityChangeCommand( materialID_, ambientReflectivity ) ) );
 
-    notifyChange_();
+    notifyObservers();
 }
 
 void MaterialHandler::setDiffuseReflectivity( const PackableColor& diffuseReflectivity )
@@ -102,7 +107,7 @@ void MaterialHandler::setDiffuseReflectivity( const PackableColor& diffuseReflec
 
     server_->sendCommand( CommandConstPtr( new MaterialDiffuseReflectivityChangeCommand( materialID_, diffuseReflectivity ) ) );
 
-    notifyChange_();
+    notifyObservers();
 }
 
 void MaterialHandler::setSpecularReflectivity( const PackableColor& specularReflectivity )
@@ -111,7 +116,7 @@ void MaterialHandler::setSpecularReflectivity( const PackableColor& specularRefl
 
     server_->sendCommand( CommandConstPtr( new MaterialSpecularReflectivityChangeCommand( materialID_, specularReflectivity ) ) );
 
-    notifyChange_();
+    notifyObservers();
 }
 
 void MaterialHandler::setSpecularExponent( float specularExponent )
@@ -120,7 +125,7 @@ void MaterialHandler::setSpecularExponent( float specularExponent )
 
     server_->sendCommand( CommandConstPtr( new MaterialSpecularExponentChangeCommand( materialID_, specularExponent ) ) );
 
-    notifyChange_();
+    notifyObservers();
 }
 
 
