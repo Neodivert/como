@@ -30,7 +30,7 @@
 #include <queue>
 #include <client/models/3d/lights/lights.hpp>
 #include <client/managers/drawables_manager/drawables_manager.hpp>
-#include <client/managers/materials_manager/materials_manager.hpp>
+#include <client/managers/materials/materials_manager.hpp>
 #include <client/managers/lights/lights_manager.hpp>
 #include <common/users/user.hpp>
 

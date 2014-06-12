@@ -20,7 +20,7 @@
 #define MATERIALS_EDITOR_HPP
 
 #include <QFrame>
-#include <client/managers/materials_manager/materials_manager.hpp>
+#include <client/managers/materials/materials_manager.hpp>
 
 #include "materials_list.hpp"
 #include "material_panel.hpp"

@@ -20,7 +20,7 @@
 #define MATERIALS_LIST_HPP
 
 #include <QListWidget>
-#include <client/managers/materials_manager/materials_manager.hpp>
+#include <client/managers/materials/materials_manager.hpp>
 #include <map>
 #include "materials_list_item.hpp"
 

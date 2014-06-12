@@ -25,7 +25,7 @@
 #include <client/managers/server_interface/server_interface.hpp>
 #include <client/models/utilities/changeable/changeable.hpp>
 #include <map>
-#include <client/managers/materials_manager/materials_manager.hpp>
+#include <client/managers/materials/materials_manager.hpp>
 #include <QOffscreenSurface>
 #include <common/utilities/observer_pattern/observable.hpp>
 
