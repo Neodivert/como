@@ -331,7 +331,9 @@ void DrawablesSelection::updateSelectionCentroid()
     }
 
     // Get the selection centroid.
-    centroid_ /= drawables_.size();
+    if( drawables_.size() ){
+        centroid_ /= drawables_.size();
+    }
     centroid_.w = 1.0f;
 
     mutex_.unlock();

@@ -235,6 +235,14 @@ void Viewport::keyPressEvent( QKeyEvent *e )
 
 void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 {
+    LocalDrawablesSelectionPtr localUserSelection = comoApp->getScene()->getDrawablesManager()->getLocalUserSelection();
+
+    // Only compute the mouse move event if we are transforming a selection.
+    if( ( comoApp->getTransformationType() == TransformationType::NONE ) ||
+            ( localUserSelection->getSize() == 0 ) ){
+        return;
+    }
+
     // Reference axis used in rotations.
     const glm::vec3 xAxis( 1.0f, 0.0f, 0.0f );
     const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
@@ -285,7 +293,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 }
 
                 // Do the translation.
-                comoApp->getScene()->getDrawablesManager()->getLocalUserSelection()->translate( glm::vec3( transformVector ) );
+                localUserSelection->translate( glm::vec3( transformVector ) );
             break;
             case TransformationType::ROTATION:
                 // Compute the angle between the vectors.
@@ -303,16 +311,16 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                     // transformationMode.
                     switch( transformationMode ){
                         case TransformationMode::FIXED_X:
-                            comoApp->getScene()->getDrawablesManager()->getLocalUserSelection()->rotate( angle, xAxis );
+                            localUserSelection->rotate( angle, xAxis );
                         break;
                         case TransformationMode::FIXED_Y:
-                            comoApp->getScene()->getDrawablesManager()->getLocalUserSelection()->rotate( angle, yAxis );
+                            localUserSelection->rotate( angle, yAxis );
                         break;
                         case TransformationMode::FIXED_Z:
-                            comoApp->getScene()->getDrawablesManager()->getLocalUserSelection()->rotate( angle, zAxis );
+                            localUserSelection->rotate( angle, zAxis );
                         break;
                         case TransformationMode::FREE:
-                            comoApp->getScene()->getDrawablesManager()->getLocalUserSelection()->rotate( angle, glm::vec3( -camera->getCenterVector() ) );
+                            localUserSelection->rotate( angle, glm::vec3( -camera->getCenterVector() ) );
                         break;
                     }
                 }
@@ -360,7 +368,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                         transformVector.y != 0.0f &&
                         transformVector.z != 0.0f ){
                         // Do the scale.
-                        comoApp->getScene()->getDrawablesManager()->getLocalUserSelection()->scale( glm::vec3( transformVector ) );
+                        localUserSelection->scale( glm::vec3( transformVector ) );
                     }
                 }
             break;
