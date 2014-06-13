@@ -23,7 +23,7 @@ COMO makes use of the following APIs and libraries:
 * OpenGL 4.2 and GLSL.
 * GLM.
 
-## Instalation (Ubuntu 14.04)
+## Building COMO (Ubuntu 14.04)
 
 ### Dependencies
 1. Install Qt 5.2 or above. You can dowload and use the online installer [from here](http://qt-project.org/downloads) or you can also install Qt from [this Ubuntu repository](https://launchpad.net/~ubuntu-sdk-team/+archive/ppa) issuing the following commands in a terminal.
