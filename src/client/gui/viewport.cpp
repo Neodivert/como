@@ -237,12 +237,6 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 {
     LocalDrawablesSelectionPtr localUserSelection = comoApp->getScene()->getDrawablesManager()->getLocalUserSelection();
 
-    // Only compute the mouse move event if we are transforming a selection.
-    if( ( comoApp->getTransformationType() == TransformationType::NONE ) ||
-            ( localUserSelection->getSize() == 0 ) ){
-        return;
-    }
-
     // Reference axis used in rotations.
     const glm::vec3 xAxis( 1.0f, 0.0f, 0.0f );
     const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
