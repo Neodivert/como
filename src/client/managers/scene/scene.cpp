@@ -216,7 +216,7 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( localUserID_, server_, log_ ) );
 
         // Initialize the drawables manager.
-        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, materialsManager_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/primitives/scenes/" ) + sceneName_, oglContext_, log_ ) );
+        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, materialsManager_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/scenes/" ) + sceneName_ + std::string( "/primitives" ), oglContext_, log_ ) );
 
         // Initialize the lights manager.
         lightsManager_ = LightsManagerPtr( new LightsManager( drawablesManager_, server_, log_ ) );
@@ -481,9 +481,9 @@ void Scene::executeRemotePrimitiveCommand( PrimitiveCommandConstPtr command )
             // Debug message.
             log_->debug( "Primitive file received: [", primitiveCreationCommand->getFile()->getFilePath()->getValue(), "]\n" );
 
-            // Build the primitives relative path, starting from SCENES_PRIMITIVES_DIR/<scene name>/.
+            // Build the primitives relative path, starting from SCENES_DIR/<scene name>/primitives.
             primitiveRelPath = primitiveCreationCommand->getFile()->getFilePath()->getValue();
-            primitiveRelPath = primitiveRelPath.substr( ( std::string( SCENES_PRIMITIVES_DIR ) + '/' + sceneName_ ).length() + 1 );
+            primitiveRelPath = primitiveRelPath.substr( ( std::string( SCENES_DIR ) + '/' + sceneName_ + "/primitives" ).length() + 1 );
 
             log_->debug( "Primitive relative path: [", primitiveRelPath, "]\n" );
 
@@ -540,7 +540,7 @@ void Scene::createScenePrimitivesDirectory()
     int lastCommandResult = 0;
 
     // Build the path to the scene primitives directory.
-    sprintf( scenePrimitivesDirectory, "%s/%s", SCENES_PRIMITIVES_DIR, sceneName_ );
+    sprintf( scenePrimitivesDirectory, "%s/%s/primitives", SCENES_DIR, sceneName_ );
 
     log_->debug( "Creating scene primitives directory [", scenePrimitivesDirectory, "] ...\n" );
 

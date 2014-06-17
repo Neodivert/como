@@ -33,6 +33,7 @@
 #include <map>
 #include <queue>
 #include <boost/filesystem.hpp>
+#include <common/utilities/paths.hpp>
 
 using boost::asio::ip::tcp;
 

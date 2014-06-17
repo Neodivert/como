@@ -403,21 +403,32 @@ void Server::createScenePrimitivesDirectory()
     int lastCommandResult = 0;
 
     // Build the path to the scene primitives directory.
-    sprintf( scenePrimitivesDirectory, "%s/%s", SCENES_PRIMITIVES_DIR, sceneName_ );
+    sprintf( scenePrimitivesDirectory, "%s/%s/primitives", SCENES_DIR, sceneName_ );
 
     log_->debug( "Creating scene primitives directory [", scenePrimitivesDirectory, "] ...\n" );
 
-    // Copy the server directory for local primitives as this scene's
-    // primitives directory.
+    // Create the scene primitives directory.
+    sprintf( consoleCommand, "mkdir -p \"%s\"", scenePrimitivesDirectory );
+    log_->debug( consoleCommand, "\n" );
+    lastCommandResult = system( consoleCommand );
+    if( lastCommandResult ){
+        throw std::runtime_error( std::string( "Error creating scene primitives directory [" ) +
+                                  scenePrimitivesDirectory +
+                                  "]"
+                                  );
+    }
+
+    // Copy the server's local directory to this scene's directory.
     // TODO: Use a multiplatform alternative (boost::filesystem::copy_directory
     // doesn't copy directory's contents).
-    sprintf( consoleCommand, "cp -RT \"%s\" \"%s\"", LOCAL_PRIMITIVES_DIR, scenePrimitivesDirectory );
+    sprintf( consoleCommand, "cp -RT \"%s\"* \"%s\"", LOCAL_PRIMITIVES_DIR, scenePrimitivesDirectory );
+    log_->debug( consoleCommand, "\n" );
     lastCommandResult = system( consoleCommand );
 
     // If there was any error creating the scene primitives directory, throw
     // an exception.
     if( lastCommandResult ){
-        throw std::runtime_error( std::string( "Error creating scene primitives directory [" ) +
+        throw std::runtime_error( std::string( "Error copying contents to scene primitives directory [" ) +
                                   scenePrimitivesDirectory +
                                   "]"
                                   );

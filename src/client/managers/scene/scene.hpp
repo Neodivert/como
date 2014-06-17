@@ -33,6 +33,7 @@
 #include <client/managers/materials/materials_manager.hpp>
 #include <client/managers/lights/lights_manager.hpp>
 #include <common/users/user.hpp>
+#include <common/utilities/paths.hpp>
 
 Q_DECLARE_METATYPE( como::CommandConstPtr )
 
