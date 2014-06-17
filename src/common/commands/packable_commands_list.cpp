@@ -128,6 +128,15 @@ const void* PackableCommandsList::unpack( const void* buffer )
                 }
             break;
 
+            // Primitive category commands.
+            case CommandTarget::PRIMITIVE_CATEGORY:
+                switch( PrimitiveCategoryCommand::getType( buffer ) ){
+                    case PrimitiveCategoryCommandType::PRIMITIVE_CATEGORY_CREATION:
+                        command = CommandPtr( new PrimitiveCategoryCreationCommand );
+                    break;
+                }
+            break;
+
             case CommandTarget::MATERIAL:
                 switch( MaterialCommand::getType( buffer ) ){
                     case MaterialCommandType::MATERIAL_CREATION:

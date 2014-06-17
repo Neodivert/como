@@ -25,11 +25,13 @@ INCLUDEPATH += ../../src
 HEADERS += \
     ../../src/server/server.hpp \
     ../../src/server/public_user.hpp \
-    ../../src/server/commands_historic.hpp
+    ../../src/server/commands_historic.hpp \
+    ../../src/server/server_primitives_manager.hpp
 
 # Server sources
 SOURCES += \
     ../../src/server/main.cpp \
     ../../src/server/server.cpp \
     ../../src/server/public_user.cpp \
-    ../../src/server/commands_historic.cpp
+    ../../src/server/commands_historic.cpp \
+    ../../src/server/server_primitives_manager.cpp

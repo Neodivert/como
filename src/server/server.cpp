@@ -109,8 +109,9 @@ void Server::run()
     try{
         log_->debug( "Press any key to exit\n" );
 
-        // Create the primitives directory for the current scene.
-        createScenePrimitivesDirectory();
+        // Create and initialize the primitives directory for the current
+        // scene.
+        primitivesManager_ = std::unique_ptr< ServerPrimitivesManager >( new ServerPrimitivesManager( sceneName_, commandsHistoric_, log_ ) );
 
         // Create a directional light with with no owner and synchronise it in
         // the commands historic.
@@ -357,6 +358,9 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
                 log_->debug( "Primitive received [", primitiveCreationCommand->getFile()->getFilePath()->getValue(), "]\n" );
             }
         break;
+        case CommandTarget::PRIMITIVE_CATEGORY:
+            // TODO: Complete
+        break;
         case CommandTarget::MATERIAL:
             // TODO: Complete.
         break;
@@ -395,74 +399,6 @@ void Server::addCommand( CommandConstPtr sceneCommand )
 /***
  * 7. Auxiliar methods
  ***/
-
-void Server::createScenePrimitivesDirectory()
-{
-    char scenePrimitivesDirectory[128] = {0};
-    char consoleCommand[256] = {0};
-    int lastCommandResult = 0;
-
-    // Build the path to the scene primitives directory.
-    sprintf( scenePrimitivesDirectory, "%s/%s/primitives", SCENES_DIR, sceneName_ );
-
-    log_->debug( "Creating scene primitives directory [", scenePrimitivesDirectory, "] ...\n" );
-
-    // Create the scene primitives directory.
-    sprintf( consoleCommand, "mkdir -p \"%s\"", scenePrimitivesDirectory );
-    log_->debug( consoleCommand, "\n" );
-    lastCommandResult = system( consoleCommand );
-    if( lastCommandResult ){
-        throw std::runtime_error( std::string( "Error creating scene primitives directory [" ) +
-                                  scenePrimitivesDirectory +
-                                  "]"
-                                  );
-    }
-
-    // Copy the server's local directory to this scene's directory.
-    // TODO: Use a multiplatform alternative (boost::filesystem::copy_directory
-    // doesn't copy directory's contents).
-    sprintf( consoleCommand, "cp -RT \"%s\"* \"%s\"", LOCAL_PRIMITIVES_DIR, scenePrimitivesDirectory );
-    log_->debug( consoleCommand, "\n" );
-    lastCommandResult = system( consoleCommand );
-
-    // If there was any error creating the scene primitives directory, throw
-    // an exception.
-    if( lastCommandResult ){
-        throw std::runtime_error( std::string( "Error copying contents to scene primitives directory [" ) +
-                                  scenePrimitivesDirectory +
-                                  "]"
-                                  );
-    }
-
-    log_->debug( "Creating scene primitives directory [", scenePrimitivesDirectory, "] ...OK\n" );
-
-    initializePrimitives( scenePrimitivesDirectory );
-}
-
-
-void Server::initializePrimitives( const char* primitivesDir )
-{
-    PrimitiveID primitiveID = 0;
-    const char* filePath = nullptr;
-    const boost::filesystem::recursive_directory_iterator endIterator;
-    boost::filesystem::recursive_directory_iterator fileIterator( primitivesDir );
-
-    log_->debug( "Adding primitives to scene [", primitivesDir, "] ...\n" );
-
-    for( ; fileIterator != endIterator; fileIterator++ ){
-        if( boost::filesystem::is_regular_file( *fileIterator ) ){
-            filePath = fileIterator->path().string().c_str();
-
-            log_->debug( "\tAdding primitive [", filePath, "] to scene ...\n" );
-            addCommand( CommandConstPtr( new PrimitiveCreationCommand( filePath, 0, primitiveID ) ) );
-            log_->debug( "\tAdding primitive [", filePath, "] to scene ...OK\n" );
-
-            primitiveID++;
-        }
-    }
-
-    log_->debug( "Adding primitives to scene [", primitivesDir, "] ...OK\n" );
-}
 
 
 void Server::deleteUser( UserID id )

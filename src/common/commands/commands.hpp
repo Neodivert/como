@@ -37,6 +37,9 @@
 // Primitive commands
 #include "primitive_commands/primitive_creation_command.hpp"
 
+// Primitive category commands
+#include "primitive_category_commands/primitive_category_creation_command.hpp"
+
 // Material commands
 #include "material_commands/material_commands.hpp" // TODO: Make this with the rest of commands.
 

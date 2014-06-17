@@ -34,6 +34,7 @@
 #include <queue>
 #include <boost/filesystem.hpp>
 #include <common/utilities/paths.hpp>
+#include <server/server_primitives_manager.hpp>
 
 using boost::asio::ip::tcp;
 
@@ -87,6 +88,9 @@ class Server
 
         // A map that relates each drawable in the scene with its owner.
         DrawableOwners drawableOwners_;
+
+
+        std::unique_ptr< ServerPrimitivesManager > primitivesManager_;
 
         // Log
         LogPtr log_;
@@ -177,10 +181,6 @@ class Server
         /***
          * 7. Auxiliar methods
          ***/
-    private:
-        void createScenePrimitivesDirectory();
-        void initializePrimitives( const char* primitivesDir );
-
     public:
         void deleteUser( UserID id );
         void unselectAll( UserID userID );

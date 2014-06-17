@@ -78,7 +78,10 @@ HEADERS += \
     ../../src/common/commands/light_commands/light_color_change_command.hpp \
     ../../src/common/utilities/observer_pattern/observable_container.hpp \
     ../../src/common/utilities/observer_pattern/container_observer.hpp \
-    ../../src/common/utilities/paths.hpp
+    ../../src/common/utilities/paths.hpp \
+    ../../src/common/ids/primitive_category_id.hpp \
+    ../../src/common/commands/primitive_category_commands/primitive_category_command.hpp \
+    ../../src/common/commands/primitive_category_commands/primitive_category_creation_command.hpp
 
 
 # Common sources (used by both client and server).
@@ -120,4 +123,6 @@ SOURCES += \
     ../../src/common/commands/light_commands/light_command.cpp \
     ../../src/common/utilities/observer_pattern/observable.cpp \
     ../../src/common/commands/user_commands/user_parameter_change_command.cpp \
-    ../../src/common/commands/light_commands/light_color_change_command.cpp
+    ../../src/common/commands/light_commands/light_color_change_command.cpp \
+    ../../src/common/commands/primitive_category_commands/primitive_category_command.cpp \
+    ../../src/common/commands/primitive_category_commands/primitive_category_creation_command.cpp
