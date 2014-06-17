@@ -66,7 +66,13 @@ class ServerPrimitivesManager : public AbstractPrimitivesManager
          * 4. Categories management
          ***/
     private:
-        void registerCategory( std::string categoryName );
+        PrimitiveCategoryID registerCategory( std::string categoryName );
+
+
+        /***
+         * 5. Primitives management
+         ***/
+        void registerPrimitive( std::string filePath, PrimitiveCategoryID categoryID );
 
 
         /***

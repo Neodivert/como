@@ -136,6 +136,7 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
         DrawablesManagerPtr getDrawablesManager() const ;
         MaterialsManagerPtr getMaterialsManager() const;
         LightsManagerPtr getLightsManager() const;
+        const ClientPrimitivesManager* getPrimitivesManager() const;
 
 
         /***
@@ -190,7 +191,6 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
     private:
         void executeRemoteUserCommand( UserCommandConstPtr command );
         void executeRemoteDrawableCommand( DrawableCommandConstPtr command );
-        void executeRemotePrimitiveCommand( PrimitiveCommandConstPtr command );
 
     public slots:
         void executeRemoteCommand( CommandConstPtr command );

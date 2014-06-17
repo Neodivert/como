@@ -73,8 +73,14 @@ QFrame* CreationTab::createMeshFromPrimitiveCreationMenu()
 
     // Signal / Slot connection: when a new primitive is created in the scene,
     // add it to the primitives dropdown list.
-    connect( scene_.get(), &Scene::primitiveAdded, [=]( QString primitiveRelPath, PrimitiveID primitiveID ){
-        primitiveSelector->insertItem( static_cast< int >( primitiveID ), primitiveRelPath );
+    connect( scene_.get(), &Scene::connectedToScene, [=](){
+        // If we don't wait until we are connected to a scene to make the
+        // following connection, we get a null pointer when calling
+        // scene_->getPrimitivesManager().
+        connect( scene_->getPrimitivesManager(), &ClientPrimitivesManager::primitiveAdded, [=]( PrimitiveID primitiveID, std::string primitiveRelPath ){
+            primitiveSelector->insertItem( static_cast< int >( primitiveID ), primitiveRelPath.c_str() );
+        });
+
     });
 
     return frame;

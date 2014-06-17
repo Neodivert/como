@@ -219,7 +219,7 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         primitivesManager_ = std::unique_ptr< ClientPrimitivesManager >( new ClientPrimitivesManager( sceneName_, log_ ) );
 
         // Initialize the drawables manager.
-        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, materialsManager_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/scenes/" ) + sceneName_ + std::string( "/primitives" ), oglContext_, log_ ) );
+        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, primitivesManager_.get(), materialsManager_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/scenes/" ) + sceneName_ + std::string( "/primitives" ), oglContext_, log_ ) );
 
         // Initialize the lights manager.
         lightsManager_ = LightsManagerPtr( new LightsManager( drawablesManager_, server_, log_ ) );
@@ -299,6 +299,11 @@ MaterialsManagerPtr Scene::getMaterialsManager() const
 LightsManagerPtr Scene::getLightsManager() const
 {
     return lightsManager_;
+}
+
+const ClientPrimitivesManager *Scene::getPrimitivesManager() const
+{
+    return primitivesManager_.get();
 }
 
 
@@ -471,36 +476,6 @@ void Scene::executeRemoteUserCommand( UserCommandConstPtr command )
     }
 }
 
-void Scene::executeRemotePrimitiveCommand( PrimitiveCommandConstPtr command )
-{
-    const PrimitiveCreationCommand * primitiveCreationCommand = nullptr;
-    std::string primitiveRelPath;
-
-    switch( command->getType() ){
-        case PrimitiveCommandType::PRIMITIVE_CREATION:
-            // Cast to a PRIMITIVE_SELECTION command.
-            primitiveCreationCommand = dynamic_cast< const PrimitiveCreationCommand* >( command.get() );
-
-            // Debug message.
-            log_->debug( "Primitive file received: [", primitiveCreationCommand->getFile()->getFilePath()->getValue(), "]\n" );
-
-            // Build the primitives relative path, starting from SCENES_DIR/<scene name>/primitives.
-            primitiveRelPath = primitiveCreationCommand->getFile()->getFilePath()->getValue();
-            primitiveRelPath = primitiveRelPath.substr( ( std::string( SCENES_DIR ) + '/' + sceneName_ + "/primitives" ).length() + 1 );
-
-            log_->debug( "Primitive relative path: [", primitiveRelPath, "]\n" );
-
-            // Register the new primitive.
-            drawablesManager_->registerPrimitivePath( primitiveCreationCommand->getPrimitiveID(), primitiveRelPath );
-
-            // Emit a signal indicating the primitive insertion. Include
-            // primitive's name and ID in the signal.
-            emit primitiveAdded( tr( primitiveRelPath.c_str() ),
-                                 primitiveCreationCommand->getPrimitiveID() );
-        break;
-    }
-}
-
 
 void Scene::executeRemoteCommand( CommandConstPtr command )
 {
@@ -519,7 +494,7 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
             drawablesManager_->executeRemoteSelectionCommand( dynamic_pointer_cast< const SelectionCommand>( command ) );
         break;
         case CommandTarget::PRIMITIVE:
-            executeRemotePrimitiveCommand( dynamic_pointer_cast< const PrimitiveCommand>( command ) );
+            primitivesManager_->executeRemoteCommand( dynamic_pointer_cast< const PrimitiveCommand>( command ) );
         break;
         case CommandTarget::PRIMITIVE_CATEGORY:
             primitivesManager_->executeRemoteCommand( dynamic_pointer_cast< const PrimitiveCategoryCommand >( command ) );

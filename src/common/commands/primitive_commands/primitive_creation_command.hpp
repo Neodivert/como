@@ -20,6 +20,7 @@
 #define PRIMITIVE_CREATION_COMMAND_HPP
 
 #include "primitive_command.hpp"
+#include <common/ids/primitive_category_id.hpp>
 
 namespace como {
 
@@ -31,6 +32,9 @@ namespace como {
 class PrimitiveCreationCommand : public PrimitiveCommand
 {
     private:
+        /*! Primitive category ID. */
+        PackablePrimitiveCategoryID category_;
+
         /*! Primitive specification file. */
         PackableFile file_;
 
@@ -42,14 +46,7 @@ class PrimitiveCreationCommand : public PrimitiveCommand
         /*! \brief Default constructor. */
         PrimitiveCreationCommand();
 
-        /*!
-         * \brief Constructor. Creates a PrimitiveCreationCommand from the
-         * given specification file.
-         * \param filePath path to the primitive's specification file.
-         * \param userID ID of the user who created / shared the primitive.
-         * \param drawableID Unique ID given to the new primitive.
-         */
-        PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, PrimitiveID primitiveID );
+        PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, PrimitiveID primitiveID, PrimitiveCategoryID categoryID );
 
         /*! \brief Copy assignment operator */
         PrimitiveCreationCommand( const PrimitiveCreationCommand& );
@@ -70,8 +67,12 @@ class PrimitiveCreationCommand : public PrimitiveCommand
          * 3. Getters
          ***/
 
+        std::string getPrimitiveName() const;
+
+        PrimitiveCategoryID getCategoryID() const;
+
         /*! \brief Returns a pointer to the primitive's specification file. */
-        const PackableFile* getFile() const ;
+        const PackableFile* getFile() const;
 
 
         /***

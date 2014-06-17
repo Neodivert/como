@@ -25,11 +25,12 @@ namespace como {
  * 1. Construction
  ***/
 
-DrawablesManager::DrawablesManager( ServerInterfacePtr server, MaterialsManagerPtr materialsManager, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
+DrawablesManager::DrawablesManager( ServerInterfacePtr server, const ClientPrimitivesManager* primitivesManager, MaterialsManagerPtr materialsManager, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
     AbstractChangeable(),
     nonSelectedDrawables_( new DrawablesSelection( glm::vec4( 0.0f ) ) ),
     server_( server ),
     localUserID_( localUserID ),
+    primitivesManager_( primitivesManager ),
     materialsManager_( materialsManager ),
     primitivesDirPath_( primitivesDirPath ),
     oglContext_( oglContext ),
@@ -125,9 +126,9 @@ void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, Packabl
 
 void DrawablesManager::createMeshAndMaterial( PrimitiveID primitiveID )
 {
-    // Build the "absolute" path to the specification file of the
+    // Get the "absolute" path to the specification file of the
     // primitive used for building this mesh.
-    std::string primitivePath = primitivesDirPath_ + '/' + primitivePaths_.at( primitiveID );
+    std::string primitivePath = primitivesManager_->getPrimitiveAbsolutePath( primitiveID );
 
     // Create the material.
     MaterialID materialID = materialsManager_->createMaterial( "Unnamed material" ); // TODO: Use another name.
@@ -148,9 +149,9 @@ void DrawablesManager::createMeshAndMaterial( PrimitiveID primitiveID )
 // FIXME: Duplicated code.
 void DrawablesManager::createMesh( PrimitiveID primitiveID, MaterialID materialID )
 {
-    // Build the "absolute" path to the specification file of the
+    // Get the "absolute" path to the specification file of the
     // primitive used for building this mesh.
-    std::string primitivePath = primitivesDirPath_ + '/' + primitivePaths_.at( primitiveID );
+    std::string primitivePath = primitivesManager_->getPrimitiveAbsolutePath( primitiveID );
 
     // Create the mesh.
     DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
@@ -166,9 +167,9 @@ void DrawablesManager::createMesh( PrimitiveID primitiveID, MaterialID materialI
 // FIXME: Duplicated code.
 void DrawablesManager::createRemoteMesh( PrimitiveID primitiveID, PackableDrawableID drawableID, MaterialID materialID )
 {
-    // Build the "absolute" path to the specification file of the
+    // Get the "absolute" path to the specification file of the
     // primitive used for building this mesh.
-    std::string primitivePath = primitivesDirPath_ + '/' + primitivePaths_.at( primitiveID );
+    std::string primitivePath = primitivesManager_->getPrimitiveAbsolutePath( primitiveID );
 
     // Create the mesh.
     DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), materialsManager_->getMaterial( materialID ) ) );

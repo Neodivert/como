@@ -84,7 +84,8 @@ HEADERS += \
     ../../src/common/commands/primitive_category_commands/primitive_category_creation_command.hpp \
     ../../src/common/commands/primitive_category_commands/primitive_category_commands.hpp \
     ../../src/common/commands/primitive_commands/primitive_commands.hpp \
-    ../../src/common/managers/primitives/abstract_primitives_manager.hpp
+    ../../src/common/managers/primitives/abstract_primitives_manager.hpp \
+    ../../src/common/ids/primitive_id.hpp
 
 
 # Common sources (used by both client and server).

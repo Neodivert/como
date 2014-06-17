@@ -90,9 +90,20 @@ void ServerPrimitivesManager::syncPrimitivesDir()
 
 void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
 {
-    registerCategory( boost::filesystem::basename( dirPath ) );
+    const boost::filesystem::directory_iterator endIterator;
+    boost::filesystem::directory_iterator fileIterator( dirPath );
+    PrimitiveCategoryID categoryID;
+    std::string filePath;
 
-    // use PrimitivesID
+    categoryID = registerCategory( boost::filesystem::basename( dirPath ) );
+
+    for( ; fileIterator != endIterator; fileIterator++ ){
+        if( boost::filesystem::is_regular_file( *fileIterator ) ){
+            filePath = fileIterator->path().string();
+
+            registerPrimitive( filePath, categoryID );
+        }
+    }
 }
 
 
@@ -100,16 +111,31 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
  * 4. Categories management
  ***/
 
-void ServerPrimitivesManager::registerCategory( std::string categoryName )
+PrimitiveCategoryID ServerPrimitivesManager::registerCategory( std::string categoryName )
 {
     // Register the the given category.
     AbstractPrimitivesManager::registerCategory( nextPrimitiveCategoryID_, categoryName );
-    nextPrimitiveCategoryID_++;
 
     // Add the appropriate category creation command to the commands historic.
     log_->debug( "\tAdding primitive category [", categoryName, "] to scene ...\n" );
     commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCategoryCreationCommand( 0, nextPrimitiveCategoryID_, categoryName  ) ) );
     log_->debug( "\tAdding primitive category [", categoryName, "] to scene ...OK\n" );
+
+    return nextPrimitiveCategoryID_++;
+}
+
+
+/***
+ * 5. Primitives management
+ ***/
+
+void ServerPrimitivesManager::registerPrimitive( std::string filePath, PrimitiveCategoryID categoryID )
+{
+    AbstractPrimitivesManager::registerPrimitive( nextPrimitiveID_, boost::filesystem::basename( filePath ) + boost::filesystem::extension( filePath ), categoryID );
+
+    commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCreationCommand( filePath.c_str(), 0, nextPrimitiveID_, categoryID ) ) );
+
+    nextPrimitiveID_++;
 }
 
 } // namespace como

@@ -125,11 +125,13 @@ class PackableFile : public CompositePackable {
         std::uint32_t getFileSize() const;
 
 
+        std::string getFileName() const;
+
         /*!
          * \brief Returns a pointer to the path of the primitive's
          * specification file.
          */
-        const PackableString< NAME_SIZE >* getFilePath() const ;
+        std::string getFilePath() const ;
 
 
         /***

@@ -28,6 +28,7 @@
 #include <client/managers/materials/materials_manager.hpp>
 #include <QOffscreenSurface>
 #include <common/utilities/observer_pattern/observable.hpp>
+#include <client/managers/primitives/client_primitives_manager.hpp>
 
 namespace como {
 
@@ -48,6 +49,8 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
 
         UserID localUserID_;
 
+        const ClientPrimitivesManager* primitivesManager_;
+
         MaterialsManagerPtr materialsManager_;
 
         // TODO: move this to ServerInterface?
@@ -67,7 +70,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         /***
          * 1. Construction
          ***/
-        DrawablesManager( ServerInterfacePtr server, MaterialsManagerPtr materialsManager, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
+        DrawablesManager( ServerInterfacePtr server, const ClientPrimitivesManager* primitivesManager, MaterialsManagerPtr materialsManager, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
         DrawablesManager( const DrawablesManager& ) = delete;
         DrawablesManager( DrawablesManager&& ) = delete;
 

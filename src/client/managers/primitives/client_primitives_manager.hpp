@@ -25,11 +25,14 @@
 #include <common/commands/primitive_commands/primitive_commands.hpp>
 #include <map>
 #include <common/managers/primitives/abstract_primitives_manager.hpp>
+#include <QObject>
 
 namespace como {
 
-class ClientPrimitivesManager : public AbstractPrimitivesManager
+class ClientPrimitivesManager : public QObject, public AbstractPrimitivesManager
 {
+    Q_OBJECT
+
     private:
 
     public:
@@ -52,6 +55,7 @@ class ClientPrimitivesManager : public AbstractPrimitivesManager
          * 3. Remote command execution
          ***/
         void executeRemoteCommand( PrimitiveCategoryCommandConstPtr command );
+        void executeRemoteCommand( PrimitiveCommandConstPtr command );
 
 
         /***
@@ -59,6 +63,13 @@ class ClientPrimitivesManager : public AbstractPrimitivesManager
          ***/
         ClientPrimitivesManager& operator = ( const ClientPrimitivesManager& ) = delete;
         ClientPrimitivesManager& operator = ( ClientPrimitivesManager&& ) = delete;
+
+
+        /***
+         * 5. Signals
+         ***/
+    signals:
+        void primitiveAdded( PrimitiveID id, std::string relativePath );
 };
 
 } // namespace como

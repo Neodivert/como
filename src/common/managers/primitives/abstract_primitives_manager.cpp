@@ -45,7 +45,24 @@ AbstractPrimitivesManager::AbstractPrimitivesManager( std::string sceneName, Log
 
 
 /***
- * 3. Categories management
+ * 3. Getters
+ ***/
+
+std::string AbstractPrimitivesManager::getPrimitiveRelativePath( PrimitiveID id ) const
+{
+    PrimitiveInfo primitive = primitiveInfo_.at( id );
+    std::string categoryName = categoryNames_.at( primitive.category );
+    return categoryName + "/" + primitive.name;
+}
+
+std::string AbstractPrimitivesManager::getPrimitiveAbsolutePath( PrimitiveID id ) const
+{
+    return scenePrimitivesDir_ + '/' + getPrimitiveRelativePath( id );
+}
+
+
+/***
+ * 4. Categories management
  ***/
 
 void AbstractPrimitivesManager::registerCategory( PrimitiveCategoryID id, std::string name )
@@ -74,7 +91,21 @@ void AbstractPrimitivesManager::createCategory( PrimitiveCategoryID id, std::str
 
 
 /***
- * 4. Auxiliar methods
+ * 5. Primitives management
+ ***/
+
+void AbstractPrimitivesManager::registerPrimitive( PrimitiveID id, std::string name , PrimitiveCategoryID category )
+{
+    log_->debug( "Primitive registered - id (", static_cast< unsigned int >( id ),
+                 "), name (", name,
+                 ") - category(", static_cast< unsigned int >( category ), ")\n" );
+
+    primitiveInfo_[id] = PrimitiveInfo( { name, category } );
+}
+
+
+/***
+ * 6. Auxiliar methods
  ***/
 
 bool AbstractPrimitivesManager::categoryNameInUse( std::string categoryName ) const

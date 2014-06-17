@@ -9,16 +9,17 @@ namespace como {
 PrimitiveCreationCommand::PrimitiveCreationCommand() :
     PrimitiveCommand( PrimitiveCommandType::PRIMITIVE_CREATION, 0, 0 )
 {
-    // Register the primitive's file as part of this CompositePackable.
+    addPackable( &category_ );
     addPackable( &file_ );
 }
 
 
-PrimitiveCreationCommand::PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, PrimitiveID primitiveID ) :
+PrimitiveCreationCommand::PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, PrimitiveID primitiveID, PrimitiveCategoryID categoryID ) :
     PrimitiveCommand( PrimitiveCommandType::PRIMITIVE_CREATION, userID, primitiveID ),
+    category_( categoryID ),
     file_( filePath )
 {
-    // Register the primitive's file as part of this CompositePackable.
+    addPackable( &category_ );
     addPackable( &file_ );
 }
 
@@ -27,7 +28,7 @@ PrimitiveCreationCommand::PrimitiveCreationCommand( const PrimitiveCreationComma
     PrimitiveCommand( b ),
     file_( b.file_ )
 {
-    // Register the primitive's file as part of this CompositePackable.
+    addPackable( &category_ );
     addPackable( &file_ );
 }
 
@@ -35,6 +36,18 @@ PrimitiveCreationCommand::PrimitiveCreationCommand( const PrimitiveCreationComma
 /***
  * 3. Getters
  ***/
+
+std::string PrimitiveCreationCommand::getPrimitiveName() const
+{
+    return file_.getFileName();
+}
+
+
+PrimitiveCategoryID PrimitiveCreationCommand::getCategoryID() const
+{
+    return category_.getValue();
+}
+
 
 const PackableFile* PrimitiveCreationCommand::getFile() const
 {

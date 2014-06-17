@@ -23,9 +23,16 @@
 #include <map>
 #include <common/utilities/log.hpp>
 #include <common/ids/primitive_category_id.hpp>
+#include <common/ids/primitive_id.hpp>
 #include <common/managers/primitives/abstract_primitives_manager.hpp>
 
 namespace como {
+
+struct PrimitiveInfo
+{
+    std::string name;
+    PrimitiveCategoryID category;
+};
 
 class AbstractPrimitivesManager
 {
@@ -33,6 +40,7 @@ class AbstractPrimitivesManager
         std::string scenePrimitivesDir_;
 
         std::map< PrimitiveCategoryID, std::string > categoryNames_;
+        std::map< PrimitiveID, PrimitiveInfo > primitiveInfo_;
 
         LogPtr log_;
 
@@ -53,7 +61,14 @@ class AbstractPrimitivesManager
 
 
         /***
-         * 3. Categories management
+         * 3. Getters
+         ***/
+        std::string getPrimitiveRelativePath( PrimitiveID id ) const;
+        std::string getPrimitiveAbsolutePath( PrimitiveID id ) const;
+
+
+        /***
+         * 4. Categories management
          ***/
     protected:
         void registerCategory( PrimitiveCategoryID id, std::string name );
@@ -61,13 +76,19 @@ class AbstractPrimitivesManager
 
 
         /***
-         * 4. Auxiliar methods
+         * 5. Primitives management
+         ***/
+        void registerPrimitive( PrimitiveID id, std::string name, PrimitiveCategoryID category );
+
+
+        /***
+         * 6. Auxiliar methods
          ***/
         bool categoryNameInUse( std::string categoryName ) const;
 
 
         /***
-         * 5. Operators
+         * 7. Operators
          ***/
         AbstractPrimitivesManager& operator = ( const AbstractPrimitivesManager& ) = delete;
         AbstractPrimitivesManager& operator = ( AbstractPrimitivesManager&& ) = delete;

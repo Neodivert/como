@@ -234,9 +234,16 @@ std::uint32_t PackableFile::getFileSize() const
 }
 
 
-const PackableString< NAME_SIZE >* PackableFile::getFilePath() const
+std::string PackableFile::getFileName() const
 {
-    return &filePath_;
+    return boost::filesystem::basename( filePath_.getValue() ) +
+            boost::filesystem::extension( filePath_.getValue() );
+}
+
+
+std::string PackableFile::getFilePath() const
+{
+    return std::string( filePath_.getValue() );
 }
 
 

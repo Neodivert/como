@@ -20,6 +20,7 @@
 #define PRIMITIVE_COMMAND_HPP
 
 #include <common/commands/type_command.hpp>
+#include <common/ids/primitive_id.hpp>
 
 namespace como {
 
@@ -34,8 +35,6 @@ enum class PrimitiveCommandType : std::uint8_t {
 };
 
 typedef PackableUint8< PrimitiveCommandType > PackablePrimitiveCommandType;
-typedef std::uint8_t PrimitiveID;
-typedef PackableUint8< PrimitiveID > PackablePrimitiveID;
 
 class PrimitiveCommand : public TypeCommand< PrimitiveCommandType >
 {
