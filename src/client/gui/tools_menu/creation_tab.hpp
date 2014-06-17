@@ -20,6 +20,7 @@
 #define CREATION_TAB_HPP
 
 #include <QFrame>
+#include <client/gui/primitives/primitive_import_dialog.hpp>
 #include <client/managers/scene/scene.hpp>
 
 namespace como {
@@ -58,7 +59,7 @@ class CreationTab : public QFrame
          ***/
     private:
         QFrame* createMeshFromPrimitiveCreationMenu();
-        QFrame* createDirectionalLightMenu();
+        QPushButton* createPrimitiveImportButton() const;
     public:
 
 

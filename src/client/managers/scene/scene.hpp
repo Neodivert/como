@@ -136,7 +136,7 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
         DrawablesManagerPtr getDrawablesManager() const ;
         MaterialsManagerPtr getMaterialsManager() const;
         LightsManagerPtr getLightsManager() const;
-        const ClientPrimitivesManager* getPrimitivesManager() const;
+        ClientPrimitivesManager* getPrimitivesManager() const;
 
 
         /***

@@ -32,6 +32,7 @@ CreationTab::CreationTab( ScenePtr scene ) :
 
     // Add widgets to the previous layout.
     layout->addWidget( createMeshFromPrimitiveCreationMenu() );
+    layout->addWidget( createPrimitiveImportButton() );
 
     // Set the previous layout as this tab's layout.
     setLayout( layout );
@@ -84,6 +85,20 @@ QFrame* CreationTab::createMeshFromPrimitiveCreationMenu()
     });
 
     return frame;
+}
+
+
+QPushButton* CreationTab::createPrimitiveImportButton() const
+{
+    QPushButton* importPrimitiveButton = new QPushButton( "Import primitive" );
+
+    QObject::connect( importPrimitiveButton, &QPushButton::clicked, [this](){
+        PrimitiveImportDialog primitiveImportDialog( scene_->getPrimitivesManager() );
+
+        primitiveImportDialog.exec();
+    });
+
+    return importPrimitiveButton;
 }
 
 } // namespace como

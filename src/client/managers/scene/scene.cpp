@@ -301,7 +301,7 @@ LightsManagerPtr Scene::getLightsManager() const
     return lightsManager_;
 }
 
-const ClientPrimitivesManager *Scene::getPrimitivesManager() const
+ClientPrimitivesManager *Scene::getPrimitivesManager() const
 {
     return primitivesManager_.get();
 }
