@@ -25,14 +25,11 @@ namespace como {
  ***/
 
 ServerPrimitivesManager::ServerPrimitivesManager( std::string sceneName_, CommandsHistoricPtr commandsHistoric, LogPtr log ) :
+    AbstractPrimitivesManager( sceneName_, log ),
     nextPrimitiveCategoryID_( 0 ),
     nextPrimitiveID_( 0 ),
-    commandsHistoric_( commandsHistoric ),
-    log_( log )
+    commandsHistoric_( commandsHistoric )
 {
-    // Build the path to the scene's primitives directory.
-    scenePrimitivesDir_ = std::string( SCENES_DIR ) + "/" + sceneName_ + "/primitives";
-
     // Sync server's local primitives directory.
     syncPrimitivesDir();
 }
@@ -47,18 +44,7 @@ void ServerPrimitivesManager::createPrimitivesDir()
     char consoleCommand[256] = {0};
     int lastCommandResult = 0;
 
-    log_->debug( "Creating scene primitives directory [", scenePrimitivesDir_, "] ...\n" );
-
-    // Create the scene primitives directory.
-    sprintf( consoleCommand, "mkdir -p \"%s\"", scenePrimitivesDir_.c_str() );
-    log_->debug( consoleCommand, "\n" );
-    lastCommandResult = system( consoleCommand );
-    if( lastCommandResult ){
-        throw std::runtime_error( std::string( "Error creating scene primitives directory [" ) +
-                                  scenePrimitivesDir_ +
-                                  "]"
-                                  );
-    }
+    log_->debug( "Populating scene primitives directory [", scenePrimitivesDir_, "] ...\n" );
 
     // Copy the server's local directory to this scene's directory.
     // TODO: Use a multiplatform alternative (boost::filesystem::copy_directory
@@ -76,17 +62,17 @@ void ServerPrimitivesManager::createPrimitivesDir()
                                   );
     }
 
-    log_->debug( "Creating scene primitives directory [", scenePrimitivesDir_, "] ...OK\n" );
+    log_->debug( "Populating scene primitives directory [", scenePrimitivesDir_, "] ...OK\n" );
 }
 
 
 void ServerPrimitivesManager::syncPrimitivesDir()
 {
+    createPrimitivesDir();
+
     const char* filePath = nullptr;
     const boost::filesystem::directory_iterator endIterator;
     boost::filesystem::directory_iterator fileIterator( scenePrimitivesDir_ );
-
-    createPrimitivesDir();
 
     log_->debug( "Adding primitives to scene [", scenePrimitivesDir_, "] ...\n" );
 
@@ -104,7 +90,7 @@ void ServerPrimitivesManager::syncPrimitivesDir()
 
 void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
 {
-    addCategory( boost::filesystem::basename( dirPath ) );
+    registerCategory( boost::filesystem::basename( dirPath ) );
 
     // use PrimitivesID
 }
@@ -114,34 +100,16 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
  * 4. Categories management
  ***/
 
-void ServerPrimitivesManager::addCategory( std::string categoryName )
+void ServerPrimitivesManager::registerCategory( std::string categoryName )
 {
-    if( categoryNameInUse( categoryName ) ){
-        throw std::runtime_error( std::string( "Category name [" ) +
-                                  categoryName +
-                                  "] already in use" );
-    }
+    // Register the the given category.
+    AbstractPrimitivesManager::registerCategory( nextPrimitiveCategoryID_, categoryName );
+    nextPrimitiveCategoryID_++;
 
+    // Add the appropriate category creation command to the commands historic.
     log_->debug( "\tAdding primitive category [", categoryName, "] to scene ...\n" );
     commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCategoryCreationCommand( 0, nextPrimitiveCategoryID_, categoryName  ) ) );
     log_->debug( "\tAdding primitive category [", categoryName, "] to scene ...OK\n" );
-
-    categoryNames_[ nextPrimitiveCategoryID_ ] = categoryName;
-}
-
-
-/***
- * 5. Auxiliar methods
- ***/
-
-bool ServerPrimitivesManager::categoryNameInUse( std::string categoryName )
-{
-    for( auto categoryPair : categoryNames_ ){
-        if( categoryPair.second == categoryName ){
-            return true;
-        }
-    }
-    return false;
 }
 
 } // namespace como

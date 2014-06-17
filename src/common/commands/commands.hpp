@@ -35,10 +35,10 @@
 #include "selection_commands/selection_deletion_command.hpp"
 
 // Primitive commands
-#include "primitive_commands/primitive_creation_command.hpp"
+#include "primitive_commands/primitive_commands.hpp"
 
 // Primitive category commands
-#include "primitive_category_commands/primitive_category_creation_command.hpp"
+#include "primitive_category_commands/primitive_category_commands.hpp"
 
 // Material commands
 #include "material_commands/material_commands.hpp" // TODO: Make this with the rest of commands.

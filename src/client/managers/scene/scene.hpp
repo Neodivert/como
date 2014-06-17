@@ -34,6 +34,7 @@
 #include <client/managers/lights/lights_manager.hpp>
 #include <common/users/user.hpp>
 #include <common/utilities/paths.hpp>
+#include <client/managers/primitives/client_primitives_manager.hpp>
 
 Q_DECLARE_METATYPE( como::CommandConstPtr )
 
@@ -60,6 +61,8 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
         // Users sharing this scene.
         UsersMap users_;
 
+        std::unique_ptr< ClientPrimitivesManager > primitivesManager_;
+
         /*!
          * \brief Drawables mmanager. This object acts as a container and an
          * interface to all the drawables present in the scene.
@@ -69,7 +72,6 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
         MaterialsManagerPtr materialsManager_;
 
         LightsManagerPtr lightsManager_;
-
 
         OpenGLPtr openGL_;
 

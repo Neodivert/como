@@ -215,6 +215,9 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         // Initialize the materials manager.
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( localUserID_, server_, log_ ) );
 
+        // Initialize the primitives manager.
+        primitivesManager_ = std::unique_ptr< ClientPrimitivesManager >( new ClientPrimitivesManager( sceneName_, log_ ) );
+
         // Initialize the drawables manager.
         drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, materialsManager_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/scenes/" ) + sceneName_ + std::string( "/primitives" ), oglContext_, log_ ) );
 
@@ -517,6 +520,9 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
         break;
         case CommandTarget::PRIMITIVE:
             executeRemotePrimitiveCommand( dynamic_pointer_cast< const PrimitiveCommand>( command ) );
+        break;
+        case CommandTarget::PRIMITIVE_CATEGORY:
+            primitivesManager_->executeRemoteCommand( dynamic_pointer_cast< const PrimitiveCategoryCommand >( command ) );
         break;
         case CommandTarget::MATERIAL:
             materialsManager_->executeRemoteCommand( dynamic_pointer_cast< const MaterialCommand >( command ) );

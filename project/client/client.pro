@@ -83,7 +83,8 @@ HEADERS += \
     ../../src/client/models/3d/lights/light_properties.hpp \
     ../../src/client/models/3d/lights/directional_light_properties.hpp \
     ../../src/client/models/utilities/open_gl.hpp \
-    ../../src/client/gui/users/users_list_item.hpp
+    ../../src/client/gui/users/users_list_item.hpp \
+    ../../src/client/managers/primitives/client_primitives_manager.hpp
 
 
 # Client sources
@@ -133,4 +134,5 @@ SOURCES += \
     ../../src/client/models/3d/lights/light_properties.cpp \
     ../../src/client/models/3d/lights/directional_light_properties.cpp \
     ../../src/client/models/utilities/open_gl.cpp \
-    ../../src/client/gui/users/users_list_item.cpp
+    ../../src/client/gui/users/users_list_item.cpp \
+    ../../src/client/managers/primitives/client_primitives_manager.cpp

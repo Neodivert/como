@@ -19,27 +19,22 @@
 #ifndef SERVER_PRIMITIVES_MANAGER_HPP
 #define SERVER_PRIMITIVES_MANAGER_HPP
 
-#include <map>
-#include <common/utilities/paths.hpp>
+#include <common/managers/primitives/abstract_primitives_manager.hpp>
 #include <common/ids/primitive_category_id.hpp>
 #include <string>
 #include <server/commands_historic.hpp>
+#include <common/utilities/paths.hpp>
+
 
 namespace como {
 
-class ServerPrimitivesManager
+class ServerPrimitivesManager : public AbstractPrimitivesManager
 {
     private:
-        std::string scenePrimitivesDir_;
-
-        std::map< PrimitiveCategoryID, std::string > categoryNames_;
-
         PrimitiveCategoryID nextPrimitiveCategoryID_;
         PrimitiveID nextPrimitiveID_;
 
         CommandsHistoricPtr commandsHistoric_;
-
-        LogPtr log_;
 
     public:
         /***
@@ -71,7 +66,7 @@ class ServerPrimitivesManager
          * 4. Categories management
          ***/
     private:
-        void addCategory( std::string categoryName );
+        void registerCategory( std::string categoryName );
 
 
         /***

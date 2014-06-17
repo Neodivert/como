@@ -45,11 +45,21 @@ class PrimitiveCategoryCreationCommand : public PrimitiveCategoryCommand
 
 
         /***
-         * 3. Operators
+         * 3. Getters
+         ***/
+        std::string getCategoryName() const;
+
+
+        /***
+         * 4. Operators
          ***/
         PrimitiveCategoryCreationCommand& operator = ( const PrimitiveCategoryCreationCommand& ) = delete;
         PrimitiveCategoryCreationCommand& operator = ( PrimitiveCategoryCreationCommand&& ) = delete;
 };
+
+DEFINE_SHARED_POINTERS( PrimitiveCategoryCreationCommand,
+                        PrimitiveCategoryCreationCommandPtr,
+                        PrimitiveCategoryCreationCommandConstPtr )
 
 } // namespace como
 

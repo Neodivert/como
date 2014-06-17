@@ -53,11 +53,21 @@ class PrimitiveCategoryCommand : public TypeCommand< PrimitiveCategoryCommandTyp
 
 
         /***
-         * 3. Operators
+         * 3. Getters
+         ***/
+        PrimitiveCategoryID getCategoryID() const;
+
+
+        /***
+         * 4. Operators
          ***/
         PrimitiveCategoryCommand& operator = ( const PrimitiveCategoryCommand& ) = delete;
         PrimitiveCategoryCommand& operator = ( PrimitiveCategoryCommand&& ) = delete;
 };
+
+DEFINE_SHARED_POINTERS( PrimitiveCategoryCommand,
+                        PrimitiveCategoryCommandPtr,
+                        PrimitiveCategoryCommandConstPtr )
 
 } // namespace como
 

@@ -16,29 +16,9 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "primitive_category_command.hpp"
+#ifndef PRIMITIVE_COMMANDS_HPP
+#define PRIMITIVE_COMMANDS_HPP
 
-namespace como {
+#include "primitive_creation_command.hpp"
 
-/***
- * 1. Construction
- ***/
-
-PrimitiveCategoryCommand::PrimitiveCategoryCommand( UserID userID, PrimitiveCategoryID categoryID, PrimitiveCategoryCommandType commandType ) :
-    TypeCommand( CommandTarget::PRIMITIVE_CATEGORY, commandType, userID ),
-    categoryID_( categoryID )
-{
-    addPackable( &categoryID_ );
-}
-
-
-/***
- * 3. Getters
- ***/
-
-PrimitiveCategoryID PrimitiveCategoryCommand::getCategoryID() const
-{
-    return categoryID_.getValue();
-}
-
-} // namespace como
+#endif // PRIMITIVE_COMMANDS_HPP

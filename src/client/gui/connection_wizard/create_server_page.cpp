@@ -108,7 +108,7 @@ bool CreateServerPage::validatePage()
         // FIXME: Maybe there is something more elegant?
         // TODO: The log_->debug() call is a trick for discarging system return
         // value. Remove this.
-        log_->debug( system( "sleep 1" ) );
+        log_->debug( system( "sleep 1" ), "\n" );
 
         // Try to connect to the Server scene. In case of error, the method
         // Scene::connect() throws an error.

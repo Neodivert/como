@@ -25,6 +25,11 @@
 #include <memory>
 #include <stdexcept>
 
+#define DEFINE_SHARED_POINTERS( type, ptr, constPtr ) \
+    typedef std::shared_ptr< type > ptr; \
+    typedef std::shared_ptr< const type > constPtr; \
+
+
 namespace como {
 
 /*
@@ -52,7 +57,7 @@ typedef PackableUint8<CommandTarget> PackableCommandTarget;
 
 /*
  * Strings associated to the different values of CommandTarget enum.
- * Used for GUI output
+ * Used for console output
 */
 const char commandTargetStrings[][32]
 {
@@ -60,6 +65,7 @@ const char commandTargetStrings[][32]
     "DRAWABLE",
     "SELECTION",
     "PRIMITIVE",
+    "PRIMITIVE_CATEGORY"
     "MATERIAL",
     "LIGHT"
 };
