@@ -79,13 +79,11 @@ HEADERS += \
     ../../src/common/utilities/observer_pattern/observable_container.hpp \
     ../../src/common/utilities/observer_pattern/container_observer.hpp \
     ../../src/common/utilities/paths.hpp \
-    ../../src/common/ids/primitive_category_id.hpp \
     ../../src/common/commands/primitive_category_commands/primitive_category_command.hpp \
     ../../src/common/commands/primitive_category_commands/primitive_category_creation_command.hpp \
     ../../src/common/commands/primitive_category_commands/primitive_category_commands.hpp \
     ../../src/common/commands/primitive_commands/primitive_commands.hpp \
     ../../src/common/managers/primitives/abstract_primitives_manager.hpp \
-    ../../src/common/ids/primitive_id.hpp \
     ../../src/common/ids/resource_id.hpp \
     ../../src/common/ids/user_id.hpp \
     ../../src/common/packables/ids/packable_resource_id.hpp
