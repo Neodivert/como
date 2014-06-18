@@ -25,6 +25,7 @@
 #include <common/commands/primitive_commands/primitive_commands.hpp>
 #include <map>
 #include <common/managers/primitives/abstract_primitives_manager.hpp>
+#include <client/managers/server_interface/server_interface.hpp>
 #include <QObject>
 
 namespace como {
@@ -34,13 +35,14 @@ class ClientPrimitivesManager : public QObject, public AbstractPrimitivesManager
     Q_OBJECT
 
     private:
+        ServerInterfacePtr server_;
 
     public:
         /***
          * 1. Construction
          ***/
         ClientPrimitivesManager() = delete;
-        ClientPrimitivesManager( std::string sceneName, LogPtr log );
+        ClientPrimitivesManager( std::string sceneName, ServerInterfacePtr server, LogPtr log );
         ClientPrimitivesManager( const ClientPrimitivesManager& ) = delete;
         ClientPrimitivesManager( ClientPrimitivesManager&& ) = delete;
 
@@ -52,21 +54,27 @@ class ClientPrimitivesManager : public QObject, public AbstractPrimitivesManager
 
 
         /***
-         * 3. Remote command execution
+         * 3. Primitives management
+         ***/
+        void createPrimitive( std::string filePath, ResourceID categoryID );
+
+
+        /***
+         * 4. Remote command execution
          ***/
         void executeRemoteCommand( PrimitiveCategoryCommandConstPtr command );
         void executeRemoteCommand( PrimitiveCommandConstPtr command );
 
 
         /***
-         * 4. Operators
+         * 5. Operators
          ***/
         ClientPrimitivesManager& operator = ( const ClientPrimitivesManager& ) = delete;
         ClientPrimitivesManager& operator = ( ClientPrimitivesManager&& ) = delete;
 
 
         /***
-         * 5. Signals
+         * 6. Signals
          ***/
     signals:
         void primitiveAdded( ResourceID id, std::string relativePath );

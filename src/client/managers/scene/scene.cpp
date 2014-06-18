@@ -216,7 +216,7 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( localUserID_, server_, log_ ) );
 
         // Initialize the primitives manager.
-        primitivesManager_ = std::unique_ptr< ClientPrimitivesManager >( new ClientPrimitivesManager( sceneName_, log_ ) );
+        primitivesManager_ = std::unique_ptr< ClientPrimitivesManager >( new ClientPrimitivesManager( sceneName_, server_, log_ ) );
 
         // Initialize the drawables manager.
         drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, primitivesManager_.get(), materialsManager_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/scenes/" ) + sceneName_ + std::string( "/primitives" ), oglContext_, log_ ) );

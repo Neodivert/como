@@ -87,6 +87,8 @@ std::shared_ptr< const UserAcceptancePacket > ServerInterface::connect( const ch
     userAcceptedPacket.recv( *socket_ );
     log_->debug( "Receiving USER_ACCEPTANCE packet ...OK\n" );
 
+    nextResourceID_ = ResourceID( userAcceptedPacket.getId(), 0 );
+
     selectionColor = userAcceptedPacket.getSelectionColor();
     log_->debug( "User accepted: \n",
                  "\tID: [", userAcceptedPacket.getId(), "]\n",
@@ -255,6 +257,16 @@ void ServerInterface::work()
     }
 
     log_->debug( "[", boost::this_thread::get_id(), "] thread end\n" );
+}
+
+
+/***
+ * 5. Getters
+ ***/
+
+ResourceID ServerInterface::getNewResourceID()
+{
+    return nextResourceID_++;
 }
 
 } // namespace como

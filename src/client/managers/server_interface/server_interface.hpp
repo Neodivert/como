@@ -29,6 +29,7 @@
 #include <map>
 #include <queue>
 #include <QObject>
+#include <common/ids/resource_id.hpp>
 
 namespace como {
 
@@ -52,6 +53,8 @@ class ServerInterface : public QObject
         std::queue< CommandConstPtr > sceneCommandsToServer_;
 
         boost::asio::deadline_timer timer_;
+
+        ResourceID nextResourceID_;
 
         // Log
         LogPtr log_;
@@ -102,7 +105,14 @@ class ServerInterface : public QObject
 
 
         /***
-         * 5. Operators
+         * 5. Getters
+         ***/
+    public:
+        ResourceID getNewResourceID();
+
+
+        /***
+         * 6. Operators
          ***/
     public:
         ServerInterface& operator=( const ServerInterface& ) = delete ;
@@ -110,7 +120,7 @@ class ServerInterface : public QObject
 
 
         /***
-         * 5. Signals
+         * 7. Signals
          ***/
     signals:
         void commandReceived( CommandConstPtr command );

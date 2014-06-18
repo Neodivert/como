@@ -35,7 +35,7 @@ class PrimitiveImportDialog : public QDialog
     Q_OBJECT
 
     private:
-        ClientPrimitivesManager const* primitivesManager_;
+        ClientPrimitivesManager* primitivesManager_;
 
         QPushButton* fileInput_;
         ResourceSelector* primitiveCategorySelector_;

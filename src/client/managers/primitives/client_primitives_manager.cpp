@@ -26,13 +26,37 @@ namespace como {
  * 1. Construction
  ***/
 
-ClientPrimitivesManager::ClientPrimitivesManager( std::string sceneName, LogPtr log ) :
-    AbstractPrimitivesManager( sceneName, log )
+ClientPrimitivesManager::ClientPrimitivesManager( std::string sceneName, ServerInterfacePtr server, LogPtr log ) :
+    AbstractPrimitivesManager( sceneName, log ),
+    server_( server )
 {}
 
 
 /***
- * 3. Remote command execution
+ * 3. Primitives management
+ ***/
+
+void ClientPrimitivesManager::createPrimitive( std::string filePath, ResourceID categoryID )
+{
+    std::string name =
+            boost::filesystem::basename( filePath ) +
+            boost::filesystem::extension( filePath );
+
+    ResourceID id = server_->getNewResourceID();
+
+    registerPrimitive( id, name, categoryID );
+
+    // TODO: What if the file already exists in the destination dir?
+    boost::filesystem::copy( filePath, getPrimitiveAbsolutePath( id ) );
+
+    emit primitiveAdded( id, getPrimitiveRelativePath( id ) );
+
+    // TODO: Send command to server.
+}
+
+
+/***
+ * 4. Remote command execution
  ***/
 
 void ClientPrimitivesManager::executeRemoteCommand( PrimitiveCategoryCommandConstPtr command )
@@ -69,35 +93,5 @@ void ClientPrimitivesManager::executeRemoteCommand( PrimitiveCommandConstPtr com
         }break;
     }
 }
-
-/*
-void Scene::executeRemotePrimitiveCommand( PrimitiveCommandConstPtr command )
-{
-    const PrimitiveCreationCommand * primitiveCreationCommand = nullptr;
-    std::string primitiveRelPath;
-
-    switch( command->getType() ){
-        case PrimitiveCommandType::PRIMITIVE_CREATION:
-            // Cast to a PRIMITIVE_SELECTION command.
-            primitiveCreationCommand = dynamic_cast< const PrimitiveCreationCommand* >( command.get() );
-
-            // Debug message.
-
-
-            // Build the primitives relative path, starting from SCENES_DIR/<scene name>/primitiveexecuteRemotePrimitiveCommands.
-            primitiveRelPath = primitiveCreationCommand->getFile()->getFilePath()->getValue();
-            primitiveRelPath = primitiveRelPath.substr( ( std::string( SCENES_DIR ) + '/' + sceneName_ + "/primitives" ).length() + 1 );
-
-            log_->debug( "Primitive relative path: [", primitiveRelPath, "]\n" );
-
-            // Register the new primitive.
-            drawablesManager_->registerPrimitivePath( primitiveCreationCommand->getPrimitiveID(), primitiveRelPath );
-
-
-        break;
-    }
-}
-*/
-
 
 } // namespace como

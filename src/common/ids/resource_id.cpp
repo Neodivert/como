@@ -116,7 +116,7 @@ ResourceID ResourceID::operator ++ ( int )
 {
     ResourceID result( *this );
 
-    operator++();
+    ++(*this);
 
     return result;
 }
