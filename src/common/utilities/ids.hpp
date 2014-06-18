@@ -23,13 +23,9 @@
 #include <common/packables/packable_uint16.hpp>
 #include <common/packables/packable_uint32.hpp>
 #include <cstdint>
+#include <common/ids/user_id.hpp>
 
 namespace como {
-
-typedef std::uint16_t UserID;
-typedef PackableUint16< UserID > PackableUserID;
-
-const UserID NO_USER = 0;
 
 typedef std::uint32_t DrawableIndex;
 typedef PackableUint32< DrawableIndex > PackableDrawableIndex;
