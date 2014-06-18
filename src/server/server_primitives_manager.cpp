@@ -27,7 +27,7 @@ namespace como {
 ServerPrimitivesManager::ServerPrimitivesManager( std::string sceneName_, CommandsHistoricPtr commandsHistoric, LogPtr log ) :
     AbstractPrimitivesManager( sceneName_, log ),
     nextPrimitiveCategoryID_( 0, 0 ),
-    nextPrimitiveID_( 0 ),
+    nextPrimitiveID_( 0, 0 ),
     commandsHistoric_( commandsHistoric )
 {
     // Sync server's local primitives directory.

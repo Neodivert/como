@@ -23,7 +23,7 @@
 #include <map>
 #include <common/utilities/log.hpp>
 #include <common/ids/resource_id.hpp>
-#include <common/ids/primitive_id.hpp>
+#include <common/ids/resource_id.hpp>
 #include <common/managers/primitives/abstract_primitives_manager.hpp>
 #include <list>
 
@@ -35,7 +35,8 @@ struct PrimitiveInfo
     ResourceID category;
 };
 
-typedef std::list< std::pair< ResourceID, std::string > > CategoriesList;
+// TODO: Move this
+typedef std::list< std::pair< ResourceID, std::string > > ResourcesList;
 
 class AbstractPrimitivesManager
 {
@@ -43,7 +44,7 @@ class AbstractPrimitivesManager
         std::string scenePrimitivesDir_;
 
         std::map< ResourceID, std::string > categoryNames_;
-        std::map< PrimitiveID, PrimitiveInfo > primitiveInfo_;
+        std::map< ResourceID, PrimitiveInfo > primitiveInfo_;
 
         LogPtr log_;
 
@@ -66,9 +67,9 @@ class AbstractPrimitivesManager
         /***
          * 3. Getters
          ***/
-        std::string getPrimitiveRelativePath( PrimitiveID id ) const;
-        std::string getPrimitiveAbsolutePath( PrimitiveID id ) const;
-        CategoriesList getCategoriesList() const;
+        std::string getPrimitiveRelativePath( ResourceID id ) const;
+        std::string getPrimitiveAbsolutePath( ResourceID id ) const;
+        ResourcesList getCategoriesList() const;
 
 
         /***
@@ -82,7 +83,7 @@ class AbstractPrimitivesManager
         /***
          * 5. Primitives management
          ***/
-        void registerPrimitive( PrimitiveID id, std::string name, ResourceID category );
+        void registerPrimitive( ResourceID id, std::string name, ResourceID category );
 
 
         /***

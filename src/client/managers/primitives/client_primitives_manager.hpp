@@ -69,7 +69,7 @@ class ClientPrimitivesManager : public QObject, public AbstractPrimitivesManager
          * 5. Signals
          ***/
     signals:
-        void primitiveAdded( PrimitiveID id, std::string relativePath );
+        void primitiveAdded( ResourceID id, std::string relativePath );
 };
 
 } // namespace como

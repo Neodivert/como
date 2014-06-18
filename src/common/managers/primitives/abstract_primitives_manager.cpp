@@ -48,21 +48,21 @@ AbstractPrimitivesManager::AbstractPrimitivesManager( std::string sceneName, Log
  * 3. Getters
  ***/
 
-std::string AbstractPrimitivesManager::getPrimitiveRelativePath( PrimitiveID id ) const
+std::string AbstractPrimitivesManager::getPrimitiveRelativePath( ResourceID id ) const
 {
     PrimitiveInfo primitive = primitiveInfo_.at( id );
     std::string categoryName = categoryNames_.at( primitive.category );
     return categoryName + "/" + primitive.name;
 }
 
-std::string AbstractPrimitivesManager::getPrimitiveAbsolutePath( PrimitiveID id ) const
+std::string AbstractPrimitivesManager::getPrimitiveAbsolutePath( ResourceID id ) const
 {
     return scenePrimitivesDir_ + '/' + getPrimitiveRelativePath( id );
 }
 
-CategoriesList AbstractPrimitivesManager::getCategoriesList() const
+ResourcesList AbstractPrimitivesManager::getCategoriesList() const
 {
-    CategoriesList categoriesList;
+    ResourcesList categoriesList;
 
     for( auto category : categoryNames_ ){
         categoriesList.push_back( std::pair< ResourceID, std::string >( category.first, category.second ) );
@@ -105,9 +105,9 @@ void AbstractPrimitivesManager::createCategory( ResourceID id, std::string name 
  * 5. Primitives management
  ***/
 
-void AbstractPrimitivesManager::registerPrimitive( PrimitiveID id, std::string name , ResourceID category )
+void AbstractPrimitivesManager::registerPrimitive( ResourceID id, std::string name , ResourceID category )
 {
-    log_->debug( "Primitive registered - id (", static_cast< unsigned int >( id ),
+    log_->debug( "Primitive registered - id (", id,
                  "), name (", name,
                  ") - category(", category, ")\n" );
 

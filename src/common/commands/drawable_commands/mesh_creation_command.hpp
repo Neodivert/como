@@ -20,7 +20,7 @@
 #define MESH_CREATION_COMMAND_HPP
 
 #include "drawable_command.hpp"
-#include <common/commands/primitive_commands/primitive_command.hpp> // PackablePrimitiveID type.
+#include <common/commands/primitive_commands/primitive_command.hpp> // PackableResourceID type.
 #include <common/utilities/ids.hpp>
 
 namespace como {

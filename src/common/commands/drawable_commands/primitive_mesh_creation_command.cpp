@@ -26,13 +26,13 @@ namespace como {
 
 PrimitiveMeshCreationCommand::PrimitiveMeshCreationCommand() :
     MeshCreationCommand( MaterialMeshType::PRIMITIVE_MESH, NULL_DRAWABLE_ID, MaterialID() ), // TODO: Remove MaterialID()
-    primitiveID_( 0 )
+    primitiveID_( NO_RESOURCE )
 {
     addPackable( &primitiveID_ );
 }
 
 
-PrimitiveMeshCreationCommand::PrimitiveMeshCreationCommand( PackableDrawableID drawableID, PrimitiveID primitiveID, const MaterialID& materialID ) :
+PrimitiveMeshCreationCommand::PrimitiveMeshCreationCommand( PackableDrawableID drawableID, ResourceID primitiveID, const MaterialID& materialID ) :
     MeshCreationCommand( MaterialMeshType::PRIMITIVE_MESH, drawableID, materialID ),
     primitiveID_( primitiveID )
 {
@@ -52,7 +52,7 @@ PrimitiveMeshCreationCommand::PrimitiveMeshCreationCommand( const PrimitiveMeshC
  * 3. Getters
  ***/
 
-PrimitiveID PrimitiveMeshCreationCommand::getPrimitiveID() const
+ResourceID PrimitiveMeshCreationCommand::getPrimitiveID() const
 {
     return primitiveID_.getValue();
 }

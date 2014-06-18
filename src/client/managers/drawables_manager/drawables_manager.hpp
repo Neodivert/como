@@ -57,7 +57,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         std::queue< PackableDrawableID > localUserPendingSelections_;
 
         // Map ID - PrimitivePath.
-        std::map< PrimitiveID, std::string > primitivePaths_;
+        std::map< ResourceID, std::string > primitivePaths_;
 
         // Relative path to the primitives directory.
         std::string primitivesDirPath_;
@@ -108,13 +108,13 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         void addDrawable( UserID userID, DrawablePtr drawable, PackableDrawableID drawableID );
 
     public:
-        //void addMesh( PrimitiveID primitiveID, QColor color );
-        void createMeshAndMaterial( PrimitiveID primitiveID );
+        //void addMesh( ResourceID primitiveID, QColor color );
+        void createMeshAndMaterial( ResourceID primitiveID );
 
     public:
-        void createMesh( PrimitiveID primitiveID, MaterialID materialID );
+        void createMesh( ResourceID primitiveID, MaterialID materialID );
     private:
-        void createRemoteMesh( PrimitiveID primitiveID, PackableDrawableID drawableID, MaterialID materialID );
+        void createRemoteMesh( ResourceID primitiveID, PackableDrawableID drawableID, MaterialID materialID );
 
     public:
 
@@ -161,7 +161,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         DrawablesManager& operator=( DrawablesManager&& ) = delete;
 
         // TODO: Move to a new PrimitivesManager class?
-        void registerPrimitivePath( PrimitiveID primitiveID, std::string primitiveRelPath );
+        void registerPrimitivePath( ResourceID primitiveID, std::string primitiveRelPath );
 
         virtual bool hasChangedSinceLastQuery();
 };

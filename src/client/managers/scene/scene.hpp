@@ -182,7 +182,7 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
         void userConnected( UserConnectionCommandConstPtr command );
         void userDisconnected( UserID userID );
         void connectedToScene( const QString& sceneName );
-        void primitiveAdded( QString primitiveName, PrimitiveID primitiveID );
+        void primitiveAdded( QString primitiveName, ResourceID primitiveID );
 
 
         /***

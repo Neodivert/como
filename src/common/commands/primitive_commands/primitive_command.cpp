@@ -24,7 +24,7 @@ namespace como {
  * 1. Construction
  ***/
 
-PrimitiveCommand::PrimitiveCommand( PrimitiveCommandType primitiveCommandType, UserID userID, PrimitiveID primitiveID ) :
+PrimitiveCommand::PrimitiveCommand( PrimitiveCommandType primitiveCommandType, UserID userID, ResourceID primitiveID ) :
     TypeCommand( CommandTarget::PRIMITIVE, primitiveCommandType, userID ),
     primitiveID_( primitiveID )
 {
@@ -48,7 +48,7 @@ PrimitiveCommand::PrimitiveCommand( const PrimitiveCommand& b ) :
  * 3. Getters
  ***/
 
-PrimitiveID PrimitiveCommand::getPrimitiveID() const
+ResourceID PrimitiveCommand::getPrimitiveID() const
 {
     return primitiveID_.getValue();
 }

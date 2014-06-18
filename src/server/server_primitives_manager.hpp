@@ -32,7 +32,7 @@ class ServerPrimitivesManager : public AbstractPrimitivesManager
 {
     private:
         ResourceID nextPrimitiveCategoryID_;
-        PrimitiveID nextPrimitiveID_;
+        ResourceID nextPrimitiveID_;
 
         CommandsHistoricPtr commandsHistoric_;
 

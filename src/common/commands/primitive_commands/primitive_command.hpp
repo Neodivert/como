@@ -20,7 +20,7 @@
 #define PRIMITIVE_COMMAND_HPP
 
 #include <common/commands/type_command.hpp>
-#include <common/ids/primitive_id.hpp>
+#include <common/ids/resource_id.hpp>
 
 namespace como {
 
@@ -40,7 +40,7 @@ class PrimitiveCommand : public TypeCommand< PrimitiveCommandType >
 {
     private:
         /*! \brief Primitive ID. */
-        PackablePrimitiveID primitiveID_;
+        PackableResourceID primitiveID_;
 
     public:
         /***
@@ -57,7 +57,7 @@ class PrimitiveCommand : public TypeCommand< PrimitiveCommandType >
          * \param userID ID of the user who performed this command.
          * \param primitiveID ID of the primitive affected by this command.
          */
-        PrimitiveCommand( PrimitiveCommandType primitiveCommandType, UserID userID, PrimitiveID primitiveID );
+        PrimitiveCommand( PrimitiveCommandType primitiveCommandType, UserID userID, ResourceID primitiveID );
 
         /*! \brief Copy constructor. */
         PrimitiveCommand( const PrimitiveCommand& b );
@@ -79,7 +79,7 @@ class PrimitiveCommand : public TypeCommand< PrimitiveCommandType >
          ***/
 
         /*! \brief Get the ID of the primitive affected by this target. */
-        PrimitiveID getPrimitiveID() const ;
+        ResourceID getPrimitiveID() const ;
 
 
         /***

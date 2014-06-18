@@ -7,14 +7,14 @@ namespace como {
  ***/
 
 PrimitiveCreationCommand::PrimitiveCreationCommand() :
-    PrimitiveCommand( PrimitiveCommandType::PRIMITIVE_CREATION, 0, 0 )
+    PrimitiveCommand( PrimitiveCommandType::PRIMITIVE_CREATION, 0, {0, 0} )
 {
     addPackable( &category_ );
     addPackable( &file_ );
 }
 
 
-PrimitiveCreationCommand::PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, PrimitiveID primitiveID, ResourceID categoryID ) :
+PrimitiveCreationCommand::PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, ResourceID primitiveID, ResourceID categoryID ) :
     PrimitiveCommand( PrimitiveCommandType::PRIMITIVE_CREATION, userID, primitiveID ),
     category_( categoryID ),
     file_( filePath )

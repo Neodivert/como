@@ -16,8 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PRIMITIVE_CATEGORY_SELECTOR_HPP
-#define PRIMITIVE_CATEGORY_SELECTOR_HPP
+#ifndef RESOURCE_SELECTOR_HPP
+#define RESOURCE_SELECTOR_HPP
 
 #include <vector>
 #include <string>
@@ -27,43 +27,58 @@
 
 namespace como {
 
-class PrimitiveCategorySelector : public QComboBox
+class ResourceSelector : public QComboBox
 {
+    Q_OBJECT
+
     private:
-        // Vector with the IDs of all the categories given as arguments in
+        // Vector with the IDs of all the resources given as arguments in
         // constructor. This acts as a map between the index given to the
-        // category in this dropdown list (i) and its ID (v[i]).
-        std::vector< ResourceID > categoriesIDs_;
+        // resource in this dropdown list (i) and its ID (v[i]).
+        std::vector< ResourceID > resourcesIDs_;
 
     public:
         /***
          * 1. Construction
          ***/
-        PrimitiveCategorySelector() = delete;
-        PrimitiveCategorySelector( const CategoriesList categoriesList );
-        PrimitiveCategorySelector( const PrimitiveCategorySelector& ) = delete;
-        PrimitiveCategorySelector( PrimitiveCategorySelector&& ) = delete;
+        ResourceSelector();
+        ResourceSelector( const ResourcesList resourcesList );
+        ResourceSelector( const ResourceSelector& ) = delete;
+        ResourceSelector( ResourceSelector&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~PrimitiveCategorySelector() = default;
+        ~ResourceSelector() = default;
 
 
         /***
          * 3. Getters
          ***/
-        ResourceID getCurrentCategoryID() const;
+        ResourceID getCurrentResourceID() const;
 
 
         /***
-         * 4. Operators
+         * 4. Items management
          ***/
-        PrimitiveCategorySelector& operator = ( const PrimitiveCategorySelector& ) = delete;
-        PrimitiveCategorySelector& operator = ( PrimitiveCategorySelector&& ) = delete;
+        void insertResource( ResourceID id, std::string name );
+
+
+        /***
+         * 5. Operators
+         ***/
+        ResourceSelector& operator = ( const ResourceSelector& ) = delete;
+        ResourceSelector& operator = ( ResourceSelector&& ) = delete;
+
+
+        /***
+         * 6. Signals
+         ***/
+    signals:
+        void resourceSelected( ResourceID resourceID );
 };
 
 } // namespace como
 
-#endif // PRIMITIVE_CATEGORY_SELECTOR_HPP
+#endif // RESOURCE_SELECTOR_HPP

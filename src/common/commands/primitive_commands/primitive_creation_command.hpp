@@ -46,7 +46,7 @@ class PrimitiveCreationCommand : public PrimitiveCommand
         /*! \brief Default constructor. */
         PrimitiveCreationCommand();
 
-        PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, PrimitiveID primitiveID, ResourceID categoryID );
+        PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, ResourceID primitiveID, ResourceID categoryID );
 
         /*! \brief Copy assignment operator */
         PrimitiveCreationCommand( const PrimitiveCreationCommand& );

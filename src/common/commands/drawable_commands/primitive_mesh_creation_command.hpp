@@ -27,14 +27,14 @@ class PrimitiveMeshCreationCommand : public MeshCreationCommand
 {
     private:
         // ID of the primitive we are creating this mesh from.
-        PackablePrimitiveID primitiveID_;
+        PackableResourceID primitiveID_;
 
     public:
         /***
          * 1. Construction
          ***/
         PrimitiveMeshCreationCommand();
-        PrimitiveMeshCreationCommand( PackableDrawableID drawableID, PrimitiveID primitiveID, const MaterialID& materialID );
+        PrimitiveMeshCreationCommand( PackableDrawableID drawableID, ResourceID primitiveID, const MaterialID& materialID );
         PrimitiveMeshCreationCommand( const PrimitiveMeshCreationCommand& b );
         PrimitiveMeshCreationCommand( PrimitiveMeshCreationCommand&& ) = delete;
 
@@ -48,7 +48,7 @@ class PrimitiveMeshCreationCommand : public MeshCreationCommand
         /***
          * 3. Getters
          ***/
-        PrimitiveID getPrimitiveID() const;
+        ResourceID getPrimitiveID() const;
 
 
         /***

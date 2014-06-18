@@ -124,7 +124,7 @@ void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, Packabl
 }
 
 
-void DrawablesManager::createMeshAndMaterial( PrimitiveID primitiveID )
+void DrawablesManager::createMeshAndMaterial( ResourceID primitiveID )
 {
     // Get the "absolute" path to the specification file of the
     // primitive used for building this mesh.
@@ -147,7 +147,7 @@ void DrawablesManager::createMeshAndMaterial( PrimitiveID primitiveID )
 
 
 // FIXME: Duplicated code.
-void DrawablesManager::createMesh( PrimitiveID primitiveID, MaterialID materialID )
+void DrawablesManager::createMesh( ResourceID primitiveID, MaterialID materialID )
 {
     // Get the "absolute" path to the specification file of the
     // primitive used for building this mesh.
@@ -165,7 +165,7 @@ void DrawablesManager::createMesh( PrimitiveID primitiveID, MaterialID materialI
 
 
 // FIXME: Duplicated code.
-void DrawablesManager::createRemoteMesh( PrimitiveID primitiveID, PackableDrawableID drawableID, MaterialID materialID )
+void DrawablesManager::createRemoteMesh( ResourceID primitiveID, PackableDrawableID drawableID, MaterialID materialID )
 {
     // Get the "absolute" path to the specification file of the
     // primitive used for building this mesh.
@@ -430,7 +430,7 @@ void DrawablesManager::executeRemoteParameterChangeCommand( UserParameterChangeC
  * 8. Auxiliar methods
  ***/
 
-void DrawablesManager::registerPrimitivePath( PrimitiveID primitiveID, std::string primitiveRelPath )
+void DrawablesManager::registerPrimitivePath( ResourceID primitiveID, std::string primitiveRelPath )
 {
     // Create a new entry (ID, relative path) for the recently added primitive.
     primitivePaths_[primitiveID] = primitiveRelPath;

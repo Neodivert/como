@@ -47,11 +47,11 @@ QFrame* CreationTab::createMeshFromPrimitiveCreationMenu()
 {
     QFrame* frame = nullptr;
     QVBoxLayout* layout = nullptr;
-    QComboBox* primitiveSelector = nullptr;
+    ResourceSelector* primitiveSelector = nullptr;
     QLabel* label = nullptr;
 
     // Create an empty dropdown list (QComboBox).
-    primitiveSelector = new QComboBox;
+    primitiveSelector = new ResourceSelector;
 
     // Create a label for this menu.
     label = new QLabel( "Create mesh from primitive: " );
@@ -65,23 +65,21 @@ QFrame* CreationTab::createMeshFromPrimitiveCreationMenu()
     frame = new QFrame();
     frame->setLayout( layout );
 
-    // Signal / Slot connection: when one of the available primitives is
-    // selected, create a mesh from it and add it to the scene.
-    void (QComboBox::*activated)( int ) = &QComboBox::activated;
-    connect( primitiveSelector, activated, [=]( int primitiveID ) {
-        scene_->getDrawablesManager()->createMeshAndMaterial( static_cast< PrimitiveID >( primitiveID ) );
-    });
-
-    // Signal / Slot connection: when a new primitive is created in the scene,
-    // add it to the primitives dropdown list.
     connect( scene_.get(), &Scene::connectedToScene, [=](){
         // If we don't wait until we are connected to a scene to make the
         // following connection, we get a null pointer when calling
         // scene_->getPrimitivesManager().
-        connect( scene_->getPrimitivesManager(), &ClientPrimitivesManager::primitiveAdded, [=]( PrimitiveID primitiveID, std::string primitiveRelPath ){
-            primitiveSelector->insertItem( static_cast< int >( primitiveID ), primitiveRelPath.c_str() );
-        });
 
+        // Signal / Slot connection: when one of the available primitives is
+        // selected, create a mesh from it and add it to the scene.
+        QObject::connect( primitiveSelector, &ResourceSelector::resourceSelected,
+                          scene_->getDrawablesManager().get(), &DrawablesManager::createMeshAndMaterial );
+
+        // Signal / Slot connection: when a new primitive is created in the scene,
+        // add it to the primitives dropdown list.
+        connect( scene_->getPrimitivesManager(), &ClientPrimitivesManager::primitiveAdded, [=]( ResourceID primitiveID, std::string primitiveRelPath ){
+            primitiveSelector->insertResource( primitiveID, primitiveRelPath );
+        });
     });
 
     return frame;

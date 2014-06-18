@@ -14,7 +14,7 @@ PrimitiveImportDialog::PrimitiveImportDialog( ClientPrimitivesManager *primitive
 
     // Create widgets.
     fileInput_ = new QPushButton( "Select file" );
-    primitiveCategorySelector_ = new PrimitiveCategorySelector( primitivesManager->getCategoriesList() );
+    primitiveCategorySelector_ = new ResourceSelector( primitivesManager->getCategoriesList() );
     okButton_ = new QPushButton( "OK" );
     cancelButton_ = new QPushButton( "Cancel" );
 
