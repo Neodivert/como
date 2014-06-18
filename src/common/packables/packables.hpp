@@ -30,5 +30,6 @@
 #include "packable_float.hpp"
 #include "composite_packable.hpp"
 #include "ids/packable_material_id.hpp"
+#include "ids/packable_resource_id.hpp"
 
 #endif // PACKABLES_HPP

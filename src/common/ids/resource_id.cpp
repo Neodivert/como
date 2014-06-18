@@ -30,9 +30,13 @@ ResourceID::ResourceID() :
     resourceIndex_( 0 )
 {}
 
+ResourceID::ResourceID(UserID creatorID, ResourceIndex resourceIndex) :
+    creatorID_( creatorID ),
+    resourceIndex_( resourceIndex )
+{}
+
 
 ResourceID::ResourceID( const ResourceID& b ) :
-
     creatorID_( b.creatorID_ ),
     resourceIndex_( b.resourceIndex_ )
 {}

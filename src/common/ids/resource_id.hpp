@@ -20,19 +20,21 @@
 #define RESOURCE_ID_HPP
 
 #include <common/utilities/ids.hpp>
+#include <common/packables/packable_uint32.hpp>
 #include "user_id.hpp"
 #include <cstdint>
 
 namespace como {
 
 typedef std::uint32_t ResourceIndex;
+typedef PackableUint32< ResourceIndex > PackableResourceIndex;
+
 
 /*
  * A resource is uniquely identified by a pair of values:
  * - The ID of the user who created it.
  * - A index to differ the resource from others created by the same user.
  */
-
 class ResourceID
 {
     private:
@@ -44,6 +46,7 @@ class ResourceID
          * 1. Construction
          ***/
         ResourceID();
+        ResourceID( UserID creatorID, ResourceIndex resourceIndex );
         ResourceID( const ResourceID& b );
         ResourceID( ResourceID&& b );
 
