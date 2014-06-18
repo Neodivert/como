@@ -22,7 +22,7 @@
 #include <string>
 #include <map>
 #include <common/utilities/log.hpp>
-#include <common/ids/primitive_category_id.hpp>
+#include <common/ids/resource_id.hpp>
 #include <common/ids/primitive_id.hpp>
 #include <common/managers/primitives/abstract_primitives_manager.hpp>
 #include <list>
@@ -32,17 +32,17 @@ namespace como {
 struct PrimitiveInfo
 {
     std::string name;
-    PrimitiveCategoryID category;
+    ResourceID category;
 };
 
-typedef std::list< std::pair< PrimitiveCategoryID, std::string > > CategoriesList;
+typedef std::list< std::pair< ResourceID, std::string > > CategoriesList;
 
 class AbstractPrimitivesManager
 {
     protected:
         std::string scenePrimitivesDir_;
 
-        std::map< PrimitiveCategoryID, std::string > categoryNames_;
+        std::map< ResourceID, std::string > categoryNames_;
         std::map< PrimitiveID, PrimitiveInfo > primitiveInfo_;
 
         LogPtr log_;
@@ -75,14 +75,14 @@ class AbstractPrimitivesManager
          * 4. Categories management
          ***/
     protected:
-        void registerCategory( PrimitiveCategoryID id, std::string name );
-        void createCategory( PrimitiveCategoryID id, std::string name );
+        void registerCategory( ResourceID id, std::string name );
+        void createCategory( ResourceID id, std::string name );
 
 
         /***
          * 5. Primitives management
          ***/
-        void registerPrimitive( PrimitiveID id, std::string name, PrimitiveCategoryID category );
+        void registerPrimitive( PrimitiveID id, std::string name, ResourceID category );
 
 
         /***

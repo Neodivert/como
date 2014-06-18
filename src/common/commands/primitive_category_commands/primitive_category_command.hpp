@@ -20,7 +20,7 @@
 #define PRIMITIVE_CATEGORY_COMMAND_HPP
 
 #include <common/packables/packable_uint8.hpp>
-#include <common/ids/primitive_category_id.hpp>
+#include <common/ids/resource_id.hpp>
 #include <common/commands/type_command.hpp>
 
 namespace como {
@@ -34,14 +34,14 @@ typedef PackableUint8< PrimitiveCategoryCommandType > PackablePrimitiveCategoryC
 class PrimitiveCategoryCommand : public TypeCommand< PrimitiveCategoryCommandType >
 {
     private:
-        PackablePrimitiveCategoryID categoryID_;
+        PackableResourceID categoryID_;
 
     public:
         /***
          * 1. Construction
          ***/
         PrimitiveCategoryCommand() = delete;
-        PrimitiveCategoryCommand( UserID userID, PrimitiveCategoryID categoryID, PrimitiveCategoryCommandType commandType );
+        PrimitiveCategoryCommand( UserID userID, ResourceID categoryID, PrimitiveCategoryCommandType commandType );
         PrimitiveCategoryCommand( const PrimitiveCategoryCommand& ) = delete;
         PrimitiveCategoryCommand( PrimitiveCategoryCommand&& ) = delete;
 
@@ -55,7 +55,7 @@ class PrimitiveCategoryCommand : public TypeCommand< PrimitiveCategoryCommandTyp
         /***
          * 3. Getters
          ***/
-        PrimitiveCategoryID getCategoryID() const;
+        ResourceID getCategoryID() const;
 
 
         /***

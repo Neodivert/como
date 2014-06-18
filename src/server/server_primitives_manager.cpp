@@ -26,7 +26,7 @@ namespace como {
 
 ServerPrimitivesManager::ServerPrimitivesManager( std::string sceneName_, CommandsHistoricPtr commandsHistoric, LogPtr log ) :
     AbstractPrimitivesManager( sceneName_, log ),
-    nextPrimitiveCategoryID_( 0 ),
+    nextPrimitiveCategoryID_( 0, 0 ),
     nextPrimitiveID_( 0 ),
     commandsHistoric_( commandsHistoric )
 {
@@ -92,7 +92,7 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
 {
     const boost::filesystem::directory_iterator endIterator;
     boost::filesystem::directory_iterator fileIterator( dirPath );
-    PrimitiveCategoryID categoryID;
+    ResourceID categoryID;
     std::string filePath;
 
     categoryID = registerCategory( boost::filesystem::basename( dirPath ) );
@@ -111,7 +111,7 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
  * 4. Categories management
  ***/
 
-PrimitiveCategoryID ServerPrimitivesManager::registerCategory( std::string categoryName )
+ResourceID ServerPrimitivesManager::registerCategory( std::string categoryName )
 {
     // Register the the given category.
     AbstractPrimitivesManager::registerCategory( nextPrimitiveCategoryID_, categoryName );
@@ -129,7 +129,7 @@ PrimitiveCategoryID ServerPrimitivesManager::registerCategory( std::string categ
  * 5. Primitives management
  ***/
 
-void ServerPrimitivesManager::registerPrimitive( std::string filePath, PrimitiveCategoryID categoryID )
+void ServerPrimitivesManager::registerPrimitive( std::string filePath, ResourceID categoryID )
 {
     AbstractPrimitivesManager::registerPrimitive( nextPrimitiveID_, boost::filesystem::basename( filePath ) + boost::filesystem::extension( filePath ), categoryID );
 

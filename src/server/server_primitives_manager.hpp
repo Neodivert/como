@@ -20,7 +20,7 @@
 #define SERVER_PRIMITIVES_MANAGER_HPP
 
 #include <common/managers/primitives/abstract_primitives_manager.hpp>
-#include <common/ids/primitive_category_id.hpp>
+#include <common/ids/resource_id.hpp>
 #include <string>
 #include <server/commands_historic.hpp>
 #include <common/utilities/paths.hpp>
@@ -31,7 +31,7 @@ namespace como {
 class ServerPrimitivesManager : public AbstractPrimitivesManager
 {
     private:
-        PrimitiveCategoryID nextPrimitiveCategoryID_;
+        ResourceID nextPrimitiveCategoryID_;
         PrimitiveID nextPrimitiveID_;
 
         CommandsHistoricPtr commandsHistoric_;
@@ -66,13 +66,13 @@ class ServerPrimitivesManager : public AbstractPrimitivesManager
          * 4. Categories management
          ***/
     private:
-        PrimitiveCategoryID registerCategory( std::string categoryName );
+        ResourceID registerCategory( std::string categoryName );
 
 
         /***
          * 5. Primitives management
          ***/
-        void registerPrimitive( std::string filePath, PrimitiveCategoryID categoryID );
+        void registerPrimitive( std::string filePath, ResourceID categoryID );
 
 
         /***

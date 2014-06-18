@@ -14,7 +14,7 @@ PrimitiveCreationCommand::PrimitiveCreationCommand() :
 }
 
 
-PrimitiveCreationCommand::PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, PrimitiveID primitiveID, PrimitiveCategoryID categoryID ) :
+PrimitiveCreationCommand::PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, PrimitiveID primitiveID, ResourceID categoryID ) :
     PrimitiveCommand( PrimitiveCommandType::PRIMITIVE_CREATION, userID, primitiveID ),
     category_( categoryID ),
     file_( filePath )
@@ -43,7 +43,7 @@ std::string PrimitiveCreationCommand::getPrimitiveName() const
 }
 
 
-PrimitiveCategoryID PrimitiveCreationCommand::getCategoryID() const
+ResourceID PrimitiveCreationCommand::getCategoryID() const
 {
     return category_.getValue();
 }

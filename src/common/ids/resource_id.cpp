@@ -104,6 +104,24 @@ ResourceID& ResourceID::operator = ( ResourceID&& b )
 }
 
 
+ResourceID& ResourceID::operator ++ ()
+{
+    resourceIndex_++;
+
+    return *this;
+}
+
+
+ResourceID ResourceID::operator ++ ( int )
+{
+    ResourceID result( *this );
+
+    operator++();
+
+    return result;
+}
+
+
 /***
  * 4. Console output
  ***/

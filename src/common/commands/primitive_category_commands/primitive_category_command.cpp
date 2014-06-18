@@ -24,7 +24,7 @@ namespace como {
  * 1. Construction
  ***/
 
-PrimitiveCategoryCommand::PrimitiveCategoryCommand( UserID userID, PrimitiveCategoryID categoryID, PrimitiveCategoryCommandType commandType ) :
+PrimitiveCategoryCommand::PrimitiveCategoryCommand( UserID userID, ResourceID categoryID, PrimitiveCategoryCommandType commandType ) :
     TypeCommand( CommandTarget::PRIMITIVE_CATEGORY, commandType, userID ),
     categoryID_( categoryID )
 {
@@ -36,7 +36,7 @@ PrimitiveCategoryCommand::PrimitiveCategoryCommand( UserID userID, PrimitiveCate
  * 3. Getters
  ***/
 
-PrimitiveCategoryID PrimitiveCategoryCommand::getCategoryID() const
+ResourceID PrimitiveCategoryCommand::getCategoryID() const
 {
     return categoryID_.getValue();
 }

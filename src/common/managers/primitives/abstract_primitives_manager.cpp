@@ -65,7 +65,7 @@ CategoriesList AbstractPrimitivesManager::getCategoriesList() const
     CategoriesList categoriesList;
 
     for( auto category : categoryNames_ ){
-        categoriesList.push_back( std::pair< PrimitiveCategoryID, std::string >( category.first, category.second ) );
+        categoriesList.push_back( std::pair< ResourceID, std::string >( category.first, category.second ) );
     }
 
     return categoriesList;
@@ -76,7 +76,7 @@ CategoriesList AbstractPrimitivesManager::getCategoriesList() const
  * 4. Categories management
  ***/
 
-void AbstractPrimitivesManager::registerCategory( PrimitiveCategoryID id, std::string name )
+void AbstractPrimitivesManager::registerCategory( ResourceID id, std::string name )
 {
     if( categoryNameInUse( name ) ){
         throw std::runtime_error( std::string( "Category name [" ) +
@@ -88,7 +88,7 @@ void AbstractPrimitivesManager::registerCategory( PrimitiveCategoryID id, std::s
 }
 
 
-void AbstractPrimitivesManager::createCategory( PrimitiveCategoryID id, std::string name )
+void AbstractPrimitivesManager::createCategory( ResourceID id, std::string name )
 {
     boost::system::error_code errorCode;
 
@@ -105,11 +105,11 @@ void AbstractPrimitivesManager::createCategory( PrimitiveCategoryID id, std::str
  * 5. Primitives management
  ***/
 
-void AbstractPrimitivesManager::registerPrimitive( PrimitiveID id, std::string name , PrimitiveCategoryID category )
+void AbstractPrimitivesManager::registerPrimitive( PrimitiveID id, std::string name , ResourceID category )
 {
     log_->debug( "Primitive registered - id (", static_cast< unsigned int >( id ),
                  "), name (", name,
-                 ") - category(", static_cast< unsigned int >( category ), ")\n" );
+                 ") - category(", category, ")\n" );
 
     primitiveInfo_[id] = PrimitiveInfo( { name, category } );
 }

@@ -72,7 +72,12 @@ class ResourceID
 
         ResourceID& operator = (const ResourceID& b );
         ResourceID& operator = ( ResourceID&& );
+
+        ResourceID& operator ++ (); // Prefix
+        ResourceID operator ++ ( int ); // Postfix
 };
+
+const ResourceID NO_RESOURCE( 0, 0 );
 
 /***
  * 4. Console output

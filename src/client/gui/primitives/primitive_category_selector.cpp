@@ -46,7 +46,7 @@ PrimitiveCategorySelector::PrimitiveCategorySelector( const CategoriesList categ
  * 3. Getters
  ***/
 
-PrimitiveCategoryID PrimitiveCategorySelector::getCurrentCategoryID() const
+ResourceID PrimitiveCategorySelector::getCurrentCategoryID() const
 {
     return categoriesIDs_.at( currentIndex() );
 }

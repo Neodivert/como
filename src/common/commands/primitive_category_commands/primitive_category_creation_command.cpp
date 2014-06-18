@@ -25,8 +25,16 @@ namespace como {
  ***/
 
 PrimitiveCategoryCreationCommand::PrimitiveCategoryCreationCommand() :
-    PrimitiveCategoryCommand( NO_USER, 0, PrimitiveCategoryCommandType::PRIMITIVE_CATEGORY_CREATION ),
+    PrimitiveCategoryCommand( NO_USER, NO_RESOURCE, PrimitiveCategoryCommandType::PRIMITIVE_CATEGORY_CREATION ),
     categoryName_( "Unnamed category" )
+{
+    addPackable( &categoryName_ );
+}
+
+
+PrimitiveCategoryCreationCommand::PrimitiveCategoryCreationCommand( UserID userID, ResourceID categoryID, std::string categoryName ) :
+    PrimitiveCategoryCommand( userID, categoryID, PrimitiveCategoryCommandType::PRIMITIVE_CATEGORY_CREATION ),
+    categoryName_( categoryName.c_str() )
 {
     addPackable( &categoryName_ );
 }
@@ -39,14 +47,6 @@ PrimitiveCategoryCreationCommand::PrimitiveCategoryCreationCommand() :
 std::string PrimitiveCategoryCreationCommand::getCategoryName() const
 {
     return std::string( categoryName_.getValue() );
-}
-
-
-PrimitiveCategoryCreationCommand::PrimitiveCategoryCreationCommand( UserID userID, PrimitiveCategoryID categoryID, std::string categoryName ) :
-    PrimitiveCategoryCommand( userID, categoryID, PrimitiveCategoryCommandType::PRIMITIVE_CATEGORY_CREATION ),
-    categoryName_( categoryName.c_str() )
-{
-    addPackable( &categoryName_ );
 }
 
 } // namespace como

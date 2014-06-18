@@ -21,7 +21,7 @@
 
 #include <vector>
 #include <string>
-#include <common/ids/primitive_category_id.hpp>
+#include <common/ids/resource_id.hpp>
 #include <QComboBox>
 #include <common/managers/primitives/abstract_primitives_manager.hpp> // CategoriesList type
 
@@ -33,7 +33,7 @@ class PrimitiveCategorySelector : public QComboBox
         // Vector with the IDs of all the categories given as arguments in
         // constructor. This acts as a map between the index given to the
         // category in this dropdown list (i) and its ID (v[i]).
-        std::vector< PrimitiveCategoryID > categoriesIDs_;
+        std::vector< ResourceID > categoriesIDs_;
 
     public:
         /***
@@ -54,7 +54,7 @@ class PrimitiveCategorySelector : public QComboBox
         /***
          * 3. Getters
          ***/
-        PrimitiveCategoryID getCurrentCategoryID() const;
+        ResourceID getCurrentCategoryID() const;
 
 
         /***

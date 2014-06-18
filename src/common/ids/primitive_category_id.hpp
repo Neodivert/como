@@ -23,9 +23,9 @@
 
 namespace como {
 
-typedef std::uint8_t PrimitiveCategoryID;
+//typedef std::uint8_t ResourceID;
 
-typedef PackableUint8< std::uint8_t > PackablePrimitiveCategoryID;
+//typedef PackableUint8< std::uint8_t > PackableResourceID;
 
 } // namespace como
 

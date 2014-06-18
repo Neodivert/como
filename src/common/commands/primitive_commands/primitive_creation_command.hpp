@@ -20,7 +20,7 @@
 #define PRIMITIVE_CREATION_COMMAND_HPP
 
 #include "primitive_command.hpp"
-#include <common/ids/primitive_category_id.hpp>
+#include <common/ids/resource_id.hpp>
 
 namespace como {
 
@@ -33,7 +33,7 @@ class PrimitiveCreationCommand : public PrimitiveCommand
 {
     private:
         /*! Primitive category ID. */
-        PackablePrimitiveCategoryID category_;
+        PackableResourceID category_;
 
         /*! Primitive specification file. */
         PackableFile file_;
@@ -46,7 +46,7 @@ class PrimitiveCreationCommand : public PrimitiveCommand
         /*! \brief Default constructor. */
         PrimitiveCreationCommand();
 
-        PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, PrimitiveID primitiveID, PrimitiveCategoryID categoryID );
+        PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, PrimitiveID primitiveID, ResourceID categoryID );
 
         /*! \brief Copy assignment operator */
         PrimitiveCreationCommand( const PrimitiveCreationCommand& );
@@ -69,7 +69,7 @@ class PrimitiveCreationCommand : public PrimitiveCommand
 
         std::string getPrimitiveName() const;
 
-        PrimitiveCategoryID getCategoryID() const;
+        ResourceID getCategoryID() const;
 
         /*! \brief Returns a pointer to the primitive's specification file. */
         const PackableFile* getFile() const;
