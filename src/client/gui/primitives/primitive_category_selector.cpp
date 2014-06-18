@@ -37,6 +37,7 @@ PrimitiveCategorySelector::PrimitiveCategorySelector( const CategoriesList categ
     }
 
     // Select the first element as the current one.
+    // TODO: And if there is no categories?
     setCurrentIndex( 0 );
 }
 
