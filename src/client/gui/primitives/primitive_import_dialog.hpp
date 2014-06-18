@@ -26,6 +26,7 @@
 #include <QFileDialog>
 #include <QComboBox>
 #include <QMessageBox>
+#include <client/gui/primitives/primitive_category_selector.hpp>
 
 namespace como {
 
@@ -37,6 +38,8 @@ class PrimitiveImportDialog : public QDialog
         ClientPrimitivesManager const* primitivesManager_;
 
         QPushButton* fileInput_;
+        PrimitiveCategorySelector* primitiveCategorySelector_;
+
         QPushButton* okButton_;
         QPushButton* cancelButton_;
 

@@ -60,6 +60,17 @@ std::string AbstractPrimitivesManager::getPrimitiveAbsolutePath( PrimitiveID id 
     return scenePrimitivesDir_ + '/' + getPrimitiveRelativePath( id );
 }
 
+CategoriesList AbstractPrimitivesManager::getCategoriesList() const
+{
+    CategoriesList categoriesList;
+
+    for( auto category : categoryNames_ ){
+        categoriesList.push_back( std::pair< PrimitiveCategoryID, std::string >( category.first, category.second ) );
+    }
+
+    return categoriesList;
+}
+
 
 /***
  * 4. Categories management

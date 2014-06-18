@@ -85,7 +85,8 @@ HEADERS += \
     ../../src/client/models/utilities/open_gl.hpp \
     ../../src/client/gui/users/users_list_item.hpp \
     ../../src/client/managers/primitives/client_primitives_manager.hpp \
-    ../../src/client/gui/primitives/primitive_import_dialog.hpp
+    ../../src/client/gui/primitives/primitive_import_dialog.hpp \
+    ../../src/client/gui/primitives/primitive_category_selector.hpp
 
 
 # Client sources
@@ -137,4 +138,5 @@ SOURCES += \
     ../../src/client/models/utilities/open_gl.cpp \
     ../../src/client/gui/users/users_list_item.cpp \
     ../../src/client/managers/primitives/client_primitives_manager.cpp \
-    ../../src/client/gui/primitives/primitive_import_dialog.cpp
+    ../../src/client/gui/primitives/primitive_import_dialog.cpp \
+    ../../src/client/gui/primitives/primitive_category_selector.cpp

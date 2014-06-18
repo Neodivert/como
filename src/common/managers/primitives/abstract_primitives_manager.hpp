@@ -25,6 +25,7 @@
 #include <common/ids/primitive_category_id.hpp>
 #include <common/ids/primitive_id.hpp>
 #include <common/managers/primitives/abstract_primitives_manager.hpp>
+#include <list>
 
 namespace como {
 
@@ -33,6 +34,8 @@ struct PrimitiveInfo
     std::string name;
     PrimitiveCategoryID category;
 };
+
+typedef std::list< std::pair< PrimitiveCategoryID, std::string > > CategoriesList;
 
 class AbstractPrimitivesManager
 {
@@ -65,6 +68,7 @@ class AbstractPrimitivesManager
          ***/
         std::string getPrimitiveRelativePath( PrimitiveID id ) const;
         std::string getPrimitiveAbsolutePath( PrimitiveID id ) const;
+        CategoriesList getCategoriesList() const;
 
 
         /***

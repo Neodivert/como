@@ -14,6 +14,7 @@ PrimitiveImportDialog::PrimitiveImportDialog( ClientPrimitivesManager *primitive
 
     // Create widgets.
     fileInput_ = new QPushButton( "Select file" );
+    primitiveCategorySelector_ = new PrimitiveCategorySelector( primitivesManager->getCategoriesList() );
     okButton_ = new QPushButton( "OK" );
     cancelButton_ = new QPushButton( "Cancel" );
 
@@ -28,6 +29,7 @@ PrimitiveImportDialog::PrimitiveImportDialog( ClientPrimitivesManager *primitive
     QObject::connect( cancelButton_, &QPushButton::clicked, this, &PrimitiveImportDialog::reject );
 
     layout->addRow( "Mesh file: ", fileInput_ );
+    layout->addRow( "Category: ", primitiveCategorySelector_ );
     layout->addRow( cancelButton_, okButton_ );
 
     setLayout( layout );
