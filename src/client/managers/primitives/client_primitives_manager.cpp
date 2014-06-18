@@ -36,22 +36,34 @@ ClientPrimitivesManager::ClientPrimitivesManager( std::string sceneName, ServerI
  * 3. Primitives management
  ***/
 
-void ClientPrimitivesManager::createPrimitive( std::string filePath, ResourceID categoryID )
+std::string ClientPrimitivesManager::createPrimitive( std::string filePath, ResourceID categoryID )
 {
-    std::string name =
-            boost::filesystem::basename( filePath ) +
-            boost::filesystem::extension( filePath );
+    char resourceIDString[20];
 
     ResourceID id = server_->getNewResourceID();
+
+    sprintf( resourceIDString, "_%u_%u_", id.getCreatorID(), id.getResourceIndex() );
+
+    std::string name =
+            boost::filesystem::basename( filePath ) +
+            std::string( resourceIDString ) +
+            boost::filesystem::extension( filePath );
 
     registerPrimitive( id, name, categoryID );
 
     // TODO: What if the file already exists in the destination dir?
     boost::filesystem::copy( filePath, getPrimitiveAbsolutePath( id ) );
 
+    server_->sendCommand(
+                CommandConstPtr(
+                    new PrimitiveCreationCommand( getPrimitiveAbsolutePath( id ).c_str(),
+                                                  id.getCreatorID(),
+                                                  id,
+                                                  categoryID ) ) );
+
     emit primitiveAdded( id, getPrimitiveRelativePath( id ) );
 
-    // TODO: Send command to server.
+    return getPrimitiveRelativePath( id );
 }
 
 

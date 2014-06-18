@@ -44,7 +44,11 @@ void PrimitiveImportDialog::validate()
 {
     std::string filePath = fileInput_->text().toStdString();
     if( boost::filesystem::exists( filePath ) ){
-        primitivesManager_->createPrimitive( filePath, primitiveCategorySelector_->getCurrentResourceID() );
+        std::string primitiveRelativePath =
+                primitivesManager_->createPrimitive( filePath, primitiveCategorySelector_->getCurrentResourceID() );
+
+        QMessageBox::warning( nullptr, "Primitive saved", primitiveRelativePath.c_str() );
+
         accept();
     }else{
         std::string errorMessage = std::string( "File [" ) + filePath + "] NOT FOUND";

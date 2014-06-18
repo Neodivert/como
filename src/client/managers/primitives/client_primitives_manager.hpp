@@ -27,6 +27,7 @@
 #include <common/managers/primitives/abstract_primitives_manager.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
 #include <QObject>
+#include <cstdio>
 
 namespace como {
 
@@ -56,7 +57,7 @@ class ClientPrimitivesManager : public QObject, public AbstractPrimitivesManager
         /***
          * 3. Primitives management
          ***/
-        void createPrimitive( std::string filePath, ResourceID categoryID );
+        std::string createPrimitive( std::string filePath, ResourceID categoryID );
 
 
         /***
