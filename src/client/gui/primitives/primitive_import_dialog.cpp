@@ -24,13 +24,29 @@ PrimitiveImportDialog::PrimitiveImportDialog( ClientPrimitivesManager *primitive
     });
 
     // Set accept and reject buttons behaviour.
-    QObject::connect( okButton_, &QPushButton::clicked, this, &PrimitiveImportDialog::accept );
+    QObject::connect( okButton_, &QPushButton::clicked, this, &PrimitiveImportDialog::validate );
     QObject::connect( cancelButton_, &QPushButton::clicked, this, &PrimitiveImportDialog::reject );
 
     layout->addRow( "Mesh file: ", fileInput_ );
     layout->addRow( cancelButton_, okButton_ );
 
     setLayout( layout );
+}
+
+
+/***
+ * 3. Data validation
+ ***/
+
+void PrimitiveImportDialog::validate()
+{
+    std::string filePath = fileInput_->text().toStdString();
+    if( boost::filesystem::exists( filePath ) ){
+        accept();
+    }else{
+        std::string errorMessage = std::string( "File [" ) + filePath + "] NOT FOUND";
+        QMessageBox::critical( nullptr, "Input error", errorMessage.c_str() );
+    }
 }
 
 } // namespace como

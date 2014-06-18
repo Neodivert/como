@@ -25,6 +25,7 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QComboBox>
+#include <QMessageBox>
 
 namespace como {
 
@@ -56,7 +57,15 @@ class PrimitiveImportDialog : public QDialog
 
 
         /***
-         * 3. Operators
+         * 3. Data validation
+         ***/
+    public slots:
+        void validate();
+    public:
+
+
+        /***
+         * 4. Operators
          ***/
         PrimitiveImportDialog& operator = ( const PrimitiveImportDialog& ) = delete;
         PrimitiveImportDialog& operator = ( PrimitiveImportDialog&& ) = delete;
