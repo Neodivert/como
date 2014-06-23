@@ -28,6 +28,7 @@
 #include <client/managers/server_interface/server_interface.hpp>
 #include <QObject>
 #include <cstdio>
+#include <fstream>
 
 namespace como {
 
@@ -58,6 +59,9 @@ class ClientPrimitivesManager : public QObject, public AbstractPrimitivesManager
          * 3. Primitives management
          ***/
         std::string createPrimitive( std::string filePath, ResourceID categoryID );
+    private:
+        void importMeshFile( std::string primitiveName, std::string oldFilePath, std::string newFilePath );
+    public:
 
 
         /***

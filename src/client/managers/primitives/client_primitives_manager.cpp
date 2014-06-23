@@ -42,17 +42,19 @@ std::string ClientPrimitivesManager::createPrimitive( std::string filePath, Reso
 
     ResourceID id = server_->getNewResourceID();
 
-    sprintf( resourceIDString, "_%u_%u_", id.getCreatorID(), id.getResourceIndex() );
+    sprintf( resourceIDString, "_%u_%u", id.getCreatorID(), id.getResourceIndex() );
 
-    std::string name =
+    std::string primitiveName =
             boost::filesystem::basename( filePath ) +
-            std::string( resourceIDString ) +
+            std::string( resourceIDString );
+
+    std::string meshFileName =
+            primitiveName +
             boost::filesystem::extension( filePath );
 
-    registerPrimitive( id, name, categoryID );
+    registerPrimitive( id, meshFileName, categoryID );
 
-    // TODO: What if the file already exists in the destination dir?
-    boost::filesystem::copy( filePath, getPrimitiveAbsolutePath( id ) );
+    importMeshFile( primitiveName, filePath, getPrimitiveAbsolutePath( id ) );
 
     server_->sendCommand(
                 CommandConstPtr(
@@ -64,6 +66,76 @@ std::string ClientPrimitivesManager::createPrimitive( std::string filePath, Reso
     emit primitiveAdded( id, getPrimitiveRelativePath( id ) );
 
     return getPrimitiveRelativePath( id );
+}
+
+
+void ClientPrimitivesManager::importMeshFile( std::string primitiveName, std::string oldFilePath, std::string newFilePath )
+{
+    const unsigned int LINE_SIZE = 250;
+    char line[LINE_SIZE] = {0};
+    bool processMaterial = false;
+
+    log_->debug( "Importing mesh file (", primitiveName, ", ",
+                 oldFilePath, ", ",
+                 newFilePath, ")\n" );
+
+    std::string materialName;
+
+    // The material file name will be given a name equal to the mesh file but
+    // with a .mtl extension.
+    std::string newMaterialFileName = primitiveName + ".mtl";
+
+    if( boost::filesystem::exists( newFilePath ) ){
+        throw std::runtime_error( std::string( "Mesh file [" ) +
+                                  newFilePath + "] already exists" );
+    }
+
+    // Open the original mesh file.
+    std::ifstream oldFile( oldFilePath );
+
+    if( !oldFile.is_open() ){
+        throw std::runtime_error( std::string( "Couldn't open file [" +
+                                               oldFilePath + "]" ) );
+    }
+
+    // Create the new mesh file.
+    std::ofstream newFile( newFilePath );
+
+    if( !newFile.is_open() ){
+        throw std::runtime_error( std::string( "Couldn't open file [" +
+                                               oldFilePath + "]" ) );
+    }
+
+    // Start to copy the contents of the original mesh file to the new mesh
+    // file in primitives directory. If a line including the material
+    // name appears, replace such name by the new one.
+    while( !oldFile.eof() ){
+        oldFile.getline( line, LINE_SIZE );
+
+        if( !strncmp( line, "mtllib", 6 ) ){
+            processMaterial = true;
+
+            materialName = std::string( line ).substr( 7 );
+
+            log_->debug( "Material name: ", materialName, "\n" );
+
+            newFile << "mtllib " << newMaterialFileName << std::endl;
+        }else{
+            newFile << line << std::endl;
+        }
+    }
+
+    oldFile.close();
+    newFile.close();
+
+    // Copy the material name to the primitives directory.
+    std::string oldMaterialFilePath = oldFilePath.substr( 0, oldFilePath.size() - boost::filesystem::extension( oldFilePath ).size() ) + ".mtl";
+    std::string newMaterialFilePath = newFilePath.substr( 0, newFilePath.size() - boost::filesystem::extension( newFilePath ).size() ) + ".mtl";
+
+    if( processMaterial ){
+        log_->debug( "processMaterial: ", oldMaterialFilePath, ", ", newMaterialFilePath, "\n" );
+        boost::filesystem::copy( oldMaterialFilePath, newMaterialFilePath );
+    }
 }
 
 
