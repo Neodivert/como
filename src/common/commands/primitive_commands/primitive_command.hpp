@@ -31,7 +31,8 @@ namespace como {
  * primitives.
  */
 enum class PrimitiveCommandType : std::uint8_t {
-    PRIMITIVE_CREATION = 0
+    PRIMITIVE_CREATION = 0,
+    PRIMITIVE_INSTANTIATION
 };
 
 typedef PackableUint8< PrimitiveCommandType > PackablePrimitiveCommandType;

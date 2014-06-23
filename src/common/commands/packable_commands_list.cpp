@@ -86,15 +86,6 @@ const void* PackableCommandsList::unpack( const void* buffer )
             // Drawable commands
             case CommandTarget::DRAWABLE:
                 switch( DrawableCommand::getType( buffer ) ){
-                    case DrawableCommandType::MESH_CREATION:
-                        switch( MeshCreationCommand::getMeshType( buffer ) ){
-                            case MaterialMeshType::PRIMITIVE_MESH:
-                                command = CommandPtr( new PrimitiveMeshCreationCommand );
-                            break;
-                        }
-
-
-                    break;
                     case DrawableCommandType::DRAWABLE_SELECTION:
                         command = CommandPtr( new DrawableSelectionCommand );
                     break;
@@ -124,6 +115,9 @@ const void* PackableCommandsList::unpack( const void* buffer )
                 switch( PrimitiveCommand::getType( buffer ) ){
                     case PrimitiveCommandType::PRIMITIVE_CREATION:
                         command = CommandPtr( new PrimitiveCreationCommand );
+                    break;
+                    case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:
+                        command = CommandPtr( new PrimitiveInstantiationCommand );
                     break;
                 }
             break;

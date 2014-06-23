@@ -19,43 +19,48 @@
 #ifndef PRIMITIVE_MESH_CREATION_COMMAND_HPP
 #define PRIMITIVE_MESH_CREATION_COMMAND_HPP
 
-#include <common/commands/drawable_commands/mesh_creation_command.hpp>
+#include "primitive_command.hpp"
 
 namespace como {
 
-class PrimitiveMeshCreationCommand : public MeshCreationCommand
+class PrimitiveInstantiationCommand : public PrimitiveCommand
 {
     private:
         // ID of the primitive we are creating this mesh from.
         PackableResourceID primitiveID_;
 
+        PackableResourceID meshID_;
+        PackableResourceID materialID_;
+
     public:
         /***
          * 1. Construction
          ***/
-        PrimitiveMeshCreationCommand();
-        PrimitiveMeshCreationCommand( PackableDrawableID drawableID, ResourceID primitiveID, const MaterialID& materialID );
-        PrimitiveMeshCreationCommand( const PrimitiveMeshCreationCommand& b );
-        PrimitiveMeshCreationCommand( PrimitiveMeshCreationCommand&& ) = delete;
+        PrimitiveInstantiationCommand();
+        PrimitiveInstantiationCommand( ResourceID primitiveID, PackableDrawableID drawableID, const MaterialID& materialID );
+        PrimitiveInstantiationCommand( const PrimitiveInstantiationCommand& b );
+        PrimitiveInstantiationCommand( PrimitiveInstantiationCommand&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~PrimitiveMeshCreationCommand() = default;
+        ~PrimitiveInstantiationCommand() = default;
 
 
         /***
          * 3. Getters
          ***/
         ResourceID getPrimitiveID() const;
+        ResourceID getMeshID() const;
+        ResourceID getMaterialID() const;
 
 
         /***
          * 4. Operators
          ***/
-        PrimitiveMeshCreationCommand& operator=( const PrimitiveMeshCreationCommand& ) = delete;
-        PrimitiveMeshCreationCommand& operator=( PrimitiveMeshCreationCommand&& ) = delete;
+        PrimitiveInstantiationCommand& operator=( const PrimitiveInstantiationCommand& ) = delete;
+        PrimitiveInstantiationCommand& operator=( PrimitiveInstantiationCommand&& ) = delete;
 };
 
 } // namespace como

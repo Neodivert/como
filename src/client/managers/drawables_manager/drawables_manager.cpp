@@ -25,12 +25,11 @@ namespace como {
  * 1. Construction
  ***/
 
-DrawablesManager::DrawablesManager( ServerInterfacePtr server, const ClientPrimitivesManager* primitivesManager, MaterialsManagerPtr materialsManager, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
+DrawablesManager::DrawablesManager( ServerInterfacePtr server, MaterialsManagerPtr materialsManager, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
     AbstractChangeable(),
     nonSelectedDrawables_( new DrawablesSelection( glm::vec4( 0.0f ) ) ),
     server_( server ),
     localUserID_( localUserID ),
-    primitivesManager_( primitivesManager ),
     materialsManager_( materialsManager ),
     primitivesDirPath_( primitivesDirPath ),
     oglContext_( oglContext ),
@@ -124,47 +123,8 @@ void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, Packabl
 }
 
 
-void DrawablesManager::createMeshAndMaterial( ResourceID primitiveID )
-{
-    // Get the "absolute" path to the specification file of the
-    // primitive used for building this mesh.
-    std::string primitivePath = primitivesManager_->getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MESH );
-
-    // Create the material.
-    MaterialID materialID = materialsManager_->createMaterial( "Unnamed material" ); // TODO: Use another name.
-
-    // Create the mesh.
-    DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
-    PackableDrawableID drawableID = addDrawable( drawable );
-
-    log_->debug( "Creating local mesh - Drawable ID (", drawableID,
-                 ") MaterialID ", materialID, "\n" );
-
-    // Send the command to the server (the MaterialCreationCommand command was
-    // already sent in previous call to materialsManager_->createMaterial() ).
-    server_->sendCommand( CommandConstPtr( new PrimitiveMeshCreationCommand( drawableID, primitiveID, materialID ) ) );
-}
-
-
 // FIXME: Duplicated code.
-void DrawablesManager::createMesh( ResourceID primitiveID, MaterialID materialID )
-{
-    // Get the "absolute" path to the specification file of the
-    // primitive used for building this mesh.
-    std::string primitivePath = primitivesManager_->getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MESH );
-
-    // Create the mesh.
-    DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
-
-    // Add the mesh to the scene and retrieve its ID.
-    PackableDrawableID drawableID = addDrawable( drawable );
-
-    // Send the command to the server.
-    server_->sendCommand( CommandConstPtr( new PrimitiveMeshCreationCommand( drawableID, primitiveID, materialID ) ) );
-}
-
-
-// FIXME: Duplicated code.
+/*
 void DrawablesManager::createRemoteMesh( ResourceID primitiveID, PackableDrawableID drawableID, MaterialID materialID )
 {
     // Get the "absolute" path to the specification file of the
@@ -180,7 +140,7 @@ void DrawablesManager::createRemoteMesh( ResourceID primitiveID, PackableDrawabl
     // Add the mesh to the scene.
     addDrawable( drawableID.creatorID.getValue(), drawable, drawableID );
 }
-
+*/
 
 void DrawablesManager::deleteSelection()
 {
@@ -320,29 +280,9 @@ void DrawablesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewProjMatri
 
 void DrawablesManager::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
 {
-    const MeshCreationCommand* meshCreationCommand = nullptr;
-    const PrimitiveMeshCreationCommand* primitiveMeshCreationCommand = nullptr;
     const DrawableSelectionCommand* selectDrawable = nullptr;
 
     switch( command->getType() ){
-        case  DrawableCommandType::MESH_CREATION:
-            meshCreationCommand = dynamic_cast< const MeshCreationCommand* >( command.get() );
-
-            switch( meshCreationCommand->getMeshType() ){
-                case MaterialMeshType::PRIMITIVE_MESH:
-                    // Cast to a MESH_CREATION command.
-                    primitiveMeshCreationCommand = dynamic_cast< const PrimitiveMeshCreationCommand* >( meshCreationCommand );
-
-                    log_->debug( "Creating remote mesh - Drawable ID (", primitiveMeshCreationCommand->getDrawableID(),
-                                 ") MaterialID (", primitiveMeshCreationCommand->getMaterialID(), ")\n" );
-
-                    createRemoteMesh( primitiveMeshCreationCommand->getPrimitiveID(),
-                                      primitiveMeshCreationCommand->getDrawableID(),
-                                      primitiveMeshCreationCommand->getMaterialID() );
-                break;
-            }
-        break;
-
         case DrawableCommandType::DRAWABLE_SELECTION:
             // Cast to a DRAWABLE_SELECTION command.
             selectDrawable = dynamic_cast< const DrawableSelectionCommand* >( command.get() );

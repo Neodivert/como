@@ -328,7 +328,6 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
 
 void Server::processSceneCommand( CommandConstPtr sceneCommand )
 {
-    const MeshCreationCommand* meshCreationCommand = nullptr;
     const PrimitiveCreationCommand* primitiveCreationCommand = nullptr;
     const DrawableSelectionCommand* selectDrawable = nullptr;
 
@@ -337,17 +336,6 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
         break;
         case CommandTarget::DRAWABLE:
             switch( ( dynamic_cast< const DrawableCommand* >( sceneCommand.get() ) )->getType() ){
-                case DrawableCommandType::MESH_CREATION:
-                    // MESH_CREATION command received, cast its pointer.
-                    meshCreationCommand = dynamic_cast< const MeshCreationCommand* >( sceneCommand.get() );
-
-                    // Add a node to the Drawable Owners map for the recently added
-                    // drawable. Mark it with a 0 (no owner).
-                    drawableOwners_[meshCreationCommand->getDrawableID()] = 0;
-
-                    log_->debug( "Mesh added! (", (int)( meshCreationCommand->getDrawableID().creatorID.getValue() ),
-                                 ", ", (int)( meshCreationCommand->getDrawableID().drawableIndex.getValue() ), "\n" );
-                break;
                 case DrawableCommandType::DRAWABLE_SELECTION:
                     // DRAWABLE_SELECTION command received, cast its pointer.
                     selectDrawable = dynamic_cast< const DrawableSelectionCommand* >( sceneCommand.get() );
@@ -366,17 +354,36 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
                 unselectAll( sceneCommand->getUserID() );
             }
         break;
-        case CommandTarget::PRIMITIVE:
-            if( ( dynamic_cast< const PrimitiveCommand* >( sceneCommand.get() ) )->getType() == PrimitiveCommandType::PRIMITIVE_CREATION ){
-                // PRIMITIVE_CREATION command received, cast its pointer.
-                primitiveCreationCommand = dynamic_cast< const PrimitiveCreationCommand* >( sceneCommand.get() );
+        case CommandTarget::PRIMITIVE:{
+            const PrimitiveCommand* primitiveCommand = dynamic_cast< const PrimitiveCommand* >( sceneCommand.get() );
 
-                // TODO: Complete, Save new primitive.
-                log_->debug( "Primitive received [", primitiveCreationCommand->getMeshFile()->getFilePath(), "]\n" );
+            switch( primitiveCommand->getType() ){
+                case PrimitiveCommandType::PRIMITIVE_CREATION:
+                    // PRIMITIVE_CREATION command received, cast its pointer.
+                    primitiveCreationCommand = dynamic_cast< const PrimitiveCreationCommand* >( sceneCommand.get() );
+
+                    // TODO: Complete, Save new primitive.
+                    log_->debug( "Primitive received [", primitiveCreationCommand->getMeshFile()->getFilePath(), "]\n" );
+                break;
+                case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:{
+                    const PrimitiveInstantiationCommand* primitiveCommand = dynamic_cast< const PrimitiveInstantiationCommand* >( sceneCommand.get() );
+
+                    // Add a node to the Drawable Owners map for the recently added
+                    // drawable. Mark it with a 0 (no owner).
+                    PackableDrawableID drawableID;
+                    drawableID.creatorID = primitiveCommand->getMeshID().getCreatorID();
+                    drawableID.drawableIndex = static_cast< DrawableIndex >( primitiveCommand->getMeshID().getResourceIndex() );
+
+                    drawableOwners_[ drawableID ] = 0;
+
+                    log_->debug( "Mesh added! (", (int)( primitiveCommand->getMeshID().getCreatorID() ),
+                                 ", ", (int)( primitiveCommand->getMeshID().getResourceIndex() ), "\n" );
+                }break;
             }
-        break;
+        }break;
         case CommandTarget::PRIMITIVE_CATEGORY:
             // TODO: Complete
+
         break;
         case CommandTarget::MATERIAL:
             // TODO: Complete.

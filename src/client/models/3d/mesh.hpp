@@ -29,7 +29,6 @@
 #include <stdexcept>
 #include <client/models/3d/materials/material.hpp>
 #include <common/packables/array/packable_color.hpp>
-#include <common/commands/drawable_commands/mesh_creation_command.hpp> // For MeshType.
 
 namespace como {
 

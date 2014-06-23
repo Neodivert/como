@@ -33,7 +33,6 @@ HEADERS += \
     ../../src/common/commands/user_commands/user_connection_command.hpp \
     ../../src/common/commands/user_commands/user_disconnection_command.hpp \
     ../../src/common/commands/drawable_commands/drawable_command.hpp \
-    ../../src/common/commands/drawable_commands/mesh_creation_command.hpp \
     ../../src/common/commands/drawable_commands/drawable_selection_command.hpp \
     ../../src/common/commands/selection_commands/selection_response_command.hpp \
     ../../src/common/commands/selection_commands/selection_transformation_command.hpp \
@@ -54,7 +53,6 @@ HEADERS += \
     ../../src/common/commands/primitive_commands/primitive_command.hpp \
     ../../src/common/users/user.hpp \
     ../../src/common/commands/type_command.hpp \
-    ../../src/common/commands/drawable_commands/primitive_mesh_creation_command.hpp \
     ../../src/common/commands/light_commands/light_creation_command.hpp \
     ../../src/common/commands/light_commands/directional_light_creation_command.hpp \
     ../../src/common/packables/packable_wrapper.hpp \
@@ -86,7 +84,8 @@ HEADERS += \
     ../../src/common/managers/primitives/abstract_primitives_manager.hpp \
     ../../src/common/ids/resource_id.hpp \
     ../../src/common/ids/user_id.hpp \
-    ../../src/common/packables/ids/packable_resource_id.hpp
+    ../../src/common/packables/ids/packable_resource_id.hpp \
+    ../../src/common/commands/primitive_commands/primitive_instantiation_command.hpp
 
 
 # Common sources (used by both client and server).
@@ -102,7 +101,6 @@ SOURCES += \
     ../../src/common/commands/user_commands/user_connection_command.cpp \
     ../../src/common/commands/user_commands/user_disconnection_command.cpp \
     ../../src/common/commands/drawable_commands/drawable_command.cpp \
-    ../../src/common/commands/drawable_commands/mesh_creation_command.cpp \
     ../../src/common/commands/drawable_commands/drawable_selection_command.cpp \
     ../../src/common/commands/selection_commands/selection_response_command.cpp \
     ../../src/common/commands/selection_commands/selection_transformation_command.cpp \
@@ -115,7 +113,6 @@ SOURCES += \
     ../../src/common/commands/primitive_commands/primitive_creation_command.cpp \
     ../../src/common/commands/primitive_commands/primitive_command.cpp \
     ../../src/common/users/user.cpp \
-    ../../src/common/commands/drawable_commands/primitive_mesh_creation_command.cpp \
     ../../src/common/commands/light_commands/light_creation_command.cpp \
     ../../src/common/commands/light_commands/directional_light_creation_command.cpp \
     ../../src/common/packables/packable_float.cpp \
@@ -133,4 +130,5 @@ SOURCES += \
     ../../src/common/commands/primitive_category_commands/primitive_category_creation_command.cpp \
     ../../src/common/managers/primitives/abstract_primitives_manager.cpp \
     ../../src/common/ids/resource_id.cpp \
-    ../../src/common/packables/ids/packable_resource_id.cpp
+    ../../src/common/packables/ids/packable_resource_id.cpp \
+    ../../src/common/commands/primitive_commands/primitive_instantiation_command.cpp

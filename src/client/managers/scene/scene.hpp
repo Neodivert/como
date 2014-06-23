@@ -63,7 +63,7 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
         // Users sharing this scene.
         UsersMap users_;
 
-        std::unique_ptr< ClientPrimitivesManager > primitivesManager_;
+        ClientPrimitivesManagerPtr primitivesManager_;
 
         /*!
          * \brief Drawables mmanager. This object acts as a container and an
@@ -138,7 +138,7 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
         DrawablesManagerPtr getDrawablesManager() const ;
         MaterialsManagerPtr getMaterialsManager() const;
         LightsManagerPtr getLightsManager() const;
-        ClientPrimitivesManager* getPrimitivesManager() const;
+        ClientPrimitivesManagerPtr getPrimitivesManager() const;
 
 
         /***

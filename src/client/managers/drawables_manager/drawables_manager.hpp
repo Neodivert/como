@@ -28,7 +28,6 @@
 #include <client/managers/materials/materials_manager.hpp>
 #include <QOffscreenSurface>
 #include <common/utilities/observer_pattern/observable.hpp>
-#include <client/managers/primitives/client_primitives_manager.hpp>
 
 namespace como {
 
@@ -49,15 +48,13 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
 
         UserID localUserID_;
 
-        const ClientPrimitivesManager* primitivesManager_;
-
         MaterialsManagerPtr materialsManager_;
 
         // TODO: move this to ServerInterface?
         std::queue< PackableDrawableID > localUserPendingSelections_;
 
         // Map ID - PrimitivePath.
-        std::map< ResourceID, std::string > primitivePaths_;
+        std::map< ResourceID, std::string > primitivePaths_; // TODO: Remove this and related methods.
 
         // Relative path to the primitives directory.
         std::string primitivesDirPath_;
@@ -70,7 +67,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         /***
          * 1. Construction
          ***/
-        DrawablesManager( ServerInterfacePtr server, const ClientPrimitivesManager* primitivesManager, MaterialsManagerPtr materialsManager, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
+        DrawablesManager( ServerInterfacePtr server, MaterialsManagerPtr materialsManager, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
         DrawablesManager( const DrawablesManager& ) = delete;
         DrawablesManager( DrawablesManager&& ) = delete;
 
@@ -109,12 +106,9 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
 
     public:
         //void addMesh( ResourceID primitiveID, QColor color );
-        void createMeshAndMaterial( ResourceID primitiveID );
 
-    public:
-        void createMesh( ResourceID primitiveID, MaterialID materialID );
     private:
-        void createRemoteMesh( ResourceID primitiveID, PackableDrawableID drawableID, MaterialID materialID );
+        //void createRemoteMesh( ResourceID primitiveID, PackableDrawableID drawableID, MaterialID materialID );
 
     public:
 

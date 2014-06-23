@@ -24,7 +24,6 @@
 namespace como {
 
 enum class DrawableCommandType : std::uint8_t {
-    MESH_CREATION = 0,
     DRAWABLE_SELECTION
 };
 

@@ -73,11 +73,11 @@ QFrame* CreationTab::createMeshFromPrimitiveCreationMenu()
         // Signal / Slot connection: when one of the available primitives is
         // selected, create a mesh from it and add it to the scene.
         QObject::connect( primitiveSelector, &ResourceSelector::resourceSelected,
-                          scene_->getDrawablesManager().get(), &DrawablesManager::createMeshAndMaterial );
+                          scene_->getPrimitivesManager().get(), &ClientPrimitivesManager::instantiatePrimitive );
 
         // Signal / Slot connection: when a new primitive is created in the scene,
         // add it to the primitives dropdown list.
-        connect( scene_->getPrimitivesManager(), &ClientPrimitivesManager::primitiveAdded, [=]( ResourceID primitiveID, std::string primitiveRelPath ){
+        connect( scene_->getPrimitivesManager().get(), &ClientPrimitivesManager::primitiveAdded, [=]( ResourceID primitiveID, std::string primitiveRelPath ){
             primitiveSelector->insertResource( primitiveID, primitiveRelPath );
         });
     });
@@ -91,7 +91,7 @@ QPushButton* CreationTab::createPrimitiveImportButton() const
     QPushButton* importPrimitiveButton = new QPushButton( "Import primitive" );
 
     QObject::connect( importPrimitiveButton, &QPushButton::clicked, [this](){
-        PrimitiveImportDialog primitiveImportDialog( scene_->getPrimitivesManager() );
+        PrimitiveImportDialog primitiveImportDialog( scene_->getPrimitivesManager().get() );
 
         primitiveImportDialog.exec();
     });

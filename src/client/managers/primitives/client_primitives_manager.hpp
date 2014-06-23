@@ -20,6 +20,7 @@
 #define CLIENT_PRIMITIVES_MANAGER_HPP
 
 #include <string>
+#include <client/managers/drawables_manager/drawables_manager.hpp>
 #include <common/utilities/log.hpp>
 #include <common/commands/primitive_category_commands/primitive_category_commands.hpp>
 #include <common/commands/primitive_commands/primitive_commands.hpp>
@@ -27,6 +28,7 @@
 #include <common/managers/primitives/abstract_primitives_manager.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
 #include <QObject>
+#include <client/managers/materials/materials_manager.hpp>
 #include <cstdio>
 #include <fstream>
 
@@ -39,12 +41,15 @@ class ClientPrimitivesManager : public QObject, public AbstractPrimitivesManager
     private:
         ServerInterfacePtr server_;
 
+        DrawablesManagerPtr drawablesManager_;
+        MaterialsManagerPtr materialsManager_;
+
     public:
         /***
          * 1. Construction
          ***/
         ClientPrimitivesManager() = delete;
-        ClientPrimitivesManager( std::string sceneDirPath, ServerInterfacePtr server, LogPtr log );
+        ClientPrimitivesManager( std::string sceneDirPath, ServerInterfacePtr server, DrawablesManagerPtr drawablesManager, MaterialsManagerPtr materialsManager, LogPtr log );
         ClientPrimitivesManager( const ClientPrimitivesManager& ) = delete;
         ClientPrimitivesManager( ClientPrimitivesManager&& ) = delete;
 
@@ -62,6 +67,7 @@ class ClientPrimitivesManager : public QObject, public AbstractPrimitivesManager
     private:
         ResourceID importMeshFile( std::string oldFilePath, ResourceID categoryID );
     public:
+        void instantiatePrimitive( ResourceID primitiveID );
 
 
         /***
@@ -84,6 +90,8 @@ class ClientPrimitivesManager : public QObject, public AbstractPrimitivesManager
     signals:
         void primitiveAdded( ResourceID id, std::string relativePath );
 };
+
+typedef std::shared_ptr< ClientPrimitivesManager > ClientPrimitivesManagerPtr;
 
 } // namespace como
 

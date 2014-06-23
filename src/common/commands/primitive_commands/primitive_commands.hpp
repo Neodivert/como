@@ -20,5 +20,6 @@
 #define PRIMITIVE_COMMANDS_HPP
 
 #include "primitive_creation_command.hpp"
+#include "primitive_instantiation_command.hpp"
 
 #endif // PRIMITIVE_COMMANDS_HPP

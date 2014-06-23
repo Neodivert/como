@@ -25,7 +25,6 @@
 #include "user_commands/user_parameter_change_command.hpp"
 
 // Drawable commands
-#include "drawable_commands/primitive_mesh_creation_command.hpp"
 #include "drawable_commands/drawable_selection_command.hpp"
 
 // Selection commands

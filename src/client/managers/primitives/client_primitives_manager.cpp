@@ -26,9 +26,11 @@ namespace como {
  * 1. Construction
  ***/
 
-ClientPrimitivesManager::ClientPrimitivesManager( std::string sceneDirPath, ServerInterfacePtr server, LogPtr log ) :
+ClientPrimitivesManager::ClientPrimitivesManager( std::string sceneDirPath, ServerInterfacePtr server, DrawablesManagerPtr drawablesManager, MaterialsManagerPtr materialsManager, LogPtr log ) :
     AbstractPrimitivesManager( sceneDirPath, log ),
-    server_( server )
+    server_( server ),
+    drawablesManager_( drawablesManager ),
+    materialsManager_( materialsManager )
 {}
 
 
@@ -153,6 +155,27 @@ ResourceID ClientPrimitivesManager::importMeshFile( std::string oldFilePath, Res
     return primitiveID;
 }
 
+void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
+{
+    // Get the "absolute" path to the specification file of the
+    // primitive used for building this mesh.
+    std::string primitivePath = getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MESH );
+
+    // Create the material.
+    MaterialID materialID = materialsManager_->createMaterial( "Unnamed material" ); // TODO: Use another name.
+
+    // Create the mesh.
+    DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
+    PackableDrawableID drawableID = drawablesManager_->addDrawable( drawable );
+
+    log_->debug( "Creating local mesh - Drawable ID (", drawableID,
+                 ") MaterialID ", materialID, "\n" );
+
+    // Send the command to the server (the MaterialCreationCommand command was
+    // already sent in previous call to materialsManager_->createMaterial() ).
+    server_->sendCommand( CommandConstPtr( new PrimitiveInstantiationCommand( primitiveID, drawableID, materialID ) ) );
+}
+
 
 /***
  * 4. Remote command execution
@@ -191,6 +214,9 @@ void ClientPrimitivesManager::executeRemoteCommand( PrimitiveCommandConstPtr com
             emit primitiveAdded( primitiveCreationCommand->getPrimitiveID(),
                                  getPrimitiveRelativePath( primitiveCreationCommand->getPrimitiveID(), PrimitiveComponent::MESH ) );
         }break;
+        case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:
+            // TODO: Complete.
+        break;
     }
 }
 
