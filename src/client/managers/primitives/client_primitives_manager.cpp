@@ -38,42 +38,43 @@ ClientPrimitivesManager::ClientPrimitivesManager( std::string sceneDirPath, Serv
 
 std::string ClientPrimitivesManager::createPrimitive( std::string filePath, ResourceID categoryID )
 {
-    char resourceIDString[20];
+    ResourceID id = importMeshFile( filePath, categoryID );
 
-    ResourceID id = server_->getNewResourceID();
-
-    sprintf( resourceIDString, "_%u_%u", id.getCreatorID(), id.getResourceIndex() );
-
-    std::string primitiveName =
-            boost::filesystem::basename( filePath ) +
-            std::string( resourceIDString );
-
-    std::string meshFileName =
-            primitiveName +
-            boost::filesystem::extension( filePath );
-
-    registerPrimitive( id, meshFileName, categoryID );
-
-    importMeshFile( primitiveName, filePath, getPrimitiveAbsolutePath( id ) );
+    log_->debug( "Primitive imported. Sending command\n" );
 
     server_->sendCommand(
                 CommandConstPtr(
-                    new PrimitiveCreationCommand( getPrimitiveAbsolutePath( id ).c_str(),
-                                                  id.getCreatorID(),
+                    new PrimitiveCreationCommand( id.getCreatorID(),
                                                   id,
-                                                  categoryID ) ) );
+                                                  categoryID,
+                                                  getPrimitiveAbsolutePath( id, PrimitiveComponent::MESH ).c_str() ,
+                                                  getPrimitiveAbsolutePath( id, PrimitiveComponent::MATERIAL ).c_str() ) ) );
 
-    emit primitiveAdded( id, getPrimitiveRelativePath( id ) );
+    emit primitiveAdded( id, getPrimitiveRelativePath( id, PrimitiveComponent::MESH ) );
 
-    return getPrimitiveRelativePath( id );
+    return getPrimitiveRelativePath( id, PrimitiveComponent::MESH );
 }
 
 
-void ClientPrimitivesManager::importMeshFile( std::string primitiveName, std::string oldFilePath, std::string newFilePath )
+ResourceID ClientPrimitivesManager::importMeshFile( std::string oldFilePath, ResourceID categoryID )
 {
     const unsigned int LINE_SIZE = 250;
     char line[LINE_SIZE] = {0};
     bool processMaterial = false;
+    char resourceIDString[20];
+
+    ResourceID primitiveID = server_->getNewResourceID();
+    sprintf( resourceIDString, "_%u_%u", primitiveID.getCreatorID(), primitiveID.getResourceIndex() );
+
+    std::string primitiveName =
+            boost::filesystem::basename( oldFilePath ) +
+            std::string( resourceIDString );
+
+    std::string meshFileName =
+            primitiveName +
+            boost::filesystem::extension( oldFilePath );
+
+    std::string newFilePath = getCategoryAbsoluteePath( categoryID ) + '/' + meshFileName;
 
     log_->debug( "Importing mesh file (", primitiveName, ", ",
                  oldFilePath, ", ",
@@ -94,7 +95,7 @@ void ClientPrimitivesManager::importMeshFile( std::string primitiveName, std::st
     std::ifstream oldFile( oldFilePath );
 
     if( !oldFile.is_open() ){
-        throw std::runtime_error( std::string( "Couldn't open file [" +
+        throw std::runtime_error( std::string( "Importing mesh file (old) - Couldn't open file [" +
                                                oldFilePath + "]" ) );
     }
 
@@ -102,9 +103,12 @@ void ClientPrimitivesManager::importMeshFile( std::string primitiveName, std::st
     std::ofstream newFile( newFilePath );
 
     if( !newFile.is_open() ){
-        throw std::runtime_error( std::string( "Couldn't open file [" +
-                                               oldFilePath + "]" ) );
+        throw std::runtime_error( std::string( "Importing mesh file (new) - Couldn't open file [" +
+                                               newFilePath + "]" ) );
     }
+
+    log_->debug( "oldFilePath: ", oldFilePath, "\n" );
+    log_->debug( "newFilePath: ", newFilePath, "\n" );
 
     // Start to copy the contents of the original mesh file to the new mesh
     // file in primitives directory. If a line including the material
@@ -128,14 +132,25 @@ void ClientPrimitivesManager::importMeshFile( std::string primitiveName, std::st
     oldFile.close();
     newFile.close();
 
+    if( !processMaterial ){
+        boost::filesystem::remove( newFilePath );
+        throw std::runtime_error( "Primitive must include a material" );
+    }
+
     // Copy the material name to the primitives directory.
     std::string oldMaterialFilePath = oldFilePath.substr( 0, oldFilePath.size() - boost::filesystem::extension( oldFilePath ).size() ) + ".mtl";
     std::string newMaterialFilePath = newFilePath.substr( 0, newFilePath.size() - boost::filesystem::extension( newFilePath ).size() ) + ".mtl";
 
-    if( processMaterial ){
-        log_->debug( "processMaterial: ", oldMaterialFilePath, ", ", newMaterialFilePath, "\n" );
-        boost::filesystem::copy( oldMaterialFilePath, newMaterialFilePath );
-    }
+    log_->debug( "oldMaterialFilePath: ", oldMaterialFilePath, "\n" );
+    log_->debug( "newMaterialFilePath: ", newMaterialFilePath, "\n" );
+
+    log_->debug( "processMaterial: ", oldMaterialFilePath, ", ", newMaterialFilePath, "\n" );
+    boost::filesystem::copy( oldMaterialFilePath, newMaterialFilePath );
+
+    // Register the primitive into the system.
+    registerPrimitive( primitiveID, categoryID, meshFileName, newMaterialFileName );
+
+    return primitiveID;
 }
 
 
@@ -163,17 +178,18 @@ void ClientPrimitivesManager::executeRemoteCommand( PrimitiveCommandConstPtr com
             const PrimitiveCreationCommand* primitiveCreationCommand =
                     dynamic_cast< const PrimitiveCreationCommand* >( command.get() );
 
-            log_->debug( "Primitive file received: [", primitiveCreationCommand->getFile()->getFilePath(), "]\n" );
+            log_->debug( "Primitive file received: [", primitiveCreationCommand->getMeshFile()->getFilePath(), "]\n" );
 
             registerPrimitive( primitiveCreationCommand->getPrimitiveID(),
-                             primitiveCreationCommand->getPrimitiveName(),
-                             primitiveCreationCommand->getCategoryID() );
+                               primitiveCreationCommand->getCategoryID(),
+                               primitiveCreationCommand->getMeshFileName(),
+                               primitiveCreationCommand->getMaterialFileName() );
 
             // Emit a signal indicating the primitive insertion. Include
             // primitive's name and ID in the signal.
             // TODO: Complete
             emit primitiveAdded( primitiveCreationCommand->getPrimitiveID(),
-                                 getPrimitiveRelativePath( primitiveCreationCommand->getPrimitiveID() ) );
+                                 getPrimitiveRelativePath( primitiveCreationCommand->getPrimitiveID(), PrimitiveComponent::MESH ) );
         }break;
     }
 }

@@ -59,17 +59,41 @@ AbstractPrimitivesManager::~AbstractPrimitivesManager()
  * 3. Getters
  ***/
 
-std::string AbstractPrimitivesManager::getPrimitiveRelativePath( ResourceID id ) const
+std::string AbstractPrimitivesManager::getPrimitiveRelativePath( ResourceID id, PrimitiveComponent component ) const
 {
     PrimitiveInfo primitive = primitiveInfo_.at( id );
-    std::string categoryName = categoryNames_.at( primitive.category );
-    return categoryName + "/" + primitive.name;
+    std::string categoryRelativePath = getCategoryRelativePath( primitive.category );
+
+    switch( component ){
+        case PrimitiveComponent::MESH:
+            return categoryRelativePath + "/" + primitive.meshFileName;
+        break;
+        case PrimitiveComponent::MATERIAL:
+            return categoryRelativePath + "/" + primitive.materialFileName;
+        break;
+        default:
+            throw std::runtime_error( "AbstractPrimitivesManager::getPrimitiveRelativePath - what?" );
+        break;
+    }
 }
 
-std::string AbstractPrimitivesManager::getPrimitiveAbsolutePath( ResourceID id ) const
+std::string AbstractPrimitivesManager::getPrimitiveAbsolutePath( ResourceID id, PrimitiveComponent component ) const
 {
-    return scenePrimitivesDir_ + '/' + getPrimitiveRelativePath( id );
+    return scenePrimitivesDir_ + '/' + getPrimitiveRelativePath( id, component );
 }
+
+
+std::string AbstractPrimitivesManager::getCategoryRelativePath( ResourceID id ) const
+{
+    return categoryNames_.at( id );
+}
+
+
+std::string AbstractPrimitivesManager::getCategoryAbsoluteePath( ResourceID id ) const
+{
+    return scenePrimitivesDir_ + '/' + getCategoryRelativePath( id );
+}
+
 
 ResourcesList AbstractPrimitivesManager::getCategoriesList() const
 {
@@ -116,13 +140,17 @@ void AbstractPrimitivesManager::createCategory( ResourceID id, std::string name 
  * 5. Primitives management
  ***/
 
-void AbstractPrimitivesManager::registerPrimitive( ResourceID id, std::string name , ResourceID category )
+void AbstractPrimitivesManager::registerPrimitive( ResourceID id, ResourceID category, std::string meshFileName, std::string materialFileName )
 {
+    std::string name = meshFileName;
+
     log_->debug( "Primitive registered - id (", id,
                  "), name (", name,
-                 ") - category(", category, ")\n" );
+                 ") - category(", category, ")",
+                 ") - meshFileName(", meshFileName, ")",
+                 ") . materialFileName(", materialFileName, ")\n" );
 
-    primitiveInfo_[id] = PrimitiveInfo( { name, category } );
+    primitiveInfo_[id] = PrimitiveInfo( { name, category, meshFileName, materialFileName } );
 }
 
 

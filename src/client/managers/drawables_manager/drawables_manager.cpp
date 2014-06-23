@@ -128,7 +128,7 @@ void DrawablesManager::createMeshAndMaterial( ResourceID primitiveID )
 {
     // Get the "absolute" path to the specification file of the
     // primitive used for building this mesh.
-    std::string primitivePath = primitivesManager_->getPrimitiveAbsolutePath( primitiveID );
+    std::string primitivePath = primitivesManager_->getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MESH );
 
     // Create the material.
     MaterialID materialID = materialsManager_->createMaterial( "Unnamed material" ); // TODO: Use another name.
@@ -151,7 +151,7 @@ void DrawablesManager::createMesh( ResourceID primitiveID, MaterialID materialID
 {
     // Get the "absolute" path to the specification file of the
     // primitive used for building this mesh.
-    std::string primitivePath = primitivesManager_->getPrimitiveAbsolutePath( primitiveID );
+    std::string primitivePath = primitivesManager_->getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MESH );
 
     // Create the mesh.
     DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
@@ -169,7 +169,7 @@ void DrawablesManager::createRemoteMesh( ResourceID primitiveID, PackableDrawabl
 {
     // Get the "absolute" path to the specification file of the
     // primitive used for building this mesh.
-    std::string primitivePath = primitivesManager_->getPrimitiveAbsolutePath( primitiveID );
+    std::string primitivePath = primitivesManager_->getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MESH );
 
     // Create the mesh.
     DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), materialsManager_->getMaterial( materialID ) ) );

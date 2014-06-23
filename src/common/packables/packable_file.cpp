@@ -54,7 +54,7 @@ PackableFile::PackableFile( const PackableString<NAME_SIZE>& filePath, bool crea
         file_.open( filePath_.getValue(), std::ios_base::in | std::ios_base::binary );
 
         if( !file_.is_open() ){
-            throw std::runtime_error( std::string( "Couldn't open file [" ) + filePath_.getValue() + "]" );
+            throw std::runtime_error( std::string( "PackableFile constructor - Couldn't open file [" ) + filePath_.getValue() + "]" );
         }
 
         file_.close();
@@ -82,7 +82,7 @@ PackableFile::PackableFile( const PackableFile& b ) :
     file_.open( filePath_.getValue(), std::ios_base::in | std::ios_base::binary );
 
     if( !file_.is_open() ){
-        throw std::runtime_error( std::string( "Couldn't open file [" ) + filePath_.getValue() + "]" );
+        throw std::runtime_error( std::string( "Packable file copy constructor - Couldn't open file [" ) + filePath_.getValue() + "]" );
     }
 
     file_.close();
@@ -257,7 +257,7 @@ void PackableFile::updateFileSize()
     file_.open( filePath_.getValue(), std::ios_base::in | std::ios_base::binary | std::ios_base::ate );
 
     if( !file_.is_open() ){
-        throw std::runtime_error( std::string( "Couldn't open file [" ) + filePath_.getValue() + "]" );
+        throw std::runtime_error( std::string( "PackableFile::updateFileSize() - Couldn't open file [" ) + filePath_.getValue() + "]" );
     }
 
 

@@ -94,6 +94,8 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
     boost::filesystem::directory_iterator fileIterator( dirPath );
     ResourceID categoryID;
     std::string filePath;
+    std::string meshFileName;
+    std::string materialFileName;
 
     categoryID = registerCategory( boost::filesystem::basename( dirPath ) );
 
@@ -101,7 +103,20 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
         if( boost::filesystem::is_regular_file( *fileIterator ) ){
             filePath = fileIterator->path().string();
 
-            registerPrimitive( filePath, categoryID );
+            log_->debug( "filePath: ", filePath, "\n" );
+
+            if( boost::filesystem::extension( filePath ) == ".obj" ){
+                meshFileName = boost::filesystem::basename( filePath ) + ".obj";
+
+                // TODO: Remove this and retrieve material file name from mesh file.
+                materialFileName = boost::filesystem::basename( filePath ) + ".mtl";
+
+                log_->debug( "Registering (", meshFileName, ", ", materialFileName, ") ...\n" );
+
+                registerPrimitive( categoryID, meshFileName, materialFileName );
+
+                log_->debug( "Registering (", meshFileName, ", ", materialFileName, ") ...OK\n" );
+            }
         }
     }
 }
@@ -129,11 +144,15 @@ ResourceID ServerPrimitivesManager::registerCategory( std::string categoryName )
  * 5. Primitives management
  ***/
 
-void ServerPrimitivesManager::registerPrimitive( std::string filePath, ResourceID categoryID )
+void ServerPrimitivesManager::registerPrimitive( ResourceID categoryID, std::string meshFileName, std::string materialFileName )
 {
-    AbstractPrimitivesManager::registerPrimitive( nextPrimitiveID_, boost::filesystem::basename( filePath ) + boost::filesystem::extension( filePath ), categoryID );
+    AbstractPrimitivesManager::registerPrimitive( nextPrimitiveID_, categoryID, meshFileName, materialFileName );
 
-    commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCreationCommand( filePath.c_str(), 0, nextPrimitiveID_, categoryID ) ) );
+    commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCreationCommand( 0,
+                                                                                  nextPrimitiveID_,
+                                                                                  categoryID,
+                                                                                  getPrimitiveAbsolutePath( nextPrimitiveID_, PrimitiveComponent::MESH ).c_str(),
+                                                                                  getPrimitiveAbsolutePath( nextPrimitiveID_, PrimitiveComponent::MATERIAL ).c_str() ) ) );
 
     nextPrimitiveID_++;
 }

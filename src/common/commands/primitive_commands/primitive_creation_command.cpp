@@ -10,26 +10,31 @@ PrimitiveCreationCommand::PrimitiveCreationCommand() :
     PrimitiveCommand( PrimitiveCommandType::PRIMITIVE_CREATION, 0, {0, 0} )
 {
     addPackable( &category_ );
-    addPackable( &file_ );
+    addPackable( &meshFile_ );
+    addPackable( &materialFile_ );
 }
 
 
-PrimitiveCreationCommand::PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, ResourceID primitiveID, ResourceID categoryID ) :
+PrimitiveCreationCommand::PrimitiveCreationCommand( UserID userID, ResourceID primitiveID, ResourceID categoryID, PackableString< NAME_SIZE > meshFilePath, PackableString< NAME_SIZE > materialFilePath ) :
     PrimitiveCommand( PrimitiveCommandType::PRIMITIVE_CREATION, userID, primitiveID ),
     category_( categoryID ),
-    file_( filePath )
+    meshFile_( meshFilePath ),
+    materialFile_( materialFilePath )
 {
     addPackable( &category_ );
-    addPackable( &file_ );
+    addPackable( &meshFile_ );
+    addPackable( &materialFile_ );
 }
 
 
 PrimitiveCreationCommand::PrimitiveCreationCommand( const PrimitiveCreationCommand& b ) :
     PrimitiveCommand( b ),
-    file_( b.file_ )
+    meshFile_( b.meshFile_ ),
+    materialFile_( b.materialFile_ )
 {
     addPackable( &category_ );
-    addPackable( &file_ );
+    addPackable( &meshFile_ );
+    addPackable( &materialFile_ );
 }
 
 
@@ -39,7 +44,19 @@ PrimitiveCreationCommand::PrimitiveCreationCommand( const PrimitiveCreationComma
 
 std::string PrimitiveCreationCommand::getPrimitiveName() const
 {
-    return file_.getFileName();
+    return getMeshFileName();
+}
+
+
+std::string PrimitiveCreationCommand::getMeshFileName() const
+{
+    return meshFile_.getFileName();
+}
+
+
+std::string PrimitiveCreationCommand::getMaterialFileName() const
+{
+    return materialFile_.getFileName();
 }
 
 
@@ -49,11 +66,14 @@ ResourceID PrimitiveCreationCommand::getCategoryID() const
 }
 
 
-const PackableFile* PrimitiveCreationCommand::getFile() const
+const PackableFile* PrimitiveCreationCommand::getMeshFile() const
 {
-    return &file_;
+    return &meshFile_;
 }
 
-
+const PackableFile* PrimitiveCreationCommand::getMaterialFile() const
+{
+    return &materialFile_;
+}
 
 } // namespace como

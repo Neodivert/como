@@ -72,7 +72,7 @@ class ServerPrimitivesManager : public AbstractPrimitivesManager
         /***
          * 5. Primitives management
          ***/
-        void registerPrimitive( std::string filePath, ResourceID categoryID );
+        void registerPrimitive( ResourceID categoryID, std::string meshFileName, std::string materialFileName );
 
 
         /***

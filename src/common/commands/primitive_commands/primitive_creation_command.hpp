@@ -35,8 +35,9 @@ class PrimitiveCreationCommand : public PrimitiveCommand
         /*! Primitive category ID. */
         PackableResourceID category_;
 
-        /*! Primitive specification file. */
-        PackableFile file_;
+        /*! Primitive specification files. */
+        PackableFile meshFile_;
+        PackableFile materialFile_;
 
     public:
         /***
@@ -46,7 +47,7 @@ class PrimitiveCreationCommand : public PrimitiveCommand
         /*! \brief Default constructor. */
         PrimitiveCreationCommand();
 
-        PrimitiveCreationCommand( PackableString< NAME_SIZE > filePath, UserID userID, ResourceID primitiveID, ResourceID categoryID );
+        PrimitiveCreationCommand( UserID userID, ResourceID primitiveID, ResourceID categoryID, PackableString< NAME_SIZE > meshFilePath, PackableString< NAME_SIZE > materialFilePath );
 
         /*! \brief Copy assignment operator */
         PrimitiveCreationCommand( const PrimitiveCreationCommand& );
@@ -68,11 +69,15 @@ class PrimitiveCreationCommand : public PrimitiveCommand
          ***/
 
         std::string getPrimitiveName() const;
+        std::string getMeshFileName() const;
+        std::string getMaterialFileName() const;
 
         ResourceID getCategoryID() const;
 
         /*! \brief Returns a pointer to the primitive's specification file. */
-        const PackableFile* getFile() const;
+        const PackableFile* getMeshFile() const;
+
+        const PackableFile* getMaterialFile() const;
 
 
         /***

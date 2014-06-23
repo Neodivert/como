@@ -372,7 +372,7 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
                 primitiveCreationCommand = dynamic_cast< const PrimitiveCreationCommand* >( sceneCommand.get() );
 
                 // TODO: Complete, Save new primitive.
-                log_->debug( "Primitive received [", primitiveCreationCommand->getFile()->getFilePath(), "]\n" );
+                log_->debug( "Primitive received [", primitiveCreationCommand->getMeshFile()->getFilePath(), "]\n" );
             }
         break;
         case CommandTarget::PRIMITIVE_CATEGORY:

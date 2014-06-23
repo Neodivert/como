@@ -60,7 +60,7 @@ class ClientPrimitivesManager : public QObject, public AbstractPrimitivesManager
          ***/
         std::string createPrimitive( std::string filePath, ResourceID categoryID );
     private:
-        void importMeshFile( std::string primitiveName, std::string oldFilePath, std::string newFilePath );
+        ResourceID importMeshFile( std::string oldFilePath, ResourceID categoryID );
     public:
 
 

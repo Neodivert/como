@@ -33,6 +33,14 @@ struct PrimitiveInfo
 {
     std::string name;
     ResourceID category;
+
+    std::string meshFileName;
+    std::string materialFileName;
+};
+
+enum class PrimitiveComponent {
+    MESH = 0,
+    MATERIAL
 };
 
 // TODO: Move this
@@ -67,8 +75,13 @@ class AbstractPrimitivesManager
         /***
          * 3. Getters
          ***/
-        std::string getPrimitiveRelativePath( ResourceID id ) const;
-        std::string getPrimitiveAbsolutePath( ResourceID id ) const;
+        std::string getPrimitiveRelativePath( ResourceID id, PrimitiveComponent component ) const;
+        std::string getPrimitiveAbsolutePath( ResourceID id, PrimitiveComponent component ) const;
+
+    protected:
+        std::string getCategoryRelativePath( ResourceID id ) const;
+        std::string getCategoryAbsoluteePath( ResourceID id ) const;
+    public:
         ResourcesList getCategoriesList() const;
 
 
@@ -83,7 +96,7 @@ class AbstractPrimitivesManager
         /***
          * 5. Primitives management
          ***/
-        void registerPrimitive( ResourceID id, std::string name, ResourceID category );
+        void registerPrimitive( ResourceID id, ResourceID category, std::string meshFileName, std::string materialFileName );
 
 
         /***
