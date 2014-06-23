@@ -48,7 +48,7 @@ class RenderPanel : public QFrame
         RenderPanel( RenderPanel&& ) = delete;
         explicit RenderPanel( QWidget *parent, shared_ptr< ComoApp > comoApp );
 
-        ~RenderPanel() = default;
+        ~RenderPanel();
 
 
         /***

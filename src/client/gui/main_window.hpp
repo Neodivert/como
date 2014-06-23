@@ -35,9 +35,6 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
     private:
-        // App's singlenton instance.
-        shared_ptr< ComoApp > comoApp;
-
         // Log
         LogPtr log_;
 

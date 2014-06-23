@@ -27,7 +27,6 @@ namespace como {
 ViewFrame::ViewFrame( View view, shared_ptr< ComoApp > comoApp ) :
     QFrame()
 {
-
     QFrame* header;
     QHBoxLayout* headerLayout;
 

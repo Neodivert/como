@@ -34,8 +34,7 @@ class ToolsMenu : public QTabWidget
     Q_OBJECT
 
     protected:
-        // Pointer to app's current state.
-        shared_ptr< ComoApp > comoApp;
+        shared_ptr< ComoApp > comoApp_;
 
         // Current color (used when creating new drawables)
         QColor currentColor_;

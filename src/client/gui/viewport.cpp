@@ -90,6 +90,8 @@ Viewport::Viewport( View view, shared_ptr< ComoApp > comoApp ) :
 Viewport::~Viewport()
 {
     delete camera;
+
+    comoApp->getLog()->debug( "Viewport destroyed\n" );
 }
 
 

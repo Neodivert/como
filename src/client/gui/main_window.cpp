@@ -41,9 +41,6 @@ MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     // Create a instance of Log.
     log_ = LogPtr( new Log );
 
-    // Create a instance of ComoApp.
-    this->comoApp = comoApp;
-
     // Set a QFrame as the central widget. This frame will hold all others widgets.
     setCentralWidget( new QFrame( this ) );
 

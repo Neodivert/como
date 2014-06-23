@@ -75,6 +75,12 @@ RenderPanel::RenderPanel( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
 }
 
 
+RenderPanel::~RenderPanel()
+{
+    comoApp->getLog()->debug( "RenderPanel destroyed\n" );
+}
+
+
 /***
  * 3. Slots
  ***/

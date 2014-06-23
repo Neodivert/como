@@ -82,7 +82,5 @@ int main( int argc, char *argv[] )
         mainExitValue = app.exec();
     }
 
-    std::cout << "comoApp: " << comoApp.use_count() << std::endl;
-
     return mainExitValue;
 }
