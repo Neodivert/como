@@ -36,6 +36,8 @@
 
 int main( int argc, char *argv[] )
 {
+    int mainExitValue = 0;
+
     boost::system::error_code errorCode;
 
     // Create a Qt application.
@@ -77,6 +79,10 @@ int main( int argc, char *argv[] )
         window.show();
 
         // Run Qt application.
-        return app.exec();
+        mainExitValue = app.exec();
     }
+
+    std::cout << "comoApp: " << comoApp.use_count() << std::endl;
+
+    return mainExitValue;
 }

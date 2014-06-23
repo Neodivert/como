@@ -53,7 +53,7 @@ class AbstractPrimitivesManager
          * 1. Construction
          ***/
         AbstractPrimitivesManager() = delete;
-        AbstractPrimitivesManager( std::string sceneName, LogPtr log );
+        AbstractPrimitivesManager( std::string sceneDirPath, LogPtr log );
         AbstractPrimitivesManager( const AbstractPrimitivesManager& ) = delete;
         AbstractPrimitivesManager( AbstractPrimitivesManager&& ) = delete;
 
@@ -61,7 +61,7 @@ class AbstractPrimitivesManager
         /***
          * 2. Destruction
          ***/
-        ~AbstractPrimitivesManager() = default;
+        ~AbstractPrimitivesManager();
 
 
         /***

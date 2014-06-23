@@ -26,8 +26,8 @@ namespace como {
  * 1. Construction
  ***/
 
-ClientPrimitivesManager::ClientPrimitivesManager( std::string sceneName, ServerInterfacePtr server, LogPtr log ) :
-    AbstractPrimitivesManager( sceneName, log ),
+ClientPrimitivesManager::ClientPrimitivesManager( std::string sceneDirPath, ServerInterfacePtr server, LogPtr log ) :
+    AbstractPrimitivesManager( sceneDirPath, log ),
     server_( server )
 {}
 

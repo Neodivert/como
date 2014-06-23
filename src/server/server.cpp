@@ -41,6 +41,9 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
     // Set the scene name.
     strncpy( sceneName_, sceneName, NAME_SIZE );
 
+    // Set the scene dir path.
+    sceneDirPath_ = std::string( SCENES_DIR ) + '/' + sceneName_;
+
     // Create the threads pool.
     for( i=0; i<N_THREADS; i++ ){
         threads_.create_thread( boost::bind( &Server::workerThread, this ) );
@@ -98,6 +101,20 @@ void Server::initUserColors()
 
 
 /***
+ * 2. Destruction
+ ***/
+
+Server::~Server()
+{
+    // Primitives manager must be destroyed before Server.
+    primitivesManager_.reset();
+
+    log_->debug( "Removing scene dir [", sceneDirPath_, "]\n" );
+    boost::filesystem::remove_all( sceneDirPath_ );
+}
+
+
+/***
  * 3. Main loop
  ***/
 
@@ -111,7 +128,7 @@ void Server::run()
 
         // Create and initialize the primitives directory for the current
         // scene.
-        primitivesManager_ = std::unique_ptr< ServerPrimitivesManager >( new ServerPrimitivesManager( sceneName_, commandsHistoric_, log_ ) );
+        primitivesManager_ = std::unique_ptr< ServerPrimitivesManager >( new ServerPrimitivesManager( sceneDirPath_, commandsHistoric_, log_ ) );
 
         // Create a directional light with with no owner and synchronise it in
         // the commands historic.

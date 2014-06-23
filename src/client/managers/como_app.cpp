@@ -40,6 +40,11 @@ ComoApp::ComoApp() :
     OpenGL::checkStatus( "ComoApp constructor - after creating OpenGL context and scene" );
 }
 
+ComoApp::~ComoApp()
+{
+    log_->debug( "ComoApp destroyed\n" );
+}
+
 /*
 ComoApp* ComoApp::getInstance()
 {

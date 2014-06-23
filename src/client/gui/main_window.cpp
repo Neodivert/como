@@ -87,4 +87,10 @@ MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     centralWidget()->setLayout( layout );
 }
 
+
+MainWindow::~MainWindow()
+{
+    log_->debug( "MainWindow destructor\n" );
+}
+
 } // namespace como

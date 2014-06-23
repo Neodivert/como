@@ -26,13 +26,13 @@ namespace como {
  * 1. Construction
  ***/
 
-AbstractPrimitivesManager::AbstractPrimitivesManager( std::string sceneName, LogPtr log ) :
+AbstractPrimitivesManager::AbstractPrimitivesManager( std::string sceneDirPath, LogPtr log ) :
     log_( log )
 {
     boost::system::error_code errorCode;
 
     // Build the path to the scene's primitives directory.
-    scenePrimitivesDir_ = std::string( SCENES_DIR ) + "/" + sceneName + "/primitives";
+    scenePrimitivesDir_ = sceneDirPath + "/primitives";
 
     // Build the scene's primitives directory.
     boost::filesystem::create_directories( scenePrimitivesDir_, errorCode );
@@ -41,6 +41,17 @@ AbstractPrimitivesManager::AbstractPrimitivesManager( std::string sceneName, Log
     }
 
     log_->debug( "Scene primitives dir [", scenePrimitivesDir_, "] created\n" );
+}
+
+
+/***
+ * 2. Destruction
+ ***/
+
+AbstractPrimitivesManager::~AbstractPrimitivesManager()
+{
+    log_->debug( "Removing scene primitives dir [", scenePrimitivesDir_, "]\n" );
+    boost::filesystem::remove_all( scenePrimitivesDir_ );
 }
 
 

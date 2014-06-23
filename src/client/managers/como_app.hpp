@@ -118,7 +118,7 @@ class ComoApp : public QObject {
         LogPtr log_;
 
         // Curren scene.
-        shared_ptr< Scene > scene;
+        ScenePtr scene;
 
         /***
          * 1. Initialization and destruction
@@ -128,7 +128,7 @@ class ComoApp : public QObject {
         ComoApp( const ComoApp& ) = delete;
         ComoApp( ComoApp&& ) = delete;
 
-        ~ComoApp() = default;
+        ~ComoApp();
 
         /***
          * 2. Getters

@@ -44,7 +44,7 @@ class ClientPrimitivesManager : public QObject, public AbstractPrimitivesManager
          * 1. Construction
          ***/
         ClientPrimitivesManager() = delete;
-        ClientPrimitivesManager( std::string sceneName, ServerInterfacePtr server, LogPtr log );
+        ClientPrimitivesManager( std::string sceneDirPath, ServerInterfacePtr server, LogPtr log );
         ClientPrimitivesManager( const ClientPrimitivesManager& ) = delete;
         ClientPrimitivesManager( ClientPrimitivesManager&& ) = delete;
 

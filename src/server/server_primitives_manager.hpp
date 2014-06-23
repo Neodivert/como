@@ -41,7 +41,7 @@ class ServerPrimitivesManager : public AbstractPrimitivesManager
          * 1. Construction
          ***/
         ServerPrimitivesManager() = delete;
-        ServerPrimitivesManager( std::string sceneName_, CommandsHistoricPtr commandsHistoric, LogPtr log );
+        ServerPrimitivesManager( std::string sceneDirPath, CommandsHistoricPtr commandsHistoric, LogPtr log );
         ServerPrimitivesManager( const ServerPrimitivesManager& ) = delete;
         ServerPrimitivesManager( ServerPrimitivesManager&& ) = delete;
 

@@ -58,6 +58,8 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
         // Scene name
         char sceneName_[NAME_SIZE];
 
+        std::string sceneDirPath_;
+
         // Users sharing this scene.
         UsersMap users_;
 

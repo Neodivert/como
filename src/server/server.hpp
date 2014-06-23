@@ -59,6 +59,9 @@ class Server
         // Scene name.
         char sceneName_[NAME_SIZE];
 
+        // Scene dir name.
+        std::string sceneDirPath_;
+
         // Users map (ID, user).
         UsersMap users_;
 
@@ -126,7 +129,7 @@ class Server
         /***
          * 2. Destruction
          ***/
-        ~Server() = default;
+        ~Server();
 
 
         /***

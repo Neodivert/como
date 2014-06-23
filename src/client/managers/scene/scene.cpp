@@ -48,8 +48,6 @@ Scene::Scene( LogPtr log ) :
     // the local scene.
     QObject::connect( server_.get(), &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
 
-
-
     OpenGL::checkStatus( "Scene - constructor\n" );
 }
 
@@ -60,6 +58,12 @@ Scene::~Scene()
     // vertex attribute arrays.
     glDeleteBuffers( 1, &linesVBO );
     glDeleteVertexArrays( 1, &linesVAO );
+
+    // Primitives manager must be destroyed before Server.
+    primitivesManager_.reset();
+
+    log_->debug( "Removing scene dir [", sceneDirPath_, "]\n" );
+    boost::filesystem::remove_all( sceneDirPath_ );
 }
 
 
@@ -212,11 +216,13 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         // Create the scene's primitives directory.
         createScenePrimitivesDirectory();
 
+        sceneDirPath_ = std::string( SCENES_DIR ) + '/' + sceneName_;
+
         // Initialize the materials manager.
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( localUserID_, server_, log_ ) );
 
         // Initialize the primitives manager.
-        primitivesManager_ = std::unique_ptr< ClientPrimitivesManager >( new ClientPrimitivesManager( sceneName_, server_, log_ ) );
+        primitivesManager_ = std::unique_ptr< ClientPrimitivesManager >( new ClientPrimitivesManager( sceneDirPath_, server_, log_ ) );
 
         // Initialize the drawables manager.
         drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, primitivesManager_.get(), materialsManager_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/scenes/" ) + sceneName_ + std::string( "/primitives" ), oglContext_, log_ ) );
