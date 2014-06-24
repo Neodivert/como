@@ -17,6 +17,7 @@
 ***/
 
 #include "texture.hpp"
+#include <SOIL/SOIL.h>
 
 namespace como {
 
@@ -75,15 +76,28 @@ void Texture::initSamplerShaderLocation()
 void Texture::loadFromFile( const std::string& imagePath )
 {
     (void)( imagePath ); // TODO: Remove
-    GLsizei imageHeight = 32; // TODO: Retrieve dimensions from image.
-    GLsizei imageWidth = 32;
+    int imageWidth = 32; // TODO: Retrieve dimensions from image.
+    int imageHeight = 32;
+
+    unsigned char* imageData = SOIL_load_image( imagePath.c_str(), &imageWidth, &imageHeight, nullptr, 0 );
 
     // Set the texture's storage.
     glTexStorage2D( GL_TEXTURE_2D,  // target
                     1,              // levels
-                    GL_RGBA8,       // internal format
+                    GL_RGB8,       // internal format
                     imageWidth,
                     imageHeight );
+
+    // Set the texture's data.
+    glTexSubImage2D( GL_TEXTURE_2D,
+                     0,
+                     0,
+                     0,
+                     imageWidth,
+                     imageHeight,
+                     GL_RGB,
+                     GL_UNSIGNED_BYTE,
+                     imageData );
 }
 
 
@@ -94,6 +108,7 @@ void Texture::loadFromFile( const std::string& imagePath )
 void Texture::sendToShader() const
 {
     // Connect sampler to texture unit 0.
+    glActiveTexture( GL_TEXTURE0 );
     glUniform1i( samplerShaderLocation_, 0 );
 }
 
