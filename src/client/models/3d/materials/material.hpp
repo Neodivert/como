@@ -43,6 +43,7 @@ class Material
     public:
         Material();
         Material( const std::string& name );
+        Material( const std::string& filePath, const std::string& materialName );
         Material( PackableColor color );
         Material( const Material& ) = default;
         Material( Material&& ) = default;

@@ -31,36 +31,39 @@ const glm::vec3 DEFAULT_MATERIAL_SPECULAR_REFLECTIVITY = glm::vec3( 0.9f );
 const float DEFAULT_MATERIAL_SPECULAR_EXPONENT = 0.9f;
 
 
+#define MATERIAL_DEFAULT_INITIALIZATION \
+    name_( DEFAULT_MATERIAL_NAME ), \
+    color_( DEFAULT_MATERIAL_COLOR ), \
+    ambientReflectivity_( DEFAULT_MATERIAL_AMBIENT_REFLECTIVITY ), \
+    diffuseReflectivity_( DEFAULT_MATERIAL_DIFFUSE_REFLECTIVITY ), \
+    specularReflectivity_( DEFAULT_MATERIAL_SPECULAR_REFLECTIVITY ), \
+    specularExponent_( DEFAULT_MATERIAL_SPECULAR_EXPONENT )
+
+
 /***
  * 1. Construction
  ***/
 
 Material::Material() :
-    name_( DEFAULT_MATERIAL_NAME ),
-    color_( DEFAULT_MATERIAL_COLOR ),
-    ambientReflectivity_( DEFAULT_MATERIAL_AMBIENT_REFLECTIVITY ),
-    diffuseReflectivity_( DEFAULT_MATERIAL_DIFFUSE_REFLECTIVITY ),
-    specularReflectivity_( DEFAULT_MATERIAL_SPECULAR_REFLECTIVITY ),
-    specularExponent_( DEFAULT_MATERIAL_SPECULAR_EXPONENT )
+    MATERIAL_DEFAULT_INITIALIZATION
 {}
 
 
 Material::Material( const std::string& name ) :
-    name_( name ),
-    color_( DEFAULT_MATERIAL_COLOR ),
-    ambientReflectivity_( DEFAULT_MATERIAL_AMBIENT_REFLECTIVITY ),
-    diffuseReflectivity_( DEFAULT_MATERIAL_DIFFUSE_REFLECTIVITY ),
-    specularReflectivity_( DEFAULT_MATERIAL_SPECULAR_REFLECTIVITY ),
-    specularExponent_( DEFAULT_MATERIAL_SPECULAR_EXPONENT )
-{}
+    MATERIAL_DEFAULT_INITIALIZATION
+{
+    name_ = name;
+}
+
+Material::Material( const string &filePath, const string &materialName ) :
+    MATERIAL_DEFAULT_INITIALIZATION
+{
+    loadFromFile( filePath, materialName );
+}
 
 
 Material::Material( PackableColor color ) :
-    name_( DEFAULT_MATERIAL_NAME ),
-    ambientReflectivity_( DEFAULT_MATERIAL_AMBIENT_REFLECTIVITY ),
-    diffuseReflectivity_( DEFAULT_MATERIAL_DIFFUSE_REFLECTIVITY ),
-    specularReflectivity_( DEFAULT_MATERIAL_SPECULAR_REFLECTIVITY ),
-    specularExponent_( DEFAULT_MATERIAL_SPECULAR_EXPONENT )
+    MATERIAL_DEFAULT_INITIALIZATION
 {
     color_ = color.toVec4();
 }
@@ -75,6 +78,18 @@ void Material::loadFromFile( const string &filePath, const string &materialName 
     std::ifstream materialFile;
     std::string line;
 
+    std::function< bool( std::string ) > materialFoundPredicate;
+
+    if( materialName == "*" ){
+        materialFoundPredicate = []( std::string line ){
+            return ( line.substr( 0, strlen( "newmtl" ) ) == "newmtl" );
+        };
+    }else{
+        materialFoundPredicate = [=]( std::string line ){
+            return ( line != "newmtl " + materialName );
+        };
+    }
+
     // Copy the material name.
     // TODO: Add the material ID to the name.
     name_ = materialName;
@@ -88,7 +103,7 @@ void Material::loadFromFile( const string &filePath, const string &materialName 
     // Keep reading until finding the requested material.
     do{
         std::getline( materialFile, line );
-    }while( !materialFile.eof() && ( line != "newmtl " + materialName ) );
+    }while( !materialFile.eof() && !materialFoundPredicate( line ) );
 
     if( materialFile.eof() ){
         throw std::runtime_error( std::string( "Material [" ) +
@@ -96,6 +111,11 @@ void Material::loadFromFile( const string &filePath, const string &materialName 
                                   "] not found in file [" +
                                   filePath +
                                   "]" );
+    }
+
+    // If no material name was specified, retrieve it from the file.
+    if( materialName == "*" ){
+        name_ = line.substr( line.find( ' ' ) + 1 );
     }
 
     // Keep reading the material info until reaching the next material or the

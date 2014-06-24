@@ -82,7 +82,7 @@ ResourceID ClientPrimitivesManager::importMeshFile( std::string oldFilePath, Res
                  oldFilePath, ", ",
                  newFilePath, ")\n" );
 
-    std::string materialName;
+    std::string materialFileName;
 
     // The material file name will be given a name equal to the mesh file but
     // with a .mtl extension.
@@ -118,12 +118,12 @@ ResourceID ClientPrimitivesManager::importMeshFile( std::string oldFilePath, Res
     while( !oldFile.eof() ){
         oldFile.getline( line, LINE_SIZE );
 
-        if( !strncmp( line, "mtllib", 6 ) ){
+        if( !strncmp( line, "mtllib", strlen( "mtllib" ) ) ){
             processMaterial = true;
 
-            materialName = std::string( line ).substr( 7 );
+            materialFileName = std::string( line ).substr( 7 );
 
-            log_->debug( "Material name: ", materialName, "\n" );
+            log_->debug( "Material file name: ", materialFileName, "\n" );
 
             newFile << "mtllib " << newMaterialFileName << std::endl;
         }else{
@@ -159,13 +159,14 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 {
     // Get the "absolute" path to the specification file of the
     // primitive used for building this mesh.
-    std::string primitivePath = getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MESH );
+    std::string meshFilePath = getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MESH );
+    std::string materialFilePath = getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MATERIAL );
 
-    // Create the material.
-    MaterialID materialID = materialsManager_->createMaterial( "Unnamed material" ); // TODO: Use another name.
+    // Create the material and idd to the materials manager.
+    MaterialID materialID = materialsManager_->createMaterial( materialFilePath, "*" ); // TODO: Don't use "*"
 
     // Create the mesh.
-    DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
+    DrawablePtr drawable = DrawablePtr( new Mesh( meshFilePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
     PackableDrawableID drawableID = drawablesManager_->addDrawable( drawable );
 
     log_->debug( "Creating local mesh - Drawable ID (", drawableID,

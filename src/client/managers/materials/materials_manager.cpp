@@ -56,9 +56,24 @@ MaterialID MaterialsManager::createMaterial( const std::string& namePrefix )
     return nextLocalMaterialID_++;
 }
 
+// FIXME: Duplicated code.
+MaterialID MaterialsManager::createMaterial( const string& filePath, const string& materialName )
+{
+    // Create the new material and insert it into the materials container.
+    materials_[nextLocalMaterialID_] = MaterialPtr( new Material( filePath, materialName ) );
+
+    // Set the creator of the material as its current owner.
+    materialsOwners_[nextLocalMaterialID_] = nextLocalMaterialID_.getCreatorID();
+
+    notifyElementInsertion( nextLocalMaterialID_ );
+
+    return nextLocalMaterialID_++;
+}
+
+
 void MaterialsManager::createMaterial( const MaterialID& id, const std::string& name )
 {
-    // Create the new material and insert it in the materials container.
+    // Create the new material and insert it into the materials container.
     materials_[id] = MaterialPtr( new Material( name ) );
 
     // Set the creator of the material as its current owner.
