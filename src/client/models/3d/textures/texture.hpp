@@ -19,15 +19,25 @@
 #ifndef TEXTURE_HPP
 #define TEXTURE_HPP
 
+#include <string>
+
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
+
 namespace como {
 
 class Texture
 {
+    private:
+        GLuint oglName_;
+        GLint samplerShaderLocation_;
+
     public:
         /***
          * 1. Construction
          ***/
         Texture() = delete;
+        Texture( const std::string& imagePath );
         Texture( const Texture& ) = delete;
         Texture( Texture&& ) = delete;
 
@@ -39,13 +49,22 @@ class Texture
 
 
         /***
-         * 3. Shader communication
+         * 3. Initialization
+         ***/
+    private:
+        void initSamplerShaderLocation();
+        void loadFromFile( const std::string& imagePath );
+    public:
+
+
+        /***
+         * 4. Shader communication
          ***/
         void sendToShader() const;
 
 
         /***
-         * 4. Operators
+         * 5. Operators
          ***/
         Texture& operator = ( const Texture& ) = delete;
         Texture& operator = ( Texture&& ) = delete;
