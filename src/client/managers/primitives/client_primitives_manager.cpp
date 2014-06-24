@@ -166,6 +166,10 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
     MaterialID materialID = materialsManager_->createMaterial( materialFilePath, "*" ); // TODO: Don't use "*"
 
     // Create the mesh.
+    // TODO: This is somehow ugly for .obj and .mtl files. We first read the
+    // material from the .mtl file and then read the mesh file from .obj
+    // *ignoring* the references in this file to the .mtl file. Is there a
+    // better and more elegant way of reading both mesh and material together?.
     DrawablePtr drawable = DrawablePtr( new Mesh( meshFilePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
     PackableDrawableID drawableID = drawablesManager_->addDrawable( drawable );
 
