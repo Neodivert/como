@@ -37,7 +37,7 @@ MaterialPanel::MaterialPanel() :
     // specular exponent.
     specularExponentSpinBox_->setDecimals( 2 );
     specularExponentSpinBox_->setSingleStep( 1.0 );
-    specularExponentSpinBox_->setRange( 0.0, 100.0 );
+    specularExponentSpinBox_->setRange( 0.0, 1000.0 );
 
     // Set this panel's layout.
     layout->addWidget( new QLabel( "Material panel" ) );
