@@ -60,14 +60,21 @@ MaterialID MaterialsManager::createMaterial( const std::string& namePrefix )
 MaterialID MaterialsManager::createMaterial( const string& filePath, const string& materialName )
 {
     // Create the new material and insert it into the materials container.
-    materials_[nextLocalMaterialID_] = MaterialPtr( new Material( filePath, materialName ) );
-
-    // Set the creator of the material as its current owner.
-    materialsOwners_[nextLocalMaterialID_] = nextLocalMaterialID_.getCreatorID();
-
-    notifyElementInsertion( nextLocalMaterialID_ );
+    createMaterial( nextLocalMaterialID_, filePath, materialName );
 
     return nextLocalMaterialID_++;
+}
+
+
+void MaterialsManager::createMaterial( MaterialID materialID, const string &filePath, const string &materialName )
+{
+    // Create the new material and insert it into the materials container.
+    materials_[materialID] = MaterialPtr( new Material( filePath, materialName ) );
+
+    // Set the creator of the material as its current owner.
+    materialsOwners_[materialID] = materialID.getCreatorID();
+
+    notifyElementInsertion( materialID );
 }
 
 

@@ -72,8 +72,9 @@ QFrame* CreationTab::createMeshFromPrimitiveCreationMenu()
 
         // Signal / Slot connection: when one of the available primitives is
         // selected, create a mesh from it and add it to the scene.
+        void (ClientPrimitivesManager::*signal)( ResourceID ) = &ClientPrimitivesManager::instantiatePrimitive;
         QObject::connect( primitiveSelector, &ResourceSelector::resourceSelected,
-                          scene_->getPrimitivesManager().get(), &ClientPrimitivesManager::instantiatePrimitive );
+                          scene_->getPrimitivesManager().get(), signal );
 
         // Signal / Slot connection: when a new primitive is created in the scene,
         // add it to the primitives dropdown list.

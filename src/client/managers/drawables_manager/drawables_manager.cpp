@@ -114,7 +114,6 @@ PackableDrawableID DrawablesManager::addDrawable( DrawablePtr drawable )
     return localDrawablesSelection_->addDrawable( drawable );
 }
 
-
 void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, PackableDrawableID drawableID )
 {
     //takeOpenGLContext();

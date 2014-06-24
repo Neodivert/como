@@ -178,7 +178,31 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 
     // Send the command to the server (the MaterialCreationCommand command was
     // already sent in previous call to materialsManager_->createMaterial() ).
-    server_->sendCommand( CommandConstPtr( new PrimitiveInstantiationCommand( primitiveID, drawableID, materialID ) ) );
+    server_->sendCommand( CommandConstPtr( new PrimitiveInstantiationCommand( server_->getLocalUserID(), primitiveID, drawableID, materialID ) ) );
+}
+
+
+// FIXME: Duplicated code.
+void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID primitiveID, PackableDrawableID meshID, MaterialID materialID )
+{
+    // Get the "absolute" path to the specification file of the
+    // primitive used for building this mesh.
+    std::string meshFilePath = getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MESH );
+    std::string materialFilePath = getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MATERIAL );
+
+    // Create the material and add it to the materials manager.
+    materialsManager_->createMaterial( materialID, materialFilePath, "*" ); // TODO: Don't use "*"
+
+    // Create the mesh.
+    // TODO: This is somehow ugly for .obj and .mtl files. We first read the
+    // material from the .mtl file and then read the mesh file from .obj
+    // *ignoring* the references in this file to the .mtl file. Is there a
+    // better and more elegant way of reading both mesh and material together?.
+    DrawablePtr drawable = DrawablePtr( new Mesh( meshFilePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
+    drawablesManager_->addDrawable( userID, drawable, meshID );
+
+    log_->debug( "Creating remote mesh - Mesh ID (", meshID,
+                 ") MaterialID ", materialID, "\n" );
 }
 
 
@@ -219,9 +243,19 @@ void ClientPrimitivesManager::executeRemoteCommand( PrimitiveCommandConstPtr com
             emit primitiveAdded( primitiveCreationCommand->getPrimitiveID(),
                                  getPrimitiveRelativePath( primitiveCreationCommand->getPrimitiveID(), PrimitiveComponent::MESH ) );
         }break;
-        case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:
-            // TODO: Complete.
-        break;
+        case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:{
+            const PrimitiveInstantiationCommand* primitiveCommand =
+                    dynamic_cast< const PrimitiveInstantiationCommand* >( command.get() );
+
+            PackableDrawableID meshID;
+            meshID.creatorID = primitiveCommand->getMeshID().getCreatorID();
+            meshID.drawableIndex = static_cast< DrawableIndex >( primitiveCommand->getMeshID().getResourceIndex() );
+
+            instantiatePrimitive( primitiveCommand->getUserID(),
+                                  primitiveCommand->getPrimitiveID(),
+                                  meshID,
+                                  MaterialID( primitiveCommand->getMaterialID().getCreatorID(), static_cast< MaterialIndex >( primitiveCommand->getMaterialID().getResourceIndex() ) ) );
+        }break;
     }
 }
 

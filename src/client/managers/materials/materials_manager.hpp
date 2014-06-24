@@ -73,6 +73,7 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
     public:
         MaterialID createMaterial( const std::string& namePrefix );
         MaterialID createMaterial( const std::string& filePath, const std::string& materialName );
+        void createMaterial( MaterialID materialID, const std::string& filePath, const std::string& materialName );
     private:
         void createMaterial( const MaterialID& id, const std::string& name );
 

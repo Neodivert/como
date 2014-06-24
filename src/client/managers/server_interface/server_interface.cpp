@@ -269,4 +269,10 @@ ResourceID ServerInterface::getNewResourceID()
     return nextResourceID_++;
 }
 
+
+UserID ServerInterface::getLocalUserID() const
+{
+    return nextResourceID_.getCreatorID();
+}
+
 } // namespace como

@@ -109,6 +109,7 @@ class ServerInterface : public QObject
          ***/
     public:
         ResourceID getNewResourceID();
+        UserID getLocalUserID() const;
 
 
         /***

@@ -68,6 +68,9 @@ class ClientPrimitivesManager : public QObject, public AbstractPrimitivesManager
         ResourceID importMeshFile( std::string oldFilePath, ResourceID categoryID );
     public:
         void instantiatePrimitive( ResourceID primitiveID );
+    private:
+        void instantiatePrimitive( UserID userID, ResourceID primitiveID, PackableDrawableID meshID, MaterialID materialID );
+    public:
 
 
         /***
