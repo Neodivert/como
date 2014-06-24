@@ -18,21 +18,9 @@
 
 #include <QGuiApplication>
 #include "gui/main_window.hpp"
-
-#define GLM_FORCE_RADIANS
-#include <glm/gtx/vector_angle.hpp>
 #include "gui/connection_wizard/connection_wizard.hpp"
 #include "managers/como_app.hpp"
 #include <boost/filesystem.hpp>
-
-//#define TESTING_MODE 1
-
-#include <boost/array.hpp>
-#include <boost/asio.hpp>
-
-#include <clocale>
-
-#include <common/packables/packable_float.hpp>
 
 int main( int argc, char *argv[] )
 {

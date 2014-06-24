@@ -18,6 +18,7 @@
 
 #include "material.hpp"
 #include <client/models/3d/drawable.hpp>
+#include <boost/tokenizer.hpp>
 
 
 namespace como {
@@ -66,7 +67,66 @@ Material::Material( PackableColor color ) :
 
 
 /***
- * 3. Getters
+ * 3. Initialization
+ ***/
+
+void Material::loadFromFile( const string &filePath, const string &materialName )
+{
+    std::ifstream materialFile;
+    std::string line;
+
+    // Copy the material name.
+    // TODO: Add the material ID to the name.
+    name_ = materialName;
+
+    // Open the material file.
+    materialFile.open( filePath );
+    if( !materialFile.is_open() ){
+        throw std::runtime_error( std::string( "Couldn't open file [" ) + filePath + "]" );
+    }
+
+    // Keep reading until finding the requested material.
+    do{
+        std::getline( materialFile, line );
+    }while( !materialFile.eof() && ( line != "newmtl " + materialName ) );
+
+    if( materialFile.eof() ){
+        throw std::runtime_error( std::string( "Material [" ) +
+                                  materialName +
+                                  "] not found in file [" +
+                                  filePath +
+                                  "]" );
+    }
+
+    // Keep reading the material info until reaching the next material or the
+    // file end.
+    do{
+        std::getline( materialFile, line );
+
+        if( line.size() ){
+            // Lines are in the form "<variable> <value>". We retrieve the
+            // <variable> part in lineHeader and the <value> part in lineBody.
+            std::string lineHeader = line.substr( 0, line.find( ' ' ) );
+            std::string lineBody = line.substr( line.find( ' ' ) + 1 );
+
+            // Retrieve material parameters from file.
+            if( lineHeader == "Ka" ){
+                ambientReflectivity_ = readVec3( lineBody );
+            }else if( lineHeader == "Kd" ){
+                diffuseReflectivity_ = readVec3( lineBody );
+            }else if( lineHeader == "Ks" ){
+                specularReflectivity_ = readVec3( lineBody );
+            }else if( lineHeader == "Ns" ){
+                specularExponent_ = std::atof( lineBody.c_str() );
+            }
+
+        }
+    }while( !materialFile.eof() && line.substr( 0, strlen( "newmtl" ) ) != "newmtl" );
+}
+
+
+/***
+ * 4. Getters
  ***/
 
 std::string Material::getName() const
@@ -101,7 +161,7 @@ float Material::getSpecularExponent() const
 
 
 /***
- * 4. Setters
+ * 5. Setters
  ***/
 
 void Material::setColor( const PackableColor& color )
@@ -131,7 +191,7 @@ void Material::setSpecularExponent( float specularExponent )
 
 
 /***
- * 5. Shader comunication
+ * 6. Shader comunication
  ***/
 
 void Material::sendToShader() const
@@ -175,7 +235,7 @@ void Material::sendToShader() const
 
 
 /***
- * 6. Auxiliar methods
+ * 7. Auxiliar methods
  ***/
 
 void Material::print() const
@@ -188,6 +248,25 @@ void Material::print() const
               << "Specular reflectivity: (" << specularReflectivity_[0] << ", " << specularReflectivity_[1] << ", " << specularReflectivity_[2] << ")" << std::endl
               << "Specular exponent: (" << specularExponent_ << ")" << std::endl
               << "----------------------------------------------" << std::endl;
+}
+
+
+glm::vec3 Material::readVec3( string str ) const
+{
+    glm::vec3 resVector( 0.0f );
+
+    // http://stackoverflow.com/a/55680
+    boost::char_separator<char> separator( " " );
+    boost::tokenizer< boost::char_separator< char > > components( str, separator );
+    unsigned int i = 0;
+
+    // FIXME: What if a line has more than 3 components?
+    for( const auto& component : components ){
+        resVector[i] = std::atof( component.c_str() );
+        i++;
+    }
+
+    return resVector;
 }
 
 } // namespace como
