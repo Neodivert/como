@@ -86,7 +86,9 @@ HEADERS += \
     ../../src/common/ids/user_id.hpp \
     ../../src/common/packables/ids/packable_resource_id.hpp \
     ../../src/common/commands/primitive_commands/primitive_instantiation_command.hpp \
-    ../../src/common/primitives/primitives_importer.hpp
+    ../../src/common/primitives/primitives_importer.hpp \
+    ../../src/common/primitives/obj_primitives_importer.hpp \
+    ../../src/common/exceptions/file_not_open_exception.hpp
 
 
 # Common sources (used by both client and server).
@@ -132,4 +134,6 @@ SOURCES += \
     ../../src/common/managers/primitives/abstract_primitives_manager.cpp \
     ../../src/common/ids/resource_id.cpp \
     ../../src/common/packables/ids/packable_resource_id.cpp \
-    ../../src/common/commands/primitive_commands/primitive_instantiation_command.cpp
+    ../../src/common/commands/primitive_commands/primitive_instantiation_command.cpp \
+    ../../src/common/primitives/obj_primitives_importer.cpp \
+    ../../src/common/exceptions/file_not_open_exception.cpp

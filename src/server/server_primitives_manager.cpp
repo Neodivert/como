@@ -17,6 +17,7 @@
 ***/
 
 #include "server_primitives_manager.hpp"
+#include <common/primitives/obj_primitives_importer.hpp>
 
 namespace como {
 
@@ -68,13 +69,13 @@ void ServerPrimitivesManager::createPrimitivesDir()
 
 void ServerPrimitivesManager::syncPrimitivesDir()
 {
-    createPrimitivesDir();
+    //createPrimitivesDir();
 
     const char* filePath = nullptr;
     const boost::filesystem::directory_iterator endIterator;
-    boost::filesystem::directory_iterator fileIterator( scenePrimitivesDir_ );
+    boost::filesystem::directory_iterator fileIterator( LOCAL_PRIMITIVES_DIR );
 
-    log_->debug( "Adding primitives to scene [", scenePrimitivesDir_, "] ...\n" );
+    log_->debug( "Adding primitives to scene [", LOCAL_PRIMITIVES_DIR, "] ...\n" );
 
     for( ; fileIterator != endIterator; fileIterator++ ){
         if( boost::filesystem::is_directory( *fileIterator ) ){
@@ -84,7 +85,7 @@ void ServerPrimitivesManager::syncPrimitivesDir()
         }
     }
 
-    log_->debug( "Adding primitives to scene [", scenePrimitivesDir_, "] ...OK\n" );
+    log_->debug( "Adding primitives to scene [", LOCAL_PRIMITIVES_DIR, "] ...OK\n" );
 }
 
 
@@ -96,8 +97,13 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
     std::string filePath;
     std::string meshFileName;
     std::string materialFileName;
+    OBJPrimitivesImporter primitivesImporter;
+
+    log_->debug( "Synchronizing category dir [", dirPath, "]\n" );
 
     categoryID = registerCategory( boost::filesystem::basename( dirPath ) );
+
+    boost::filesystem::create_directory( getCategoryAbsoluteePath( categoryID ) );
 
     for( ; fileIterator != endIterator; fileIterator++ ){
         if( boost::filesystem::is_regular_file( *fileIterator ) ){
@@ -106,6 +112,10 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
             log_->debug( "filePath: ", filePath, "\n" );
 
             if( boost::filesystem::extension( filePath ) == ".obj" ){
+                primitivesImporter.importPrimitive( boost::filesystem::basename( filePath ),
+                                                    filePath,
+                                                    getCategoryAbsoluteePath( categoryID ) );
+
                 meshFileName = boost::filesystem::basename( filePath ) + ".obj";
 
                 // TODO: Remove this and retrieve material file name from mesh file.

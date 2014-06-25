@@ -47,7 +47,7 @@ class PrimitivesImporter {
          * \brief Rename the file <filePath> and the files referenced by it as
          * <name>.original_extension and copy them all to <destDirectory>.
          */
-        virtual void importPrimitive( std::string name, std::string filePath, std::string& destDirectory ) = 0;
+        virtual void importPrimitive( std::string name, std::string filePath, std::string destDirectory ) = 0;
 
 
         /***
