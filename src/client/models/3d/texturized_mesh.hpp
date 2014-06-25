@@ -39,6 +39,10 @@ class TexturizedMesh : public Mesh
          * 2. Initialization
          ***/
         void loadFromFile( const std::string& filePath );
+        virtual void initVAO();
+        virtual unsigned int getBytesPerVertex() const;
+        virtual unsigned int getComponentsPerVertex() const;
+        virtual void setVertexData(GLfloat *vbo, GLint index);
 
 
         /***

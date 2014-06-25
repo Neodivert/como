@@ -116,8 +116,11 @@ class Mesh : public Drawable
 
         void initVertexData();
 
-        virtual void initVBO();
+        void initVBO();
         virtual void initVAO();
+        virtual unsigned int getBytesPerVertex() const;
+        virtual unsigned int getComponentsPerVertex() const;
+
         virtual void setVertexData( GLfloat* vbo, GLint index );
 
         void computeCentroid();
@@ -129,6 +132,7 @@ class Mesh : public Drawable
          ***/
     private:
         void LoadFromOBJ( const char* objFile );
+        virtual bool processFileLine( const std::string& line );
     public:
 
 

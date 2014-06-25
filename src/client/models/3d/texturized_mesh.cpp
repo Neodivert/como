@@ -66,9 +66,5 @@ void TexturizedMesh::loadFromFile( const string &filePath )
 }
 
 
-/***
- * 2. Initialization
- ***/
-
 
 } // namespace como

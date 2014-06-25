@@ -190,7 +190,7 @@ void Mesh::initVBO()
 {
     // Allocate a VBO for transformed vertices.
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
-    glBufferData( GL_ARRAY_BUFFER, originalVertices.size()*COMPONENTS_PER_VERTEX*sizeof( GLfloat ), NULL, GL_STATIC_DRAW );
+    glBufferData( GL_ARRAY_BUFFER, originalVertices.size()*getBytesPerVertex(), NULL, GL_STATIC_DRAW );
 }
 
 
@@ -198,12 +198,25 @@ void Mesh::initVAO()
 {
     // Set the organization of the vertex and normals data in the VBO.
     glBindVertexArray( vao );
-    glVertexAttribPointer( SHADER_VERTEX_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, COMPONENTS_PER_VERTEX*sizeof( GL_FLOAT ), (void *)( 0 ) );
-    glVertexAttribPointer( SHADER_NORMAL_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, COMPONENTS_PER_VERTEX*sizeof( GL_FLOAT ), (void *)( COMPONENTS_PER_VERTEX_POSITION * sizeof( GL_FLOAT ) ) );
+    glVertexAttribPointer( SHADER_VERTEX_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, getBytesPerVertex(), (void *)( 0 ) );
+    glVertexAttribPointer( SHADER_NORMAL_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, getBytesPerVertex(), (void *)( COMPONENTS_PER_VERTEX_POSITION * sizeof( GL_FLOAT ) ) );
 
     // Enable previous vertex data arrays.
     glEnableVertexAttribArray( SHADER_VERTEX_ATTR_LOCATION );
     glEnableVertexAttribArray( SHADER_NORMAL_ATTR_LOCATION );
+}
+
+
+unsigned int Mesh::getBytesPerVertex() const
+{
+    return getComponentsPerVertex() * sizeof( GL_FLOAT );
+}
+
+
+unsigned int Mesh::getComponentsPerVertex() const
+{
+    // Vertex coordinates (3 components) + normal coordinates (3 components).
+    return 6;
 }
 
 
@@ -265,12 +278,9 @@ void Mesh::computeVertexNormals()
 
 void Mesh::LoadFromOBJ( const char* filePath )
 {
-    unsigned int i;
     const unsigned int LINE_SIZE = 250;
     std::ifstream file;
     char line[LINE_SIZE];
-    glm::vec3 vertex;
-    std::array< GLuint, 3 > triangle;
 
     // Initialize original vertex data.
     originalVertices.clear();
@@ -287,31 +297,7 @@ void Mesh::LoadFromOBJ( const char* filePath )
     // Read vertex data from file.
     // TODO: Accept OBJ files with multiple objects inside.
     while( file.getline( line, LINE_SIZE ) ){
-        if( line[0] == 'v' ){
-            // Set '.' as the float separator (for parsing floats from a text
-            // line).
-            setlocale( LC_NUMERIC, "C" );
-
-            // Extract the vertex from the line and add it to the Mesh.
-            sscanf( line, "v %f %f %f", &vertex[0], &vertex[1], &vertex[2] );
-
-            // Resize the vertex coordinates.
-            vertex *= 0.5f;
-
-            originalVertices.push_back( vertex );
-
-        }else if( line[0] == 'f' ){
-            // Extract the face from the line and add it to the Mesh.
-            sscanf( line, "f %u %u %u", &triangle[0], &triangle[1], &triangle[2] );
-
-            for( i=0; i<3; i++ ){
-                // Decrement every vertex index because they are 1-based in the .obj file.
-                triangle[i] -= 1;
-            }
-
-            triangles.push_back( triangle );
-        }
-        // TODO: And the normals?
+        processFileLine( line );
     }
 
     // Close the input file and finish initializing the mesh.
@@ -323,6 +309,45 @@ void Mesh::LoadFromOBJ( const char* filePath )
 
     // Initialize Mesh transformed vertex data.
     initVertexData();
+}
+
+
+bool Mesh::processFileLine( const string &line )
+{
+    glm::vec3 vertex;
+    std::array< GLuint, 3 > triangle;
+    unsigned int i;
+
+
+    if( line[0] == 'v' ){
+        // Set '.' as the float separator (for parsing floats from a text
+        // line).
+        setlocale( LC_NUMERIC, "C" );
+
+        // Extract the vertex from the line and add it to the Mesh.
+        sscanf( line.c_str(), "v %f %f %f", &vertex[0], &vertex[1], &vertex[2] );
+
+        // Resize the vertex coordinates.
+        vertex *= 0.5f;
+
+        originalVertices.push_back( vertex * 0.5f );
+
+    }else if( line[0] == 'f' ){
+        // Extract the face from the line and add it to the Mesh.
+        sscanf( line.c_str(), "f %u %u %u", &triangle[0], &triangle[1], &triangle[2] );
+
+        for( i=0; i<3; i++ ){
+            // Decrement every vertex index because they are 1-based in the .obj file.
+            triangle[i] -= 1;
+        }
+
+        triangles.push_back( triangle );
+    }else{
+        return false;
+    }
+    // TODO: And the normals?
+
+    return true;
 }
 
 
