@@ -30,8 +30,10 @@ OpenGL::OpenGL()
     }
 
     // Get location of uniform shader variables.
-    sharedVariablesLocations_[ShaderVariable::LIGHTING_ENABLED] =
+    shaderVariablesLocations_[ShaderVariable::LIGHTING_ENABLED] =
             getShaderVariableLocation( "lightingEnabled" );
+    shaderVariablesLocations_[ShaderVariable::TEXTURING_ENABLED] =
+            getShaderVariableLocation( "texturingEnabled" );
 }
 
 
@@ -41,20 +43,38 @@ OpenGL::OpenGL()
 
 void OpenGL::enableLighting() const
 {
-    glUniform1i( sharedVariablesLocations_.at( ShaderVariable::LIGHTING_ENABLED ), 1 );
+    glUniform1i( shaderVariablesLocations_.at( ShaderVariable::LIGHTING_ENABLED ), 1 );
     OpenGL::checkStatus( "Scene::enableLighting()" );
 }
 
 
 void OpenGL::disableLighting() const
 {
-    glUniform1i( sharedVariablesLocations_.at( ShaderVariable::LIGHTING_ENABLED ), 0 );
+    glUniform1i( shaderVariablesLocations_.at( ShaderVariable::LIGHTING_ENABLED ), 0 );
     OpenGL::checkStatus( "Scene::disableLighting()" );
 }
 
 
 /***
- * 4. Utilities
+ * 4. Texturing
+ ***/
+
+void OpenGL::enableTexturing() const
+{
+    glUniform1i( shaderVariablesLocations_.at( ShaderVariable::TEXTURING_ENABLED ), 1 );
+    OpenGL::checkStatus( "Scene::enableTexturing()" );
+}
+
+
+void OpenGL::disableTexturing() const
+{
+    glUniform1i( shaderVariablesLocations_.at( ShaderVariable::TEXTURING_ENABLED ), 0 );
+    OpenGL::checkStatus( "Scene::enableTexturing()" );
+}
+
+
+/***
+ * 5. Utilities
  ***/
 
 GLint OpenGL::getShaderVariableLocation( string varName ) const
@@ -74,7 +94,7 @@ GLint OpenGL::getShaderVariableLocation( string varName ) const
 
 
 /***
- * 5. Checking
+ * 6. Checking
  ***/
 
 void OpenGL::checkStatus( std::string location )

@@ -20,17 +20,22 @@
 #define TEXTURIZED_MESH_HPP
 
 #include "mesh.hpp"
+#include <array>
 
 namespace como {
 
 class TexturizedMesh : public Mesh
 {
+    private:
+        std::vector< glm::vec2 > textureCoordinates_;
+        std::vector< std::array< GLuint, 3 > > textureTriangles_;
+
     public:
         /***
          * 1. Construction
          ***/
         TexturizedMesh() = delete;
-        TexturizedMesh( const std::string& filePath, MaterialConstPtr material );
+        TexturizedMesh( MaterialConstPtr material );
         TexturizedMesh( const TexturizedMesh& ) = delete;
         TexturizedMesh( TexturizedMesh&& ) = delete;
 
@@ -38,16 +43,17 @@ class TexturizedMesh : public Mesh
         /***
          * 2. Initialization
          ***/
-        void loadFromFile( const std::string& filePath );
+    protected:
+        virtual bool processFileLine(const string &line);
         virtual void initVAO();
-        virtual unsigned int getBytesPerVertex() const;
         virtual unsigned int getComponentsPerVertex() const;
-        virtual void setVertexData(GLfloat *vbo, GLint index);
+        virtual void setVertexData( GLint index );
 
 
         /***
          * 3. Destruction
          ***/
+    public:
         ~TexturizedMesh() = default; // TODO: Or not default?
 
 

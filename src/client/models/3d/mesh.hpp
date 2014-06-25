@@ -76,8 +76,10 @@ class Mesh : public Drawable
         std::vector< glm::vec3 > originalVertices;
         std::vector< glm::vec3 > originalNormals;
 
+    protected:
         // Mesh's triangles.
         std::vector< std::array< GLuint, 3 > > triangles;
+    private:
 
         // Mesh's centroid.
         glm::vec4 originalCentroid;
@@ -90,9 +92,9 @@ class Mesh : public Drawable
          * 1. Construction.
          ***/
     protected:
-        Mesh( MeshType type, const char* file, MaterialConstPtr materia );
+        Mesh( MeshType type, const char* file, MaterialConstPtr material );
     public:
-        Mesh( const char* file, MaterialConstPtr material );
+        Mesh( MaterialConstPtr material );
         Mesh( const Mesh& b );
         Mesh( Mesh&& ) = delete;
 
@@ -109,9 +111,7 @@ class Mesh : public Drawable
         /***
          * 3. Initialization.
          ***/
-    private:
-        void initMesh( const char* file );
-
+    protected:
         void initMeshBuffers();
 
         void initVertexData();
@@ -121,7 +121,7 @@ class Mesh : public Drawable
         virtual unsigned int getBytesPerVertex() const;
         virtual unsigned int getComponentsPerVertex() const;
 
-        virtual void setVertexData( GLfloat* vbo, GLint index );
+        virtual void setVertexData( GLint index );
 
         void computeCentroid();
         void computeVertexNormals();
@@ -130,8 +130,9 @@ class Mesh : public Drawable
         /***
          * 4. File loading.
          ***/
-    private:
-        void LoadFromOBJ( const char* objFile );
+    public:
+        void loadFromOBJ( const char* objFile );
+    protected:
         virtual bool processFileLine( const std::string& line );
     public:
 

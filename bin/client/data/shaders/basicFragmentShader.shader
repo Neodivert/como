@@ -8,6 +8,7 @@
 #version 420 core
 
 uniform bool lightingEnabled;
+uniform bool texturingEnabled;
 
 const unsigned int MAX_DIRECTIONAL_LIGHTS = 4;
 const unsigned int MAX_LIGHTS = MAX_DIRECTIONAL_LIGHTS;
@@ -43,6 +44,7 @@ out vec4 finalColor;
 void main()
 {
 	finalColor = vec4( 0.0f );
+	vec4 meshColor;
 
 	unsigned int i;
 	if( lightingEnabled ){
@@ -64,10 +66,15 @@ void main()
 				vec3 scatteredLight = lights[ directionalLights[i].lightIndex ].color * diffuse * material.diffuseReflectivity;
 				vec3 reflectedLight = lights[ directionalLights[i].lightIndex ].color * specular * material.specularReflectivity;
 	
+				if( texturingEnabled ){
+					//meshColor = texture( 
+				}else{
+					meshColor = material.color;
+				}
 				// don’t modulate the underlying color with reflected light,
 				// only with scattered light
-				vec3 rgb = min ( material.color.rgb * scatteredLight + reflectedLight, vec3( 1.0f ) );
-				finalColor += vec4( rgb, material.color.a );
+				vec3 rgb = min ( meshColor.rgb * scatteredLight + reflectedLight, vec3( 1.0f ) );
+				finalColor += vec4( rgb, meshColor.a );
 			}
 		}
 	}else{

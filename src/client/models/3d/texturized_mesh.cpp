@@ -17,52 +17,97 @@
 ***/
 
 #include "texturized_mesh.hpp"
+#include <cstdint>
 
 namespace como {
 
-TexturizedMesh::TexturizedMesh( const string &filePath, MaterialConstPtr material ) :
-    Mesh( MeshType::MESH, filePath.c_str(), material )
-{
-    loadFromFile( filePath );
-}
+const GLint SHADER_TEXTURE_ATTR_LOCATION = 2; // FIXME: This value depends on SHADER_* constants in mesh.cpp (high coupling!)
+
+TexturizedMesh::TexturizedMesh( MaterialConstPtr material ) :
+    Mesh( material )
+{}
 
 
 /***
  * 2. Initialization
  ***/
 
-void TexturizedMesh::loadFromFile( const string &filePath )
+bool TexturizedMesh::processFileLine( const string &line )
 {
-    (void)( filePath );
-    /*
-    std::ifstream file( filePath.c_str() );
-    std::string line;
-    glm::vec2 uvCoordinates;
+    glm::vec2 textureCoordinates;
+    std::array< GLuint, 3 > vertexTriangle;
+    std::array< GLuint, 3 > textureTriangle;
+    unsigned int i = 0;
 
-    // Vertex coordinates and another datahas been read in
-    // Mesh::loadFromFile(). We only read texture coordinates here.
-    while( !file.eof() ){
-        std::getline( file, line );
+    if( line.substr( 0, 2 ) == "vt" ){
+        // Extract the UV coordinates from the line and add it to the Mesh.
+        sscanf( line.c_str(), "vt %f %f", &textureCoordinates[0], &textureCoordinates[1] );
 
-        if( line.substr( 0, 2 ) == "vt" ){
-            // Set '.' as the float separator (for parsing floats from a text
-            // line).
-            setlocale( LC_NUMERIC, "C" );
+        std::cout << "UV[" << textureCoordinates_.size() << "]: ("
+                  << textureCoordinates[0] << ", " << textureCoordinates[1] << ")" << std::endl;
 
-            // Extract the UV coordinates from the line and add it to the Mesh.
-            sscanf( line, "vt %f %f", &uvCoordinates[0], &uvCoordinates[1] );
+        textureCoordinates_.push_back( textureCoordinates );
 
-            originalVertices.push_back( vertex );
+        return true;
+    }else if( line[0] == 'f' ){
+        // Extract the UV coordinates from the line and add it to the Mesh.
+        std::cout << "sscanf: " << sscanf( line.c_str(), "f %u/%u %u/%u %u/%u",
+                &vertexTriangle[0], &textureTriangle[0],
+                &vertexTriangle[1], &textureTriangle[1],
+                &vertexTriangle[2], &textureTriangle[2]) << std::endl;
 
-            // TODO: Oh no, we have to mix UV coordinates with more vertex data
-            // in VBO! It can't be as simple as calling Mesh constructor and
-            // then Texturized mesh. Noooooo!.
+        for( i=0; i<3; i++ ){
+            // Decrement every vertex index because they are 1-based in the .obj file.
+            vertexTriangle[i] -= 1;
+            textureTriangle[i] -= 1;
         }
+
+        std::cout << "Vertex triangle: (" << vertexTriangle[0] << ", " << vertexTriangle[1] << ", " << vertexTriangle[2] << ")" << std::endl;
+        std::cout << "Texture triangle: " << textureTriangle[0] << ", " << textureTriangle[1] << ", " << textureTriangle[2] << ")" << std::endl;
+
+        triangles.push_back( vertexTriangle );
+        textureTriangles_.push_back( textureTriangle );
+
+        return true;
+    }else{
+        return Mesh::processFileLine( line );
     }
+}
 
 
-    file.close();
-    */
+void TexturizedMesh::initVAO()
+{
+    Mesh::initVAO();
+
+    int byteOffset = getBytesPerVertex() - Mesh::getBytesPerVertex();
+
+    // Include texture coordinates info in VAO.
+    glVertexAttribPointer( SHADER_TEXTURE_ATTR_LOCATION, 2, GL_FLOAT, GL_FALSE, (int)getBytesPerVertex(), (void *)( (std::uintptr_t)( byteOffset ) ) ); // TODO: Fix the std::uintptr_t cast?
+
+    // Enable previous vertex data arrays.
+    glEnableVertexAttribArray( SHADER_TEXTURE_ATTR_LOCATION );
+}
+
+
+unsigned int TexturizedMesh::getComponentsPerVertex() const
+{
+    return Mesh::getComponentsPerVertex() + 2; // 2 UV coordinates.
+}
+
+
+void TexturizedMesh::setVertexData( GLint index )
+{   
+    GLfloat textureCoordinates[] =
+    {
+        textureCoordinates_[index][X],
+        textureCoordinates_[index][Y]
+    };
+
+    Mesh::setVertexData( index );
+
+    std::cout << "TexturizedMesh::setVertexData - Bytes per vertex [" << getBytesPerVertex() << "]" << std::endl;
+
+    glBufferSubData( GL_ARRAY_BUFFER, index * getBytesPerVertex(), getBytesPerVertex(), textureCoordinates );
 }
 
 

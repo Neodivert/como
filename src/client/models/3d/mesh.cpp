@@ -39,6 +39,7 @@ const GLint SHADER_VERTEX_ATTR_LOCATION = 0;
 const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
 
 
+
 /***
  * 1. Construction.
  ***/
@@ -49,17 +50,15 @@ Mesh::Mesh( MeshType type, const char* fileName, MaterialConstPtr material ) :
     type_( type ),
     material_( material )
 {
-    initMesh( fileName );
+    loadFromOBJ( fileName );
 }
 
 
-Mesh::Mesh( const char* fileName, MaterialConstPtr material ) :
+Mesh::Mesh( MaterialConstPtr material ) :
     Drawable( DrawableType::MESH, "Mesh #" ),
     type_( MeshType::MESH ),
     material_( material )
-{   
-    initMesh( fileName );
-}
+{}
 
 
 Mesh::Mesh( const Mesh& b ) :
@@ -102,20 +101,6 @@ Mesh::~Mesh()
  * 3. Initialization.
  ***/
 
-void Mesh::initMesh( const char* fileName )
-{
-    OpenGL::checkStatus( "Mesh( const char* fileName ) - 1" );
-
-    // Initialize OpenGL objects (VBO, VAO, EBO, ...) associated to this Mesh.
-    initMeshBuffers();
-
-    // Load vertex data from given file.
-    LoadFromOBJ( fileName );
-
-    OpenGL::checkStatus( "Mesh( const char* fileName ) - 2" );
-}
-
-
 void Mesh::initMeshBuffers()
 {
     GLint currentShaderProgram;
@@ -157,7 +142,6 @@ void Mesh::initMeshBuffers()
 void Mesh::initVertexData()
 {
     unsigned int i;
-    GLfloat* vertexData = nullptr;
 
     // Initialize VAO and VBO.
     initVBO();
@@ -166,20 +150,15 @@ void Mesh::initVertexData()
     // Copy the mesh's elements to a EBO.
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, triangles.size()*3*sizeof( GLuint ), nullptr, GL_STATIC_DRAW );
 
+    std::cout << "triangles: " << triangles.size() << std::endl;
     for( i=0; i<triangles.size(); i++ ){
         glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, 3*i*sizeof( GLuint ), 3*sizeof( GLuint ), &triangles[i] );
     }
 
-    // Map the OpenGL's VBO for original vertex data to client memory, so we can initialize it.
-    vertexData = (GLfloat*)glMapBuffer( GL_ARRAY_BUFFER, GL_WRITE_ONLY );
-
     // Copy the vertex data to VBO.
     for( GLuint i = 0; i<originalVertices.size(); i++ ){
-        setVertexData( vertexData, i );
+        setVertexData( i );
     }
-
-    // We finished updating the VBO, unmap it so OpenGL can take control over it.
-    glUnmapBuffer( GL_ARRAY_BUFFER );
 
     // Update transformed vertices.
     update();
@@ -190,7 +169,9 @@ void Mesh::initVBO()
 {
     // Allocate a VBO for transformed vertices.
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
-    glBufferData( GL_ARRAY_BUFFER, originalVertices.size()*getBytesPerVertex(), NULL, GL_STATIC_DRAW );
+    glBufferData( GL_ARRAY_BUFFER, originalVertices.size()*this->getBytesPerVertex(), NULL, GL_STATIC_DRAW );
+
+    std::cout << "VBO (" << originalVertices.size() << " * " << this->getBytesPerVertex() << ")" << std::endl;
 }
 
 
@@ -220,8 +201,26 @@ unsigned int Mesh::getComponentsPerVertex() const
 }
 
 
-void Mesh::setVertexData( GLfloat* vbo, GLint index )
+void Mesh::setVertexData( GLint index )
 {
+    GLfloat vertexData[] =
+    {
+        // Vertex coordinates
+        originalVertices[index].x,
+        originalVertices[index].y,
+        originalVertices[index].z,
+
+        // Normal coordinates
+        originalNormals[index].x,
+        originalNormals[index].y,
+        originalNormals[index].z
+    };
+
+    std::cout << "Mesh::setVertexData - Bytes per vertex [" << getBytesPerVertex() << "]" << std::endl;
+    glBufferSubData( GL_ARRAY_BUFFER, index * getBytesPerVertex(), getBytesPerVertex(), vertexData );
+
+    /*
+
     // Copy vertex position to VBO.
     vbo[index*COMPONENTS_PER_VERTEX+X] = originalVertices[index].x;
     vbo[index*COMPONENTS_PER_VERTEX+Y] = originalVertices[index].y;
@@ -231,6 +230,7 @@ void Mesh::setVertexData( GLfloat* vbo, GLint index )
     vbo[index*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+X] = originalNormals[index].x;
     vbo[index*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+Y] = originalNormals[index].y;
     vbo[index*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+Z] = originalNormals[index].z;
+    */
 }
 
 
@@ -276,11 +276,13 @@ void Mesh::computeVertexNormals()
  * 4. File loading.
  ***/
 
-void Mesh::LoadFromOBJ( const char* filePath )
+void Mesh::loadFromOBJ( const char* filePath )
 {
-    const unsigned int LINE_SIZE = 250;
+    // Initialize OpenGL objects (VBO, VAO, EBO, ...) associated to this Mesh.
+    initMeshBuffers();
+
     std::ifstream file;
-    char line[LINE_SIZE];
+    std::string line;
 
     // Initialize original vertex data.
     originalVertices.clear();
@@ -296,8 +298,8 @@ void Mesh::LoadFromOBJ( const char* filePath )
 
     // Read vertex data from file.
     // TODO: Accept OBJ files with multiple objects inside.
-    while( file.getline( line, LINE_SIZE ) ){
-        processFileLine( line );
+    while( std::getline( file, line ) ){
+        std::cout << "line: [" << line << "]: " << this->processFileLine( line ) << std::endl;
     }
 
     // Close the input file and finish initializing the mesh.
@@ -317,7 +319,7 @@ bool Mesh::processFileLine( const string &line )
     glm::vec3 vertex;
     std::array< GLuint, 3 > triangle;
     unsigned int i;
-
+    unsigned int componentsRead = 0;
 
     if( line[0] == 'v' ){
         // Set '.' as the float separator (for parsing floats from a text
@@ -330,11 +332,15 @@ bool Mesh::processFileLine( const string &line )
         // Resize the vertex coordinates.
         vertex *= 0.5f;
 
-        originalVertices.push_back( vertex * 0.5f );
+        originalVertices.push_back( vertex );
 
     }else if( line[0] == 'f' ){
         // Extract the face from the line and add it to the Mesh.
-        sscanf( line.c_str(), "f %u %u %u", &triangle[0], &triangle[1], &triangle[2] );
+        componentsRead = sscanf( line.c_str(), "f %u %u %u", &triangle[0], &triangle[1], &triangle[2] );
+
+        if( componentsRead != 3 ){
+            throw std::runtime_error( "Error reading mesh triangle (Is it a textured mesh?)" );
+        }
 
         for( i=0; i<3; i++ ){
             // Decrement every vertex index because they are 1-based in the .obj file.

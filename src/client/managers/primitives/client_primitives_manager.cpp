@@ -170,7 +170,10 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
     // material from the .mtl file and then read the mesh file from .obj
     // *ignoring* the references in this file to the .mtl file. Is there a
     // better and more elegant way of reading both mesh and material together?.
-    DrawablePtr drawable = DrawablePtr( new Mesh( meshFilePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
+    Mesh* mesh = new Mesh( materialsManager_->getMaterial( materialID ) );
+    mesh->loadFromOBJ( meshFilePath.c_str() );
+    DrawablePtr drawable = DrawablePtr( mesh );
+
     PackableDrawableID drawableID = drawablesManager_->addDrawable( drawable );
 
     log_->debug( "Creating local mesh - Drawable ID (", drawableID,
@@ -198,7 +201,10 @@ void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID pr
     // material from the .mtl file and then read the mesh file from .obj
     // *ignoring* the references in this file to the .mtl file. Is there a
     // better and more elegant way of reading both mesh and material together?.
-    DrawablePtr drawable = DrawablePtr( new Mesh( meshFilePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
+    Mesh* mesh = new Mesh( materialsManager_->getMaterial( materialID ) );
+    mesh->loadFromOBJ( meshFilePath.c_str() );
+    DrawablePtr drawable = DrawablePtr( mesh );
+
     drawablesManager_->addDrawable( userID, drawable, meshID );
 
     log_->debug( "Creating remote mesh - Mesh ID (", meshID,

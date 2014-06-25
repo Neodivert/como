@@ -22,6 +22,8 @@
 #include "managers/como_app.hpp"
 #include <boost/filesystem.hpp>
 
+#include <client/models/3d/texturized_mesh.hpp>
+
 int main( int argc, char *argv[] )
 {
     int mainExitValue = 0;
