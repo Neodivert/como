@@ -62,10 +62,12 @@ class Mesh : public Drawable
         static GLint normalMatrixLocation_;
 
         // VAO : Vertex Attributes Array.
+    protected:
         GLuint vao;
 
         // VBO for transformed vertex data.
         GLuint vbo;
+    private:
 
         // EBO : Elements-Buffer Array.
         GLuint ebo;
@@ -113,6 +115,11 @@ class Mesh : public Drawable
         void initMeshBuffers();
 
         void initVertexData();
+
+        virtual void initVBO();
+        virtual void initVAO();
+        virtual void setVertexData( GLfloat* vbo, GLint index );
+
         void computeCentroid();
         void computeVertexNormals();
 

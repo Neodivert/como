@@ -159,18 +159,9 @@ void Mesh::initVertexData()
     unsigned int i;
     GLfloat* vertexData = nullptr;
 
-    // Allocate a VBO for transformed vertices.
-    glBindBuffer( GL_ARRAY_BUFFER, vbo );
-    glBufferData( GL_ARRAY_BUFFER, originalVertices.size()*COMPONENTS_PER_VERTEX*sizeof( GLfloat ), NULL, GL_STATIC_DRAW );
-
-    // Set the organization of the vertex and normals data in the VBO.
-    glBindVertexArray( vao );
-    glVertexAttribPointer( SHADER_VERTEX_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, COMPONENTS_PER_VERTEX*sizeof( GL_FLOAT ), (void *)( 0 ) );
-    glVertexAttribPointer( SHADER_NORMAL_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, COMPONENTS_PER_VERTEX*sizeof( GL_FLOAT ), (void *)( COMPONENTS_PER_VERTEX_POSITION * sizeof( GL_FLOAT ) ) );
-
-    // Enable previous vertex data arrays.
-    glEnableVertexAttribArray( SHADER_VERTEX_ATTR_LOCATION );
-    glEnableVertexAttribArray( SHADER_NORMAL_ATTR_LOCATION );
+    // Initialize VAO and VBO.
+    initVBO();
+    initVAO();
 
     // Copy the mesh's elements to a EBO.
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, triangles.size()*3*sizeof( GLuint ), nullptr, GL_STATIC_DRAW );
@@ -184,15 +175,7 @@ void Mesh::initVertexData()
 
     // Copy the vertex data to VBO.
     for( GLuint i = 0; i<originalVertices.size(); i++ ){
-        // Copy vertex position to VBO.
-        vertexData[i*COMPONENTS_PER_VERTEX+X] = originalVertices[i].x;
-        vertexData[i*COMPONENTS_PER_VERTEX+Y] = originalVertices[i].y;
-        vertexData[i*COMPONENTS_PER_VERTEX+Z] = originalVertices[i].z;
-
-        // Copy vertex normal to VBO.
-        vertexData[i*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+X] = originalNormals[i].x;
-        vertexData[i*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+Y] = originalNormals[i].y;
-        vertexData[i*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+Z] = originalNormals[i].z;
+        setVertexData( vertexData, i );
     }
 
     // We finished updating the VBO, unmap it so OpenGL can take control over it.
@@ -200,6 +183,41 @@ void Mesh::initVertexData()
 
     // Update transformed vertices.
     update();
+}
+
+
+void Mesh::initVBO()
+{
+    // Allocate a VBO for transformed vertices.
+    glBindBuffer( GL_ARRAY_BUFFER, vbo );
+    glBufferData( GL_ARRAY_BUFFER, originalVertices.size()*COMPONENTS_PER_VERTEX*sizeof( GLfloat ), NULL, GL_STATIC_DRAW );
+}
+
+
+void Mesh::initVAO()
+{
+    // Set the organization of the vertex and normals data in the VBO.
+    glBindVertexArray( vao );
+    glVertexAttribPointer( SHADER_VERTEX_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, COMPONENTS_PER_VERTEX*sizeof( GL_FLOAT ), (void *)( 0 ) );
+    glVertexAttribPointer( SHADER_NORMAL_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, COMPONENTS_PER_VERTEX*sizeof( GL_FLOAT ), (void *)( COMPONENTS_PER_VERTEX_POSITION * sizeof( GL_FLOAT ) ) );
+
+    // Enable previous vertex data arrays.
+    glEnableVertexAttribArray( SHADER_VERTEX_ATTR_LOCATION );
+    glEnableVertexAttribArray( SHADER_NORMAL_ATTR_LOCATION );
+}
+
+
+void Mesh::setVertexData( GLfloat* vbo, GLint index )
+{
+    // Copy vertex position to VBO.
+    vbo[index*COMPONENTS_PER_VERTEX+X] = originalVertices[index].x;
+    vbo[index*COMPONENTS_PER_VERTEX+Y] = originalVertices[index].y;
+    vbo[index*COMPONENTS_PER_VERTEX+Z] = originalVertices[index].z;
+
+    // Copy vertex normal to VBO.
+    vbo[index*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+X] = originalNormals[index].x;
+    vbo[index*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+Y] = originalNormals[index].y;
+    vbo[index*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+Z] = originalNormals[index].z;
 }
 
 
@@ -293,6 +311,7 @@ void Mesh::LoadFromOBJ( const char* filePath )
 
             triangles.push_back( triangle );
         }
+        // TODO: And the normals?
     }
 
     // Close the input file and finish initializing the mesh.

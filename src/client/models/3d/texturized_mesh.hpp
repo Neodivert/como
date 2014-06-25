@@ -29,19 +29,26 @@ class TexturizedMesh : public Mesh
         /***
          * 1. Construction
          ***/
-        TexturizedMesh();
+        TexturizedMesh() = delete;
+        TexturizedMesh( const std::string& filePath, MaterialConstPtr material );
         TexturizedMesh( const TexturizedMesh& ) = delete;
         TexturizedMesh( TexturizedMesh&& ) = delete;
 
 
         /***
-         * 2. Destruction
+         * 2. Initialization
+         ***/
+        void loadFromFile( const std::string& filePath );
+
+
+        /***
+         * 3. Destruction
          ***/
         ~TexturizedMesh() = default; // TODO: Or not default?
 
 
         /***
-         * 3. Operators
+         * 4. Operators
          ***/
         TexturizedMesh& operator = ( const TexturizedMesh& ) = delete;
         TexturizedMesh& operator = ( TexturizedMesh&& ) = delete;
