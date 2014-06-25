@@ -85,7 +85,8 @@ HEADERS += \
     ../../src/common/ids/resource_id.hpp \
     ../../src/common/ids/user_id.hpp \
     ../../src/common/packables/ids/packable_resource_id.hpp \
-    ../../src/common/commands/primitive_commands/primitive_instantiation_command.hpp
+    ../../src/common/commands/primitive_commands/primitive_instantiation_command.hpp \
+    ../../src/common/primitives/primitives_importer.hpp
 
 
 # Common sources (used by both client and server).
