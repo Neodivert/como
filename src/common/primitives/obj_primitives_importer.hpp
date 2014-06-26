@@ -48,10 +48,10 @@ class OBJPrimitivesImporter : PrimitivesImporter {
          * \brief Rename the file <srcFilePath> and the files referenced by it
          * as <name>.original_extension and copy them all to <destDirectory>.
          */
-        virtual void importPrimitive( std::string name, std::string srcFilePath, std::string dstDirectory );
+        virtual PrimitiveInfo importPrimitive( std::string name, std::string srcFilePath, std::string dstDirectory );
 
     private:
-        void importMaterialFile( std::string primitiveName, std::string srcFilePath, std::string dstDirectory );
+        void importMaterialFile( PrimitiveInfo& primitive, std::string srcFilePath, std::string dstDirectory );
 
 
         /***

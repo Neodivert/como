@@ -21,6 +21,7 @@
 
 #include "primitive_command.hpp"
 #include <common/ids/resource_id.hpp>
+#include <common/primitives/primitive_info.hpp>
 
 namespace como {
 
@@ -78,6 +79,8 @@ class PrimitiveCreationCommand : public PrimitiveCommand
         const PackableFile* getMeshFile() const;
 
         const PackableFile* getMaterialFile() const;
+
+        PrimitiveInfo getPrimitiveInfo() const;
 
 
         /***

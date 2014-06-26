@@ -26,21 +26,14 @@
 #include <common/ids/resource_id.hpp>
 #include <common/managers/primitives/abstract_primitives_manager.hpp>
 #include <list>
+#include <common/primitives/primitive_info.hpp>
 
 namespace como {
 
-struct PrimitiveInfo
-{
-    std::string name;
-    ResourceID category;
-
-    std::string meshFileName;
-    std::string materialFileName;
-};
-
 enum class PrimitiveComponent {
     MESH = 0,
-    MATERIAL
+    MATERIAL,
+    TEXTURE
 };
 
 // TODO: Move this
@@ -96,7 +89,7 @@ class AbstractPrimitivesManager
         /***
          * 5. Primitives management
          ***/
-        void registerPrimitive( ResourceID id, ResourceID category, std::string meshFileName, std::string materialFileName );
+        void registerPrimitive( ResourceID id, PrimitiveInfo primitive );
 
 
         /***

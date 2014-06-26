@@ -31,6 +31,7 @@
 #include <client/managers/materials/materials_manager.hpp>
 #include <cstdio>
 #include <fstream>
+#include <common/primitives/obj_primitives_importer.hpp>
 
 namespace como {
 
@@ -65,7 +66,7 @@ class ClientPrimitivesManager : public QObject, public AbstractPrimitivesManager
          ***/
         std::string createPrimitive( std::string filePath, ResourceID categoryID );
     private:
-        ResourceID importMeshFile( std::string oldFilePath, ResourceID categoryID );
+        ResourceID importMeshFile( std::string srcFilePath, ResourceID categoryID );
     public:
         void instantiatePrimitive( ResourceID primitiveID );
     private:

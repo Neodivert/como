@@ -89,21 +89,33 @@ void ServerPrimitivesManager::syncPrimitivesDir()
 }
 
 
+ResourceID ServerPrimitivesManager::createCategory( std::string name )
+{
+    AbstractPrimitivesManager::createCategory( nextPrimitiveCategoryID_, name );
+
+    commandsHistoric_->addCommand( CommandConstPtr(
+                                       new PrimitiveCategoryCreationCommand( 0,
+                                                                             nextPrimitiveCategoryID_,
+                                                                             name ) ) );
+
+    return nextPrimitiveCategoryID_++;
+}
+
+
 void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
 {
     const boost::filesystem::directory_iterator endIterator;
     boost::filesystem::directory_iterator fileIterator( dirPath );
-    ResourceID categoryID;
     std::string filePath;
-    std::string meshFileName;
-    std::string materialFileName;
     OBJPrimitivesImporter primitivesImporter;
+    ResourceID categoryID;
+    PrimitiveInfo primitive;
 
     log_->debug( "Synchronizing category dir [", dirPath, "]\n" );
 
-    categoryID = registerCategory( boost::filesystem::basename( dirPath ) );
+    categoryID = createCategory( boost::filesystem::basename( dirPath ) );
 
-    boost::filesystem::create_directory( getCategoryAbsoluteePath( categoryID ) );
+    boost::filesystem::create_directory( getCategoryAbsoluteePath( primitive.category ) );
 
     for( ; fileIterator != endIterator; fileIterator++ ){
         if( boost::filesystem::is_regular_file( *fileIterator ) ){
@@ -112,20 +124,12 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
             log_->debug( "filePath: ", filePath, "\n" );
 
             if( boost::filesystem::extension( filePath ) == ".obj" ){
-                primitivesImporter.importPrimitive( boost::filesystem::basename( filePath ),
-                                                    filePath,
-                                                    getCategoryAbsoluteePath( categoryID ) );
+                primitive = primitivesImporter.importPrimitive( boost::filesystem::basename( filePath ),
+                                                                filePath,
+                                                                getCategoryAbsoluteePath( categoryID ) );
+                primitive.category = categoryID;
 
-                meshFileName = boost::filesystem::basename( filePath ) + ".obj";
-
-                // TODO: Remove this and retrieve material file name from mesh file.
-                materialFileName = boost::filesystem::basename( filePath ) + ".mtl";
-
-                log_->debug( "Registering (", meshFileName, ", ", materialFileName, ") ...\n" );
-
-                registerPrimitive( categoryID, meshFileName, materialFileName );
-
-                log_->debug( "Registering (", meshFileName, ", ", materialFileName, ") ...OK\n" );
+                registerPrimitive( primitive );
             }
         }
     }
@@ -154,13 +158,14 @@ ResourceID ServerPrimitivesManager::registerCategory( std::string categoryName )
  * 5. Primitives management
  ***/
 
-void ServerPrimitivesManager::registerPrimitive( ResourceID categoryID, std::string meshFileName, std::string materialFileName )
+void ServerPrimitivesManager::registerPrimitive( PrimitiveInfo primitive )
 {
-    AbstractPrimitivesManager::registerPrimitive( nextPrimitiveID_, categoryID, meshFileName, materialFileName );
+    AbstractPrimitivesManager::registerPrimitive( nextPrimitiveID_, primitive );
 
+    // TODO: Remove getPrimitiveAbsoutePath and use primitive struct?
     commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCreationCommand( 0,
                                                                                   nextPrimitiveID_,
-                                                                                  categoryID,
+                                                                                  primitive.category,
                                                                                   getPrimitiveAbsolutePath( nextPrimitiveID_, PrimitiveComponent::MESH ).c_str(),
                                                                                   getPrimitiveAbsolutePath( nextPrimitiveID_, PrimitiveComponent::MATERIAL ).c_str() ) ) );
 

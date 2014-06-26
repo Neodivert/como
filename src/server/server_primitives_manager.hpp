@@ -52,6 +52,7 @@ class ServerPrimitivesManager : public AbstractPrimitivesManager
     private:
         void createPrimitivesDir();
         void syncPrimitivesDir();
+        ResourceID createCategory( std::string name );
         void syncPrimitivesCategoryDir( std::string dirPath );
     public:
 
@@ -72,7 +73,7 @@ class ServerPrimitivesManager : public AbstractPrimitivesManager
         /***
          * 5. Primitives management
          ***/
-        void registerPrimitive( ResourceID categoryID, std::string meshFileName, std::string materialFileName );
+        void registerPrimitive( PrimitiveInfo primitive );
 
 
         /***

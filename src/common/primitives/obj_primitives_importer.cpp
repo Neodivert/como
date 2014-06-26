@@ -27,7 +27,7 @@ namespace como {
  * 3. Primitives import
  ***/
 
-void OBJPrimitivesImporter::importPrimitive( std::string primitiveName, std::string srcFilePath, std::string dstDirectory )
+PrimitiveInfo OBJPrimitivesImporter::importPrimitive( std::string primitiveName, std::string srcFilePath, std::string dstDirectory )
 {
     std::ifstream srcFile;
     std::ofstream dstFile;
@@ -35,20 +35,25 @@ void OBJPrimitivesImporter::importPrimitive( std::string primitiveName, std::str
     std::string dstFilePath;
     std::string srcMaterialFilePath;
     std::string srcMaterialFileName;
-    std::string dstMaterialFileName;
+    PrimitiveInfo primitive;
+    bool materialProcessed = false;
+
+    // Retrieve primitive name and mesh file.
+    primitive.name = primitiveName;
+    primitive.meshFileName =
+            boost::filesystem::basename( srcFilePath ) +
+            boost::filesystem::extension( srcFilePath );
 
     srcFile.open( srcFilePath );
     if( !srcFile.is_open() ){
         throw FileNotOpenException( srcFilePath );
     }
 
-
     dstFilePath = dstDirectory + '/' + primitiveName + ".obj";
     std::cout << "dstFilePath: [" << dstFilePath << "]" << std::endl;
     dstFile.open( dstFilePath.c_str() );
     std::cout << dstFile.is_open() << std::endl;
     if( !dstFile.is_open() ){
-        throw std::runtime_error( strerror(errno) );
         throw FileNotOpenException( dstFilePath );
     }
 
@@ -60,15 +65,21 @@ void OBJPrimitivesImporter::importPrimitive( std::string primitiveName, std::str
 
         if( fileLine.size() ){
             if( fileLine.substr( 0, strlen( "mtllib" ) ) == "mtllib" ){
-                // Retrieve the material file name and retrieve the new name.
+                if( materialProcessed ){
+                    srcFile.close();
+                    dstFile.close();
+                    throw std::runtime_error( "Only one .mtl file per primitive allowed" );
+                }
+
+                // Retrieve the material file path.
                 srcMaterialFileName = fileLine.substr( strlen( "mtllib" ) + 1 );
-                dstMaterialFileName = primitiveName + '_' + dstMaterialFileName;
-
-                dstFile << "mtllib " << dstMaterialFileName << std::endl;
-
                 srcMaterialFilePath = srcFilePath.substr( 0, srcFilePath.rfind( '/' ) + 1 ) + srcMaterialFileName;
 
-                importMaterialFile( primitiveName, srcMaterialFilePath, dstDirectory );
+                // Import the material file path.
+                importMaterialFile( primitive, srcMaterialFilePath, dstDirectory );
+
+                dstFile << "mtllib " << primitive.materialFileName << std::endl;
+                materialProcessed = true;
             }else{
                 dstFile << fileLine << std::endl;
             }
@@ -77,12 +88,38 @@ void OBJPrimitivesImporter::importPrimitive( std::string primitiveName, std::str
 
     srcFile.close();
     dstFile.close();
+
+    if( !materialProcessed ){
+        throw std::runtime_error( "A primitive can't be define without a material" );
+    }
+
+    return primitive;
 }
 
 
-void OBJPrimitivesImporter::importMaterialFile( std::string primitiveName, std::string srcFilePath, std::string dstDirectory )
+void OBJPrimitivesImporter::importMaterialFile( PrimitiveInfo& primitive, std::string srcFilePath, std::string dstDirectory )
 {
-    boost::filesystem::copy( srcFilePath, dstDirectory + '/' + primitiveName + ".mtl" );
+    boost::system::error_code errorCode;
+    std::string dstMaterialFilePath;
+
+    // Generate the material file name.
+    primitive.materialFileName = primitive.name + ".mtl";
+
+    // Generate the material destination dir path.
+    dstMaterialFilePath = dstDirectory + '/' + primitive.materialFileName;
+
+    // Copy the material file to its final location.
+    boost::filesystem::copy( srcFilePath, dstMaterialFilePath, errorCode );
+
+    std::cout << "Importing material file: " << srcFilePath << ", " << dstMaterialFilePath << std::endl;
+
+    if( errorCode ){
+        throw std::runtime_error( std::string( "ERROR importing material file [" ) +
+                                  srcFilePath +
+                                  "] to [" +
+                                  dstMaterialFilePath +
+                                  "]: " + errorCode.message() );
+    }
 }
 
 } // namespace como

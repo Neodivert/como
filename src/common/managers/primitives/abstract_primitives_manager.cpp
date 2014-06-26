@@ -71,6 +71,9 @@ std::string AbstractPrimitivesManager::getPrimitiveRelativePath( ResourceID id, 
         case PrimitiveComponent::MATERIAL:
             return categoryRelativePath + "/" + primitive.materialFileName;
         break;
+        case PrimitiveComponent::TEXTURE:
+            return categoryRelativePath + "/" + primitive.textureFileName;
+        break;
         default:
             throw std::runtime_error( "AbstractPrimitivesManager::getPrimitiveRelativePath - what?" );
         break;
@@ -133,6 +136,8 @@ void AbstractPrimitivesManager::createCategory( ResourceID id, std::string name 
     if( errorCode ){
         throw std::runtime_error( errorCode.message() );
     }
+
+    log_->debug( "Category created [", scenePrimitivesDir_ + '/' + name, "]" );
 }
 
 
@@ -140,17 +145,16 @@ void AbstractPrimitivesManager::createCategory( ResourceID id, std::string name 
  * 5. Primitives management
  ***/
 
-void AbstractPrimitivesManager::registerPrimitive( ResourceID id, ResourceID category, std::string meshFileName, std::string materialFileName )
+void AbstractPrimitivesManager::registerPrimitive( ResourceID id, PrimitiveInfo primitive )
 {
-    std::string name = meshFileName;
-
     log_->debug( "Primitive registered - id (", id,
-                 "), name (", name,
-                 ") - category(", category, ")",
-                 ") - meshFileName(", meshFileName, ")",
-                 ") . materialFileName(", materialFileName, ")\n" );
+                 "), name (", primitive.name,
+                 ") - category(", primitive.category, ")",
+                 ") - meshFileName(", primitive.meshFileName, ")",
+                 ") - materialFileName(", primitive.materialFileName, ")",
+                 ") - textureFileName(", primitive.textureFileName, ")\n" );
 
-    primitiveInfo_[id] = PrimitiveInfo( { name, category, meshFileName, materialFileName } );
+    primitiveInfo_[id] = primitive;
 }
 
 

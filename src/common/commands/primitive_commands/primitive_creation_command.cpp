@@ -76,4 +76,17 @@ const PackableFile* PrimitiveCreationCommand::getMaterialFile() const
     return &materialFile_;
 }
 
+PrimitiveInfo PrimitiveCreationCommand::getPrimitiveInfo() const
+{
+    PrimitiveInfo primitive;
+
+    primitive.name = getMeshFileName(); // TODO: Change this and retrieve real primitive name.
+    primitive.category = getCategoryID();
+    primitive.meshFileName = getMeshFileName();
+    primitive.materialFileName = getMaterialFileName();
+    primitive.textureFileName = ""; // Retrieve real field.
+
+    return primitive;
+}
+
 } // namespace como

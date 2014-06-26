@@ -88,7 +88,8 @@ HEADERS += \
     ../../src/common/commands/primitive_commands/primitive_instantiation_command.hpp \
     ../../src/common/primitives/primitives_importer.hpp \
     ../../src/common/primitives/obj_primitives_importer.hpp \
-    ../../src/common/exceptions/file_not_open_exception.hpp
+    ../../src/common/exceptions/file_not_open_exception.hpp \
+    ../../src/common/primitives/primitive_info.hpp
 
 
 # Common sources (used by both client and server).
