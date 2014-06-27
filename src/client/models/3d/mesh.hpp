@@ -118,6 +118,8 @@ class Mesh : public Drawable
 
         void initVBO();
         virtual void initVAO();
+        unsigned int getOwnBytesPerVertex() const;
+        unsigned int getOwnComponentsPerVertex() const;
         virtual unsigned int getBytesPerVertex() const;
         virtual unsigned int getComponentsPerVertex() const;
 

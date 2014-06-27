@@ -67,7 +67,8 @@ void main()
 				vec3 reflectedLight = lights[ directionalLights[i].lightIndex ].color * specular * material.specularReflectivity;
 	
 				if( texturingEnabled ){
-					//meshColor = texture( 
+					//meshColor = texture(
+					meshColor = material.color;
 				}else{
 					meshColor = material.color;
 				}

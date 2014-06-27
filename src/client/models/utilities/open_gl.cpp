@@ -34,6 +34,8 @@ OpenGL::OpenGL()
             getShaderVariableLocation( "lightingEnabled" );
     shaderVariablesLocations_[ShaderVariable::TEXTURING_ENABLED] =
             getShaderVariableLocation( "texturingEnabled" );
+
+    std::cout << "texturingEnabled location: " << shaderVariablesLocations_.at( ShaderVariable::TEXTURING_ENABLED ) << std::endl;
 }
 
 
@@ -43,15 +45,17 @@ OpenGL::OpenGL()
 
 void OpenGL::enableLighting() const
 {
+    OpenGL::checkStatus( "Scene::enableLighting() - Begin" );
     glUniform1i( shaderVariablesLocations_.at( ShaderVariable::LIGHTING_ENABLED ), 1 );
-    OpenGL::checkStatus( "Scene::enableLighting()" );
+    OpenGL::checkStatus( "After Scene::enableLighting() - End" );
 }
 
 
 void OpenGL::disableLighting() const
 {
+    OpenGL::checkStatus( "Scene::disableLighting() - Begin" );
     glUniform1i( shaderVariablesLocations_.at( ShaderVariable::LIGHTING_ENABLED ), 0 );
-    OpenGL::checkStatus( "Scene::disableLighting()" );
+    OpenGL::checkStatus( "Scene::disableLighting() - End" );
 }
 
 
@@ -61,15 +65,17 @@ void OpenGL::disableLighting() const
 
 void OpenGL::enableTexturing() const
 {
+    OpenGL::checkStatus( "Scene::enableTexturing() - Begin" );
     glUniform1i( shaderVariablesLocations_.at( ShaderVariable::TEXTURING_ENABLED ), 1 );
-    OpenGL::checkStatus( "Scene::enableTexturing()" );
+    OpenGL::checkStatus( "Scene::enableTexturing() - End" );
 }
 
 
 void OpenGL::disableTexturing() const
 {
+    OpenGL::checkStatus( "Scene::disableTexturing() - Begin" );
     glUniform1i( shaderVariablesLocations_.at( ShaderVariable::TEXTURING_ENABLED ), 0 );
-    OpenGL::checkStatus( "Scene::enableTexturing()" );
+    OpenGL::checkStatus( "Scene::disableTexturing()" );
 }
 
 

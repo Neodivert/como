@@ -24,6 +24,8 @@
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 
+#include <memory>
+
 namespace como {
 
 class Texture
@@ -69,6 +71,9 @@ class Texture
         Texture& operator = ( const Texture& ) = delete;
         Texture& operator = ( Texture&& ) = delete;
 };
+
+typedef std::shared_ptr< Texture > TexturePtr;
+typedef std::shared_ptr< const Texture > TextureConstPtr;
 
 } // namespace como
 

@@ -23,8 +23,9 @@ namespace como {
 
 const GLint SHADER_TEXTURE_ATTR_LOCATION = 2; // FIXME: This value depends on SHADER_* constants in mesh.cpp (high coupling!)
 
-TexturizedMesh::TexturizedMesh( MaterialConstPtr material ) :
-    Mesh( material )
+TexturizedMesh::TexturizedMesh( MaterialConstPtr material, TextureConstPtr texture ) :
+    Mesh( material ),
+    texture_( texture )
 {}
 
 
@@ -79,7 +80,7 @@ void TexturizedMesh::initVAO()
 {
     Mesh::initVAO();
 
-    int byteOffset = getBytesPerVertex() - Mesh::getBytesPerVertex();
+    int byteOffset = 6 * sizeof( GL_FLOAT ); //getBytesPerVertex() - Mesh::getBytesPerVertex();
 
     // Include texture coordinates info in VAO.
     glVertexAttribPointer( SHADER_TEXTURE_ATTR_LOCATION, 2, GL_FLOAT, GL_FALSE, (int)getBytesPerVertex(), (void *)( (std::uintptr_t)( byteOffset ) ) ); // TODO: Fix the std::uintptr_t cast?
@@ -89,9 +90,20 @@ void TexturizedMesh::initVAO()
 }
 
 
+unsigned int TexturizedMesh::getOwnBytesPerVertex() const
+{
+    return getOwnComponentsPerVertex() * sizeof( GL_FLOAT );
+}
+
+
+unsigned int TexturizedMesh::getOwnComponentsPerVertex() const
+{
+    return 2; // UV coordinates.
+}
+
 unsigned int TexturizedMesh::getComponentsPerVertex() const
 {
-    return Mesh::getComponentsPerVertex() + 2; // 2 UV coordinates.
+    return Mesh::getOwnComponentsPerVertex() + getOwnComponentsPerVertex();
 }
 
 
@@ -103,13 +115,28 @@ void TexturizedMesh::setVertexData( GLint index )
         textureCoordinates_[index][Y]
     };
 
+
     Mesh::setVertexData( index );
 
-    std::cout << "TexturizedMesh::setVertexData - Bytes per vertex [" << getBytesPerVertex() << "]" << std::endl;
+    std::cout << "getBytesPerVertex(): " << getBytesPerVertex() << std::endl
+              << "Mesh::getBytesPerVertex(): " << Mesh::getBytesPerVertex() << std::endl;
+    std::cout << "TexturizedMesh::setVertexData(" << ( index * getBytesPerVertex() + Mesh::getOwnBytesPerVertex()) << ", " << getOwnBytesPerVertex() << ")" << std::endl;
 
-    glBufferSubData( GL_ARRAY_BUFFER, index * getBytesPerVertex(), getBytesPerVertex(), textureCoordinates );
+    OpenGL::checkStatus( "TexturizedMesh::setVertexData - 1" );
+    glBufferSubData( GL_ARRAY_BUFFER, ( index * getBytesPerVertex() + Mesh::getOwnBytesPerVertex()), getOwnBytesPerVertex(), textureCoordinates );
+    OpenGL::checkStatus( "TexturizedMesh::setVertexData - 2" );
 }
 
 
+void TexturizedMesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) const
+{
+    openGL->enableTexturing();
+
+    //texture_->sendToShader();
+
+    Mesh::draw( openGL, viewProjMatrix, contourColor );
+
+    openGL->disableTexturing();
+}
 
 } // namespace como

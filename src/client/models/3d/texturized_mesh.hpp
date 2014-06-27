@@ -21,6 +21,7 @@
 
 #include "mesh.hpp"
 #include <array>
+#include <client/models/3d/textures/texture.hpp>
 
 namespace como {
 
@@ -29,13 +30,14 @@ class TexturizedMesh : public Mesh
     private:
         std::vector< glm::vec2 > textureCoordinates_;
         std::vector< std::array< GLuint, 3 > > textureTriangles_;
+        TextureConstPtr texture_;
 
     public:
         /***
          * 1. Construction
          ***/
         TexturizedMesh() = delete;
-        TexturizedMesh( MaterialConstPtr material );
+        TexturizedMesh( MaterialConstPtr material, TextureConstPtr texture );
         TexturizedMesh( const TexturizedMesh& ) = delete;
         TexturizedMesh( TexturizedMesh&& ) = delete;
 
@@ -46,6 +48,8 @@ class TexturizedMesh : public Mesh
     protected:
         virtual bool processFileLine(const string &line);
         virtual void initVAO();
+        unsigned int getOwnBytesPerVertex() const;
+        unsigned int getOwnComponentsPerVertex() const;
         virtual unsigned int getComponentsPerVertex() const;
         virtual void setVertexData( GLint index );
 
@@ -58,7 +62,13 @@ class TexturizedMesh : public Mesh
 
 
         /***
-         * 4. Operators
+         * 4. Drawing
+         ***/
+        virtual void draw( OpenGLPtr openGL, const glm::mat4 &viewProjMatrix, const GLfloat *contourColor ) const;
+
+
+        /***
+         * 5. Operators
          ***/
         TexturizedMesh& operator = ( const TexturizedMesh& ) = delete;
         TexturizedMesh& operator = ( TexturizedMesh&& ) = delete;

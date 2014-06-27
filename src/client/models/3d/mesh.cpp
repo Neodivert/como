@@ -143,22 +143,33 @@ void Mesh::initVertexData()
 {
     unsigned int i;
 
+    OpenGL::checkStatus( "Mesh::initVertexData - 1" );
+
     // Initialize VAO and VBO.
     initVBO();
+    OpenGL::checkStatus( "Mesh::initVertexData - 2" );
     initVAO();
+
+    OpenGL::checkStatus( "Mesh::initVertexData - 3" );
 
     // Copy the mesh's elements to a EBO.
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, triangles.size()*3*sizeof( GLuint ), nullptr, GL_STATIC_DRAW );
+
+    OpenGL::checkStatus( "Mesh::initVertexData - 4" );
 
     std::cout << "triangles: " << triangles.size() << std::endl;
     for( i=0; i<triangles.size(); i++ ){
         glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, 3*i*sizeof( GLuint ), 3*sizeof( GLuint ), &triangles[i] );
     }
 
+    OpenGL::checkStatus( "Mesh::initVertexData - 5" );
+
     // Copy the vertex data to VBO.
     for( GLuint i = 0; i<originalVertices.size(); i++ ){
         setVertexData( i );
     }
+
+    OpenGL::checkStatus( "Mesh::initVertexData - 6" );
 
     // Update transformed vertices.
     update();
@@ -187,6 +198,17 @@ void Mesh::initVAO()
     glEnableVertexAttribArray( SHADER_NORMAL_ATTR_LOCATION );
 }
 
+unsigned int Mesh::getOwnBytesPerVertex() const
+{
+    return getOwnComponentsPerVertex() * sizeof( GL_FLOAT );
+}
+
+unsigned int Mesh::getOwnComponentsPerVertex() const
+{
+    // Vertex coordinates (3 components) + normal coordinates (3 components).
+    return 6;
+}
+
 
 unsigned int Mesh::getBytesPerVertex() const
 {
@@ -196,8 +218,7 @@ unsigned int Mesh::getBytesPerVertex() const
 
 unsigned int Mesh::getComponentsPerVertex() const
 {
-    // Vertex coordinates (3 components) + normal coordinates (3 components).
-    return 6;
+    return getOwnComponentsPerVertex();
 }
 
 
@@ -216,8 +237,10 @@ void Mesh::setVertexData( GLint index )
         originalNormals[index].z
     };
 
-    std::cout << "Mesh::setVertexData - Bytes per vertex [" << getBytesPerVertex() << "]" << std::endl;
-    glBufferSubData( GL_ARRAY_BUFFER, index * getBytesPerVertex(), getBytesPerVertex(), vertexData );
+    OpenGL::checkStatus( "Mesh::setVertexData - 1" );
+    std::cout << "Mesh::setVertexData(" << (index * getBytesPerVertex()) << ", " << Mesh::getOwnBytesPerVertex() << ")" << std::endl;
+    glBufferSubData( GL_ARRAY_BUFFER, index * getBytesPerVertex(), Mesh::getOwnBytesPerVertex(), vertexData );
+    OpenGL::checkStatus( "Mesh::setVertexData - 2" );
 
     /*
 
@@ -278,8 +301,11 @@ void Mesh::computeVertexNormals()
 
 void Mesh::loadFromOBJ( const char* filePath )
 {
+    OpenGL::checkStatus( "Mesh::loadFromOBJ - 1/5" );
     // Initialize OpenGL objects (VBO, VAO, EBO, ...) associated to this Mesh.
     initMeshBuffers();
+
+    OpenGL::checkStatus( "Mesh::loadFromOBJ - 2/5" );
 
     std::ifstream file;
     std::string line;
@@ -305,12 +331,18 @@ void Mesh::loadFromOBJ( const char* filePath )
     // Close the input file and finish initializing the mesh.
     file.close();
 
+    OpenGL::checkStatus( "Mesh::loadFromOBJ - 3/5" );
+
     // Compute Mesh's centroid and vertex normals.
     computeCentroid();
     computeVertexNormals();
 
+    OpenGL::checkStatus( "Mesh::loadFromOBJ - 4/5" );
+
     // Initialize Mesh transformed vertex data.
     initVertexData();
+
+    OpenGL::checkStatus( "Mesh::loadFromOBJ - 5/5" );
 }
 
 

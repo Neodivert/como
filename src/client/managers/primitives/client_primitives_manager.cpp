@@ -82,6 +82,8 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
     // primitive used for building this mesh.
     std::string meshFilePath = getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MESH );
     std::string materialFilePath = getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MATERIAL );
+    Mesh* mesh = nullptr;
+    TexturePtr texture;
 
     // Create the material and idd to the materials manager.
     MaterialID materialID = materialsManager_->createMaterial( materialFilePath, "*" ); // TODO: Don't use "*"
@@ -91,7 +93,12 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
     // material from the .mtl file and then read the mesh file from .obj
     // *ignoring* the references in this file to the .mtl file. Is there a
     // better and more elegant way of reading both mesh and material together?.
-    Mesh* mesh = new Mesh( materialsManager_->getMaterial( materialID ) );
+    if( getPrimitiveInfo( primitiveID ).textureFileName.size() ){
+        texture = TexturePtr( new Texture( getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::TEXTURE ) ) );
+        mesh = new TexturizedMesh( materialsManager_->getMaterial( materialID ), texture );
+    }else{
+        mesh = new Mesh( materialsManager_->getMaterial( materialID ) );
+    }
     mesh->loadFromOBJ( meshFilePath.c_str() );
     DrawablePtr drawable = DrawablePtr( mesh );
 
@@ -113,6 +120,8 @@ void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID pr
     // primitive used for building this mesh.
     std::string meshFilePath = getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MESH );
     std::string materialFilePath = getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MATERIAL );
+    Mesh* mesh = nullptr;
+    TexturePtr texture;
 
     // Create the material and add it to the materials manager.
     materialsManager_->createMaterial( materialID, materialFilePath, "*" ); // TODO: Don't use "*"
@@ -122,7 +131,13 @@ void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID pr
     // material from the .mtl file and then read the mesh file from .obj
     // *ignoring* the references in this file to the .mtl file. Is there a
     // better and more elegant way of reading both mesh and material together?.
-    Mesh* mesh = new Mesh( materialsManager_->getMaterial( materialID ) );
+    if( getPrimitiveInfo( primitiveID ).textureFileName.size() ){
+        texture = TexturePtr( new Texture( getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::TEXTURE ) ) );
+        mesh = new TexturizedMesh( materialsManager_->getMaterial( materialID ), texture );
+    }else{
+        mesh = new Mesh( materialsManager_->getMaterial( materialID ) );
+    }
+    mesh->loadFromOBJ( meshFilePath.c_str() );
     mesh->loadFromOBJ( meshFilePath.c_str() );
     DrawablePtr drawable = DrawablePtr( mesh );
 
