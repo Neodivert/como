@@ -108,6 +108,7 @@ void* PackableFile::PackableFile::pack( void* buffer ) const
     // Pack the file path and size, among other packables held by this
     // CompositePackable (parent class), into the given buffer.
     buffer = CompositePackable::pack( buffer );
+    // TODO: If I inherit another class from PackableFile, would't this pack all its packables before finisihing the packing of this class? Check also for other classes.
 
     // Pack the file contents into the given buffer.
     castedBuffer = static_cast< char* >( buffer );

@@ -21,6 +21,7 @@
 
 #include "packable.hpp"
 #include <vector>
+#include <functional>
 
 namespace como {
 
@@ -37,7 +38,6 @@ struct PackablePair {
     // Yes, simple pointers. We are NOT owning the pointed packables.
     const Packable* constant;
     Packable* variable;
-
 
     PackablePair() :
         constant( nullptr ),

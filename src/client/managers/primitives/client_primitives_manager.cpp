@@ -48,9 +48,7 @@ std::string ClientPrimitivesManager::createPrimitive( std::string filePath, Reso
                 CommandConstPtr(
                     new PrimitiveCreationCommand( id.getCreatorID(),
                                                   id,
-                                                  categoryID,
-                                                  getPrimitiveAbsolutePath( id, PrimitiveComponent::MESH ).c_str() ,
-                                                  getPrimitiveAbsolutePath( id, PrimitiveComponent::MATERIAL ).c_str() ) ) );
+                                                  getPrimitiveInfo( id ) ) ) );
 
     emit primitiveAdded( id, getPrimitiveRelativePath( id, PrimitiveComponent::MESH ) );
 
@@ -159,7 +157,7 @@ void ClientPrimitivesManager::executeRemoteCommand( PrimitiveCommandConstPtr com
             const PrimitiveCreationCommand* primitiveCreationCommand =
                     dynamic_cast< const PrimitiveCreationCommand* >( command.get() );
 
-            log_->debug( "Primitive file received: [", primitiveCreationCommand->getMeshFile()->getFilePath(), "]\n" );
+            log_->debug( "Primitive file received: [", primitiveCreationCommand->getPrimitiveInfo().materialFileName, "]\n" );
 
             registerPrimitive( primitiveCreationCommand->getPrimitiveID(),
                                primitiveCreationCommand->getPrimitiveInfo() );

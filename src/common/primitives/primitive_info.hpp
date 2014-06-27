@@ -27,7 +27,9 @@ namespace como {
 struct PrimitiveInfo
 {
     std::string name;
+
     ResourceID category;
+    std::string directory;
 
     std::string meshFileName;
     std::string materialFileName;

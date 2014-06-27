@@ -40,6 +40,7 @@ PrimitiveInfo OBJPrimitivesImporter::importPrimitive( std::string primitiveName,
 
     // Retrieve primitive name and mesh file.
     primitive.name = primitiveName;
+    primitive.directory = dstDirectory;
     primitive.meshFileName =
             boost::filesystem::basename( srcFilePath ) +
             boost::filesystem::extension( srcFilePath );
@@ -136,7 +137,7 @@ void OBJPrimitivesImporter::importMaterialFile( PrimitiveInfo& primitive, std::s
                 // Import the texture file path.
                 importTextureFile( primitive, srcTextureFilePath, dstDirectory );
 
-                dstFile << primitive.textureFileName << std::endl;
+                dstFile << "map_Kd " << primitive.textureFileName << std::endl;
             }else{
                 dstFile << fileLine << std::endl;
             }

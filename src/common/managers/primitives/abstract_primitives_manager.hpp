@@ -68,6 +68,7 @@ class AbstractPrimitivesManager
         /***
          * 3. Getters
          ***/
+        PrimitiveInfo getPrimitiveInfo( ResourceID id ) const ;
         std::string getPrimitiveRelativePath( ResourceID id, PrimitiveComponent component ) const;
         std::string getPrimitiveAbsolutePath( ResourceID id, PrimitiveComponent component ) const;
 

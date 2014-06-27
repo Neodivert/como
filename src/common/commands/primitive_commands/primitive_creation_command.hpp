@@ -22,6 +22,7 @@
 #include "primitive_command.hpp"
 #include <common/ids/resource_id.hpp>
 #include <common/primitives/primitive_info.hpp>
+#include <functional>
 
 namespace como {
 
@@ -36,9 +37,15 @@ class PrimitiveCreationCommand : public PrimitiveCommand
         /*! Primitive category ID. */
         PackableResourceID category_;
 
+        /*! Primitive name. */
+        PackableString< 64 > name_;
+
         /*! Primitive specification files. */
         PackableFile meshFile_;
         PackableFile materialFile_;
+
+        PackableUint8< bool > includesTexture_;
+        ConditionalPackableWrapper< PackableFile > textureFile_;
 
     public:
         /***
@@ -48,7 +55,7 @@ class PrimitiveCreationCommand : public PrimitiveCommand
         /*! \brief Default constructor. */
         PrimitiveCreationCommand();
 
-        PrimitiveCreationCommand( UserID userID, ResourceID primitiveID, ResourceID categoryID, PackableString< NAME_SIZE > meshFilePath, PackableString< NAME_SIZE > materialFilePath );
+        PrimitiveCreationCommand( UserID userID, ResourceID primitiveID, PrimitiveInfo primitive );
 
         /*! \brief Copy assignment operator */
         PrimitiveCreationCommand( const PrimitiveCreationCommand& );
@@ -69,18 +76,10 @@ class PrimitiveCreationCommand : public PrimitiveCommand
          * 3. Getters
          ***/
 
-        std::string getPrimitiveName() const;
-        std::string getMeshFileName() const;
-        std::string getMaterialFileName() const;
-
-        ResourceID getCategoryID() const;
-
-        /*! \brief Returns a pointer to the primitive's specification file. */
-        const PackableFile* getMeshFile() const;
-
-        const PackableFile* getMaterialFile() const;
-
         PrimitiveInfo getPrimitiveInfo() const;
+    private:
+        bool includesTexture() const;
+    public:
 
 
         /***

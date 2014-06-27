@@ -165,9 +165,7 @@ void ServerPrimitivesManager::registerPrimitive( PrimitiveInfo primitive )
     // TODO: Remove getPrimitiveAbsoutePath and use primitive struct?
     commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCreationCommand( 0,
                                                                                   nextPrimitiveID_,
-                                                                                  primitive.category,
-                                                                                  getPrimitiveAbsolutePath( nextPrimitiveID_, PrimitiveComponent::MESH ).c_str(),
-                                                                                  getPrimitiveAbsolutePath( nextPrimitiveID_, PrimitiveComponent::MATERIAL ).c_str() ) ) );
+                                                                                  primitive ) ) );
 
     nextPrimitiveID_++;
 }

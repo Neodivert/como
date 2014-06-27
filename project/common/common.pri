@@ -89,7 +89,8 @@ HEADERS += \
     ../../src/common/primitives/primitives_importer.hpp \
     ../../src/common/primitives/obj_primitives_importer.hpp \
     ../../src/common/exceptions/file_not_open_exception.hpp \
-    ../../src/common/primitives/primitive_info.hpp
+    ../../src/common/primitives/primitive_info.hpp \
+    ../../src/common/packables/conditional_packable_wrapper.hpp
 
 
 # Common sources (used by both client and server).

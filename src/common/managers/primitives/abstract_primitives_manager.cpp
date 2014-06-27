@@ -55,6 +55,12 @@ AbstractPrimitivesManager::~AbstractPrimitivesManager()
 }
 
 
+PrimitiveInfo AbstractPrimitivesManager::getPrimitiveInfo( ResourceID id ) const
+{
+    return primitiveInfo_.at( id );
+}
+
+
 /***
  * 3. Getters
  ***/
@@ -150,6 +156,7 @@ void AbstractPrimitivesManager::registerPrimitive( ResourceID id, PrimitiveInfo 
     log_->debug( "Primitive registered - id (", id,
                  "), name (", primitive.name,
                  ") - category(", primitive.category, ")",
+                 ") - directory(", primitive.directory, ")",
                  ") - meshFileName(", primitive.meshFileName, ")",
                  ") - materialFileName(", primitive.materialFileName, ")",
                  ") - textureFileName(", primitive.textureFileName, ")\n" );

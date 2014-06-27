@@ -148,7 +148,7 @@ class PackableFile : public CompositePackable {
          ***/
 
         /*! \brief Copy assignment operator */
-        PackableFile& operator = (const PackableFile& b) = delete;
+        PackableFile& operator = (const PackableFile& b);
 
         /*! \brief Move assignment operator */
         PackableFile& operator = ( PackableFile&& ) = delete;
