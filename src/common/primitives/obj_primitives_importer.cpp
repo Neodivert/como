@@ -54,6 +54,7 @@ PrimitiveInfo OBJPrimitivesImporter::importPrimitive( std::string primitiveName,
     dstFile.open( dstFilePath.c_str() );
     std::cout << dstFile.is_open() << std::endl;
     if( !dstFile.is_open() ){
+        srcFile.close();
         throw FileNotOpenException( dstFilePath );
     }
 
@@ -99,25 +100,75 @@ PrimitiveInfo OBJPrimitivesImporter::importPrimitive( std::string primitiveName,
 
 void OBJPrimitivesImporter::importMaterialFile( PrimitiveInfo& primitive, std::string srcFilePath, std::string dstDirectory )
 {
-    boost::system::error_code errorCode;
     std::string dstMaterialFilePath;
+    std::ifstream srcFile;
+    std::ofstream dstFile;
+    std::string fileLine;
+    std::string srcTextureFileName;
+    std::string srcTextureFilePath;
 
     // Generate the material file name.
-    primitive.materialFileName = primitive.name + ".mtl";
+    primitive.materialFileName = primitive.name + boost::filesystem::extension( srcFilePath );
 
     // Generate the material destination dir path.
     dstMaterialFilePath = dstDirectory + '/' + primitive.materialFileName;
 
-    // Copy the material file to its final location.
-    boost::filesystem::copy( srcFilePath, dstMaterialFilePath, errorCode );
+    srcFile.open( srcFilePath );
+    if( !srcFile.is_open() ){
+        throw FileNotOpenException( srcFilePath );
+    }
 
-    std::cout << "Importing material file: " << srcFilePath << ", " << dstMaterialFilePath << std::endl;
+    dstFile.open( dstMaterialFilePath );
+    if( !dstFile.is_open() ){
+        srcFile.close();
+        throw FileNotOpenException( dstMaterialFilePath );
+    }
+
+    while( !srcFile.eof() ){
+        std::getline( srcFile, fileLine );
+
+        if( fileLine.size() ){
+            if( fileLine.substr( 0, strlen( "map_Kd" ) ) == "map_Kd" ){
+                // Retrieve the texture file path.
+                srcTextureFileName = fileLine.substr( strlen( "mtllib" ) + 1 );
+                srcTextureFilePath = srcFilePath.substr( 0, srcFilePath.rfind( '/' ) + 1 ) + srcTextureFileName;
+
+                // Import the texture file path.
+                importTextureFile( primitive, srcTextureFilePath, dstDirectory );
+
+                dstFile << primitive.textureFileName << std::endl;
+            }else{
+                dstFile << fileLine << std::endl;
+            }
+        }
+    }
+
+    srcFile.close();
+    dstFile.close();
+}
+
+
+void OBJPrimitivesImporter::importTextureFile( PrimitiveInfo &primitive, std::string srcFilePath, std::string dstDirectory )
+{
+    boost::system::error_code errorCode;
+    std::string dstTextureFilePath;
+
+    // Generate the texture file name.
+    primitive.textureFileName = primitive.name + boost::filesystem::extension( srcFilePath );
+
+    // Generate the texture destination dir path.
+    dstTextureFilePath = dstDirectory + '/' + primitive.textureFileName;
+
+    // Copy the texture file to its final location.
+    boost::filesystem::copy( srcFilePath, dstTextureFilePath, errorCode );
+
+    std::cout << "Importing texture file: " << srcFilePath << ", " << dstTextureFilePath << std::endl;
 
     if( errorCode ){
-        throw std::runtime_error( std::string( "ERROR importing material file [" ) +
+        throw std::runtime_error( std::string( "ERROR importing texture file [" ) +
                                   srcFilePath +
                                   "] to [" +
-                                  dstMaterialFilePath +
+                                  dstTextureFilePath +
                                   "]: " + errorCode.message() );
     }
 }

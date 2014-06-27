@@ -52,6 +52,7 @@ class OBJPrimitivesImporter : PrimitivesImporter {
 
     private:
         void importMaterialFile( PrimitiveInfo& primitive, std::string srcFilePath, std::string dstDirectory );
+        void importTextureFile( PrimitiveInfo& primitive, std::string srcFilePath, std::string dstDirectory );
 
 
         /***
