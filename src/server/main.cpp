@@ -23,6 +23,7 @@
 #include <clocale>
 #include <boost/filesystem.hpp>
 
+#include <common/primitives/obj_primitives_importer.hpp>
 
 int main( int argc, char* argv[] )
 {

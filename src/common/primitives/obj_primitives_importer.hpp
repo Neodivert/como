@@ -21,8 +21,25 @@
 
 #include "primitives_importer.hpp"
 #include <boost/filesystem.hpp>
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <GL/gl.h>
+#include <array>
 
 namespace como {
+
+struct MeshInfo {
+    std::vector< glm::vec3 > vertices;
+    std::vector< glm::vec3 > normals;
+    std::vector< glm::vec2 > uvCoordinates;
+
+    std::vector< std::array< GLuint, 3 > > vertexTriangles;
+    std::vector< std::array< GLuint, 3 > > normalTriangles;
+    std::vector< std::array< GLuint, 3 > > uvTriangles;
+
+    std::vector< GLfloat > vboData;
+    std::vector< GLuint > eboData;
+};
 
 class OBJPrimitivesImporter : PrimitivesImporter {
     public:
@@ -49,6 +66,11 @@ class OBJPrimitivesImporter : PrimitivesImporter {
          * as <name>.original_extension and copy them all to <destDirectory>.
          */
         virtual PrimitiveInfo importPrimitive( std::string name, std::string srcFilePath, std::string dstDirectory );
+
+    private:
+        virtual void processMeshFile( std::string filePath, MeshInfo& meshInfo );
+        void processMeshFileLine( std::string line, MeshInfo& meshInfo );
+        void generateMeshVertexData( MeshInfo& meshInfo );
 
     private:
         void importMaterialFile( PrimitiveInfo& primitive, std::string srcFilePath, std::string dstDirectory );
