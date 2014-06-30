@@ -37,6 +37,9 @@ void PrimitiveFile::write( const MeshInfo meshInfo, std::string filePath )
 
     writeVertices( meshInfo.vertexData.vertices, file );
     writeTriangles( meshInfo.vertexData.vertexTriangles, file );
+    writeOpenGLData( meshInfo.oglData, file );
+
+    file.close();
 }
 
 
@@ -60,6 +63,42 @@ void PrimitiveFile::writeTriangles( const TrianglesVector& triangles, std::ofstr
     // Write all the triangles to the file (one triangle per line).
     for( auto triangle : triangles ){
         file << triangle[0] << " " << triangle[1] << " " << triangle[2] << std::endl;
+    }
+}
+
+
+void PrimitiveFile::writeOpenGLData( const MeshOpenGLData& oglData, std::ofstream& file )
+{
+    unsigned int vertexIndex = 0;
+    unsigned int componentIndex = 0;
+    unsigned int nVBOVertices = 0;
+    unsigned int componentsPerVertex = oglData.getComponentsPerVertex();
+    unsigned int triangleIndex = 0;
+
+    nVBOVertices = oglData.vboData.size() / componentsPerVertex;
+
+    // Write the number of components per vertex.
+    file << componentsPerVertex << std::endl;
+
+    // Write the number of VBO vertices.
+    file << nVBOVertices << std::endl;
+
+    // Write the VBO data to the file (one vertex per line).
+    for( vertexIndex = 0; vertexIndex < nVBOVertices; vertexIndex++ ){
+        for( componentIndex = 0; componentIndex < oglData.getComponentsPerVertex()-1; componentIndex++ ){
+            file << oglData.vboData[vertexIndex * componentsPerVertex + componentIndex] << " ";
+        }
+        file << oglData.vboData[vertexIndex * componentsPerVertex + componentIndex] << std::endl;
+    }
+
+    // Write the number of triangles to the file.
+    file << ( oglData.eboData.size() / 3 ) << std::endl;
+
+    // Write the EBO data to the file (one triangle per line).
+    for( triangleIndex = 0; triangleIndex < oglData.eboData.size() / 3; triangleIndex++ ){
+        file << oglData.eboData[triangleIndex * 3] << " "
+             << oglData.eboData[triangleIndex * 3 + 1] << " "
+             << oglData.eboData[triangleIndex * 3 + 2] << std::endl;
     }
 }
 

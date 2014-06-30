@@ -49,6 +49,7 @@ class PrimitiveFile
     private:
         static void writeVertices( const VerticesVector& vertices, std::ofstream& file );
         static void writeTriangles( const VertexTrianglesVector& triangles, std::ofstream& file );
+        static void writeOpenGLData( const MeshOpenGLData& oglData, std::ofstream& file );
 
 
         /***
