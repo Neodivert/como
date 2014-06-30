@@ -21,6 +21,7 @@
 
 #include <string>
 #include <common/primitives/primitive_info.hpp>
+#include <boost/filesystem.hpp>
 
 namespace como {
 

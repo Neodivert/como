@@ -20,6 +20,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <common/exceptions/file_not_open_exception.hpp>
+#include <common/primitives/primitive_file.hpp>
 #include <map>
 #include <array>
 
@@ -50,9 +51,7 @@ PrimitiveInfo OBJPrimitivesImporter::importPrimitive( std::string srcFilePath, s
             primitiveInfo.name +
             ".prim";
 
-    // TODO: Remove when generating real .prim file.
-    int res = system( ( std::string( "touch \"" ) + primitiveInfo.filePath + "\"" ).c_str() );
-    (void)( res );
+    PrimitiveFile::write( meshInfo, primitiveInfo.filePath );
 
     return primitiveInfo;
 }
@@ -98,6 +97,9 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
     */
 
     generateMeshVertexData( meshInfo );
+
+
+
 }
 
 void OBJPrimitivesImporter::processMeshFileLine( std::string line, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo )
@@ -128,14 +130,14 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string line, PrimitiveInfo
         // Resize the vertex coordinates.
         //vertex *= 0.5f;
 
-        meshInfo.vertices.push_back( vertex );
+        meshInfo.vertexData.vertices.push_back( vertex );
     }else if( lineHeader == "vt" ){
         glm::vec2 textureCoordinates;
 
         // Extract the UV coordinates from the line and add it to the Mesh.
         sscanf( lineBody.c_str(), "%f %f", &textureCoordinates[0], &textureCoordinates[1] );
 
-        meshInfo.uvCoordinates.push_back( textureCoordinates );
+        meshInfo.textureData.uvCoordinates.push_back( textureCoordinates );
     }else if( lineHeader == "f" ){
         // TODO: Process multiple types of "face lines".
         std::array< GLuint, 3 > vertexTriangle;
@@ -159,7 +161,7 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string line, PrimitiveInfo
                 vertexTriangle[i] -= 1;
             }
 
-            meshInfo.vertexTriangles.push_back( vertexTriangle );
+            meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
 
         }else{
             std::array< GLuint, 3 > uvTriangle;
@@ -187,8 +189,8 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string line, PrimitiveInfo
                     uvTriangle[i] -= 1;
                 }
 
-                meshInfo.vertexTriangles.push_back( vertexTriangle );
-                meshInfo.uvTriangles.push_back( uvTriangle );
+                meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
+                meshInfo.textureData.uvTriangles.push_back( uvTriangle );
 
             }else{
                 throw std::runtime_error(
@@ -215,11 +217,11 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
 
     //std::cout << "meshInfo.uvTriangles: " << meshInfo.uvTriangles.size() << std::endl;
 
-    for( currentTriangleIndex = 0; currentTriangleIndex < meshInfo.vertexTriangles.size(); currentTriangleIndex++ ){
+    for( currentTriangleIndex = 0; currentTriangleIndex < meshInfo.vertexData.vertexTriangles.size(); currentTriangleIndex++ ){
         for( triangleVertexIndex = 0; triangleVertexIndex < 3; triangleVertexIndex++ ){
-            compoundVertex[0] = meshInfo.vertexTriangles[currentTriangleIndex][triangleVertexIndex];
-            compoundVertex[1] = ( meshInfo.normalTriangles.size() ) ? meshInfo.normalTriangles[currentTriangleIndex][triangleVertexIndex] : 0;
-            compoundVertex[2] = ( meshInfo.uvTriangles.size() ) ? meshInfo.uvTriangles[currentTriangleIndex][triangleVertexIndex] : 0;
+            compoundVertex[0] = meshInfo.vertexData.vertexTriangles[currentTriangleIndex][triangleVertexIndex];
+            compoundVertex[1] = ( meshInfo.normalData.normalTriangles.size() ) ? meshInfo.normalData.normalTriangles[currentTriangleIndex][triangleVertexIndex] : 0;
+            compoundVertex[2] = ( meshInfo.textureData.uvTriangles.size() ) ? meshInfo.textureData.uvTriangles[currentTriangleIndex][triangleVertexIndex] : 0;
 
             finalVerticesIt = finalVertices.find( compoundVertex );
             if( finalVerticesIt != finalVertices.end() ){
@@ -247,33 +249,33 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
 
     for( auto finalVertex : finalVertices ){
         // Insert vertex position.
-        meshInfo.vboData.push_back( meshInfo.vertices[ finalVertex.first[0] ][0] );
-        meshInfo.vboData.push_back( meshInfo.vertices[ finalVertex.first[0] ][1] );
-        meshInfo.vboData.push_back( meshInfo.vertices[ finalVertex.first[0] ][2] );
+        meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ finalVertex.first[0] ][0] );
+        meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ finalVertex.first[0] ][1] );
+        meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ finalVertex.first[0] ][2] );
 
         // Insert vertex normal (if exists).
-        if( meshInfo.normals.size() ){
-            meshInfo.vboData.push_back( meshInfo.normals[ finalVertex.first[1] ][0] );
-            meshInfo.vboData.push_back( meshInfo.normals[ finalVertex.first[1] ][1] );
-            meshInfo.vboData.push_back( meshInfo.normals[ finalVertex.first[1] ][2] );
+        if( meshInfo.normalData.normals.size() ){
+            meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ finalVertex.first[1] ][0] );
+            meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ finalVertex.first[1] ][1] );
+            meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ finalVertex.first[1] ][2] );
         }else{
-            meshInfo.vboData.push_back( 0 );
-            meshInfo.vboData.push_back( 0 );
-            meshInfo.vboData.push_back( 0 );
+            meshInfo.oglData.vboData.push_back( 0 );
+            meshInfo.oglData.vboData.push_back( 0 );
+            meshInfo.oglData.vboData.push_back( 0 );
         }
 
         // Insert UV coordinates (if exist).
-        if( meshInfo.uvCoordinates.size() ){
-            meshInfo.vboData.push_back( meshInfo.uvCoordinates[ finalVertex.first[2] ][0] );
-            meshInfo.vboData.push_back( meshInfo.uvCoordinates[ finalVertex.first[2] ][1] );
+        if( meshInfo.textureData.uvCoordinates.size() ){
+            meshInfo.oglData.vboData.push_back( meshInfo.textureData.uvCoordinates[ finalVertex.first[2] ][0] );
+            meshInfo.oglData.vboData.push_back( meshInfo.textureData.uvCoordinates[ finalVertex.first[2] ][1] );
         }
     }
 
 
     for( auto finalTriangle : finalTriangles ){
-        meshInfo.eboData.push_back( finalTriangle[0] );
-        meshInfo.eboData.push_back( finalTriangle[1] );
-        meshInfo.eboData.push_back( finalTriangle[2] );
+        meshInfo.oglData.eboData.push_back( finalTriangle[0] );
+        meshInfo.oglData.eboData.push_back( finalTriangle[1] );
+        meshInfo.oglData.eboData.push_back( finalTriangle[2] );
     }
 
     /*

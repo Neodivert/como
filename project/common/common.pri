@@ -90,7 +90,13 @@ HEADERS += \
     ../../src/common/primitives/obj_primitives_importer.hpp \
     ../../src/common/exceptions/file_not_open_exception.hpp \
     ../../src/common/primitives/primitive_info.hpp \
-    ../../src/common/packables/conditional_packable_wrapper.hpp
+    ../../src/common/packables/conditional_packable_wrapper.hpp \
+    ../../src/common/primitives/primitive_file.hpp \
+    ../../src/common/mesh_info/mesh_vertex_data.hpp \
+    ../../src/common/mesh_info/mesh_normal_data.hpp \
+    ../../src/common/mesh_info/mesh_texture_data.hpp \
+    ../../src/common/mesh_info/mesh_info.hpp \
+    ../../src/common/mesh_info/mesh_opengl_data.hpp
 
 
 # Common sources (used by both client and server).
@@ -139,4 +145,5 @@ SOURCES += \
     ../../src/common/commands/primitive_commands/primitive_instantiation_command.cpp \
     ../../src/common/primitives/obj_primitives_importer.cpp \
     ../../src/common/exceptions/file_not_open_exception.cpp \
-    ../../src/common/primitives/primitive_info.cpp
+    ../../src/common/primitives/primitive_info.cpp \
+    ../../src/common/primitives/primitive_file.cpp
