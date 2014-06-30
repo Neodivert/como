@@ -38,6 +38,8 @@ void PrimitiveFile::write( const MeshInfo meshInfo, std::string filePath )
     writeVertices( meshInfo.vertexData.vertices, file );
     writeTriangles( meshInfo.vertexData.vertexTriangles, file );
     writeOpenGLData( meshInfo.oglData, file );
+    // TODO: Change and write all materials.
+    writeMaterial( meshInfo.materialsData[0], file );
 
     file.close();
 }
@@ -100,6 +102,26 @@ void PrimitiveFile::writeOpenGLData( const MeshOpenGLData& oglData, std::ofstrea
              << oglData.eboData[triangleIndex * 3 + 1] << " "
              << oglData.eboData[triangleIndex * 3 + 2] << std::endl;
     }
+}
+
+
+void PrimitiveFile::writeMaterial( const MaterialInfo &material, std::ofstream &file )
+{
+    file << material.name << std::endl;
+
+    file << material.ambientReflectivity[0] << " "
+         << material.ambientReflectivity[1] << " "
+         << material.ambientReflectivity[2] << std::endl;
+
+    file << material.diffuseReflectivity[0] << " "
+         << material.diffuseReflectivity[1] << " "
+         << material.diffuseReflectivity[2] << std::endl;
+
+    file << material.specularReflectivity[0] << " "
+         << material.specularReflectivity[1] << " "
+         << material.specularReflectivity[2] << std::endl;
+
+    file << material.specularExponent << std::endl;
 }
 
 

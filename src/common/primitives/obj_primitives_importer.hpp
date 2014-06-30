@@ -58,16 +58,23 @@ class OBJPrimitivesImporter : PrimitivesImporter {
 
     private:
         virtual void processMeshFile( std::string filePath, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo );
-        void processMeshFileLine( std::string line, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo );
+        void processMeshFileLine( std::string filePath, std::string line, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo );
         void generateMeshVertexData( MeshInfo& meshInfo );
 
     private:
-        void importMaterialFile( PrimitiveInfo& primitive, std::string srcFilePath, std::string dstDirectory );
+        void processMaterialFile( std::string filePath, std::vector< MaterialInfo >& materials );
+        void processMaterialFileLine( std::string fileLine, std::vector< MaterialInfo >& materials );
         void importTextureFile( PrimitiveInfo& primitive, std::string srcFilePath, std::string dstDirectory );
 
 
         /***
-         * 4. Operators
+         * 4. Auxiliar methods
+         ***/
+        glm::vec3 readVec3( std::string str ) const;
+
+
+        /***
+         * 5. Operators
          ***/
         OBJPrimitivesImporter& operator = ( const OBJPrimitivesImporter& ) = delete;
         OBJPrimitivesImporter& operator = ( OBJPrimitivesImporter&& ) = delete;

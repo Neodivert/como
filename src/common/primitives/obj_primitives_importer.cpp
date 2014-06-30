@@ -70,7 +70,7 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
     while( !file.eof() ){
         std::getline( file, fileLine );
 
-        processMeshFileLine( fileLine, primitiveInfo, meshInfo );
+        processMeshFileLine( filePath, fileLine, primitiveInfo, meshInfo );
     }
 
 
@@ -97,12 +97,9 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
     */
 
     generateMeshVertexData( meshInfo );
-
-
-
 }
 
-void OBJPrimitivesImporter::processMeshFileLine( std::string line, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo )
+void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::string line, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo )
 {
     unsigned int i;
     unsigned int componentsRead = 0;
@@ -199,6 +196,10 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string line, PrimitiveInfo
                             "]" );
             }
         }
+    }else if( lineHeader == "mtllib" ){
+        std::string fileDirectory = filePath.substr( 0, filePath.rfind( '/' ) );
+        std::string materialFilePath = fileDirectory + '/' + lineBody;
+        processMaterialFile( materialFilePath, meshInfo.materialsData );
     }
     // TODO: And the normals?
 }
@@ -297,59 +298,48 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
     */
 }
 
-
-void OBJPrimitivesImporter::importMaterialFile( PrimitiveInfo& primitive, std::string srcFilePath, std::string dstDirectory )
+void OBJPrimitivesImporter::processMaterialFile( std::string filePath, std::vector<MaterialInfo> &materials )
 {
-    (void)( primitive );
-    (void)( srcFilePath );
-    (void)( dstDirectory );
-    /*
-    std::string dstMaterialFilePath;
-    std::ifstream srcFile;
-    std::ofstream dstFile;
+    std::ifstream file;
     std::string fileLine;
-    std::string srcTextureFileName;
-    std::string srcTextureFilePath;
 
-    // Generate the material file name.
-    primitive.materialFileName = primitive.name + boost::filesystem::extension( srcFilePath );
-
-    // Generate the material destination dir path.
-    dstMaterialFilePath = dstDirectory + '/' + primitive.materialFileName;
-
-    srcFile.open( srcFilePath );
-    if( !srcFile.is_open() ){
-        throw FileNotOpenException( srcFilePath );
+    file.open( filePath );
+    if( !file.is_open() ){
+        throw FileNotOpenException( filePath );
     }
 
-    dstFile.open( dstMaterialFilePath );
-    if( !dstFile.is_open() ){
-        srcFile.close();
-        throw FileNotOpenException( dstMaterialFilePath );
+    while( !file.eof() ){
+        std::getline( file, fileLine );
+
+        processMaterialFileLine( fileLine, materials );
+    }
+}
+
+
+void OBJPrimitivesImporter::processMaterialFileLine( std::string fileLine, std::vector<MaterialInfo>& materials )
+{
+    std::string lineHeader = fileLine.substr( 0, fileLine.find( ' ' ) );
+    std::string lineBody = fileLine.substr( fileLine.find( ' ' ) + 1 );
+
+    if( !fileLine.size() ){
+        return;
     }
 
-    while( !srcFile.eof() ){
-        std::getline( srcFile, fileLine );
-
-        if( fileLine.size() ){
-            if( fileLine.substr( 0, strlen( "map_Kd" ) ) == "map_Kd" ){
-                // Retrieve the texture file path.
-                srcTextureFileName = fileLine.substr( strlen( "mtllib" ) + 1 );
-                srcTextureFilePath = srcFilePath.substr( 0, srcFilePath.rfind( '/' ) + 1 ) + srcTextureFileName;
-
-                // Import the texture file path.
-                importTextureFile( primitive, srcTextureFilePath, dstDirectory );
-
-                dstFile << "map_Kd " << primitive.textureFileName << std::endl;
-            }else{
-                dstFile << fileLine << std::endl;
-            }
-        }
+    // Retrieve material parameters from file.
+    if( lineHeader == "newmtl" ){
+        MaterialInfo newMaterial;
+        newMaterial.name = lineBody;
+        materials.push_back( newMaterial );
+    }else if( lineHeader == "Ka" ){
+        materials.back().ambientReflectivity = readVec3( lineBody );
+    }else if( lineHeader == "Kd" ){
+        materials.back().diffuseReflectivity = readVec3( lineBody );
+    }else if( lineHeader == "Ks" ){
+        materials.back().specularReflectivity = readVec3( lineBody );
+    }else if( lineHeader == "Ns" ){
+        materials.back().specularExponent = std::atof( lineBody.c_str() );
     }
-
-    srcFile.close();
-    dstFile.close();
-    */
+    // TODO: Import texture (map_Kd).
 }
 
 
@@ -381,6 +371,20 @@ void OBJPrimitivesImporter::importTextureFile( PrimitiveInfo &primitive, std::st
                                   "]: " + errorCode.message() );
     }
     */
+}
+
+
+/***
+ * 4. Auxiliar methods
+ ***/
+
+glm::vec3 OBJPrimitivesImporter::readVec3( std::string str ) const
+{
+    glm::vec3 v;
+
+    sscanf( str.c_str(), "%f %f %f", &v[0], &v[1], &v[2] );
+
+    return v;
 }
 
 } // namespace como

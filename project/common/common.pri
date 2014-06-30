@@ -96,7 +96,8 @@ HEADERS += \
     ../../src/common/mesh_info/mesh_normal_data.hpp \
     ../../src/common/mesh_info/mesh_texture_data.hpp \
     ../../src/common/mesh_info/mesh_info.hpp \
-    ../../src/common/mesh_info/mesh_opengl_data.hpp
+    ../../src/common/mesh_info/mesh_opengl_data.hpp \
+    ../../src/common/mesh_info/material_info.hpp
 
 
 # Common sources (used by both client and server).

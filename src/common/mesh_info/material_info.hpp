@@ -16,29 +16,26 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef MESH_INFO_HPP
-#define MESH_INFO_HPP
+#ifndef MATERIAL_INFO_HPP
+#define MATERIAL_INFO_HPP
 
-#include "mesh_vertex_data.hpp"
-#include "mesh_normal_data.hpp"
-#include "mesh_texture_data.hpp"
-#include "mesh_opengl_data.hpp"
-#include "material_info.hpp"
+#include <string>
+#include <glm/glm.hpp>
 
 namespace como {
 
-struct MeshInfo {
-    MeshVertexData vertexData;
-    MeshNormalData normalData;
-    MeshTextureData textureData;
+struct MaterialInfo
+{
+    std::string name;
 
-    MeshOpenGLData oglData;
+    glm::vec4 color;
 
-    std::vector< MaterialInfo > materialsData;
+    glm::vec3 ambientReflectivity;
+    glm::vec3 diffuseReflectivity;
+    glm::vec3 specularReflectivity;
+    float specularExponent;
 };
-
 
 } // namespace como
 
-
-#endif // MESH_INFO_HPP
+#endif // MATERIAL_INFO_HPP
