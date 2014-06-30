@@ -247,6 +247,8 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
     }
     */
 
+    meshInfo.oglData.includesTextures = ( meshInfo.textureData.uvCoordinates.size() != 0 );
+
     for( auto finalVertex : finalVertices ){
         // Insert vertex position.
         meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ finalVertex.first[0] ][0] );
