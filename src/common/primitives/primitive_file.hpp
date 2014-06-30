@@ -43,18 +43,29 @@ class PrimitiveFile
 
 
         /***
-         * 3. File management
+         * 3. File writting
          ***/
         static void write( const MeshInfo meshInfo, std::string filePath );
     private:
         static void writeVertices( const VerticesVector& vertices, std::ofstream& file );
         static void writeTriangles( const VertexTrianglesVector& triangles, std::ofstream& file );
         static void writeOpenGLData( const MeshOpenGLData& oglData, std::ofstream& file );
+        static void writeMaterials( const std::vector< MaterialInfo >& materials, std::ofstream& file );
         static void writeMaterial( const MaterialInfo& material, std::ofstream& file );
 
 
         /***
-         * 4. Operators
+         * 4. File reading
+         ***/
+    public:
+        static void read( MeshInfo& meshInfo, std::string filePath );
+    private:
+        static void readVertices( VerticesVector& vertices, std::ifstream& file );
+
+
+
+        /***
+         * 5. Operators
          ***/
         PrimitiveFile& operator = ( const PrimitiveFile& ) = delete;
         PrimitiveFile& operator = ( PrimitiveFile&& ) = delete;

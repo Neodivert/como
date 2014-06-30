@@ -23,7 +23,7 @@
 namespace como {
 
 /***
- * 3. File management
+ * 3. File writting
  ***/
 
 void PrimitiveFile::write( const MeshInfo meshInfo, std::string filePath )
@@ -38,8 +38,7 @@ void PrimitiveFile::write( const MeshInfo meshInfo, std::string filePath )
     writeVertices( meshInfo.vertexData.vertices, file );
     writeTriangles( meshInfo.vertexData.vertexTriangles, file );
     writeOpenGLData( meshInfo.oglData, file );
-    // TODO: Change and write all materials.
-    writeMaterial( meshInfo.materialsData[0], file );
+    writeMaterials( meshInfo.materialsData, file );
 
     file.close();
 }
@@ -105,6 +104,18 @@ void PrimitiveFile::writeOpenGLData( const MeshOpenGLData& oglData, std::ofstrea
 }
 
 
+void PrimitiveFile::writeMaterials( const std::vector<MaterialInfo>& materials, std::ofstream& file )
+{
+    file << materials.size() << std::endl;
+
+    for( auto material : materials ){
+        writeMaterial( material, file );
+    }
+}
+
+
+
+
 void PrimitiveFile::writeMaterial( const MaterialInfo &material, std::ofstream &file )
 {
     file << material.name << std::endl;
@@ -124,5 +135,53 @@ void PrimitiveFile::writeMaterial( const MaterialInfo &material, std::ofstream &
     file << material.specularExponent << std::endl;
 }
 
+
+/***
+ * 4. File reading
+ ***/
+
+void PrimitiveFile::read( MeshInfo &meshInfo, std::string filePath )
+{
+    // TODO?: Here we don't use meshInfo.normalData or meshInfo.textureData.
+    // Do we use an auxiliar struct without those attributes?
+
+    std::ifstream file;
+
+    file.open( filePath );
+    if( !file.is_open() ){
+        throw FileNotOpenException( filePath );
+    }
+
+    readVertices( meshInfo.vertexData.vertices, file );
+
+    /*
+    writeTriangles( meshInfo.vertexData.vertexTriangles, file );
+    writeOpenGLData( meshInfo.oglData, file );
+    writeMaterials( meshInfo.materialsData, file );
+    */
+
+
+    file.close();
+}
+
+
+void PrimitiveFile::readVertices( VerticesVector& vertices, std::ifstream &file )
+{
+    unsigned int i, nVertices = 0;
+    std::string fileLine;
+    glm::vec3 vertex;
+
+    // Read the number of vertices in the mesh.
+    std::getline( file, fileLine );
+    nVertices = atoi( fileLine.c_str() );
+
+    // Read all the vertices from the file (one vertex per line).
+    vertices.reserve( nVertices );
+    for( i = 0; i < nVertices; i++ ){
+        std::getline( file, fileLine );
+        sscanf( fileLine.c_str(), "%f %f %f", &vertex[0], &vertex[1], &vertex[2] );
+        vertices.push_back( vertex );
+    }
+}
 
 } // namespace como
