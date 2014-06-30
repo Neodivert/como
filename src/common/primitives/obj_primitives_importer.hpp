@@ -68,13 +68,7 @@ class OBJPrimitivesImporter : PrimitivesImporter {
 
 
         /***
-         * 4. Auxiliar methods
-         ***/
-        glm::vec3 readVec3( std::string str ) const;
-
-
-        /***
-         * 5. Operators
+         * 4. Operators
          ***/
         OBJPrimitivesImporter& operator = ( const OBJPrimitivesImporter& ) = delete;
         OBJPrimitivesImporter& operator = ( OBJPrimitivesImporter&& ) = delete;

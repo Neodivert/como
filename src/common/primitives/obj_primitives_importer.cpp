@@ -331,11 +331,11 @@ void OBJPrimitivesImporter::processMaterialFileLine( std::string fileLine, std::
         newMaterial.name = lineBody;
         materials.push_back( newMaterial );
     }else if( lineHeader == "Ka" ){
-        materials.back().ambientReflectivity = readVec3( lineBody );
+        materials.back().ambientReflectivity = PrimitiveFile::readVec3( lineBody );
     }else if( lineHeader == "Kd" ){
-        materials.back().diffuseReflectivity = readVec3( lineBody );
+        materials.back().diffuseReflectivity = PrimitiveFile::readVec3( lineBody );
     }else if( lineHeader == "Ks" ){
-        materials.back().specularReflectivity = readVec3( lineBody );
+        materials.back().specularReflectivity = PrimitiveFile::readVec3( lineBody );
     }else if( lineHeader == "Ns" ){
         materials.back().specularExponent = std::atof( lineBody.c_str() );
     }
@@ -373,18 +373,5 @@ void OBJPrimitivesImporter::importTextureFile( PrimitiveInfo &primitive, std::st
     */
 }
 
-
-/***
- * 4. Auxiliar methods
- ***/
-
-glm::vec3 OBJPrimitivesImporter::readVec3( std::string str ) const
-{
-    glm::vec3 v;
-
-    sscanf( str.c_str(), "%f %f %f", &v[0], &v[1], &v[2] );
-
-    return v;
-}
 
 } // namespace como

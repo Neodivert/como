@@ -61,11 +61,21 @@ class PrimitiveFile
         static void read( MeshInfo& meshInfo, std::string filePath );
     private:
         static void readVertices( VerticesVector& vertices, std::ifstream& file );
-
+        static void readTriangles( VertexTrianglesVector& triangles, std::ifstream& file );
+        static void readOpenGLData( MeshOpenGLData& oglData, std::ifstream& file );
+        static void readMaterials( std::vector< MaterialInfo >& materials, std::ifstream& file );
+        static void readMaterial( MaterialInfo& material, std::ifstream& file );
 
 
         /***
-         * 5. Operators
+         * 5. Auxiliar methods
+         ***/
+    public:
+        static glm::vec3 readVec3( std::string str );
+
+
+        /***
+         * 6. Operators
          ***/
         PrimitiveFile& operator = ( const PrimitiveFile& ) = delete;
         PrimitiveFile& operator = ( PrimitiveFile&& ) = delete;

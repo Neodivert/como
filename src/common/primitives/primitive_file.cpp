@@ -153,12 +153,9 @@ void PrimitiveFile::read( MeshInfo &meshInfo, std::string filePath )
     }
 
     readVertices( meshInfo.vertexData.vertices, file );
-
-    /*
-    writeTriangles( meshInfo.vertexData.vertexTriangles, file );
-    writeOpenGLData( meshInfo.oglData, file );
-    writeMaterials( meshInfo.materialsData, file );
-    */
+    readTriangles( meshInfo.vertexData.vertexTriangles, file );
+    readOpenGLData( meshInfo.oglData, file );
+    readMaterials( meshInfo.materialsData, file );
 
 
     file.close();
@@ -173,6 +170,8 @@ void PrimitiveFile::readVertices( VerticesVector& vertices, std::ifstream &file 
 
     // Read the number of vertices in the mesh.
     std::getline( file, fileLine );
+
+
     nVertices = atoi( fileLine.c_str() );
 
     // Read all the vertices from the file (one vertex per line).
@@ -182,6 +181,136 @@ void PrimitiveFile::readVertices( VerticesVector& vertices, std::ifstream &file 
         sscanf( fileLine.c_str(), "%f %f %f", &vertex[0], &vertex[1], &vertex[2] );
         vertices.push_back( vertex );
     }
+}
+
+
+void PrimitiveFile::readTriangles( VertexTrianglesVector& triangles, std::ifstream& file )
+{
+    unsigned int i, nTriangles = 0;
+    std::string fileLine;
+    std::array< GLuint, 3 > triangle;
+
+    // Read the number of triangles in the mesh.
+    std::getline( file, fileLine );
+    nTriangles = atoi( fileLine.c_str() );
+
+    // Read all the triangles from the file (one triangle per line).
+    triangles.reserve( nTriangles );
+    for( i = 0; i < nTriangles; i++ ){
+        std::getline( file, fileLine );
+        sscanf( fileLine.c_str(), "%u %u %u", &triangle[0], &triangle[1], &triangle[2] );
+        triangles.push_back( triangle );
+    }
+}
+
+
+void PrimitiveFile::readOpenGLData( MeshOpenGLData& oglData, std::ifstream& file )
+{
+    std::string fileLine;
+    unsigned int vertexIndex = 0;
+    unsigned int componentIndex = 0;
+    unsigned int nVBOVertices = 0;
+    unsigned int componentsPerVertex = 0;
+    unsigned int triangleIndex = 0;
+    unsigned int nTriangles = 0;
+    std::array< GLuint, 3 > triangle;
+    std::string lineTail;
+
+    // Read the number of components per vertex.
+    std::getline( file, fileLine );
+    componentsPerVertex = atoi( fileLine.c_str() );
+
+    // Read the number of VBO vertices.
+    std::getline( file, fileLine );
+    nVBOVertices = atoi( fileLine.c_str() );
+
+    // Read the VBO data from the file (one vertex per line).
+    for( vertexIndex = 0; vertexIndex < nVBOVertices; vertexIndex++ ){
+        std::getline( file, fileLine );
+        lineTail = fileLine;
+
+        for( componentIndex = 0; componentIndex < componentsPerVertex - 1; componentIndex++ ){
+            lineTail.substr( 0, lineTail.find( '/' ) );
+
+            oglData.vboData.push_back( atoi( lineTail.c_str() ) );
+
+            lineTail = fileLine.substr( lineTail.find( '/' ) + 1 );
+        }
+        oglData.vboData.push_back( atoi( lineTail.c_str() ) );
+    }
+
+    // Read the number of triangles from the file.
+    std::getline( file, fileLine );
+    nTriangles = atoi( fileLine.c_str() );
+
+    // Read the EBO data from the file (one triangle per line).
+    oglData.eboData.reserve( nTriangles );
+    for( triangleIndex = 0; triangleIndex < nTriangles; triangleIndex++ ){
+        sscanf( fileLine.c_str(), "%u %u %u",
+                &triangle[0],
+                &triangle[1],
+                &triangle[2] );
+
+        oglData.eboData.push_back( triangle[0] );
+        oglData.eboData.push_back( triangle[1] );
+        oglData.eboData.push_back( triangle[2] );
+    }
+}
+
+
+void PrimitiveFile::readMaterials( std::vector<MaterialInfo>& materials, std::ifstream& file )
+{
+    std::string fileLine;
+    unsigned int i = 0, nMaterials = 0;
+
+    // Read the number of materials.
+    std::getline( file, fileLine );
+    nMaterials = atoi( fileLine.c_str() );
+
+    // Read all the materials.
+    materials.resize( nMaterials );
+    for( i = 0; i < nMaterials; i++ ){
+        readMaterial( materials[i], file );
+    }
+}
+
+
+void PrimitiveFile::readMaterial( MaterialInfo &material, std::ifstream &file )
+{
+    std::string fileLine;
+
+    // Read the material's name.
+    std::getline( file, material.name );
+
+    // Read the material's ambient reflectivity.
+    std::getline( file, fileLine );
+    material.ambientReflectivity = readVec3( fileLine );
+
+    // Read the material's diffuse reflectivity.
+    std::getline( file, fileLine );
+    material.diffuseReflectivity = readVec3( fileLine );
+
+    // Read the material's specular reflectivity.
+    std::getline( file, fileLine );
+    material.specularReflectivity = readVec3( fileLine );
+
+    // Read the material's specular exponent.
+    std::getline( file, fileLine );
+    material.specularExponent = atoi( fileLine.c_str() );
+}
+
+
+/***
+ * 5. Auxiliar methods
+ ***/
+
+glm::vec3 PrimitiveFile::readVec3( std::string str )
+{
+    glm::vec3 v;
+
+    sscanf( str.c_str(), "%f %f %f", &v[0], &v[1], &v[2] );
+
+    return v;
 }
 
 } // namespace como
