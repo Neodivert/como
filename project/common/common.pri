@@ -138,4 +138,5 @@ SOURCES += \
     ../../src/common/packables/ids/packable_resource_id.cpp \
     ../../src/common/commands/primitive_commands/primitive_instantiation_command.cpp \
     ../../src/common/primitives/obj_primitives_importer.cpp \
-    ../../src/common/exceptions/file_not_open_exception.cpp
+    ../../src/common/exceptions/file_not_open_exception.cpp \
+    ../../src/common/primitives/primitive_info.cpp

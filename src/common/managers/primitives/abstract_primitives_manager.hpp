@@ -30,6 +30,8 @@
 
 namespace como {
 
+const std::string PRIMITIVES_TEMP_DIRECTORY = "data/.tmp";
+
 enum class PrimitiveComponent {
     MESH = 0,
     MATERIAL,
@@ -69,8 +71,7 @@ class AbstractPrimitivesManager
          * 3. Getters
          ***/
         PrimitiveInfo getPrimitiveInfo( ResourceID id ) const ;
-        std::string getPrimitiveRelativePath( ResourceID id, PrimitiveComponent component ) const;
-        std::string getPrimitiveAbsolutePath( ResourceID id, PrimitiveComponent component ) const;
+        std::string getPrimitiveFilePath( ResourceID id ) const;
 
     protected:
         std::string getCategoryRelativePath( ResourceID id ) const;
@@ -104,6 +105,12 @@ class AbstractPrimitivesManager
          ***/
         AbstractPrimitivesManager& operator = ( const AbstractPrimitivesManager& ) = delete;
         AbstractPrimitivesManager& operator = ( AbstractPrimitivesManager&& ) = delete;
+
+
+        /***
+         * 8. Auxiliar methods
+         ***/
+        static std::string getCurrentDateTimeStr();
 };
 
 } // namespace como

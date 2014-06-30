@@ -45,10 +45,10 @@ class PrimitivesImporter {
          ***/
 
         /*!
-         * \brief Rename the file <filePath> and the files referenced by it as
-         * <name>.original_extension and copy them all to <destDirectory>.
+         * \brief Import a primitive from file <filePath> and save it on
+         * <dstDirectory> by adding a <nameSuffix> suffix to its final name.
          */
-        virtual PrimitiveInfo importPrimitive( std::string name, std::string filePath, std::string destDirectory ) = 0;
+        virtual PrimitiveInfo importPrimitive( std::string srcFilePath, std::string dstDirectory, std::string nameSuffix) = 0;
 
 
         /***

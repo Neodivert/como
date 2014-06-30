@@ -29,83 +29,36 @@ namespace como {
  * 3. Primitives import
  ***/
 
-PrimitiveInfo OBJPrimitivesImporter::importPrimitive( std::string primitiveName, std::string srcFilePath, std::string dstDirectory )
+PrimitiveInfo OBJPrimitivesImporter::importPrimitive( std::string srcFilePath, std::string dstDirectory, std::string nameSuffix )
 {
-    std::ifstream srcFile;
-    std::ofstream dstFile;
-    std::string fileLine;
-    std::string dstFilePath;
-    std::string srcMaterialFilePath;
-    std::string srcMaterialFileName;
-    PrimitiveInfo primitive;
-    bool materialProcessed = false;
+    // TODO: Remove.
+    (void)( dstDirectory );
+    (void)( nameSuffix );
 
-
-    // Retrieve primitive name and mesh file.
-    primitive.name = primitiveName;
-    primitive.directory = dstDirectory;
-    primitive.meshFileName =
-            boost::filesystem::basename( srcFilePath ) +
-            boost::filesystem::extension( srcFilePath );
-
-    srcFile.open( srcFilePath );
-    if( !srcFile.is_open() ){
-        throw FileNotOpenException( srcFilePath );
-    }
-
-    dstFilePath = dstDirectory + '/' + primitiveName + ".obj";
-    std::cout << "dstFilePath: [" << dstFilePath << "]" << std::endl;
-    dstFile.open( dstFilePath.c_str() );
-    std::cout << dstFile.is_open() << std::endl;
-    if( !dstFile.is_open() ){
-        srcFile.close();
-        throw FileNotOpenException( dstFilePath );
-    }
-
-    // This loop copies the primitive source OBJ file replacing
-    // "mtllib <material>" line with the new material name.
-    // We also import the referenced material file.
-    while( !srcFile.eof() ){
-        std::getline( srcFile, fileLine );
-
-        if( fileLine.size() ){
-            if( fileLine.substr( 0, strlen( "mtllib" ) ) == "mtllib" ){
-                if( materialProcessed ){
-                    srcFile.close();
-                    dstFile.close();
-                    throw std::runtime_error( "Only one .mtl file per primitive allowed" );
-                }
-
-                // Retrieve the material file path.
-                srcMaterialFileName = fileLine.substr( strlen( "mtllib" ) + 1 );
-                srcMaterialFilePath = srcFilePath.substr( 0, srcFilePath.rfind( '/' ) + 1 ) + srcMaterialFileName;
-
-                // Import the material file path.
-                importMaterialFile( primitive, srcMaterialFilePath, dstDirectory );
-
-                dstFile << "mtllib " << primitive.materialFileName << std::endl;
-                materialProcessed = true;
-            }else{
-                dstFile << fileLine << std::endl;
-            }
-        }
-    }
-
-    srcFile.close();
-    dstFile.close();
+    std::cout << "Importing primitive - srcFilePath(" << srcFilePath
+              << "), dstDirectory(" << dstDirectory
+              << "), nameSuffix(" << nameSuffix << ")" << std::endl;
 
     MeshInfo meshInfo;
-    processMeshFile( srcFilePath, meshInfo );
+    PrimitiveInfo primitiveInfo;
 
-    if( !materialProcessed ){
-        throw std::runtime_error( "A primitive can't be define without a material" );
-    }
+    processMeshFile( srcFilePath, primitiveInfo, meshInfo );
 
-    return primitive;
+    primitiveInfo.name += nameSuffix;
+    primitiveInfo.filePath =
+            dstDirectory + '/' +
+            primitiveInfo.name +
+            ".prim";
+
+    // TODO: Remove when generating real .prim file.
+    int res = system( ( std::string( "touch \"" ) + primitiveInfo.filePath + "\"" ).c_str() );
+    (void)( res );
+
+    return primitiveInfo;
 }
 
 
-void OBJPrimitivesImporter::processMeshFile( std::string filePath, MeshInfo& meshInfo )
+void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo )
 {
     std::ifstream file;
     std::string fileLine;
@@ -118,9 +71,11 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, MeshInfo& mes
     while( !file.eof() ){
         std::getline( file, fileLine );
 
-        processMeshFileLine( fileLine, meshInfo );
+        processMeshFileLine( fileLine, primitiveInfo, meshInfo );
     }
 
+
+    /*
     std::cout << "Mesh: " << std::endl
               << "-------------------------------------------" << std::endl;
     std::cout << "Vertices: " << std::endl;
@@ -140,22 +95,27 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, MeshInfo& mes
         std::cout << "\t(" << v[0] << ", " << v[1] << ", " << v[2] << ")" << std::endl;
     }
     std::cout << "-------------------------------------------------------" << std::endl;
+    */
 
     generateMeshVertexData( meshInfo );
 }
 
-void OBJPrimitivesImporter::processMeshFileLine( std::string line, MeshInfo& meshInfo )
+void OBJPrimitivesImporter::processMeshFileLine( std::string line, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo )
 {
     unsigned int i;
     unsigned int componentsRead = 0;
+    std::string lineHeader;
+    std::string lineBody;
 
     if( !line.size() ){
         return;
     }
 
-    std::cout << "line.substr( 0, 2 ): [" << line.substr( 0, 2 ) << "]" << std::endl;
-
-    if( line.substr( 0, 2 ) == "v " ){
+    lineHeader = line.substr( 0, line.find( ' ' ) );
+    lineBody = line.substr( line.find( ' ' ) + 1 );
+    if( lineHeader == "o" ){
+        primitiveInfo.name = lineBody;
+    }else if( lineHeader == "v" ){
         glm::vec3 vertex;
 
         // Set '.' as the float separator (for parsing floats from a text
@@ -163,20 +123,20 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string line, MeshInfo& mes
         setlocale( LC_NUMERIC, "C" );
 
         // Extract the vertex from the line and add it to the Mesh.
-        sscanf( line.c_str(), "v %f %f %f", &vertex[0], &vertex[1], &vertex[2] );
+        sscanf( lineBody.c_str(), "%f %f %f", &vertex[0], &vertex[1], &vertex[2] );
 
         // Resize the vertex coordinates.
         //vertex *= 0.5f;
 
         meshInfo.vertices.push_back( vertex );
-    }else if( line.substr( 0, 2 ) == "vt" ){
+    }else if( lineHeader == "vt" ){
         glm::vec2 textureCoordinates;
 
         // Extract the UV coordinates from the line and add it to the Mesh.
-        sscanf( line.c_str(), "vt %f %f", &textureCoordinates[0], &textureCoordinates[1] );
+        sscanf( lineBody.c_str(), "%f %f", &textureCoordinates[0], &textureCoordinates[1] );
 
         meshInfo.uvCoordinates.push_back( textureCoordinates );
-    }else if( line.substr( 0, 2 ) == "f " ){
+    }else if( lineHeader == "f" ){
         // TODO: Process multiple types of "face lines".
         std::array< GLuint, 3 > vertexTriangle;
 
@@ -188,7 +148,7 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string line, MeshInfo& mes
         if( firstSlashPosition == std::string::npos ){
             // No slashes found. Face defines only vertex positions.
 
-            componentsRead = sscanf( line.c_str(), "f %u %u %u", &vertexTriangle[0], &vertexTriangle[1], &vertexTriangle[2] );
+            componentsRead = sscanf( lineBody.c_str(), "%u %u %u", &vertexTriangle[0], &vertexTriangle[1], &vertexTriangle[2] );
 
             if( componentsRead != 3 ){
                 throw std::runtime_error( "Error reading mesh triangle (Is it a textured mesh?)" );
@@ -211,10 +171,15 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string line, MeshInfo& mes
                 // position and UV coordinates.
 
                 // Extract the UV coordinates from the line and add it to the Mesh.
-                std::cout << "sscanf: " << sscanf( line.c_str(), "f %u/%u %u/%u %u/%u",
+                componentsRead =
+                        sscanf( lineBody.c_str(), "%u/%u %u/%u %u/%u",
                         &vertexTriangle[0], &uvTriangle[0],
                         &vertexTriangle[1], &uvTriangle[1],
-                        &vertexTriangle[2], &uvTriangle[2]) << std::endl;
+                        &vertexTriangle[2], &uvTriangle[2]);
+
+                if( componentsRead != 6 ){
+                    throw std::runtime_error( "ERROR reading OBJ face line (v/vt)" );
+                }
 
                 for( i=0; i<3; i++ ){
                     // Decrement every vertex index because they are 1-based in the .obj file.
@@ -248,7 +213,7 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
     unsigned int currentTriangleIndex = 0;
     unsigned int triangleVertexIndex = 0;
 
-    std::cout << "meshInfo.uvTriangles: " << meshInfo.uvTriangles.size() << std::endl;
+    //std::cout << "meshInfo.uvTriangles: " << meshInfo.uvTriangles.size() << std::endl;
 
     for( currentTriangleIndex = 0; currentTriangleIndex < meshInfo.vertexTriangles.size(); currentTriangleIndex++ ){
         for( triangleVertexIndex = 0; triangleVertexIndex < 3; triangleVertexIndex++ ){
@@ -268,6 +233,7 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
         finalTriangles.push_back( triangle );
     }
 
+    /*
     std::cout << "Final vertices: ";
     for( auto v : finalVertices ){
         std::cout << "\t(" << v.first[0] << ", " << v.first[1] << ", " << v.first[2] << "): " << v.second << std::endl;
@@ -277,7 +243,7 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
     for( auto t : finalTriangles ){
         std::cout << "\t(" << t[0] << ", " << t[1] << ", " << t[2] << ")" << std::endl;
     }
-
+    */
 
     for( auto finalVertex : finalVertices ){
         // Insert vertex position.
@@ -310,6 +276,7 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
         meshInfo.eboData.push_back( finalTriangle[2] );
     }
 
+    /*
     unsigned int i, j;
     const unsigned int componetstPerVertex = ( meshInfo.uvCoordinates.size() ) ? 8 : 6;
     for( i = 0; i < finalVertices.size(); i++ ){
@@ -323,11 +290,16 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
     for( i = 0; i < finalTriangles.size(); i++ ){
         std::cout << "\t\t\t(" << meshInfo.eboData[i*3] << ", " << meshInfo.eboData[i*3+1] << ", " << meshInfo.eboData[i*3+2] << ")" << std::endl;
     }
+    */
 }
 
 
 void OBJPrimitivesImporter::importMaterialFile( PrimitiveInfo& primitive, std::string srcFilePath, std::string dstDirectory )
 {
+    (void)( primitive );
+    (void)( srcFilePath );
+    (void)( dstDirectory );
+    /*
     std::string dstMaterialFilePath;
     std::ifstream srcFile;
     std::ofstream dstFile;
@@ -373,11 +345,16 @@ void OBJPrimitivesImporter::importMaterialFile( PrimitiveInfo& primitive, std::s
 
     srcFile.close();
     dstFile.close();
+    */
 }
 
 
 void OBJPrimitivesImporter::importTextureFile( PrimitiveInfo &primitive, std::string srcFilePath, std::string dstDirectory )
 {
+    (void)( primitive );
+    (void)( srcFilePath );
+    (void)( dstDirectory );
+    /*
     boost::system::error_code errorCode;
     std::string dstTextureFilePath;
 
@@ -399,6 +376,7 @@ void OBJPrimitivesImporter::importTextureFile( PrimitiveInfo &primitive, std::st
                                   dstTextureFilePath +
                                   "]: " + errorCode.message() );
     }
+    */
 }
 
 } // namespace como

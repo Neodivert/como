@@ -110,6 +110,7 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
     OBJPrimitivesImporter primitivesImporter;
     ResourceID categoryID;
     PrimitiveInfo primitive;
+    char nameSuffix[30];
 
     log_->debug( "Synchronizing category dir [", dirPath, "]\n" );
 
@@ -124,9 +125,11 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
             log_->debug( "filePath: ", filePath, "\n" );
 
             if( boost::filesystem::extension( filePath ) == ".obj" ){
-                primitive = primitivesImporter.importPrimitive( boost::filesystem::basename( filePath ),
-                                                                filePath,
-                                                                getCategoryAbsoluteePath( categoryID ) );
+                sprintf( nameSuffix, "__%i_%i", nextPrimitiveID_.getCreatorID(), nextPrimitiveID_.getResourceIndex() );
+
+                primitive = primitivesImporter.importPrimitive( filePath,
+                                                                getCategoryAbsoluteePath( categoryID ),
+                                                                nameSuffix );
                 primitive.category = categoryID;
 
                 registerPrimitive( primitive );
@@ -160,12 +163,21 @@ ResourceID ServerPrimitivesManager::registerCategory( std::string categoryName )
 
 void ServerPrimitivesManager::registerPrimitive( PrimitiveInfo primitive )
 {
+    // We are about to create a command which needs to keep a copy of the
+    // current primitive, so we create such copy in the tmp directory.
+    PrimitiveInfo primitiveCopy = primitive.copy(
+                PRIMITIVES_TEMP_DIRECTORY + '/' +
+                primitive.name + "_" +
+                getCurrentDateTimeStr() +
+                boost::filesystem::extension( primitive.filePath ) );
+    log_->debug( "Primitive creation command created for primitive (",
+                 primitiveCopy.filePath, ")\n" );
+
     AbstractPrimitivesManager::registerPrimitive( nextPrimitiveID_, primitive );
 
-    // TODO: Remove getPrimitiveAbsoutePath and use primitive struct?
     commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCreationCommand( 0,
                                                                                   nextPrimitiveID_,
-                                                                                  primitive ) ) );
+                                                                                  primitiveCopy ) ) );
 
     nextPrimitiveID_++;
 }

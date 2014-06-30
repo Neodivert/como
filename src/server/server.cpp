@@ -362,7 +362,7 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
                     // PRIMITIVE_CREATION command received, cast its pointer.
                     primitiveCreationCommand = dynamic_cast< const PrimitiveCreationCommand* >( sceneCommand.get() );
 
-                    // TODO: Complete, Save new primitive.
+                    // TODO: Complete, Save new primitive (Move it from temp to category directory).
                     log_->debug( "Primitive received [", primitiveCreationCommand->getPrimitiveInfo().name, "]\n" );
                 break;
                 case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:{

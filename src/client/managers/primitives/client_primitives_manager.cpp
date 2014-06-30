@@ -50,9 +50,9 @@ std::string ClientPrimitivesManager::createPrimitive( std::string filePath, Reso
                                                   id,
                                                   getPrimitiveInfo( id ) ) ) );
 
-    emit primitiveAdded( id, getPrimitiveRelativePath( id, PrimitiveComponent::MESH ) );
+    emit primitiveAdded( id, getPrimitiveFilePath( id ) );
 
-    return getPrimitiveRelativePath( id, PrimitiveComponent::MESH );
+    return getPrimitiveFilePath( id );
 }
 
 
@@ -78,10 +78,14 @@ ResourceID ClientPrimitivesManager::importMeshFile( std::string srcFilePath, Res
 
 void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 {
+    (void)( primitiveID );
+
+    // TODO: Reimplement.
+    /*
     // Get the "absolute" path to the specification file of the
     // primitive used for building this mesh.
-    std::string meshFilePath = getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MESH );
-    std::string materialFilePath = getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MATERIAL );
+    std::string meshFilePath = getPrimitiveFilePath( primitiveID );
+    std::string materialFilePath = getPrimitiveFilePath( primitiveID );
     Mesh* mesh = nullptr;
     TexturePtr texture;
 
@@ -93,8 +97,8 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
     // material from the .mtl file and then read the mesh file from .obj
     // *ignoring* the references in this file to the .mtl file. Is there a
     // better and more elegant way of reading both mesh and material together?.
-    if( getPrimitiveInfo( primitiveID ).textureFileName.size() ){
-        texture = TexturePtr( new Texture( getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::TEXTURE ) ) );
+    if( getPrimitiveInfo( primitiveID ).includesTexture() ){
+        texture = TexturePtr( new Texture( getPrimitiveAbsolutePath( primitiveID ) ) );
         mesh = new TexturizedMesh( materialsManager_->getMaterial( materialID ), texture );
     }else{
         mesh = new Mesh( materialsManager_->getMaterial( materialID ) );
@@ -110,16 +114,23 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
     // Send the command to the server (the MaterialCreationCommand command was
     // already sent in previous call to materialsManager_->createMaterial() ).
     server_->sendCommand( CommandConstPtr( new PrimitiveInstantiationCommand( server_->getLocalUserID(), primitiveID, drawableID, materialID ) ) );
+    */
 }
 
 
 // FIXME: Duplicated code.
 void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID primitiveID, PackableDrawableID meshID, MaterialID materialID )
 {
+    (void)( userID );
+    (void)( primitiveID );
+    (void)( meshID );
+    (void)( materialID );
+    // TODO: Reimplement.
+    /*
     // Get the "absolute" path to the specification file of the
     // primitive used for building this mesh.
-    std::string meshFilePath = getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MESH );
-    std::string materialFilePath = getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MATERIAL );
+    std::string meshFilePath = getPrimitiveFilePath( primitiveID, PrimitiveComponent::MESH );
+    std::string materialFilePath = getPrimitiveFilePath( primitiveID, PrimitiveComponent::MATERIAL );
     Mesh* mesh = nullptr;
     TexturePtr texture;
 
@@ -145,6 +156,7 @@ void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID pr
 
     log_->debug( "Creating remote mesh - Mesh ID (", meshID,
                  ") MaterialID ", materialID, "\n" );
+    */
 }
 
 
@@ -172,16 +184,24 @@ void ClientPrimitivesManager::executeRemoteCommand( PrimitiveCommandConstPtr com
             const PrimitiveCreationCommand* primitiveCreationCommand =
                     dynamic_cast< const PrimitiveCreationCommand* >( command.get() );
 
-            log_->debug( "Primitive file received: [", primitiveCreationCommand->getPrimitiveInfo().materialFileName, "]\n" );
+            PrimitiveInfo tmpPrimitive = primitiveCreationCommand->getPrimitiveInfo();
+            std::string dstFilePath =
+                    getCategoryAbsoluteePath( tmpPrimitive.category ) +
+                    "/" +
+                    boost::filesystem::basename( tmpPrimitive.filePath ) +
+                    boost::filesystem::extension( tmpPrimitive.filePath );
+            PrimitiveInfo primitiveInfo = tmpPrimitive.copy( dstFilePath );
+
+            log_->debug( "Primitive file received: [", primitiveInfo.filePath, "]\n" );
 
             registerPrimitive( primitiveCreationCommand->getPrimitiveID(),
-                               primitiveCreationCommand->getPrimitiveInfo() );
+                               primitiveInfo );
 
             // Emit a signal indicating the primitive insertion. Include
             // primitive's name and ID in the signal.
             // TODO: Complete
             emit primitiveAdded( primitiveCreationCommand->getPrimitiveID(),
-                                 getPrimitiveRelativePath( primitiveCreationCommand->getPrimitiveID(), PrimitiveComponent::MESH ) );
+                                 getPrimitiveFilePath( primitiveCreationCommand->getPrimitiveID() ) );
         }break;
         case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:{
             const PrimitiveInstantiationCommand* primitiveCommand =

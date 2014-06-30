@@ -21,19 +21,52 @@
 
 #include <string>
 #include <common/ids/resource_id.hpp>
+#include <boost/filesystem.hpp>
 
 namespace como {
 
-struct PrimitiveInfo
+class PrimitiveInfo
 {
-    std::string name;
+    public:
+        std::string name;
 
-    ResourceID category;
-    std::string directory;
+        ResourceID category;
 
-    std::string meshFileName;
-    std::string materialFileName;
-    std::string textureFileName;
+        std::string filePath;
+
+
+        /***
+         * 1. Construction
+         ***/
+        PrimitiveInfo() = default;
+        PrimitiveInfo( const PrimitiveInfo& ) = default;
+        PrimitiveInfo( PrimitiveInfo&& ) = default;
+
+
+        /***
+         * 2. Destruction
+         ***/
+        ~PrimitiveInfo() = default;
+
+
+        /***
+         * 3. Getters
+         ***/
+        bool includesTexture() const;
+
+
+        /***
+         * 4. Primitive file management
+         ***/
+        PrimitiveInfo copy( std::string dstFilePath );
+        void move( std::string dstFilePath );
+
+
+        /***
+         * 5. Operators
+         ***/
+        PrimitiveInfo& operator = ( const PrimitiveInfo& ) = default;
+        PrimitiveInfo& operator = ( PrimitiveInfo&& ) = default;
 };
 
 } // namespace como

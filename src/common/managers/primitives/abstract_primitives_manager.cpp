@@ -19,6 +19,9 @@
 #include "abstract_primitives_manager.hpp"
 #include <boost/filesystem.hpp>
 #include <common/utilities/paths.hpp>
+#include <iostream>
+#include <iomanip>
+#include <ctime>
 
 namespace como {
 
@@ -40,6 +43,11 @@ AbstractPrimitivesManager::AbstractPrimitivesManager( std::string sceneDirPath, 
         throw std::runtime_error( errorCode.message() );
     }
 
+    // If the primitives temp directory doesn't exist, create it!.
+    if( !boost::filesystem::exists( PRIMITIVES_TEMP_DIRECTORY ) ){
+        boost::filesystem::create_directories( PRIMITIVES_TEMP_DIRECTORY );
+    }
+
     log_->debug( "Scene primitives dir [", scenePrimitivesDir_, "] created\n" );
 }
 
@@ -52,6 +60,11 @@ AbstractPrimitivesManager::~AbstractPrimitivesManager()
 {
     log_->debug( "Removing scene primitives dir [", scenePrimitivesDir_, "]\n" );
     boost::filesystem::remove_all( scenePrimitivesDir_ );
+
+    // FIXME: This breaks everything if there are multiple instances of server
+    // running.
+    log_->debug( "Removing primitives tmp dir [", PRIMITIVES_TEMP_DIRECTORY, "]\n" );
+    boost::filesystem::remove_all( PRIMITIVES_TEMP_DIRECTORY );
 }
 
 
@@ -65,32 +78,10 @@ PrimitiveInfo AbstractPrimitivesManager::getPrimitiveInfo( ResourceID id ) const
  * 3. Getters
  ***/
 
-std::string AbstractPrimitivesManager::getPrimitiveRelativePath( ResourceID id, PrimitiveComponent component ) const
+std::string AbstractPrimitivesManager::getPrimitiveFilePath( ResourceID id ) const
 {
-    PrimitiveInfo primitive = primitiveInfo_.at( id );
-    std::string categoryRelativePath = getCategoryRelativePath( primitive.category );
-
-    switch( component ){
-        case PrimitiveComponent::MESH:
-            return categoryRelativePath + "/" + primitive.meshFileName;
-        break;
-        case PrimitiveComponent::MATERIAL:
-            return categoryRelativePath + "/" + primitive.materialFileName;
-        break;
-        case PrimitiveComponent::TEXTURE:
-            return categoryRelativePath + "/" + primitive.textureFileName;
-        break;
-        default:
-            throw std::runtime_error( "AbstractPrimitivesManager::getPrimitiveRelativePath - what?" );
-        break;
-    }
+    return primitiveInfo_.at( id ).filePath;
 }
-
-std::string AbstractPrimitivesManager::getPrimitiveAbsolutePath( ResourceID id, PrimitiveComponent component ) const
-{
-    return scenePrimitivesDir_ + '/' + getPrimitiveRelativePath( id, component );
-}
-
 
 std::string AbstractPrimitivesManager::getCategoryRelativePath( ResourceID id ) const
 {
@@ -156,10 +147,7 @@ void AbstractPrimitivesManager::registerPrimitive( ResourceID id, PrimitiveInfo 
     log_->debug( "Primitive registered - id (", id,
                  "), name (", primitive.name,
                  ") - category(", primitive.category, ")",
-                 ") - directory(", primitive.directory, ")",
-                 ") - meshFileName(", primitive.meshFileName, ")",
-                 ") - materialFileName(", primitive.materialFileName, ")",
-                 ") - textureFileName(", primitive.textureFileName, ")\n" );
+                 ") - file path(", primitive.filePath, ")\n" );
 
     primitiveInfo_[id] = primitive;
 }
@@ -179,5 +167,24 @@ bool AbstractPrimitivesManager::categoryNameInUse( std::string categoryName ) co
     return false;
 }
 
+
+/***
+ * 8. Auxiliar methods
+ ***/
+
+std::string AbstractPrimitivesManager::getCurrentDateTimeStr()
+{
+    // Source: http://stackoverflow.com/a/16358264
+    time_t rawtime;
+    struct tm * timeinfo;
+    char buffer[80];
+
+    time (&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    strftime( buffer, 80, "%d-%m-%Y_%I-%M-%S", timeinfo );
+
+    return buffer;
+}
 
 } // namespace como

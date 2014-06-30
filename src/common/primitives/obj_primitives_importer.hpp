@@ -65,11 +65,11 @@ class OBJPrimitivesImporter : PrimitivesImporter {
          * \brief Rename the file <srcFilePath> and the files referenced by it
          * as <name>.original_extension and copy them all to <destDirectory>.
          */
-        virtual PrimitiveInfo importPrimitive( std::string name, std::string srcFilePath, std::string dstDirectory );
+        virtual PrimitiveInfo importPrimitive( std::string srcFilePath, std::string dstDirectory, std::string nameSuffix );
 
     private:
-        virtual void processMeshFile( std::string filePath, MeshInfo& meshInfo );
-        void processMeshFileLine( std::string line, MeshInfo& meshInfo );
+        virtual void processMeshFile( std::string filePath, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo );
+        void processMeshFileLine( std::string line, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo );
         void generateMeshVertexData( MeshInfo& meshInfo );
 
     private:

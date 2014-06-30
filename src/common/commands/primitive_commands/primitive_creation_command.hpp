@@ -41,11 +41,8 @@ class PrimitiveCreationCommand : public PrimitiveCommand
         PackableString< 64 > name_;
 
         /*! Primitive specification files. */
-        PackableFile meshFile_;
-        PackableFile materialFile_;
+        PackableFile primitiveFile_;
 
-        PackableUint8< bool > includesTexture_;
-        ConditionalPackableWrapper< PackableFile > textureFile_;
 
     public:
         /***
@@ -91,6 +88,13 @@ class PrimitiveCreationCommand : public PrimitiveCommand
 
         /*! \brief Move assignment operator */
         PrimitiveCreationCommand& operator=( PrimitiveCreationCommand&& ) = delete;
+
+
+        /***
+         * 5. Auxiliar methods
+         ***/
+    private:
+        std::string getCurrentDateTimeStr() const;
 };
 
 } // namespace como
