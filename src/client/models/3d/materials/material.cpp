@@ -55,11 +55,14 @@ Material::Material( const std::string& name ) :
     name_ = name;
 }
 
-Material::Material( const string &filePath, const string &materialName ) :
-    MATERIAL_DEFAULT_INITIALIZATION
-{
-    loadFromFile( filePath, materialName );
-}
+Material::Material( const MaterialInfo& materialInfo ) :
+    name_( materialInfo.name ),
+    color_( DEFAULT_MATERIAL_COLOR ),
+    ambientReflectivity_( materialInfo.ambientReflectivity ),
+    diffuseReflectivity_( materialInfo.diffuseReflectivity ),
+    specularReflectivity_( materialInfo.specularReflectivity ),
+    specularExponent_( materialInfo.specularExponent )
+{}
 
 
 Material::Material( PackableColor color ) :

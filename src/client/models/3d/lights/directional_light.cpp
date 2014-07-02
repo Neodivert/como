@@ -25,7 +25,7 @@ namespace como {
  ***/
 
 DirectionalLight::DirectionalLight( DirectionalLightPropertiesSharedPtr lightProperties, MaterialConstPtr meshMaterial ) :
-    Mesh( MeshType::LIGHT, "data/system/primitives/directional_light.obj", meshMaterial ),
+    Mesh( MeshType::LIGHT, "data/system/primitives/directional_light.prim", meshMaterial ), // TODO: Load material from file.
     lightProperties_( lightProperties )
 {}
 

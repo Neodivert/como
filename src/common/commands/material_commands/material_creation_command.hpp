@@ -20,6 +20,7 @@
 #define MATERIAL_CREATION_COMMAND_HPP
 
 #include "material_command.hpp"
+#include <common/mesh_info/material_info.hpp>
 
 namespace como {
 
@@ -27,6 +28,11 @@ class MaterialCreationCommand : public MaterialCommand
 {
     private:
         PackableString<64> materialName_;
+        PackableColor materialAmbientReflectivity_;
+        PackableColor materialDiffuseReflectivity_;
+        PackableColor materialSpecularReflectivity_;
+        PackableFloat materialSpecularExponent_;
+
 
     /***
      * 1. Construction
@@ -46,7 +52,7 @@ class MaterialCreationCommand : public MaterialCommand
     /***
      * 3. Getters
      ***/
-        std::string getMaterialName() const;
+        MaterialInfo getMaterialInfo() const;
 
 
     /***

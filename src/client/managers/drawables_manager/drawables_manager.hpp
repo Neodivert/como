@@ -105,7 +105,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         void addDrawable( UserID userID, DrawablePtr drawable, PackableDrawableID drawableID );
 
     public:
-        //void addMesh( ResourceID primitiveID, QColor color );
+        PackableDrawableID createMesh( MeshVertexData vertexData, MeshOpenGLData oglData, MaterialConstPtr material );
 
     private:
         //void createRemoteMesh( ResourceID primitiveID, PackableDrawableID drawableID, MaterialID materialID );

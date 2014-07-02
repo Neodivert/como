@@ -19,6 +19,7 @@
 #include "client_primitives_manager.hpp"
 #include <boost/filesystem.hpp>
 #include <common/utilities/paths.hpp>
+#include <common/primitives/primitive_file.hpp>
 
 namespace como {
 
@@ -78,35 +79,13 @@ ResourceID ClientPrimitivesManager::importMeshFile( std::string srcFilePath, Res
 
 void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 {
-    (void)( primitiveID );
+    MeshInfo meshInfo;
 
-    // TODO: Reimplement.
-    /*
-    // Get the "absolute" path to the specification file of the
-    // primitive used for building this mesh.
-    std::string meshFilePath = getPrimitiveFilePath( primitiveID );
-    std::string materialFilePath = getPrimitiveFilePath( primitiveID );
-    Mesh* mesh = nullptr;
-    TexturePtr texture;
+    PrimitiveFile::read( meshInfo, getPrimitiveFilePath( primitiveID ) );
 
-    // Create the material and idd to the materials manager.
-    MaterialID materialID = materialsManager_->createMaterial( materialFilePath, "*" ); // TODO: Don't use "*"
+    MaterialID materialID = materialsManager_->createMaterial( meshInfo.materialsData[0] ); // TODO: Use multiple materials?
 
-    // Create the mesh.
-    // TODO: This is somehow ugly for .obj and .mtl files. We first read the
-    // material from the .mtl file and then read the mesh file from .obj
-    // *ignoring* the references in this file to the .mtl file. Is there a
-    // better and more elegant way of reading both mesh and material together?.
-    if( getPrimitiveInfo( primitiveID ).includesTexture() ){
-        texture = TexturePtr( new Texture( getPrimitiveAbsolutePath( primitiveID ) ) );
-        mesh = new TexturizedMesh( materialsManager_->getMaterial( materialID ), texture );
-    }else{
-        mesh = new Mesh( materialsManager_->getMaterial( materialID ) );
-    }
-    mesh->loadFromOBJ( meshFilePath.c_str() );
-    DrawablePtr drawable = DrawablePtr( mesh );
-
-    PackableDrawableID drawableID = drawablesManager_->addDrawable( drawable );
+    PackableDrawableID drawableID = drawablesManager_->createMesh( meshInfo.vertexData, meshInfo.oglData, materialsManager_->getMaterial( materialID ) );
 
     log_->debug( "Creating local mesh - Drawable ID (", drawableID,
                  ") MaterialID ", materialID, "\n" );
@@ -114,7 +93,6 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
     // Send the command to the server (the MaterialCreationCommand command was
     // already sent in previous call to materialsManager_->createMaterial() ).
     server_->sendCommand( CommandConstPtr( new PrimitiveInstantiationCommand( server_->getLocalUserID(), primitiveID, drawableID, materialID ) ) );
-    */
 }
 
 

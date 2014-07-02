@@ -89,8 +89,7 @@ HEADERS += \
     ../../src/client/managers/primitives/client_primitives_manager.hpp \
     ../../src/client/gui/primitives/primitive_import_dialog.hpp \
     ../../src/client/gui/resources/resource_selector.hpp \
-    ../../src/client/models/3d/textures/texture.hpp \
-    ../../src/client/models/3d/texturized_mesh.hpp
+    ../../src/client/models/3d/textures/texture.hpp
 
 
 # Client sources
@@ -144,5 +143,4 @@ SOURCES += \
     ../../src/client/managers/primitives/client_primitives_manager.cpp \
     ../../src/client/gui/primitives/primitive_import_dialog.cpp \
     ../../src/client/gui/resources/resource_selector.cpp \
-    ../../src/client/models/3d/textures/texture.cpp \
-    ../../src/client/models/3d/texturized_mesh.cpp
+    ../../src/client/models/3d/textures/texture.cpp

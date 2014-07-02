@@ -29,6 +29,7 @@
 #include <stdexcept>
 #include <client/models/3d/materials/material.hpp>
 #include <common/packables/array/packable_color.hpp>
+#include <common/mesh_info/mesh_info.hpp>
 
 namespace como {
 
@@ -52,6 +53,9 @@ class Mesh : public Drawable
         // Mesh type
         MeshType type_;
 
+        // Mesh vertex data (vertices and vertex triangles).
+        MeshVertexData vertexData_;
+
         // Location of the uniform shader variable used for coloring geometries.
         static GLint uniformColorLocation;
 
@@ -71,15 +75,7 @@ class Mesh : public Drawable
 
         // EBO : Elements-Buffer Array.
         GLuint ebo;
-
-        // Original vertex attribues.
-        std::vector< glm::vec3 > originalVertices;
-        std::vector< glm::vec3 > originalNormals;
-
-    protected:
-        // Mesh's triangles.
-        std::vector< std::array< GLuint, 3 > > triangles;
-    private:
+        GLsizei nEboElements_;
 
         // Mesh's centroid.
         glm::vec4 originalCentroid;
@@ -94,8 +90,8 @@ class Mesh : public Drawable
     protected:
         Mesh( MeshType type, const char* file, MaterialConstPtr material );
     public:
-        Mesh( MaterialConstPtr material );
-        Mesh( const Mesh& b );
+        Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, MaterialConstPtr material );
+        Mesh( const Mesh& b ) = default;
         Mesh( Mesh&& ) = delete;
 
 
@@ -112,9 +108,12 @@ class Mesh : public Drawable
          * 3. Initialization.
          ***/
     protected:
-        void initMeshBuffers();
+        void init( const MeshOpenGLData& oglData );
+        void genOpenGLBuffers();
+        void initShaderLocations();
+        void populateOpenGLBuffers( const MeshOpenGLData& oglData );
 
-        void initVertexData();
+        void initMeshBuffers();
 
         void initVBO();
         virtual void initVAO();
@@ -123,28 +122,15 @@ class Mesh : public Drawable
         virtual unsigned int getBytesPerVertex() const;
         virtual unsigned int getComponentsPerVertex() const;
 
-        virtual void setVertexData( GLint index );
-
         void computeCentroid();
-        void computeVertexNormals();
-
-
-        /***
-         * 4. File loading.
-         ***/
-    public:
-        void loadFromOBJ( const char* objFile );
-    protected:
-        virtual bool processFileLine( const std::string& line );
-    public:
 
 
         /***
          * 5. Getters.
          ***/
+    public:
         MeshType getType() const ;
         glm::vec4 getCentroid() const ;
-        void getVertexData( unsigned int& n, GLfloat* vertices );
 
 
         /***

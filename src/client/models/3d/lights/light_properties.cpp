@@ -38,8 +38,7 @@ LightProperties::LightProperties( LightType type, GLuint index, const PackableCo
     // Get the location of this light's color in the GLSL shader program.
     sprintf( uniformName, "lights[%u].color", index_ );
     colorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
-
-    std::cout << "MeshLight color location (" << uniformName << "): " << colorLocation_ << std::endl;
+    assert( colorLocation_ != -1 );
 
     // Update light color in the shader.
     setLightColor( color );

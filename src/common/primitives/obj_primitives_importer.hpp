@@ -60,6 +60,7 @@ class OBJPrimitivesImporter : PrimitivesImporter {
         virtual void processMeshFile( std::string filePath, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo );
         void processMeshFileLine( std::string filePath, std::string line, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo );
         void generateMeshVertexData( MeshInfo& meshInfo );
+        void computeVertexNormals( MeshVertexData& vertexData, MeshNormalData& normalData );
 
     private:
         void processMaterialFile( std::string filePath, std::vector< MaterialInfo >& materials );

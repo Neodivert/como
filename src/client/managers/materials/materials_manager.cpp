@@ -37,56 +37,24 @@ MaterialsManager::MaterialsManager( UserID localUserID, ServerInterfacePtr serve
  * 3. Material creation
  ***/
 
-MaterialID MaterialsManager::createMaterial( const std::string& namePrefix )
-{
-    // Generate a name for the new material from the given ID and name prefix.
-    std::string materialName =
-            namePrefix +
-            std::string( " # " ) +
-            boost::lexical_cast< std::string >( static_cast< int >( nextLocalMaterialID_.getCreatorID() ) ) +
-            std::string( "," ) +
-            boost::lexical_cast< std::string >( static_cast< int >( nextLocalMaterialID_.getMaterialIndex() ) );
-
-    createMaterial( nextLocalMaterialID_, materialName );
-
-    log_->debug( "Creating material - Material ID: ", nextLocalMaterialID_, "\n" );
-
-    server_->sendCommand( CommandConstPtr( new MaterialCreationCommand( nextLocalMaterialID_, materialName ) ) );
-
-    return nextLocalMaterialID_++;
-}
-
-// FIXME: Duplicated code.
-MaterialID MaterialsManager::createMaterial( const string& filePath, const string& materialName )
+MaterialID MaterialsManager::createMaterial( const MaterialInfo &materialInfo )
 {
     // Create the new material and insert it into the materials container.
-    createMaterial( nextLocalMaterialID_, filePath, materialName );
+    createMaterial( nextLocalMaterialID_, materialInfo );
 
     return nextLocalMaterialID_++;
 }
 
 
-void MaterialsManager::createMaterial( MaterialID materialID, const string &filePath, const string &materialName )
+void MaterialsManager::createMaterial( MaterialID materialID, const MaterialInfo& materialInfo )
 {
     // Create the new material and insert it into the materials container.
-    materials_[materialID] = MaterialPtr( new Material( filePath, materialName ) );
+    materials_[materialID] = MaterialPtr( new Material( materialInfo ) );
 
     // Set the creator of the material as its current owner.
     materialsOwners_[materialID] = materialID.getCreatorID();
 
     notifyElementInsertion( materialID );
-}
-
-
-void MaterialsManager::createMaterial( const MaterialID& id, const std::string& name )
-{
-    // Create the new material and insert it into the materials container.
-    materials_[id] = MaterialPtr( new Material( name ) );
-
-    // Set the creator of the material as its current owner.
-    materialsOwners_[id] = id.getCreatorID();
-
-    notifyElementInsertion( id );
 }
 
 
@@ -145,10 +113,10 @@ void MaterialsManager::executeRemoteCommand( MaterialCommandConstPtr command )
             const MaterialCreationCommand* materialCreationCommand =
                     dynamic_cast< const MaterialCreationCommand* >( command.get() );
 
-            log_->debug( "\tMaterial name: ", materialCreationCommand->getMaterialName(), "\n" );
+            log_->debug( "\tMaterial name: ", materialCreationCommand->getMaterialInfo().name, "\n" );
 
             createMaterial( materialCreationCommand->getMaterialID(),
-                            materialCreationCommand->getMaterialName() );
+                            materialCreationCommand->getMaterialInfo() );
         }break;
 
         case MaterialCommandType::MATERIAL_MODIFICATION:{

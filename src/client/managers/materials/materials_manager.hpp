@@ -31,6 +31,7 @@
 #include <client/models/utilities/changeable/changeable.hpp>
 #include <functional>
 #include <common/utilities/observer_pattern/observable_container.hpp>
+#include <common/mesh_info/material_info.hpp>
 
 namespace como {
 
@@ -71,11 +72,9 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
          * 3. Material creation
          ***/
     public:
-        MaterialID createMaterial( const std::string& namePrefix );
-        MaterialID createMaterial( const std::string& filePath, const std::string& materialName );
-        void createMaterial( MaterialID materialID, const std::string& filePath, const std::string& materialName );
+        MaterialID createMaterial( const MaterialInfo& materialInfo );
     private:
-        void createMaterial( const MaterialID& id, const std::string& name );
+        void createMaterial( MaterialID id, const MaterialInfo &materialInfo );
 
 
         /***

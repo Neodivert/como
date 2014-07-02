@@ -170,8 +170,6 @@ void PrimitiveFile::readVertices( VerticesVector& vertices, std::ifstream &file 
 
     // Read the number of vertices in the mesh.
     std::getline( file, fileLine );
-
-
     nVertices = atoi( fileLine.c_str() );
 
     // Read all the vertices from the file (one vertex per line).
@@ -215,6 +213,11 @@ void PrimitiveFile::readOpenGLData( MeshOpenGLData& oglData, std::ifstream& file
     unsigned int nTriangles = 0;
     std::array< GLuint, 3 > triangle;
     std::string lineTail;
+    std::string token;
+
+    // Set '.' as the float separator (for parsing floats from a text
+    // line).
+    setlocale( LC_NUMERIC, "C" );
 
     // Read the number of components per vertex.
     std::getline( file, fileLine );
@@ -230,13 +233,13 @@ void PrimitiveFile::readOpenGLData( MeshOpenGLData& oglData, std::ifstream& file
         lineTail = fileLine;
 
         for( componentIndex = 0; componentIndex < componentsPerVertex - 1; componentIndex++ ){
-            lineTail.substr( 0, lineTail.find( '/' ) );
+            token = lineTail.substr( 0, lineTail.find( ' ' ) );
 
-            oglData.vboData.push_back( atoi( lineTail.c_str() ) );
+            oglData.vboData.push_back( atof( token.c_str() ) );
 
-            lineTail = fileLine.substr( lineTail.find( '/' ) + 1 );
+            lineTail = lineTail.substr( lineTail.find( ' ' ) + 1 );
         }
-        oglData.vboData.push_back( atoi( lineTail.c_str() ) );
+        oglData.vboData.push_back( atof( lineTail.c_str() ) );
     }
 
     // Read the number of triangles from the file.
@@ -246,6 +249,7 @@ void PrimitiveFile::readOpenGLData( MeshOpenGLData& oglData, std::ifstream& file
     // Read the EBO data from the file (one triangle per line).
     oglData.eboData.reserve( nTriangles );
     for( triangleIndex = 0; triangleIndex < nTriangles; triangleIndex++ ){
+        std::getline( file, fileLine );
         sscanf( fileLine.c_str(), "%u %u %u",
                 &triangle[0],
                 &triangle[1],

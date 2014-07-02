@@ -20,6 +20,7 @@
 
 #define GLM_FORCE_RADIANS
 #include <glm/gtx/intersect.hpp>
+#include <common/primitives/primitive_file.hpp>
 
 // TODO: Remove this once the constants PRIMITIVES_*_DIR be moved to
 // another place.
@@ -44,38 +45,43 @@ const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
  * 1. Construction.
  ***/
 
-// TODO: Replace meshColor argument by a MaterialConstPtr.
-Mesh::Mesh( MeshType type, const char* fileName, MaterialConstPtr material ) :
+Mesh::Mesh( MeshType type, const char* filePath, MaterialConstPtr material ) :
     Drawable( DrawableType::MESH, "Mesh #" ),
     type_( type ),
     material_( material )
 {
-    loadFromOBJ( fileName );
+    MeshInfo meshInfo;
+    PrimitiveFile::read( meshInfo, filePath );
+
+    vertexData_ = meshInfo.vertexData;
+
+    init( meshInfo.oglData );
 }
 
 
-Mesh::Mesh( MaterialConstPtr material ) :
+Mesh::Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, MaterialConstPtr material ) :
     Drawable( DrawableType::MESH, "Mesh #" ),
     type_( MeshType::MESH ),
+    vertexData_( vertexData ),
     material_( material )
-{}
+{
+    init( oglData );
+}
 
-
+/*
 Mesh::Mesh( const Mesh& b ) :
     Drawable( b ),
     type_( b.type_ ),
-    originalVertices( b.originalVertices ),
-    originalNormals( b.originalNormals ),
+    vertexData_( b.vertexData_ ),
     triangles( b.triangles ),
     originalCentroid( b.originalCentroid ),
     transformedCentroid( b.transformedCentroid ),
     material_( b.material_ )
 {
-    // Initialize and populate Mesh's vertex data.
-    initMeshBuffers();
-    initVertexData();
+    init( oglData );
+    // TODO: Copy buffers.
 }
-
+*/
 
 DrawablePtr Mesh::clone()
 {
@@ -101,6 +107,81 @@ Mesh::~Mesh()
  * 3. Initialization.
  ***/
 
+void Mesh::init( const MeshOpenGLData& oglData )
+{
+    OpenGL::checkStatus( "Mesh::init - 1" );
+    genOpenGLBuffers();
+    OpenGL::checkStatus( "Mesh::init - 2" );
+
+    initShaderLocations();
+    OpenGL::checkStatus( "Mesh::init - 3" );
+
+    populateOpenGLBuffers( oglData );
+    OpenGL::checkStatus( "Mesh::init - 4" );
+
+    initVAO();
+    OpenGL::checkStatus( "Mesh::init - 5" );
+
+    // Set both original and transformed centroids.
+    originalCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
+    transformedCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
+}
+
+
+void Mesh::genOpenGLBuffers()
+{
+    // Generate a VAO for the Mesh and bind it as the active one.
+    glGenVertexArrays( 1, &vao );
+    glBindVertexArray( vao );
+
+    // Generate a VBO and bind it for holding vertex data.
+    glGenBuffers( 1, &vbo );
+    glBindBuffer( GL_ARRAY_BUFFER, vbo );
+
+    // Generate an EBO and bind it for holding vertex indices.
+    glGenBuffers( 1, &ebo );
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
+}
+
+
+void Mesh::initShaderLocations()
+{
+    GLint currentShaderProgram;
+
+    if( uniformColorLocation == -1 ){
+        // Location of uniform shader variable "color" hasn't been initialized yet.
+
+        // Get current shader program id.
+        glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+
+        // Get location of uniform shader variable "color".
+        uniformColorLocation = glGetUniformLocation( currentShaderProgram, "material.color" );
+
+        // Get location of uniform shader variable "mvpMatrix".
+        mvpMatrixLocation_ = glGetUniformLocation( currentShaderProgram, "mvpMatrix" );
+
+        // Get location of uniform shader variable "normalMatrix".
+        normalMatrixLocation_ = glGetUniformLocation( currentShaderProgram, "normalMatrix" );
+    }
+}
+
+
+void Mesh::populateOpenGLBuffers( const MeshOpenGLData& oglData )
+{
+    const unsigned int vboSize = oglData.vboData.size() * sizeof( GLfloat );
+    const unsigned int eboSize = oglData.eboData.size() * sizeof( GLuint );
+
+    // Populate the VBO.
+    glBufferData( GL_ARRAY_BUFFER, vboSize, &( oglData.vboData[0] ), GL_STATIC_DRAW );
+
+    // Populate the EBO.
+    glBufferData( GL_ELEMENT_ARRAY_BUFFER, eboSize, &( oglData.eboData[0] ), GL_STATIC_DRAW );
+
+    nEboElements_ = oglData.eboData.size();
+}
+
+
+// TODO: Remove this method.
 void Mesh::initMeshBuffers()
 {
     GLint currentShaderProgram;
@@ -138,58 +219,11 @@ void Mesh::initMeshBuffers()
     transformedCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
 }
 
-
-void Mesh::initVertexData()
-{
-    unsigned int i;
-
-    OpenGL::checkStatus( "Mesh::initVertexData - 1" );
-
-    // Initialize VAO and VBO.
-    initVBO();
-    OpenGL::checkStatus( "Mesh::initVertexData - 2" );
-    initVAO();
-
-    OpenGL::checkStatus( "Mesh::initVertexData - 3" );
-
-    // Copy the mesh's elements to a EBO.
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER, triangles.size()*3*sizeof( GLuint ), nullptr, GL_STATIC_DRAW );
-
-    OpenGL::checkStatus( "Mesh::initVertexData - 4" );
-
-    std::cout << "triangles: " << triangles.size() << std::endl;
-    for( i=0; i<triangles.size(); i++ ){
-        glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, 3*i*sizeof( GLuint ), 3*sizeof( GLuint ), &triangles[i] );
-    }
-
-    OpenGL::checkStatus( "Mesh::initVertexData - 5" );
-
-    // Copy the vertex data to VBO.
-    for( GLuint i = 0; i<originalVertices.size(); i++ ){
-        setVertexData( i );
-    }
-
-    OpenGL::checkStatus( "Mesh::initVertexData - 6" );
-
-    // Update transformed vertices.
-    update();
-}
-
-
-void Mesh::initVBO()
-{
-    // Allocate a VBO for transformed vertices.
-    glBindBuffer( GL_ARRAY_BUFFER, vbo );
-    glBufferData( GL_ARRAY_BUFFER, originalVertices.size()*this->getBytesPerVertex(), NULL, GL_STATIC_DRAW );
-
-    std::cout << "VBO (" << originalVertices.size() << " * " << this->getBytesPerVertex() << ")" << std::endl;
-}
-
-
 void Mesh::initVAO()
 {
     // Set the organization of the vertex and normals data in the VBO.
     glBindVertexArray( vao );
+    glBindBuffer( GL_ARRAY_BUFFER, vbo );
     glVertexAttribPointer( SHADER_VERTEX_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, getBytesPerVertex(), (void *)( 0 ) );
     glVertexAttribPointer( SHADER_NORMAL_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, getBytesPerVertex(), (void *)( COMPONENTS_PER_VERTEX_POSITION * sizeof( GL_FLOAT ) ) );
 
@@ -222,170 +256,17 @@ unsigned int Mesh::getComponentsPerVertex() const
 }
 
 
-void Mesh::setVertexData( GLint index )
-{
-    GLfloat vertexData[] =
-    {
-        // Vertex coordinates
-        originalVertices[index].x,
-        originalVertices[index].y,
-        originalVertices[index].z,
-
-        // Normal coordinates
-        originalNormals[index].x,
-        originalNormals[index].y,
-        originalNormals[index].z
-    };
-
-    OpenGL::checkStatus( "Mesh::setVertexData - 1" );
-    std::cout << "Mesh::setVertexData(" << (index * getBytesPerVertex()) << ", " << Mesh::getOwnBytesPerVertex() << ")" << std::endl;
-    glBufferSubData( GL_ARRAY_BUFFER, index * getBytesPerVertex(), Mesh::getOwnBytesPerVertex(), vertexData );
-    OpenGL::checkStatus( "Mesh::setVertexData - 2" );
-
-    /*
-
-    // Copy vertex position to VBO.
-    vbo[index*COMPONENTS_PER_VERTEX+X] = originalVertices[index].x;
-    vbo[index*COMPONENTS_PER_VERTEX+Y] = originalVertices[index].y;
-    vbo[index*COMPONENTS_PER_VERTEX+Z] = originalVertices[index].z;
-
-    // Copy vertex normal to VBO.
-    vbo[index*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+X] = originalNormals[index].x;
-    vbo[index*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+Y] = originalNormals[index].y;
-    vbo[index*COMPONENTS_PER_VERTEX+COMPONENTS_PER_VERTEX_POSITION+Z] = originalNormals[index].z;
-    */
-}
-
-
 void Mesh::computeCentroid()
 {
     unsigned int i = 0;
 
     originalCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
-    for( i = 0; i < originalVertices.size(); i++ ){
-        originalCentroid += glm::vec4( originalVertices[i], 1.0f );
+    for( i = 0; i < vertexData_.vertices.size(); i++ ){
+        originalCentroid += glm::vec4( vertexData_.vertices[i], 1.0f );
     }
 
-    originalCentroid /= originalVertices.size();
+    originalCentroid /= vertexData_.vertices.size();
     originalCentroid.w = 1.0f;
-}
-
-
-void Mesh::computeVertexNormals()
-{
-    unsigned int normalIndex, faceIndex;
-
-    // Allocate space for holding one normal per vertex.
-    originalNormals.resize( originalVertices.size() );
-
-    // Compute every vertex's normal.
-    for( normalIndex = 0; normalIndex < originalNormals.size(); normalIndex++ ){
-        originalNormals[normalIndex] = glm::vec3( 0.0f );
-        for( faceIndex = 0; faceIndex < triangles.size(); faceIndex++ ){
-            if( ( triangles[faceIndex][0] == normalIndex ) ||
-                    ( triangles[faceIndex][1] == normalIndex ) ||
-                    ( triangles[faceIndex][2] == normalIndex ) ){
-
-                originalNormals[normalIndex] += glm::cross( originalVertices[ triangles[faceIndex][2] ] - originalVertices[ triangles[faceIndex][0] ], originalVertices[ triangles[faceIndex][1] ] - originalVertices[ triangles[faceIndex][0] ] );
-            }
-        }
-        // TODO: Do I have to divide or something first?
-        originalNormals[normalIndex] = glm::normalize( originalNormals[normalIndex] );
-    }
-}
-
-
-/***
- * 4. File loading.
- ***/
-
-void Mesh::loadFromOBJ( const char* filePath )
-{
-    OpenGL::checkStatus( "Mesh::loadFromOBJ - 1/5" );
-    // Initialize OpenGL objects (VBO, VAO, EBO, ...) associated to this Mesh.
-    initMeshBuffers();
-
-    OpenGL::checkStatus( "Mesh::loadFromOBJ - 2/5" );
-
-    std::ifstream file;
-    std::string line;
-
-    // Initialize original vertex data.
-    originalVertices.clear();
-    triangles.clear();
-    originalCentroid = glm::vec4( 0.0f );
-
-    // Try to open the OBJ file.
-    file.open( filePath );
-
-    if( !file.is_open() ){
-        throw std::runtime_error( std::string( "ERROR: File [" ) + std::string( filePath ) + std::string( "] not found" ) );
-    }
-
-    // Read vertex data from file.
-    // TODO: Accept OBJ files with multiple objects inside.
-    while( std::getline( file, line ) ){
-        std::cout << "line: [" << line << "]: " << this->processFileLine( line ) << std::endl;
-    }
-
-    // Close the input file and finish initializing the mesh.
-    file.close();
-
-    OpenGL::checkStatus( "Mesh::loadFromOBJ - 3/5" );
-
-    // Compute Mesh's centroid and vertex normals.
-    computeCentroid();
-    computeVertexNormals();
-
-    OpenGL::checkStatus( "Mesh::loadFromOBJ - 4/5" );
-
-    // Initialize Mesh transformed vertex data.
-    initVertexData();
-
-    OpenGL::checkStatus( "Mesh::loadFromOBJ - 5/5" );
-}
-
-
-bool Mesh::processFileLine( const string &line )
-{
-    glm::vec3 vertex;
-    std::array< GLuint, 3 > triangle;
-    unsigned int i;
-    unsigned int componentsRead = 0;
-
-    if( line[0] == 'v' ){
-        // Set '.' as the float separator (for parsing floats from a text
-        // line).
-        setlocale( LC_NUMERIC, "C" );
-
-        // Extract the vertex from the line and add it to the Mesh.
-        sscanf( line.c_str(), "v %f %f %f", &vertex[0], &vertex[1], &vertex[2] );
-
-        // Resize the vertex coordinates.
-        vertex *= 0.5f;
-
-        originalVertices.push_back( vertex );
-
-    }else if( line[0] == 'f' ){
-        // Extract the face from the line and add it to the Mesh.
-        componentsRead = sscanf( line.c_str(), "f %u %u %u", &triangle[0], &triangle[1], &triangle[2] );
-
-        if( componentsRead != 3 ){
-            throw std::runtime_error( "Error reading mesh triangle (Is it a textured mesh?)" );
-        }
-
-        for( i=0; i<3; i++ ){
-            // Decrement every vertex index because they are 1-based in the .obj file.
-            triangle[i] -= 1;
-        }
-
-        triangles.push_back( triangle );
-    }else{
-        return false;
-    }
-    // TODO: And the normals?
-
-    return true;
 }
 
 
@@ -402,27 +283,6 @@ MeshType Mesh::getType() const
 glm::vec4 Mesh::getCentroid() const
 {
     return transformedCentroid;
-}
-
-
-void Mesh::getVertexData( unsigned int& n, GLfloat* vertices )
-{
-    GLfloat* mappedVBO = nullptr;
-
-    // Get the number of vertices of the mesh.
-    n = originalVertices.size();
-
-    // Bind the mesh's VBO
-    glBindBuffer( GL_ARRAY_BUFFER, vbo );
-
-    // Map the VBO to client memory.
-    mappedVBO = (GLfloat *)glMapBuffer( GL_ARRAY_BUFFER, GL_READ_ONLY );
-
-    // Copy the VBO data to the pointer given as an argument.
-    memcpy( vertices, mappedVBO, n * COMPONENTS_PER_VERTEX * sizeof( GLfloat ) );
-
-    // Unmap the VBO.
-    glUnmapBuffer( GL_ARRAY_BUFFER );
 }
 
 
@@ -447,12 +307,12 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
     rayDirection = glm::normalize( rayDirection );
 
     // Compute intersections with all triangles in this Mesh.
-    for( unsigned int i = 0; i < triangles.size(); i++ ){
+    for( unsigned int i = 0; i < vertexData_.vertexTriangles.size(); i++ ){
         if( glm::intersectRayTriangle( rayOrigin,
                                        rayDirection,
-                                       originalVertices[triangles[i][0]],
-                                       originalVertices[triangles[i][1]],
-                                       originalVertices[triangles[i][2]],
+                                       vertexData_.vertices[vertexData_.vertexTriangles[i][0]],
+                                       vertexData_.vertices[vertexData_.vertexTriangles[i][1]],
+                                       vertexData_.vertices[vertexData_.vertexTriangles[i][2]],
                                        intersection ) ){
 
             // There was an intersection with this triangle. Get the parameter t.
@@ -491,6 +351,8 @@ void Mesh::update()
 
 void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) const
 {
+    OpenGL::checkStatus( "Mesh::draw - begin" );
+
     // Compute MVP matrix and pass it to the shader.
     sendMVPMatrixToShader( viewProjMatrix * transformationMatrix );
 
@@ -503,7 +365,8 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
 
     // Draw Mesh's interior.
-    glDrawElements( GL_TRIANGLES, triangles.size()*3, GL_UNSIGNED_INT, NULL );
+    glDrawElements( GL_TRIANGLES, nEboElements_, GL_UNSIGNED_INT, NULL );
+
 
     // Set the color for the mesh's contour.
     if( contourColor != nullptr ){
@@ -517,13 +380,15 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
         glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
         // Draw Mesh's contour
-        glDrawElements( GL_TRIANGLES, triangles.size()*3, GL_UNSIGNED_INT, NULL );
+        glDrawElements( GL_TRIANGLES, nEboElements_, GL_UNSIGNED_INT, NULL );
 
         // Return polygon mode to previos GL_FILL.
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 
         openGL->enableLighting();
     }
+
+    OpenGL::checkStatus( "Mesh::draw - end" );
 }
 
 /***

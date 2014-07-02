@@ -32,7 +32,6 @@
 #include <cstdio>
 #include <fstream>
 #include <common/primitives/obj_primitives_importer.hpp>
-#include <client/models/3d/texturized_mesh.hpp>
 
 namespace como {
 

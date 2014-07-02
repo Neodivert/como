@@ -369,6 +369,8 @@ void Scene::draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect ) co
 {
     GLfloat WHITE_COLOR[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
+    openGL_->disableTexturing();
+
     // Draw all the drawables.
     openGL_->enableLighting();
     drawablesManager_->drawAll( openGL_, viewProjMatrix );

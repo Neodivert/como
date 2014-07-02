@@ -27,6 +27,14 @@
 
 int main( int argc, char* argv[] )
 {
+    /*
+    (void)( argc );
+    (void)( argv );
+
+    como::OBJPrimitivesImporter importer;
+    importer.importPrimitive( "data/local/primitives/geometry/cube.obj", ".", "" );
+    */
+
     char oldPath[256] = {0};
     boost::system::error_code errorCode;
 

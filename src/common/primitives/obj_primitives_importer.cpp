@@ -32,14 +32,6 @@ namespace como {
 
 PrimitiveInfo OBJPrimitivesImporter::importPrimitive( std::string srcFilePath, std::string dstDirectory, std::string nameSuffix )
 {
-    // TODO: Remove.
-    (void)( dstDirectory );
-    (void)( nameSuffix );
-
-    std::cout << "Importing primitive - srcFilePath(" << srcFilePath
-              << "), dstDirectory(" << dstDirectory
-              << "), nameSuffix(" << nameSuffix << ")" << std::endl;
-
     MeshInfo meshInfo;
     PrimitiveInfo primitiveInfo;
 
@@ -50,6 +42,11 @@ PrimitiveInfo OBJPrimitivesImporter::importPrimitive( std::string srcFilePath, s
             dstDirectory + '/' +
             primitiveInfo.name +
             ".prim";
+
+    // All primitive must have at least one material.
+    if( !meshInfo.materialsData.size() ){
+        meshInfo.materialsData.push_back( MaterialInfo() );
+    }
 
     PrimitiveFile::write( meshInfo, primitiveInfo.filePath );
 
@@ -73,28 +70,9 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
         processMeshFileLine( filePath, fileLine, primitiveInfo, meshInfo );
     }
 
-
-    /*
-    std::cout << "Mesh: " << std::endl
-              << "-------------------------------------------" << std::endl;
-    std::cout << "Vertices: " << std::endl;
-    for( auto v : meshInfo.vertices ){
-        std::cout << "\t(" << v[0] << ", " << v[1] << ", " << v[2] << ")" << std::endl;
+    if( meshInfo.normalData.normals.size() != meshInfo.vertexData.vertices.size() ){
+        computeVertexNormals( meshInfo.vertexData, meshInfo.normalData );
     }
-    std::cout << "UV coordinates: " << std::endl;
-    for( auto v : meshInfo.uvCoordinates ){
-        std::cout << "\t(" << v[0] << ", " << v[1] << ")" << std::endl;
-    }
-    std::cout << "Vertex triangles: " << std::endl;
-    for( auto v : meshInfo.vertexTriangles ){
-        std::cout << "\t(" << v[0] << ", " << v[1] << ", " << v[2] << ")" << std::endl;
-    }
-    std::cout << "UV triangles: " << std::endl;
-    for( auto v : meshInfo.uvTriangles ){
-        std::cout << "\t(" << v[0] << ", " << v[1] << ", " << v[2] << ")" << std::endl;
-    }
-    std::cout << "-------------------------------------------------------" << std::endl;
-    */
 
     generateMeshVertexData( meshInfo );
 }
@@ -210,13 +188,12 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
 {
     std::map< CompoundVertex, GLuint > finalVertices;
     std::map< CompoundVertex, GLuint >::const_iterator finalVerticesIt;
-    std::list< std::array< GLuint, 3 > > finalTriangles;
     CompoundVertex compoundVertex;
-    std::array< GLuint, 3 > triangle;
     unsigned int currentTriangleIndex = 0;
     unsigned int triangleVertexIndex = 0;
+    GLuint compoundVertexIndex = 0;
 
-    //std::cout << "meshInfo.uvTriangles: " << meshInfo.uvTriangles.size() << std::endl;
+    meshInfo.oglData.includesTextures = ( meshInfo.textureData.uvCoordinates.size() != 0 );
 
     for( currentTriangleIndex = 0; currentTriangleIndex < meshInfo.vertexData.vertexTriangles.size(); currentTriangleIndex++ ){
         for( triangleVertexIndex = 0; triangleVertexIndex < 3; triangleVertexIndex++ ){
@@ -226,77 +203,59 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
 
             finalVerticesIt = finalVertices.find( compoundVertex );
             if( finalVerticesIt != finalVertices.end() ){
-                triangle[triangleVertexIndex] = finalVerticesIt->second;
+                compoundVertexIndex = finalVerticesIt->second;
             }else{
-                finalVertices[compoundVertex] = finalVertices.size() - 1;
-                triangle[triangleVertexIndex] = finalVertices[compoundVertex];
+                compoundVertexIndex = finalVertices.size();
+
+                meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ compoundVertex[0] ][0] );
+                meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ compoundVertex[0] ][1] );
+                meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ compoundVertex[0] ][2] );
+
+                // Insert vertex normal (if exists).
+                if( meshInfo.normalData.normals.size() ){
+                    meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][0] );
+                    meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][1] );
+                    meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][2] );
+                }else{
+                    meshInfo.oglData.vboData.push_back( 0 );
+                    meshInfo.oglData.vboData.push_back( 0 );
+                    meshInfo.oglData.vboData.push_back( 0 );
+                }
+
+                // Insert UV coordinates (if exist).
+                if( meshInfo.textureData.uvCoordinates.size() ){
+                    meshInfo.oglData.vboData.push_back( meshInfo.textureData.uvCoordinates[ compoundVertex[2] ][0] );
+                    meshInfo.oglData.vboData.push_back( meshInfo.textureData.uvCoordinates[ compoundVertex[2] ][1] );
+                }
+
+                finalVertices.insert( std::pair< CompoundVertex, GLuint >( compoundVertex, compoundVertexIndex ) );
+            }
+            meshInfo.oglData.eboData.push_back( compoundVertexIndex );
+        }
+    }
+}
+
+
+void OBJPrimitivesImporter::computeVertexNormals( MeshVertexData &vertexData, MeshNormalData &normalData )
+{
+    GLuint currentVertexIndex = 0;
+
+    normalData.normals.resize( vertexData.vertices.size() );
+    for( currentVertexIndex = 0; currentVertexIndex < vertexData.vertices.size(); currentVertexIndex++ ){
+        normalData.normals[currentVertexIndex] = glm::vec3( 0.0f );
+
+        for( auto triangle : vertexData.vertexTriangles ){
+            if( triangle[0] == currentVertexIndex
+                    || triangle[1] == currentVertexIndex
+                    || triangle[2] == currentVertexIndex ){
+                normalData.normals[currentVertexIndex] += glm::cross( vertexData.vertices[ triangle[2] ] - vertexData.vertices[ triangle[0] ], vertexData.vertices[ triangle[1] ] - vertexData.vertices[ triangle[0] ] );
             }
         }
 
-        finalTriangles.push_back( triangle );
+        normalData.normals[currentVertexIndex] = glm::normalize( normalData.normals[currentVertexIndex] );
     }
-
-    /*
-    std::cout << "Final vertices: ";
-    for( auto v : finalVertices ){
-        std::cout << "\t(" << v.first[0] << ", " << v.first[1] << ", " << v.first[2] << "): " << v.second << std::endl;
-    }
-
-    std::cout << "Final triangles: ";
-    for( auto t : finalTriangles ){
-        std::cout << "\t(" << t[0] << ", " << t[1] << ", " << t[2] << ")" << std::endl;
-    }
-    */
-
-    meshInfo.oglData.includesTextures = ( meshInfo.textureData.uvCoordinates.size() != 0 );
-
-    for( auto finalVertex : finalVertices ){
-        // Insert vertex position.
-        meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ finalVertex.first[0] ][0] );
-        meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ finalVertex.first[0] ][1] );
-        meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ finalVertex.first[0] ][2] );
-
-        // Insert vertex normal (if exists).
-        if( meshInfo.normalData.normals.size() ){
-            meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ finalVertex.first[1] ][0] );
-            meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ finalVertex.first[1] ][1] );
-            meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ finalVertex.first[1] ][2] );
-        }else{
-            meshInfo.oglData.vboData.push_back( 0 );
-            meshInfo.oglData.vboData.push_back( 0 );
-            meshInfo.oglData.vboData.push_back( 0 );
-        }
-
-        // Insert UV coordinates (if exist).
-        if( meshInfo.textureData.uvCoordinates.size() ){
-            meshInfo.oglData.vboData.push_back( meshInfo.textureData.uvCoordinates[ finalVertex.first[2] ][0] );
-            meshInfo.oglData.vboData.push_back( meshInfo.textureData.uvCoordinates[ finalVertex.first[2] ][1] );
-        }
-    }
-
-
-    for( auto finalTriangle : finalTriangles ){
-        meshInfo.oglData.eboData.push_back( finalTriangle[0] );
-        meshInfo.oglData.eboData.push_back( finalTriangle[1] );
-        meshInfo.oglData.eboData.push_back( finalTriangle[2] );
-    }
-
-    /*
-    unsigned int i, j;
-    const unsigned int componetstPerVertex = ( meshInfo.uvCoordinates.size() ) ? 8 : 6;
-    for( i = 0; i < finalVertices.size(); i++ ){
-        std::cout << "\t\t(";
-        for( j = 0; j < componetstPerVertex; j++ ){
-            std::cout << meshInfo.vboData[i * componetstPerVertex + j] << ", ";
-        }
-        std::cout << ")" << std::endl;
-    }
-
-    for( i = 0; i < finalTriangles.size(); i++ ){
-        std::cout << "\t\t\t(" << meshInfo.eboData[i*3] << ", " << meshInfo.eboData[i*3+1] << ", " << meshInfo.eboData[i*3+2] << ")" << std::endl;
-    }
-    */
 }
+
 
 void OBJPrimitivesImporter::processMaterialFile( std::string filePath, std::vector<MaterialInfo> &materials )
 {
@@ -313,6 +272,8 @@ void OBJPrimitivesImporter::processMaterialFile( std::string filePath, std::vect
 
         processMaterialFileLine( fileLine, materials );
     }
+
+    file.close();
 }
 
 
