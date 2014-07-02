@@ -153,15 +153,19 @@ void Mesh::initShaderLocations()
 
         // Get current shader program id.
         glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+        assert( currentShaderProgram != 0 );
 
         // Get location of uniform shader variable "color".
         uniformColorLocation = glGetUniformLocation( currentShaderProgram, "material.color" );
+        assert( uniformColorLocation != -1 );
 
         // Get location of uniform shader variable "mvpMatrix".
         mvpMatrixLocation_ = glGetUniformLocation( currentShaderProgram, "mvpMatrix" );
+        assert( mvpMatrixLocation_ != -1 );
 
         // Get location of uniform shader variable "normalMatrix".
         normalMatrixLocation_ = glGetUniformLocation( currentShaderProgram, "normalMatrix" );
+        assert( normalMatrixLocation_ != -1 );
     }
 }
 

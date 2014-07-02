@@ -68,9 +68,9 @@ void main()
 	
 				if( texturingEnabled ){
 					//meshColor = texture(
-					meshColor = material.color;
+					meshColor = vec4( material.diffuseReflectivity, 1.0f );
 				}else{
-					meshColor = material.color;
+					meshColor = vec4( material.diffuseReflectivity, 1.0f );
 				}
 				// don’t modulate the underlying color with reflected light,
 				// only with scattered light

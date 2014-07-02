@@ -212,15 +212,9 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
                 meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ compoundVertex[0] ][2] );
 
                 // Insert vertex normal (if exists).
-                if( meshInfo.normalData.normals.size() ){
-                    meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][0] );
-                    meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][1] );
-                    meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][2] );
-                }else{
-                    meshInfo.oglData.vboData.push_back( 0 );
-                    meshInfo.oglData.vboData.push_back( 0 );
-                    meshInfo.oglData.vboData.push_back( 0 );
-                }
+                meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][0] );
+                meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][1] );
+                meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][2] );
 
                 // Insert UV coordinates (if exist).
                 if( meshInfo.textureData.uvCoordinates.size() ){
