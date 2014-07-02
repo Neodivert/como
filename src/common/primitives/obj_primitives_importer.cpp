@@ -70,6 +70,8 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
         processMeshFileLine( filePath, fileLine, primitiveInfo, meshInfo );
     }
 
+    file.close();
+
     if( meshInfo.normalData.normals.size() != meshInfo.vertexData.vertices.size() ){
         computeVertexNormals( meshInfo.vertexData, meshInfo.normalData );
     }
@@ -230,23 +232,28 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
 }
 
 
-void OBJPrimitivesImporter::computeVertexNormals( MeshVertexData &vertexData, MeshNormalData &normalData )
+void OBJPrimitivesImporter::computeVertexNormals( const MeshVertexData &vertexData, MeshNormalData &normalData )
 {
-    GLuint currentVertexIndex = 0;
+    glm::vec3 faceNormal;
 
-    normalData.normals.resize( vertexData.vertices.size() );
-    for( currentVertexIndex = 0; currentVertexIndex < vertexData.vertices.size(); currentVertexIndex++ ){
-        normalData.normals[currentVertexIndex] = glm::vec3( 0.0f );
+    // Set a zero normal for every vertex in the mesh.
+    normalData.normals.resize( vertexData.vertices.size(), glm::vec3( 0.0f ) );
 
-        for( auto triangle : vertexData.vertexTriangles ){
-            if( triangle[0] == currentVertexIndex
-                    || triangle[1] == currentVertexIndex
-                    || triangle[2] == currentVertexIndex ){
-                normalData.normals[currentVertexIndex] += glm::cross( vertexData.vertices[ triangle[2] ] - vertexData.vertices[ triangle[0] ], vertexData.vertices[ triangle[1] ] - vertexData.vertices[ triangle[0] ] );
-            }
-        }
+    // Compute each face normal and add it to the normal of every vertex in
+    // in the triangle.
+    for( auto triangle : vertexData.vertexTriangles ){
+        faceNormal = glm::cross(
+                    vertexData.vertices[ triangle[2] ] - vertexData.vertices[ triangle[0] ],
+                    vertexData.vertices[ triangle[1] ] - vertexData.vertices[ triangle[0] ] );
 
-        normalData.normals[currentVertexIndex] = glm::normalize( normalData.normals[currentVertexIndex] );
+        normalData.normals[ triangle[0] ] += faceNormal;
+        normalData.normals[ triangle[1] ] += faceNormal;
+        normalData.normals[ triangle[2] ] += faceNormal;
+    }
+
+    // Normalize all the normals.
+    for( auto normal : normalData.normals ){
+        normal = glm::normalize( normal );
     }
 }
 
