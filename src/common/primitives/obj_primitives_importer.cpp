@@ -72,9 +72,9 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
 
     file.close();
 
-    if( meshInfo.normalData.normals.size() != meshInfo.vertexData.vertices.size() ){
+    //if( meshInfo.normalData.normals.size() != meshInfo.vertexData.vertices.size() ){
         computeVertexNormals( meshInfo.vertexData, meshInfo.normalData );
-    }
+    //}
 
     generateMeshVertexData( meshInfo );
 }
@@ -200,7 +200,7 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
     for( currentTriangleIndex = 0; currentTriangleIndex < meshInfo.vertexData.vertexTriangles.size(); currentTriangleIndex++ ){
         for( triangleVertexIndex = 0; triangleVertexIndex < 3; triangleVertexIndex++ ){
             compoundVertex[0] = meshInfo.vertexData.vertexTriangles[currentTriangleIndex][triangleVertexIndex];
-            compoundVertex[1] = ( meshInfo.normalData.normalTriangles.size() ) ? meshInfo.normalData.normalTriangles[currentTriangleIndex][triangleVertexIndex] : 0;
+            compoundVertex[1] = meshInfo.normalData.normalTriangles[currentTriangleIndex][triangleVertexIndex]; // TODO: Remove normal triangles?.
             compoundVertex[2] = ( meshInfo.textureData.uvTriangles.size() ) ? meshInfo.textureData.uvTriangles[currentTriangleIndex][triangleVertexIndex] : 0;
 
             finalVerticesIt = finalVertices.find( compoundVertex );
@@ -213,7 +213,7 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
                 meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ compoundVertex[0] ][1] );
                 meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ compoundVertex[0] ][2] );
 
-                // Insert vertex normal (if exists).
+                // Insert vertex normal.
                 meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][0] );
                 meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][1] );
                 meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][2] );
@@ -252,9 +252,11 @@ void OBJPrimitivesImporter::computeVertexNormals( const MeshVertexData &vertexDa
     }
 
     // Normalize all the normals.
-    for( auto normal : normalData.normals ){
+    for( auto& normal : normalData.normals ){
         normal = glm::normalize( normal );
     }
+
+    normalData.normalTriangles = vertexData.vertexTriangles;
 }
 
 
