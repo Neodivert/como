@@ -313,21 +313,21 @@ void OBJPrimitivesImporter::processMaterialFileLine( std::string filePath, std::
 void OBJPrimitivesImporter::processTextureFile( std::string filePath, std::unique_ptr<TextureInfo>& textureInfo )
 {
     std::ifstream file;
-    unsigned int imageFileSize;
-
-    textureInfo = std::unique_ptr< TextureInfo >( new TextureInfo );
+    unsigned int imageFileSize = 0;
 
     file.open( filePath, std::ios_base::binary );
     if( !file.is_open() ){
         throw FileNotOpenException( filePath );
     }
 
+    textureInfo = std::unique_ptr< TextureInfo >( new TextureInfo );
+
     // Retrieve the size of the texture image file.
     file.seekg( 0, file.end );
     imageFileSize = file.tellg();
     file.seekg( 0, file.beg );
 
-    textureInfo->imageFileData.reserve( imageFileSize );
+    textureInfo->imageFileData.resize( imageFileSize );
     file.read( &( textureInfo->imageFileData[0] ), imageFileSize );
 
     file.close();

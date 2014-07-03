@@ -24,7 +24,7 @@
 namespace como {
 
 struct TextureInfo {
-     std::string imageFileData;
+    std::string imageFileData;
 };
 
 }

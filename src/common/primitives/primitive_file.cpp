@@ -134,9 +134,22 @@ void PrimitiveFile::writeMaterial( const MaterialInfo &material, std::ofstream &
 
     file << material.specularExponent << std::endl;
 
+    // If current material includes a texture, we write the following data to
+    // file:
+    // - A line "1" indicating that the current material includes a texture.
+    // - A line "<n>" where n is the size (in bytes) of the texture image file
+    // data.
+    // - <n> bytes of the texture image file.
     if( material.textureInfo ){
         file << "1" << std::endl
-             << material.textureInfo->imageFileData << std::endl;
+             << material.textureInfo->imageFileData.size() << std::endl;
+
+        // Write texture data.
+        file.write( &( material.textureInfo->imageFileData[0] ),
+                material.textureInfo->imageFileData.size() );
+
+        // Add a new line right after texture data.
+        file << std::endl;
     }else{
         file << "0" << std::endl;
     }
@@ -313,8 +326,19 @@ void PrimitiveFile::readMaterial( MaterialInfo &material, std::ifstream &file )
     // otherwise.
     std::getline( file, fileLine );
     if( fileLine == "1" ){
-        // Read material info.
-        material.textureInfo->imageFileData = fileLine;
+        // Add an emtpy texture to the current material.
+        material.textureInfo = std::unique_ptr< TextureInfo >( new TextureInfo );
+
+        // Read texture data size.
+        std::getline( file, fileLine );
+        material.textureInfo->imageFileData.resize( atoi( fileLine.c_str() ) );
+
+        // Read texture data.
+        file.read( &( material.textureInfo->imageFileData[0] ),
+                material.textureInfo->imageFileData.size() );
+
+        // Remove the new line separator right after texture data.
+        std::getline( file, fileLine );
     }
 }
 
