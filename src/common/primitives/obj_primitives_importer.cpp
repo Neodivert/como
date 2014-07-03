@@ -23,6 +23,7 @@
 #include <common/primitives/primitive_file.hpp>
 #include <map>
 #include <array>
+#include <SOIL/SOIL.h>
 
 namespace como {
 
@@ -273,14 +274,14 @@ void OBJPrimitivesImporter::processMaterialFile( std::string filePath, std::vect
     while( !file.eof() ){
         std::getline( file, fileLine );
 
-        processMaterialFileLine( fileLine, materials );
+        processMaterialFileLine( filePath, fileLine, materials );
     }
 
     file.close();
 }
 
 
-void OBJPrimitivesImporter::processMaterialFileLine( std::string fileLine, std::vector<MaterialInfo>& materials )
+void OBJPrimitivesImporter::processMaterialFileLine( std::string filePath, std::string fileLine, std::vector<MaterialInfo>& materials )
 {
     std::string lineHeader = fileLine.substr( 0, fileLine.find( ' ' ) );
     std::string lineBody = fileLine.substr( fileLine.find( ' ' ) + 1 );
@@ -302,39 +303,32 @@ void OBJPrimitivesImporter::processMaterialFileLine( std::string fileLine, std::
         materials.back().specularReflectivity = PrimitiveFile::readVec3( lineBody );
     }else if( lineHeader == "Ns" ){
         materials.back().specularExponent = std::atof( lineBody.c_str() );
+    }else if( lineHeader == "map_Kd" ){
+        std::string textureFilePath = filePath.substr( 0, filePath.rfind( '/' ) ) + '/' + lineBody;
+        processTextureFile( textureFilePath, materials.back().textureInfo );
     }
-    // TODO: Import texture (map_Kd).
 }
 
 
-void OBJPrimitivesImporter::importTextureFile( PrimitiveInfo &primitive, std::string srcFilePath, std::string dstDirectory )
+void OBJPrimitivesImporter::processTextureFile( std::string filePath, TextureInfo& textureInfo )
 {
-    (void)( primitive );
-    (void)( srcFilePath );
-    (void)( dstDirectory );
-    /*
-    boost::system::error_code errorCode;
-    std::string dstTextureFilePath;
+    std::ifstream file;
+    unsigned int imageFileSize;
 
-    // Generate the texture file name.
-    primitive.textureFileName = primitive.name + boost::filesystem::extension( srcFilePath );
-
-    // Generate the texture destination dir path.
-    dstTextureFilePath = dstDirectory + '/' + primitive.textureFileName;
-
-    // Copy the texture file to its final location.
-    boost::filesystem::copy( srcFilePath, dstTextureFilePath, errorCode );
-
-    std::cout << "Importing texture file: " << srcFilePath << ", " << dstTextureFilePath << std::endl;
-
-    if( errorCode ){
-        throw std::runtime_error( std::string( "ERROR importing texture file [" ) +
-                                  srcFilePath +
-                                  "] to [" +
-                                  dstTextureFilePath +
-                                  "]: " + errorCode.message() );
+    file.open( filePath, std::ios_base::binary );
+    if( !file.is_open() ){
+        throw FileNotOpenException( filePath );
     }
-    */
+
+    // Retrieve the size of the texture image file.
+    file.seekg( 0, file.end );
+    imageFileSize = file.tellg();
+    file.seekg( 0, file.beg );
+
+    textureInfo.imageFileData.reserve( imageFileSize );
+    file.read( &( textureInfo.imageFileData[0] ), imageFileSize );
+
+    file.close();
 }
 
 

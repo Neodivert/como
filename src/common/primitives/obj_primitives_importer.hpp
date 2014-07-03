@@ -64,8 +64,9 @@ class OBJPrimitivesImporter : PrimitivesImporter {
 
     private:
         void processMaterialFile( std::string filePath, std::vector< MaterialInfo >& materials );
-        void processMaterialFileLine( std::string fileLine, std::vector< MaterialInfo >& materials );
-        void importTextureFile( PrimitiveInfo& primitive, std::string srcFilePath, std::string dstDirectory );
+        void processMaterialFileLine( std::string filePath, std::string fileLine, std::vector< MaterialInfo >& materials );
+
+        void processTextureFile( std::string filePath, TextureInfo& textureInfo );
 
 
         /***

@@ -19,12 +19,12 @@
 #ifndef TEXTURE_INFO_HPP
 #define TEXTURE_INFO_HPP
 
-#include <memory>
+#include <vector>
 
 namespace como {
 
 struct TextureInfo {
-     std::unique_ptr< unsigned int > pixelData;
+     std::vector< char > imageFileData;
 };
 
 }
