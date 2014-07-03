@@ -19,12 +19,12 @@
 #ifndef TEXTURE_INFO_HPP
 #define TEXTURE_INFO_HPP
 
-#include <vector>
+#include <string>
 
 namespace como {
 
 struct TextureInfo {
-     std::vector< char > imageFileData;
+     std::string imageFileData;
 };
 
 }

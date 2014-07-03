@@ -133,6 +133,13 @@ void PrimitiveFile::writeMaterial( const MaterialInfo &material, std::ofstream &
          << material.specularReflectivity[2] << std::endl;
 
     file << material.specularExponent << std::endl;
+
+    if( material.textureInfo ){
+        file << "1" << std::endl
+             << material.textureInfo->imageFileData << std::endl;
+    }else{
+        file << "0" << std::endl;
+    }
 }
 
 
@@ -301,6 +308,14 @@ void PrimitiveFile::readMaterial( MaterialInfo &material, std::ifstream &file )
     // Read the material's specular exponent.
     std::getline( file, fileLine );
     material.specularExponent = atoi( fileLine.c_str() );
+
+    // Next line is "1" if the current material contains a texture or "0"
+    // otherwise.
+    std::getline( file, fileLine );
+    if( fileLine == "1" ){
+        // Read material info.
+        material.textureInfo->imageFileData = fileLine;
+    }
 }
 
 
