@@ -27,6 +27,8 @@ struct DirectionalLight {
 };
 uniform DirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
 
+uniform sampler2D textureSampler;
+
 // Material info
 struct Material {
 	vec4 color;
@@ -38,6 +40,7 @@ struct Material {
 uniform Material material;
 
 in vec3 normal;
+in vec2 uvCoordinates;
 
 out vec4 finalColor;
 
@@ -67,8 +70,7 @@ void main()
 				vec3 reflectedLight = lights[ directionalLights[i].lightIndex ].color * specular * material.specularReflectivity;
 	
 				if( texturingEnabled ){
-					//meshColor = texture(
-					meshColor = vec4( material.diffuseReflectivity, 1.0f );
+					meshColor = texture( textureSampler, uvCoordinates );
 				}else{
 					meshColor = vec4( material.diffuseReflectivity, 1.0f );
 				}
