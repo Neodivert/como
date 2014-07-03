@@ -37,7 +37,8 @@ const float DEFAULT_MATERIAL_SPECULAR_EXPONENT = 0.9f;
     ambientReflectivity_( DEFAULT_MATERIAL_AMBIENT_REFLECTIVITY ), \
     diffuseReflectivity_( DEFAULT_MATERIAL_DIFFUSE_REFLECTIVITY ), \
     specularReflectivity_( DEFAULT_MATERIAL_SPECULAR_REFLECTIVITY ), \
-    specularExponent_( DEFAULT_MATERIAL_SPECULAR_EXPONENT )
+    specularExponent_( DEFAULT_MATERIAL_SPECULAR_EXPONENT ), \
+    texture_( nullptr )
 
 
 /***
@@ -62,13 +63,31 @@ Material::Material( const MaterialInfo& materialInfo ) :
     diffuseReflectivity_( materialInfo.diffuseReflectivity ),
     specularReflectivity_( materialInfo.specularReflectivity ),
     specularExponent_( materialInfo.specularExponent )
-{}
+{
+    if( materialInfo.textureInfo ){
+        texture_ = std::unique_ptr< Texture >( new Texture( *( materialInfo.textureInfo ) ) );
+    }
+}
 
 
 Material::Material( PackableColor color ) :
     MATERIAL_DEFAULT_INITIALIZATION
 {
-    color_ = color.toVec4();
+        color_ = color.toVec4();
+}
+
+
+Material::Material( const Material& b ) :
+    name_( b.name_ ),
+    color_( b.color_ ),
+    ambientReflectivity_( b.ambientReflectivity_ ),
+    diffuseReflectivity_( b.diffuseReflectivity_ ),
+    specularReflectivity_( b.specularReflectivity_ ),
+    specularExponent_( b.specularExponent_ )
+{
+    if( b.texture_ ){
+        texture_ = std::unique_ptr< Texture >( new Texture( std::move( *( b.texture_ ) ) ) );
+    }
 }
 
 
@@ -221,6 +240,10 @@ void Material::sendToShader() const
 {
     GLint currentShaderProgram = -1;
     GLint uniformLocation = -1;
+
+    if( texture_ ){
+        texture_->sendToShader();
+    }
 
     // Get current shader program ID.
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );

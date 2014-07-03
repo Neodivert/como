@@ -18,6 +18,7 @@
 
 #include "texture.hpp"
 #include <SOIL/SOIL.h>
+#include <cassert>
 
 namespace como {
 
@@ -25,23 +26,21 @@ namespace como {
  * 1. Construction
  ***/
 
-Texture::Texture( const std::string &imagePath )
+Texture::Texture( const TextureInfo& textureInfo )
 {
-    (void)( imagePath ); // TODO: Remove.
+    oglName_ = SOIL_load_OGL_texture_from_memory(
+                (const unsigned char*)( textureInfo.imageFileData.c_str() ),
+                textureInfo.imageFileData.size(),
+                0,
+                0,
+                SOIL_FLAG_TEXTURE_RECTANGLE );
 
-    // Generate a new texture object.
-    glGenTextures( 1, &oglName_ );
-
-    // Bind the texture object to a texture unit and target.
-    glActiveTexture( GL_TEXTURE0 );
-    glBindTexture( GL_TEXTURE_2D, oglName_ );
+    assert( glGetString( GL_EXTENSIONS ) != nullptr ); // TODO: Remove this in the future.
+    assert( oglName_ != 0 );
 
     // Retrieve the location in shader of the texture sampler for futher
     // access.
     initSamplerShaderLocation();
-
-    // Load texture data from file.
-    loadFromFile( imagePath );
 }
 
 
@@ -52,9 +51,8 @@ Texture::Texture( const std::string &imagePath )
 Texture::~Texture()
 {
     // TODO: Release Texture name (OpenGL).
+    glDeleteTextures( 1, &oglName_ );
 }
-
-
 
 
 /***
@@ -70,34 +68,6 @@ void Texture::initSamplerShaderLocation()
 
     // Get location of sampler in shader.
     samplerShaderLocation_ = glGetUniformLocation( currentShaderProgram, "sampler" );
-}
-
-
-void Texture::loadFromFile( const std::string& imagePath )
-{
-    (void)( imagePath ); // TODO: Remove
-    int imageWidth = 32; // TODO: Retrieve dimensions from image.
-    int imageHeight = 32;
-
-    unsigned char* imageData = SOIL_load_image( imagePath.c_str(), &imageWidth, &imageHeight, nullptr, 0 );
-
-    // Set the texture's storage.
-    glTexStorage2D( GL_TEXTURE_2D,  // target
-                    1,              // levels
-                    GL_RGB8,       // internal format
-                    imageWidth,
-                    imageHeight );
-
-    // Set the texture's data.
-    glTexSubImage2D( GL_TEXTURE_2D,
-                     0,
-                     0,
-                     0,
-                     imageWidth,
-                     imageHeight,
-                     GL_RGB,
-                     GL_UNSIGNED_BYTE,
-                     imageData );
 }
 
 

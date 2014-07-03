@@ -22,6 +22,8 @@
 #include <client/models/dependencies.hpp>
 #include <common/packables/array/packable_color.hpp>
 #include <common/mesh_info/material_info.hpp>
+#include <client/models/3d/textures/texture.hpp>
+
 
 namespace como {
 
@@ -37,6 +39,8 @@ class Material
         glm::vec3 specularReflectivity_; // ("Ks" in a *.mtl file).
         float specularExponent_;         // ("Ns" in a *.mtl file).
 
+        std::unique_ptr< Texture > texture_;
+
 
         /***
          * 1. Construction
@@ -46,7 +50,7 @@ class Material
         Material( const std::string& name );
         Material( const MaterialInfo& materialInfo );
         Material( PackableColor color );
-        Material( const Material& ) = default;
+        Material( const Material& );
         Material( Material&& ) = default;
 
 

@@ -32,10 +32,11 @@
 #include <cstdio>
 #include <fstream>
 #include <common/primitives/obj_primitives_importer.hpp>
+#include <QOffscreenSurface>
 
 namespace como {
 
-class ClientPrimitivesManager : public QObject, public AbstractPrimitivesManager
+class ClientPrimitivesManager : public QOffscreenSurface, public AbstractPrimitivesManager
 {
     Q_OBJECT
 

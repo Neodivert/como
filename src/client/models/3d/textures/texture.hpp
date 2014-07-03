@@ -25,6 +25,7 @@
 #include <GL/gl.h>
 
 #include <memory>
+#include <common/mesh_info/texture_info.hpp>
 
 namespace como {
 
@@ -39,9 +40,9 @@ class Texture
          * 1. Construction
          ***/
         Texture() = delete;
-        Texture( const std::string& imagePath );
+        Texture( const TextureInfo& textureInfo );
         Texture( const Texture& ) = delete;
-        Texture( Texture&& ) = delete;
+        Texture( Texture&& ) = default;
 
 
         /***
@@ -55,7 +56,6 @@ class Texture
          ***/
     private:
         void initSamplerShaderLocation();
-        void loadFromFile( const std::string& imagePath );
     public:
 
 
