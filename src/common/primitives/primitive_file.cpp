@@ -241,6 +241,7 @@ void PrimitiveFile::readOpenGLData( MeshOpenGLData& oglData, std::ifstream& file
     // Read the number of components per vertex.
     std::getline( file, fileLine );
     oglData.componentsPerVertex = atoi( fileLine.c_str() );
+    oglData.includesTextures = (oglData.componentsPerVertex == 8); // TODO: Don't use magic numbers!
 
     // Read the number of VBO vertices.
     std::getline( file, fileLine );

@@ -94,7 +94,8 @@ void Texture::initSamplerShaderLocation()
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
 
     // Get location of sampler in shader.
-    samplerShaderLocation_ = glGetUniformLocation( currentShaderProgram, "sampler" );
+    samplerShaderLocation_ = glGetUniformLocation( currentShaderProgram, "textureSampler" );
+    assert( samplerShaderLocation_ != -1 );
 }
 
 
@@ -107,7 +108,7 @@ void Texture::sendToShader() const
     // Connect sampler to texture unit 0.
     glActiveTexture( GL_TEXTURE0 );
     glUniform1i( samplerShaderLocation_, 0 );
+    glBindTexture( GL_TEXTURE_2D, oglName_ );
 }
-
 
 }
