@@ -21,6 +21,7 @@
 
 #include <string>
 #include <glm/glm.hpp>
+#include "texture_info.hpp"
 
 namespace como {
 
@@ -34,6 +35,8 @@ struct MaterialInfo
     glm::vec3 diffuseReflectivity;
     glm::vec3 specularReflectivity;
     float specularExponent;
+
+    TextureInfo textureInfo;
 };
 
 } // namespace como
