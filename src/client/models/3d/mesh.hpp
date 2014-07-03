@@ -82,6 +82,7 @@ class Mesh : public Drawable
         glm::vec4 transformedCentroid;
 
         bool includesTexture_;
+        unsigned int componensPerVertex_;
 
 
 

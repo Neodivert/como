@@ -121,6 +121,7 @@ void Mesh::init( const MeshOpenGLData& oglData )
     OpenGL::checkStatus( "Mesh::init - 4" );
 
     includesTexture_ = oglData.includesTextures;
+    componensPerVertex_ = oglData.componentsPerVertex;
 
     initVAO();
     OpenGL::checkStatus( "Mesh::init - 5" );
@@ -252,13 +253,7 @@ unsigned int Mesh::getBytesPerVertex() const
 
 unsigned int Mesh::getComponentsPerVertex() const
 {
-    if( includesTexture_ ){
-        // 3D Vertex coordinates + 3D normal + 2D UV coordinates.
-        return 8;
-    }else{
-        // 3D Vertex coordinates + 3D normal
-        return 6;
-    }
+    return componensPerVertex_;
 }
 
 

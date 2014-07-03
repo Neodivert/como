@@ -34,8 +34,6 @@ OpenGL::OpenGL()
             getShaderVariableLocation( "lightingEnabled" );
     shaderVariablesLocations_[ShaderVariable::TEXTURING_ENABLED] =
             getShaderVariableLocation( "texturingEnabled" );
-
-    std::cout << "texturingEnabled location: " << shaderVariablesLocations_.at( ShaderVariable::TEXTURING_ENABLED ) << std::endl;
 }
 
 

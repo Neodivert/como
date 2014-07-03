@@ -195,13 +195,19 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
     unsigned int triangleVertexIndex = 0;
     GLuint compoundVertexIndex = 0;
 
-    meshInfo.oglData.includesTextures = ( meshInfo.textureData.uvCoordinates.size() != 0 );
+    if( meshInfo.textureData.uvCoordinates.size() ){
+        meshInfo.oglData.includesTextures = true;
+        meshInfo.oglData.componentsPerVertex = 8;
+    }else{
+        meshInfo.oglData.includesTextures = false;
+        meshInfo.oglData.componentsPerVertex = 6;
+    }
 
     for( currentTriangleIndex = 0; currentTriangleIndex < meshInfo.vertexData.vertexTriangles.size(); currentTriangleIndex++ ){
         for( triangleVertexIndex = 0; triangleVertexIndex < 3; triangleVertexIndex++ ){
             compoundVertex[0] = meshInfo.vertexData.vertexTriangles[currentTriangleIndex][triangleVertexIndex];
             compoundVertex[1] = meshInfo.normalData.normalTriangles[currentTriangleIndex][triangleVertexIndex]; // TODO: Remove normal triangles?.
-            compoundVertex[2] = ( meshInfo.textureData.uvTriangles.size() ) ? meshInfo.textureData.uvTriangles[currentTriangleIndex][triangleVertexIndex] : 0;
+            compoundVertex[2] = ( meshInfo.oglData.includesTextures ) ? meshInfo.textureData.uvTriangles[currentTriangleIndex][triangleVertexIndex] : 0;
 
             finalVerticesIt = finalVertices.find( compoundVertex );
             if( finalVerticesIt != finalVertices.end() ){
@@ -219,7 +225,7 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
                 meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][2] );
 
                 // Insert UV coordinates (if exist).
-                if( meshInfo.textureData.uvCoordinates.size() ){
+                if( meshInfo.oglData.includesTextures ){
                     meshInfo.oglData.vboData.push_back( meshInfo.textureData.uvCoordinates[ compoundVertex[2] ][0] );
                     meshInfo.oglData.vboData.push_back( meshInfo.textureData.uvCoordinates[ compoundVertex[2] ][1] );
                 }

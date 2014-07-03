@@ -73,7 +73,7 @@ void PrimitiveFile::writeOpenGLData( const MeshOpenGLData& oglData, std::ofstrea
     unsigned int vertexIndex = 0;
     unsigned int componentIndex = 0;
     unsigned int nVBOVertices = 0;
-    unsigned int componentsPerVertex = oglData.getComponentsPerVertex();
+    unsigned int componentsPerVertex = oglData.componentsPerVertex;
     unsigned int triangleIndex = 0;
 
     nVBOVertices = oglData.vboData.size() / componentsPerVertex;
@@ -86,7 +86,7 @@ void PrimitiveFile::writeOpenGLData( const MeshOpenGLData& oglData, std::ofstrea
 
     // Write the VBO data to the file (one vertex per line).
     for( vertexIndex = 0; vertexIndex < nVBOVertices; vertexIndex++ ){
-        for( componentIndex = 0; componentIndex < oglData.getComponentsPerVertex()-1; componentIndex++ ){
+        for( componentIndex = 0; componentIndex < oglData.componentsPerVertex-1; componentIndex++ ){
             file << oglData.vboData[vertexIndex * componentsPerVertex + componentIndex] << " ";
         }
         file << oglData.vboData[vertexIndex * componentsPerVertex + componentIndex] << std::endl;
@@ -228,7 +228,6 @@ void PrimitiveFile::readOpenGLData( MeshOpenGLData& oglData, std::ifstream& file
     unsigned int vertexIndex = 0;
     unsigned int componentIndex = 0;
     unsigned int nVBOVertices = 0;
-    unsigned int componentsPerVertex = 0;
     unsigned int triangleIndex = 0;
     unsigned int nTriangles = 0;
     std::array< GLuint, 3 > triangle;
@@ -241,7 +240,7 @@ void PrimitiveFile::readOpenGLData( MeshOpenGLData& oglData, std::ifstream& file
 
     // Read the number of components per vertex.
     std::getline( file, fileLine );
-    componentsPerVertex = atoi( fileLine.c_str() );
+    oglData.componentsPerVertex = atoi( fileLine.c_str() );
 
     // Read the number of VBO vertices.
     std::getline( file, fileLine );
@@ -252,7 +251,7 @@ void PrimitiveFile::readOpenGLData( MeshOpenGLData& oglData, std::ifstream& file
         std::getline( file, fileLine );
         lineTail = fileLine;
 
-        for( componentIndex = 0; componentIndex < componentsPerVertex - 1; componentIndex++ ){
+        for( componentIndex = 0; componentIndex < oglData.componentsPerVertex - 1; componentIndex++ ){
             token = lineTail.substr( 0, lineTail.find( ' ' ) );
 
             oglData.vboData.push_back( atof( token.c_str() ) );

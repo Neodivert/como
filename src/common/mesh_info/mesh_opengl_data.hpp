@@ -34,17 +34,8 @@ struct MeshOpenGLData {
     GLFloatBuffer vboData;
     GLUintBuffer eboData;
 
-    inline unsigned int getComponentsPerVertex() const;
+    unsigned int componentsPerVertex;
 };
-
-unsigned int MeshOpenGLData::getComponentsPerVertex() const
-{
-    if( !includesTextures ){
-        return 6; // 3D position + 3D normal.
-    }else{
-        return 8; // 3D position + 3D normal + 2D UV coordinates.
-    }
-}
 
 } // namespace como
 
