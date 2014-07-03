@@ -31,7 +31,15 @@ Texture::Texture( const TextureInfo& textureInfo )
     SDL_Surface* textureImage = nullptr;
     SDL_RWops* textureData = nullptr;
 
+    // Generate a texture GL name.
+    glGenTextures( 1, &oglName_ );
+    assert( oglName_ != 0 );
 
+    // Bind the previous texture as a 2D texture.
+    glActiveTexture( GL_TEXTURE0 );
+    glBindTexture( GL_TEXTURE_2D, oglName_ );
+
+    // Load texture data from memory.
     textureData = SDL_RWFromConstMem(
                 &( textureInfo.imageFileData[0] ),
                 textureInfo.imageFileData.size() );
@@ -41,9 +49,20 @@ Texture::Texture( const TextureInfo& textureInfo )
         throw std::runtime_error( IMG_GetError() );
     }
 
-    (void)( textureInfo );
-    assert( oglName_ != 0 );
+    // Set texture storage and data.
+    glTexImage2D(
+                GL_TEXTURE_2D,
+                1,
+                GL_RGBA, // TODO: Retrieve this value from textureImage.
+                textureImage->w,
+                textureImage->h,
+                0,
+                GL_RGBA,
+                GL_UNSIGNED_BYTE,
+                textureImage->pixels // TODO: Do I have to have the ->pitch into account?
+                );
 
+    // Free resources.
     SDL_FreeSurface( textureImage );
 
     // Retrieve the location in shader of the texture sampler for futher
