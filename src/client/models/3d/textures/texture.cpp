@@ -28,8 +28,23 @@ namespace como {
 
 Texture::Texture( const TextureInfo& textureInfo )
 {
+    SDL_Surface* textureImage = nullptr;
+    SDL_RWops* textureData = nullptr;
+
+
+    textureData = SDL_RWFromConstMem(
+                &( textureInfo.imageFileData[0] ),
+                textureInfo.imageFileData.size() );
+
+    textureImage = IMG_Load_RW( textureData, 0 );
+    if( !textureImage ){
+        throw std::runtime_error( IMG_GetError() );
+    }
+
     (void)( textureInfo );
     assert( oglName_ != 0 );
+
+    SDL_FreeSurface( textureImage );
 
     // Retrieve the location in shader of the texture sampler for futher
     // access.
