@@ -23,9 +23,14 @@
 #include <boost/filesystem.hpp>
 
 #include <common/primitives/primitive_file.hpp>
+#include <SDL2/SDL_image.h>
 
 int main( int argc, char *argv[] )
 {
+    // TODO: Add checking code.
+    IMG_Init( IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF );
+    atexit( IMG_Quit );
+
     int mainExitValue = 0;
 
     boost::system::error_code errorCode;

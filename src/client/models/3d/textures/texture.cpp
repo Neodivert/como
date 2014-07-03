@@ -18,6 +18,7 @@
 
 #include "texture.hpp"
 #include <cassert>
+#include <SDL2/SDL_image.h>
 
 namespace como {
 

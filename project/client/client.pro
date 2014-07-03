@@ -30,6 +30,8 @@ UI_DIR = $$BUILD_DATA_DIR/ui
 
 INCLUDEPATH += ../../src
 
+LIBS += -lSDL2_image
+
 
 # Include files and parameters that are common to both client and server.
 include( ../common/common.pri )
