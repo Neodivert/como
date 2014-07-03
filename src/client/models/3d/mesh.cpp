@@ -244,27 +244,21 @@ void Mesh::initVAO()
     }
 }
 
-unsigned int Mesh::getOwnBytesPerVertex() const
-{
-    return getOwnComponentsPerVertex() * sizeof( GL_FLOAT );
-}
-
-unsigned int Mesh::getOwnComponentsPerVertex() const
-{
-    // Vertex coordinates (3 components) + normal coordinates (3 components).
-    return 6;
-}
-
 
 unsigned int Mesh::getBytesPerVertex() const
 {
     return getComponentsPerVertex() * sizeof( GL_FLOAT );
 }
 
-
 unsigned int Mesh::getComponentsPerVertex() const
 {
-    return getOwnComponentsPerVertex();
+    if( includesTexture_ ){
+        // 3D Vertex coordinates + 3D normal + 2D UV coordinates.
+        return 8;
+    }else{
+        // 3D Vertex coordinates + 3D normal
+        return 6;
+    }
 }
 
 
