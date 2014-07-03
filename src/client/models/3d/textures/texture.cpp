@@ -17,7 +17,6 @@
 ***/
 
 #include "texture.hpp"
-#include <SOIL/SOIL.h>
 #include <cassert>
 
 namespace como {
@@ -28,14 +27,7 @@ namespace como {
 
 Texture::Texture( const TextureInfo& textureInfo )
 {
-    oglName_ = SOIL_load_OGL_texture_from_memory(
-                (const unsigned char*)( textureInfo.imageFileData.c_str() ),
-                textureInfo.imageFileData.size(),
-                0,
-                0,
-                SOIL_FLAG_TEXTURE_RECTANGLE );
-
-    assert( glGetString( GL_EXTENSIONS ) != nullptr ); // TODO: Remove this in the future.
+    (void)( textureInfo );
     assert( oglName_ != 0 );
 
     // Retrieve the location in shader of the texture sampler for futher

@@ -23,7 +23,6 @@
 #include <common/primitives/primitive_file.hpp>
 #include <map>
 #include <array>
-#include <SOIL/SOIL.h>
 
 namespace como {
 
