@@ -38,6 +38,7 @@ GLint Mesh::normalMatrixLocation_ = -1;
 
 const GLint SHADER_VERTEX_ATTR_LOCATION = 0;
 const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
+const GLint SHADER_UV_ATTR_LOCATION = 2;
 
 
 
@@ -118,6 +119,8 @@ void Mesh::init( const MeshOpenGLData& oglData )
 
     populateOpenGLBuffers( oglData );
     OpenGL::checkStatus( "Mesh::init - 4" );
+
+    includesTexture_ = oglData.includesTextures;
 
     initVAO();
     OpenGL::checkStatus( "Mesh::init - 5" );
@@ -234,6 +237,11 @@ void Mesh::initVAO()
     // Enable previous vertex data arrays.
     glEnableVertexAttribArray( SHADER_VERTEX_ATTR_LOCATION );
     glEnableVertexAttribArray( SHADER_NORMAL_ATTR_LOCATION );
+
+    if( includesTexture_ ){
+        glVertexAttribPointer( SHADER_UV_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, getBytesPerVertex(), (void *)( COMPONENTS_PER_VERTEX_POSITION * 2 * sizeof( GL_FLOAT ) ) );
+        glEnableVertexAttribArray( SHADER_UV_ATTR_LOCATION );
+    }
 }
 
 unsigned int Mesh::getOwnBytesPerVertex() const
@@ -356,6 +364,12 @@ void Mesh::update()
 void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) const
 {
     OpenGL::checkStatus( "Mesh::draw - begin" );
+
+    if( includesTexture_ ){
+        openGL->enableTexturing();
+    }else{
+        openGL->disableTexturing();
+    }
 
     // Compute MVP matrix and pass it to the shader.
     sendMVPMatrixToShader( viewProjMatrix * transformationMatrix );

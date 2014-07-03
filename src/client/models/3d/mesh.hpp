@@ -81,6 +81,8 @@ class Mesh : public Drawable
         glm::vec4 originalCentroid;
         glm::vec4 transformedCentroid;
 
+        bool includesTexture_;
+
         // Mesh's material.
         MaterialConstPtr material_;
 
