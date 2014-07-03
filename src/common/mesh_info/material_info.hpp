@@ -22,6 +22,7 @@
 #include <string>
 #include <glm/glm.hpp>
 #include "texture_info.hpp"
+#include <memory>
 
 namespace como {
 
@@ -36,8 +37,26 @@ struct MaterialInfo
     glm::vec3 specularReflectivity;
     float specularExponent;
 
-    TextureInfo textureInfo;
+    std::unique_ptr< TextureInfo > textureInfo;
+
+    MaterialInfo() : textureInfo( nullptr ) {}
+    inline MaterialInfo( const MaterialInfo& b );
 };
+
+
+MaterialInfo::MaterialInfo( const MaterialInfo& b ) :
+    name( b.name ),
+    color( b.color ),
+    ambientReflectivity( b.ambientReflectivity ),
+    diffuseReflectivity( b.diffuseReflectivity ),
+    specularReflectivity( b.specularReflectivity ),
+    specularExponent( b.specularExponent )
+{
+    if( b.textureInfo ){
+        textureInfo = std::unique_ptr< TextureInfo >( new TextureInfo( *( b.textureInfo ) ) );
+    }
+}
+
 
 } // namespace como
 

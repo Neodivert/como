@@ -310,10 +310,12 @@ void OBJPrimitivesImporter::processMaterialFileLine( std::string filePath, std::
 }
 
 
-void OBJPrimitivesImporter::processTextureFile( std::string filePath, TextureInfo& textureInfo )
+void OBJPrimitivesImporter::processTextureFile( std::string filePath, std::unique_ptr<TextureInfo>& textureInfo )
 {
     std::ifstream file;
     unsigned int imageFileSize;
+
+    textureInfo = std::unique_ptr< TextureInfo >( new TextureInfo );
 
     file.open( filePath, std::ios_base::binary );
     if( !file.is_open() ){
@@ -325,8 +327,8 @@ void OBJPrimitivesImporter::processTextureFile( std::string filePath, TextureInf
     imageFileSize = file.tellg();
     file.seekg( 0, file.beg );
 
-    textureInfo.imageFileData.reserve( imageFileSize );
-    file.read( &( textureInfo.imageFileData[0] ), imageFileSize );
+    textureInfo->imageFileData.reserve( imageFileSize );
+    file.read( &( textureInfo->imageFileData[0] ), imageFileSize );
 
     file.close();
 }
