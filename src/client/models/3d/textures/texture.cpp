@@ -19,6 +19,7 @@
 #include "texture.hpp"
 #include <cassert>
 #include <SDL2/SDL_image.h>
+#include <client/models/utilities/open_gl.hpp>
 
 namespace como {
 
@@ -28,6 +29,8 @@ namespace como {
 
 Texture::Texture( const TextureInfo& textureInfo )
 {
+    OpenGL::checkStatus( "Texture constructor - begin" );
+
     SDL_Surface* textureImage = nullptr;
     SDL_RWops* textureData = nullptr;
 
@@ -38,6 +41,14 @@ Texture::Texture( const TextureInfo& textureInfo )
     // Bind the previous texture as a 2D texture.
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, oglName_ );
+
+    OpenGL::checkStatus( "Texture constructor - before setting GL_UNPACK* parameters" );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    //glPixelStorei( GL_UNPACK_ROW_LENGTH, 2 );
+    //glPixelStorei( GL_UNPACK_IMAGE_HEIGHT, 2 );
+    glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+    OpenGL::checkStatus( "Texture constructor - after setting GL_UNPACK* parameters" );
 
     // Load texture data from memory.
     textureData = SDL_RWFromConstMem(
@@ -52,8 +63,8 @@ Texture::Texture( const TextureInfo& textureInfo )
     // Set texture storage and data.
     glTexImage2D(
                 GL_TEXTURE_2D,
-                1,
-                GL_RGBA, // TODO: Retrieve this value from textureImage.
+                0,
+                GL_RGBA8, // TODO: Retrieve this value from textureImage.
                 textureImage->w,
                 textureImage->h,
                 0,
@@ -68,6 +79,8 @@ Texture::Texture( const TextureInfo& textureInfo )
     // Retrieve the location in shader of the texture sampler for futher
     // access.
     initSamplerShaderLocation();
+
+    OpenGL::checkStatus( "Texture constructor - end" );
 }
 
 
