@@ -130,6 +130,14 @@ PackableDrawableID DrawablesManager::createMesh( MeshVertexData vertexData, Mesh
 }
 
 
+void DrawablesManager::createMesh(PackableDrawableID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, MaterialConstPtr material)
+{
+    DrawablePtr mesh( new Mesh( vertexData, oglData, material ) );
+
+    addDrawable( meshID.creatorID.getValue(), mesh, meshID );
+}
+
+
 // FIXME: Duplicated code.
 /*
 void DrawablesManager::createRemoteMesh( ResourceID primitiveID, PackableDrawableID drawableID, MaterialID materialID )

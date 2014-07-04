@@ -100,9 +100,15 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID primitiveID, PackableDrawableID meshID, MaterialID materialID )
 {
     (void)( userID );
-    (void)( primitiveID );
-    (void)( meshID );
-    (void)( materialID );
+
+    MeshInfo meshInfo;
+
+    PrimitiveFile::read( meshInfo, getPrimitiveFilePath( primitiveID ) );
+
+    materialsManager_->createMaterial( materialID, meshInfo.materialsData[0] ); // TODO: Use multiple materials?
+
+    drawablesManager_->createMesh( meshID, meshInfo.vertexData, meshInfo.oglData, materialsManager_->getMaterial( materialID ) );
+
     // TODO: Reimplement.
     /*
     // Get the "absolute" path to the specification file of the

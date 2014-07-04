@@ -106,6 +106,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
 
     public:
         PackableDrawableID createMesh( MeshVertexData vertexData, MeshOpenGLData oglData, MaterialConstPtr material );
+        void createMesh( PackableDrawableID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, MaterialConstPtr material );
 
     private:
         //void createRemoteMesh( ResourceID primitiveID, PackableDrawableID drawableID, MaterialID materialID );

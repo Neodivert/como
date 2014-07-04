@@ -73,7 +73,7 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
          ***/
     public:
         MaterialID createMaterial( const MaterialInfo& materialInfo );
-    private:
+    //private:
         void createMaterial( MaterialID id, const MaterialInfo &materialInfo );
 
 
