@@ -114,6 +114,8 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
         // Extract the UV coordinates from the line and add it to the Mesh.
         sscanf( lineBody.c_str(), "%f %f", &textureCoordinates[0], &textureCoordinates[1] );
 
+        // Invert Y component. (TODO: Move this computation to another place?)
+        textureCoordinates.y = 1.0f - textureCoordinates.y;
         meshInfo.textureData.uvCoordinates.push_back( textureCoordinates );
     }else if( lineHeader == "f" ){
         // TODO: Process multiple types of "face lines".
