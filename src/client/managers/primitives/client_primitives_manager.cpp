@@ -162,13 +162,13 @@ void ClientPrimitivesManager::executeRemoteCommand( PrimitiveCommandConstPtr com
             const PrimitiveCreationCommand* primitiveCreationCommand =
                     dynamic_cast< const PrimitiveCreationCommand* >( command.get() );
 
-            PrimitiveInfo tmpPrimitive = primitiveCreationCommand->getPrimitiveInfo();
+            PrimitiveInfo primitiveInfo = primitiveCreationCommand->getPrimitiveInfo();
             std::string dstFilePath =
-                    getCategoryAbsoluteePath( tmpPrimitive.category ) +
+                    getCategoryAbsoluteePath( primitiveInfo.category ) +
                     "/" +
-                    boost::filesystem::basename( tmpPrimitive.filePath ) +
-                    boost::filesystem::extension( tmpPrimitive.filePath );
-            PrimitiveInfo primitiveInfo = tmpPrimitive.copy( dstFilePath );
+                    boost::filesystem::basename( primitiveInfo.filePath ) +
+                    boost::filesystem::extension( primitiveInfo.filePath );
+            primitiveInfo.move( dstFilePath );
 
             log_->debug( "Primitive file received: [", primitiveInfo.filePath, "]\n" );
 

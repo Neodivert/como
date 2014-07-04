@@ -149,9 +149,8 @@ const void* PackableFile::unpack( const void* buffer )
 
     sprintf( consoleCommand, "mkdir -p \"%s\"", filePathBaseName.c_str() );
 
-    // TODO: The std::cout << call is a trick for discarging system return
-    // value. Remove this.
-    std::cout << system( consoleCommand ) << std::endl;
+    int res = system( consoleCommand );
+    (void)(res);
 
     // Unpack the file contents from the given buffer and write them to file.
     castedBuffer = static_cast< const char* >( buffer );

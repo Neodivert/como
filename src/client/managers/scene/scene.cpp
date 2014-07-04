@@ -213,10 +213,7 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         // Copy the scene name given by the server.
         setName( userAcceptancePacket->getSceneName() );
 
-        // Create the scene's primitives directory.
-        createScenePrimitivesDirectory();
-
-        sceneDirPath_ = std::string( SCENES_DIR ) + '/' + sceneName_;
+        createSceneDirectory();
 
         // Initialize the materials manager.
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( localUserID_, server_, log_ ) );
@@ -347,6 +344,22 @@ void Scene::setName( const char* sceneName )
 {
     strncpy( sceneName_, sceneName, NAME_SIZE );
 }
+
+
+void Scene::createSceneDirectory()
+{
+    sceneDirPath_ = std::string( SCENES_DIR ) + '/' + sceneName_;
+
+    unsigned int nameCounter = 1;
+    while( boost::filesystem::exists( sceneDirPath_ ) ){
+        sceneDirPath_ = std::string( SCENES_DIR ) + '/' + sceneName_ + '_' + std::to_string( nameCounter );
+        nameCounter++;
+    }
+
+    boost::filesystem::create_directory( sceneDirPath_ );
+    log_->debug( "Scene directory created [", sceneDirPath_, "]\n" );
+}
+
 
 void Scene::takeOpenGLContext()
 {
@@ -519,39 +532,6 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
                  commandTargetStrings[static_cast<unsigned int>( command->getTarget() )],
                  ") ...OK\n" );
 }
-
-
-// TODO: Duplicated code in Server::createScenePrimitivesDirectory.
-void Scene::createScenePrimitivesDirectory()
-{
-    char scenePrimitivesDirectory[128] = {0};
-    char consoleCommand[256] = {0};
-    int lastCommandResult = 0;
-
-    // Build the path to the scene primitives directory.
-    sprintf( scenePrimitivesDirectory, "%s/%s/primitives", SCENES_DIR, sceneName_ );
-
-    log_->debug( "Creating scene primitives directory [", scenePrimitivesDirectory, "] ...\n" );
-
-    // Copy the server directory for local primitives as this scene's
-    // primitives directory.
-    // TODO: Use a multiplatform alternative (boost::filesystem::copy_directory
-    // doesn't copy directory's contents).
-    sprintf( consoleCommand, "mkdir -p \"%s\"", scenePrimitivesDirectory );
-    lastCommandResult = system( consoleCommand );
-
-    // If there was any error creating the scene primitives directory, throw
-    // an exception.
-    if( lastCommandResult ){
-        throw std::runtime_error( std::string( "Error creating scene primitives directory [" ) +
-                                  scenePrimitivesDirectory +
-                                  "]"
-                                  );
-    }
-
-    log_->debug( "Creating scene primitives directory [", scenePrimitivesDirectory, "] ...OK\n" );
-}
-
 
 bool Scene::hasChangedSinceLastQuery()
 {

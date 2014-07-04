@@ -40,8 +40,6 @@ void UsersList::addUser( UserConnectionCommandConstPtr userConnectedPacket )
     PackableColor userSelectionColor;
     QPixmap pixmap( 50, 50 );
 
-    log_->debug( "\n\n\nAdded user [", userConnectedPacket->getUserID(), "] to users list (GUI)\n\n\n" );
-
     // Retrieve user's selection color.
     userSelectionColor = userConnectedPacket->getSelectionColor();
 

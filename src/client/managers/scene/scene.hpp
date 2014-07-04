@@ -150,6 +150,7 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
 
     protected:
         void setName( const char* sceneName );
+        void createSceneDirectory();
 
 
         /***
