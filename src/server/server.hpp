@@ -191,6 +191,7 @@ class Server
     private:
         std::string getCurrentDayTime() const ;
         void workerThread();
+        void createSceneDirectory();
         void openAcceptor();
         bool nameInUse( const char* newName ) const ;
 

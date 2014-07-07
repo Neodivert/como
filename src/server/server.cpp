@@ -36,13 +36,16 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
     newId_( 1 ),
     port_( port_ )
 {
+    // Initialize the log.
+    log_ = LogPtr( new Log );
+
     unsigned int i;
 
     // Set the scene name.
     strncpy( sceneName_, sceneName, NAME_SIZE );
 
-    // Set the scene dir path.
-    sceneDirPath_ = std::string( SCENES_DIR ) + '/' + sceneName_;
+    // Create the scene directory.
+    createSceneDirectory();
 
     // Create the threads pool.
     for( i=0; i<N_THREADS; i++ ){
@@ -51,9 +54,6 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
 
     // Initialize the commands historic.
     commandsHistoric_ = CommandsHistoricPtr( new CommandsHistoric( std::bind( &Server::broadcast, this ) ) );
-
-    // Initialize the log.
-    log_ = LogPtr( new Log );
 
     // Debug information.
     log_->debug( "Scene [", sceneName_, "] created\n" );
@@ -511,6 +511,21 @@ void Server::workerThread()
     }
 
     log_->debug( "[", boost::this_thread::get_id(), "] Thread finish\n" );
+}
+
+// FIXME: Duplicated code in Scene class (client project).
+void Server::createSceneDirectory()
+{
+    sceneDirPath_ = std::string( SCENES_DIR ) + '/' + sceneName_;
+
+    unsigned int nameCounter = 1;
+    while( boost::filesystem::exists( sceneDirPath_ ) ){
+        sceneDirPath_ = std::string( SCENES_DIR ) + '/' + sceneName_ + '_' + std::to_string( nameCounter );
+        nameCounter++;
+    }
+
+    boost::filesystem::create_directory( sceneDirPath_ );
+    log_->debug( "Scene directory created [", sceneDirPath_, "]\n" );
 }
 
 
