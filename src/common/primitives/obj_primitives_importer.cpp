@@ -76,6 +76,8 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
 
     file.close();
 
+    completePolygonGroups( meshInfo );
+
     if( meshInfo.normalData.normals.size() == 0 ){
         computeVertexNormals( meshInfo.vertexData, meshInfo.normalData );
     }
@@ -98,6 +100,16 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
     lineBody = line.substr( line.find( ' ' ) + 1 );
     if( lineHeader == "o" ){
         primitiveInfo.name = lineBody;
+    }else if( lineHeader == "g" ){
+        PolygonGroupData polygonGroup;
+        polygonGroup.firstTriangle = meshInfo.vertexData.vertexTriangles.size();
+        polygonGroup.lastTriangle = 0;
+
+        if( meshInfo.polygonGroupsData.size() ){
+            meshInfo.polygonGroupsData.back().lastTriangle = meshInfo.vertexData.vertexTriangles.size() - 1;
+        }
+
+        meshInfo.polygonGroupsData.push_back( polygonGroup );
     }else if( lineHeader == "v" ){
         glm::vec3 vertex;
 
@@ -203,6 +215,26 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
         std::string fileDirectory = filePath.substr( 0, filePath.rfind( '/' ) );
         std::string materialFilePath = fileDirectory + '/' + lineBody;
         processMaterialFile( materialFilePath, meshInfo.materialsData );
+    }else if( lineHeader == "usemtl" ){
+        // We have to associate the given material to the current polygon
+        // group. If we don't have any polygon groups, we create one now.
+        if( meshInfo.polygonGroupsData.size() == 0 ){
+            PolygonGroupData polygonGroup;
+            polygonGroup.firstTriangle = meshInfo.vertexData.vertexTriangles.size();
+            polygonGroup.lastTriangle = 0;
+
+            meshInfo.polygonGroupsData.push_back( polygonGroup );
+        }
+        meshInfo.polygonGroupsData.back().materialIndex = getMaterialIndex( meshInfo, lineBody );
+    }
+
+    if( meshInfo.polygonGroupsData.size() == 0 ){
+        PolygonGroupData polygonGroup;
+        polygonGroup.firstTriangle = 0;
+        polygonGroup.lastTriangle = meshInfo.polygonGroupsData.size() - 1;
+        polygonGroup.materialIndex = 0;
+
+        meshInfo.polygonGroupsData.push_back( polygonGroup );
     }
 }
 
@@ -285,6 +317,36 @@ void OBJPrimitivesImporter::computeVertexNormals( const MeshVertexData &vertexDa
     }
 
     normalData.normalTriangles = vertexData.vertexTriangles;
+}
+
+
+void OBJPrimitivesImporter::completePolygonGroups( MeshInfo& meshInfo )
+{
+    unsigned int i;
+
+    for( i=0; i < meshInfo.polygonGroupsData.size() - 1; i++ ){
+        meshInfo.polygonGroupsData[i].lastTriangle = meshInfo.polygonGroupsData[i+1].firstTriangle - 1;
+    }
+    if( i < meshInfo.polygonGroupsData.size() ){
+        meshInfo.polygonGroupsData[i].lastTriangle = meshInfo.vertexData.vertexTriangles.size() - 1;
+    }
+}
+
+
+unsigned int OBJPrimitivesImporter::getMaterialIndex( const MeshInfo &meshInfo, std::string name )
+{
+    unsigned int i = 0;
+
+    while( i < meshInfo.materialsData.size() ){
+        if( meshInfo.materialsData[i].name == name ){
+            return i;
+        }
+        i++;
+    }
+
+    throw std::runtime_error( std::string( "OBJPrimitivesImporter - material [" ) +
+                              name +
+                              "] not found" );
 }
 
 

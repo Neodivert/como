@@ -21,12 +21,7 @@
 
 #include <common/mesh_info/mesh_info.hpp>
 #include "primitives_importer.hpp"
-/*
-#define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
-#include <GL/gl.h>
-#include <array>
-*/
+#include <map>
 
 namespace como {
 
@@ -61,6 +56,8 @@ class OBJPrimitivesImporter : PrimitivesImporter {
         void processMeshFileLine( std::string filePath, std::string line, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo );
         void generateMeshVertexData( MeshInfo& meshInfo );
         void computeVertexNormals( const MeshVertexData& vertexData, MeshNormalData& normalData );
+        void completePolygonGroups( MeshInfo& meshInfo );
+        unsigned int getMaterialIndex( const MeshInfo& meshInfo, std::string name );
 
     private:
         void processMaterialFile( std::string filePath, std::vector< MaterialInfo >& materials );

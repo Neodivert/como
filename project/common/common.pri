@@ -99,7 +99,8 @@ HEADERS += \
     ../../src/common/mesh_info/mesh_opengl_data.hpp \
     ../../src/common/mesh_info/material_info.hpp \
     ../../src/common/mesh_info/texture_info.hpp \
-    ../../src/common/scene/basic_scene.hpp
+    ../../src/common/scene/basic_scene.hpp \
+    ../../src/common/mesh_info/polygon_group_data.hpp
 
 
 # Common sources (used by both client and server).

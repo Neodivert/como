@@ -16,34 +16,20 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef MESH_INFO_HPP
-#define MESH_INFO_HPP
+#ifndef POLYGON_GROUP_DATA_HPP
+#define POLYGON_GROUP_DATA_HPP
 
-#include "mesh_vertex_data.hpp"
-#include "mesh_normal_data.hpp"
-#include "mesh_texture_data.hpp"
-#include "mesh_opengl_data.hpp"
-#include "material_info.hpp"
-#include "polygon_group_data.hpp"
-
-
+#include <string>
 
 namespace como {
 
-struct MeshInfo {
-    MeshVertexData vertexData;
-    MeshNormalData normalData;
-    MeshTextureData textureData;
+struct PolygonGroupData {
+    unsigned int firstTriangle;
+    unsigned int lastTriangle;
 
-    MeshOpenGLData oglData;
-
-    std::vector< PolygonGroupData > polygonGroupsData;
-
-    std::vector< MaterialInfo > materialsData;
+    unsigned int materialIndex;
 };
-
 
 } // namespace como
 
-
-#endif // MESH_INFO_HPP
+#endif // POLYGON_GROUP_DATA_HPP
