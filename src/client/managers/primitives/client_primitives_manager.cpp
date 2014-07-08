@@ -110,39 +110,6 @@ void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID pr
     materialsManager_->createMaterial( materialID, meshInfo.materialsData[0] ); // TODO: Use multiple materials?
 
     drawablesManager_->createMesh( meshID, meshInfo.vertexData, meshInfo.oglData, materialsManager_->getMaterial( materialID ) );
-
-    // TODO: Reimplement.
-    /*
-    // Get the "absolute" path to the specification file of the
-    // primitive used for building this mesh.
-    std::string meshFilePath = getPrimitiveFilePath( primitiveID, PrimitiveComponent::MESH );
-    std::string materialFilePath = getPrimitiveFilePath( primitiveID, PrimitiveComponent::MATERIAL );
-    Mesh* mesh = nullptr;
-    TexturePtr texture;
-
-    // Create the material and add it to the materials manager.
-    materialsManager_->createMaterial( materialID, materialFilePath, "*" ); // TODO: Don't use "*"
-
-    // Create the mesh.
-    // TODO: This is somehow ugly for .obj and .mtl files. We first read the
-    // material from the .mtl file and then read the mesh file from .obj
-    // *ignoring* the references in this file to the .mtl file. Is there a
-    // better and more elegant way of reading both mesh and material together?.
-    if( getPrimitiveInfo( primitiveID ).textureFileName.size() ){
-        texture = TexturePtr( new Texture( getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::TEXTURE ) ) );
-        mesh = new TexturizedMesh( materialsManager_->getMaterial( materialID ), texture );
-    }else{
-        mesh = new Mesh( materialsManager_->getMaterial( materialID ) );
-    }
-    mesh->loadFromOBJ( meshFilePath.c_str() );
-    mesh->loadFromOBJ( meshFilePath.c_str() );
-    DrawablePtr drawable = DrawablePtr( mesh );
-
-    drawablesManager_->addDrawable( userID, drawable, meshID );
-
-    log_->debug( "Creating remote mesh - Mesh ID (", meshID,
-                 ") MaterialID ", materialID, "\n" );
-    */
 }
 
 
