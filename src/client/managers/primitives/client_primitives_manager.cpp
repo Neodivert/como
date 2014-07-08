@@ -174,7 +174,7 @@ void ClientPrimitivesManager::executeRemoteCommand( PrimitiveCommandConstPtr com
             std::string dstFilePath =
                     getCategoryAbsoluteePath( primitiveInfo.category ) +
                     "/" +
-                    boost::filesystem::basename( primitiveInfo.filePath ) +
+                    primitiveInfo.name +
                     boost::filesystem::extension( primitiveInfo.filePath );
             primitiveInfo.move( dstFilePath );
 
