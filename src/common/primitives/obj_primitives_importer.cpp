@@ -59,6 +59,10 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
     std::ifstream file;
     std::string fileLine;
 
+    // Set '.' as the float separator (for parsing floats from a text
+    // line).
+    setlocale( LC_NUMERIC, "C" );
+
     file.open( filePath );
     if( !file.is_open() ){
         throw FileNotOpenException( filePath );
@@ -72,9 +76,9 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
 
     file.close();
 
-    //if( meshInfo.normalData.normals.size() != meshInfo.vertexData.vertices.size() ){
+    if( meshInfo.normalData.normals.size() == 0 ){
         computeVertexNormals( meshInfo.vertexData, meshInfo.normalData );
-    //}
+    }
 
     generateMeshVertexData( meshInfo );
 }
@@ -97,16 +101,8 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
     }else if( lineHeader == "v" ){
         glm::vec3 vertex;
 
-        // Set '.' as the float separator (for parsing floats from a text
-        // line).
-        setlocale( LC_NUMERIC, "C" );
-
         // Extract the vertex from the line and add it to the Mesh.
         sscanf( lineBody.c_str(), "%f %f %f", &vertex[0], &vertex[1], &vertex[2] );
-
-        // Resize the vertex coordinates.
-        //vertex *= 0.5f;
-
         meshInfo.vertexData.vertices.push_back( vertex );
     }else if( lineHeader == "vt" ){
         glm::vec2 textureCoordinates;
@@ -117,6 +113,13 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
         // Invert Y component. (TODO: Move this computation to another place?)
         textureCoordinates.y = 1.0f - textureCoordinates.y;
         meshInfo.textureData.uvCoordinates.push_back( textureCoordinates );
+    }else if( lineHeader == "vn" ){
+        glm::vec3 normal;
+
+        // Extract the normal from the line and add it to the Mesh.
+        sscanf( lineBody.c_str(), "%f %f %f", &normal[0], &normal[1], &normal[2] );
+        meshInfo.normalData.normals.push_back( glm::normalize( normal ) );
+
     }else if( lineHeader == "f" ){
         // TODO: Process multiple types of "face lines".
         std::array< GLuint, 3 > vertexTriangle;
@@ -172,10 +175,28 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
                 meshInfo.textureData.uvTriangles.push_back( uvTriangle );
 
             }else{
-                throw std::runtime_error(
-                            std::string( "OBJPrimitivesImporter doesn't recognize the face line [" ) +
-                            line +
-                            "]" );
+                std::array< GLuint, 3 > normalTriangle;
+
+                if( secondSlashPosition != (firstSlashPosition + 1) ){
+                    componentsRead =
+                            sscanf( lineBody.c_str(), "%u/%u/%u %u/%u/%u %u/%u/%u",
+                            &vertexTriangle[0], &uvTriangle[0], &normalTriangle[0],
+                            &vertexTriangle[1], &uvTriangle[1], &normalTriangle[1],
+                            &vertexTriangle[2], &uvTriangle[2], &normalTriangle[2] );
+
+                    if( componentsRead != 9 ){
+                        throw std::runtime_error( "ERROR reading OBJ face line (v/vt/vn)" );
+                    }
+
+                    meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
+                    meshInfo.textureData.uvTriangles.push_back( uvTriangle );
+                    meshInfo.normalData.normalTriangles.push_back( normalTriangle );
+                }else{
+                    throw std::runtime_error(
+                                std::string( "OBJPrimitivesImporter doesn't recognize the face line [" ) +
+                                line +
+                                "]" );
+                }
             }
         }
     }else if( lineHeader == "mtllib" ){
@@ -183,7 +204,6 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
         std::string materialFilePath = fileDirectory + '/' + lineBody;
         processMaterialFile( materialFilePath, meshInfo.materialsData );
     }
-    // TODO: And the normals?
 }
 
 typedef std::array< GLuint, 3 > CompoundVertex;
