@@ -98,7 +98,8 @@ HEADERS += \
     ../../src/common/mesh_info/mesh_info.hpp \
     ../../src/common/mesh_info/mesh_opengl_data.hpp \
     ../../src/common/mesh_info/material_info.hpp \
-    ../../src/common/mesh_info/texture_info.hpp
+    ../../src/common/mesh_info/texture_info.hpp \
+    ../../src/common/scene/basic_scene.hpp
 
 
 # Common sources (used by both client and server).
@@ -148,4 +149,5 @@ SOURCES += \
     ../../src/common/primitives/obj_primitives_importer.cpp \
     ../../src/common/exceptions/file_not_open_exception.cpp \
     ../../src/common/primitives/primitive_info.cpp \
-    ../../src/common/primitives/primitive_file.cpp
+    ../../src/common/primitives/primitive_file.cpp \
+    ../../src/common/scene/basic_scene.cpp

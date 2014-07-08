@@ -39,7 +39,7 @@ MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     setWindowTitle( tr( "Cooperative Modeller" ) );
 
     // Create a instance of Log.
-    log_ = LogPtr( new Log );
+    log_ = comoApp->getLog();
 
     // Set a QFrame as the central widget. This frame will hold all others widgets.
     setCentralWidget( new QFrame( this ) );

@@ -27,8 +27,8 @@ namespace como {
  * 1. Construction
  ***/
 
-ClientPrimitivesManager::ClientPrimitivesManager( std::string sceneDirPath, ServerInterfacePtr server, DrawablesManagerPtr drawablesManager, MaterialsManagerPtr materialsManager, LogPtr log ) :
-    AbstractPrimitivesManager( sceneDirPath, log ),
+ClientPrimitivesManager::ClientPrimitivesManager( std::string sceneDirPath, std::string sceneTempDirPath, ServerInterfacePtr server, DrawablesManagerPtr drawablesManager, MaterialsManagerPtr materialsManager, LogPtr log ) :
+    AbstractPrimitivesManager( sceneDirPath, sceneTempDirPath, log ),
     server_( server ),
     drawablesManager_( drawablesManager ),
     materialsManager_( materialsManager )
@@ -49,7 +49,9 @@ std::string ClientPrimitivesManager::createPrimitive( std::string filePath, Reso
                 CommandConstPtr(
                     new PrimitiveCreationCommand( id.getCreatorID(),
                                                   id,
-                                                  getPrimitiveInfo( id ) ) ) );
+                                                  getPrimitiveInfo( id ),
+                                                  tempDirPath_
+                                                  ) ) );
 
     emit primitiveAdded( id, getPrimitiveFilePath( id ) );
 

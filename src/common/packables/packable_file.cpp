@@ -20,41 +20,46 @@
 
 namespace como {
 
+int PackableFile::fileCounter = 0;
+
 
 /***
  * 1. Construction
  ***/
 
-PackableFile::PackableFile()
+PackableFile::PackableFile( const std::string& unpackingDirPath ) :
+    unpackingDirPath_( unpackingDirPath ),
+    filePath_( "" ),
+    fileSize_( 0 )
 {
-    // "Register" the filePath and the fileSize as part of this
-    // CompositePackable (for automatic packing / unpacking when calling
-    // CompositePackable packing / unpacking methods).
+    // "Register" the fileSize as part of this CompositePackable (for automatic
+    // packing / unpacking when calling CompositePackable packing / unpacking
+    // methods).
     // The file content's are packed / unpacked explicitly in this class.
-    addPackable( &filePath_ );
     addPackable( &fileSize_ );
 }
 
 
-PackableFile::PackableFile( const PackableString<NAME_SIZE>& filePath, bool createFile ) :
+PackableFile::PackableFile( const std::string& unpackingDirPath, const std::string& filePath, bool createFile ) :
     CompositePackable(),
+    unpackingDirPath_( unpackingDirPath ),
     filePath_( filePath ),
     fileSize_( 0 )
 {
     // Check that we can create or open the file, as requested.
     if( createFile ){
-        file_.open( filePath_.getValue(), std::ios_base::out | std::ios_base::binary | std::ios_base::trunc );
+        file_.open( filePath_.c_str(), std::ios_base::out | std::ios_base::binary | std::ios_base::trunc );
 
         if( !file_.is_open() ){
-            throw std::runtime_error( std::string( "Couldn't create file [" ) + filePath_.getValue() + "]" );
+            throw std::runtime_error( std::string( "Couldn't create file [" ) + filePath_ + "]" );
         }
 
         file_.close();
     }else{
-        file_.open( filePath_.getValue(), std::ios_base::in | std::ios_base::binary );
+        file_.open( filePath_.c_str(), std::ios_base::in | std::ios_base::binary );
 
         if( !file_.is_open() ){
-            throw std::runtime_error( std::string( "PackableFile constructor - Couldn't open file [" ) + filePath_.getValue() + "]" );
+            throw std::runtime_error( std::string( "PackableFile constructor - Couldn't open file [" ) + filePath_ + "]" );
         }
 
         file_.close();
@@ -68,7 +73,6 @@ PackableFile::PackableFile( const PackableString<NAME_SIZE>& filePath, bool crea
     // CompositePackable (for automatic packing / unpacking when calling
     // CompositePackable packing / unpacking methods).
     // The file content's are packed / unpacked explicitly in this class.
-    addPackable( &filePath_ );
     addPackable( &fileSize_ );
 }
 
@@ -79,19 +83,18 @@ PackableFile::PackableFile( const PackableFile& b ) :
     fileSize_( b.fileSize_ )
 {
     // Check that we can open the file.
-    file_.open( filePath_.getValue(), std::ios_base::in | std::ios_base::binary );
+    file_.open( filePath_.c_str(), std::ios_base::in | std::ios_base::binary );
 
     if( !file_.is_open() ){
-        throw std::runtime_error( std::string( "Packable file copy constructor - Couldn't open file [" ) + filePath_.getValue() + "]" );
+        throw std::runtime_error( std::string( "Packable file copy constructor - Couldn't open file [" ) + filePath_ + "]" );
     }
 
     file_.close();
 
-    // "Register" the filePath and the fileSize as part of this
+    // "Register" the the fileSize as part of this
     // CompositePackable (for automatic packing / unpacking when calling
     // CompositePackable packing / unpacking methods).
     // The file content's are packed / unpacked explicitly in this class.
-    addPackable( &filePath_ );
     addPackable( &fileSize_ );
 }
 
@@ -113,7 +116,7 @@ void* PackableFile::PackableFile::pack( void* buffer ) const
     // Pack the file contents into the given buffer.
     castedBuffer = static_cast< char* >( buffer );
 
-    file_.open( filePath_.getValue(), std::ios_base::in | std::ios_base::binary );
+    file_.open( filePath_.c_str(), std::ios_base::in | std::ios_base::binary );
     file_.read( castedBuffer, fileSize_.getValue() );
 
     if( !file_ ){
@@ -142,10 +145,12 @@ const void* PackableFile::unpack( const void* buffer )
     // CompositePackable (parent class), from the given buffer.
     buffer = CompositePackable::unpack( buffer );
 
+    // Set the file path for the file being unpacked.
+    filePath_ = generateUnpackedFilePath();
+
     // Maybe the file being unpacked will be placed in a directory which
     // doesn't exist. Create it.
-    filePathBaseName = filePath_.getValue();
-    filePathBaseName = filePathBaseName.substr( 0, filePathBaseName.rfind( '/' ) );
+    filePathBaseName = filePath_.substr( 0, filePath_.rfind( '/' ) );
 
     sprintf( consoleCommand, "mkdir -p \"%s\"", filePathBaseName.c_str() );
 
@@ -155,17 +160,17 @@ const void* PackableFile::unpack( const void* buffer )
     // Unpack the file contents from the given buffer and write them to file.
     castedBuffer = static_cast< const char* >( buffer );
 
-    file_.open( filePath_.getValue(), std::ios_base::out | std::ios_base::binary );
+    file_.open( filePath_.c_str(), std::ios_base::out | std::ios_base::binary );
 
     if( !file_.is_open() ){
-        sprintf( errorMessage, "ERROR creating file [%s] for unpacking", filePath_.getValue() );
+        sprintf( errorMessage, "ERROR creating file [%s] for unpacking", filePath_.c_str() );
         throw std::runtime_error( errorMessage );
     }
 
     file_.write( castedBuffer, fileSize_.getValue() );
 
     if( !file_ ){
-        sprintf( errorMessage, "ERROR unpacking file [%s]", filePath_.getValue() );
+        sprintf( errorMessage, "ERROR unpacking file [%s]", filePath_.c_str() );
         throw std::runtime_error( errorMessage );
     }
 
@@ -192,7 +197,7 @@ const void* PackableFile::unpack( const void* buffer ) const
     // Read the file contents for checking if they match the buffer contents.
     fileContents = new char[fileSize_.getValue()];
 
-    file_.open( filePath_.getValue(), std::ios_base::in | std::ios_base::binary );
+    file_.open( filePath_.c_str(), std::ios_base::in | std::ios_base::binary );
     file_.read( fileContents, fileSize_.getValue() );
 
     if( !file_ ){
@@ -236,14 +241,18 @@ std::uint32_t PackableFile::getFileSize() const
 
 std::string PackableFile::getFileName() const
 {
-    return boost::filesystem::basename( filePath_.getValue() ) +
-            boost::filesystem::extension( filePath_.getValue() );
+    return boost::filesystem::basename( getFilePath() ) +
+            boost::filesystem::extension( getFilePath() );
 }
 
 
 std::string PackableFile::getFilePath() const
 {
-    return std::string( filePath_.getValue() );
+    if( filePath_ != "" ){
+        return filePath_;
+    }else{
+        throw std::runtime_error( "PackableFile::getFileName() - empty name" );
+    }
 }
 
 
@@ -254,16 +263,22 @@ std::string PackableFile::getFilePath() const
 void PackableFile::updateFileSize()
 {
     // Open the file and set the cursor at the end.
-    file_.open( filePath_.getValue(), std::ios_base::in | std::ios_base::binary | std::ios_base::ate );
+    file_.open( filePath_.c_str(), std::ios_base::in | std::ios_base::binary | std::ios_base::ate );
 
     if( !file_.is_open() ){
-        throw std::runtime_error( std::string( "PackableFile::updateFileSize() - Couldn't open file [" ) + filePath_.getValue() + "]" );
+        throw std::runtime_error( std::string( "PackableFile::updateFileSize() - Couldn't open file [" ) + filePath_.c_str() + "]" );
     }
 
 
     // Update the file size and close the file.
     fileSize_.setValue( static_cast< std::uint32_t >( file_.tellg() ) );
     file_.close();
+}
+
+
+std::string PackableFile::generateUnpackedFilePath() const
+{
+    return unpackingDirPath_ + "/packable_file_" + std::to_string( fileCounter++ ) + ".tmp";
 }
 
 } // namespace como

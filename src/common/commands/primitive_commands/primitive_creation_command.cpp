@@ -11,18 +11,20 @@ namespace como {
  * 1. Construction
  ***/
 
-PrimitiveCreationCommand::PrimitiveCreationCommand() :
-    PrimitiveCommand( PrimitiveCommandType::PRIMITIVE_CREATION, 0, {0, 0} )
+PrimitiveCreationCommand::PrimitiveCreationCommand( const std::string& unpackingDirPath ) :
+    PrimitiveCommand( PrimitiveCommandType::PRIMITIVE_CREATION, 0, {0, 0} ),
+    primitiveFile_( unpackingDirPath )
 {
     ADD_PACKABLES
 }
 
 
-PrimitiveCreationCommand::PrimitiveCreationCommand( UserID userID, ResourceID primitiveID, PrimitiveInfo primitive ) :
+PrimitiveCreationCommand::PrimitiveCreationCommand( UserID userID, ResourceID primitiveID, PrimitiveInfo primitive, const std::string& unpackingDirPath ) :
     PrimitiveCommand( PrimitiveCommandType::PRIMITIVE_CREATION, userID, primitiveID ),
     category_( primitive.category ),
     name_( primitive.name.c_str() ),
-    primitiveFile_( primitive.filePath.c_str() )
+    primitiveFile_( unpackingDirPath, primitive.filePath )
+
 {
     ADD_PACKABLES
 }

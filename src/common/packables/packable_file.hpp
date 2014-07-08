@@ -34,9 +34,14 @@ namespace como {
  * or unpacked from a given buffer.
  */
 class PackableFile : public CompositePackable {
-    private:
+    private:   
+        static int fileCounter;
+
+        /*! \brief Path of the directory where this file will be unpacked */
+        std::string unpackingDirPath_;
+
         /*! \brief Path to the file to be packed / unpacked */
-        PackableString<NAME_SIZE> filePath_;
+        std::string filePath_;
 
         /*! \brief Size of the file to be packed / unpacked */
         PackableUint32< std::uint32_t > fileSize_;
@@ -51,13 +56,16 @@ class PackableFile : public CompositePackable {
          ***/
 
         /*! \brief Default constructor. */
-        PackableFile();
+        PackableFile() = delete;
+
+        /*! \brief  */
+        PackableFile( const std::string& unpackingDirPath );
 
         /*!
          * \brief Constructor. Wraps a file (or created, if requested),
          * making it packable.
          */
-        PackableFile( const PackableString<NAME_SIZE>& filePath, bool createFile = false );
+        PackableFile( const std::string& unpackingDirPath, const std::string& filePath, bool createFile = false );
 
         /*! brief Copy constructor. */
         PackableFile( const PackableFile& b );
@@ -140,6 +148,8 @@ class PackableFile : public CompositePackable {
     protected:
         /*! \brief Update the fileSize attribute. Used when initializing. */
         void updateFileSize();
+
+        std::string generateUnpackedFilePath() const;
 
 
     public:

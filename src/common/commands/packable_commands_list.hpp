@@ -35,6 +35,9 @@ typedef std::list< CommandConstPtr > CommandsList;
 class PackableCommandsList : public Packable
 {
     private:
+        /*! Path of the unpacking directory for commands including files. */
+        std::string unpackingDirPath_;
+
         /*! List of commands */
         CommandsList commands_;
 
@@ -44,7 +47,10 @@ class PackableCommandsList : public Packable
          ***/
 
         /*! \brief Default constructor */
-        PackableCommandsList() = default;
+        PackableCommandsList() = delete;
+
+        /*! \brief Constructor */
+        PackableCommandsList( const std::string& unpackingDirPath );
 
         /*! \brief Copy constructor */
         PackableCommandsList( const PackableCommandsList& b );

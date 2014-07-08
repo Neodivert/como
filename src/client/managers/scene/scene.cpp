@@ -21,11 +21,11 @@
 namespace como {
 
 /***
- * 1. Initialization and destruction
+ * 1. Construction.
  ***/
 
 Scene::Scene( LogPtr log ) :
-    log_( log ),
+    BasicScene( log ),
     localUserID_( 1 ), // Will be updated to its final value in Scene::connect().
     localUserNextDrawableIndex_( 1 ),
     uniformColorLocation( -1 ),
@@ -42,15 +42,13 @@ Scene::Scene( LogPtr log ) :
     qRegisterMetaType< CommandConstPtr >();
     qRegisterMetaType< CommandConstPtr >( "CommandConstPtr" );
 
-    server_ = ServerInterfacePtr( new ServerInterface( log_ ) );
-
-    // Signal / slot: when a command is received from server, execute it on
-    // the local scene.
-    QObject::connect( server_.get(), &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
-
     OpenGL::checkStatus( "Scene - constructor\n" );
 }
 
+
+/***
+ * 2. Destruction
+ ***/
 
 Scene::~Scene()
 {
@@ -61,9 +59,6 @@ Scene::~Scene()
 
     // Primitives manager must be destroyed before Server.
     primitivesManager_.reset();
-
-    log_->debug( "Removing scene dir [", sceneDirPath_, "]\n" );
-    boost::filesystem::remove_all( sceneDirPath_ );
 }
 
 
@@ -202,6 +197,14 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
     try{
         std::shared_ptr< const UserAcceptancePacket > userAcceptancePacket;
 
+        // Initialize the scene.
+        initScene( "scene" );
+
+        log_->debug( "TEMP DIR: [", getTempDirPath(), "]\n" );
+
+        // Create an interface to the server.
+        server_ = ServerInterfacePtr( new ServerInterface( log_, getTempDirPath() ) );
+
         // Try to connect to the server. If there is any error, the method
         // ServerInterface::connect() throws an exception.
         log_->debug( "Connecting to (", host, ":", port, ") with name [", userName, "]...\n" );
@@ -210,22 +213,22 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         // Retrieve the local user ID.
         localUserID_ = userAcceptancePacket->getId();
 
-        // Copy the scene name given by the server.
-        setName( userAcceptancePacket->getSceneName() );
-
-        createSceneDirectory();
+        // Signal / slot: when a command is received from server, execute it on
+        // the local scene.
+        QObject::connect( server_.get(), &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
 
         // Initialize the materials manager.
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( localUserID_, server_, log_ ) );
 
         // Initialize the drawables manager.
-        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, materialsManager_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/scenes/" ) + sceneName_ + std::string( "/primitives" ), oglContext_, log_ ) );
+        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, materialsManager_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/scenes/" ) + getName() + std::string( "/primitives" ), oglContext_, log_ ) );
 
         // Initialize the primitives manager.
-        primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( sceneDirPath_, server_, drawablesManager_, materialsManager_, log_ ) );
+        primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, drawablesManager_, materialsManager_, log_ ) );
 
         // Initialize the lights manager.
         lightsManager_ = LightsManagerPtr( new LightsManager( drawablesManager_, server_, log_ ) );
+
 
         drawablesManager_->addObserver( lightsManager_.get() );
 
@@ -337,27 +340,6 @@ void Scene::setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny )
     }
 
     glUnmapBuffer( GL_ARRAY_BUFFER );
-}
-
-
-void Scene::setName( const char* sceneName )
-{
-    strncpy( sceneName_, sceneName, NAME_SIZE );
-}
-
-
-void Scene::createSceneDirectory()
-{
-    sceneDirPath_ = std::string( SCENES_DIR ) + '/' + sceneName_;
-
-    unsigned int nameCounter = 1;
-    while( boost::filesystem::exists( sceneDirPath_ ) ){
-        sceneDirPath_ = std::string( SCENES_DIR ) + '/' + sceneName_ + '_' + std::to_string( nameCounter );
-        nameCounter++;
-    }
-
-    boost::filesystem::create_directory( sceneDirPath_ );
-    log_->debug( "Scene directory created [", sceneDirPath_, "]\n" );
 }
 
 

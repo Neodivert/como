@@ -27,6 +27,7 @@ namespace como {
 
 Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, unsigned int nThreads ) :
     // Initialize the server parameters.
+    BasicScene( sceneName ),
     io_service_( std::shared_ptr< boost::asio::io_service >( new boost::asio::io_service ) ),
     acceptor_( *io_service_ ),
     work_( *io_service_ ),
@@ -36,16 +37,7 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
     newId_( 1 ),
     port_( port_ )
 {
-    // Initialize the log.
-    log_ = LogPtr( new Log );
-
     unsigned int i;
-
-    // Set the scene name.
-    strncpy( sceneName_, sceneName, NAME_SIZE );
-
-    // Create the scene directory.
-    createSceneDirectory();
 
     // Create the threads pool.
     for( i=0; i<N_THREADS; i++ ){
@@ -54,9 +46,6 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
 
     // Initialize the commands historic.
     commandsHistoric_ = CommandsHistoricPtr( new CommandsHistoric( std::bind( &Server::broadcast, this ) ) );
-
-    // Debug information.
-    log_->debug( "Scene [", sceneName_, "] created\n" );
 }
 
 
@@ -106,9 +95,6 @@ Server::~Server()
 {
     // Primitives manager must be destroyed before Server.
     primitivesManager_.reset();
-
-    log_->debug( "Removing scene dir [", sceneDirPath_, "]\n" );
-    boost::filesystem::remove_all( sceneDirPath_ );
 }
 
 
@@ -126,7 +112,7 @@ void Server::run()
 
         // Create and initialize the primitives directory for the current
         // scene.
-        primitivesManager_ = std::unique_ptr< ServerPrimitivesManager >( new ServerPrimitivesManager( sceneDirPath_, commandsHistoric_, log_ ) );
+        primitivesManager_ = std::unique_ptr< ServerPrimitivesManager >( new ServerPrimitivesManager( getDirPath(), getTempDirPath(), commandsHistoric_, log_ ) );
 
         // Create a directional light with with no owner and synchronise it in
         // the commands historic.
@@ -243,7 +229,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         }
 
         // Send the scene name within the UserAcceptancePacket.
-        userAcceptedPacket.setSceneName( sceneName_ );
+        userAcceptedPacket.setSceneName( getName().c_str() );
 
         // Get a color from the queue of free colors and assign it to the new
         // user.
@@ -269,7 +255,8 @@ void Server::onAccept( const boost::system::error_code& errorCode )
                         std::bind( &Server::deleteUser, this, std::placeholders::_1 ),
                         commandsHistoric_,
                         log_,
-                        userColor
+                        userColor,
+                        getTempDirPath()
                     );
 
         // Add an USER_CONNECTION scene command to the server historic.
@@ -511,21 +498,6 @@ void Server::workerThread()
     }
 
     log_->debug( "[", boost::this_thread::get_id(), "] Thread finish\n" );
-}
-
-// FIXME: Duplicated code in Scene class (client project).
-void Server::createSceneDirectory()
-{
-    sceneDirPath_ = std::string( SCENES_DIR ) + '/' + sceneName_;
-
-    unsigned int nameCounter = 1;
-    while( boost::filesystem::exists( sceneDirPath_ ) ){
-        sceneDirPath_ = std::string( SCENES_DIR ) + '/' + sceneName_ + '_' + std::to_string( nameCounter );
-        nameCounter++;
-    }
-
-    boost::filesystem::create_directory( sceneDirPath_ );
-    log_->debug( "Scene directory created [", sceneDirPath_, "]\n" );
 }
 
 

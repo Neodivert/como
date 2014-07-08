@@ -45,6 +45,7 @@ class AbstractPrimitivesManager
 {
     protected:
         std::string scenePrimitivesDir_;
+        std::string tempDirPath_;
 
         std::map< ResourceID, std::string > categoryNames_;
         std::map< ResourceID, PrimitiveInfo > primitiveInfo_;
@@ -56,7 +57,7 @@ class AbstractPrimitivesManager
          * 1. Construction
          ***/
         AbstractPrimitivesManager() = delete;
-        AbstractPrimitivesManager( std::string sceneDirPath, LogPtr log );
+        AbstractPrimitivesManager( std::string sceneDirPath, std::string sceneTempDirPath, LogPtr log );
         AbstractPrimitivesManager( const AbstractPrimitivesManager& ) = delete;
         AbstractPrimitivesManager( AbstractPrimitivesManager&& ) = delete;
 

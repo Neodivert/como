@@ -51,7 +51,7 @@ class ClientPrimitivesManager : public QOffscreenSurface, public AbstractPrimiti
          * 1. Construction
          ***/
         ClientPrimitivesManager() = delete;
-        ClientPrimitivesManager( std::string sceneDirPath, ServerInterfacePtr server, DrawablesManagerPtr drawablesManager, MaterialsManagerPtr materialsManager, LogPtr log );
+        ClientPrimitivesManager( std::string sceneDirPath, std::string sceneTempDirPath, ServerInterfacePtr server, DrawablesManagerPtr drawablesManager, MaterialsManagerPtr materialsManager, LogPtr log );
         ClientPrimitivesManager( const ClientPrimitivesManager& ) = delete;
         ClientPrimitivesManager( ClientPrimitivesManager&& ) = delete;
 

@@ -52,11 +52,14 @@ class SceneUpdatePacket : public Packet
          * 1. Construction
          ***/
 
+        /*! \brief Default constructor */
+        SceneUpdatePacket() = delete;
+
         /*!
-         * \brief Default constructor. Constructs an emtpy
+         * \brief Constructs an emtpy
          * SceneUpdatePacket (0 commands).
          */
-        SceneUpdatePacket();
+        SceneUpdatePacket( const std::string& unpackingDirPath );
 
         /*! \brief Copy constructor */
         SceneUpdatePacket( const SceneUpdatePacket& b );

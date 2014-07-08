@@ -35,6 +35,7 @@
 #include <common/users/user.hpp>
 #include <common/utilities/paths.hpp>
 #include <client/managers/primitives/client_primitives_manager.hpp>
+#include <common/scene/basic_scene.hpp>
 
 Q_DECLARE_METATYPE( como::CommandConstPtr )
 
@@ -50,16 +51,11 @@ enum LinesBufferOffset {
 
 typedef std::map< UserID, UserPtr > UsersMap;
 
-class Scene : public QOffscreenSurface, public AbstractChangeable
+class Scene : public QOffscreenSurface, public BasicScene, public AbstractChangeable
 {
     Q_OBJECT
 
-    protected:
-        // Scene name
-        char sceneName_[NAME_SIZE];
-
-        std::string sceneDirPath_;
-
+    private:
         // Users sharing this scene.
         UsersMap users_;
 
@@ -77,10 +73,6 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
 
         OpenGLPtr openGL_;
 
-
-        // Log
-        LogPtr log_;
-
         // Local user's ID.
         UserID localUserID_;
         DrawableIndex localUserNextDrawableIndex_;
@@ -90,7 +82,6 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
         // Interface with the server.
         ServerInterfacePtr server_;
 
-    private:
         // Lines VAO, VBO and offsets.
         GLuint linesVAO;
         GLuint linesVBO;
@@ -149,7 +140,6 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
         void setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny );
 
     protected:
-        void setName( const char* sceneName );
         void createSceneDirectory();
 
 
@@ -202,7 +192,6 @@ class Scene : public QOffscreenSurface, public AbstractChangeable
          * 14. Auxiliar methods
          ***/
     public:
-        void createScenePrimitivesDirectory();
         virtual bool hasChangedSinceLastQuery();
 };
 

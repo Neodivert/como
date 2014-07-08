@@ -50,9 +50,12 @@ class PrimitiveCreationCommand : public PrimitiveCommand
          ***/
 
         /*! \brief Default constructor. */
-        PrimitiveCreationCommand();
+        PrimitiveCreationCommand() = delete;
 
-        PrimitiveCreationCommand( UserID userID, ResourceID primitiveID, PrimitiveInfo primitive );
+
+        PrimitiveCreationCommand( const std::string& unpackingDirPath );
+
+        PrimitiveCreationCommand( UserID userID, ResourceID primitiveID, PrimitiveInfo primitive, const std::string& unpackingDirPath );
 
         /*! \brief Copy assignment operator */
         PrimitiveCreationCommand( const PrimitiveCreationCommand& );

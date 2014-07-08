@@ -90,7 +90,8 @@ class PublicUser : public User
                     std::function<void (UserID)> removeUserCallback,
                     CommandsHistoricPtr commandsHistoric,
                     LogPtr log,
-                    std::uint32_t color );
+                    std::uint32_t color,
+                    const std::string& unpackingDirPath );
 
 
         /***

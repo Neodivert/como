@@ -21,6 +21,11 @@
 
 namespace como {
 
+PackableCommandsList::PackableCommandsList( const std::string& unpackingDirPath ) :
+    Packable(),
+    unpackingDirPath_( unpackingDirPath )
+{}
+
 
 PackableCommandsList::PackableCommandsList( const PackableCommandsList& b ) :
     Packable( b ),
@@ -114,7 +119,7 @@ const void* PackableCommandsList::unpack( const void* buffer )
             case CommandTarget::PRIMITIVE:
                 switch( PrimitiveCommand::getType( buffer ) ){
                     case PrimitiveCommandType::PRIMITIVE_CREATION:
-                        command = CommandPtr( new PrimitiveCreationCommand );
+                        command = CommandPtr( new PrimitiveCreationCommand( unpackingDirPath_ ) );
                     break;
                     case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:
                         command = CommandPtr( new PrimitiveInstantiationCommand );

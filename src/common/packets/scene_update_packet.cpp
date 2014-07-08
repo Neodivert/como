@@ -25,9 +25,10 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-SceneUpdatePacket::SceneUpdatePacket() :
+SceneUpdatePacket::SceneUpdatePacket( const std::string& unpackingDirPath ) :
     Packet( PacketType::SCENE_UPDATE ),
-    nUnsyncCommands_( 0 )
+    nUnsyncCommands_( 0 ),
+    commands_( unpackingDirPath )
 {
     addPackable( &nUnsyncCommands_ );
     addPackable( &commands_ );

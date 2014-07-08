@@ -35,6 +35,7 @@
 #include <boost/filesystem.hpp>
 #include <common/utilities/paths.hpp>
 #include <server/server_primitives_manager.hpp>
+#include <common/scene/basic_scene.hpp>
 
 using boost::asio::ip::tcp;
 
@@ -44,7 +45,7 @@ typedef std::map< PackableDrawableID, UserID > DrawableOwners;
 typedef std::map< UserID, PublicUserPtr > UsersMap;
 
 /*! Main server manager */
-class Server
+class Server : public BasicScene
 {
     private:
         // I/O service.
@@ -55,12 +56,6 @@ class Server
 
         // Work object.
         boost::asio::io_service::work work_;
-
-        // Scene name.
-        char sceneName_[NAME_SIZE];
-
-        // Scene dir name.
-        std::string sceneDirPath_;
 
         // Users map (ID, user).
         UsersMap users_;
@@ -95,8 +90,7 @@ class Server
 
         std::unique_ptr< ServerPrimitivesManager > primitivesManager_;
 
-        // Log
-        LogPtr log_;
+
 
         mutable std::recursive_mutex mutex_;
 
@@ -191,7 +185,6 @@ class Server
     private:
         std::string getCurrentDayTime() const ;
         void workerThread();
-        void createSceneDirectory();
         void openAcceptor();
         bool nameInUse( const char* newName ) const ;
 

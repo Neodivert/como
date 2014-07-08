@@ -27,9 +27,11 @@ const unsigned int TIME_BETWEEN_SHIPMENTS = 1000 / SHIPMENTS_PER_SECOND;
  * 1. Initialization and destruction
  ***/
 
-ServerInterface::ServerInterface( LogPtr log ) :
+ServerInterface::ServerInterface( LogPtr log , const std::string& unpackingDirPath ) :
     work_( std::shared_ptr< boost::asio::io_service::work >( new boost::asio::io_service::work( io_service_ ) ) ),
     socket_( SocketPtr( new boost::asio::ip::tcp::socket( io_service_ ) ) ),
+    sceneUpdatePacketFromServer_( unpackingDirPath ),
+    sceneUpdatePacketToServer_( unpackingDirPath ),
     timer_( io_service_ ),
     log_( log )
 {   

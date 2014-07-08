@@ -68,7 +68,7 @@ class ServerInterface : public QObject
         ServerInterface() = delete;
         ServerInterface( const ServerInterface& ) = delete;
         ServerInterface( ServerInterface&& ) = delete;
-        ServerInterface( LogPtr log );
+        ServerInterface( LogPtr log, const std::string& unpackingDirPath );
 
         ~ServerInterface();
 

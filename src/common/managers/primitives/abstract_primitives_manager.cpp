@@ -29,7 +29,8 @@ namespace como {
  * 1. Construction
  ***/
 
-AbstractPrimitivesManager::AbstractPrimitivesManager( std::string sceneDirPath, LogPtr log ) :
+AbstractPrimitivesManager::AbstractPrimitivesManager( std::string sceneDirPath, std::string sceneTempDirPath, LogPtr log ) :
+    tempDirPath_( sceneTempDirPath ),
     log_( log )
 {
     boost::system::error_code errorCode;
@@ -41,11 +42,6 @@ AbstractPrimitivesManager::AbstractPrimitivesManager( std::string sceneDirPath, 
     boost::filesystem::create_directories( scenePrimitivesDir_, errorCode );
     if( errorCode ){
         throw std::runtime_error( errorCode.message() );
-    }
-
-    // If the primitives temp directory doesn't exist, create it!.
-    if( !boost::filesystem::exists( PRIMITIVES_TEMP_DIRECTORY ) ){
-        boost::filesystem::create_directories( PRIMITIVES_TEMP_DIRECTORY );
     }
 
     log_->debug( "Scene primitives dir [", scenePrimitivesDir_, "] created\n" );
@@ -60,11 +56,6 @@ AbstractPrimitivesManager::~AbstractPrimitivesManager()
 {
     log_->debug( "Removing scene primitives dir [", scenePrimitivesDir_, "]\n" );
     boost::filesystem::remove_all( scenePrimitivesDir_ );
-
-    // FIXME: This breaks everything if there are multiple instances of server
-    // running.
-    log_->debug( "Removing primitives tmp dir [", PRIMITIVES_TEMP_DIRECTORY, "]\n" );
-    boost::filesystem::remove_all( PRIMITIVES_TEMP_DIRECTORY );
 }
 
 

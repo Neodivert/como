@@ -25,8 +25,8 @@ namespace como {
  * 1. Construction
  ***/
 
-ServerPrimitivesManager::ServerPrimitivesManager( std::string sceneDirPath, CommandsHistoricPtr commandsHistoric, LogPtr log ) :
-    AbstractPrimitivesManager( sceneDirPath, log ),
+ServerPrimitivesManager::ServerPrimitivesManager( const std::string& sceneDirPath, const std::string& tempDirPath, CommandsHistoricPtr commandsHistoric, LogPtr log ) :
+    AbstractPrimitivesManager( sceneDirPath, tempDirPath, log ),
     nextPrimitiveCategoryID_( 0, 0 ),
     nextPrimitiveID_( 0, 0 ),
     commandsHistoric_( commandsHistoric )
@@ -166,7 +166,7 @@ void ServerPrimitivesManager::registerPrimitive( PrimitiveInfo primitive )
     // We are about to create a command which needs to keep a copy of the
     // current primitive, so we create such copy in the tmp directory.
     PrimitiveInfo primitiveCopy = primitive.copy(
-                PRIMITIVES_TEMP_DIRECTORY + '/' +
+                tempDirPath_ + '/' +
                 primitive.name + "_" +
                 getCurrentDateTimeStr() +
                 boost::filesystem::extension( primitive.filePath ) );
@@ -177,7 +177,8 @@ void ServerPrimitivesManager::registerPrimitive( PrimitiveInfo primitive )
 
     commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCreationCommand( 0,
                                                                                   nextPrimitiveID_,
-                                                                                  primitiveCopy ) ) );
+                                                                                  primitiveCopy,
+                                                                                  tempDirPath_ ) ) );
 
     nextPrimitiveID_++;
 }
