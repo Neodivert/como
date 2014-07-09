@@ -84,10 +84,10 @@ class Mesh : public Drawable
         bool includesTexture_;
         unsigned int componensPerVertex_;
 
-
+        std::vector< PolygonGroupData > polygonsGroups_;
 
         // Mesh's material.
-        MaterialConstPtr material_;
+        std::vector< MaterialConstPtr > materials_;
 
         /***
          * 1. Construction.
@@ -95,7 +95,7 @@ class Mesh : public Drawable
     protected:
         Mesh( MeshType type, const char* file, MaterialConstPtr material );
     public:
-        Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, MaterialConstPtr material );
+        Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials );
         Mesh( const Mesh& b ) = default;
         Mesh( Mesh&& ) = delete;
 

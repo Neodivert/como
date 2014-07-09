@@ -46,15 +46,39 @@ MaterialID MaterialsManager::createMaterial( const MaterialInfo &materialInfo )
 }
 
 
-void MaterialsManager::createMaterial( MaterialID materialID, const MaterialInfo& materialInfo )
+void MaterialsManager::createMaterials( const std::vector< MaterialInfo >& materialsInfo, MaterialID& firstMaterialID )
 {
-    // Create the new material and insert it into the materials container.
-    materials_[materialID] = MaterialPtr( new Material( materialInfo ) );
+    assert( materialsInfo.size() != 0 );
+
+    firstMaterialID = nextLocalMaterialID_;
+
+    for( auto materialInfo : materialsInfo ){
+        createMaterial( nextLocalMaterialID_, materialInfo );
+        nextLocalMaterialID_++;
+    }
+}
+
+void MaterialsManager::createMaterial( MaterialID id, const MaterialInfo& materialInfo )
+{
+    materials_[id] = MaterialPtr( new Material( materialInfo ) );
 
     // Set the creator of the material as its current owner.
-    materialsOwners_[materialID] = materialID.getCreatorID();
+    materialsOwners_[id] = id.getCreatorID();
 
-    notifyElementInsertion( materialID );
+    notifyElementInsertion( id );
+}
+
+
+void MaterialsManager::createRemoteMaterials( const std::vector< MaterialInfo >& materialsInfo, const MaterialID& firstMaterialID )
+{
+    assert( materialsInfo.size() != 0 );
+
+    MaterialID materialID = firstMaterialID;
+
+    for( auto materialInfo : materialsInfo ){
+        createMaterial( materialID, materialInfo );
+        materialID++;
+    }
 }
 
 
@@ -97,6 +121,22 @@ void MaterialsManager::selectMaterial( UserID userID, const MaterialID& id )
 MaterialConstPtr MaterialsManager::getMaterial( const MaterialID& id ) const
 {
     return materials_.at( id );
+}
+
+std::vector<MaterialConstPtr> MaterialsManager::getMaterials( const MaterialID& firstMaterialID, unsigned int nMaterials ) const
+{
+    std::vector< MaterialConstPtr > materials;
+    unsigned int i = 0;
+    MaterialID materialID = firstMaterialID;
+
+    materials.reserve( nMaterials );
+
+    for( i = 0; i < nMaterials; i++ ){
+        materials.push_back( materials_.at( materialID ) );
+        materialID++;
+    }
+
+    return materials;
 }
 
 

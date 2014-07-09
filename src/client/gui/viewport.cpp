@@ -66,8 +66,6 @@ Viewport::Viewport( View view, shared_ptr< ComoApp > comoApp ) :
 
         OpenGL::checkStatus( "Viewport constructor, after creating the camera" );
 
-        //OpenGL::checkStatus( "Viewport constructor, before computing dimension inverses" );
-
         // Compute dimensions' inverses.
         if( width() ){
             widthInverse = 1.0f / width();
@@ -81,7 +79,7 @@ Viewport::Viewport( View view, shared_ptr< ComoApp > comoApp ) :
 
         OpenGL::checkStatus( "Viewport constructor - end" );
     }catch( std::exception& ex ){
-        comoApp->getLog()->error( ex.what() );
+        comoApp->getLog()->error( ex.what(), "\n" );
         throw ex;
     }
 }

@@ -40,6 +40,8 @@ const GLint SHADER_VERTEX_ATTR_LOCATION = 0;
 const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
 const GLint SHADER_UV_ATTR_LOCATION = 2;
 
+const char DEFAULT_MESH_NAME[] = "Mesh #";
+
 
 
 /***
@@ -47,27 +49,30 @@ const GLint SHADER_UV_ATTR_LOCATION = 2;
  ***/
 
 Mesh::Mesh( MeshType type, const char* filePath, MaterialConstPtr material ) :
-    Drawable( DrawableType::MESH, "Mesh #" ),
-    type_( type ),
-    material_( material )
+    Drawable( DrawableType::MESH, DEFAULT_MESH_NAME ),
+    type_( type )
 {
     MeshInfo meshInfo;
     PrimitiveFile::read( meshInfo, filePath );
 
     vertexData_ = meshInfo.vertexData;
+    polygonsGroups_ = meshInfo.polygonGroupsData;
+    materials_.push_back( material );
 
     init( meshInfo.oglData );
 }
 
 
-Mesh::Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, MaterialConstPtr material ) :
-    Drawable( DrawableType::MESH, "Mesh #" ),
+Mesh::Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials ) :
+    Drawable( DrawableType::MESH, DEFAULT_MESH_NAME ),
     type_( MeshType::MESH ),
     vertexData_( vertexData ),
-    material_( material )
+    polygonsGroups_( polygonsGroups ),
+    materials_( materials )
 {
     init( oglData );
 }
+
 
 /*
 Mesh::Mesh( const Mesh& b ) :
@@ -363,17 +368,20 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
     // Compute MVP matrix and pass it to the shader.
     sendMVPMatrixToShader( viewProjMatrix * transformationMatrix );
 
-    // Send this mesh's material to shader.
-    material_->sendToShader();
-
     // Bind Mesh VAO and VBOs as the active ones.
     glBindVertexArray( vao );
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
 
-    // Draw Mesh's interior.
-    glDrawElements( GL_TRIANGLES, nEboElements_, GL_UNSIGNED_INT, NULL );
+    for( auto polygonsGroup : polygonsGroups_ ){
+        // Send this mesh's material to shader.
+        materials_[polygonsGroup.materialIndex]->sendToShader();
 
+        glDrawElements( GL_TRIANGLES,
+                        (polygonsGroup.lastTriangle - polygonsGroup.firstTriangle + 1) * 3,
+                        GL_UNSIGNED_INT,
+                        ( std::intptr_t* )( polygonsGroup.firstTriangle * 3 * sizeof( GL_UNSIGNED_INT ) ) );
+    }
 
     // Set the color for the mesh's contour.
     if( contourColor != nullptr ){

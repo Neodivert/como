@@ -23,7 +23,7 @@
 
 namespace como {
 
-const std::string DEFAULT_MATERIAL_NAME = "Unnamed material";
+const char DEFAULT_MATERIAL_NAME[] = "Unnamed material";
 const glm::vec4 DEFAULT_MATERIAL_COLOR = glm::vec4( 1.0f );
 const glm::vec3 DEFAULT_MATERIAL_AMBIENT_REFLECTIVITY = glm::vec3( 0.9f );
 const glm::vec3 DEFAULT_MATERIAL_DIFFUSE_REFLECTIVITY = glm::vec3( 0.9f );

@@ -49,6 +49,7 @@ class PrimitiveFile
     private:
         static void writeVertices( const VerticesVector& vertices, std::ofstream& file );
         static void writeTriangles( const VertexTrianglesVector& triangles, std::ofstream& file );
+        static void writePolygonsGroups( const std::vector< PolygonGroupData >& polygonsGroupsData, std::ofstream& file );
         static void writeOpenGLData( const MeshOpenGLData& oglData, std::ofstream& file );
         static void writeMaterials( const std::vector< MaterialInfo >& materials, std::ofstream& file );
         static void writeMaterial( const MaterialInfo& material, std::ofstream& file );
@@ -62,6 +63,7 @@ class PrimitiveFile
     private:
         static void readVertices( VerticesVector& vertices, std::ifstream& file );
         static void readTriangles( VertexTrianglesVector& triangles, std::ifstream& file );
+        static void readPolygonsGroups( std::vector< PolygonGroupData >& polygonsGroupsData, std::ifstream& file );
         static void readOpenGLData( MeshOpenGLData& oglData, std::ifstream& file );
         static void readMaterials( std::vector< MaterialInfo >& materials, std::ifstream& file );
         static void readMaterial( MaterialInfo& material, std::ifstream& file );

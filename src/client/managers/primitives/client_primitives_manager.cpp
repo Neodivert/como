@@ -79,22 +79,24 @@ ResourceID ClientPrimitivesManager::importMeshFile( std::string srcFilePath, Res
     return primitiveID;
 }
 
+
 void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 {
     MeshInfo meshInfo;
+    MaterialID firstMaterialID;
 
     PrimitiveFile::read( meshInfo, getPrimitiveFilePath( primitiveID ) );
 
-    MaterialID materialID = materialsManager_->createMaterial( meshInfo.materialsData[0] ); // TODO: Use multiple materials?
+    materialsManager_->createMaterials( meshInfo.materialsData, firstMaterialID );
 
-    PackableDrawableID drawableID = drawablesManager_->createMesh( meshInfo.vertexData, meshInfo.oglData, materialsManager_->getMaterial( materialID ) );
+    PackableDrawableID drawableID = drawablesManager_->createMesh( meshInfo.vertexData, meshInfo.oglData, meshInfo.polygonGroupsData, materialsManager_->getMaterials( firstMaterialID, meshInfo.materialsData.size() ) );
 
     log_->debug( "Creating local mesh - Drawable ID (", drawableID,
-                 ") MaterialID ", materialID, "\n" );
+                 ") First materialID ", firstMaterialID, ") nMaterials (", meshInfo.materialsData.size(), ")\n" );
 
     // Send the command to the server (the MaterialCreationCommand command was
     // already sent in previous call to materialsManager_->createMaterial() ).
-    server_->sendCommand( CommandConstPtr( new PrimitiveInstantiationCommand( server_->getLocalUserID(), primitiveID, drawableID, materialID ) ) );
+    server_->sendCommand( CommandConstPtr( new PrimitiveInstantiationCommand( server_->getLocalUserID(), primitiveID, drawableID, firstMaterialID ) ) );
 }
 
 
@@ -107,9 +109,9 @@ void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID pr
 
     PrimitiveFile::read( meshInfo, getPrimitiveFilePath( primitiveID ) );
 
-    materialsManager_->createMaterial( materialID, meshInfo.materialsData[0] ); // TODO: Use multiple materials?
+    materialsManager_->createRemoteMaterials( meshInfo.materialsData, materialID );
 
-    drawablesManager_->createMesh( meshID, meshInfo.vertexData, meshInfo.oglData, materialsManager_->getMaterial( materialID ) );
+    drawablesManager_->createMesh( meshID, meshInfo.vertexData, meshInfo.oglData, meshInfo.polygonGroupsData, materialsManager_->getMaterials( materialID, meshInfo.materialsData.size() ) );
 }
 
 

@@ -84,7 +84,6 @@ glm::vec4 Camera::getCenterVector() const
 void Camera::update()
 {
     // Update camera's mesh.
-    // FIXME: What mesh? I didn't define camera's vertex data yet.
     Mesh::update();
 
     // Update transformed camera position and orientation.

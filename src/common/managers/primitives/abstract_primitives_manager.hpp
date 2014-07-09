@@ -30,8 +30,6 @@
 
 namespace como {
 
-const std::string PRIMITIVES_TEMP_DIRECTORY = "data/.tmp";
-
 enum class PrimitiveComponent {
     MESH = 0,
     MATERIAL,

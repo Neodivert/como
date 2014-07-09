@@ -37,6 +37,7 @@ void PrimitiveFile::write( const MeshInfo meshInfo, std::string filePath )
 
     writeVertices( meshInfo.vertexData.vertices, file );
     writeTriangles( meshInfo.vertexData.vertexTriangles, file );
+    writePolygonsGroups( meshInfo.polygonGroupsData, file );
     writeOpenGLData( meshInfo.oglData, file );
     writeMaterials( meshInfo.materialsData, file );
 
@@ -64,6 +65,20 @@ void PrimitiveFile::writeTriangles( const TrianglesVector& triangles, std::ofstr
     // Write all the triangles to the file (one triangle per line).
     for( auto triangle : triangles ){
         file << triangle[0] << " " << triangle[1] << " " << triangle[2] << std::endl;
+    }
+}
+
+
+void PrimitiveFile::writePolygonsGroups( const std::vector<PolygonGroupData>& polygonsGroupsData, std::ofstream& file )
+{
+    // Write the number of polygons groups.
+    file << polygonsGroupsData.size() << std::endl;
+
+    // Write all the polygons groups (one per line).
+    for( auto polygonsGroup : polygonsGroupsData ){
+        file << polygonsGroup.firstTriangle << " "
+             << polygonsGroup.lastTriangle << " "
+             << polygonsGroup.materialIndex << std::endl;
     }
 }
 
@@ -174,9 +189,9 @@ void PrimitiveFile::read( MeshInfo &meshInfo, std::string filePath )
 
     readVertices( meshInfo.vertexData.vertices, file );
     readTriangles( meshInfo.vertexData.vertexTriangles, file );
+    readPolygonsGroups( meshInfo.polygonGroupsData, file );
     readOpenGLData( meshInfo.oglData, file );
     readMaterials( meshInfo.materialsData, file );
-
 
     file.close();
 }
@@ -218,6 +233,26 @@ void PrimitiveFile::readTriangles( VertexTrianglesVector& triangles, std::ifstre
         std::getline( file, fileLine );
         sscanf( fileLine.c_str(), "%u %u %u", &triangle[0], &triangle[1], &triangle[2] );
         triangles.push_back( triangle );
+    }
+}
+
+void PrimitiveFile::readPolygonsGroups(std::vector<PolygonGroupData>& polygonsGroupsData, std::ifstream& file )
+{
+    std::string fileLine;
+
+    // Read the number of polygons groups and reserve space for them.
+    std::getline( file, fileLine );
+    polygonsGroupsData.resize( atoi( fileLine.c_str() ) );
+
+    // Write all the polygons groups (one per line).
+    for( auto& polygonsGroup : polygonsGroupsData ){
+        std::getline( file, fileLine );
+
+        sscanf( fileLine.c_str(),
+                "%u %u %u",
+                &( polygonsGroup.firstTriangle ),
+                &( polygonsGroup.lastTriangle ),
+                &( polygonsGroup.materialIndex ) );
     }
 }
 
@@ -267,7 +302,7 @@ void PrimitiveFile::readOpenGLData( MeshOpenGLData& oglData, std::ifstream& file
     nTriangles = atoi( fileLine.c_str() );
 
     // Read the EBO data from the file (one triangle per line).
-    oglData.eboData.reserve( nTriangles );
+    oglData.eboData.reserve( nTriangles * 3 );
     for( triangleIndex = 0; triangleIndex < nTriangles; triangleIndex++ ){
         std::getline( file, fileLine );
         sscanf( fileLine.c_str(), "%u %u %u",

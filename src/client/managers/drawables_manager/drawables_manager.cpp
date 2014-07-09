@@ -122,17 +122,17 @@ void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, Packabl
 }
 
 
-PackableDrawableID DrawablesManager::createMesh( MeshVertexData vertexData, MeshOpenGLData oglData, MaterialConstPtr material )
+PackableDrawableID DrawablesManager::createMesh( MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials )
 {
-    DrawablePtr mesh( new Mesh( vertexData, oglData, material ) );
+    DrawablePtr mesh( new Mesh( vertexData, oglData, polygonsGroups, materials ) );
 
     return addDrawable( mesh );
 }
 
 
-void DrawablesManager::createMesh(PackableDrawableID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, MaterialConstPtr material)
+void DrawablesManager::createMesh( PackableDrawableID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials )
 {
-    DrawablePtr mesh( new Mesh( vertexData, oglData, material ) );
+    DrawablePtr mesh( new Mesh( vertexData, oglData, polygonsGroups, materials ) );
 
     addDrawable( meshID.creatorID.getValue(), mesh, meshID );
 }

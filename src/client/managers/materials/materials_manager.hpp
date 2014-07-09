@@ -73,8 +73,11 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
          ***/
     public:
         MaterialID createMaterial( const MaterialInfo& materialInfo );
+        void createMaterials( const std::vector<MaterialInfo>& materialsInfo, MaterialID& firstMaterialID );
+        void createRemoteMaterials( const std::vector< MaterialInfo >& materialsInfo, const MaterialID& firstMaterialID );
     //private:
         void createMaterial( MaterialID id, const MaterialInfo &materialInfo );
+
 
 
         /***
@@ -91,6 +94,7 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
          ***/
     public:
         MaterialConstPtr getMaterial( const MaterialID& id ) const;
+        std::vector< MaterialConstPtr > getMaterials( const MaterialID& firstMaterialID, unsigned int nMaterials ) const;
 
 
         /***
@@ -102,7 +106,6 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
         /***
          * 7. Updating
          ***/
-    private:
         virtual void onChange(){}
         virtual void update();
 

@@ -38,7 +38,7 @@ typedef std::shared_ptr< Packet > PacketPtr;
 typedef std::function<void( const boost::system::error_code& errorCode, PacketPtr)> PacketHandler;
 
 // Maximum buffer available size for packing a packet.
-const PacketSize PACKET_BUFFER_SIZE = 4 * 524288; // 4 x 512 x 1024 bytes.
+const PacketSize PACKET_HEADER_BUFFER_SIZE = 20; // TODO: Use a real value.
 
 
 /*!
@@ -53,7 +53,8 @@ class Packet : public CompositePackable
         PacketHeader header_;
 
         /*! Buffer where this Packet is read from / written to. */
-        char buffer_[PACKET_BUFFER_SIZE];
+        mutable char headerBuffer_[PACKET_HEADER_BUFFER_SIZE];
+        mutable std::vector< char > bodyBuffer_;
 
     public:
         /***
@@ -99,10 +100,6 @@ class Packet : public CompositePackable
          * latter is defined in every inherited class).
          */
         virtual bool expectedType() const = 0;
-
-        /*! \brief Returns a pointer to the buffer used for packing /
-         * unpacking this Packet */
-        const char* getBuffer() const { return buffer_; }
 
 
         /***
