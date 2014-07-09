@@ -103,10 +103,8 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
     }else if( lineHeader == "g" ){
         PolygonGroupData polygonGroup;
         polygonGroup.firstTriangle = meshInfo.vertexData.vertexTriangles.size();
-        polygonGroup.lastTriangle = 0;
-
         if( meshInfo.polygonGroupsData.size() ){
-            meshInfo.polygonGroupsData.back().lastTriangle = meshInfo.vertexData.vertexTriangles.size() - 1;
+            polygonGroup.materialIndex = meshInfo.polygonGroupsData.back().materialIndex;
         }
 
         meshInfo.polygonGroupsData.push_back( polygonGroup );
@@ -221,7 +219,6 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
         if( meshInfo.polygonGroupsData.size() == 0 ){
             PolygonGroupData polygonGroup;
             polygonGroup.firstTriangle = meshInfo.vertexData.vertexTriangles.size();
-            polygonGroup.lastTriangle = 0;
 
             meshInfo.polygonGroupsData.push_back( polygonGroup );
         }
@@ -325,11 +322,22 @@ void OBJPrimitivesImporter::completePolygonGroups( MeshInfo& meshInfo )
     unsigned int i;
 
     for( i=0; i < meshInfo.polygonGroupsData.size() - 1; i++ ){
-        meshInfo.polygonGroupsData[i].lastTriangle = meshInfo.polygonGroupsData[i+1].firstTriangle - 1;
+        if( meshInfo.polygonGroupsData[i+1].firstTriangle > 0 ){
+            meshInfo.polygonGroupsData[i].lastTriangle = meshInfo.polygonGroupsData[i+1].firstTriangle - 1;
+        }else{
+            meshInfo.polygonGroupsData[i].lastTriangle = meshInfo.polygonGroupsData[i+1].firstTriangle;
+        }
     }
     if( i < meshInfo.polygonGroupsData.size() ){
         meshInfo.polygonGroupsData[i].lastTriangle = meshInfo.vertexData.vertexTriangles.size() - 1;
     }
+
+    // Remote polygon groups which don't have any triangles.
+    std::remove_if( meshInfo.polygonGroupsData.begin(),
+                    meshInfo.polygonGroupsData.end(),
+                    []( const PolygonGroupData& p ){
+                        return ( p.firstTriangle == p.lastTriangle );
+                    } );
 }
 
 

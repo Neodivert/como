@@ -125,7 +125,7 @@ void AbstractPrimitivesManager::createCategory( ResourceID id, std::string name 
         throw std::runtime_error( errorCode.message() );
     }
 
-    log_->debug( "Category created [", scenePrimitivesDir_ + '/' + name, "]" );
+    log_->debug( "Category created [", scenePrimitivesDir_ + '/' + name, "]\n" );
 }
 
 

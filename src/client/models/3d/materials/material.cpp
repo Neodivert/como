@@ -66,6 +66,8 @@ Material::Material( const MaterialInfo& materialInfo ) :
 {
     if( materialInfo.textureInfo ){
         texture_ = std::unique_ptr< Texture >( new Texture( *( materialInfo.textureInfo ) ) );
+    }else{
+        texture_ = nullptr;
     }
 }
 
@@ -87,6 +89,8 @@ Material::Material( const Material& b ) :
 {
     if( b.texture_ ){
         texture_ = std::unique_ptr< Texture >( new Texture( std::move( *( b.texture_ ) ) ) );
+    }else{
+        texture_ = nullptr;
     }
 }
 
@@ -241,10 +245,6 @@ void Material::sendToShader() const
     GLint currentShaderProgram = -1;
     GLint uniformLocation = -1;
 
-    if( texture_ ){
-        texture_->sendToShader();
-    }
-
     // Get current shader program ID.
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
 
@@ -277,6 +277,11 @@ void Material::sendToShader() const
     OpenGL::checkStatus( "Getting location of material.specularExponent in shader" );
     glUniform1f( uniformLocation, specularExponent_ );
     OpenGL::checkStatus( "Sending material.specularExponent to shader" );
+
+    // Send texture, if any, to shader.
+    if( texture_ != nullptr ){
+        texture_->sendToShader();
+    }
 }
 
 
