@@ -378,7 +378,7 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
         materials_[polygonsGroup.materialIndex]->sendToShader();
 
         glDrawElements( GL_TRIANGLES,
-                        (polygonsGroup.lastTriangle - polygonsGroup.firstTriangle + 1) * 3,
+                        polygonsGroup.nTriangles * 3,
                         GL_UNSIGNED_INT,
                         ( std::intptr_t* )( polygonsGroup.firstTriangle * 3 * sizeof( GL_UNSIGNED_INT ) ) );
     }

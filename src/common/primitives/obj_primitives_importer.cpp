@@ -228,7 +228,7 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
     if( meshInfo.polygonGroupsData.size() == 0 ){
         PolygonGroupData polygonGroup;
         polygonGroup.firstTriangle = 0;
-        polygonGroup.lastTriangle = meshInfo.polygonGroupsData.size() - 1;
+        polygonGroup.nTriangles = ( meshInfo.polygonGroupsData.size() - 1 ) * 3;
         polygonGroup.materialIndex = 0;
 
         meshInfo.polygonGroupsData.push_back( polygonGroup );
@@ -322,21 +322,17 @@ void OBJPrimitivesImporter::completePolygonGroups( MeshInfo& meshInfo )
     unsigned int i;
 
     for( i=0; i < meshInfo.polygonGroupsData.size() - 1; i++ ){
-        if( meshInfo.polygonGroupsData[i+1].firstTriangle > 0 ){
-            meshInfo.polygonGroupsData[i].lastTriangle = meshInfo.polygonGroupsData[i+1].firstTriangle - 1;
-        }else{
-            meshInfo.polygonGroupsData[i].lastTriangle = meshInfo.polygonGroupsData[i+1].firstTriangle;
-        }
+        meshInfo.polygonGroupsData[i].nTriangles = meshInfo.polygonGroupsData[i+1].firstTriangle - meshInfo.polygonGroupsData[i].firstTriangle;
     }
     if( i < meshInfo.polygonGroupsData.size() ){
-        meshInfo.polygonGroupsData[i].lastTriangle = meshInfo.vertexData.vertexTriangles.size() - 1;
+        meshInfo.polygonGroupsData[i].nTriangles = meshInfo.vertexData.vertexTriangles.size() - meshInfo.polygonGroupsData[i].firstTriangle;
     }
 
     // Remote polygon groups which don't have any triangles.
     std::remove_if( meshInfo.polygonGroupsData.begin(),
                     meshInfo.polygonGroupsData.end(),
                     []( const PolygonGroupData& p ){
-                        return ( p.firstTriangle == p.lastTriangle );
+                        return ( p.nTriangles == 0 );
                     } );
 }
 

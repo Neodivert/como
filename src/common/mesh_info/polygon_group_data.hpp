@@ -25,7 +25,7 @@ namespace como {
 
 struct PolygonGroupData {
     unsigned int firstTriangle;
-    unsigned int lastTriangle;
+    unsigned int nTriangles;
 
     unsigned int materialIndex;
 };

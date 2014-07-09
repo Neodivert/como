@@ -77,7 +77,7 @@ void PrimitiveFile::writePolygonsGroups( const std::vector<PolygonGroupData>& po
     // Write all the polygons groups (one per line).
     for( auto polygonsGroup : polygonsGroupsData ){
         file << polygonsGroup.firstTriangle << " "
-             << polygonsGroup.lastTriangle << " "
+             << polygonsGroup.nTriangles << " "
              << polygonsGroup.materialIndex << std::endl;
     }
 }
@@ -251,7 +251,7 @@ void PrimitiveFile::readPolygonsGroups(std::vector<PolygonGroupData>& polygonsGr
         sscanf( fileLine.c_str(),
                 "%u %u %u",
                 &( polygonsGroup.firstTriangle ),
-                &( polygonsGroup.lastTriangle ),
+                &( polygonsGroup.nTriangles ),
                 &( polygonsGroup.materialIndex ) );
     }
 }
