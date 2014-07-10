@@ -1,7 +1,7 @@
 # Blender v2.69 (sub 0) OBJ File: 'textured_cube.blend'
 # www.blender.org
 mtllib textured_cube.mtl
-o Cube
+o Textured cube
 v 1.000000 -1.000000 -1.000000
 v 1.000000 -1.000000 1.000000
 v -1.000000 -1.000000 1.000000
