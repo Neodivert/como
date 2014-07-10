@@ -88,7 +88,11 @@ RenderPanel::~RenderPanel()
 void RenderPanel::renderIfNeeded()
 {
     for( unsigned int i=0; i<4; i++ ){
-        viewFrames_[i]->renderIfNeeded();
+        if( comoApp->getScene()->hasChangedSinceLastQuery() ){
+            viewFrames_[i]->render();
+        }else{
+            viewFrames_[i]->renderIfNeeded();
+        }
     }
 }
 

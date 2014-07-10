@@ -58,6 +58,7 @@ class ViewFrame : public QFrame
          ***/
     public slots:
         virtual void renderIfNeeded();
+        virtual void render();
 };
 
 } // namespace como

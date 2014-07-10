@@ -463,6 +463,7 @@ void Viewport::setView( View view )
     // in a signal.
     emit viewIndexChanged( static_cast< int >( view ) );
 
+    //comoApp->getScene()->renderNeeded();
     forceRender();
 }
 
@@ -475,7 +476,7 @@ void Viewport::setProjection( Projection projection )
             projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f );
         break;
         case Projection::PERSPECTIVE:
-            projectionMatrix = glm::perspective( 60.0f, (float)(width())/(float)(height()), 0.1f, 1.0f );
+            projectionMatrix = glm::perspective( 45.0f, (float)(width())/(float)(height()), 0.1f, 100.0f );
         break;
     }
 

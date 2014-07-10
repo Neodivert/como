@@ -131,7 +131,12 @@ QGroupBox* ViewFrame::createProjectionSwitch()
 
 void ViewFrame::renderIfNeeded()
 {
-    viewport->renderIfNeeded();
+    render();
+}
+
+void ViewFrame::render()
+{
+    viewport->render();
 }
 
 
