@@ -71,6 +71,7 @@ class AbstractPrimitivesManager
          ***/
         PrimitiveInfo getPrimitiveInfo( ResourceID id ) const ;
         std::string getPrimitiveFilePath( ResourceID id ) const;
+        std::string getPrimitiveRelativePath( ResourceID id ) const;
 
     protected:
         std::string getCategoryRelativePath( ResourceID id ) const;

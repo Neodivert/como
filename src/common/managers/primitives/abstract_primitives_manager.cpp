@@ -74,6 +74,14 @@ std::string AbstractPrimitivesManager::getPrimitiveFilePath( ResourceID id ) con
     return primitiveInfo_.at( id ).filePath;
 }
 
+std::string AbstractPrimitivesManager::getPrimitiveRelativePath(ResourceID id) const
+{
+    std::string relPath = primitiveInfo_.at( id ).filePath;
+    relPath = relPath.substr( scenePrimitivesDir_.size() );
+
+    return relPath;
+}
+
 std::string AbstractPrimitivesManager::getCategoryRelativePath( ResourceID id ) const
 {
     return categoryNames_.at( id );

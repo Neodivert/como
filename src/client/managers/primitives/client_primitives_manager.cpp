@@ -53,7 +53,7 @@ std::string ClientPrimitivesManager::createPrimitive( std::string filePath, Reso
                                                   tempDirPath_
                                                   ) ) );
 
-    emit primitiveAdded( id, getPrimitiveFilePath( id ) );
+    emit primitiveAdded( id, getPrimitiveRelativePath( id ) );
 
     return getPrimitiveFilePath( id );
 }
@@ -156,7 +156,7 @@ void ClientPrimitivesManager::executeRemoteCommand( PrimitiveCommandConstPtr com
             // primitive's name and ID in the signal.
             // TODO: Complete
             emit primitiveAdded( primitiveCreationCommand->getPrimitiveID(),
-                                 getPrimitiveFilePath( primitiveCreationCommand->getPrimitiveID() ) );
+                                 getPrimitiveRelativePath( primitiveCreationCommand->getPrimitiveID() ) );
         }break;
         case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:{
             const PrimitiveInstantiationCommand* primitiveCommand =
