@@ -57,7 +57,7 @@ class ViewFrame : public QFrame
          * 3. Updating and drawing
          ***/
     public slots:
-        virtual void render();
+        virtual void renderIfNeeded();
 };
 
 } // namespace como

@@ -75,6 +75,8 @@ class Viewport : public QWindow
 
         glm::mat4 projectionMatrix;
 
+        bool forceRender_;
+
     public:
         /***
          * 1. Initialization and destruction
@@ -95,6 +97,7 @@ class Viewport : public QWindow
         virtual void resizeEvent( QResizeEvent* event );
         virtual void mouseMoveEvent( QMouseEvent* mouseMoveEvent );
         virtual void mousePressEvent( QMouseEvent* mousePressEvent );
+        virtual void wheelEvent( QWheelEvent* ev );
         void keyPressEvent( QKeyEvent *e );
 
 
@@ -125,6 +128,7 @@ class Viewport : public QWindow
     public slots:
         void setView( View view );
         void setProjection( Projection projection );
+        void forceRender();
 
         /***
          * 7. Auxiliar methods

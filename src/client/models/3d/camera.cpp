@@ -6,9 +6,9 @@ const PackableColor DEFAULT_CAMERA_MESH_COLOR( 255, 255, 255, 0 );
 
 Camera::Camera( View view ) :
     Mesh( MeshType::CAMERA, "data/system/primitives/camera.prim", MaterialConstPtr( new Material ) ), // TODO: Load material from file.
-    originalEye     ( 0.0f, 0.0f, 0.0f, 1.0f ),
-    originalUp      ( 0.0f, 1.0f, 0.0f, 1.0f ),
-    originalCenter  ( 0.0f, 0.0f, -1.0f, 1.0f )
+    originalEye     ( 0.0f, 0.0f, 0.0f, 0.0f ),
+    originalUp      ( 0.0f, 1.0f, 0.0f, 0.0f ),
+    originalCenter  ( 0.0f, 0.0f, -1.0f, 0.0f )
 {
     // Set given view.
     setView( view );

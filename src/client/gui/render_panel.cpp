@@ -70,7 +70,7 @@ RenderPanel::RenderPanel( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     // Set a timer and use it for rendering the scene on all viewports every
     // X miliseconds.
     QTimer* timer = new QTimer( this );
-    connect( timer, &QTimer::timeout, this, &RenderPanel::renderSceneIfChanged );
+    connect( timer, &QTimer::timeout, this, &RenderPanel::renderIfNeeded );
     timer->start( 22 );
 }
 
@@ -85,12 +85,10 @@ RenderPanel::~RenderPanel()
  * 3. Slots
  ***/
 
-void RenderPanel::renderSceneIfChanged()
+void RenderPanel::renderIfNeeded()
 {
-    if( comoApp->getScene()->hasChangedSinceLastQuery() ){
-        for( unsigned int i=0; i<4; i++ ){
-            viewFrames_[i]->render();
-        }
+    for( unsigned int i=0; i<4; i++ ){
+        viewFrames_[i]->renderIfNeeded();
     }
 }
 

@@ -33,7 +33,8 @@ GLint Viewport::viewProjectionMatrixLocation = -1;
  ***/
 
 Viewport::Viewport( View view, shared_ptr< ComoApp > comoApp ) :
-    QWindow()
+    QWindow(),
+    forceRender_( true )
 {
     try {
         GLint currentShaderProgram;
@@ -179,6 +180,17 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
         // the current selection.
         comoApp->setTransformationType( TransformationType::NONE );
     }
+}
+
+
+void Viewport::wheelEvent( QWheelEvent *ev )
+{
+    const float step = ( ev->delta() > 0 ) ? 0.01f : -0.01f;
+    const glm::vec3 direction = step * glm::vec3( camera->getCenterVector() );
+
+    camera->translate( direction );
+
+    forceRender();
 }
 
 
@@ -385,7 +397,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 
 void Viewport::renderIfNeeded()
 {
-    if( comoApp->getScene()->hasChangedSinceLastQuery() ){
+    if( forceRender_ || comoApp->getScene()->hasChangedSinceLastQuery() ){
         render();
     }
 }
@@ -433,6 +445,8 @@ void Viewport::render()
 
     // Swap buffers.
     comoApp->getScene()->getOpenGLContext()->swapBuffers( this );
+
+    forceRender_ = false;
 }
 
 
@@ -443,13 +457,13 @@ void Viewport::render()
 void Viewport::setView( View view )
 {
     comoApp->getScene()->getOpenGLContext()->makeCurrent( this );
-
     camera->setView( view );
-    comoApp->getScene()->renderNeeded();
 
     // Get the integer index of the current View and return it
     // in a signal.
     emit viewIndexChanged( static_cast< int >( view ) );
+
+    forceRender();
 }
 
 
@@ -465,7 +479,12 @@ void Viewport::setProjection( Projection projection )
         break;
     }
 
-    //comoApp->getScene()->renderNeeded();
+    forceRender();
+}
+
+void Viewport::forceRender()
+{
+    forceRender_ = true;
 }
 
 

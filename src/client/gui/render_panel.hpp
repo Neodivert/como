@@ -62,7 +62,7 @@ class RenderPanel : public QFrame
          * 3. Slots
          ***/
     public slots:
-        void renderSceneIfChanged();
+        void renderIfNeeded();
 };
 
 } // namespace como

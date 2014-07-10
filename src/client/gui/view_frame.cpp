@@ -129,9 +129,9 @@ QGroupBox* ViewFrame::createProjectionSwitch()
  * 3. Updating and drawing
  ***/
 
-void ViewFrame::render()
+void ViewFrame::renderIfNeeded()
 {
-    viewport->render();
+    viewport->renderIfNeeded();
 }
 
 
