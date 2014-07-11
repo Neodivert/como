@@ -63,20 +63,24 @@ class ServerInterface : public QObject
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
         ServerInterface() = delete;
         ServerInterface( const ServerInterface& ) = delete;
         ServerInterface( ServerInterface&& ) = delete;
-        ServerInterface( LogPtr log, const std::string& unpackingDirPath );
+        ServerInterface( const char* host, const char* port, const char* userName, const std::string& unpackingDirPath, LogPtr log, UserAcceptancePacket& userAcceptancePacket );
 
+
+        /***
+         * 2. Destruction
+         ***/
         ~ServerInterface();
 
 
         /***
          * 2. Connection and disconnection
          ***/
-        std::shared_ptr< const UserAcceptancePacket > connect( const char* host, const char* port, const char* userName );
+        void connect( const char* host, const char* port, const char* userName, UserAcceptancePacket& userAcceptancePacket );
         void disconnect();
 
 

@@ -27,19 +27,41 @@ const unsigned int TIME_BETWEEN_SHIPMENTS = 1000 / SHIPMENTS_PER_SECOND;
  * 1. Initialization and destruction
  ***/
 
-ServerInterface::ServerInterface( LogPtr log , const std::string& unpackingDirPath ) :
+ServerInterface::ServerInterface( const char *host, const char *port, const char *userName, const std::string& unpackingDirPath, LogPtr log, UserAcceptancePacket &userAcceptancePacket ) :
     work_( std::shared_ptr< boost::asio::io_service::work >( new boost::asio::io_service::work( io_service_ ) ) ),
     socket_( SocketPtr( new boost::asio::ip::tcp::socket( io_service_ ) ) ),
     sceneUpdatePacketFromServer_( unpackingDirPath ),
     sceneUpdatePacketToServer_( unpackingDirPath ),
     timer_( io_service_ ),
     log_( log )
-{   
-    for( unsigned int i=0; i<2; i++ ){
-        workerThreads_.create_thread( boost::bind( &ServerInterface::work, this ) );
+{
+    try {
+        // Try to connect to the server. If it fails, this method throws a
+        // runtime_error exception.
+        connect( host, port, userName, userAcceptancePacket );
+
+        nextResourceID_ = ResourceID( userAcceptancePacket.getId(), 0 );
+
+        // Create the "worker threads" which will be communicating with the server.
+        for( unsigned int i=0; i<2; i++ ){
+            workerThreads_.create_thread( boost::bind( &ServerInterface::work, this ) );
+        }
+
+        // Start to listen to server.
+        listen();
+
+        // Set timer for sending pending commands to server on a regular basis.
+        setTimer();
+
+    }catch( std::exception& ex ){
+        throw ex;
     }
 }
 
+
+/***
+ * 2. Destruction
+ ***/
 
 ServerInterface::~ServerInterface()
 {
@@ -51,11 +73,10 @@ ServerInterface::~ServerInterface()
  * 2. Connection and disconnection
  ***/
 
-std::shared_ptr< const UserAcceptancePacket > ServerInterface::connect( const char* host, const char* port, const char* userName )
+void ServerInterface::connect( const char* host, const char* port, const char* userName, UserAcceptancePacket& userAcceptancePacket )
 {
     boost::system::error_code errorCode;
     como::NewUserPacket newUserPacket;
-    como::UserAcceptancePacket userAcceptedPacket;
     PackableColor selectionColor;
 
     // Create the TCP resolver and query needed for connecting to the server.
@@ -86,15 +107,13 @@ std::shared_ptr< const UserAcceptancePacket > ServerInterface::connect( const ch
 
     log_->debug( "Receiving USER_ACCEPTANCE packet ...\n" );
     // Read from the server an USER_ACCEPTED network package and unpack it.
-    userAcceptedPacket.recv( *socket_ );
+    userAcceptancePacket.recv( *socket_ );
     log_->debug( "Receiving USER_ACCEPTANCE packet ...OK\n" );
 
-    nextResourceID_ = ResourceID( userAcceptedPacket.getId(), 0 );
-
-    selectionColor = userAcceptedPacket.getSelectionColor();
+    selectionColor = userAcceptancePacket.getSelectionColor();
     log_->debug( "User accepted: \n",
-                 "\tID: [", userAcceptedPacket.getId(), "]\n",
-                 "\tName: [", userAcceptedPacket.getName(), "]\n",
+                 "\tID: [", userAcceptancePacket.getId(), "]\n",
+                 "\tName: [", userAcceptancePacket.getName(), "]\n",
                  "\tSelection color: [", (int)( selectionColor[0].getValue() ), ", ",
                  (int)( selectionColor[1].getValue() ), ", ",
                  (int)( selectionColor[2].getValue() ), ", ",
@@ -106,11 +125,6 @@ std::shared_ptr< const UserAcceptancePacket > ServerInterface::connect( const ch
 
 
     //listenerThread = new std::thread( std::bind( &ServerInterface::listen, this ) );
-    listen();
-
-    setTimer();
-
-    return std::shared_ptr< const UserAcceptancePacket >( dynamic_cast< const UserAcceptancePacket* >( userAcceptedPacket.clone() ) );
 }
 
 
