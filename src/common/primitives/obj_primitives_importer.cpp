@@ -202,10 +202,18 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
                     meshInfo.textureData.uvTriangles.push_back( uvTriangle );
                     meshInfo.normalData.normalTriangles.push_back( normalTriangle );
                 }else{
-                    throw std::runtime_error(
-                                std::string( "OBJPrimitivesImporter doesn't recognize the face line [" ) +
-                                line +
-                                "]" );
+                    componentsRead =
+                            sscanf( lineBody.c_str(), "%u//%u %u//%u %u//%u",
+                            &vertexTriangle[0], &normalTriangle[0],
+                            &vertexTriangle[1], &normalTriangle[1],
+                            &vertexTriangle[2], &normalTriangle[2] );
+
+                    if( componentsRead != 6 ){
+                        throw std::runtime_error( "ERROR reading OBJ face line (v//vn)" );
+                    }
+
+                    meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
+                    meshInfo.normalData.normalTriangles.push_back( normalTriangle );
                 }
             }
         }

@@ -63,16 +63,15 @@ ResourceID ClientPrimitivesManager::importMeshFile( std::string srcFilePath, Res
 {
     OBJPrimitivesImporter primitivesImporter;
     PrimitiveInfo primitive;
-    char primitiveName[64];
+    char primitiveNameSuffix[64];
 
     // Generate the primitive name.
     ResourceID primitiveID = server_->getNewResourceID();
-    sprintf( primitiveName, "%s_%u_%u",
-             boost::filesystem::basename( srcFilePath ).c_str(),
+    sprintf( primitiveNameSuffix, "_%u_%u",
              primitiveID.getCreatorID(),
              primitiveID.getResourceIndex() );
 
-    primitive = primitivesImporter.importPrimitive( primitiveName, srcFilePath, getCategoryAbsoluteePath( categoryID ) );
+    primitive = primitivesImporter.importPrimitive( srcFilePath, getCategoryAbsoluteePath( categoryID ), primitiveNameSuffix );
     primitive.category = categoryID;
     registerPrimitive( primitiveID, primitive );
 
