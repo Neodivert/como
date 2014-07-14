@@ -84,7 +84,7 @@ Scene::Scene( const char* host, const char* port, const char* userName, LogPtr l
 
         OpenGL::checkStatus( "Scene - constructor\n" );
     }catch( std::exception& ex ){
-        throw ex;
+        throw;
     }
 }
 
@@ -279,7 +279,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( userAcceptancePacket ) ) );
     }catch( std::exception& ex ){
         std::cerr << ex.what() << std::endl;
-        throw ex;
+        throw;
     }
 }
 

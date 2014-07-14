@@ -54,7 +54,7 @@ ServerInterface::ServerInterface( const char *host, const char *port, const char
         setTimer();
 
     }catch( std::exception& ex ){
-        throw ex;
+        throw;
     }
 }
 
@@ -268,7 +268,7 @@ void ServerInterface::work()
         }catch( std::exception& ex ){
             // TODO: close the server correctly.
             log_->debug( ex.what(), "\n" );
-            throw ex;
+            throw;
         }
     }
 

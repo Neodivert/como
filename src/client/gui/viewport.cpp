@@ -81,7 +81,7 @@ Viewport::Viewport( View view, shared_ptr< ComoApp > comoApp ) :
         OpenGL::checkStatus( "Viewport constructor - end" );
     }catch( std::exception& ex ){
         comoApp->getLog()->error( ex.what(), "\n" );
-        throw ex;
+        throw;
     }
 }
 
