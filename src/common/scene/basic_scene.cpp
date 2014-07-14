@@ -60,14 +60,6 @@ BasicScene::~BasicScene()
 
 void BasicScene::createSceneDirectory()
 {
-    // TODO: Remote the sceneInitialized fix when Scene and BasicScene be
-    // fully initialized on constructor.
-    static bool sceneInitialized = false;
-
-    if( sceneInitialized ){
-        throw std::runtime_error( "Scene already initialized" );
-    }
-
     sceneDirPath_ = std::string( SCENES_DIR ) + '/' + sceneName_;
 
     unsigned int nameCounter = 1;
@@ -82,8 +74,6 @@ void BasicScene::createSceneDirectory()
 
     boost::filesystem::create_directory( sceneTempDirPath_ );
     log_->debug( "Scene temp directory created [", getTempDirPath(), "]\n" );
-
-    sceneInitialized = true;
 }
 
 
