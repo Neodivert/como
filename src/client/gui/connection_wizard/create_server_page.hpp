@@ -38,7 +38,6 @@ class CreateServerPage : public QWizardPage
         QLineEdit* sceneNameInput_;
         QLineEdit* portInput_;
         QSpinBox* maxUsersInput_;
-        QLineEdit* userNameInput_;
 
         // Log
         LogPtr log_;

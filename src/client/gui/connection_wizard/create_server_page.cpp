@@ -19,9 +19,10 @@
 #include "create_server_page.hpp"
 #include <QFormLayout>
 #include <QIntValidator>
+#include "page_ids.hpp"
+
 
 namespace como {
-
 
 /***
  * 1. Initialization and destruction
@@ -31,7 +32,6 @@ CreateServerPage::CreateServerPage( ScenePtr& scene, LogPtr log ) :
     scene_( scene ),
     portInput_( nullptr ),
     maxUsersInput_( nullptr ),
-    userNameInput_( nullptr ),
     log_( log )
 {
     QFormLayout* layout = nullptr;
@@ -50,15 +50,11 @@ CreateServerPage::CreateServerPage( ScenePtr& scene, LogPtr log ) :
     maxUsersInput_->setMaximum( 16 );
     maxUsersInput_->setValue( 5 );
 
-    // Create a user name input.
-    userNameInput_ = new QLineEdit;
-
     // Create the page's layout
     layout = new QFormLayout;
     layout->addRow( tr( "Scene name: " ), sceneNameInput_ );
     layout->addRow( tr( "Port (0 - 65535): " ), portInput_ );
     layout->addRow( tr( "Max users (1 - 16): " ), maxUsersInput_ );
-    layout->addRow( tr( "Your user name in the server" ), userNameInput_ );
 
     // Set the page's title and layout.
     setTitle( tr( "Create server" ) );
@@ -75,53 +71,25 @@ bool CreateServerPage::validatePage()
     char serverCommand[256];
     int pid;
 
-    // We consider this page valid if we can create the server and connect to
-    // it with the connection info given by user.
-    try{
-        std::string userName = userNameInput_->text().toLocal8Bit().data();
-        if( !userName.size() ){
-            log_->error( "ERROR: User name can't be empty\n" );
-            return false;
-        }
-        if( ( userName.find( '(' ) != std::string::npos ) ||
-            ( userName.find( ')' ) != std::string::npos ) ){
-            log_->error( "ERROR: User name can't contain parenthesis\n" );
-            return false;
-        }
+    log_->debug( "Creating server with port(", portInput_->text().toLocal8Bit().data(), ") and maxUsers(", maxUsersInput_->text().toLocal8Bit().data(), ")\n" );
 
-        log_->debug( "Creating server with port(", portInput_->text().toLocal8Bit().data(), ") and maxUsers(", maxUsersInput_->text().toLocal8Bit().data(), ")\n" );
-
-        pid = fork();
-        if( pid == 0 ){
-            // FIXME: This isn't multiplatform.
-            sprintf( serverCommand, "gnome-terminal -e \" \\\"%s\\\" %d %d \\\"%s\\\"\"",
-                                                SERVER_PATH,                                        // Server bin.
-                                                atoi( portInput_->text().toLocal8Bit().data() ),    // Port.
-                                                maxUsersInput_->value(),                            // Max. users.
-                                                sceneNameInput_->text().toLocal8Bit().data()        // Scene name.
-                     );
-            log_->debug( "Server command: [", serverCommand, "]\n",
-                         "\tReturn value: ", system( serverCommand ), "\n" );
-            exit( 0 );
-        }
-
-        // FIXME: Maybe there is something more elegant?
-        // TODO: The log_->debug() call is a trick for discarging system return
-        // value. Remove this.
-        log_->debug( system( "sleep 3" ), "\n" );
-
-        // Try to connect to the Server scene. In case of error, the Scene
-        // constructor throws a runtime_error.
-        scene_ = ScenePtr(
-                    new Scene( "127.0.0.1",                                // Server IP
-                            portInput_->text().toLocal8Bit().data(),    // Server port
-                            userName.c_str(),                           // User name
-                            log_ ) );
-        return true;
-    }catch( std::runtime_error& ex ){
-        log_->error( ex.what(), "\n" );
-        return false;
+    pid = fork();
+    if( pid == 0 ){
+        // FIXME: This isn't multiplatform.
+        sprintf( serverCommand, "gnome-terminal -e \" \\\"%s\\\" %d %d \\\"%s\\\"\"",
+                                            SERVER_PATH,                                        // Server bin.
+                                            atoi( portInput_->text().toLocal8Bit().data() ),    // Port.
+                                            maxUsersInput_->value(),                            // Max. users.
+                                            sceneNameInput_->text().toLocal8Bit().data()        // Scene name.
+                 );
+        log_->debug( "Server command: [", serverCommand, "]\n",
+                     "\tReturn value: ", system( serverCommand ), "\n" );
+        exit( 0 );
     }
+
+    QMessageBox::information( nullptr, "Server created", "The server has been created" );
+
+    return true;
 }
 
 
@@ -131,7 +99,7 @@ bool CreateServerPage::validatePage()
 
 int CreateServerPage::nextId() const
 {
-    return -1;
+    return PAGE_CONNECT_SERVER;
 }
 
 } // namespace como
