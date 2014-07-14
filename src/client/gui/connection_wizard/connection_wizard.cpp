@@ -35,14 +35,27 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-ConnectionWizard::ConnectionWizard( ScenePtr scene, LogPtr log, QWidget* parent ) :
-    QWizard( parent )
-{
+ConnectionWizard::ConnectionWizard( LogPtr log, QWidget* parent ) :
+    QWizard( parent ),
+    scene_( nullptr )
+{   
     setPage( PAGE_INTRO, new IntroPage );
-    setPage( PAGE_CONNECT_SERVER, new ConnectServerPage( scene, log ) );
-    setPage( PAGE_CREATE_SERVER, new CreateServerPage( scene, log ) );
+    setPage( PAGE_CONNECT_SERVER, new ConnectServerPage( scene_, log ) );
+    setPage( PAGE_CREATE_SERVER, new CreateServerPage( scene_, log ) );
 
     setStartId( PAGE_INTRO );
+}
+
+
+/***
+ * 3. Main method
+ ***/
+
+ScenePtr ConnectionWizard::run()
+{
+    exec();
+
+    return scene_;
 }
 
 }

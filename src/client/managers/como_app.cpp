@@ -24,21 +24,15 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-ComoApp::ComoApp() :
+ComoApp::ComoApp( ScenePtr scene, LogPtr log ) :
+    scene_( scene ),
     appMode( AppMode::OBJECT ),
     transformationMode( TransformationMode::FREE ),
     editionScope( EditionScope::GLOBAL ),
-    transformationType( TransformationType::NONE )
-{
-    // Create a log
-    log_ = LogPtr( new Log );
+    transformationType( TransformationType::NONE ),
+    log_( log )
+{}
 
-    // Set default scene.
-    scene = ScenePtr( new Scene( log_ ) );
-
-    log_->debug( "OpenGL context is valid?: ", getScene()->getOpenGLContext()->isValid(), "\n" );
-    OpenGL::checkStatus( "ComoApp constructor - after creating OpenGL context and scene" );
-}
 
 ComoApp::~ComoApp()
 {
@@ -88,15 +82,14 @@ TransformationType ComoApp::getTransformationType() const
 }
 
 
-ScenePtr ComoApp::getScene() const
-{
-    return scene;
-}
-
-
 LogPtr ComoApp::getLog() const
 {
     return log_;
+}
+
+ScenePtr ComoApp::getScene() const
+{
+    return scene_;
 }
 
 
@@ -124,7 +117,8 @@ void ComoApp::setTransformationMode( TransformationMode transformationMode )
     // Emit signal.
     emit transformationModeIndexChanged( static_cast< int >( transformationMode ) );
 
-    scene->renderNeeded();
+    // TODO: Reimplement this.
+    //scene->renderNeeded();
 }
 
 

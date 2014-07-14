@@ -32,20 +32,33 @@ class ConnectionWizard : public QWizard
 {
     Q_OBJECT
 
+    private:
+        ScenePtr scene_;
+
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
         ConnectionWizard() = delete ;
         ConnectionWizard( const ConnectionWizard& ) = delete;
         ConnectionWizard( ConnectionWizard&& ) = delete;
-        ConnectionWizard( ScenePtr scene, LogPtr log, QWidget* parent = nullptr );
+        ConnectionWizard( LogPtr log, QWidget* parent = nullptr );
 
+
+        /***
+         * 2. Destruction
+         ***/
         ~ConnectionWizard() = default;
 
 
         /***
-         * 2. Operators
+         * 3. Main method
+         ***/
+        ScenePtr run();
+
+
+        /***
+         * 4. Operators
          ***/
         ConnectionWizard& operator = ( const ConnectionWizard& ) = delete;
         ConnectionWizard& operator = ( ConnectionWizard&& ) = delete;

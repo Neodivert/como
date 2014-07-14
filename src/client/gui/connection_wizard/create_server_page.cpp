@@ -27,7 +27,7 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-CreateServerPage::CreateServerPage( ScenePtr scene, LogPtr log ) :
+CreateServerPage::CreateServerPage( ScenePtr& scene, LogPtr log ) :
     scene_( scene ),
     portInput_( nullptr ),
     maxUsersInput_( nullptr ),
@@ -110,12 +110,13 @@ bool CreateServerPage::validatePage()
         // value. Remove this.
         log_->debug( system( "sleep 3" ), "\n" );
 
-        // Try to connect to the Server scene. In case of error, the method
-        // Scene::connect() throws an error.
-        scene_->connect( "127.0.0.1",                                 // Server IP
-                         portInput_->text().toLocal8Bit().data(),     // Server port
-                         userName.c_str()                             // User name
-                       );
+        // Try to connect to the Server scene. In case of error, the Scene
+        // constructor throws a runtime_error.
+        scene_ = ScenePtr(
+                    new Scene( "127.0.0.1",                                // Server IP
+                            portInput_->text().toLocal8Bit().data(),    // Server port
+                            userName.c_str(),                           // User name
+                            log_ ) );
         return true;
     }catch( std::runtime_error& ex ){
         log_->error( ex.what(), "\n" );

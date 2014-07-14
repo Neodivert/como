@@ -101,6 +101,9 @@ class ComoApp : public QObject {
     Q_OBJECT
 
     protected:
+        //
+        ScenePtr scene_;
+
         // Current app mode.
         AppMode appMode;
 
@@ -117,16 +120,15 @@ class ComoApp : public QObject {
         // Log
         LogPtr log_;
 
-        // Curren scene.
-        ScenePtr scene;
 
         /***
          * 1. Initialization and destruction
          ***/
     public:
-        ComoApp();
+        ComoApp() = delete;
         ComoApp( const ComoApp& ) = delete;
         ComoApp( ComoApp&& ) = delete;
+        ComoApp( ScenePtr scene, LogPtr log );
 
         ~ComoApp();
 
@@ -137,8 +139,8 @@ class ComoApp : public QObject {
         EditionScope getEditionScope() const ;
         TransformationType getTransformationType() const ;
         TransformationMode getTransformationMode() const ;
-        ScenePtr getScene() const ;
         LogPtr getLog() const ;
+        ScenePtr getScene() const;
 
 
         /***

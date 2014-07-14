@@ -21,10 +21,10 @@
 namespace como {
 
 /***
- * 1. Initialization and destruction
+ * 1. Construction
  ***/
 
-ConnectServerPage::ConnectServerPage( ScenePtr scene, LogPtr log ) :
+ConnectServerPage::ConnectServerPage( ScenePtr& scene, LogPtr log ) :
     scene_( scene ),
     ipInput_( nullptr ),
     portInput_( nullptr ),
@@ -59,43 +59,49 @@ ConnectServerPage::ConnectServerPage( ScenePtr scene, LogPtr log ) :
 
 
 /***
- * 2. Validators
+ * 3. Validators
  ***/
 
 bool ConnectServerPage::validatePage()
 {
-    bool connectionEstablished = false;
+    try{
+        // We consider this page valid if we can connect to the server with the
+        // connection info given by user.
+        std::string userName = userNameInput_->text().toLocal8Bit().data();
+        if( !userName.size() ){
+            log_->error( "ERROR: User name can't be empty\n" );
+            return false;
+        }
+        if( ( userName.find( '(' ) != std::string::npos ) ||
+            ( userName.find( ')' ) != std::string::npos ) ){
+            log_->error( "ERROR: User name can't contain parenthesis\n" );
+            return false;
+        }
 
-    // We consider this page valid if we can connect to the server with the
-    // connection info given by user.
-    std::string userName = userNameInput_->text().toLocal8Bit().data();
-    if( !userName.size() ){
-        log_->error( "ERROR: User name can't be empty\n" );
+        // Try to connect to the server scene. In case of error, Scene's
+        // constructor throws a std::runtime_error
+        scene_ = ScenePtr(
+                    new Scene( ipInput_->text().toLocal8Bit().data(),      // Server IP
+                            portInput_->text().toLocal8Bit().data(),    // Server port
+                            userName.c_str(),                           // User name
+                            log_ ) );
+
+        return true;
+    }catch( std::runtime_error& ex ){
+        std::string errorMsg =
+                std::string( "Couldn't connect to server (" ) +
+                ex.what() +
+                ")";
+
+        QMessageBox::critical( 0, "Connection error", errorMsg.c_str() );
+
         return false;
     }
-    if( ( userName.find( '(' ) != std::string::npos ) ||
-        ( userName.find( ')' ) != std::string::npos ) ){
-        log_->error( "ERROR: User name can't contain parenthesis\n" );
-        return false;
-    }
-
-    // Try to connect to the server scene.
-    connectionEstablished =
-            scene_->connect( ipInput_->text().toLocal8Bit().data(),         // Server IP
-                                portInput_->text().toLocal8Bit().data(),    // Server port
-                                userName.c_str()                            // User name
-                    );
-
-    // If we couldn't connect to the server, display an error popup.
-    if( !connectionEstablished ){
-        QMessageBox::critical( 0, "Connection error", "Couldn't connect to server" );
-    }
-    return connectionEstablished;
 }
 
 
 /***
- * 3. Auxiliar methods
+ * 4. Auxiliar methods
  ***/
 
 int ConnectServerPage::nextId() const

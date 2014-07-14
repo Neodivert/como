@@ -34,7 +34,7 @@ class CreateServerPage : public QWizardPage
     Q_OBJECT
 
     private:
-        ScenePtr scene_;
+        ScenePtr& scene_;
         QLineEdit* sceneNameInput_;
         QLineEdit* portInput_;
         QSpinBox* maxUsersInput_;
@@ -45,13 +45,17 @@ class CreateServerPage : public QWizardPage
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
         CreateServerPage() = delete;
         CreateServerPage( const CreateServerPage& ) = delete;
         CreateServerPage( CreateServerPage&& ) = delete;
-        CreateServerPage( ScenePtr scene, LogPtr log );
+        CreateServerPage( ScenePtr& scene, LogPtr log );
 
+
+        /***
+         * 2. Destruction
+         ***/
         ~CreateServerPage() = default;
 
 

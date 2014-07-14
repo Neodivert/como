@@ -23,10 +23,15 @@
 #include <boost/filesystem.hpp>
 
 #include <common/primitives/primitive_file.hpp>
+#include <client/managers/scene/scene.hpp>
 #include <SDL2/SDL_image.h>
 
 int main( int argc, char *argv[] )
 {
+    // FIXME: Study why this is necessary.
+    //qRegisterMetaType< como::CommandConstPtr >();
+    qRegisterMetaType< como::CommandConstPtr >( "CommandConstPtr" );
+
     // TODO: Add checking code.
     IMG_Init( IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF );
     atexit( IMG_Quit );
@@ -37,7 +42,6 @@ int main( int argc, char *argv[] )
 
     // Create a Qt application.
     QApplication app( argc, argv );
-    int dialogCode;
 
     // Variable argv[0] contains the string used for invoking this program
     // We now retrieve the basename of that string for getting a
@@ -56,21 +60,23 @@ int main( int argc, char *argv[] )
         throw std::runtime_error( errorCode.message() );
     }
 
-    // Create the COMO app.
-    std::shared_ptr< como::ComoApp > comoApp( new como::ComoApp );
-
-    // Create the main window.
-    como::MainWindow window( nullptr, comoApp );
+    como::LogPtr log( new como::Log() );
 
     // Create a wizzard for creating a scene or connecting to a created one.
-    como::ConnectionWizard connectionWizard( comoApp->getScene(), comoApp->getLog(), &window );
+    como::ConnectionWizard connectionWizard( log );
 
     // Execute the connection wizard, then show the main window.
-    dialogCode = connectionWizard.exec();
+    como::ScenePtr scene = connectionWizard.run();
 
     // If the user doesn't reject the connection wizard, show the main window
     // and run the app.
-    if( dialogCode != QDialog::Rejected ){
+    if( scene != nullptr ){
+        // Create the COMO app.
+        std::shared_ptr< como::ComoApp > comoApp( new como::ComoApp( scene, log ) );
+
+        // Create the main window.
+        como::MainWindow window( nullptr, comoApp );
+
         window.show();
 
         // Run Qt application.

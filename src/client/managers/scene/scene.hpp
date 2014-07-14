@@ -97,7 +97,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public AbstractChange
         Scene() = delete;
         Scene( const Scene&  ) = delete;
         Scene( Scene&& ) = delete;
-        Scene( LogPtr log );
+        Scene( const char* host, const char* port, const char* userName, LogPtr log );
 
 
         /***
@@ -112,7 +112,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public AbstractChange
 
         void initOpenGL();
         void initLinesBuffer();
-        bool connect( const char* host, const char* port, const char* userName );
+        void initManagers( const UserAcceptancePacket& userAcceptancePacket );
 
 
         /***
@@ -174,7 +174,6 @@ class Scene : public QOffscreenSurface, public BasicScene, public AbstractChange
         void renderNeeded();
         void userConnected( UserConnectionCommandConstPtr command );
         void userDisconnected( UserID userID );
-        void connectedToScene( const QString& sceneName );
         void primitiveAdded( QString primitiveName, ResourceID primitiveID );
 
 

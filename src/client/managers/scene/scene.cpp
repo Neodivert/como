@@ -24,25 +24,68 @@ namespace como {
  * 1. Construction.
  ***/
 
-Scene::Scene( LogPtr log ) :
+/*
+        // Users sharing this scene.
+        UsersMap users_;
+
+        ClientPrimitivesManagerPtr primitivesManager_;
+
+         * \brief Drawables mmanager. This object acts as a container and an
+         * interface to all the drawables present in the scene.
+         *
+        DrawablesManagerPtr drawablesManager_;
+
+        MaterialsManagerPtr materialsManager_;
+
+        LightsManagerPtr lightsManager_;
+
+        OpenGLPtr openGL_;
+
+        // Local user's ID.
+        UserID localUserID_;
+        DrawableIndex localUserNextDrawableIndex_;
+
+        shared_ptr< QOpenGLContext > oglContext_;
+
+        // Interface with the server.
+        ServerInterfacePtr server_;
+
+        // Lines VAO, VBO and offsets.
+        GLuint linesVAO;
+        GLuint linesVBO;
+        GLuint linesBufferOffsets[N_LINES_BUFFER_OFFSETS];
+
+        GLint uniformColorLocation;
+        GLint uniformLightingEnabledLocation;
+        */
+
+Scene::Scene( const char* host, const char* port, const char* userName, LogPtr log ) :
     BasicScene( log ),
     localUserID_( 1 ), // Will be updated to its final value in Scene::connect().
     localUserNextDrawableIndex_( 1 ),
     uniformColorLocation( -1 ),
     uniformLightingEnabledLocation( -1 )
 {
-    initOpenGL();
+    try {
+        UserAcceptancePacket userAcceptancePacket;
 
-    initLinesBuffer();
+        initScene( "scene" );
 
-    // Set the background color.
-    setBackgroundColor( 0.9f, 0.9f, 0.9f, 0.9f );
+        server_ = ServerInterfacePtr( new ServerInterface( host, port, userName, getTempDirPath(), log, userAcceptancePacket ) );
 
-    // FIXME: Study why this is necessary.
-    qRegisterMetaType< CommandConstPtr >();
-    qRegisterMetaType< CommandConstPtr >( "CommandConstPtr" );
+        initManagers( userAcceptancePacket );
 
-    OpenGL::checkStatus( "Scene - constructor\n" );
+        initOpenGL();
+
+        initLinesBuffer();
+
+        // Set the background color.
+        setBackgroundColor( 0.9f, 0.9f, 0.9f, 0.9f );
+
+        OpenGL::checkStatus( "Scene - constructor\n" );
+    }catch( std::exception& ex ){
+        throw ex;
+    }
 }
 
 
@@ -192,36 +235,36 @@ void Scene::initLinesBuffer()
 }
 
 
-bool Scene::connect( const char* host, const char* port, const char* userName )
+void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
 {
     try{
-        std::shared_ptr< const UserAcceptancePacket > userAcceptancePacket;
-
         // Initialize the scene.
-        initScene( "scene" );
+        //initScene( "scene" );
 
         log_->debug( "TEMP DIR: [", getTempDirPath(), "]\n" );
 
         // Create an interface to the server.
-        server_ = ServerInterfacePtr( new ServerInterface( log_, getTempDirPath() ) );
+        //server_ = ServerInterfacePtr( new ServerInterface( log_, getTempDirPath() ) );
 
         // Try to connect to the server. If there is any error, the method
         // ServerInterface::connect() throws an exception.
-        log_->debug( "Connecting to (", host, ":", port, ") with name [", userName, "]...\n" );
-        userAcceptancePacket = server_->connect( host, port, userName );
+        //log_->debug( "Connecting to (", host, ":", port, ") with name [", userName, "]...\n" );
+        //userAcceptancePacket = server_->connect( host, port, userName );
 
         // Retrieve the local user ID.
-        localUserID_ = userAcceptancePacket->getId();
+        localUserID_ = userAcceptancePacket.getId();
 
         // Signal / slot: when a command is received from server, execute it on
         // the local scene.
         QObject::connect( server_.get(), &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
 
+        log_->debug( "Remote command execution signal connected\n" );
+
         // Initialize the materials manager.
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( localUserID_, server_, log_ ) );
 
         // Initialize the drawables manager.
-        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, materialsManager_, localUserID_, userAcceptancePacket->getSelectionColor(), std::string( "data/scenes/" ) + getName() + std::string( "/primitives" ), oglContext_, log_ ) );
+        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, materialsManager_, localUserID_, userAcceptancePacket.getSelectionColor(), std::string( "data/scenes/" ) + getName() + std::string( "/primitives" ), oglContext_, log_ ) );
 
         // Initialize the primitives manager.
         primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, drawablesManager_, materialsManager_, log_ ) );
@@ -233,15 +276,10 @@ bool Scene::connect( const char* host, const char* port, const char* userName )
         drawablesManager_->addObserver( lightsManager_.get() );
 
         // Add the local user to the scene.
-        addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( *userAcceptancePacket ) ) );
-
-        // Emit a signal indicating that we have connected to a scene.
-        emit connectedToScene( tr( userAcceptancePacket->getSceneName() ) );
-
-        return true;
+        addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( userAcceptancePacket ) ) );
     }catch( std::exception& ex ){
         std::cerr << ex.what() << std::endl;
-        return false;
+        throw ex;
     }
 }
 
