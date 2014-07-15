@@ -34,7 +34,8 @@ GLint Viewport::viewProjectionMatrixLocation = -1;
 
 Viewport::Viewport( View view, shared_ptr< ComoApp > comoApp ) :
     QWindow(),
-    forceRender_( true )
+    forceRender_( true ),
+    lastMouseWorldPos_( 0.0f )
 {
     try {
         GLint currentShaderProgram;
@@ -159,10 +160,6 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
         // We are not in transformation mode. This mouse press is for selecting
         // a drawable.
 
-        // Record last mouse position.
-        //recordLastMousePos( mousePressEvent->x(), mousePressEvent->y() );
-        lastMousePos = getNormalizedMousePos( mousePressEvent->x(), mousePressEvent->y() );
-
         // http://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection
         // Tace a ray from pixel towards camera's center vector.
         traceRay( mousePressEvent->x(), height() - mousePressEvent->y() - 1, rayOrigin, rayDirection );
@@ -174,7 +171,10 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
         // Do the ray picking.
         comoApp->getScene()->getDrawablesManager()->selectDrawableByRayPicking( rayOrigin,
                                                          rayDirection,
-                                                         addToSelection );
+                                                         addToSelection,
+                                                         lastMouseWorldPos_ );
+
+        std::cout << "lastMouseWorldPos_: (" << lastMouseWorldPos_.x << ", " << lastMouseWorldPos_.y << ", " << lastMouseWorldPos_.z << std::endl;
     }else{
         // We were in transformation mode. This mouse press is for droping
         // the current selection.
@@ -255,18 +255,26 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     const glm::vec3 zAxis( 0.0f, 0.0f, 1.0f );
 
     // Variables used for computing the magnitude of the transformation.
-    glm::vec4 transformVector;
+    glm::vec3 transformVector;
     float angle;
-    // TODO: Not a complete conversion to screen coordinates.
-    glm::vec2 scenePivotPoint = glm::vec2( projectionMatrix * camera->getViewMatrix() * glm::vec4( comoApp->getScene()->getDrawablesManager()->getPivotPoint(), 1.0f ) );
-    scenePivotPoint.x *= 0.5f;
-    scenePivotPoint.y *= -0.5f;
+    const glm::vec3 scenePivotPoint = comoApp->getScene()->getDrawablesManager()->getPivotPoint();
 
-    glm::vec2 pivotPointToMousePosVector;
-    glm::vec2 lastPivotPointToMousePosVector;
+    glm::vec3 rayOrigin, rayDirection;
+    traceRay( mouseMoveEvent->x(), height() - mouseMoveEvent->y() - 1, rayOrigin, rayDirection );
 
-    // Compute mouse pos (window normalized coordinates [-0.5, 0.5]).
-    const glm::vec2 mousePos = getNormalizedMousePos( mouseMoveEvent->pos().x(), mouseMoveEvent->pos().y() );
+    // Compute the coefficients of the plane which contains the point
+    // "lastMouseWorldPos_" and whose normal is "-camera->getCenterVector()".
+    const float A = -camera->getCenterVector().x;
+    const float B = -camera->getCenterVector().y;
+    const float C = -camera->getCenterVector().z;
+    const float D = -( A * lastMouseWorldPos_.x + B * lastMouseWorldPos_.y + C * lastMouseWorldPos_.z );
+
+    // Get the intersection between the previous ray and plane.
+    const float t = -( ( A * rayOrigin.x + B * rayOrigin.y + C * rayOrigin.z + D ) / ( A * rayDirection.x + B * rayDirection.y + C * rayDirection.z ) );
+    const glm::vec3 currentMouseWorldPos = rayOrigin + rayDirection * t;
+
+    const glm::vec3 lastMouseWorldRelPos = lastMouseWorldPos_ - scenePivotPoint;
+    const glm::vec3 currentMouseWorldRelPos = currentMouseWorldPos - scenePivotPoint;
 
     // Get current app's transformation type and mode.
     TransformationType transformationType = comoApp->getTransformationType();
@@ -277,8 +285,9 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
         // Make the transformation requested by user.
         switch( transformationType ){
             case TransformationType::TRANSLATION:
-                // Transform mouse move to a world space's translation vector.
-                transformVector = 2.0f * glm::inverse( projectionMatrix*camera->getViewMatrix() ) * glm::vec4( mousePos.x - lastMousePos.x, lastMousePos.y - mousePos.y, 0.0f, 1.0f );
+                // Compute the transformation vector.
+                transformVector = currentMouseWorldPos - lastMouseWorldPos_;
+                std::cout << "transformVector: (" << transformVector.x << ", " << transformVector.y << ", " << transformVector.z << ")" << std::endl;
 
                 // If requested, attach the translation vector to an axis.
                 switch( transformationMode ){
@@ -301,54 +310,48 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 // Do the translation.
                 localUserSelection->translate( glm::vec3( transformVector ) );
             break;
-            case TransformationType::ROTATION:
-                // Compute the angle between the vectors.
-                pivotPointToMousePosVector = glm::normalize( mousePos - scenePivotPoint );
-                lastPivotPointToMousePosVector = lastMousePos - scenePivotPoint;
+            case TransformationType::ROTATION:{
+                angle = glm::orientedAngle(
+                            glm::normalize( currentMouseWorldRelPos ),
+                            glm::normalize( lastMouseWorldRelPos ),
+                            glm::normalize( glm::vec3( camera->getCenterVector() ) ) );
 
-                // Error checking : if lastPivotPointToMousePosVector's lenght
-                // would be zero, we would have a NaN when normalizing it.
-                if( glm::length( lastPivotPointToMousePosVector ) != 0.0f ){
-                    lastPivotPointToMousePosVector = glm::normalize( lastPivotPointToMousePosVector );
-
-                    angle = glm::orientedAngle( pivotPointToMousePosVector, lastPivotPointToMousePosVector );
-
-                    // Make the rotation about an axis or another depending on the current
-                    // transformationMode.
-                    switch( transformationMode ){
-                        case TransformationMode::FIXED_X:
-                            localUserSelection->rotate( angle, xAxis );
-                        break;
-                        case TransformationMode::FIXED_Y:
-                            localUserSelection->rotate( angle, yAxis );
-                        break;
-                        case TransformationMode::FIXED_Z:
-                            localUserSelection->rotate( angle, zAxis );
-                        break;
-                        case TransformationMode::FREE:
-                            localUserSelection->rotate( angle, glm::vec3( -camera->getCenterVector() ) );
-                        break;
-                    }
+                // Make the rotation about an axis or another depending on the current
+                // transformationMode.
+                switch( transformationMode ){
+                    case TransformationMode::FIXED_X:
+                        localUserSelection->rotate( angle, xAxis );
+                    break;
+                    case TransformationMode::FIXED_Y:
+                        localUserSelection->rotate( angle, yAxis );
+                    break;
+                    case TransformationMode::FIXED_Z:
+                        localUserSelection->rotate( angle, zAxis );
+                    break;
+                    case TransformationMode::FREE:
+                        localUserSelection->rotate( angle, glm::vec3( -camera->getCenterVector() ) );
+                    break;
                 }
-
-            break;
-            case TransformationType::SCALE:
-                // Compute the scale magnitud.
-                pivotPointToMousePosVector = mousePos - scenePivotPoint;
-                lastPivotPointToMousePosVector = lastMousePos - scenePivotPoint;
-
-                // Error checking : if lastPivotPointToMousePosVector's
+            }break;
+            case TransformationType::SCALE:{
+                // Error checking : if lastMouseWorldRelPos's
                 // components would be zero, we would have a NaN when
                 // dividing by it.
-                if( lastPivotPointToMousePosVector.x != 0.0f &&
-                    lastPivotPointToMousePosVector.y != 0.0f ){
-                    transformVector = glm::vec4( pivotPointToMousePosVector.x / lastPivotPointToMousePosVector.x,
-                                                 pivotPointToMousePosVector.y / lastPivotPointToMousePosVector.y,
-                                                 1.0f,
-                                                 1.0f );
+                if( lastMouseWorldRelPos.x != 0.0f &&
+                    lastMouseWorldRelPos.y != 0.0f &&
+                    lastMouseWorldRelPos.z != 0.0f ){
+                    transformVector = glm::vec3( currentMouseWorldRelPos.x / lastMouseWorldRelPos.x,
+                                                 currentMouseWorldRelPos.y / lastMouseWorldRelPos.y,
+                                                 currentMouseWorldRelPos.z / lastMouseWorldRelPos.z );
 
                     // Transform the scale vector from window to world space.
-                    transformVector = Drawable::transformScaleVector( transformVector, glm::inverse( projectionMatrix * camera->getViewMatrix() ) );
+                    // TODO: Why isn't this nedeed anymore?.
+                    //transformVector = glm::vec3( Drawable::transformScaleVector( glm::vec4( transformVector, 1.0f ), glm::inverse( projectionMatrix * camera->getViewMatrix() ) ) );
+
+                    // TODO: Remove this.
+                    std::cout << "lastMouseWorldPos: (" << lastMouseWorldRelPos.x << ", " << lastMouseWorldRelPos.y << ", " << lastMouseWorldRelPos.z << ")" << std::endl;
+                    std::cout << "currentMouseWorldPos: (" << currentMouseWorldPos.x << ", " << currentMouseWorldPos.y << ", " << currentMouseWorldPos.z << ")" << std::endl;
+                    std::cout << "transformVector: (" << transformVector.x << ", " << transformVector.y << ", " << transformVector.z << ")" << std::endl;
 
                     // If requested, attach the tranformation vector to an axis.
                     switch( transformationMode ){
@@ -377,7 +380,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                         localUserSelection->scale( glm::vec3( transformVector ) );
                     }
                 }
-            break;
+            }break;
             default:
             break;
         }
@@ -387,7 +390,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     updateTransformGuideLine( mouseMoveEvent->pos().x(), height() - mouseMoveEvent->pos().y() - 1 );
 
     // Record last mouse position.
-    lastMousePos = mousePos;
+    lastMouseWorldPos_ = currentMouseWorldPos;
 }
 
 
@@ -508,14 +511,14 @@ void Viewport::traceRay( const GLfloat& x, const GLfloat& y, glm::vec3& rayOrigi
     viewport = glm::vec4( 0, 0, width(), height() );
 
     // Get window coordinates. Set z to near plane's z.
-    windowCoordinates = glm::vec3( x, y, 0.0f );
+    windowCoordinates = glm::vec3( x, y, 1.0f );
 
     // Get ray origin coordinates at clipping near plane by unproyecting the window's ones.
     rayOrigin = glm::unProject( windowCoordinates, camera->getViewMatrix(), projectionMatrix, viewport );
 
     // Get ray direction coordinates by unproyecting the window's ones to far plane and
     // then substracting the ray origin.
-    windowCoordinates.z = 1.0f;
+    windowCoordinates.z = -1.0f;
     rayDirection = glm::unProject( windowCoordinates, camera->getViewMatrix(), projectionMatrix, viewport ) - rayOrigin;
 }
 

@@ -112,7 +112,9 @@ void Server::run()
 
         // Create and initialize the primitives directory for the current
         // scene.
-        primitivesManager_ = std::unique_ptr< ServerPrimitivesManager >( new ServerPrimitivesManager( getDirPath(), getTempDirPath(), commandsHistoric_, log_ ) );
+        io_service_->post( [this](){
+            primitivesManager_ = std::unique_ptr< ServerPrimitivesManager >( new ServerPrimitivesManager( getDirPath(), getTempDirPath(), commandsHistoric_, log_ ) );
+        });
 
         // Create a directional light with with no owner and synchronise it in
         // the commands historic.

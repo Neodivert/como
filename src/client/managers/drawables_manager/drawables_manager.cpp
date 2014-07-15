@@ -227,7 +227,7 @@ void DrawablesManager::unselectAll( UserID userID )
 
 
 
-PackableDrawableID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection )
+PackableDrawableID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint )
 {
     const float MAX_T = 9999999.0f;
     float minT = MAX_T;
@@ -257,6 +257,10 @@ PackableDrawableID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, g
 
         // Insert the selected drawable's ID in a queue of pending selections.
         localUserPendingSelections_.push( closestObject );
+
+        // Save the collision point (in world coordinates) for returning it to
+        // caller.
+        worldCollisionPoint = r0 + r1 * minT;
     }else{
         // If user dind't selected any non-selected drawable, check if he / she
         // clicked on an already selected one.
@@ -268,6 +272,11 @@ PackableDrawableID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, g
             log_->debug( "NO CLOSEST OBJECT. Unselecting all\n" );
             unselectAll();
         }
+
+        // Even if no object is collided, we return in "worldCollisionPoint"
+        // the "collision" with the near plane.
+        //worldCollisionPoint = r0;
+        worldCollisionPoint = glm::vec3( 0.0f );
     }
 
     return closestObject;

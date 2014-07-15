@@ -132,7 +132,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         void unselectAll();
         void unselectAll( UserID userId );
 
-        PackableDrawableID selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection );
+        PackableDrawableID selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint );
 
 
         /***

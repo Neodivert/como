@@ -71,11 +71,11 @@ class Viewport : public QWindow
         float widthInverse;
         float heightInverse;
 
-        glm::vec2 lastMousePos;
-
         glm::mat4 projectionMatrix;
 
         bool forceRender_;
+
+        glm::vec3 lastMouseWorldPos_;
 
     public:
         /***

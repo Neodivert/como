@@ -24,41 +24,6 @@ namespace como {
  * 1. Construction.
  ***/
 
-/*
-        // Users sharing this scene.
-        UsersMap users_;
-
-        ClientPrimitivesManagerPtr primitivesManager_;
-
-         * \brief Drawables mmanager. This object acts as a container and an
-         * interface to all the drawables present in the scene.
-         *
-        DrawablesManagerPtr drawablesManager_;
-
-        MaterialsManagerPtr materialsManager_;
-
-        LightsManagerPtr lightsManager_;
-
-        OpenGLPtr openGL_;
-
-        // Local user's ID.
-        UserID localUserID_;
-        DrawableIndex localUserNextDrawableIndex_;
-
-        shared_ptr< QOpenGLContext > oglContext_;
-
-        // Interface with the server.
-        ServerInterfacePtr server_;
-
-        // Lines VAO, VBO and offsets.
-        GLuint linesVAO;
-        GLuint linesVBO;
-        GLuint linesBufferOffsets[N_LINES_BUFFER_OFFSETS];
-
-        GLint uniformColorLocation;
-        GLint uniformLightingEnabledLocation;
-        */
-
 Scene::Scene( const char* host, const char* port, const char* userName, LogPtr log ) :
     BasicScene( log ),
     localUserID_( 1 ), // Will be updated to its final value in Scene::connect().
