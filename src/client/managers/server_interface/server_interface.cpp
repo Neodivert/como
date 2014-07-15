@@ -46,13 +46,6 @@ ServerInterface::ServerInterface( const char *host, const char *port, const char
         for( unsigned int i=0; i<2; i++ ){
             workerThreads_.create_thread( boost::bind( &ServerInterface::work, this ) );
         }
-
-        // Start to listen to server.
-        listen();
-
-        // Set timer for sending pending commands to server on a regular basis.
-        setTimer();
-
     }catch( std::exception& ex ){
         throw;
     }
@@ -202,6 +195,16 @@ void ServerInterface::sendCommand( CommandConstPtr sceneCommand )
 {
     // Queue the new scene command.
     sceneCommandsToServer_.push( sceneCommand );
+}
+
+
+void ServerInterface::run()
+{
+    // Start to listen to server.
+    listen();
+
+    // Set timer for sending pending commands to server on a regular basis.
+    setTimer();
 }
 
 

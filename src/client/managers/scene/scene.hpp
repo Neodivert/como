@@ -90,6 +90,8 @@ class Scene : public QOffscreenSurface, public BasicScene, public AbstractChange
         GLint uniformColorLocation;
         GLint uniformLightingEnabledLocation;
 
+        UserConnectionCommandConstPtr localUserConnectionCommand_;
+
     public:
         /***
          * 1. Construction.
@@ -192,6 +194,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public AbstractChange
          ***/
     public:
         virtual bool hasChangedSinceLastQuery();
+        void run();
 };
 
 typedef std::shared_ptr< Scene > ScenePtr;

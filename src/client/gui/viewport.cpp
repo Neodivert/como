@@ -174,7 +174,7 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
                                                          addToSelection,
                                                          lastMouseWorldPos_ );
 
-        std::cout << "lastMouseWorldPos_: (" << lastMouseWorldPos_.x << ", " << lastMouseWorldPos_.y << ", " << lastMouseWorldPos_.z << std::endl;
+        std::cout << "(1) lastMouseWorldPos_: (" << lastMouseWorldPos_.x << ", " << lastMouseWorldPos_.y << ", " << lastMouseWorldPos_.z << std::endl;
     }else{
         // We were in transformation mode. This mouse press is for droping
         // the current selection.
@@ -344,12 +344,16 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                                                  currentMouseWorldRelPos.y / lastMouseWorldRelPos.y,
                                                  currentMouseWorldRelPos.z / lastMouseWorldRelPos.z );
 
+                    if( isnan( lastMouseWorldRelPos.x ) ){
+                        std::cout << "Is NaN!" << std::endl;
+                    }
+
                     // Transform the scale vector from window to world space.
                     // TODO: Why isn't this nedeed anymore?.
                     //transformVector = glm::vec3( Drawable::transformScaleVector( glm::vec4( transformVector, 1.0f ), glm::inverse( projectionMatrix * camera->getViewMatrix() ) ) );
 
                     // TODO: Remove this.
-                    std::cout << "lastMouseWorldPos: (" << lastMouseWorldRelPos.x << ", " << lastMouseWorldRelPos.y << ", " << lastMouseWorldRelPos.z << ")" << std::endl;
+                    std::cout << "lastMouseWorldPos_: (" << lastMouseWorldPos_.x << ", " << lastMouseWorldPos_.y << ", " << lastMouseWorldPos_.z << ")" << std::endl;
                     std::cout << "currentMouseWorldPos: (" << currentMouseWorldPos.x << ", " << currentMouseWorldPos.y << ", " << currentMouseWorldPos.z << ")" << std::endl;
                     std::cout << "transformVector: (" << transformVector.x << ", " << transformVector.y << ", " << transformVector.z << ")" << std::endl;
 

@@ -74,10 +74,12 @@ int main( int argc, char *argv[] )
         // Create the COMO app.
         std::shared_ptr< como::ComoApp > comoApp( new como::ComoApp( scene, log ) );
 
-        // Create the main window.
+        // Create and show the main window.
         como::MainWindow window( nullptr, comoApp );
-
         window.show();
+
+        // "Run" the scene (start synchronization with server).
+        comoApp->getScene()->run();
 
         // Run Qt application.
         mainExitValue = app.exec();

@@ -240,6 +240,8 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
 
         drawablesManager_->addObserver( lightsManager_.get() );
 
+        localUserConnectionCommand_ = UserConnectionCommandConstPtr( new UserConnectionCommand( userAcceptancePacket ) );
+
         // Add the local user to the scene.
         addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( userAcceptancePacket ) ) );
     }catch( std::exception& ex ){
@@ -536,6 +538,17 @@ bool Scene::hasChangedSinceLastQuery()
     }
 
     return false;
+}
+
+void Scene::run()
+{
+    // When the server was created, the local user was added to the Scene
+    // but as the GUI wasn't yet initialized, the GUI users list wasn't
+    // updated. We reemit here the signal for GUI updating.
+    // TODO: Remove this and find a better way of initializing the users list?
+    emit userConnected( localUserConnectionCommand_ );
+
+    server_->run();
 }
 
 } // namespace como
