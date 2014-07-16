@@ -43,10 +43,10 @@ class UserAcceptancePacket : public Packet
         PackableUserID id_; 
 
         /*! User Name given to the addressee of this packet */
-        PackableString<NAME_SIZE> name_;
+        PackableString name_;
 
         /*! Name of the scene being synchronised by the server */
-        PackableString<NAME_SIZE> sceneName_;
+        PackableString sceneName_;
 
         /*!
          * Selection color given to the addressee of this pacekt. The

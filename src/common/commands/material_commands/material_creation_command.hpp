@@ -27,7 +27,7 @@ namespace como {
 class MaterialCreationCommand : public MaterialCommand
 {
     private:
-        PackableString<64> materialName_;
+        PackableString materialName_;
         PackableColor materialAmbientReflectivity_;
         PackableColor materialDiffuseReflectivity_;
         PackableColor materialSpecularReflectivity_;

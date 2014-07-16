@@ -27,7 +27,7 @@ namespace como {
 class UserConnectionCommand : public UserCommand
 {
     private:
-        PackableString<NAME_SIZE> name_;
+        PackableString name_;
         PackableColor selectionColor_;
 
     public:

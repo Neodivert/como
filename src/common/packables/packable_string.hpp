@@ -20,7 +20,7 @@
 #define PACKABLE_STRING_HPP
 
 #include "packable.hpp"
-#include <cstring>
+#include <string>
 
 namespace como {
 
@@ -28,14 +28,12 @@ namespace como {
  * \class PackableString
  *
  * \brief String that can be packed into / unpacked from a given buffer.
- * \tparam STRING_SIZE string size (in characters).
  */
-template <unsigned int STRING_SIZE>
 class PackableString : public Packable
 {
     private:
         /*! Plain inner string */
-        char str_[STRING_SIZE];
+        std::string str_;
 
     public:
         /***
@@ -47,6 +45,8 @@ class PackableString : public Packable
 
         /*! Constructs a packable string by copying a plain one. */
         PackableString( const char* str );
+
+        PackableString( const std::string& str );
 
         /*! Copy constructor */
         PackableString( const PackableString& b );
@@ -85,10 +85,10 @@ class PackableString : public Packable
          * \brief returns a pointer to inner plain string.
          * \return a pointer to inner plain string.
          */
-        const char* getValue() const { return str_; }
+        const char* getValue() const { return str_.c_str(); }
 
         /*! \brief see Packable::getPacketSize const */
-        virtual PacketSize getPacketSize() const { return STRING_SIZE; }
+        virtual PacketSize getPacketSize() const { return sizeof( std::uint16_t ) + str_.size(); }
 
         /*! \brief see PackableArrayWrapper::operator[] */
         char& operator []( unsigned int index ){ return str_[index]; }
@@ -105,7 +105,7 @@ class PackableString : public Packable
          * string.
          * \param str plain string we are assigning.
          */
-        void setValue( const char* str ){ strncpy( str_, str, STRING_SIZE ); }
+        void setValue( const char* str ){ str_ = str; }
 
 
         /***
@@ -115,107 +115,14 @@ class PackableString : public Packable
         /*! Assigns the given plain string to this instance's inner one */
         PackableString& operator = ( const char* str );
 
+        PackableString& operator = ( const std::string& str );
+
         /*! Copy assignment operator */
         PackableString& operator = (const PackableString& b);
 
         /*! Move assignment operator */
         PackableString& operator = ( PackableString&& ) = default;
 };
-
-
-/***
- * 1. Construction
- ***/
-
-template <unsigned int STRING_SIZE>
-PackableString<STRING_SIZE>::PackableString( const PackableString<STRING_SIZE>& b ) :
-    Packable()
-{
-    strncpy( str_, b.str_, STRING_SIZE );
-}
-
-template <unsigned int STRING_SIZE>
-PackableString<STRING_SIZE>::PackableString( const char* str ) :
-    Packable()
-{
-    strncpy( str_, str, STRING_SIZE );
-}
-
-
-/***
- * 3. Packing and unpacking
- ***/
-
-template <unsigned int STRING_SIZE>
-void* PackableString<STRING_SIZE>::pack( void* buffer ) const
-{
-    // Cast the buffer so we can pack this string.
-    char* castedBuffer = static_cast< char* >( buffer );
-
-    // Pack the string into the buffer.
-    strncpy( castedBuffer, str_, STRING_SIZE );
-
-    // Return a pointer to the next position in the buffer.
-    return static_cast< void *>( castedBuffer + STRING_SIZE );
-}
-
-
-template <unsigned int STRING_SIZE>
-const void* PackableString<STRING_SIZE>::unpack( const void* buffer )
-{
-    // Cast the buffer so we can unpack the string.
-    const char* castedBuffer = static_cast< const char* >( buffer );
-
-    // Unpack the string from the buffer.
-    strncpy( str_, static_cast< const char* >( buffer ), STRING_SIZE );
-
-    // Return a pointer to the next position in the buffer.
-    return static_cast< const void *>( castedBuffer + STRING_SIZE );
-}
-
-
-template <unsigned int STRING_SIZE>
-const void* PackableString<STRING_SIZE>::unpack( const void* buffer ) const
-{
-    char unpackedStr[STRING_SIZE] = { 0 };
-
-    // Cast the buffer so we can unpack the string.
-    const char* castedBuffer = static_cast< const char* >( buffer );
-
-    // Unpack a string from the given buffer.
-    strncpy( unpackedStr, static_cast< const char* >( buffer ), STRING_SIZE );
-
-    // Throw an exception if the unpacked string doesn't match str_.
-    if( strncmp( str_, unpackedStr, STRING_SIZE ) ){
-        throw std::runtime_error( "ERROR: Unpacked an unexpected PackableString" );
-    }
-
-    // Return a pointer to the next position in the buffer.
-    return static_cast< const void *>( castedBuffer + STRING_SIZE );
-}
-
-
-/***
- * 6. Operators
- ***/
-
-template <unsigned int STRING_SIZE>
-PackableString<STRING_SIZE>& PackableString<STRING_SIZE>::operator = ( const PackableString<STRING_SIZE>& b )
-{
-    if( this != &b ){
-        strncpy( str_, b.str_, STRING_SIZE );
-    }
-    return *this;
-}
-
-template <unsigned int STRING_SIZE>
-PackableString<STRING_SIZE>& PackableString<STRING_SIZE>::operator = ( const char* str )
-{
-    strncpy( str_, str, STRING_SIZE );
-
-    return *this;
-}
-
 
 } // namespace como
 

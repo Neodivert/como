@@ -34,7 +34,7 @@ class NewUserPacket : public Packet
 {  
     public:
         /*! Name of the user trying to connect to server */
-        PackableString<NAME_SIZE> name_;
+        PackableString name_;
 
     public:
         /***

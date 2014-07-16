@@ -38,7 +38,7 @@ class PrimitiveCreationCommand : public PrimitiveCommand
         PackableResourceID category_;
 
         /*! Primitive name. */
-        PackableString< 64 > name_;
+        PackableString name_;
 
         /*! Primitive specification files. */
         PackableFile primitiveFile_;

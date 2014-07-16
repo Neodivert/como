@@ -208,7 +208,10 @@ const void* PackableInteger<PackedType, UnpackedType>::unpack( const void* buffe
 
     // If the unpacked value isn't the expected one, throw an exception.
     if( static_cast< UnpackedType >( networkValue ) != this->getValue() ){
-        sprintf( errorMessage, "ERROR: Unpacked an unexpected unsigned integer. Expected value (%u), unpacked value (%u)", this->getValue(), static_cast< UnpackedType >( networkValue ) );
+        sprintf( errorMessage,
+                 "ERROR: Unpacked an unexpected unsigned integer. Expected value (%u), unpacked value (%u)",
+                 static_cast< PackedType >( this->getValue() ),
+                 static_cast< PackedType >( networkValue ) );
         throw std::runtime_error( errorMessage );
     }
 

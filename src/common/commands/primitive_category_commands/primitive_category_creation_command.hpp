@@ -26,7 +26,7 @@ namespace como {
 class PrimitiveCategoryCreationCommand : public PrimitiveCategoryCommand
 {
     private:
-        PackableString<64> categoryName_;
+        PackableString categoryName_;
 
     public:
         /***

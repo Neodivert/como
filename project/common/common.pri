@@ -150,4 +150,5 @@ SOURCES += \
     ../../src/common/primitives/primitive_info.cpp \
     ../../src/common/primitives/primitive_file.cpp \
     ../../src/common/scene/basic_scene.cpp \
-    ../../src/common/commands/light_commands/light_ambient_coefficient_change_command.cpp
+    ../../src/common/commands/light_commands/light_ambient_coefficient_change_command.cpp \
+    ../../src/common/packables/packable_string.cpp
