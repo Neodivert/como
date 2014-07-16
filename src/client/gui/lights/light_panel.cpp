@@ -28,10 +28,15 @@ LightPanel::LightPanel( LightsManagerPtr lightsManager ) :
     // Create the widgets for modifying light properties.
     QFormLayout* layout = new QFormLayout();
     lightColorButton_ = new ColorButton( QColor( 255, 0, 0, 255 ) );
+    lightAmbientCoefficientSpinBox_ = new QDoubleSpinBox;
+    lightAmbientCoefficientSpinBox_->setRange( 0.0f, 1.0f );
+    lightAmbientCoefficientSpinBox_->setSingleStep( 0.01f );
+    lightAmbientCoefficientSpinBox_->setValue( 0.05f );
 
     // Set this panel's layout.
     layout->addWidget( new QLabel( "MeshLight panel" ) );
     layout->addRow( "MeshLight color", lightColorButton_ );
+    layout->addRow( "Ambient coefficient", lightAmbientCoefficientSpinBox_ );
     setLayout( layout );
 
     // Connect the signals emitted when user changes a material parameter to
@@ -53,6 +58,11 @@ LightPanel::LightPanel( LightsManagerPtr lightsManager ) :
             refresh();
         }
     });
+
+    void (QDoubleSpinBox::*ambientCoefficientChangeSignal)( double ) = &QDoubleSpinBox::valueChanged;
+    QObject::connect( lightAmbientCoefficientSpinBox_, ambientCoefficientChangeSignal, [this]( double value ){
+        currentLight_->setAmbientCoefficient( static_cast< float >( value ) );
+    } );
 
     // Initially there is no light selected, so disable this panel.
     setEnabled( false );

@@ -37,6 +37,7 @@ class LightPanel : public QFrame
         LightHandlerPtr currentLight_;
 
         ColorButton* lightColorButton_;
+        QDoubleSpinBox* lightAmbientCoefficientSpinBox_;
 
     public:
         /***

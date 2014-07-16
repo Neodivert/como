@@ -40,8 +40,15 @@ LightProperties::LightProperties( LightType type, GLuint index, const PackableCo
     colorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
     assert( colorLocation_ != -1 );
 
+    // Get the location of this light's ambient coefficient in the GLSL shader
+    // program.
+    sprintf( uniformName, "lights[%u].ambientCoefficient", index_ );
+    ambientCoefficientLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
+    assert( ambientCoefficientLocation_ != -1 );
+
     // Update light color in the shader.
     setLightColor( color );
+    setAmbientCoefficient( 0.01f );
 
     OpenGL::checkStatus( "MeshLight - Constructor end" );
 }
@@ -68,6 +75,18 @@ PackableColor LightProperties::getLightColor() const
 }
 
 
+float LightProperties::getAmbientCoefficient() const
+{
+    GLint currentShaderProgram = -1;
+    float ambientCoefficient;
+
+    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+    glGetUniformfv( currentShaderProgram, ambientCoefficientLocation_, &ambientCoefficient );
+
+    return ambientCoefficient;
+}
+
+
 GLuint LightProperties::getBaseLightIndex() const
 {
     return index_;
@@ -81,6 +100,12 @@ GLuint LightProperties::getBaseLightIndex() const
 void LightProperties::setLightColor( const PackableColor &color )
 {
     glUniform3fv( colorLocation_, 1, &color.toVec3()[0] );
+}
+
+
+void LightProperties::setAmbientCoefficient( float coefficient )
+{
+    glUniform1f( ambientCoefficientLocation_, coefficient );
 }
 
 } // namespace como

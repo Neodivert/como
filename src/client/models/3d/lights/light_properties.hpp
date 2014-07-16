@@ -36,6 +36,8 @@ class LightProperties : public AbstractLight
         /*! Light index in the GLSL shader */
         GLuint index_;
 
+        GLint ambientCoefficientLocation_;
+
         /*!
          * Location of the GLSL shader uniform variable keeping this light's
          * color.
@@ -65,6 +67,7 @@ class LightProperties : public AbstractLight
          ***/
         virtual LightType getLightType() const;
         virtual PackableColor getLightColor() const;
+        virtual float getAmbientCoefficient() const;
         virtual GLint getLightIndex() const = 0;
         virtual GLuint getBaseLightIndex() const;
 
@@ -73,6 +76,7 @@ class LightProperties : public AbstractLight
          * 4. Setters
          ***/
         virtual void setLightColor(const PackableColor &color);
+        virtual void setAmbientCoefficient( float coefficient );
 
 
         /***

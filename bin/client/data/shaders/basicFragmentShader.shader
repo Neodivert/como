@@ -16,6 +16,7 @@ const unsigned int MAX_LIGHTS = MAX_DIRECTIONAL_LIGHTS;
 // Lights.
 struct Light {
 	vec3 color;
+	float ambientCoefficient;
 };
 uniform Light lights[MAX_LIGHTS];
 
@@ -66,7 +67,8 @@ void main()
 					specular = pow( specular, material.specularExponent ); // sharpen the highlight
 				}
 
-				vec3 scatteredLight = lights[ directionalLights[i].lightIndex ].color * diffuse * material.diffuseReflectivity;
+				vec3 ambientColor = lights[ directionalLights[i].lightIndex ].ambientCoefficient * lights[ directionalLights[i].lightIndex ].color;
+				vec3 scatteredLight = ambientColor + lights[ directionalLights[i].lightIndex ].color * diffuse * material.diffuseReflectivity;
 				vec3 reflectedLight = lights[ directionalLights[i].lightIndex ].color * specular * material.specularReflectivity;
 	
 				if( texturingEnabled ){

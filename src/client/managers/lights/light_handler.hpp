@@ -54,12 +54,14 @@ class LightHandler
          ***/
         PackableDrawableID getLightID() const;
         PackableColor getLightColor() const;
+        float getAmbientCoefficient() const;
 
 
         /***
          * 4. Seters
          ***/
         void setLightColor( const PackableColor& lightColor );
+        void setAmbientCoefficient( float coefficient );
 
 
         /***

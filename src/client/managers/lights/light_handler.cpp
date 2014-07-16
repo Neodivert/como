@@ -48,6 +48,12 @@ PackableColor LightHandler::getLightColor() const
 }
 
 
+float LightHandler::getAmbientCoefficient() const
+{
+    return light_->getAmbientCoefficient();
+}
+
+
 /***
  * 4. Seters
  ***/
@@ -57,6 +63,16 @@ void LightHandler::setLightColor( const PackableColor& lightColor)
     light_->setLightColor( lightColor );
 
     server_->sendCommand( CommandConstPtr( new LightColorChangeCommand( lightID_, lightColor ) ) );
+
+    notifyChange_();
+}
+
+
+void LightHandler::setAmbientCoefficient(float coefficient)
+{
+    light_->setAmbientCoefficient( coefficient );
+
+    // TODO: Send command to server.
 
     notifyChange_();
 }
