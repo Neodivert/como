@@ -33,7 +33,7 @@ uniform sampler2D textureSampler;
 // Material info
 struct Material {
 	vec4 color;
-	vec3 ambientReflexivity;
+	vec3 ambientReflectivity;
 	vec3 diffuseReflectivity;
 	vec3 specularReflectivity;
 	float specularExponent;
@@ -67,7 +67,7 @@ void main()
 					specular = pow( specular, material.specularExponent ); // sharpen the highlight
 				}
 
-				vec3 ambientColor = lights[ directionalLights[i].lightIndex ].ambientCoefficient * lights[ directionalLights[i].lightIndex ].color;
+				vec3 ambientColor = lights[ directionalLights[i].lightIndex ].ambientCoefficient * lights[ directionalLights[i].lightIndex ].color * material.ambientReflectivity;
 				vec3 scatteredLight = ambientColor + lights[ directionalLights[i].lightIndex ].color * diffuse * material.diffuseReflectivity;
 				vec3 reflectedLight = lights[ directionalLights[i].lightIndex ].color * specular * material.specularReflectivity;
 	
