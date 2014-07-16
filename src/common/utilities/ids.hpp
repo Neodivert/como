@@ -20,8 +20,8 @@
 #define IDS_HPP
 
 #include <common/packables/composite_packable.hpp>
-#include <common/packables/packable_uint16.hpp>
-#include <common/packables/packable_uint32.hpp>
+#include <common/packables/packable_integer.hpp>
+#include <common/packables/packable_integer.hpp>
 #include <cstdint>
 #include <common/ids/user_id.hpp>
 

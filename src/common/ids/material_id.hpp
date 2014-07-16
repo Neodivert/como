@@ -20,7 +20,7 @@
 #define MATERIAL_ID_HPP
 
 #include <common/utilities/ids.hpp>
-#include <common/packables/packable_uint16.hpp>
+#include <common/packables/packable_integer.hpp>
 #include <stdexcept>
 
 namespace como {

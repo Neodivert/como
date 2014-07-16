@@ -21,7 +21,6 @@
 
 #include <common/packables/packable_wrapper.hpp>
 #include <cstdint>
-#include <typeinfo> // TODO: Remove.
 
 namespace como {
 
@@ -66,7 +65,14 @@ class PackableInteger : public PackableWrapper< UnpackedType > {
 
 
         /***
-         * 3. Packing and unpacking
+         * 3. Getters
+         ***/
+
+        virtual PacketSize getPacketSize() const;
+
+
+        /***
+         * 4. Packing and unpacking
          ***/
 
         /*! \brief see Packable::pack */
@@ -80,20 +86,7 @@ class PackableInteger : public PackableWrapper< UnpackedType > {
 
 
         /***
-         * 4. Auxiliar methods
-         ***/
-
-        /*!
-         * \brief flipByteOrder takes the value given as an argument and
-         * return a copy with its byte order flipped. Used for conversion
-         * between local and network endianess.
-         * \return a copy of the supplied value with its byte order flipped.
-         */
-        virtual PackedType flipByteOrder( const PackedType& ) const = 0;
-
-
-        /***
-         * 5. Operators
+         * 6. Operators
          ***/
 
         /*! \brief Assigns the given value to this PackableInteger */
@@ -106,9 +99,48 @@ class PackableInteger : public PackableWrapper< UnpackedType > {
         PackableInteger<PackedType, UnpackedType>& operator = ( PackableInteger<PackedType, UnpackedType>&& ) = default;
 };
 
+template <class UnpackedType>
+using PackableUint8 = PackableInteger< std::uint8_t, UnpackedType >;
+
+template <class UnpackedType>
+using PackableUint16 = PackableInteger< std::uint16_t, UnpackedType >;
+
+template <class UnpackedType>
+using PackableUint32 = PackableInteger< std::uint32_t, UnpackedType >;
 
 /***
- * 3. Packing and unpacking
+ * 5. Auxiliar methods
+ ***/
+
+inline std::uint8_t flipByteOrder( const std::uint8_t& value ){
+    return value;
+}
+
+inline std::uint16_t flipByteOrder( const std::uint16_t& value ){
+    return ( (value & 0xFF00) >> 8 ) | ((value & 0x00FF ) << 8);
+}
+
+inline std::uint32_t flipByteOrder( const std::uint32_t& value ){
+    return ( (value & 0xFF000000) >> 24 ) |
+            ( (value & 0x00FF0000) >> 8 ) |
+            ( (value & 0x0000FF00) << 8 ) |
+            ( (value & 0x000000FF) << 24 );
+}
+
+
+/***
+ * 3. Getters
+ ***/
+
+template <class PackedType, class UnpackedType>
+PacketSize PackableInteger<PackedType, UnpackedType>::getPacketSize() const
+{
+    return sizeof( PackedType );
+}
+
+
+/***
+ * 4. Packing and unpacking
  ***/
 
 template <class PackedType, class UnpackedType>
@@ -186,13 +218,15 @@ const void* PackableInteger<PackedType, UnpackedType>::unpack( const void* buffe
 
 
 /***
- * 7. Operators
+ * 6. Operators
  ***/
 
 template <class PackedType, class UnpackedType>
 PackableInteger<PackedType, UnpackedType>& PackableInteger<PackedType, UnpackedType>::operator = ( const UnpackedType& value )
 {
-    return PackableWrapper< UnpackedType >::operator = ( value );
+    PackableWrapper< UnpackedType >::operator = ( value );
+
+    return *this;
 }
 
 } // namespace como

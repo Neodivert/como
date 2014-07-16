@@ -20,7 +20,7 @@
 #define PACKABLE_COLOR_HPP
 
 #include <common/packables/array/packable_array.hpp>
-#include <common/packables/packable_uint8.hpp>
+#include <common/packables/packable_integer.hpp>
 #include <common/packables/array/packable_color.hpp>
 
 #define GLM_FORCE_RADIANS

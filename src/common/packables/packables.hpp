@@ -20,12 +20,10 @@
 #define PACKABLES_HPP
 
 #include "packable_string.hpp"
-#include "packable_uint8.hpp"
+#include "packable_integer.hpp"
 #include "array/packable_array.hpp"
 #include "array/packable_array_3.hpp"
 #include "array/packable_color.hpp"
-#include "packable_uint16.hpp"
-#include "packable_uint32.hpp"
 #include "packable_file.hpp"
 #include "packable_float.hpp"
 #include "composite_packable.hpp"

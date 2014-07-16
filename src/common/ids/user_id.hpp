@@ -2,7 +2,7 @@
 #define USER_ID_HPP
 
 #include <cstdint>
-#include <common/packables/packable_uint16.hpp>
+#include <common/packables/packable_integer.hpp>
 
 namespace como {
 

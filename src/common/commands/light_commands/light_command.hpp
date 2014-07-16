@@ -19,7 +19,7 @@
 #ifndef LIGHT_COMMAND_HPP
 #define LIGHT_COMMAND_HPP
 
-#include <common/packables/packable_uint8.hpp>
+#include <common/packables/packable_integer.hpp>
 #include <common/utilities/ids.hpp>
 #include <common/commands/type_command.hpp>
 

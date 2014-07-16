@@ -20,7 +20,7 @@
 #define RESOURCE_ID_HPP
 
 #include <common/utilities/ids.hpp>
-#include <common/packables/packable_uint32.hpp>
+#include <common/packables/packable_integer.hpp>
 #include "user_id.hpp"
 #include <cstdint>
 

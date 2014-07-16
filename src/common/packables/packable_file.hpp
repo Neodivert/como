@@ -21,7 +21,7 @@
 
 #include "composite_packable.hpp"
 #include "packable_string.hpp"
-#include "packable_uint32.hpp"
+#include "packable_integer.hpp"
 #include <fstream>
 #include <boost/filesystem.hpp>
 

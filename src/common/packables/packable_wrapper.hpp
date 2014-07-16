@@ -112,6 +112,8 @@ template < class PlainType >
 PackableWrapper<PlainType>& PackableWrapper<PlainType>::operator = ( const PlainType& value )
 {
     value_ = value;
+
+    return *this;
 }
 
 

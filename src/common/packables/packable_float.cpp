@@ -17,7 +17,7 @@
 ***/
 
 #include "packable_float.hpp"
-#include <common/packables/packable_uint32.hpp>
+#include <common/packables/packable_integer.hpp>
 #include <cmath>
 
 namespace como {

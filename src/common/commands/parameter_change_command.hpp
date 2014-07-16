@@ -20,7 +20,7 @@
 #define PARAMETER_CHANGE_COMMAND_HPP
 
 #include "type_command.hpp"
-#include <common/packables/packable_uint8.hpp>
+#include <common/packables/packable_integer.hpp>
 
 #define TEMPLATE_ARGUMENTS_LIST_DEC template < CommandTarget commandTarget, class TCommandType, TCommandType commandType, class TPlainParameterName, class TPackableID, class TPlainID, class TPackableParameterValue, class TPlainParameterValue >
 #define TEMPLATE_ARGUMENTS_LIST_DEF commandTarget, TCommandType, commandType, TPackableID, TPlainID, TPlainParameterName, TPackableParameterValue, TPlainParameterValue

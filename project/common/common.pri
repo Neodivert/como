@@ -40,9 +40,6 @@ HEADERS += \
     ../../src/common/commands/selection_commands/selection_command.hpp \
     ../../src/common/commands/selection_commands/selection_deletion_command.hpp \
     ../../src/common/packables/packables.hpp \
-    ../../src/common/packables/packable_uint8.hpp \
-    ../../src/common/packables/packable_uint16.hpp \
-    ../../src/common/packables/packable_uint32.hpp \
     ../../src/common/packables/packable_string.hpp \
     ../../src/common/packets/packet_header.hpp \
     ../../src/common/commands/packable_commands_list.hpp \
