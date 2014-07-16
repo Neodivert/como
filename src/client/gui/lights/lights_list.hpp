@@ -16,13 +16,13 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef MATERIALS_LIST_HPP
-#define MATERIALS_LIST_HPP
+#ifndef LIGHTS_LIST_HPP
+#define LIGHTS_LIST_HPP
 
+#include "lights_list_item.hpp"
 #include <QListWidget>
 #include <client/managers/drawables_manager/drawables_manager.hpp>
 #include <map>
-#include "lights_list_item.hpp"
 
 namespace como {
 
@@ -75,4 +75,4 @@ class LightsList : public QListWidget
 
 } // namespace como
 
-#endif // MATERIALS_LIST_HPP
+#endif // LIGHTS_LIST_HPP

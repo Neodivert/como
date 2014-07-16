@@ -271,4 +271,16 @@ void LightsManager::print()
     log_->unlock();
 }
 
+
+void LightsManager::highlightLight( LightID lightID )
+{
+    drawablesManager_->highlightProperty( lights_.at( lightID ).get() );
+}
+
+
+void LightsManager::removeHighlights()
+{
+    drawablesManager_->highlightProperty( nullptr );
+}
+
 } // namespace como

@@ -20,13 +20,20 @@
 #define LIGHTS_EDITOR_HPP
 
 #include <QFrame>
-#include <client/managers/lights/lights_manager.hpp>
+//#include <client/managers/lights/lights_manager.hpp>
+#include "lights_list.hpp"
 
 namespace como {
 
+// FIXME: This class and MaterialsEditor can share some base code.
 class LightsEditor : public QFrame
 {
     Q_OBJECT
+
+    private:
+        LightsManagerPtr lightsManager_;
+        LightsList* lightsList_;
+
 
     public:
         /***
@@ -44,7 +51,14 @@ class LightsEditor : public QFrame
 
 
         /***
-         * 3. Operators
+         * 3. Events
+         ***/
+        virtual void enterEvent( QEvent * event );
+        virtual void leaveEvent( QEvent * event );
+
+
+        /***
+         * 4. Operators
          ***/
         LightsEditor& operator = ( const LightsEditor& ) = delete;
         LightsEditor& operator = ( LightsEditor&& ) = delete;

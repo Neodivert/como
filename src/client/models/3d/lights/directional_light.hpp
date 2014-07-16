@@ -88,6 +88,12 @@ class DirectionalLight : public Mesh
 
         /*! \brief Move assignment operator */
         DirectionalLight& operator=( DirectionalLight&& ) = delete;
+
+
+        /***
+         * 7. Auxiliar methods
+         ***/
+        virtual bool containsProperty( const void* property ) const;
 };
 
 typedef shared_ptr< DirectionalLight > DirectionalLightPtr;

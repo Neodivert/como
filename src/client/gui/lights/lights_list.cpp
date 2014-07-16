@@ -41,6 +41,7 @@ LightsList::LightsList( LightsManagerPtr lightsManager ) :
 
     QObject::connect( this, &LightsList::lightSelected, [=]( LightID lightID ){
         lightsManager_->selectLight( lightID );
+        lightsManager_->highlightLight( lightID );
     });
 
     QObject::connect( lightsManager_.get(), &LightsManager::lightRemoved, this, &LightsList::removeLight );

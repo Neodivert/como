@@ -121,6 +121,9 @@ class LightsManager : public QObject, public Changeable, public Observer
          ***/
         unsigned int getNextFreeLightIndex( LightType lightType );
         void print();
+    public:
+        void highlightLight( LightID lightID );
+        void removeHighlights();
 };
 
 typedef std::shared_ptr< LightsManager > LightsManagerPtr;

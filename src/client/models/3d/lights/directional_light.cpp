@@ -60,4 +60,14 @@ unsigned int DirectionalLight::getMaxLights()
     return 4;
 }
 
+
+/***
+ * 7. Auxiliar methods
+ ***/
+
+bool DirectionalLight::containsProperty( const void *property ) const
+{
+    return ( ( lightProperties_.get() == property ) || Mesh::containsProperty( property ) );
+}
+
 } // namespace como

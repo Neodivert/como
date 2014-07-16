@@ -18,20 +18,20 @@
 
 #include "lights_editor.hpp"
 #include <QVBoxLayout>
-#include "lights_list.hpp"
 #include "light_panel.hpp"
 
 namespace como {
 
-LightsEditor::LightsEditor( LightsManagerPtr lightsManager )
+LightsEditor::LightsEditor( LightsManagerPtr lightsManager ) :
+    lightsManager_( lightsManager )
 {
     QVBoxLayout* layout = new QVBoxLayout;
-    LightsList* lightsList = new LightsList( lightsManager );
+    lightsList_ = new LightsList( lightsManager );
     QPushButton* directionalLightCreationButton = new QPushButton( "Create directional light" );
     LightPanel* lightPanel = new LightPanel( lightsManager );
 
     layout->addWidget( new QLabel( "Lights editor" ) );
-    layout->addWidget( lightsList );
+    layout->addWidget( lightsList_ );
     layout->addWidget( directionalLightCreationButton );
     layout->addWidget( lightPanel );
 
@@ -45,4 +45,28 @@ LightsEditor::LightsEditor( LightsManagerPtr lightsManager )
 
 }
 
-} // namepsace como
+
+/***
+ * 3. Events
+ ***/
+
+void LightsEditor::enterEvent( QEvent *event )
+{
+    (void)( event );
+
+    LightsListItem* lightItem = dynamic_cast< LightsListItem* >( lightsList_->currentItem() );
+
+    if( lightItem ){
+        lightsManager_->highlightLight( lightItem->getLightID() );
+    }
+}
+
+void LightsEditor::leaveEvent(QEvent *event)
+{
+    (void)( event );
+
+    lightsManager_->removeHighlights();
+}
+
+
+} // namespace como
