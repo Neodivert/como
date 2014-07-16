@@ -21,6 +21,8 @@
 
 #include "material_command.hpp"
 #include <common/mesh_info/material_info.hpp>
+#include <common/packables/packable_string.hpp>
+#include <common/packables/packable_float.hpp>
 
 namespace como {
 

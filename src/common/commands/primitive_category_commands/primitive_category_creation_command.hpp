@@ -20,6 +20,7 @@
 #define PRIMITIVE_CATEGORY_CREATION_COMMAND_HPP
 
 #include "primitive_category_command.hpp"
+#include <common/packables/packable_string.hpp>
 
 namespace como {
 

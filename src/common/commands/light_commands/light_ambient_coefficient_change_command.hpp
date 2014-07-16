@@ -20,6 +20,7 @@
 #define LIGHT_AMBIENT_COEFFICIENT_CHANGE_COMMAND_HPP
 
 #include "light_command.hpp"
+#include <common/packables/packable_float.hpp>
 
 namespace como {
 

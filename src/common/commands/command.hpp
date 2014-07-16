@@ -19,11 +19,11 @@
 #ifndef COMMAND_HPP
 #define COMMAND_HPP
 
-#include <common/packables/packables.hpp>
 #include <common/utilities/ids.hpp>
 #include <common/packables/array/packable_color.hpp>
 #include <memory>
 #include <stdexcept>
+#include <common/packables/packable_integer.hpp>
 
 #define DEFINE_SHARED_POINTERS( type, ptr, constPtr ) \
     typedef std::shared_ptr< type > ptr; \

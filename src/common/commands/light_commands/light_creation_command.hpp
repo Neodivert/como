@@ -20,7 +20,6 @@
 #define LIGHT_CREATION_COMMAND_HPP
 
 #include "light_command.hpp"
-#include <common/packables/packables.hpp>
 
 namespace como {
 

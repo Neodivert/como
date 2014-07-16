@@ -20,6 +20,8 @@
 #define SELECTION_TRANSFORMATION_COMMAND_HPP
 
 #include "selection_command.hpp"
+#include <common/packables/packable_float.hpp>
+#include <common/packables/array/packable_array_3.hpp>
 
 namespace como {
 

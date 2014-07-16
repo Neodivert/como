@@ -22,7 +22,9 @@
 #include "packet.hpp"
 #include <cstring>
 
-#include <common/packables/packables.hpp>
+#include <common/packables/packable_integer.hpp>
+#include <common/packables/array/packable_color.hpp>
+#include <common/packables/packable_string.hpp>
 #include <common/utilities/ids.hpp>
 
 #define GLM_FORCE_RADIANS

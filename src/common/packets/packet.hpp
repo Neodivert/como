@@ -19,7 +19,7 @@
 #ifndef PACKET_HPP
 #define PACKET_HPP
 
-#include <common/packables/packables.hpp>
+#include <common/packables/composite_packable.hpp>
 #include <stdexcept>
 #include <boost/asio.hpp>
 #include <functional>

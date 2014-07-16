@@ -19,7 +19,8 @@
 #ifndef PACKET_HEADER_HPP
 #define PACKET_HEADER_HPP
 
-#include <common/packables/packables.hpp>
+#include <common/packables/composite_packable.hpp>
+#include <common/packables/packable_integer.hpp>
 
 namespace como {
 

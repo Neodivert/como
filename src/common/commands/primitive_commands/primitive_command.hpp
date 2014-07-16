@@ -21,6 +21,7 @@
 
 #include <common/commands/type_command.hpp>
 #include <common/ids/resource_id.hpp>
+#include <common/packables/ids/packable_resource_id.hpp>
 
 namespace como {
 

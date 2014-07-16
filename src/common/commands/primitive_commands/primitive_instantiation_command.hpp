@@ -20,6 +20,8 @@
 #define PRIMITIVE_MESH_CREATION_COMMAND_HPP
 
 #include "primitive_command.hpp"
+#include <common/packables/ids/packable_resource_id.hpp>
+#include <common/packables/ids/packable_material_id.hpp>
 
 namespace como {
 

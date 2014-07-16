@@ -22,6 +22,8 @@
 #include "primitive_command.hpp"
 #include <common/ids/resource_id.hpp>
 #include <common/primitives/primitive_info.hpp>
+#include <common/packables/packable_string.hpp>
+#include <common/packables/packable_file.hpp>
 #include <functional>
 
 namespace como {

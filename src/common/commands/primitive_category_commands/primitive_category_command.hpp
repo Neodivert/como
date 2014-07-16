@@ -19,9 +19,9 @@
 #ifndef PRIMITIVE_CATEGORY_COMMAND_HPP
 #define PRIMITIVE_CATEGORY_COMMAND_HPP
 
-#include <common/packables/packable_integer.hpp>
-#include <common/ids/resource_id.hpp>
 #include <common/commands/type_command.hpp>
+#include <common/packables/packable_integer.hpp>
+#include <common/packables/ids/packable_resource_id.hpp>
 
 namespace como {
 

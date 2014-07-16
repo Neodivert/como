@@ -21,6 +21,7 @@
 
 #include <common/commands/type_command.hpp>
 #include <common/ids/material_id.hpp>
+#include <common/packables/ids/packable_material_id.hpp>
 
 namespace como {
 
