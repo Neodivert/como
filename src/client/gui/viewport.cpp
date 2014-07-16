@@ -346,6 +346,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 
                     if( isnan( lastMouseWorldRelPos.x ) ){
                         std::cout << "Is NaN!" << std::endl;
+                        throw std::runtime_error( "Is NAN!" );
                     }
 
                     // Transform the scale vector from window to world space.
@@ -353,8 +354,8 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                     //transformVector = glm::vec3( Drawable::transformScaleVector( glm::vec4( transformVector, 1.0f ), glm::inverse( projectionMatrix * camera->getViewMatrix() ) ) );
 
                     // TODO: Remove this.
-                    std::cout << "lastMouseWorldPos_: (" << lastMouseWorldPos_.x << ", " << lastMouseWorldPos_.y << ", " << lastMouseWorldPos_.z << ")" << std::endl;
-                    std::cout << "currentMouseWorldPos: (" << currentMouseWorldPos.x << ", " << currentMouseWorldPos.y << ", " << currentMouseWorldPos.z << ")" << std::endl;
+                    std::cout << "lastMouseWorldRelPos: (" << lastMouseWorldRelPos.x << ", " << lastMouseWorldRelPos.y << ", " << lastMouseWorldRelPos.z << ")" << std::endl;
+                    std::cout << "currentMouseWorldRelPos: (" << currentMouseWorldRelPos.x << ", " << currentMouseWorldRelPos.y << ", " << currentMouseWorldRelPos.z << ")" << std::endl;
                     std::cout << "transformVector: (" << transformVector.x << ", " << transformVector.y << ", " << transformVector.z << ")" << std::endl;
 
                     // If requested, attach the tranformation vector to an axis.
