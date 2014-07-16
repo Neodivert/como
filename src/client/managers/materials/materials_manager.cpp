@@ -25,7 +25,8 @@ namespace como {
  * 1. Creation
  ***/
 
-MaterialsManager::MaterialsManager( UserID localUserID, ServerInterfacePtr server, LogPtr log ) :
+MaterialsManager::MaterialsManager( DrawablesManagerPtr drawablesManager, UserID localUserID, ServerInterfacePtr server, LogPtr log ) :
+    drawablesManager_( drawablesManager ),
     nextLocalMaterialID_( localUserID, 0 ),
     localUserID_( nextLocalMaterialID_.getCreatorID() ),
     server_( server ),
@@ -215,5 +216,20 @@ void MaterialsManager::update()
     setChanged();
 }
 
+
+/***
+ * 9. Auxiliar methods
+ ***/
+
+void MaterialsManager::highlightMaterial( MaterialID materialID )
+{
+    drawablesManager_->highlightProperty( getMaterial( materialID ).get() );
+}
+
+
+void MaterialsManager::removeHighlights()
+{
+    drawablesManager_->highlightProperty( nullptr );
+}
 
 } // namespace como

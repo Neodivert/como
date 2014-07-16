@@ -25,12 +25,11 @@ namespace como {
  * 1. Construction
  ***/
 
-DrawablesManager::DrawablesManager( ServerInterfacePtr server, MaterialsManagerPtr materialsManager, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
+DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
     AbstractChangeable(),
     nonSelectedDrawables_( new DrawablesSelection( glm::vec4( 0.0f ) ) ),
     server_( server ),
     localUserID_( localUserID ),
-    materialsManager_( materialsManager ),
     primitivesDirPath_( primitivesDirPath ),
     oglContext_( oglContext ),
     log_( log )
@@ -412,6 +411,14 @@ bool DrawablesManager::hasChangedSinceLastQuery()
     }
 
     return false;
+}
+
+
+void DrawablesManager::highlightProperty( const void *property )
+{
+    for( auto drawablesSelection : drawablesSelections_ ){
+        drawablesSelection.second->highlighDrawableProperty( property );
+    }
 }
 
 } // namespace como

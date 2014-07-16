@@ -64,4 +64,28 @@ void MaterialsEditor::onElementModification( MaterialID materialID )
     }
 }
 
+
+/***
+ * 4. Events
+ ***/
+
+void MaterialsEditor::enterEvent( QEvent *event )
+{
+    (void)( event );
+
+    MaterialsListItem* materialItem = dynamic_cast< MaterialsListItem* >( materialsList_->currentItem() );
+
+    if( materialItem ){
+        materialsManager_->highlightMaterial( materialItem->getMaterialID() );
+    }
+}
+
+
+void MaterialsEditor::leaveEvent( QEvent * event )
+{
+    (void)( event );
+
+    materialsManager_->removeHighlights();
+}
+
 } // namespace como

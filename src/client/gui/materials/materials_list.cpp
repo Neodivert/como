@@ -37,6 +37,7 @@ MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager )
 
     QObject::connect( this, &MaterialsList::materialSelected, [=]( MaterialID materialID ){
         materialsManager->selectMaterial( materialID );
+        materialsManager->highlightMaterial( materialID );
     });
 }
 

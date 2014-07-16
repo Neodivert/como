@@ -62,7 +62,14 @@ class MaterialsEditor : public QFrame, public ContainerObserver< MaterialID >
 
 
         /***
-         * 4. Operators
+         * 4. Events
+         ***/
+        virtual void enterEvent ( QEvent * event );
+        virtual void leaveEvent( QEvent * event );
+
+
+        /***
+         * 5. Operators
          ***/
         MaterialsEditor& operator = ( const MaterialsEditor& ) = delete;
         MaterialsEditor& operator = ( MaterialsEditor&& ) = delete;

@@ -28,7 +28,8 @@ namespace como {
 DrawablesSelection::DrawablesSelection( glm::vec4 borderColor ) :
     borderColor_( borderColor ),
     centroid_( 0.0f, 0.0f, 0.0f, 1.0f ),
-    pivotPointMode_( PivotPointMode::MEDIAN_POINT )
+    pivotPointMode_( PivotPointMode::MEDIAN_POINT ),
+    highlightedProperty_( nullptr )
 {
 }
 
@@ -37,7 +38,8 @@ DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
     Changeable( b ),
     borderColor_( b.borderColor_ ),
     centroid_( b.centroid_ ),
-    pivotPointMode_( b.pivotPointMode_ )
+    pivotPointMode_( b.pivotPointMode_ ),
+    highlightedProperty_( nullptr )
 {
     DrawablesMap::const_iterator it;
 
@@ -475,10 +477,28 @@ void DrawablesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix
 
     // Draw every drawable in current selection.
     for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
-        drawable->second->draw( openGL, viewProjMatrix, &borderColor_[0] );
+        glm::vec4 borderColor;
+
+        if( drawable->second->containsProperty( highlightedProperty_ ) ){
+            borderColor = glm::vec4( 1.0f, 1.0f, 1.0f, 1.0f );
+        }else{
+            borderColor = borderColor_;
+        }
+
+        drawable->second->draw( openGL, viewProjMatrix, &borderColor[0] );
     }
 
     mutex_.unlock();
+}
+
+
+/***
+ * 10. Auxiliar methods
+ ***/
+
+void DrawablesSelection::highlighDrawableProperty( const void* property )
+{
+    highlightedProperty_ = property;
 }
 
 } // namespace como

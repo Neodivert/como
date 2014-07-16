@@ -25,7 +25,6 @@
 #include <client/managers/server_interface/server_interface.hpp>
 #include <client/models/utilities/changeable/changeable.hpp>
 #include <map>
-#include <client/managers/materials/materials_manager.hpp>
 #include <QOffscreenSurface>
 #include <common/utilities/observer_pattern/observable.hpp>
 
@@ -48,8 +47,6 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
 
         UserID localUserID_;
 
-        MaterialsManagerPtr materialsManager_;
-
         // TODO: move this to ServerInterface?
         std::queue< PackableDrawableID > localUserPendingSelections_;
 
@@ -67,7 +64,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         /***
          * 1. Construction
          ***/
-        DrawablesManager( ServerInterfacePtr server, MaterialsManagerPtr materialsManager, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
+        DrawablesManager( ServerInterfacePtr server, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
         DrawablesManager( const DrawablesManager& ) = delete;
         DrawablesManager( DrawablesManager&& ) = delete;
 
@@ -159,6 +156,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         void registerPrimitivePath( ResourceID primitiveID, std::string primitiveRelPath );
 
         virtual bool hasChangedSinceLastQuery();
+        void highlightProperty( const void* property );
 };
 
 typedef shared_ptr< DrawablesManager > DrawablesManagerPtr;

@@ -406,6 +406,7 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
     OpenGL::checkStatus( "Mesh::draw - end" );
 }
 
+
 /***
  * 9. Auxliar methods.
  ***/
@@ -418,6 +419,17 @@ void Mesh::sendMVPMatrixToShader( const glm::mat4& mvpMatrix )
     // Compute normal matrix and send it to shader.
     glm::mat3 normalMatrix = glm::mat3( glm::transpose( glm::inverse( mvpMatrix ) ) );
     glUniformMatrix3fv( normalMatrixLocation_, 1, GL_FALSE, &normalMatrix[0][0] );
+}
+
+
+bool Mesh::containsProperty( const void* property ) const
+{
+    for( auto material : materials_ ){
+        if( material.get() == property ){
+            return true;
+        }
+    }
+    return false;
 }
 
 } // namespace como

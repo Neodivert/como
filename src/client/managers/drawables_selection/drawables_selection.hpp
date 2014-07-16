@@ -64,6 +64,8 @@ class DrawablesSelection : public Changeable
         // Mutex for concurrent access to this selection.
         mutable std::recursive_mutex mutex_;
 
+        const void* highlightedProperty_;
+
     public:
         /***
          * 1. Initialization and destruction
@@ -154,7 +156,7 @@ class DrawablesSelection : public Changeable
         /***
          * 8. Drawing
          ***/
-        void draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix ) const ;
+        virtual void draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix ) const ;
 
 
         /***
@@ -162,6 +164,12 @@ class DrawablesSelection : public Changeable
          ***/
         DrawablesSelection& operator=( const DrawablesSelection& ) = delete ;
         DrawablesSelection& operator=( DrawablesSelection&& ) = delete;
+
+
+        /***
+         * 10. Auxiliar methods
+         ***/
+        void highlighDrawableProperty( const void* property );
 };
 
 typedef shared_ptr< DrawablesSelection > DrawablesSelectionPtr;

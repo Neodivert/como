@@ -158,6 +158,7 @@ class Mesh : public Drawable
          * 9. Auxliar methods.
          ***/
         static void sendMVPMatrixToShader( const glm::mat4& mvpMatrix );
+        bool containsProperty( const void* property ) const;
 
 
         /***

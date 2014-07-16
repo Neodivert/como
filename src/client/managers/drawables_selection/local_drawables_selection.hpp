@@ -99,6 +99,7 @@ class LocalDrawablesSelection : public QObject, public DrawablesSelection
         void roundTransformationMagnitude( float& angle, glm::vec3& v );
     public:
 
+
         /***
          * 8. Signals
          ***/

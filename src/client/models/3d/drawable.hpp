@@ -123,6 +123,7 @@ class Drawable
          * 6. Auxiliar methods
          ***/
         static glm::vec4 transformScaleVector( glm::vec4 scaleVector, const glm::mat4& transformMatrix );
+        virtual bool containsProperty( const void* property ) const = 0;
 };
 
 

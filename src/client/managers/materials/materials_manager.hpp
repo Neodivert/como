@@ -32,6 +32,7 @@
 #include <functional>
 #include <common/utilities/observer_pattern/observable_container.hpp>
 #include <common/mesh_info/material_info.hpp>
+#include <client/managers/drawables_manager/drawables_manager.hpp>
 
 namespace como {
 
@@ -42,6 +43,8 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
     Q_OBJECT
 
     private:
+        DrawablesManagerPtr drawablesManager_;
+
         std::map< MaterialID, MaterialPtr > materials_;
         MaterialsOwnershipMap materialsOwners_;
 
@@ -57,7 +60,7 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
          * 1. Creation
          ***/
         MaterialsManager() = delete;
-        MaterialsManager( UserID localUserID, ServerInterfacePtr server, LogPtr log );
+        MaterialsManager( DrawablesManagerPtr drawablesManager, UserID localUserID, ServerInterfacePtr server, LogPtr log );
         MaterialsManager( const MaterialsManager& ) = delete;
         MaterialsManager( MaterialsManager&& ) = delete;
 
@@ -123,6 +126,14 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
     signals:
         void materialSelectionConfirmed( MaterialHandlerPtr material );
         void materialSelectionDenied( MaterialID material );
+
+
+        /***
+         * 9. Auxiliar methods
+         ***/
+    public:
+        void highlightMaterial( MaterialID materialID );
+        void removeHighlights();
 };
 
 typedef std::shared_ptr< MaterialsManager > MaterialsManagerPtr;
