@@ -83,7 +83,9 @@ void ColorButton::execColorDialog()
     QColor color = QColorDialog::getColor( color_ );
 
     // Set this button's color to the color selected by user.
-    setColor( color );
+    if( color.isValid() ){
+        setColor( color );
+    }
 }
 
 } // namespace como
