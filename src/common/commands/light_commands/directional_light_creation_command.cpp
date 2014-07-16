@@ -25,12 +25,12 @@ namespace como {
  ***/
 
 DirectionalLightCreationCommand::DirectionalLightCreationCommand() :
-    LightCreationCommand( LightType::DIRECTIONAL_LIGHT, NULL_DRAWABLE_ID, PackableColor() ) // TODO: Remove MaterialID() and PackableColor()
+    LightCreationCommand( LightType::DIRECTIONAL_LIGHT, NO_USER, NULL_DRAWABLE_ID, PackableColor() ) // TODO: Remove MaterialID() and PackableColor()
 {}
 
 
-DirectionalLightCreationCommand::DirectionalLightCreationCommand( LightID lightID, const PackableColor& lightColor ) :
-    LightCreationCommand( LightType::DIRECTIONAL_LIGHT, lightID, lightColor )
+DirectionalLightCreationCommand::DirectionalLightCreationCommand( UserID userID, LightID lightID, const PackableColor& lightColor ) :
+    LightCreationCommand( LightType::DIRECTIONAL_LIGHT, userID, lightID, lightColor )
 {}
 
 } // namespace como

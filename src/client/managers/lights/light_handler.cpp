@@ -62,17 +62,17 @@ void LightHandler::setLightColor( const PackableColor& lightColor)
 {
     light_->setLightColor( lightColor );
 
-    server_->sendCommand( CommandConstPtr( new LightColorChangeCommand( lightID_, lightColor ) ) );
+    server_->sendCommand( CommandConstPtr( new LightColorChangeCommand( server_->getLocalUserID(), lightID_, lightColor ) ) );
 
     notifyChange_();
 }
 
 
-void LightHandler::setAmbientCoefficient(float coefficient)
+void LightHandler::setAmbientCoefficient( float coefficient )
 {
     light_->setAmbientCoefficient( coefficient );
 
-    // TODO: Send command to server.
+    server_->sendCommand( CommandConstPtr( new LightAmbientCoefficientChangeCommand( server_->getLocalUserID(), lightID_, coefficient ) ) );
 
     notifyChange_();
 }

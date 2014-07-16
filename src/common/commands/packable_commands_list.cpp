@@ -175,6 +175,9 @@ const void* PackableCommandsList::unpack( const void* buffer )
                     case LightCommandType::LIGHT_COLOR_CHANGE:
                         command = CommandPtr( new LightColorChangeCommand );
                     break;
+                    case LightCommandType::LIGHT_AMBIENT_COEFFICIENT_CHANGE:
+                        command = CommandPtr( new LightAmbientCoefficientChangeCommand );
+                    break;
                 }
             break;
         }

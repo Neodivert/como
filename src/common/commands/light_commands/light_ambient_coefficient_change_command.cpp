@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "light_command.hpp"
+#include "light_ambient_coefficient_change_command.hpp"
 
 namespace como {
 
@@ -24,36 +24,31 @@ namespace como {
  * 1. Construction
  ***/
 
-LightCommand::LightCommand() :
-    TypeCommand( CommandTarget::LIGHT, LightCommandType::LIGHT_CREATION, NO_USER ),
-    lightID_( NULL_DRAWABLE_ID )
+LightAmbientCoefficientChangeCommand::LightAmbientCoefficientChangeCommand() :
+    LightCommand( LightCommandType::LIGHT_AMBIENT_COEFFICIENT_CHANGE, NO_USER, NULL_DRAWABLE_ID ),
+    ambientCoefficient_( 0.0f )
 {
-    addPackable( &lightID_ );
+    addPackable( &ambientCoefficient_ );
 }
 
 
-LightCommand::LightCommand( LightCommandType commandType, UserID userID, const PackableLightID& lightID ) :
-    TypeCommand( CommandTarget::LIGHT, commandType, userID ),
-    lightID_( lightID )
+LightAmbientCoefficientChangeCommand::LightAmbientCoefficientChangeCommand( UserID userID, LightID lightID, float ambientCoefficient ) :
+    LightCommand( LightCommandType::LIGHT_AMBIENT_COEFFICIENT_CHANGE, userID, lightID ),
+    ambientCoefficient_( ambientCoefficient )
 {
-    addPackable( &lightID_ );
+    addPackable( &ambientCoefficient_ );
 }
 
-
-LightCommand::LightCommand( const LightCommand &b ) :
-    TypeCommand( b ),
-    lightID_( b.lightID_ )
-{
-    addPackable( &lightID_ );
-}
 
 /***
  * 3. Getters
  ***/
 
-LightID LightCommand::getLightID() const
+float LightAmbientCoefficientChangeCommand::getAmbientCoefficient() const
 {
-    return lightID_;
+    return ambientCoefficient_.getValue();
 }
+
+
 
 } // namespace como

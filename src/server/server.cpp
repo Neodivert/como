@@ -124,7 +124,7 @@ void Server::run()
         drawableOwners_[DIRECTIONAL_LIGHT_ID] = 0;
         std::uint8_t lightColor[4] = { 255, 255, 255, 0 };
 
-        addCommand( CommandConstPtr( new DirectionalLightCreationCommand( DIRECTIONAL_LIGHT_ID, lightColor ) ) );
+        addCommand( CommandConstPtr( new DirectionalLightCreationCommand( NO_USER, DIRECTIONAL_LIGHT_ID, lightColor ) ) );
 
         // Initialize the container of free user colors.
         initUserColors();
@@ -378,15 +378,10 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
         case CommandTarget::LIGHT:{
             const LightCommand* lightCommand = dynamic_cast< const LightCommand* >( sceneCommand.get() );
 
-            switch( lightCommand->getType() ){
-                case LightCommandType::LIGHT_CREATION:{
-                    // Add a node to the Drawable Owners map for the recently added
-                    // drawable. Mark it with a 0 (no owner).
-                    drawableOwners_[lightCommand->getLightID()] = 0;
-                }break;
-                case LightCommandType::LIGHT_COLOR_CHANGE:
-                    // TODO: Make something or delete this.
-                break;
+            if( lightCommand->getType() == LightCommandType::LIGHT_CREATION ){
+                // Add a node to the Drawable Owners map for the recently added
+                // drawable. Mark it with a 0 (no owner).
+                drawableOwners_[lightCommand->getLightID()] = 0;
             }
         }break;
     }

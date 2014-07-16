@@ -46,7 +46,6 @@ LightPanel::LightPanel( LightsManagerPtr lightsManager ) :
         currentLight_->setLightColor( color );
     });
 
-
     QObject::connect( lightsManager_.get(), &LightsManager::lightRemoved, [this]( PackableDrawableID lightID ){
         if( currentLight_ && ( lightID == currentLight_->getLightID() ) ){
             closeLight();
@@ -75,6 +74,13 @@ LightPanel::LightPanel( LightsManagerPtr lightsManager ) :
 void LightPanel::refresh()
 {
     lightColorButton_->setColor( currentLight_->getLightColor() );
+
+    // We don't want to emmit signals from lightAmbientCoefficientSpinBox_ when
+    // we call setValue() directly, so we block them temporarily.
+    // TODO: is there a more elegant way?
+    bool oldBlockingState = lightAmbientCoefficientSpinBox_->blockSignals( true );
+    lightAmbientCoefficientSpinBox_->setValue( currentLight_->getAmbientCoefficient() );
+    lightAmbientCoefficientSpinBox_->blockSignals( oldBlockingState );
 }
 
 

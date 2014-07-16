@@ -40,7 +40,7 @@ class LightCreationCommand : public LightCommand
         /***
          * 1. Construction
          ***/
-        LightCreationCommand( LightType lightType, PackableLightID lightID, const PackableColor& lightColor );
+        LightCreationCommand( LightType lightType, UserID userID, PackableLightID lightID, const PackableColor& lightColor );
         LightCreationCommand( const LightCreationCommand& b );
         LightCreationCommand( LightCreationCommand&& ) = delete;
 

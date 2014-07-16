@@ -28,7 +28,8 @@ namespace como {
 enum class LightCommandType : std::uint8_t
 {
     LIGHT_CREATION = 0,
-    LIGHT_COLOR_CHANGE
+    LIGHT_COLOR_CHANGE,
+    LIGHT_AMBIENT_COEFFICIENT_CHANGE
 };
 
 typedef PackableDrawableID LightID; // TODO: Change this.
@@ -43,7 +44,8 @@ class LightCommand : public TypeCommand< LightCommandType >
          * 1. Construction
          ***/
     public: // FIXME: This should be "protected" but LightCreationCommand::getLightType static method needs it.
-        LightCommand( LightCommandType lightType, const PackableLightID& lightID );
+        LightCommand();
+        LightCommand( LightCommandType lightType, UserID userID, const PackableLightID& lightID );
         LightCommand( const LightCommand& b );
         LightCommand( LightCommand&& ) = delete;
 

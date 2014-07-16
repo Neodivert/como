@@ -16,47 +16,47 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef LIGHT_COLOR_CHANGE_COMMAND_HPP
-#define LIGHT_COLOR_CHANGE_COMMAND_HPP
+#ifndef LIGHT_AMBIENT_COEFFICIENT_CHANGE_COMMAND_HPP
+#define LIGHT_AMBIENT_COEFFICIENT_CHANGE_COMMAND_HPP
 
 #include "light_command.hpp"
 
 namespace como {
 
-class LightColorChangeCommand : public LightCommand
+class LightAmbientCoefficientChangeCommand : public LightCommand
 {
     private:
-        PackableColor lightColor_;
+        PackableFloat ambientCoefficient_;
 
     public:
         /***
          * 1. Construction
          ***/
-        LightColorChangeCommand();
-        LightColorChangeCommand( UserID userID, PackableLightID lightID, PackableColor lightColor );
-        LightColorChangeCommand( const LightColorChangeCommand& ) = delete;
-        LightColorChangeCommand( LightColorChangeCommand&& ) = delete;
+        LightAmbientCoefficientChangeCommand();
+        LightAmbientCoefficientChangeCommand( UserID userID, LightID lightID, float ambientCoefficient );
+        LightAmbientCoefficientChangeCommand( const LightAmbientCoefficientChangeCommand& ) = delete;
+        LightAmbientCoefficientChangeCommand( LightAmbientCoefficientChangeCommand&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~LightColorChangeCommand() = default;
+        ~LightAmbientCoefficientChangeCommand() = default;
 
 
         /***
          * 3. Getters
          ***/
-        PackableColor getLightColor() const;
+        float getAmbientCoefficient() const;
 
 
         /***
          * 4. Operators
          ***/
-        LightColorChangeCommand& operator = ( const LightColorChangeCommand& ) = delete;
-        LightColorChangeCommand& operator = ( LightColorChangeCommand&& ) = delete;
+        LightAmbientCoefficientChangeCommand& operator = ( const LightAmbientCoefficientChangeCommand& ) = delete;
+        LightAmbientCoefficientChangeCommand& operator = ( LightAmbientCoefficientChangeCommand&& ) = delete;
 };
 
 } // namespace como
 
-#endif // LIGHT_COLOR_CHANGE_COMMAND_HPP
+#endif // LIGHT_AMBIENT_COEFFICIENT_CHANGE_COMMAND_HPP

@@ -94,7 +94,7 @@ void LightsManager::createDirectionalLight()
 
 
 
-    server_->sendCommand( CommandConstPtr( new DirectionalLightCreationCommand( lightID, lightColor ) ) );
+    server_->sendCommand( CommandConstPtr( new DirectionalLightCreationCommand( server_->getLocalUserID(), lightID, lightColor ) ) );
 
     log_->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
 
@@ -205,6 +205,16 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
                     dynamic_cast< const LightColorChangeCommand* >( command.get() );
 
             lights_.at( lightCommand->getLightID() )->setLightColor( lightCommand->getLightColor() );
+
+            emit lightModified( lightCommand->getLightID() );
+
+            setChanged();
+        }break;
+        case LightCommandType::LIGHT_AMBIENT_COEFFICIENT_CHANGE:{
+            const LightAmbientCoefficientChangeCommand* lightCommand =
+                    dynamic_cast< const LightAmbientCoefficientChangeCommand* >( command.get() );
+
+            lights_.at( lightCommand->getLightID() )->setAmbientCoefficient( lightCommand->getAmbientCoefficient() );
 
             emit lightModified( lightCommand->getLightID() );
 
