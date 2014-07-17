@@ -34,8 +34,8 @@ class MaterialModificationCommand : public AbstractMaterialModificationCommand
          * 1. Construction
          ***/
         MaterialModificationCommand();
-        MaterialModificationCommand( MaterialID materialID, ParameterPackableType parameterValue );
-        MaterialModificationCommand( MaterialID materialID, ParameterPlainType parameterValue );
+        MaterialModificationCommand( UserID userID, MaterialID materialID, ParameterPackableType parameterValue );
+        MaterialModificationCommand( UserID userID, MaterialID materialID, ParameterPlainType parameterValue );
         MaterialModificationCommand( const MaterialModificationCommand& b );
         MaterialModificationCommand( MaterialModificationCommand& ) = delete;
 
@@ -72,15 +72,15 @@ typedef MaterialModificationCommand< MaterialParameterName::SPECULAR_EXPONENT, P
 
 template < MaterialParameterName ParameterName, class ParameterPackableType, class ParameterPlainType >
 MaterialModificationCommand<ParameterName, ParameterPackableType, ParameterPlainType>::MaterialModificationCommand() :
-    AbstractMaterialModificationCommand( ParameterName )
+    AbstractMaterialModificationCommand( NO_USER, ParameterName )
 {
     addPackable( &parameterValue_ );
 }
 
 
 template < MaterialParameterName ParameterName, class ParameterPackableType, class ParameterPlainType >
-MaterialModificationCommand<ParameterName, ParameterPackableType, ParameterPlainType>::MaterialModificationCommand( MaterialID materialID, ParameterPackableType parameterValue ) :
-    AbstractMaterialModificationCommand( materialID, ParameterName ),
+MaterialModificationCommand<ParameterName, ParameterPackableType, ParameterPlainType>::MaterialModificationCommand( UserID userID, MaterialID materialID, ParameterPackableType parameterValue ) :
+    AbstractMaterialModificationCommand( userID, materialID, ParameterName ),
     parameterValue_( parameterValue )
 {
     addPackable( &parameterValue_ );
@@ -88,8 +88,8 @@ MaterialModificationCommand<ParameterName, ParameterPackableType, ParameterPlain
 
 
 template < MaterialParameterName ParameterName, class ParameterPackableType, class ParameterPlainType >
-MaterialModificationCommand<ParameterName, ParameterPackableType, ParameterPlainType>::MaterialModificationCommand( MaterialID materialID, ParameterPlainType parameterValue ) :
-    AbstractMaterialModificationCommand( materialID, ParameterName ),
+MaterialModificationCommand<ParameterName, ParameterPackableType, ParameterPlainType>::MaterialModificationCommand( UserID userID, MaterialID materialID, ParameterPlainType parameterValue ) :
+    AbstractMaterialModificationCommand( userID, materialID, ParameterName ),
     parameterValue_( parameterValue )
 {
     addPackable( &parameterValue_ );

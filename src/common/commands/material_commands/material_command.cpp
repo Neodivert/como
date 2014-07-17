@@ -30,8 +30,8 @@ MaterialCommand::MaterialCommand( MaterialCommandType commandType ) :
     addPackable( &materialID_ );
 }
 
-MaterialCommand::MaterialCommand( MaterialCommandType commandType, const MaterialID& materialID ) :
-    TypeCommand( CommandTarget::MATERIAL, commandType, materialID.getCreatorID() ),
+MaterialCommand::MaterialCommand( MaterialCommandType commandType, UserID userID, const MaterialID& materialID ) :
+    TypeCommand( CommandTarget::MATERIAL, commandType, userID ),
     materialID_( materialID )
 {
     addPackable( &materialID_ );

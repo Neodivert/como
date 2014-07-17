@@ -87,7 +87,7 @@ void MaterialHandler::setColor( const PackableColor& color )
 {
     material_->setColor( color );
 
-    server_->sendCommand( CommandConstPtr( new MaterialColorChangeCommand( materialID_, color ) ) );
+    server_->sendCommand( CommandConstPtr( new MaterialColorChangeCommand( server_->getLocalUserID(), materialID_, color ) ) );
 
     notifyObservers();
 }
@@ -96,7 +96,7 @@ void MaterialHandler::setAmbientReflectivity( const PackableColor& ambientReflec
 {
     material_->setAmbientReflectivity( ambientReflectivity );
 
-    server_->sendCommand( CommandConstPtr( new MaterialAmbientReflectivityChangeCommand( materialID_, ambientReflectivity ) ) );
+    server_->sendCommand( CommandConstPtr( new MaterialAmbientReflectivityChangeCommand( server_->getLocalUserID(), materialID_, ambientReflectivity ) ) );
 
     notifyObservers();
 }
@@ -105,7 +105,7 @@ void MaterialHandler::setDiffuseReflectivity( const PackableColor& diffuseReflec
 {
     material_->setDiffuseReflectivity( diffuseReflectivity );
 
-    server_->sendCommand( CommandConstPtr( new MaterialDiffuseReflectivityChangeCommand( materialID_, diffuseReflectivity ) ) );
+    server_->sendCommand( CommandConstPtr( new MaterialDiffuseReflectivityChangeCommand( server_->getLocalUserID(), materialID_, diffuseReflectivity ) ) );
 
     notifyObservers();
 }
@@ -114,7 +114,7 @@ void MaterialHandler::setSpecularReflectivity( const PackableColor& specularRefl
 {
     material_->setSpecularReflectivity( specularReflectivity );
 
-    server_->sendCommand( CommandConstPtr( new MaterialSpecularReflectivityChangeCommand( materialID_, specularReflectivity ) ) );
+    server_->sendCommand( CommandConstPtr( new MaterialSpecularReflectivityChangeCommand( server_->getLocalUserID(), materialID_, specularReflectivity ) ) );
 
     notifyObservers();
 }
@@ -123,7 +123,7 @@ void MaterialHandler::setSpecularExponent( float specularExponent )
 {
     material_->setSpecularExponent( specularExponent );
 
-    server_->sendCommand( CommandConstPtr( new MaterialSpecularExponentChangeCommand( materialID_, specularExponent ) ) );
+    server_->sendCommand( CommandConstPtr( new MaterialSpecularExponentChangeCommand( server_->getLocalUserID(), materialID_, specularExponent ) ) );
 
     notifyObservers();
 }

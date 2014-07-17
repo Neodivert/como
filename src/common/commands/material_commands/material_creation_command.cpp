@@ -21,7 +21,7 @@ MaterialCreationCommand::MaterialCreationCommand() :
 }
 
 MaterialCreationCommand::MaterialCreationCommand( const MaterialID& materialID, const std::string& materialName ) :
-    MaterialCommand( MaterialCommandType::MATERIAL_CREATION, materialID ),
+    MaterialCommand( MaterialCommandType::MATERIAL_CREATION, materialID.getCreatorID(), materialID ),
     materialName_( materialName.c_str() )
 {
     ADD_PACKABLES
