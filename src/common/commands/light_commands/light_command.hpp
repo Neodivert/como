@@ -20,7 +20,6 @@
 #define LIGHT_COMMAND_HPP
 
 #include <common/packables/packable_integer.hpp>
-#include <common/utilities/ids.hpp>
 #include <common/commands/type_command.hpp>
 
 namespace como {
@@ -32,20 +31,17 @@ enum class LightCommandType : std::uint8_t
     LIGHT_AMBIENT_COEFFICIENT_CHANGE
 };
 
-typedef PackableDrawableID LightID; // TODO: Change this.
-typedef PackableDrawableID PackableLightID;
-
 class LightCommand : public TypeCommand< LightCommandType >
 {
     private:
-        PackableLightID lightID_;
+        PackableResourceID lightID_;
 
         /***
          * 1. Construction
          ***/
     public: // FIXME: This should be "protected" but LightCreationCommand::getLightType static method needs it.
         LightCommand();
-        LightCommand( LightCommandType lightType, UserID userID, const PackableLightID& lightID );
+        LightCommand( LightCommandType lightType, UserID userID, const ResourceID& lightID );
         LightCommand( const LightCommand& b );
         LightCommand( LightCommand&& ) = delete;
 
@@ -59,7 +55,7 @@ class LightCommand : public TypeCommand< LightCommandType >
         /***
          * 3. Getters
          ***/
-        LightID getLightID() const;
+        ResourceID getResourceID() const;
 
 
         /***

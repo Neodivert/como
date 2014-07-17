@@ -48,7 +48,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         UserID localUserID_;
 
         // TODO: move this to ServerInterface?
-        std::queue< PackableDrawableID > localUserPendingSelections_;
+        std::queue< ResourceID > localUserPendingSelections_;
 
         // Map ID - PrimitivePath.
         std::map< ResourceID, std::string > primitivePaths_; // TODO: Remove this and related methods.
@@ -85,7 +85,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
     public:
         glm::vec3 getPivotPoint() const ;
         glm::vec3 getPivotPoint( UserID userID ) const ;
-        bool existsDrawable( const PackableDrawableID& id ) const;
+        bool existsDrawable( const ResourceID& id ) const;
 
 
         /***
@@ -98,15 +98,15 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
          * 6. Drawables administration
          ***/
     public:
-        PackableDrawableID addDrawable( DrawablePtr drawable );
-        void addDrawable( UserID userID, DrawablePtr drawable, PackableDrawableID drawableID );
+        ResourceID addDrawable( DrawablePtr drawable );
+        void addDrawable( UserID userID, DrawablePtr drawable, ResourceID drawableID );
 
     public:
-        PackableDrawableID createMesh( MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials );
-        void createMesh( PackableDrawableID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials );
+        ResourceID createMesh( MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials );
+        void createMesh( ResourceID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials );
 
     private:
-        //void createRemoteMesh( ResourceID primitiveID, PackableDrawableID drawableID, MaterialID materialID );
+        //void createRemoteMesh( ResourceID primitiveID, ResourceID drawableID, MaterialID materialID );
 
     public:
 
@@ -123,13 +123,13 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         /***
          * 8. Drawables (de)seletion.
          ***/
-        void selectDrawable( PackableDrawableID drawableID );
-        void selectDrawable( PackableDrawableID drawableID, UserID userID );
+        void selectDrawable( ResourceID drawableID );
+        void selectDrawable( ResourceID drawableID, UserID userID );
 
         void unselectAll();
         void unselectAll( UserID userId );
 
-        PackableDrawableID selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint );
+        ResourceID selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint );
 
 
         /***

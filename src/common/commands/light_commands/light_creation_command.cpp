@@ -25,7 +25,7 @@ namespace como {
  * 1. Construction
  ***/
 
-LightCreationCommand::LightCreationCommand( LightType lightType, UserID userID, PackableLightID lightID, const PackableColor& lightColor ) :
+LightCreationCommand::LightCreationCommand( LightType lightType, UserID userID, ResourceID lightID, const PackableColor& lightColor ) :
     LightCommand( LightCommandType::LIGHT_CREATION, userID, lightID ),
     lightType_( lightType ),
     lightColor_( lightColor )
@@ -67,7 +67,7 @@ const PackableColor& LightCreationCommand::getLightColor() const
 
 LightType LightCreationCommand::getLightType( const void* buffer )
 {
-    LightCommand lightCommand( LightCommandType::LIGHT_CREATION, NO_USER, NULL_DRAWABLE_ID );
+    LightCommand lightCommand( LightCommandType::LIGHT_CREATION, NO_USER, NO_RESOURCE );
 
     return static_cast< LightType >( static_cast< const std::uint8_t* >( buffer )[lightCommand.getPacketSize()] );
 }

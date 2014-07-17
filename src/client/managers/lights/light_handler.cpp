@@ -24,7 +24,7 @@ namespace como {
  * 1. Construction
  ***/
 
-LightHandler::LightHandler( LightPropertiesSharedPtr light, LightID lightID, ServerInterfacePtr server, std::function< void(void) > notifyChange ) :
+LightHandler::LightHandler( LightPropertiesSharedPtr light, ResourceID lightID, ServerInterfacePtr server, std::function< void(void) > notifyChange ) :
     light_( light ),
     lightID_( lightID ),
     server_( server ),
@@ -36,7 +36,7 @@ LightHandler::LightHandler( LightPropertiesSharedPtr light, LightID lightID, Ser
  * 3. Getters
  ***/
 
-PackableDrawableID LightHandler::getLightID() const
+ResourceID LightHandler::getResourceID() const
 {
     return lightID_;
 }

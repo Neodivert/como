@@ -24,7 +24,7 @@ namespace como {
  * 1. Construction
  ***/
 
-LightsListItem::LightsListItem( const LightID& id, const std::string& name ) :
+LightsListItem::LightsListItem( const ResourceID& id, const std::string& name ) :
     QListWidgetItem( name.c_str() ),
     lightID_( id )
 {}
@@ -34,7 +34,7 @@ LightsListItem::LightsListItem( const LightID& id, const std::string& name ) :
  * 3. Getters
  ***/
 
-LightID LightsListItem::getLightID() const
+ResourceID LightsListItem::getResourceID() const
 {
     return lightID_;
 }

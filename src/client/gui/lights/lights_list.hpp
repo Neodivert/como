@@ -62,15 +62,15 @@ class LightsList : public QListWidget
          * 4. Slots
          ***/
     public slots:
-        void addLight( LightID id, std::string name );
-        void removeLight( PackableDrawableID id );
+        void addLight( ResourceID id, std::string name );
+        void removeLight( ResourceID id );
 
 
         /***
          * 5. Signals
          ***/
     signals:
-        void lightSelected( LightID id );
+        void lightSelected( ResourceID id );
 };
 
 } // namespace como

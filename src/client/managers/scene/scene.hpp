@@ -75,7 +75,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public AbstractChange
 
         // Local user's ID.
         UserID localUserID_;
-        DrawableIndex localUserNextDrawableIndex_;
+        ResourceIndex localUserNextDrawableIndex_;
 
         shared_ptr< QOpenGLContext > oglContext_;
 

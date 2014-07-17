@@ -19,7 +19,6 @@
 #ifndef RESOURCE_ID_HPP
 #define RESOURCE_ID_HPP
 
-#include <common/utilities/ids.hpp>
 #include <common/packables/packable_integer.hpp>
 #include "user_id.hpp"
 #include <cstdint>
@@ -78,6 +77,7 @@ class ResourceID
 };
 
 const ResourceID NO_RESOURCE( 0, 0 );
+
 
 /***
  * 4. Console output

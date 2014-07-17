@@ -46,14 +46,14 @@ LightPanel::LightPanel( LightsManagerPtr lightsManager ) :
         currentLight_->setLightColor( color );
     });
 
-    QObject::connect( lightsManager_.get(), &LightsManager::lightRemoved, [this]( PackableDrawableID lightID ){
-        if( currentLight_ && ( lightID == currentLight_->getLightID() ) ){
+    QObject::connect( lightsManager_.get(), &LightsManager::lightRemoved, [this]( ResourceID lightID ){
+        if( currentLight_ && ( lightID == currentLight_->getResourceID() ) ){
             closeLight();
         }
     });
 
-    QObject::connect( lightsManager_.get(), &LightsManager::lightModified, [this]( PackableDrawableID lightID ){
-        if( currentLight_ && ( lightID == currentLight_->getLightID() ) ){
+    QObject::connect( lightsManager_.get(), &LightsManager::lightModified, [this]( ResourceID lightID ){
+        if( currentLight_ && ( lightID == currentLight_->getResourceID() ) ){
             refresh();
         }
     });

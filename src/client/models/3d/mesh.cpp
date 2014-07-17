@@ -22,11 +22,6 @@
 #include <glm/gtx/intersect.hpp>
 #include <common/primitives/primitive_file.hpp>
 
-// TODO: Remove this once the constants PRIMITIVES_*_DIR be moved to
-// another place.
-#include <common/utilities/ids.hpp>
-
-
 #include <iostream>
 
 namespace como {

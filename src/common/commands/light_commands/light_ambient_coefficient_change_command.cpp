@@ -25,14 +25,14 @@ namespace como {
  ***/
 
 LightAmbientCoefficientChangeCommand::LightAmbientCoefficientChangeCommand() :
-    LightCommand( LightCommandType::LIGHT_AMBIENT_COEFFICIENT_CHANGE, NO_USER, NULL_DRAWABLE_ID ),
+    LightCommand( LightCommandType::LIGHT_AMBIENT_COEFFICIENT_CHANGE, NO_USER, NO_RESOURCE ),
     ambientCoefficient_( 0.0f )
 {
     addPackable( &ambientCoefficient_ );
 }
 
 
-LightAmbientCoefficientChangeCommand::LightAmbientCoefficientChangeCommand( UserID userID, LightID lightID, float ambientCoefficient ) :
+LightAmbientCoefficientChangeCommand::LightAmbientCoefficientChangeCommand( UserID userID, ResourceID lightID, float ambientCoefficient ) :
     LightCommand( LightCommandType::LIGHT_AMBIENT_COEFFICIENT_CHANGE, userID, lightID ),
     ambientCoefficient_( ambientCoefficient )
 {

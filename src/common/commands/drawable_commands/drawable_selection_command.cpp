@@ -25,13 +25,13 @@ namespace como {
  ***/
 
 DrawableSelectionCommand::DrawableSelectionCommand() :
-    DrawableCommand( DrawableCommandType::DRAWABLE_SELECTION, 0, NULL_DRAWABLE_ID ),
+    DrawableCommand( DrawableCommandType::DRAWABLE_SELECTION, 0, NO_RESOURCE ),
     addToSelection_( false )
 {
     addPackable( &addToSelection_ );
 }
 
-DrawableSelectionCommand::DrawableSelectionCommand( UserID userID, PackableDrawableID drawableID, bool addToSelection ) :
+DrawableSelectionCommand::DrawableSelectionCommand( UserID userID, ResourceID drawableID, bool addToSelection ) :
     DrawableCommand( DrawableCommandType::DRAWABLE_SELECTION, userID, drawableID ),
     addToSelection_( addToSelection )
 {

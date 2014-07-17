@@ -24,7 +24,7 @@ namespace como {
  * 1. Construction
  ***/
 
-DrawableCommand::DrawableCommand( DrawableCommandType drawableCommandType, UserID userID, PackableDrawableID drawableID ) :
+DrawableCommand::DrawableCommand( DrawableCommandType drawableCommandType, UserID userID, ResourceID drawableID ) :
     TypeCommand( CommandTarget::DRAWABLE, drawableCommandType, userID ),
     drawableID_( drawableID )
 {
@@ -44,9 +44,9 @@ DrawableCommand::DrawableCommand( const DrawableCommand& b ) :
  * 3. Getters
  ***/
 
-PackableDrawableID DrawableCommand::getDrawableID() const
+ResourceID DrawableCommand::getResourceID() const
 {
-    return drawableID_;
+    return drawableID_.getValue();
 }
 
 
@@ -54,7 +54,7 @@ PackableDrawableID DrawableCommand::getDrawableID() const
  * 4. Setters
  ***/
 
-void DrawableCommand::setDrawableID( const PackableDrawableID& drawableID )
+void DrawableCommand::setResourceID( const ResourceID& drawableID )
 {
     drawableID_ = drawableID;
 }

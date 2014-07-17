@@ -39,7 +39,7 @@ class PrimitiveInstantiationCommand : public PrimitiveCommand
          * 1. Construction
          ***/
         PrimitiveInstantiationCommand();
-        PrimitiveInstantiationCommand( UserID userID, ResourceID primitiveID, PackableDrawableID drawableID, const MaterialID& materialID );
+        PrimitiveInstantiationCommand( UserID userID, ResourceID primitiveID, ResourceID drawableID, const MaterialID& materialID );
         PrimitiveInstantiationCommand( const PrimitiveInstantiationCommand& b );
         PrimitiveInstantiationCommand( PrimitiveInstantiationCommand&& ) = delete;
 

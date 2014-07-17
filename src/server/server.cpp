@@ -118,9 +118,7 @@ void Server::run()
 
         // Create a directional light with with no owner and synchronise it in
         // the commands historic.
-        PackableDrawableID DIRECTIONAL_LIGHT_ID;
-        DIRECTIONAL_LIGHT_ID.creatorID = NO_USER;
-        DIRECTIONAL_LIGHT_ID.drawableIndex = 1;
+        const ResourceID DIRECTIONAL_LIGHT_ID( NO_USER, 1 );
         drawableOwners_[DIRECTIONAL_LIGHT_ID] = 0;
         std::uint8_t lightColor[4] = { 255, 255, 255, 0 };
 
@@ -330,8 +328,8 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
                     // Give an affirmative response to the user's selection if the
                     // desired drawable isn't selected by anyone (User ID = 0).
                     users_.at( sceneCommand->getUserID() );
-                    log_->debug( "Selecting drawable (", (int)( selectDrawable->getDrawableID().creatorID.getValue() ), ", ", (int)( selectDrawable->getDrawableID().drawableIndex.getValue() ), ")\n" );
-                    users_.at( sceneCommand->getUserID() )->addSelectionResponse( drawableOwners_.at( selectDrawable->getDrawableID() ) == 0 );
+                    log_->debug( "Selecting drawable (", (int)( selectDrawable->getResourceID().getCreatorID() ), ", ", (int)( selectDrawable->getResourceID().getResourceIndex() ), ")\n" );
+                    users_.at( sceneCommand->getUserID() )->addSelectionResponse( drawableOwners_.at( selectDrawable->getResourceID() ) == 0 );
                 break;
             }
         break;
@@ -357,9 +355,7 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
 
                     // Add a node to the Drawable Owners map for the recently added
                     // drawable. Mark it with a 0 (no owner).
-                    PackableDrawableID drawableID;
-                    drawableID.creatorID = primitiveCommand->getMeshID().getCreatorID();
-                    drawableID.drawableIndex = static_cast< DrawableIndex >( primitiveCommand->getMeshID().getResourceIndex() );
+                    ResourceID drawableID = primitiveCommand->getMeshID();
 
                     drawableOwners_[ drawableID ] = 0;
 
@@ -381,7 +377,7 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
             if( lightCommand->getType() == LightCommandType::LIGHT_CREATION ){
                 // Add a node to the Drawable Owners map for the recently added
                 // drawable. Mark it with a 0 (no owner).
-                drawableOwners_[lightCommand->getLightID()] = 0;
+                drawableOwners_[lightCommand->getResourceID()] = 0;
             }
         }break;
     }

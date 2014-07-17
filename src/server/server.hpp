@@ -41,7 +41,7 @@ using boost::asio::ip::tcp;
 
 namespace como {
 
-typedef std::map< PackableDrawableID, UserID > DrawableOwners;
+typedef std::map< ResourceID, UserID > DrawableOwners;
 typedef std::map< UserID, PublicUserPtr > UsersMap;
 
 /*! Main server manager */

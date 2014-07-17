@@ -32,14 +32,14 @@ LightsList::LightsList( LightsManagerPtr lightsManager ) :
                       this, &LightsList::addLight );
 
     QObject::connect( this, &LightsList::itemActivated, [=]( QListWidgetItem * item ){
-        emit lightSelected( ( dynamic_cast< LightsListItem* >( item ) )->getLightID() );
+        emit lightSelected( ( dynamic_cast< LightsListItem* >( item ) )->getResourceID() );
     });
 
     QObject::connect( this, &LightsList::itemClicked, [=]( QListWidgetItem * item ){
-        emit lightSelected( ( dynamic_cast< LightsListItem* >( item ) )->getLightID() );
+        emit lightSelected( ( dynamic_cast< LightsListItem* >( item ) )->getResourceID() );
     });
 
-    QObject::connect( this, &LightsList::lightSelected, [=]( LightID lightID ){
+    QObject::connect( this, &LightsList::lightSelected, [=]( ResourceID lightID ){
         lightsManager_->selectLight( lightID );
         lightsManager_->highlightLight( lightID );
     });
@@ -52,7 +52,7 @@ LightsList::LightsList( LightsManagerPtr lightsManager ) :
  * 4. Slots
  ***/
 
-void LightsList::addLight( LightID id, std::string name )
+void LightsList::addLight( ResourceID id, std::string name )
 {
     LightsListItem* newListItem = new LightsListItem( id, name );
 
@@ -60,7 +60,7 @@ void LightsList::addLight( LightID id, std::string name )
 }
 
 
-void LightsList::removeLight( PackableDrawableID id )
+void LightsList::removeLight( ResourceID id )
 {
     QListWidgetItem* uncastedListItem;
     LightsListItem* castedListItem;
@@ -70,7 +70,7 @@ void LightsList::removeLight( PackableDrawableID id )
         uncastedListItem = item( i );
         if( uncastedListItem ){
             castedListItem = dynamic_cast< LightsListItem * >( uncastedListItem );
-            if( castedListItem->getLightID() == id ){
+            if( castedListItem->getResourceID() == id ){
                 takeItem( i );
             }
         }

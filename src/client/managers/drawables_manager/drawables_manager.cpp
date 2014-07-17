@@ -90,7 +90,7 @@ glm::vec3 DrawablesManager::getPivotPoint( UserID userID ) const
 }
 
 
-bool DrawablesManager::existsDrawable( const PackableDrawableID& id ) const
+bool DrawablesManager::existsDrawable( const ResourceID& id ) const
 {
     DrawablesSelections::const_iterator it;
 
@@ -106,14 +106,14 @@ bool DrawablesManager::existsDrawable( const PackableDrawableID& id ) const
  * 5. Drawables administration
  ***/
 
-PackableDrawableID DrawablesManager::addDrawable( DrawablePtr drawable )
+ResourceID DrawablesManager::addDrawable( DrawablePtr drawable )
 {
     //takeOpenGLContext();
 
     return localDrawablesSelection_->addDrawable( drawable );
 }
 
-void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, PackableDrawableID drawableID )
+void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, ResourceID drawableID )
 {
     //takeOpenGLContext();
 
@@ -121,7 +121,7 @@ void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, Packabl
 }
 
 
-PackableDrawableID DrawablesManager::createMesh( MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials )
+ResourceID DrawablesManager::createMesh( MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials )
 {
     DrawablePtr mesh( new Mesh( vertexData, oglData, polygonsGroups, materials ) );
 
@@ -129,17 +129,17 @@ PackableDrawableID DrawablesManager::createMesh( MeshVertexData vertexData, Mesh
 }
 
 
-void DrawablesManager::createMesh( PackableDrawableID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials )
+void DrawablesManager::createMesh( ResourceID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials )
 {
     DrawablePtr mesh( new Mesh( vertexData, oglData, polygonsGroups, materials ) );
 
-    addDrawable( meshID.creatorID.getValue(), mesh, meshID );
+    addDrawable( meshID.getCreatorID(), mesh, meshID );
 }
 
 
 // FIXME: Duplicated code.
 /*
-void DrawablesManager::createRemoteMesh( ResourceID primitiveID, PackableDrawableID drawableID, MaterialID materialID )
+void DrawablesManager::createRemoteMesh( ResourceID primitiveID, ResourceID drawableID, MaterialID materialID )
 {
     // Get the "absolute" path to the specification file of the
     // primitive used for building this mesh.
@@ -190,13 +190,13 @@ void DrawablesManager::addDrawablesSelection( UserID userID, const PackableColor
  * 6. Drawables (de)seletion.
  ***/
 
-void DrawablesManager::selectDrawable( PackableDrawableID drawableID )
+void DrawablesManager::selectDrawable( ResourceID drawableID )
 {
     selectDrawable( drawableID, localUserID_ );
 }
 
 
-void DrawablesManager::selectDrawable( PackableDrawableID drawableID, UserID userID )
+void DrawablesManager::selectDrawable( ResourceID drawableID, UserID userID )
 {
     // Retrieve user's selection.
     DrawablesSelection& userSelection = *( getUserSelection( userID ) );
@@ -226,11 +226,11 @@ void DrawablesManager::unselectAll( UserID userID )
 
 
 
-PackableDrawableID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint )
+ResourceID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint )
 {
     const float MAX_T = 9999999.0f;
     float minT = MAX_T;
-    PackableDrawableID closestObject;
+    ResourceID closestObject;
 
     DrawablesSelection& userSelection = *( getUserSelection( localUserID_ ) );
 
@@ -266,7 +266,7 @@ PackableDrawableID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, g
         if( userSelection.intersect( r0, r1, closestObject, minT ) ){
             log_->debug( "RETURN 0\n" );
             ////emit renderNeeded();
-            return NULL_DRAWABLE_ID;
+            return NO_RESOURCE;
         }else{
             log_->debug( "NO CLOSEST OBJECT. Unselecting all\n" );
             unselectAll();
@@ -311,7 +311,7 @@ void DrawablesManager::executeRemoteDrawableCommand( DrawableCommandConstPtr com
             selectDrawable = dynamic_cast< const DrawableSelectionCommand* >( command.get() );
 
             // Select drawable.
-            this->selectDrawable( selectDrawable->getDrawableID(), selectDrawable->getUserID() );
+            this->selectDrawable( selectDrawable->getResourceID(), selectDrawable->getUserID() );
         break;
     }
 }
@@ -325,7 +325,7 @@ void DrawablesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr c
     bool selectionConfirmed;
     unsigned int i;
 
-    PackableDrawableID pendingSelection;
+    ResourceID pendingSelection;
 
     switch( command->getType() ){
         case SelectionCommandType::SELECTION_DELETION:
@@ -342,7 +342,7 @@ void DrawablesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr c
                 if( selectionConfirmed ){
                     pendingSelection = localUserPendingSelections_.front();
                     selectDrawable( pendingSelection );
-                    //selectDrawable( selectDrawable->getDrawableID() );
+                    //selectDrawable( selectDrawable->getResourceID() );
                 }
                 localUserPendingSelections_.pop();
             }

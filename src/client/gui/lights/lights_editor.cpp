@@ -57,7 +57,7 @@ void LightsEditor::enterEvent( QEvent *event )
     LightsListItem* lightItem = dynamic_cast< LightsListItem* >( lightsList_->currentItem() );
 
     if( lightItem ){
-        lightsManager_->highlightLight( lightItem->getLightID() );
+        lightsManager_->highlightLight( lightItem->getResourceID() );
     }
 }
 

@@ -34,7 +34,7 @@ class LightAmbientCoefficientChangeCommand : public LightCommand
          * 1. Construction
          ***/
         LightAmbientCoefficientChangeCommand();
-        LightAmbientCoefficientChangeCommand( UserID userID, LightID lightID, float ambientCoefficient );
+        LightAmbientCoefficientChangeCommand( UserID userID, ResourceID lightID, float ambientCoefficient );
         LightAmbientCoefficientChangeCommand( const LightAmbientCoefficientChangeCommand& ) = delete;
         LightAmbientCoefficientChangeCommand( LightAmbientCoefficientChangeCommand&& ) = delete;
 

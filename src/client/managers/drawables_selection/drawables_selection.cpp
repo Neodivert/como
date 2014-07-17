@@ -45,7 +45,7 @@ DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
 
     // Clone all the drawables held by b.
     for( it = b.drawables_.begin(); it != b.drawables_.end(); it++ ){
-        drawables_.insert( std::pair< PackableDrawableID, DrawablePtr >(
+        drawables_.insert( std::pair< ResourceID, DrawablePtr >(
                                it->first,
                                it->second->clone()
                             ) );
@@ -134,7 +134,7 @@ bool DrawablesSelection::contains( MeshType meshType ) const
 }
 
 
-bool DrawablesSelection::existsDrawable( const PackableDrawableID &id ) const
+bool DrawablesSelection::existsDrawable( const ResourceID &id ) const
 {
     return drawables_.count( id );
 }
@@ -346,7 +346,7 @@ void DrawablesSelection::updateSelectionCentroid()
  ***/
 
 
-void DrawablesSelection::addDrawable( PackableDrawableID drawableID, DrawablePtr drawable )
+void DrawablesSelection::addDrawable( ResourceID drawableID, DrawablePtr drawable )
 {
     mutex_.lock();
 
@@ -361,7 +361,7 @@ void DrawablesSelection::addDrawable( PackableDrawableID drawableID, DrawablePtr
 
 // TODO: ¿Possible dead lock (if A moves a drawable to B and B moves a drawable
 // to A at the same time)?
-bool DrawablesSelection::moveDrawable( PackableDrawableID drawableID, DrawablesSelection& destinySelection )
+bool DrawablesSelection::moveDrawable( ResourceID drawableID, DrawablesSelection& destinySelection )
 {
     mutex_.lock();
 
@@ -438,7 +438,7 @@ void DrawablesSelection::erase()
  * 7. Ray picking
  ***/
 
-bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, PackableDrawableID& closestDrawable, float& minT ) const
+bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, ResourceID& closestDrawable, float& minT ) const
 {
     DrawablesMap::const_iterator drawable;
     float t;

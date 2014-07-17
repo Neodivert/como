@@ -28,7 +28,7 @@
 
 namespace como {
 
-typedef std::map< LightID, LightPropertiesSharedPtr > LightsMap;
+typedef std::map< ResourceID, LightPropertiesSharedPtr > LightsMap;
 
 class LightsManager : public QObject, public Changeable, public Observer
 {
@@ -77,11 +77,11 @@ class LightsManager : public QObject, public Changeable, public Observer
     public slots:
         void createDirectionalLight();
     private:
-        void addDirectionalLight( const LightID& lightID, const PackableColor& lightColor );
+        void addDirectionalLight( const ResourceID& lightID, const PackableColor& lightColor );
     public:
-        void selectLight( const LightID lightID );
+        void selectLight( const ResourceID lightID );
     private:
-        void removeLight( PackableDrawableID lightID );
+        void removeLight( ResourceID lightID );
 
 
         /***
@@ -102,10 +102,10 @@ class LightsManager : public QObject, public Changeable, public Observer
          * 6. Signals
          ***/
     signals:
-        void lightCreated( LightID id, std::string name );
+        void lightCreated( ResourceID id, std::string name );
         void lightSelected( LightHandlerPtr light );
-        void lightRemoved( PackableDrawableID id );
-        void lightModified( PackableDrawableID id );
+        void lightRemoved( ResourceID id );
+        void lightModified( ResourceID id );
 
 
         /***
@@ -122,7 +122,7 @@ class LightsManager : public QObject, public Changeable, public Observer
         unsigned int getNextFreeLightIndex( LightType lightType );
         void print();
     public:
-        void highlightLight( LightID lightID );
+        void highlightLight( ResourceID lightID );
         void removeHighlights();
 };
 

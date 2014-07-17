@@ -21,7 +21,6 @@
 
 #include <client/models/3d/drawable.hpp>
 #include <client/models/3d/mesh.hpp>
-#include <common/utilities/ids.hpp>
 #include <common/commands/user_commands/user_parameter_change_command.hpp> // For PivotPointMode type.
 #include <map>
 #include <functional>
@@ -31,7 +30,7 @@
 
 namespace como {
 
-typedef std::map< PackableDrawableID, DrawablePtr > DrawablesMap;
+typedef std::map< ResourceID, DrawablePtr > DrawablesMap;
 
 typedef std::function<void (void)> NotificationCallback;
 
@@ -100,7 +99,7 @@ class DrawablesSelection : public Changeable
          */
         bool contains( MeshType meshType ) const ;
 
-        bool existsDrawable( const PackableDrawableID& id ) const;
+        bool existsDrawable( const ResourceID& id ) const;
 
 
         /***
@@ -138,8 +137,8 @@ class DrawablesSelection : public Changeable
          * 6. Drawables management
          ***/
     public:
-        void addDrawable( PackableDrawableID drawableID, DrawablePtr drawable );
-        bool moveDrawable( PackableDrawableID drawableID, DrawablesSelection& destinySelection );
+        void addDrawable( ResourceID drawableID, DrawablePtr drawable );
+        bool moveDrawable( ResourceID drawableID, DrawablesSelection& destinySelection );
         void moveAll( DrawablesSelection& destinySelection );
     private:
         void clear();
@@ -150,7 +149,7 @@ class DrawablesSelection : public Changeable
         /***
          * 7. Ray picking
          ***/
-        bool intersect( glm::vec3 r0, glm::vec3 r1, PackableDrawableID& closestDrawable, float& minT ) const ;
+        bool intersect( glm::vec3 r0, glm::vec3 r1, ResourceID& closestDrawable, float& minT ) const ;
 
 
         /***

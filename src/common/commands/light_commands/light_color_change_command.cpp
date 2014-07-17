@@ -25,13 +25,13 @@ namespace como {
  ***/
 
 LightColorChangeCommand::LightColorChangeCommand() :
-    LightCommand( LightCommandType::LIGHT_COLOR_CHANGE, NO_USER, NULL_DRAWABLE_ID )
+    LightCommand( LightCommandType::LIGHT_COLOR_CHANGE, NO_USER, NO_RESOURCE )
 {
     addPackable( &lightColor_ );
 }
 
 
-LightColorChangeCommand::LightColorChangeCommand( UserID userID, PackableLightID lightID, PackableColor lightColor ) :
+LightColorChangeCommand::LightColorChangeCommand( UserID userID, ResourceID lightID, PackableColor lightColor ) :
     LightCommand( LightCommandType::LIGHT_COLOR_CHANGE, userID, lightID ),
     lightColor_( lightColor )
 {

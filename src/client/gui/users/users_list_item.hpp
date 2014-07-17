@@ -20,7 +20,7 @@
 #define USERS_LIST_ITEM_HPP
 
 #include <QListWidgetItem>
-#include <common/utilities/ids.hpp>
+#include <common/ids/user_id.hpp>
 
 namespace como {
 

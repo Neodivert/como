@@ -19,7 +19,7 @@
 #ifndef MATERIAL_ID_HPP
 #define MATERIAL_ID_HPP
 
-#include <common/utilities/ids.hpp>
+#include <common/ids/user_id.hpp>
 #include <common/packables/packable_integer.hpp>
 #include <stdexcept>
 
@@ -28,7 +28,7 @@ namespace como {
 typedef std::uint16_t MaterialIndex;
 typedef PackableUint16< MaterialIndex > PackableMaterialIndex;
 
-// TODO: Inherit this class and DrawableID from a common PairID base class.
+// TODO: Inherit this class and ResourceID from a common PairID base class.
 class MaterialID
 {
     private:

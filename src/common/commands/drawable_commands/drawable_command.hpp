@@ -32,14 +32,14 @@ typedef PackableUint8< DrawableCommandType > PackableDrawableCommandType;
 class DrawableCommand : public TypeCommand< DrawableCommandType >
 {
     private:
-        PackableDrawableID drawableID_;
+        PackableResourceID drawableID_;
 
     public:
         /***
          * 1. Construction
          ***/
         DrawableCommand() = delete;
-        DrawableCommand( DrawableCommandType drawableCommandType, UserID userID, PackableDrawableID drawableID );
+        DrawableCommand( DrawableCommandType drawableCommandType, UserID userID, ResourceID drawableID );
         DrawableCommand( const DrawableCommand& b );
         DrawableCommand( DrawableCommand&& ) = delete;
 
@@ -53,13 +53,13 @@ class DrawableCommand : public TypeCommand< DrawableCommandType >
         /***
          * 3. Getters
          ***/
-        PackableDrawableID getDrawableID() const ;
+        ResourceID getResourceID() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setDrawableID( const PackableDrawableID& drawableID );
+        void setResourceID( const ResourceID& drawableID );
 
 
         /***

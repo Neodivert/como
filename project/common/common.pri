@@ -25,7 +25,6 @@ HEADERS += \
     ../../src/common/packets/new_user_packet.hpp \
     ../../src/common/packets/user_acceptance_packet.hpp \
     ../../src/common/packets/scene_update_packet.hpp \
-    ../../src/common/utilities/ids.hpp \
     ../../src/common/utilities/log.hpp \
     ../../src/common/commands/command.hpp \
     ../../src/common/commands/commands.hpp \
@@ -108,7 +107,6 @@ SOURCES += \
     ../../src/common/packets/new_user_packet.cpp \
     ../../src/common/packets/user_acceptance_packet.cpp \
     ../../src/common/packets/scene_update_packet.cpp \
-    ../../src/common/utilities/ids.cpp \
     ../../src/common/commands/command.cpp \
     ../../src/common/commands/user_commands/user_command.cpp \
     ../../src/common/commands/user_commands/user_connection_command.cpp \

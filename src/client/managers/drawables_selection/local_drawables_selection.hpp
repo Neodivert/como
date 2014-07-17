@@ -22,7 +22,6 @@
 #include "drawables_selection.hpp"
 #include <client/managers/server_interface/server_interface.hpp>
 #include <common/commands/commands.hpp>
-#include <common/utilities/ids.hpp>
 
 namespace como {
 
@@ -40,7 +39,7 @@ class LocalDrawablesSelection : public QObject, public DrawablesSelection
         UserID localUserID_;
 
         // Unique ID to be given to the next drawable added to this selection.
-        PackableDrawableID nextDrawableID_;
+        ResourceID nextResourceID_;
 
     public:
         /***
@@ -67,7 +66,7 @@ class LocalDrawablesSelection : public QObject, public DrawablesSelection
          * 4. Drawables management
          ***/
 
-        PackableDrawableID addDrawable( DrawablePtr drawable );
+        ResourceID addDrawable( DrawablePtr drawable );
 
 
         /***

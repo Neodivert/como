@@ -33,7 +33,7 @@ class DrawableSelectionCommand : public DrawableCommand
          * 1. Construction
          ***/
         DrawableSelectionCommand();
-        DrawableSelectionCommand( UserID userID, PackableDrawableID drawableID, bool addToSelection );
+        DrawableSelectionCommand( UserID userID, ResourceID drawableID, bool addToSelection );
         DrawableSelectionCommand( const DrawableSelectionCommand& b );
         DrawableSelectionCommand( DrawableSelectionCommand&& ) = delete;
 

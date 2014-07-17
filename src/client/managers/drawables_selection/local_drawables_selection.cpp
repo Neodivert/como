@@ -26,13 +26,9 @@ LocalDrawablesSelection::LocalDrawablesSelection( UserID localUserID, glm::vec4 
     QObject(),
     DrawablesSelection( selectionBorderColor ),
     server_( server ),
-    localUserID_( localUserID )
-{
-    // Initialize the unique ID to be given to the mext drawable added to this
-    // selection (bind it to the local user).
-    nextDrawableID_.creatorID = localUserID_;
-    nextDrawableID_.drawableIndex = 0;
-}
+    localUserID_( localUserID ),
+    nextResourceID_( localUserID_, 0 )
+{}
 
 
 /***
@@ -51,17 +47,17 @@ void LocalDrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
  * 4. Drawables management
  ***/
 
-PackableDrawableID LocalDrawablesSelection::addDrawable( DrawablePtr drawable )
+ResourceID LocalDrawablesSelection::addDrawable( DrawablePtr drawable )
 {
-    PackableDrawableID newDrawableID = nextDrawableID_;
+    ResourceID newResourceID = nextResourceID_;
 
-    DrawablesSelection::addDrawable( nextDrawableID_, drawable );
+    DrawablesSelection::addDrawable( nextResourceID_, drawable );
 
     // Increment the drawable index to be given to the next drawable added to
     // this selection.
-    nextDrawableID_.drawableIndex = nextDrawableID_.drawableIndex.getValue() + 1;
+    nextResourceID_++;
 
-    return newDrawableID;
+    return newResourceID;
 }
 
 

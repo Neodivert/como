@@ -29,7 +29,7 @@ class LightHandler
 {
     private:
         LightPropertiesSharedPtr light_;
-        LightID lightID_;
+        ResourceID lightID_;
         ServerInterfacePtr server_;
 
         // Call this method when a notification has changed.
@@ -39,7 +39,7 @@ class LightHandler
         /***
          * 1. Construction
          ***/
-        LightHandler( LightPropertiesSharedPtr light, LightID lightID, ServerInterfacePtr server, std::function< void(void) > notifyChange );
+        LightHandler( LightPropertiesSharedPtr light, ResourceID lightID, ServerInterfacePtr server, std::function< void(void) > notifyChange );
         LightHandler( const LightHandler& ) = delete;
         LightHandler( LightHandler&& ) = delete;
 
@@ -52,7 +52,7 @@ class LightHandler
         /***
          * 3. Getters
          ***/
-        PackableDrawableID getLightID() const;
+        ResourceID getResourceID() const;
         PackableColor getLightColor() const;
         float getAmbientCoefficient() const;
 

@@ -30,7 +30,7 @@ class DirectionalLightCreationCommand : public LightCreationCommand
          * 1. Construction
          ***/
         DirectionalLightCreationCommand();
-        DirectionalLightCreationCommand( UserID userID, LightID lightID, const PackableColor& lightColor );
+        DirectionalLightCreationCommand( UserID userID, ResourceID lightID, const PackableColor& lightColor );
         DirectionalLightCreationCommand( const DirectionalLightCreationCommand& ) = default;
         DirectionalLightCreationCommand( DirectionalLightCreationCommand&& ) = delete;
 

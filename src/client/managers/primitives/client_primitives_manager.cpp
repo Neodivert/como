@@ -88,7 +88,7 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 
     materialsManager_->createMaterials( meshInfo.materialsData, firstMaterialID );
 
-    PackableDrawableID drawableID = drawablesManager_->createMesh( meshInfo.vertexData, meshInfo.oglData, meshInfo.polygonGroupsData, materialsManager_->getMaterials( firstMaterialID, meshInfo.materialsData.size() ) );
+    ResourceID drawableID = drawablesManager_->createMesh( meshInfo.vertexData, meshInfo.oglData, meshInfo.polygonGroupsData, materialsManager_->getMaterials( firstMaterialID, meshInfo.materialsData.size() ) );
 
     log_->debug( "Creating local mesh - Drawable ID (", drawableID,
                  ") First materialID ", firstMaterialID, ") nMaterials (", meshInfo.materialsData.size(), ")\n" );
@@ -100,7 +100,7 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 
 
 // FIXME: Duplicated code.
-void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID primitiveID, PackableDrawableID meshID, MaterialID materialID )
+void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID primitiveID, ResourceID meshID, MaterialID materialID )
 {
     (void)( userID );
 
@@ -161,13 +161,9 @@ void ClientPrimitivesManager::executeRemoteCommand( PrimitiveCommandConstPtr com
             const PrimitiveInstantiationCommand* primitiveCommand =
                     dynamic_cast< const PrimitiveInstantiationCommand* >( command.get() );
 
-            PackableDrawableID meshID;
-            meshID.creatorID = primitiveCommand->getMeshID().getCreatorID();
-            meshID.drawableIndex = static_cast< DrawableIndex >( primitiveCommand->getMeshID().getResourceIndex() );
-
             instantiatePrimitive( primitiveCommand->getUserID(),
                                   primitiveCommand->getPrimitiveID(),
-                                  meshID,
+                                  primitiveCommand->getMeshID(),
                                   MaterialID( primitiveCommand->getMaterialID().getCreatorID(), static_cast< MaterialIndex >( primitiveCommand->getMaterialID().getResourceIndex() ) ) );
         }break;
     }

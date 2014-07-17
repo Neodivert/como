@@ -20,7 +20,6 @@
 #define LIGHTS_LIST_ITEM_HPP
 
 #include <QListWidgetItem>
-#include <common/utilities/ids.hpp>
 #include <client/managers/lights/lights_manager.hpp>
 
 namespace como {
@@ -30,14 +29,14 @@ class LightsListItem : public QObject, public QListWidgetItem
     Q_OBJECT
 
     private:
-        LightID lightID_;
+        ResourceID lightID_;
 
     public:
         /***
          * 1. Construction
          ***/
         LightsListItem() = delete;
-        LightsListItem( const LightID& id, const std::string& name );
+        LightsListItem( const ResourceID& id, const std::string& name );
         LightsListItem( const LightsListItem& ) = delete;
         LightsListItem( LightsListItem&& ) = delete;
 
@@ -51,7 +50,7 @@ class LightsListItem : public QObject, public QListWidgetItem
         /***
          * 3. Getters
          ***/
-        LightID getLightID() const;
+        ResourceID getResourceID() const;
 
 
         /***

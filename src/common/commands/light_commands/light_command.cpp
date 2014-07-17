@@ -26,13 +26,13 @@ namespace como {
 
 LightCommand::LightCommand() :
     TypeCommand( CommandTarget::LIGHT, LightCommandType::LIGHT_CREATION, NO_USER ),
-    lightID_( NULL_DRAWABLE_ID )
+    lightID_( NO_RESOURCE )
 {
     addPackable( &lightID_ );
 }
 
 
-LightCommand::LightCommand( LightCommandType commandType, UserID userID, const PackableLightID& lightID ) :
+LightCommand::LightCommand( LightCommandType commandType, UserID userID, const ResourceID& lightID ) :
     TypeCommand( CommandTarget::LIGHT, commandType, userID ),
     lightID_( lightID )
 {
@@ -51,9 +51,9 @@ LightCommand::LightCommand( const LightCommand &b ) :
  * 3. Getters
  ***/
 
-LightID LightCommand::getLightID() const
+ResourceID LightCommand::getResourceID() const
 {
-    return lightID_;
+    return lightID_.getValue();
 }
 
 } // namespace como

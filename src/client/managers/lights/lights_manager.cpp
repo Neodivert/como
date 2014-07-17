@@ -84,10 +84,10 @@ void LightsManager::createDirectionalLight()
 
     // Add the created light to the Drawables Manager and retrieve the ID given
     // to it.
-    LightID lightID = drawablesManager_->addDrawable( light );
+    ResourceID lightID = drawablesManager_->addDrawable( light );
 
     // Insert the light's properties into the lights map.
-    lights_.insert( std::pair< LightID, LightPropertiesSharedPtr >(
+    lights_.insert( std::pair< ResourceID, LightPropertiesSharedPtr >(
                         lightID,
                         lightProperties
                         ));
@@ -105,7 +105,7 @@ void LightsManager::createDirectionalLight()
 }
 
 
-void LightsManager::addDirectionalLight( const LightID& lightID, const PackableColor& lightColor )
+void LightsManager::addDirectionalLight( const ResourceID& lightID, const PackableColor& lightColor )
 {
     // FIXME: Duplicated code (except for error message).
     GLint lightIndex;
@@ -133,12 +133,12 @@ void LightsManager::addDirectionalLight( const LightID& lightID, const PackableC
 
     DrawablePtr light = DrawablePtr( new DirectionalLight( lightProperties, lightMaterial ) );
 
-    drawablesManager_->addDrawable( lightID.creatorID.getValue(),
+    drawablesManager_->addDrawable( lightID.getCreatorID(),
                                     light,
                                     lightID );
 
     // Insert the light's properties into the lights map.
-    lights_.insert( std::pair< LightID, LightPropertiesSharedPtr >(
+    lights_.insert( std::pair< ResourceID, LightPropertiesSharedPtr >(
                         lightID,
                         lightProperties
                         ));
@@ -150,13 +150,13 @@ void LightsManager::addDirectionalLight( const LightID& lightID, const PackableC
 }
 
 
-void LightsManager::selectLight( const LightID lightID )
+void LightsManager::selectLight( const ResourceID lightID )
 {
     emit lightSelected( LightHandlerPtr( new LightHandler( lights_.at( lightID ), lightID, server_, std::bind( &LightsManager::setChanged, this ) ) ) );
 }
 
 
-void LightsManager::removeLight( PackableDrawableID lightID )
+void LightsManager::removeLight( ResourceID lightID )
 {
     log_->debug( "LightsManager - removing ID ", lightID, "\n" );
 
@@ -194,7 +194,7 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
                     const DirectionalLightCreationCommand* directionalLightCreationCommand =
                             dynamic_cast< const DirectionalLightCreationCommand* >( command.get() );
 
-                    addDirectionalLight( directionalLightCreationCommand->getLightID(),
+                    addDirectionalLight( directionalLightCreationCommand->getResourceID(),
                                          directionalLightCreationCommand->getLightColor()
                                          );
                 }break;
@@ -204,9 +204,9 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
             const LightColorChangeCommand* lightCommand =
                     dynamic_cast< const LightColorChangeCommand* >( command.get() );
 
-            lights_.at( lightCommand->getLightID() )->setLightColor( lightCommand->getLightColor() );
+            lights_.at( lightCommand->getResourceID() )->setLightColor( lightCommand->getLightColor() );
 
-            emit lightModified( lightCommand->getLightID() );
+            emit lightModified( lightCommand->getResourceID() );
 
             setChanged();
         }break;
@@ -214,9 +214,9 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
             const LightAmbientCoefficientChangeCommand* lightCommand =
                     dynamic_cast< const LightAmbientCoefficientChangeCommand* >( command.get() );
 
-            lights_.at( lightCommand->getLightID() )->setAmbientCoefficient( lightCommand->getAmbientCoefficient() );
+            lights_.at( lightCommand->getResourceID() )->setAmbientCoefficient( lightCommand->getAmbientCoefficient() );
 
-            emit lightModified( lightCommand->getLightID() );
+            emit lightModified( lightCommand->getResourceID() );
 
             setChanged();
         }break;
@@ -282,7 +282,7 @@ void LightsManager::print()
 }
 
 
-void LightsManager::highlightLight( LightID lightID )
+void LightsManager::highlightLight( ResourceID lightID )
 {
     drawablesManager_->highlightProperty( lights_.at( lightID ).get() );
 }
