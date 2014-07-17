@@ -173,8 +173,6 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
                                                          rayDirection,
                                                          addToSelection,
                                                          lastMouseWorldPos_ );
-
-        std::cout << "(1) lastMouseWorldPos_: (" << lastMouseWorldPos_.x << ", " << lastMouseWorldPos_.y << ", " << lastMouseWorldPos_.z << std::endl;
     }else{
         // We were in transformation mode. This mouse press is for droping
         // the current selection.
@@ -287,7 +285,6 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
             case TransformationType::TRANSLATION:
                 // Compute the transformation vector.
                 transformVector = currentMouseWorldPos - lastMouseWorldPos_;
-                std::cout << "transformVector: (" << transformVector.x << ", " << transformVector.y << ", " << transformVector.z << ")" << std::endl;
 
                 // If requested, attach the translation vector to an axis.
                 switch( transformationMode ){
@@ -344,19 +341,17 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                                                  currentMouseWorldRelPos.y / lastMouseWorldRelPos.y,
                                                  currentMouseWorldRelPos.z / lastMouseWorldRelPos.z );
 
-                    if( isnan( lastMouseWorldRelPos.x ) ){
-                        std::cout << "Is NaN!" << std::endl;
-                        throw std::runtime_error( "Is NAN!" );
+                    // TODO: Make this check unuseful.
+                    if( isnan( transformVector.x ) ||
+                        isnan( transformVector.y ) ||
+                        isnan( transformVector.z )){
+                        std::cerr << "Is NaN!" << std::endl;
+                        break;
                     }
 
                     // Transform the scale vector from window to world space.
                     // TODO: Why isn't this nedeed anymore?.
                     //transformVector = glm::vec3( Drawable::transformScaleVector( glm::vec4( transformVector, 1.0f ), glm::inverse( projectionMatrix * camera->getViewMatrix() ) ) );
-
-                    // TODO: Remove this.
-                    std::cout << "lastMouseWorldRelPos: (" << lastMouseWorldRelPos.x << ", " << lastMouseWorldRelPos.y << ", " << lastMouseWorldRelPos.z << ")" << std::endl;
-                    std::cout << "currentMouseWorldRelPos: (" << currentMouseWorldRelPos.x << ", " << currentMouseWorldRelPos.y << ", " << currentMouseWorldRelPos.z << ")" << std::endl;
-                    std::cout << "transformVector: (" << transformVector.x << ", " << transformVector.y << ", " << transformVector.z << ")" << std::endl;
 
                     // If requested, attach the tranformation vector to an axis.
                     switch( transformationMode ){
