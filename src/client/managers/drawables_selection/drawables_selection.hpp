@@ -44,7 +44,6 @@ const char pivotPointModeStrings[N_PIVOT_POINT_MODES][32] =
      "World origin"
 };
 
-
 class DrawablesSelection : public Changeable
 {
     private:
@@ -64,6 +63,9 @@ class DrawablesSelection : public Changeable
         mutable std::recursive_mutex mutex_;
 
         const void* highlightedProperty_;
+
+        bool displayEdges_;
+
 
     public:
         /***
@@ -106,6 +108,7 @@ class DrawablesSelection : public Changeable
          * 3. Setters
          ***/
         virtual void setPivotPointMode( PivotPointMode pivotPointMode );
+        void displayEdges( bool displayEdges );
 
 
         /***

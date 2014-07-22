@@ -45,6 +45,10 @@ DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserI
 
     // Insert the recently created selection to the selections map.
     drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( localUserID_, localDrawablesSelection_ ) );
+
+    // Set a default mode for displaying the edges of the meshes in this
+    // selection.
+    displayEdges( MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED );
 }
 
 
@@ -100,6 +104,28 @@ bool DrawablesManager::existsDrawable( const ResourceID& id ) const
         }
     }
     return false;
+}
+
+
+/***
+ * 4. Setters
+ ***/
+
+void DrawablesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
+{
+    switch( frequency ){
+        case MeshEdgesDisplayFrequency::ALWAYS:
+            for( auto drawablesSelection : drawablesSelections_ ){
+                drawablesSelection.second->displayEdges( true );
+            }
+        break;
+        case MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED:
+            for( auto drawablesSelection : drawablesSelections_ ){
+                drawablesSelection.second->displayEdges( false );
+            }
+            localDrawablesSelection_->displayEdges( true );
+        break;
+    }
 }
 
 /***

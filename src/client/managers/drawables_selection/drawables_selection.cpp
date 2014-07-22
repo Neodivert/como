@@ -29,7 +29,8 @@ DrawablesSelection::DrawablesSelection( glm::vec4 borderColor ) :
     borderColor_( borderColor ),
     centroid_( 0.0f, 0.0f, 0.0f, 1.0f ),
     pivotPointMode_( PivotPointMode::MEDIAN_POINT ),
-    highlightedProperty_( nullptr )
+    highlightedProperty_( nullptr ),
+    displayEdges_( false )
 {
 }
 
@@ -39,7 +40,8 @@ DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
     borderColor_( b.borderColor_ ),
     centroid_( b.centroid_ ),
     pivotPointMode_( b.pivotPointMode_ ),
-    highlightedProperty_( nullptr )
+    highlightedProperty_( nullptr ),
+    displayEdges_( b.displayEdges_ )
 {
     DrawablesMap::const_iterator it;
 
@@ -61,7 +63,8 @@ DrawablesSelection::DrawablesSelection( DrawablesSelection&& b ) :
     drawables_( b.drawables_ ),
     borderColor_( b.borderColor_ ),
     centroid_( b.centroid_ ),
-    pivotPointMode_( b.pivotPointMode_ )
+    pivotPointMode_( b.pivotPointMode_ ),
+    displayEdges_( b.displayEdges_ )
 {
 }
 
@@ -216,6 +219,12 @@ void DrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
     setChanged();
 
     mutex_.unlock();
+}
+
+
+void DrawablesSelection::displayEdges( bool displayEdges )
+{
+    displayEdges_ = displayEdges;
 }
 
 
@@ -479,13 +488,17 @@ void DrawablesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix
     for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
         glm::vec4 borderColor;
 
-        if( drawable->second->containsProperty( highlightedProperty_ ) ){
-            borderColor = glm::vec4( 1.0f, 1.0f, 1.0f, 1.0f );
-        }else{
-            borderColor = borderColor_;
-        }
+        if( displayEdges_ || drawable->second->containsProperty( highlightedProperty_ ) ){
+            if( drawable->second->containsProperty( highlightedProperty_ ) ){
+                borderColor = glm::vec4( 1.0f, 1.0f, 1.0f, 1.0f );
+            }else{
+                borderColor = borderColor_;
+            }
 
-        drawable->second->draw( openGL, viewProjMatrix, &borderColor[0] );
+            drawable->second->draw( openGL, viewProjMatrix, &borderColor[0] );
+        }else{
+            drawable->second->draw( openGL, viewProjMatrix, nullptr );
+        }
     }
 
     mutex_.unlock();

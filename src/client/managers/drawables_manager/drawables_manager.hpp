@@ -32,6 +32,11 @@ namespace como {
 
 typedef std::map< UserID, DrawablesSelectionPtr > DrawablesSelections;
 
+enum class MeshEdgesDisplayFrequency {
+    ALWAYS,
+    ONLY_WHEN_SELECTED
+};
+
 // TODO: Remove AbstractChangeable and use only Observable.
 class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, public Observable
 {
@@ -60,6 +65,11 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
 
         LogPtr log_;
 
+
+    protected:
+        MeshEdgesDisplayFrequency meshEdgesDisplayFrequency_;
+
+
     public:
         /***
          * 1. Construction
@@ -86,6 +96,12 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         glm::vec3 getPivotPoint() const ;
         glm::vec3 getPivotPoint( UserID userID ) const ;
         bool existsDrawable( const ResourceID& id ) const;
+
+
+        /***
+         * 4. Setters
+         ***/
+        void displayEdges( MeshEdgesDisplayFrequency frequency );
 
 
         /***
