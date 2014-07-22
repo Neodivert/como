@@ -35,7 +35,7 @@ MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager )
         emit materialSelected( ( dynamic_cast< MaterialsListItem* >( item ) )->getMaterialID() );
     });
 
-    QObject::connect( this, &MaterialsList::materialSelected, [=]( MaterialID materialID ){
+    QObject::connect( this, &MaterialsList::materialSelected, [=]( ResourceID materialID ){
         materialsManager->selectMaterial( materialID );
         materialsManager->highlightMaterial( materialID );
     });
@@ -46,7 +46,7 @@ MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager )
  * 4. Slots
  ***/
 
-void MaterialsList::addMaterial( MaterialID id, std::string name )
+void MaterialsList::addMaterial( ResourceID id, std::string name )
 {
     MaterialsListItem* newListItem = new MaterialsListItem( id, name );
 

@@ -31,7 +31,7 @@ namespace como {
 class MaterialHandler : public Observable
 {
     private:
-        MaterialID materialID_;
+        ResourceID materialID_;
         MaterialPtr material_;
         ServerInterfacePtr server_;
 
@@ -40,7 +40,7 @@ class MaterialHandler : public Observable
          * 1. Construction
          ***/
         MaterialHandler() = default;
-        MaterialHandler( MaterialID materialID, MaterialPtr material, ServerInterfacePtr server );
+        MaterialHandler( ResourceID materialID, MaterialPtr material, ServerInterfacePtr server );
         MaterialHandler( const MaterialHandler& ) = delete;
         MaterialHandler( MaterialHandler&& );
 
@@ -54,7 +54,7 @@ class MaterialHandler : public Observable
         /***
          * 3. Getters
          ***/
-        MaterialID getID() const;
+        ResourceID getID() const;
         std::string getName() const;
         PackableColor getColor() const;
         PackableColor getAmbientReflectivity() const;

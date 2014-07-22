@@ -41,7 +41,7 @@ class MaterialCreationCommand : public MaterialCommand
      ***/
     public:
         MaterialCreationCommand();
-        MaterialCreationCommand( const MaterialID& materialID, const std::string& materialName  );
+        MaterialCreationCommand( const ResourceID& materialID, const std::string& materialName  );
         MaterialCreationCommand( MaterialCreationCommand& b );
         MaterialCreationCommand( MaterialCreationCommand&& ) = delete;
 

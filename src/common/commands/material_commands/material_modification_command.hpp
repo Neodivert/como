@@ -34,8 +34,8 @@ class MaterialModificationCommand : public AbstractMaterialModificationCommand
          * 1. Construction
          ***/
         MaterialModificationCommand();
-        MaterialModificationCommand( UserID userID, MaterialID materialID, ParameterPackableType parameterValue );
-        MaterialModificationCommand( UserID userID, MaterialID materialID, ParameterPlainType parameterValue );
+        MaterialModificationCommand( UserID userID, ResourceID materialID, ParameterPackableType parameterValue );
+        MaterialModificationCommand( UserID userID, ResourceID materialID, ParameterPlainType parameterValue );
         MaterialModificationCommand( const MaterialModificationCommand& b );
         MaterialModificationCommand( MaterialModificationCommand& ) = delete;
 
@@ -79,7 +79,7 @@ MaterialModificationCommand<ParameterName, ParameterPackableType, ParameterPlain
 
 
 template < MaterialParameterName ParameterName, class ParameterPackableType, class ParameterPlainType >
-MaterialModificationCommand<ParameterName, ParameterPackableType, ParameterPlainType>::MaterialModificationCommand( UserID userID, MaterialID materialID, ParameterPackableType parameterValue ) :
+MaterialModificationCommand<ParameterName, ParameterPackableType, ParameterPlainType>::MaterialModificationCommand( UserID userID, ResourceID materialID, ParameterPackableType parameterValue ) :
     AbstractMaterialModificationCommand( userID, materialID, ParameterName ),
     parameterValue_( parameterValue )
 {
@@ -88,7 +88,7 @@ MaterialModificationCommand<ParameterName, ParameterPackableType, ParameterPlain
 
 
 template < MaterialParameterName ParameterName, class ParameterPackableType, class ParameterPlainType >
-MaterialModificationCommand<ParameterName, ParameterPackableType, ParameterPlainType>::MaterialModificationCommand( UserID userID, MaterialID materialID, ParameterPlainType parameterValue ) :
+MaterialModificationCommand<ParameterName, ParameterPackableType, ParameterPlainType>::MaterialModificationCommand( UserID userID, ResourceID materialID, ParameterPlainType parameterValue ) :
     AbstractMaterialModificationCommand( userID, materialID, ParameterName ),
     parameterValue_( parameterValue )
 {

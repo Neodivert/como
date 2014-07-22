@@ -24,7 +24,7 @@ namespace como {
  * 1. Construction
  ***/
 
-MaterialHandler::MaterialHandler( MaterialID materialID, MaterialPtr material, ServerInterfacePtr server ) :
+MaterialHandler::MaterialHandler( ResourceID materialID, MaterialPtr material, ServerInterfacePtr server ) :
     materialID_( materialID ),
     material_( material ),
     server_( server )
@@ -42,7 +42,7 @@ MaterialHandler::MaterialHandler( MaterialHandler&& b ) :
  * 3. Getters
  ***/
 
-MaterialID MaterialHandler::getID() const
+ResourceID MaterialHandler::getID() const
 {
     return materialID_;
 }

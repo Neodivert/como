@@ -106,7 +106,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         void createMesh( ResourceID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials );
 
     private:
-        //void createRemoteMesh( ResourceID primitiveID, ResourceID drawableID, MaterialID materialID );
+        //void createRemoteMesh( ResourceID primitiveID, ResourceID drawableID, ResourceID materialID );
 
     public:
 

@@ -38,7 +38,7 @@ MaterialsManager::MaterialsManager( DrawablesManagerPtr drawablesManager, UserID
  * 3. Material creation
  ***/
 
-MaterialID MaterialsManager::createMaterial( const MaterialInfo &materialInfo )
+ResourceID MaterialsManager::createMaterial( const MaterialInfo &materialInfo )
 {
     // Create the new material and insert it into the materials container.
     createMaterial( nextLocalMaterialID_, materialInfo );
@@ -47,7 +47,7 @@ MaterialID MaterialsManager::createMaterial( const MaterialInfo &materialInfo )
 }
 
 
-void MaterialsManager::createMaterials( const std::vector< MaterialInfo >& materialsInfo, MaterialID& firstMaterialID )
+void MaterialsManager::createMaterials( const std::vector< MaterialInfo >& materialsInfo, ResourceID& firstMaterialID )
 {
     assert( materialsInfo.size() != 0 );
 
@@ -59,7 +59,7 @@ void MaterialsManager::createMaterials( const std::vector< MaterialInfo >& mater
     }
 }
 
-void MaterialsManager::createMaterial( MaterialID id, const MaterialInfo& materialInfo )
+void MaterialsManager::createMaterial( ResourceID id, const MaterialInfo& materialInfo )
 {
     materials_[id] = MaterialPtr( new Material( materialInfo ) );
 
@@ -70,11 +70,11 @@ void MaterialsManager::createMaterial( MaterialID id, const MaterialInfo& materi
 }
 
 
-void MaterialsManager::createRemoteMaterials( const std::vector< MaterialInfo >& materialsInfo, const MaterialID& firstMaterialID )
+void MaterialsManager::createRemoteMaterials( const std::vector< MaterialInfo >& materialsInfo, const ResourceID& firstMaterialID )
 {
     assert( materialsInfo.size() != 0 );
 
-    MaterialID materialID = firstMaterialID;
+    ResourceID materialID = firstMaterialID;
 
     for( auto materialInfo : materialsInfo ){
         createMaterial( materialID, materialInfo );
@@ -87,7 +87,7 @@ void MaterialsManager::createRemoteMaterials( const std::vector< MaterialInfo >&
  * 4. Material selection
  ***/
 
-void MaterialsManager::selectMaterial( const MaterialID& id )
+void MaterialsManager::selectMaterial( const ResourceID& id )
 {
     MaterialsManager::selectMaterial( localUserID_, id );
 
@@ -106,7 +106,7 @@ void MaterialsManager::selectMaterial( const MaterialID& id )
 }
 
 
-void MaterialsManager::selectMaterial( UserID userID, const MaterialID& id )
+void MaterialsManager::selectMaterial( UserID userID, const ResourceID& id )
 {
     Q_UNUSED( userID );
     Q_UNUSED( id );
@@ -119,16 +119,16 @@ void MaterialsManager::selectMaterial( UserID userID, const MaterialID& id )
  * 5. Getters
  ***/
 
-MaterialConstPtr MaterialsManager::getMaterial( const MaterialID& id ) const
+MaterialConstPtr MaterialsManager::getMaterial( const ResourceID& id ) const
 {
     return materials_.at( id );
 }
 
-std::vector<MaterialConstPtr> MaterialsManager::getMaterials( const MaterialID& firstMaterialID, unsigned int nMaterials ) const
+std::vector<MaterialConstPtr> MaterialsManager::getMaterials( const ResourceID& firstMaterialID, unsigned int nMaterials ) const
 {
     std::vector< MaterialConstPtr > materials;
     unsigned int i = 0;
-    MaterialID materialID = firstMaterialID;
+    ResourceID materialID = firstMaterialID;
 
     materials.reserve( nMaterials );
 
@@ -221,7 +221,7 @@ void MaterialsManager::update()
  * 9. Auxiliar methods
  ***/
 
-void MaterialsManager::highlightMaterial( MaterialID materialID )
+void MaterialsManager::highlightMaterial( ResourceID materialID )
 {
     drawablesManager_->highlightProperty( getMaterial( materialID ).get() );
 }

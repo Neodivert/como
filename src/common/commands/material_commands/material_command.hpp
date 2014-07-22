@@ -20,8 +20,7 @@
 #define MATERIAL_COMMAND_HPP
 
 #include <common/commands/type_command.hpp>
-#include <common/ids/material_id.hpp>
-#include <common/packables/ids/packable_material_id.hpp>
+#include <common/packables/ids/packable_resource_id.hpp>
 
 namespace como {
 
@@ -34,7 +33,7 @@ typedef PackableUint8< MaterialCommandType > PackableMaterialCommandType;
 class MaterialCommand : public TypeCommand< MaterialCommandType >
 {
     private:
-        PackableMaterialID materialID_;
+        PackableResourceID materialID_;
 
     /***
      * 1. Construction
@@ -43,7 +42,7 @@ class MaterialCommand : public TypeCommand< MaterialCommandType >
         MaterialCommand() = delete;
         MaterialCommand( MaterialCommandType commandType );
     //protected:
-        MaterialCommand( MaterialCommandType commandType, UserID userID, const MaterialID& materialID );
+        MaterialCommand( MaterialCommandType commandType, UserID userID, const ResourceID& materialID );
     public:
         MaterialCommand( const MaterialCommand& b );
         MaterialCommand( MaterialCommand&& ) = delete;
@@ -56,7 +55,7 @@ class MaterialCommand : public TypeCommand< MaterialCommandType >
     /***
      * 3. Getters
      ***/
-        MaterialID getMaterialID() const;
+        ResourceID getMaterialID() const;
 
 
     /***

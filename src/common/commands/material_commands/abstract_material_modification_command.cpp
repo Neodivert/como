@@ -26,14 +26,14 @@ namespace como {
  ***/
 
 AbstractMaterialModificationCommand::AbstractMaterialModificationCommand( UserID userID, PackableMaterialParameterName parameterName ) :
-    MaterialCommand( MaterialCommandType::MATERIAL_MODIFICATION, userID, MaterialID() ),
+    MaterialCommand( MaterialCommandType::MATERIAL_MODIFICATION, userID, ResourceID() ),
     parameterName_( parameterName )
 {
     addPackable( &parameterName_ );
 }
 
 
-AbstractMaterialModificationCommand::AbstractMaterialModificationCommand( UserID userID, MaterialID materialID, PackableMaterialParameterName parameterName ) :
+AbstractMaterialModificationCommand::AbstractMaterialModificationCommand( UserID userID, ResourceID materialID, PackableMaterialParameterName parameterName ) :
     MaterialCommand( MaterialCommandType::MATERIAL_MODIFICATION, userID, materialID ),
     parameterName_( parameterName )
 {

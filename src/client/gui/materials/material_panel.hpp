@@ -58,7 +58,7 @@ class MaterialPanel : public QFrame
         /***
          * 3. Getters
          ***/
-        MaterialID getMaterialID() const;
+        ResourceID getMaterialID() const;
 
 
         /***

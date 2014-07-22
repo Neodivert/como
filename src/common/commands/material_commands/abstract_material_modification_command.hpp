@@ -43,7 +43,7 @@ class AbstractMaterialModificationCommand : public MaterialCommand
          * 1. Construction
          ***/
         AbstractMaterialModificationCommand( UserID userID, PackableMaterialParameterName parameterName );
-        AbstractMaterialModificationCommand( UserID userID, MaterialID materialID, PackableMaterialParameterName parameterName );
+        AbstractMaterialModificationCommand( UserID userID, ResourceID materialID, PackableMaterialParameterName parameterName );
         AbstractMaterialModificationCommand( const AbstractMaterialModificationCommand& );
         AbstractMaterialModificationCommand( AbstractMaterialModificationCommand&& ) = delete;
 

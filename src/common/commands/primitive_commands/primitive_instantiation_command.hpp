@@ -21,7 +21,6 @@
 
 #include "primitive_command.hpp"
 #include <common/packables/ids/packable_resource_id.hpp>
-#include <common/packables/ids/packable_material_id.hpp>
 
 namespace como {
 
@@ -39,7 +38,7 @@ class PrimitiveInstantiationCommand : public PrimitiveCommand
          * 1. Construction
          ***/
         PrimitiveInstantiationCommand();
-        PrimitiveInstantiationCommand( UserID userID, ResourceID primitiveID, ResourceID drawableID, const MaterialID& materialID );
+        PrimitiveInstantiationCommand( UserID userID, ResourceID primitiveID, ResourceID drawableID, const ResourceID& materialID );
         PrimitiveInstantiationCommand( const PrimitiveInstantiationCommand& b );
         PrimitiveInstantiationCommand( PrimitiveInstantiationCommand&& ) = delete;
 

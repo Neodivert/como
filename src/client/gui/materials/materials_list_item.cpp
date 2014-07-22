@@ -24,7 +24,7 @@ namespace como {
  * 1. Construction
  ***/
 
-MaterialsListItem::MaterialsListItem( const MaterialID& id, const std::string& name ) :
+MaterialsListItem::MaterialsListItem( const ResourceID& id, const std::string& name ) :
     QListWidgetItem( name.c_str() ),
     materialID_( id )
 {}
@@ -34,7 +34,7 @@ MaterialsListItem::MaterialsListItem( const MaterialID& id, const std::string& n
  * 3. Getters
  ***/
 
-MaterialID MaterialsListItem::getMaterialID() const
+ResourceID MaterialsListItem::getMaterialID() const
 {
     return materialID_;
 }

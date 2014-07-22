@@ -139,7 +139,7 @@ void DrawablesManager::createMesh( ResourceID meshID, MeshVertexData vertexData,
 
 // FIXME: Duplicated code.
 /*
-void DrawablesManager::createRemoteMesh( ResourceID primitiveID, ResourceID drawableID, MaterialID materialID )
+void DrawablesManager::createRemoteMesh( ResourceID primitiveID, ResourceID drawableID, ResourceID materialID )
 {
     // Get the "absolute" path to the specification file of the
     // primitive used for building this mesh.
@@ -149,7 +149,7 @@ void DrawablesManager::createRemoteMesh( ResourceID primitiveID, ResourceID draw
     DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
 
     log_->debug( "Creating remote mesh - Drawable ID (", drawableID,
-                     ") MaterialID ", materialID, "\n" );
+                     ") ResourceID ", materialID, "\n" );
 
     // Add the mesh to the scene.
     addDrawable( drawableID.creatorID.getValue(), drawable, drawableID );

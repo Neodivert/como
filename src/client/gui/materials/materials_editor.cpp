@@ -45,19 +45,19 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
  * 3. ContainerObserver interface
  ***/
 
-void MaterialsEditor::onElementInsertion( MaterialID materialID )
+void MaterialsEditor::onElementInsertion( ResourceID materialID )
 {
     materialsList_->addMaterial( materialID,
                                  materialsManager_->getMaterial( materialID )->getName() );
 }
 
-void MaterialsEditor::onElementDeletion( MaterialID materialID )
+void MaterialsEditor::onElementDeletion( ResourceID materialID )
 {
     // TODO: Complete.
     Q_UNUSED( materialID );
 }
 
-void MaterialsEditor::onElementModification( MaterialID materialID )
+void MaterialsEditor::onElementModification( ResourceID materialID )
 {
     if( materialPanel_->isEnabled() && materialPanel_->getMaterialID() == materialID ){
         materialPanel_->refresh();

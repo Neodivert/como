@@ -23,7 +23,7 @@
 #include <map>
 #include <client/managers/materials/material_handler.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
-#include <common/ids/material_id.hpp>
+#include <common/ids/resource_id.hpp>
 #include <string>
 #include <QObject>
 #include <memory>
@@ -36,19 +36,19 @@
 
 namespace como {
 
-typedef std::map< MaterialID, UserID > MaterialsOwnershipMap;
+typedef std::map< ResourceID, UserID > MaterialsOwnershipMap;
 
-class MaterialsManager : public QObject, public Changeable, public ObservableContainer< MaterialID >, public Observer
+class MaterialsManager : public QObject, public Changeable, public ObservableContainer< ResourceID >, public Observer
 {
     Q_OBJECT
 
     private:
         DrawablesManagerPtr drawablesManager_;
 
-        std::map< MaterialID, MaterialPtr > materials_;
+        std::map< ResourceID, MaterialPtr > materials_;
         MaterialsOwnershipMap materialsOwners_;
 
-        MaterialID nextLocalMaterialID_;
+        ResourceID nextLocalMaterialID_;
         UserID localUserID_; // TODO: Use a reference or pointer to nextLocalMaterialID_.getCreatorID();
         ServerInterfacePtr server_;
         LogPtr log_;
@@ -75,11 +75,11 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
          * 3. Material creation
          ***/
     public:
-        MaterialID createMaterial( const MaterialInfo& materialInfo );
-        void createMaterials( const std::vector<MaterialInfo>& materialsInfo, MaterialID& firstMaterialID );
-        void createRemoteMaterials( const std::vector< MaterialInfo >& materialsInfo, const MaterialID& firstMaterialID );
+        ResourceID createMaterial( const MaterialInfo& materialInfo );
+        void createMaterials( const std::vector<MaterialInfo>& materialsInfo, ResourceID& firstMaterialID );
+        void createRemoteMaterials( const std::vector< MaterialInfo >& materialsInfo, const ResourceID& firstMaterialID );
     //private:
-        void createMaterial( MaterialID id, const MaterialInfo &materialInfo );
+        void createMaterial( ResourceID id, const MaterialInfo &materialInfo );
 
 
 
@@ -87,17 +87,17 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
          * 4. Material selection
          ***/
     public:
-        void selectMaterial( const MaterialID& id );
+        void selectMaterial( const ResourceID& id );
     private:
-        void selectMaterial( UserID userID, const MaterialID& id );
+        void selectMaterial( UserID userID, const ResourceID& id );
 
 
         /***
          * 5. Getters
          ***/
     public:
-        MaterialConstPtr getMaterial( const MaterialID& id ) const;
-        std::vector< MaterialConstPtr > getMaterials( const MaterialID& firstMaterialID, unsigned int nMaterials ) const;
+        MaterialConstPtr getMaterial( const ResourceID& id ) const;
+        std::vector< MaterialConstPtr > getMaterials( const ResourceID& firstMaterialID, unsigned int nMaterials ) const;
 
 
         /***
@@ -125,14 +125,14 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
          ***/
     signals:
         void materialSelectionConfirmed( MaterialHandlerPtr material );
-        void materialSelectionDenied( MaterialID material );
+        void materialSelectionDenied( ResourceID material );
 
 
         /***
          * 9. Auxiliar methods
          ***/
     public:
-        void highlightMaterial( MaterialID materialID );
+        void highlightMaterial( ResourceID materialID );
         void removeHighlights();
 };
 

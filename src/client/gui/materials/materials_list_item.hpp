@@ -20,7 +20,7 @@
 #define MATERIALS_LIST_ITEM_HPP
 
 #include <QListWidgetItem>
-#include <common/ids/material_id.hpp>
+#include <common/ids/resource_id.hpp>
 
 namespace como {
 
@@ -29,14 +29,14 @@ class MaterialsListItem : public QObject, public QListWidgetItem
     Q_OBJECT
 
     private:
-        MaterialID materialID_;
+        ResourceID materialID_;
 
     public:
         /***
          * 1. Construction
          ***/
         MaterialsListItem() = delete;
-        MaterialsListItem( const MaterialID& id, const std::string& name );
+        MaterialsListItem( const ResourceID& id, const std::string& name );
         MaterialsListItem( const MaterialsListItem& ) = delete;
         MaterialsListItem( MaterialsListItem&& ) = delete;
 
@@ -50,7 +50,7 @@ class MaterialsListItem : public QObject, public QListWidgetItem
         /***
          * 3. Getters
          ***/
-        MaterialID getMaterialID() const;
+        ResourceID getMaterialID() const;
 
 
         /***

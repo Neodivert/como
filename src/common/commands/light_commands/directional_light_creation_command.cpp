@@ -25,7 +25,7 @@ namespace como {
  ***/
 
 DirectionalLightCreationCommand::DirectionalLightCreationCommand() :
-    LightCreationCommand( LightType::DIRECTIONAL_LIGHT, NO_USER, NO_RESOURCE, PackableColor() ) // TODO: Remove MaterialID() and PackableColor()
+    LightCreationCommand( LightType::DIRECTIONAL_LIGHT, NO_USER, NO_RESOURCE, PackableColor() ) // TODO: Remove ResourceID() and PackableColor()
 {}
 
 

@@ -56,10 +56,8 @@ HEADERS += \
     ../../src/common/packables/array/packable_array_3.hpp \
     ../../src/common/packables/array/packable_color.hpp \
     ../../src/common/packables/abstract_packable_wrapper.hpp \
-    ../../src/common/ids/material_id.hpp \
     ../../src/common/commands/material_commands/material_command.hpp \
     ../../src/common/commands/material_commands/material_creation_command.hpp \
-    ../../src/common/packables/ids/packable_material_id.hpp \
     ../../src/common/commands/material_commands/material_commands.hpp \
     ../../src/common/commands/material_commands/material_modification_command.hpp \
     ../../src/common/commands/material_commands/abstract_material_modification_command.hpp \
@@ -128,10 +126,8 @@ SOURCES += \
     ../../src/common/commands/light_commands/directional_light_creation_command.cpp \
     ../../src/common/packables/packable_float.cpp \
     ../../src/common/packables/array/packable_color.cpp \
-    ../../src/common/ids/material_id.cpp \
     ../../src/common/commands/material_commands/material_command.cpp \
     ../../src/common/commands/material_commands/material_creation_command.cpp \
-    ../../src/common/packables/ids/packable_material_id.cpp \
     ../../src/common/commands/material_commands/abstract_material_modification_command.cpp \
     ../../src/common/commands/light_commands/light_command.cpp \
     ../../src/common/utilities/observer_pattern/observable.cpp \

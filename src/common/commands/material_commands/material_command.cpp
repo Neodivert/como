@@ -30,7 +30,7 @@ MaterialCommand::MaterialCommand( MaterialCommandType commandType ) :
     addPackable( &materialID_ );
 }
 
-MaterialCommand::MaterialCommand( MaterialCommandType commandType, UserID userID, const MaterialID& materialID ) :
+MaterialCommand::MaterialCommand( MaterialCommandType commandType, UserID userID, const ResourceID& materialID ) :
     TypeCommand( CommandTarget::MATERIAL, commandType, userID ),
     materialID_( materialID )
 {
@@ -49,7 +49,7 @@ MaterialCommand::MaterialCommand( const MaterialCommand& b ) :
  * 3. Getters
  ***/
 
-MaterialID MaterialCommand::getMaterialID() const
+ResourceID MaterialCommand::getMaterialID() const
 {
     return materialID_.getValue();
 }

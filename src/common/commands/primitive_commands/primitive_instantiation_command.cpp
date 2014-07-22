@@ -36,11 +36,11 @@ PrimitiveInstantiationCommand::PrimitiveInstantiationCommand() :
 }
 
 
-PrimitiveInstantiationCommand::PrimitiveInstantiationCommand( UserID userID, ResourceID primitiveID, ResourceID drawableID, const MaterialID& materialID ) :
+PrimitiveInstantiationCommand::PrimitiveInstantiationCommand( UserID userID, ResourceID primitiveID, ResourceID drawableID, const ResourceID& materialID ) :
     PrimitiveCommand( PrimitiveCommandType::PRIMITIVE_INSTANTIATION, userID, primitiveID ),
     primitiveID_( primitiveID ),
     meshID_( drawableID ),
-    materialID_( ResourceID( materialID.getCreatorID(), static_cast< ResourceIndex >( materialID.getMaterialIndex() ) ) )
+    materialID_( materialID )
 {
     addPackable( &primitiveID_ );
     addPackable( &meshID_ );

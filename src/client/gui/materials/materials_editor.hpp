@@ -28,7 +28,7 @@
 
 namespace como {
 
-class MaterialsEditor : public QFrame, public ContainerObserver< MaterialID >
+class MaterialsEditor : public QFrame, public ContainerObserver< ResourceID >
 {
     Q_OBJECT
 
@@ -56,9 +56,9 @@ class MaterialsEditor : public QFrame, public ContainerObserver< MaterialID >
         /***
          * 3. ContainerObserver interface
          ***/
-        virtual void onElementInsertion( MaterialID materialID );
-        virtual void onElementDeletion( MaterialID materialID );
-        virtual void onElementModification( MaterialID materialID );
+        virtual void onElementInsertion( ResourceID materialID );
+        virtual void onElementDeletion( ResourceID materialID );
+        virtual void onElementModification( ResourceID materialID );
 
 
         /***

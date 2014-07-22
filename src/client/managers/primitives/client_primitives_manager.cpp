@@ -82,7 +82,7 @@ ResourceID ClientPrimitivesManager::importMeshFile( std::string srcFilePath, Res
 void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 {
     MeshInfo meshInfo;
-    MaterialID firstMaterialID;
+    ResourceID firstMaterialID;
 
     PrimitiveFile::read( meshInfo, getPrimitiveFilePath( primitiveID ) );
 
@@ -100,7 +100,7 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 
 
 // FIXME: Duplicated code.
-void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID primitiveID, ResourceID meshID, MaterialID materialID )
+void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID primitiveID, ResourceID meshID, ResourceID materialID )
 {
     (void)( userID );
 
@@ -164,7 +164,7 @@ void ClientPrimitivesManager::executeRemoteCommand( PrimitiveCommandConstPtr com
             instantiatePrimitive( primitiveCommand->getUserID(),
                                   primitiveCommand->getPrimitiveID(),
                                   primitiveCommand->getMeshID(),
-                                  MaterialID( primitiveCommand->getMaterialID().getCreatorID(), static_cast< MaterialIndex >( primitiveCommand->getMaterialID().getResourceIndex() ) ) );
+                                  primitiveCommand->getMaterialID() );
         }break;
     }
 }
