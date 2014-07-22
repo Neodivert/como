@@ -41,7 +41,9 @@ class ViewportToolBar : public QToolBar
         /***
          * 2. Initialization
          ***/
+        QAction* createMaximizeAction() const;
         QComboBox* createViewSelector( Viewport* viewport, View currentView ) const;
+        QAction* createPerspectiveAction( Viewport* viewport ) const;
 
 
         /***

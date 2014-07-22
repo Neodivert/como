@@ -34,8 +34,6 @@ class ViewFrame : public QFrame
         // OpenGL rendering surface.
         Viewport* viewport;
         ViewportToolBar* toolbar_;
-        QComboBox* viewSelector;
-        QGroupBox* projectionModeSwitch;
 
     public:
         /***
@@ -45,7 +43,6 @@ class ViewFrame : public QFrame
         ViewFrame( const ViewFrame& ) = delete;
         ViewFrame( ViewFrame&& ) = delete;
         ViewFrame( View view, shared_ptr< ComoApp > comoApp );
-        QGroupBox* createProjectionSwitch();
 
         ~ViewFrame() = default;
 

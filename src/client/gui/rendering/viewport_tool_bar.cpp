@@ -28,26 +28,33 @@ namespace como {
 ViewportToolBar::ViewportToolBar( Viewport* viewport, View currentView ) :
     QToolBar( nullptr )
 {
-    QAction* currentAction = nullptr;
-
-    currentAction = new QAction( QString( "Maximize" ), nullptr );
-    currentAction->setCheckable( true );
-    QObject::connect( currentAction, &QAction::triggered, [this]( bool checked ){
-        if( checked ){
-            emit viewFrameMaximizationRequested();
-        }else{
-            emit viewFrameMinimizationRequested();
-        }
-    });
-    addAction( currentAction );
-
+    addAction( createMaximizeAction() );
     addWidget( createViewSelector( viewport, currentView ) );
+    addAction( createPerspectiveAction( viewport ) );
 }
 
 
 /***
  * 2. Initialization
  ***/
+
+QAction* ViewportToolBar::createMaximizeAction() const
+{
+    QAction* maximizeAction = nullptr;
+
+    maximizeAction = new QAction( QString( "Maximize" ), nullptr );
+    maximizeAction->setCheckable( true );
+    QObject::connect( maximizeAction, &QAction::triggered, [this]( bool checked ){
+        if( checked ){
+            emit viewFrameMaximizationRequested();
+        }else{
+            emit viewFrameMinimizationRequested();
+        }
+    });
+
+    return maximizeAction;
+}
+
 
 QComboBox* ViewportToolBar::createViewSelector( Viewport* viewport, View currentView ) const
 {
@@ -67,6 +74,23 @@ QComboBox* ViewportToolBar::createViewSelector( Viewport* viewport, View current
     });
 
     return viewSelector;
+}
+
+
+QAction *ViewportToolBar::createPerspectiveAction( Viewport* viewport ) const
+{
+    QAction* perspectiveAction = new QAction( "Perspective", nullptr );
+    perspectiveAction->setCheckable( true );
+
+    QObject::connect( perspectiveAction, &QAction::triggered, [=]( bool checked ){
+        if( checked ){
+            viewport->setProjection( Projection::PERSPECTIVE );
+        }else{
+            viewport->setProjection( Projection::ORTHO );
+        }
+    });
+
+    return perspectiveAction;
 }
 
 } // namespace como
