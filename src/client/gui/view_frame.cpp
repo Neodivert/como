@@ -63,7 +63,7 @@ ViewFrame::ViewFrame( View view, shared_ptr< ComoApp > comoApp ) :
 
     projectionModeSwitch = createProjectionSwitch();
 
-    toolbar_ = new ViewportToolBar( viewport );
+    toolbar_ = new ViewportToolBar( viewport, view );
 
     // When requested, forward the "viewFrameMaximizationRequested" and
     // "viewFrameMinimizationnRequested" signals to the outside.

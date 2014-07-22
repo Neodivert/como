@@ -20,11 +20,11 @@
 #define VIEW_PORT_TOOLBAR_HPP
 
 #include <client/gui/viewport.hpp>
-#include <QMenuBar>
+#include <QToolBar>
 
 namespace como {
 
-class ViewportToolBar : public QMenuBar
+class ViewportToolBar : public QToolBar
 {
     Q_OBJECT
 
@@ -33,26 +33,32 @@ class ViewportToolBar : public QMenuBar
          * 1. Construction
          ***/
         ViewportToolBar() = delete;
-        ViewportToolBar( Viewport* viewport );
+        ViewportToolBar( Viewport* viewport, View currentView );
         ViewportToolBar( const ViewportToolBar& ) = delete;
         ViewportToolBar( ViewportToolBar&& ) = delete;
 
 
         /***
-         * 2. Destruction
+         * 2. Initialization
+         ***/
+        QComboBox* createViewSelector( Viewport* viewport, View currentView ) const;
+
+
+        /***
+         * 3. Destruction
          ***/
         ~ViewportToolBar() = default;
 
 
         /***
-         * 3. Operators
+         * 4. Operators
          ***/
         ViewportToolBar& operator = ( const ViewportToolBar& ) = delete;
         ViewportToolBar& operator = ( ViewportToolBar&& ) = delete;
 
 
         /***
-         * 4. Signals
+         * 5. Signals
          ***/
     signals:
         void viewFrameMaximizationRequested();
