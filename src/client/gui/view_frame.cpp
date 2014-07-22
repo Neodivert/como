@@ -61,10 +61,19 @@ ViewFrame::ViewFrame( View view, shared_ptr< ComoApp > comoApp ) :
     // When comoApp::setAppMode() be invoked, change appMode selector's index.
     connect( viewport, &Viewport::viewIndexChanged, viewSelector, &QComboBox::setCurrentIndex );
 
-
     projectionModeSwitch = createProjectionSwitch();
 
     toolbar_ = new ViewportToolBar( viewport );
+
+    // When requested, forward the "viewFrameMaximizationRequested" and
+    // "viewFrameMinimizationnRequested" signals to the outside.
+    QObject::connect( toolbar_, &ViewportToolBar::viewFrameMaximizationRequested, [this](){
+        emit viewFrameMaximizationRequested( this );
+    });
+    QObject::connect( toolbar_, &ViewportToolBar::viewFrameMinimizationRequested, [this](){
+        emit viewFrameMinimizationRequested();
+    });
+
 
     // Set the ViewFrame's header layout.
     header = new QFrame;

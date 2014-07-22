@@ -63,6 +63,8 @@ class RenderPanel : public QFrame
          ***/
     public slots:
         void renderIfNeeded();
+        void maximizeViewFrame( ViewFrame* viewFrame );
+        void minimizeViewFrames();
 };
 
 } // namespace como

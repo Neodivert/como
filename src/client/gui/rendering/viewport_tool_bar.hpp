@@ -26,6 +26,8 @@ namespace como {
 
 class ViewportToolBar : public QToolBar
 {
+    Q_OBJECT
+
     public:
         /***
          * 1. Construction
@@ -47,6 +49,14 @@ class ViewportToolBar : public QToolBar
          ***/
         ViewportToolBar& operator = ( const ViewportToolBar& ) = delete;
         ViewportToolBar& operator = ( ViewportToolBar&& ) = delete;
+
+
+        /***
+         * 4. Signals
+         ***/
+    signals:
+        void viewFrameMaximizationRequested();
+        void viewFrameMinimizationRequested();
 };
 
 } // namespace como

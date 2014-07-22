@@ -28,6 +28,8 @@ namespace como {
 
 class ViewFrame : public QFrame
 {
+    Q_OBJECT
+
     private:
         // OpenGL rendering surface.
         Viewport* viewport;
@@ -61,6 +63,13 @@ class ViewFrame : public QFrame
     public slots:
         virtual void renderIfNeeded();
         virtual void render();
+
+        /***
+         * 4. Signals
+         ***/
+    signals:
+        void viewFrameMaximizationRequested( ViewFrame* viewFrame );
+        void viewFrameMinimizationRequested();
 };
 
 } // namespace como

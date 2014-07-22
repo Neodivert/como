@@ -29,9 +29,10 @@ RenderPanel::RenderPanel( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     QFrame( parent ),
     viewFrames_{ nullptr }
 {
-    QSplitter* vSplitter;
-    QSplitter* h1Splitter;
-    QSplitter* h2Splitter;
+    QSplitter* vSplitter = nullptr;
+    QSplitter* h1Splitter = nullptr;
+    QSplitter* h2Splitter = nullptr;
+    unsigned int i = 0;
 
     // Make this render panel share the given app's state.
     this->comoApp = comoApp;
@@ -61,6 +62,21 @@ RenderPanel::RenderPanel( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     // Create the Bottom right ViewFrame.
     viewFrames_[3] = new ViewFrame( View::FRONT, comoApp );
     h2Splitter->addWidget( viewFrames_[3] );
+
+    // Maximize a viewport or another if requested.
+    for( i = 0; i < 4; i++ ){
+        QObject::connect(
+                    viewFrames_[i],
+                    &ViewFrame::viewFrameMaximizationRequested,
+                    this,
+                    &RenderPanel::maximizeViewFrame );
+
+        QObject::connect(
+                    viewFrames_[i],
+                    &ViewFrame::viewFrameMinimizationRequested,
+                    this,
+                    &RenderPanel::minimizeViewFrames );
+    }
 
     // Set the render panel layout by using previous splitters.
     QHBoxLayout *layout = new QHBoxLayout;
@@ -93,6 +109,28 @@ void RenderPanel::renderIfNeeded()
         }else{
             viewFrames_[i]->renderIfNeeded();
         }
+    }
+}
+
+
+void RenderPanel::maximizeViewFrame( ViewFrame* viewFrame )
+{
+    unsigned int i;
+
+    for( i = 0; i < 4; i++ ){
+        if( viewFrames_[i] != viewFrame ){
+            viewFrames_[i]->hide();
+        }
+    }
+}
+
+
+void RenderPanel::minimizeViewFrames()
+{
+    unsigned int i;
+
+    for( i = 0; i < 4; i++ ){
+        viewFrames_[i]->show();
     }
 }
 

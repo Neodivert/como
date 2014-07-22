@@ -28,8 +28,18 @@ namespace como {
 ViewportToolBar::ViewportToolBar( Viewport* viewport )
 {
     (void)( viewport );
+    QAction* currentAction = nullptr;
 
-    addAction( "Maximize" );
+    currentAction = new QAction( QString( "Maximize" ), nullptr );
+    currentAction->setCheckable( true );
+    QObject::connect( currentAction, &QAction::triggered, [this]( bool checked ){
+        if( checked ){
+            emit viewFrameMaximizationRequested();
+        }else{
+            emit viewFrameMinimizationRequested();
+        }
+    } );
+    addAction( currentAction );
 }
 
 } // namespace como
