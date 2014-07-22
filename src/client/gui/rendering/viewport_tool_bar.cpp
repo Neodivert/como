@@ -25,7 +25,8 @@ namespace como {
  * 1. Construction
  ***/
 
-ViewportToolBar::ViewportToolBar( Viewport* viewport )
+ViewportToolBar::ViewportToolBar( Viewport* viewport ) :
+    QMenuBar( nullptr )
 {
     (void)( viewport );
     QAction* currentAction = nullptr;
@@ -40,6 +41,8 @@ ViewportToolBar::ViewportToolBar( Viewport* viewport )
         }
     } );
     addAction( currentAction );
+
+    setVisible( true );
 }
 
 } // namespace como

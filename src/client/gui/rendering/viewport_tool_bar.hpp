@@ -20,11 +20,11 @@
 #define VIEW_PORT_TOOLBAR_HPP
 
 #include <client/gui/viewport.hpp>
-#include <QToolBar>
+#include <QMenuBar>
 
 namespace como {
 
-class ViewportToolBar : public QToolBar
+class ViewportToolBar : public QMenuBar
 {
     Q_OBJECT
 

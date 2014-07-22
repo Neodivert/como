@@ -80,7 +80,6 @@ ViewFrame::ViewFrame( View view, shared_ptr< ComoApp > comoApp ) :
     headerLayout = new QHBoxLayout;
     headerLayout->addWidget( viewSelector );
     headerLayout->addWidget( projectionModeSwitch );
-    headerLayout->addWidget( toolbar_ );
     header->setLayout( headerLayout );
 
     // Set the ViewFrame layout.
