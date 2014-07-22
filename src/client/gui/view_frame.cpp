@@ -61,19 +61,23 @@ ViewFrame::ViewFrame( View view, shared_ptr< ComoApp > comoApp ) :
     // When comoApp::setAppMode() be invoked, change appMode selector's index.
     connect( viewport, &Viewport::viewIndexChanged, viewSelector, &QComboBox::setCurrentIndex );
 
-    //
+
     projectionModeSwitch = createProjectionSwitch();
+
+    toolbar_ = new ViewportToolBar( viewport );
 
     // Set the ViewFrame's header layout.
     header = new QFrame;
     headerLayout = new QHBoxLayout;
     headerLayout->addWidget( viewSelector );
     headerLayout->addWidget( projectionModeSwitch );
+    headerLayout->addWidget( toolbar_ );
     header->setLayout( headerLayout );
 
     // Set the ViewFrame layout.
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget( header );
+    layout->addWidget( toolbar_ );
     layout->addWidget( viewportWidget );
     setLayout(layout);
 

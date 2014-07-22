@@ -21,6 +21,7 @@
 
 #include <QFrame>
 #include "viewport.hpp"
+#include <client/gui/rendering/viewport_tool_bar.hpp>
 #include <client/managers/scene/scene.hpp>
 
 namespace como {
@@ -30,6 +31,7 @@ class ViewFrame : public QFrame
     private:
         // OpenGL rendering surface.
         Viewport* viewport;
+        ViewportToolBar* toolbar_;
         QComboBox* viewSelector;
         QGroupBox* projectionModeSwitch;
 
