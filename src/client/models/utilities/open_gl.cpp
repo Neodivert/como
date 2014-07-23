@@ -17,6 +17,7 @@
 ***/
 
 #include "open_gl.hpp"
+#include <cassert>
 
 namespace como {
 
@@ -24,86 +25,114 @@ GLint defaultShaderProgram_;
 GLint normalsShaderProgram_;
 
 OpenGL::OpenGL() :
-    currentShaderProgram_( -1 ),
-    defaultShaderProgram_( -1 ),
-    normalsShaderProgram_( -1 )
+    currentProgramID_( -1 )
 {
     // Load shaders
     msl::ShaderLoader* shaderLoader = msl::ShaderLoader::getInstance();
-    defaultShaderProgram_ = shaderLoader->loadShaderProgram( "data/shaders/basicVertexShader.shader",
-                                                             "data/shaders/basicFragmentShader.shader" );
-    normalsShaderProgram_ = shaderLoader->loadShaderProgram( "data/shaders/normals/vertex.shader",
-                                                             "data/shaders/normals/geometry.shader",
-                                                             "data/shaders/normals/fragment.shader" );
+
+    shaderProgramsIDs_[ ShaderProgramType::DEFAULT ] =
+            shaderLoader->loadShaderProgram( "data/shaders/basicVertexShader.shader",
+                                             "data/shaders/basicFragmentShader.shader" );
+    assert( shaderProgramsIDs_.at( ShaderProgramType::DEFAULT ) != -1 );
+
+    shaderProgramsIDs_[ ShaderProgramType::NORMALS ] =
+            shaderLoader->loadShaderProgram( "data/shaders/normals/vertex.shader",
+                                             "data/shaders/normals/geometry.shader",
+                                             "data/shaders/normals/fragment.shader" );
+    assert( shaderProgramsIDs_.at( ShaderProgramType::NORMALS ) != -1 );
+
     shaderLoader->destroy();
 
     // Start using the default shader program.
-    glUseProgram( defaultShaderProgram_ );
-
-    // Get the id for the current shader program.
-    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram_ );
-
-    if( currentShaderProgram_ == -1 ){
-        throw std::runtime_error( "current shader program == -1");
-    }
-
-    // Get location of uniform shader variables.
-    shaderVariablesLocations_[ShaderVariable::LIGHTING_ENABLED] =
-            getShaderVariableLocation( "lightingEnabled" );
-    shaderVariablesLocations_[ShaderVariable::TEXTURING_ENABLED] =
-            getShaderVariableLocation( "texturingEnabled" );
+    setShadingMode( ShadingMode::SOLID_LIGHTING_AND_TEXTURING );
 }
 
 
 /***
- * 3. Lighting
+ * 3. Setters
+ ***/
+
+void OpenGL::setShadingMode( ShadingMode shadingMode )
+{
+    switch( shadingMode ){
+        case ShadingMode::SOLID_LIGHTING_AND_TEXTURING:
+            setProgram( ShaderProgramType::DEFAULT );
+            enableLighting();
+            enableTexturing();
+        break;
+        case ShadingMode::SOLID_LIGHTING:
+            setProgram( ShaderProgramType::DEFAULT );
+            enableLighting();
+            enableTexturing();
+        break;
+        case ShadingMode::SOLID_PLAIN:
+            setProgram( ShaderProgramType::DEFAULT );
+            disableLighting();
+            disableTexturing();
+        break;
+        case ShadingMode::NORMALS:
+            setProgram( ShaderProgramType::NORMALS );
+        break;
+    }
+}
+
+
+void OpenGL::setProgram( ShaderProgramType program )
+{
+    if( currentProgramID_ != shaderProgramsIDs_.at( program) ){
+        currentProgramID_ = shaderProgramsIDs_.at( program );
+        glUseProgram( currentProgramID_ );
+    }
+}
+
+
+/***
+ * 4. Lighting
  ***/
 
 void OpenGL::enableLighting() const
 {
-    OpenGL::checkStatus( "Scene::enableLighting() - Begin" );
-    glUniform1i( shaderVariablesLocations_.at( ShaderVariable::LIGHTING_ENABLED ), 1 );
-    OpenGL::checkStatus( "After Scene::enableLighting() - End" );
+    GLint uniformLocation = getShaderVariableLocation( "lightingEnabled" );
+    glUniform1i( uniformLocation, 1 );
 }
 
 
 void OpenGL::disableLighting() const
 {
-    OpenGL::checkStatus( "Scene::disableLighting() - Begin" );
-    glUniform1i( shaderVariablesLocations_.at( ShaderVariable::LIGHTING_ENABLED ), 0 );
-    OpenGL::checkStatus( "Scene::disableLighting() - End" );
+    GLint uniformLocation = getShaderVariableLocation( "lightingEnabled" );
+    glUniform1i( uniformLocation, 0 );
 }
 
 
 /***
- * 4. Texturing
+ * 5. Texturing
  ***/
 
 void OpenGL::enableTexturing() const
 {
-    OpenGL::checkStatus( "Scene::enableTexturing() - Begin" );
-    glUniform1i( shaderVariablesLocations_.at( ShaderVariable::TEXTURING_ENABLED ), 1 );
-    OpenGL::checkStatus( "Scene::enableTexturing() - End" );
+    GLint uniformLocation = getShaderVariableLocation( "texturingEnabled" );
+    glUniform1i( uniformLocation, 1 );
 }
 
 
 void OpenGL::disableTexturing() const
 {
-    OpenGL::checkStatus( "Scene::disableTexturing() - Begin" );
-    glUniform1i( shaderVariablesLocations_.at( ShaderVariable::TEXTURING_ENABLED ), 0 );
-    OpenGL::checkStatus( "Scene::disableTexturing()" );
+    GLint uniformLocation = getShaderVariableLocation( "texturingEnabled" );
+    glUniform1i( uniformLocation, 0 );
 }
 
 
 /***
- * 5. Utilities
+ * 6. Utilities
  ***/
 
 GLint OpenGL::getShaderVariableLocation( string varName ) const
 {
     GLint varLocation = -1;
 
-    varLocation = glGetUniformLocation( currentShaderProgram_, varName.c_str() );
+    assert( currentProgramID_ != -1 );
+
+    varLocation = glGetUniformLocation( currentProgramID_, varName.c_str() );
 
     if( varLocation < 0 ){
         throw std::runtime_error( std::string( "Shader variable [" ) +
@@ -116,7 +145,7 @@ GLint OpenGL::getShaderVariableLocation( string varName ) const
 
 
 /***
- * 6. Checking
+ * 7. Checking
  ***/
 
 void OpenGL::checkStatus( std::string location )

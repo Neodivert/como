@@ -364,15 +364,13 @@ void Scene::draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect ) co
 {
     GLfloat WHITE_COLOR[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-    openGL_->disableTexturing();
-
     // Draw all the drawables.
-    openGL_->enableLighting();
     drawablesManager_->drawAll( openGL_, viewProjMatrix );
-    openGL_->disableLighting();
 
     // Draw a guide rect if asked.
     if( drawGuideRect != -1 ){
+        openGL_->setShadingMode( ShadingMode::SOLID_PLAIN );
+
         Mesh::sendMVPMatrixToShader( viewProjMatrix );
 
         // Change painting color to white.

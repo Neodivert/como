@@ -25,23 +25,26 @@
 
 namespace como {
 
-enum class ShaderVariable {
-    LIGHTING_ENABLED,
-    TEXTURING_ENABLED
+enum class ShaderProgramType {
+    DEFAULT,
+    NORMALS
+};
+
+enum class ShadingMode {
+    SOLID_LIGHTING_AND_TEXTURING,
+    SOLID_LIGHTING,
+    SOLID_PLAIN,
+    NORMALS
 };
 
 
 class OpenGL
 {
     private:
-        // ID of the current shader program.
-        GLint currentShaderProgram_;
+        // Index of the current shader program.
+        GLint currentProgramID_;
 
-        GLint defaultShaderProgram_;
-        GLint normalsShaderProgram_;
-
-        //
-        std::map< ShaderVariable, GLint > shaderVariablesLocations_;
+        std::map< ShaderProgramType, GLint > shaderProgramsIDs_;
 
     public:
         /***
@@ -59,21 +62,30 @@ class OpenGL
 
 
         /***
-         * 3. Lighting
+         * 3. Setters
+         ***/
+        void setShadingMode( ShadingMode shadingMode );
+
+
+    private:
+        void setProgram( ShaderProgramType program );
+
+        /***
+         * 4. Lighting
          ***/
         void enableLighting() const;
         void disableLighting() const;
 
 
         /***
-         * 4. Texturing
+         * 5. Texturing
          ***/
         void enableTexturing() const;
         void disableTexturing() const;
 
 
         /***
-         * 5. Utilities
+         * 6. Utilities
          ***/
     private:
         GLint getShaderVariableLocation( std::string varName ) const;
@@ -81,14 +93,14 @@ class OpenGL
 
 
         /***
-         * 6. Checking
+         * 7. Checking
          ***/
         static void checkStatus( std::string location );
         static std::string getOpenGLErrorString( GLenum errorCode );
 
 
         /***
-         * 7. Operators
+         * 8. Operators
          ***/
         OpenGL& operator = ( const OpenGL& ) = delete;
         OpenGL& operator = ( OpenGL&& ) = delete;

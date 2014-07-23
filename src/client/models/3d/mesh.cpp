@@ -355,9 +355,9 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
     OpenGL::checkStatus( "Mesh::draw - begin" );
 
     if( includesTexture_ ){
-        openGL->enableTexturing();
+        openGL->setShadingMode( ShadingMode::SOLID_LIGHTING_AND_TEXTURING );
     }else{
-        openGL->disableTexturing();
+        openGL->setShadingMode( ShadingMode::SOLID_LIGHTING );
     }
 
     // Compute MVP matrix and pass it to the shader.
@@ -380,7 +380,7 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
 
     // Set the color for the mesh's contour.
     if( contourColor != nullptr ){
-        openGL->disableLighting();
+        openGL->setShadingMode( ShadingMode::SOLID_PLAIN );
 
         glUniform4fv( uniformColorLocation, 1, contourColor );
 
@@ -394,8 +394,6 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
 
         // Return polygon mode to previos GL_FILL.
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-
-        openGL->enableLighting();
     }
 
     OpenGL::checkStatus( "Mesh::draw - end" );
