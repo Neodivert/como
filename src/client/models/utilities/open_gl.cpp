@@ -20,8 +20,26 @@
 
 namespace como {
 
-OpenGL::OpenGL()
+GLint defaultShaderProgram_;
+GLint normalsShaderProgram_;
+
+OpenGL::OpenGL() :
+    currentShaderProgram_( -1 ),
+    defaultShaderProgram_( -1 ),
+    normalsShaderProgram_( -1 )
 {
+    // Load shaders
+    msl::ShaderLoader* shaderLoader = msl::ShaderLoader::getInstance();
+    defaultShaderProgram_ = shaderLoader->loadShaderProgram( "data/shaders/basicVertexShader.shader",
+                                                             "data/shaders/basicFragmentShader.shader" );
+    normalsShaderProgram_ = shaderLoader->loadShaderProgram( "data/shaders/normals/vertex.shader",
+                                                             "data/shaders/normals/geometry.shader",
+                                                             "data/shaders/normals/fragment.shader" );
+    shaderLoader->destroy();
+
+    // Start using the default shader program.
+    glUseProgram( defaultShaderProgram_ );
+
     // Get the id for the current shader program.
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram_ );
 

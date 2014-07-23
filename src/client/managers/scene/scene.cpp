@@ -105,10 +105,7 @@ void Scene::initOpenGL()
     }
     oglFunctions->initializeOpenGLFunctions();
 
-    // Load shaders
-    msl::ShaderLoader* shaderLoader = msl::ShaderLoader::getInstance();
-    shaderLoader->loadMinimumShaderProgram( "data/shaders/basicVertexShader.shader", "data/shaders/basicFragmentShader.shader" );
-    shaderLoader->destroy();
+    openGL_ = OpenGLPtr( new OpenGL );
 
     // Set clear color.
     glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
@@ -116,8 +113,6 @@ void Scene::initOpenGL()
     // Set OpenGL depth test.
     glEnable( GL_DEPTH_TEST );
     glDepthFunc( GL_LEQUAL );
-
-    openGL_ = OpenGLPtr( new OpenGL );
 }
 
 

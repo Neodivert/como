@@ -25,7 +25,6 @@
 #include <common/utilities/log.hpp>
 #include <common/commands/commands.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
-#include <client/models/utilities/msl/src/shader_loader.hpp>
 #include <client/managers/drawables_selection/drawables_selection.hpp>
 #include <queue>
 #include <client/models/3d/lights/lights.hpp>

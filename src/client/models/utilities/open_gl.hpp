@@ -19,9 +19,9 @@
 #ifndef OPEN_GL_HPP
 #define OPEN_GL_HPP
 
-#include <client/models/utilities/msl/src/shader_loader.hpp>
 #include <map>
 #include <memory>
+#include <client/models/utilities/msl/src/shader_loader.hpp>
 
 namespace como {
 
@@ -30,11 +30,15 @@ enum class ShaderVariable {
     TEXTURING_ENABLED
 };
 
+
 class OpenGL
 {
     private:
         // ID of the current shader program.
         GLint currentShaderProgram_;
+
+        GLint defaultShaderProgram_;
+        GLint normalsShaderProgram_;
 
         //
         std::map< ShaderVariable, GLint > shaderVariablesLocations_;
