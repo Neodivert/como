@@ -390,11 +390,11 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     }
 
-    drawNormals( openGL, viewProjMatrix, glm::vec4( 1.0f, 0.0f, 0.0f, 0.0f ) );
+    drawVertexNormals( openGL, viewProjMatrix, glm::vec4( 1.0f, 0.0f, 0.0f, 0.0f ) );
 }
 
 
-void Mesh::drawNormals( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, glm::vec4 color ) const
+void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, glm::vec4 color ) const
 {
     (void)( viewProjMatrix );
     GLint currentProgram = -1;
