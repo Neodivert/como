@@ -21,6 +21,7 @@
 #include "tools_menu/tools_menu.hpp"
 #include "connection_wizard/connection_wizard.hpp"
 #include <client/gui/users/users_list.hpp>
+#include <client/gui/menu_bar.hpp>
 
 namespace como {
 
@@ -37,6 +38,8 @@ MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
 
     // Set window's title and dimensions.
     setWindowTitle( tr( "Cooperative Modeller" ) );
+
+    setMenuBar( new MenuBar( comoApp->getScene()->getDrawablesManager() ) );
 
     // Create a instance of Log.
     log_ = comoApp->getLog();

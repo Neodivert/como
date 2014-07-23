@@ -91,7 +91,8 @@ HEADERS += \
     ../../src/client/gui/primitives/primitive_import_dialog.hpp \
     ../../src/client/gui/resources/resource_selector.hpp \
     ../../src/client/models/3d/textures/texture.hpp \
-    ../../src/client/gui/rendering/viewport_tool_bar.hpp
+    ../../src/client/gui/rendering/viewport_tool_bar.hpp \
+    ../../src/client/gui/menu_bar.hpp
 
 
 # Client sources
@@ -146,4 +147,5 @@ SOURCES += \
     ../../src/client/gui/primitives/primitive_import_dialog.cpp \
     ../../src/client/gui/resources/resource_selector.cpp \
     ../../src/client/models/3d/textures/texture.cpp \
-    ../../src/client/gui/rendering/viewport_tool_bar.cpp
+    ../../src/client/gui/rendering/viewport_tool_bar.cpp \
+    ../../src/client/gui/menu_bar.cpp
