@@ -56,9 +56,6 @@ ViewFrame::ViewFrame( View view, shared_ptr< ComoApp > comoApp ) :
     layout->addWidget( toolbar_ );
     layout->addWidget( viewportWidget );
     setLayout(layout);
-
-    // When a render is requested, render!
-    OpenGL::checkStatus( "Viewframe - Constructor" );
 }
 
 
@@ -73,7 +70,9 @@ void ViewFrame::renderIfNeeded()
 
 void ViewFrame::render()
 {
+    OpenGL::checkStatus( "ViewFrame::render - begin" );
     viewport->render();
+    OpenGL::checkStatus( "ViewFrame::render - end" );
 }
 
 

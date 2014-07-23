@@ -38,6 +38,7 @@ Viewport::Viewport( View view, shared_ptr< ComoApp > comoApp ) :
     lastMouseWorldPos_( 0.0f )
 {
     try {
+        OpenGL::checkStatus( "Viewport constructor - begin" );
         GLint currentShaderProgram;
 
         // Make this canvas share the given app's state.
@@ -53,8 +54,6 @@ Viewport::Viewport( View view, shared_ptr< ComoApp > comoApp ) :
 
         comoApp->getScene()->getOpenGLContext()->makeCurrent( this );
 
-        OpenGL::checkStatus( "Viewport constructor, before creating the camera" );
-
         // Get location of uniform shader modelview matrix.
         if( viewProjectionMatrixLocation == -1 ){
             // Get current shader program id.
@@ -65,8 +64,6 @@ Viewport::Viewport( View view, shared_ptr< ComoApp > comoApp ) :
 
         // Create the camera.
         camera = new Camera( view );
-
-        OpenGL::checkStatus( "Viewport constructor, after creating the camera" );
 
         // Compute dimensions' inverses.
         if( width() ){
@@ -428,13 +425,11 @@ void Viewport::render()
     // Draw scene.
     comoApp->getScene()->draw( projectionMatrix*viewMatrix, static_cast< int >( comoApp->getTransformationMode() ) - 1 );
 
-    // Now we'll draw some elements that are already in world space, so we
-    // update MVP Matrix with a identity model matrix.
-    Mesh::sendMVPMatrixToShader( projectionMatrix*viewMatrix );
-
     // Draw guide rect
     if( ( comoApp->getTransformationType() == TransformationType::ROTATION ) ||
         ( comoApp->getTransformationType() == TransformationType::SCALE ) ){
+        comoApp->getScene()->getOpenGL()->setShadingMode( ShadingMode::SOLID_PLAIN );
+        Mesh::sendMVPMatrixToShader(  projectionMatrix*viewMatrix );
         comoApp->getScene()->drawTransformGuideLine();
     }
 
@@ -443,6 +438,8 @@ void Viewport::render()
 
     // Draw scene's world axis.
     glDisable( GL_DEPTH_TEST );
+    comoApp->getScene()->getOpenGL()->setShadingMode( ShadingMode::SOLID_PLAIN );
+    Mesh::sendMVPMatrixToShader(  projectionMatrix*viewMatrix );
     comoApp->getScene()->drawWorldAxis();
     glEnable( GL_DEPTH_TEST );
 

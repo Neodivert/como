@@ -39,8 +39,6 @@ void Camera::setView( View view )
     const float PI = glm::pi<float>();
     const float HALF_PI = glm::half_pi<float>();
 
-    OpenGL::checkStatus( "Camera::setView - 1" );
-
     switch( view ){
         case View::LEFT:
             transformationMatrix = glm::rotate( glm::mat4( 1.0f ), HALF_PI, Y_AXIS );
@@ -64,10 +62,7 @@ void Camera::setView( View view )
         break;
     }
 
-    OpenGL::checkStatus( "Camera::setView - 2" );
     update();
-
-    OpenGL::checkStatus( "Camera::setView - 3" );
 }
 
 

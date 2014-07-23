@@ -89,6 +89,7 @@ class Mesh : public Drawable
         // Mesh's material.
         std::vector< MaterialConstPtr > materials_;
 
+
         /***
          * 1. Construction.
          ***/
@@ -152,7 +153,9 @@ class Mesh : public Drawable
     public:
         // Send mesh to OpenGL server for rendering it.
         virtual void draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloat* contourColor = nullptr ) const;
-
+    private:
+        virtual void drawNormals( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, glm::vec4 color ) const;
+    public:
 
         /***
          * 9. Auxliar methods.

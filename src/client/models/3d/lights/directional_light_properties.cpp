@@ -38,8 +38,6 @@ DirectionalLightProperties::DirectionalLightProperties(
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
     assert( currentShaderProgram != 0 );
 
-    OpenGL::checkStatus( "DirectionalLight - constructor begin" );
-
     // Get the location of the DirectionalLight::lightIndex variable in shader.
     sprintf( uniformName, "directionalLights[%u].lightIndex", directionalLightIndex );
     lightIndexLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
@@ -63,8 +61,6 @@ DirectionalLightProperties::DirectionalLightProperties(
     // Initialize light vector in shader.
     setLightVector( lightVector );
     //setHalfVector( halfVector ); // TODO: Uncomment.
-
-    OpenGL::checkStatus( "DirectionalLight - constructor end" );
 }
 
 

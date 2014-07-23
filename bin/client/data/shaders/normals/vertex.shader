@@ -22,5 +22,7 @@ void main()
 {
 	// Transform vertex position and normal.
 	outVertex.pos = mvpMatrix * vec4( vPosition.xyz, 1.0f );
+	gl_Position = outVertex.pos;
 	outVertex.normal = normalize( normalMatrix * vNormal );
 }
+

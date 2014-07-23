@@ -312,6 +312,11 @@ ClientPrimitivesManagerPtr Scene::getPrimitivesManager() const
     return primitivesManager_;
 }
 
+OpenGLPtr Scene::getOpenGL() const
+{
+    return openGL_;
+}
+
 
 /***
  * 6. Setters
@@ -330,7 +335,6 @@ void Scene::setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny )
 
     glBindBuffer( GL_ARRAY_BUFFER, linesVBO );
     guideRectsBuffer = (GLfloat *)glMapBufferRange( GL_ARRAY_BUFFER, linesBufferOffsets[TRANSFORM_GUIDE_LINE]*3*sizeof( GLfloat ), 6*sizeof( GLfloat ), GL_MAP_WRITE_BIT );
-    OpenGL::checkStatus( "Scene::setTransformGuideLine" );
 
     for( ; i<3; i++ ){
         guideRectsBuffer[i] = origin[i];
@@ -370,7 +374,6 @@ void Scene::draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect ) co
     // Draw a guide rect if asked.
     if( drawGuideRect != -1 ){
         openGL_->setShadingMode( ShadingMode::SOLID_PLAIN );
-
         Mesh::sendMVPMatrixToShader( viewProjMatrix );
 
         // Change painting color to white.
@@ -383,8 +386,6 @@ void Scene::draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect ) co
         // Draw the guide rect.
         glDrawArrays( GL_LINES, linesBufferOffsets[GUIDE_AXIS] + (drawGuideRect << 1), 2 );
     }
-
-    OpenGL::checkStatus( "Scene::draw" );
 }
 
 
@@ -411,6 +412,8 @@ void Scene::drawWorldAxis() const
 
 void Scene::drawTransformGuideLine() const
 {
+    openGL_->setShadingMode( ShadingMode::SOLID_PLAIN );
+
     const GLfloat lineColor[4] =
     {
         0.0f, 1.0f, 0.0f, 1.0f

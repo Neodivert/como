@@ -27,6 +27,8 @@ GLint normalsShaderProgram_;
 OpenGL::OpenGL() :
     currentProgramID_( -1 )
 {
+    OpenGL::checkStatus( "OpenGL::OpenGL() - begin" );
+
     // Load shaders
     msl::ShaderLoader* shaderLoader = msl::ShaderLoader::getInstance();
 
@@ -45,6 +47,8 @@ OpenGL::OpenGL() :
 
     // Start using the default shader program.
     setShadingMode( ShadingMode::SOLID_LIGHTING_AND_TEXTURING );
+
+    OpenGL::checkStatus( "OpenGL::OpenGL() - end" );
 }
 
 
@@ -153,12 +157,13 @@ void OpenGL::checkStatus( std::string location )
     GLenum errorCode = glGetError();
 
     if( errorCode != GL_NO_ERROR ){
-        throw std::runtime_error( std::string( "OpenGL ERROR at [" ) +
-                                  location +
-                                  std::string( "]: " ) +
-                                  OpenGL::getOpenGLErrorString( errorCode ) +
-                                  std::string( "\n" )
-                                  );
+        std::string errorMessage =
+                std::string( "OpenGL ERROR at [" ) +
+                location +
+                std::string( "]: " ) +
+                OpenGL::getOpenGLErrorString( errorCode ) +
+                std::string( "\n" );
+        throw std::runtime_error( errorMessage );
     }
 }
 

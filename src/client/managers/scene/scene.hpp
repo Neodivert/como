@@ -131,6 +131,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public AbstractChange
         MaterialsManagerPtr getMaterialsManager() const;
         LightsManagerPtr getLightsManager() const;
         ClientPrimitivesManagerPtr getPrimitivesManager() const;
+        OpenGLPtr getOpenGL() const;
 
 
         /***

@@ -29,8 +29,6 @@ namespace como {
 
 Texture::Texture( const TextureInfo& textureInfo )
 {
-    OpenGL::checkStatus( "Texture constructor - begin" );
-
     SDL_Surface* textureImage = nullptr;
     SDL_RWops* textureData = nullptr;
 
@@ -42,13 +40,11 @@ Texture::Texture( const TextureInfo& textureInfo )
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, oglName_ );
 
-    OpenGL::checkStatus( "Texture constructor - before setting GL_UNPACK* parameters" );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
     //glPixelStorei( GL_UNPACK_ROW_LENGTH, 2 );
     //glPixelStorei( GL_UNPACK_IMAGE_HEIGHT, 2 );
     //glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-    OpenGL::checkStatus( "Texture constructor - after setting GL_UNPACK* parameters" );
 
     // Load texture data from memory.
     textureData = SDL_RWFromConstMem(
@@ -79,8 +75,6 @@ Texture::Texture( const TextureInfo& textureInfo )
     // Retrieve the location in shader of the texture sampler for futher
     // access.
     initSamplerShaderLocation();
-
-    OpenGL::checkStatus( "Texture constructor - end" );
 }
 
 

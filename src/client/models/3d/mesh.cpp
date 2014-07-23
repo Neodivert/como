@@ -110,21 +110,16 @@ Mesh::~Mesh()
 
 void Mesh::init( const MeshOpenGLData& oglData )
 {
-    OpenGL::checkStatus( "Mesh::init - 1" );
     genOpenGLBuffers();
-    OpenGL::checkStatus( "Mesh::init - 2" );
 
     initShaderLocations();
-    OpenGL::checkStatus( "Mesh::init - 3" );
 
     populateOpenGLBuffers( oglData );
-    OpenGL::checkStatus( "Mesh::init - 4" );
 
     includesTexture_ = oglData.includesTextures;
     componensPerVertex_ = oglData.componentsPerVertex;
 
     initVAO();
-    OpenGL::checkStatus( "Mesh::init - 5" );
 
     // Set both original and transformed centroids.
     originalCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
@@ -352,8 +347,6 @@ void Mesh::update()
 
 void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) const
 {
-    OpenGL::checkStatus( "Mesh::draw - begin" );
-
     if( includesTexture_ ){
         openGL->setShadingMode( ShadingMode::SOLID_LIGHTING_AND_TEXTURING );
     }else{
@@ -378,6 +371,7 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
                         ( std::intptr_t* )( polygonsGroup.firstTriangle * 3 * sizeof( GL_UNSIGNED_INT ) ) );
     }
 
+
     // Set the color for the mesh's contour.
     if( contourColor != nullptr ){
         openGL->setShadingMode( ShadingMode::SOLID_PLAIN );
@@ -396,7 +390,35 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     }
 
-    OpenGL::checkStatus( "Mesh::draw - end" );
+    drawNormals( openGL, viewProjMatrix, glm::vec4( 1.0f, 0.0f, 0.0f, 0.0f ) );
+}
+
+
+void Mesh::drawNormals( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, glm::vec4 color ) const
+{
+    (void)( viewProjMatrix );
+    GLint currentProgram = -1;
+    GLint colorUniformLocation = -1;
+
+    openGL->setShadingMode( ShadingMode::NORMALS );
+    sendMVPMatrixToShader( viewProjMatrix * transformationMatrix );
+
+    // We don't want to send UV coordinates to shader.
+    if( includesTexture_ ){
+        glDisableVertexAttribArray( SHADER_UV_ATTR_LOCATION );
+    }
+
+    glGetIntegerv( GL_CURRENT_PROGRAM, &currentProgram );
+    colorUniformLocation = glGetUniformLocation( currentProgram, "color" );
+    assert( currentProgram != -1 );
+    assert( colorUniformLocation != -1 );
+    glUniform4fv( colorUniformLocation, 1, &( color[0] ) );
+
+    glDrawArrays( GL_POINTS, 0, vertexData_.vertices.size() );
+
+    if( includesTexture_ ){
+        glEnableVertexAttribArray( SHADER_UV_ATTR_LOCATION );
+    }
 }
 
 
@@ -406,12 +428,22 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
 
 void Mesh::sendMVPMatrixToShader( const glm::mat4& mvpMatrix )
 {
+    GLint currentProgram = -1;
+    GLint uniformLocation = -1;
+
+    glGetIntegerv( GL_CURRENT_PROGRAM, &currentProgram );
+
     // Send the given MVP matrix to shader.
-    glUniformMatrix4fv( mvpMatrixLocation_, 1, GL_FALSE, &mvpMatrix[0][0] );
+    uniformLocation = glGetUniformLocation( currentProgram, "mvpMatrix" );
+    assert( uniformLocation != -1 );
+    glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, &mvpMatrix[0][0] );
 
     // Compute normal matrix and send it to shader.
     glm::mat3 normalMatrix = glm::mat3( glm::transpose( glm::inverse( mvpMatrix ) ) );
-    glUniformMatrix3fv( normalMatrixLocation_, 1, GL_FALSE, &normalMatrix[0][0] );
+
+    uniformLocation = glGetUniformLocation( currentProgram, "normalMatrix" );
+    assert( uniformLocation != -1 );
+    glUniformMatrix3fv( uniformLocation, 1, GL_FALSE, &normalMatrix[0][0] );
 }
 
 

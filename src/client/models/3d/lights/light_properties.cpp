@@ -49,8 +49,6 @@ LightProperties::LightProperties( LightType type, GLuint index, const PackableCo
     // Update light color in the shader.
     setLightColor( color );
     setAmbientCoefficient( 0.01f );
-
-    OpenGL::checkStatus( "MeshLight - Constructor end" );
 }
 
 
