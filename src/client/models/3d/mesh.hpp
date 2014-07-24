@@ -22,7 +22,7 @@
 /***
  * Includes
  ***/
-#include "drawable.hpp"
+#include "abstract_mesh.hpp"
 #include <vector>
 #include <array>
 #include <fstream>
@@ -47,7 +47,7 @@ enum class MeshType : std::uint8_t {
  * File main class
  ***/
 
-class Mesh : public Drawable
+class Mesh : public AbstractMesh
 {
     private:
         // Mesh type
@@ -136,7 +136,7 @@ class Mesh : public Drawable
          ***/
     public:
         MeshType getType() const ;
-        glm::vec4 getCentroid() const ;
+        virtual glm::vec4 getCentroid() const;
 
 
         /***

@@ -92,7 +92,8 @@ HEADERS += \
     ../../src/client/gui/resources/resource_selector.hpp \
     ../../src/client/models/3d/textures/texture.hpp \
     ../../src/client/gui/rendering/viewport_tool_bar.hpp \
-    ../../src/client/gui/menu_bar.hpp
+    ../../src/client/gui/menu_bar.hpp \
+    ../../src/client/models/3d/abstract_mesh.hpp
 
 
 # Client sources

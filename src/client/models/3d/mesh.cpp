@@ -44,7 +44,7 @@ const char DEFAULT_MESH_NAME[] = "Mesh #";
  ***/
 
 Mesh::Mesh( MeshType type, const char* filePath, MaterialConstPtr material ) :
-    Drawable( DrawableType::MESH, DEFAULT_MESH_NAME ),
+    AbstractMesh( DEFAULT_MESH_NAME ),
     type_( type ),
     displayVertexNormals_( false )
 {
@@ -60,7 +60,7 @@ Mesh::Mesh( MeshType type, const char* filePath, MaterialConstPtr material ) :
 
 
 Mesh::Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials ) :
-    Drawable( DrawableType::MESH, DEFAULT_MESH_NAME ),
+    AbstractMesh( DEFAULT_MESH_NAME ),
     type_( MeshType::MESH ),
     vertexData_( vertexData ),
     polygonsGroups_( polygonsGroups ),
