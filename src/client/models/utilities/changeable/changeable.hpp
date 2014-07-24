@@ -23,6 +23,8 @@
 
 namespace como {
 
+// TODO: Delete this class and AbstractChangeable and replace them by the
+// Observer pattern?
 class Changeable : public AbstractChangeable
 {
     private:

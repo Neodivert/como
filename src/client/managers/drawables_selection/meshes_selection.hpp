@@ -30,6 +30,11 @@ typedef std::map< ResourceID, MeshPtr > MeshesMap;
 class MeshesSelection;
 typedef std::shared_ptr< MeshesSelection > MeshesSelectionPtr;
 
+enum class ElementsMeetingCondition {
+    ALL,
+    NONE,
+    SOME
+};
 
 class MeshesSelection : public AbstractMesh
 {
@@ -59,6 +64,7 @@ class MeshesSelection : public AbstractMesh
         virtual glm::vec4 getCentroid() const;
         virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle ) const;
         virtual bool containsProperty( const void *property ) const;
+        virtual ElementsMeetingCondition displaysVertexNormals() const;
 
 
         /***

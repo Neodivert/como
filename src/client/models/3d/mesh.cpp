@@ -284,6 +284,12 @@ glm::vec4 Mesh::getCentroid() const
 }
 
 
+bool Mesh::displaysVertexNormals() const
+{
+    return displayVertexNormals_;
+}
+
+
 /***
  * 6. Setters
  ***/

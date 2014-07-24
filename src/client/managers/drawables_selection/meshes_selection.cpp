@@ -67,6 +67,31 @@ bool MeshesSelection::containsProperty( const void* property ) const
     return false;
 }
 
+ElementsMeetingCondition MeshesSelection::displaysVertexNormals() const
+{
+    // Check whether first mesh in the selection is displaying normals or not.
+    bool firstMeshDisplaysVertexNormals = false;
+    if( meshes_.size() ){
+        firstMeshDisplaysVertexNormals = meshes_.begin()->second->displaysVertexNormals();
+    }
+
+    // Check whether any other mesh in the selection isn't displaying vertex
+    // normals when the first mesh does so or viceversa.
+    for( auto mesh : meshes_ ){
+        if( mesh.second->displaysVertexNormals() != firstMeshDisplaysVertexNormals ){
+            return ElementsMeetingCondition::SOME;
+        }
+    }
+
+    // All the meshes are whether displaying normals or not, return the
+    // appropiate value.
+    if( firstMeshDisplaysVertexNormals ){
+        return ElementsMeetingCondition::ALL;
+    }else{
+        return ElementsMeetingCondition::NONE;
+    }
+}
+
 
 /***
  * 4. Setters
