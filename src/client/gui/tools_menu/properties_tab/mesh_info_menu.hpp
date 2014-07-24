@@ -21,6 +21,7 @@
 
 #include <QObject>
 #include <client/managers/drawables_selection/local_drawables_selection.hpp>
+#include <QCheckBox>
 
 namespace como {
 
@@ -59,7 +60,13 @@ class MeshInfoMenu : public QWidget
 
 
         /***
-         * 3. Refreshing
+         * 3. Initialization
+         ***/
+        QCheckBox* createVertexNormalsDisplayCheckBox( LocalDrawablesSelectionPtr userSelection ) const;
+
+
+        /***
+         * 4. Refreshing
          ***/
 
         /*! \brief Refresh the info about the user's selection properties */
@@ -67,7 +74,7 @@ class MeshInfoMenu : public QWidget
 
 
         /***
-         * 4. Operators
+         * 5. Operators
          ***/
 
         /*! \brief Copy assignment operator */

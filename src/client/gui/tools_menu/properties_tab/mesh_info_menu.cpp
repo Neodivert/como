@@ -17,6 +17,7 @@
 ***/
 
 #include "mesh_info_menu.hpp"
+#include <QRadioButton>
 
 namespace como {
 
@@ -35,12 +36,29 @@ MeshInfoMenu::MeshInfoMenu( LocalDrawablesSelectionPtr userSelection ) :
 
     // Add widgets to the layout and set it as the current one.
     layout->addRow( "Centroid position:", centroidPosition_ );
+    layout->addWidget( createVertexNormalsDisplayCheckBox( userSelection ) );
     setLayout( layout );
 }
 
 
 /***
- * 3. Refreshing
+ * 3. Initialization
+ ***/
+
+QCheckBox* MeshInfoMenu::createVertexNormalsDisplayCheckBox( LocalDrawablesSelectionPtr userSelection ) const
+{
+    QCheckBox* displayVertexNormalsCheckBox = new QCheckBox( "Display vertex normals" );
+
+    QObject::connect( displayVertexNormalsCheckBox, &QCheckBox::toggled, [=]( bool toggled ){
+        userSelection->displayVertexNormals( toggled );
+    });
+
+    return displayVertexNormalsCheckBox;
+}
+
+
+/***
+ * 4. Refreshing
  ***/
 
 void MeshInfoMenu::refresh()
