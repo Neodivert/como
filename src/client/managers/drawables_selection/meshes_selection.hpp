@@ -22,6 +22,7 @@
 #include <client/models/3d/mesh.hpp>
 #include <map>
 #include <common/ids/resource_id.hpp>
+#include <common/utilities/observer_pattern/observable.hpp>
 
 namespace como {
 
@@ -36,7 +37,7 @@ enum class ElementsMeetingCondition {
     SOME
 };
 
-class MeshesSelection : public AbstractMesh
+class MeshesSelection : public AbstractMesh, public Observable
 {
     private:
         MeshesMap meshes_;

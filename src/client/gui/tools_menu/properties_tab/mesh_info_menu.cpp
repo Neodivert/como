@@ -36,8 +36,10 @@ MeshInfoMenu::MeshInfoMenu( LocalDrawablesSelectionPtr userSelection ) :
 
     // Add widgets to the layout and set it as the current one.
     layout->addRow( "Centroid position:", centroidPosition_ );
-    layout->addWidget( createVertexNormalsDisplayCheckBox( userSelection ) );
+    layout->addWidget( createVertexNormalsDisplayGroupBox( userSelection->meshes() ) );
     setLayout( layout );
+
+    refresh();
 }
 
 
@@ -45,15 +47,34 @@ MeshInfoMenu::MeshInfoMenu( LocalDrawablesSelectionPtr userSelection ) :
  * 3. Initialization
  ***/
 
-QCheckBox* MeshInfoMenu::createVertexNormalsDisplayCheckBox( LocalDrawablesSelectionPtr userSelection ) const
+QGroupBox* MeshInfoMenu::createVertexNormalsDisplayGroupBox( MeshesSelection* meshesSelection )
 {
-    QCheckBox* displayVertexNormalsCheckBox = new QCheckBox( "Display vertex normals" );
+    QGroupBox* displayVertexNormalsGroupBox = nullptr;
+    QVBoxLayout* layout = nullptr;
 
-    QObject::connect( displayVertexNormalsCheckBox, &QCheckBox::toggled, [=]( bool toggled ){
-        userSelection->displayVertexNormals( toggled );
+    displayVertexNormalsAlways_ = new QRadioButton( "Always" );
+    QObject::connect( displayVertexNormalsAlways_, &QCheckBox::toggled, [=]( bool toggled ){
+        if( toggled ){
+            meshesSelection->displayVertexNormals( true );
+        }
     });
 
-    return displayVertexNormalsCheckBox;
+    displayVertexNormalsNever_ = new QRadioButton( "Never" );
+    QObject::connect( displayVertexNormalsNever_, &QCheckBox::toggled, [=]( bool toggled ){
+        if( toggled ){
+            meshesSelection->displayVertexNormals( false );
+        }
+    });
+
+    layout = new QVBoxLayout;
+    layout->addWidget( displayVertexNormalsAlways_ );
+    layout->addWidget( displayVertexNormalsNever_ );
+
+    meshesSelection->addObserver( this );
+
+    displayVertexNormalsGroupBox = new QGroupBox( "Display vertex normals" );
+    displayVertexNormalsGroupBox->setLayout( layout );
+    return displayVertexNormalsGroupBox;
 }
 
 
@@ -71,6 +92,33 @@ void MeshInfoMenu::refresh()
 
     // Write the previous "centroid string" to its corresponding label.
     centroidPosition_->setText( centroidStr );
+
+    switch( userSelection_->meshes()->displaysVertexNormals() ){
+        case ElementsMeetingCondition::ALL:
+            displayVertexNormalsAlways_->setChecked( true );
+        break;
+        case ElementsMeetingCondition::NONE:
+            displayVertexNormalsNever_->setChecked( true );
+        break;
+        case ElementsMeetingCondition::SOME:
+            // The "setAutoExclusive() trick" is necessary for being able to
+            // uncheck both radio buttons.
+            displayVertexNormalsAlways_->setAutoExclusive( false );
+            displayVertexNormalsNever_->setAutoExclusive( false );
+
+            displayVertexNormalsAlways_->setChecked( false );
+            displayVertexNormalsNever_->setChecked( false );
+
+            displayVertexNormalsAlways_->setAutoExclusive( true );
+            displayVertexNormalsNever_->setAutoExclusive( true );
+        break;
+    }
+}
+
+
+void MeshInfoMenu::update()
+{
+    refresh();
 }
 
 } // namespace como

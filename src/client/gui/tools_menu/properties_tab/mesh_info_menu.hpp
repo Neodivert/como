@@ -21,11 +21,11 @@
 
 #include <QObject>
 #include <client/managers/drawables_selection/local_drawables_selection.hpp>
-#include <QCheckBox>
+#include <QGroupBox>
 
 namespace como {
 
-class MeshInfoMenu : public QWidget
+class MeshInfoMenu : public QWidget, public Observer
 {
     Q_OBJECT
 
@@ -35,6 +35,10 @@ class MeshInfoMenu : public QWidget
 
         /*! Position of the user's selection centroid */
         QLabel* centroidPosition_;
+
+        QGroupBox* displayVertexNormalsGroupBox_;
+        QRadioButton* displayVertexNormalsAlways_;
+        QRadioButton* displayVertexNormalsNever_;
 
     public:
         /***
@@ -62,7 +66,7 @@ class MeshInfoMenu : public QWidget
         /***
          * 3. Initialization
          ***/
-        QCheckBox* createVertexNormalsDisplayCheckBox( LocalDrawablesSelectionPtr userSelection ) const;
+        QGroupBox* createVertexNormalsDisplayGroupBox( MeshesSelection* meshesSelection );
 
 
         /***
@@ -71,6 +75,8 @@ class MeshInfoMenu : public QWidget
 
         /*! \brief Refresh the info about the user's selection properties */
         void refresh();
+
+        virtual void update();
 
 
         /***

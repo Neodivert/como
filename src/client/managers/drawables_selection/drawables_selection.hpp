@@ -89,6 +89,7 @@ class DrawablesSelection : public Changeable
         std::string getName() const;
         std::string getTypeName() const;
         unsigned int getSize() const;
+        MeshesSelection* meshes();
 
 
         /*!

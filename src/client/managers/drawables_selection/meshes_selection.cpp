@@ -102,6 +102,7 @@ void MeshesSelection::displayVertexNormals( bool display )
     for( auto mesh : meshes_ ){
         mesh.second->displayVertexNormals( display );
     }
+    notifyObservers();
 }
 
 
@@ -112,18 +113,21 @@ void MeshesSelection::displayVertexNormals( bool display )
 void MeshesSelection::addMesh( const ResourceID& id, MeshPtr mesh )
 {
     meshes_[id] = mesh;
+    notifyObservers();
 }
 
 
 void MeshesSelection::removeMesh( const ResourceID& id )
 {
     meshes_.erase( id );
+    notifyObservers();
 }
 
 
 void MeshesSelection::clear()
 {
     meshes_.clear();
+    notifyObservers();
 }
 
 

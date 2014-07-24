@@ -208,6 +208,12 @@ unsigned int DrawablesSelection::getSize() const
 }
 
 
+MeshesSelection *DrawablesSelection::meshes()
+{
+    return &meshes_;
+}
+
+
 /***
  * 3. Setters
  ***/
