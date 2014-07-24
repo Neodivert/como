@@ -24,9 +24,16 @@
 
 namespace como {
 
-class MenuBar : public QMenuBar
+class MenuBar : public QMenuBar, public Observer
 {
     Q_OBJECT
+
+    private:
+        DrawablesManagerPtr drawablesManager_;
+
+        QAction* displayVertexNormalsAlways_;
+        QAction* displayVertexNormalsNever_;
+
 
     public:
         /***
@@ -48,13 +55,19 @@ class MenuBar : public QMenuBar
     public:
 
         /***
-         * 2. Destruction
+         * 3. Destruction
          ***/
         ~MenuBar() = default;
 
 
         /***
-         * 3. Operators
+         * 4. Updating
+         ***/
+        virtual void update();
+
+
+        /***
+         * 5. Operators
          ***/
         MenuBar& operator = ( const MenuBar& ) = delete;
         MenuBar& operator = ( MenuBar&& ) = delete;

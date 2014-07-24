@@ -96,6 +96,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         glm::vec3 getPivotPoint() const ;
         glm::vec3 getPivotPoint( UserID userID ) const ;
         bool existsDrawable( const ResourceID& id ) const;
+        ElementsMeetingCondition displaysVertexNormals() const;
 
 
         /***

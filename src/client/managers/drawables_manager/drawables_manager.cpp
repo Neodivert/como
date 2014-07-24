@@ -107,6 +107,25 @@ bool DrawablesManager::existsDrawable( const ResourceID& id ) const
 }
 
 
+ElementsMeetingCondition DrawablesManager::displaysVertexNormals() const
+{
+    const ElementsMeetingCondition firstSelectionValue =
+            drawablesSelections_.begin()->second->meshes()->displaysVertexNormals();
+
+    if( firstSelectionValue == ElementsMeetingCondition::SOME ){
+        return ElementsMeetingCondition::SOME;
+    }
+
+    for( auto drawablesSelection : drawablesSelections_ ){
+        if( drawablesSelection.second->meshes()->displaysVertexNormals() != firstSelectionValue ){
+            return ElementsMeetingCondition::SOME;
+        }
+    }
+
+    return firstSelectionValue;
+}
+
+
 /***
  * 4. Setters
  ***/
