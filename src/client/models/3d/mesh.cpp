@@ -45,7 +45,8 @@ const char DEFAULT_MESH_NAME[] = "Mesh #";
 
 Mesh::Mesh( MeshType type, const char* filePath, MaterialConstPtr material ) :
     Drawable( DrawableType::MESH, DEFAULT_MESH_NAME ),
-    type_( type )
+    type_( type ),
+    displayVertexNormals_( false )
 {
     MeshInfo meshInfo;
     PrimitiveFile::read( meshInfo, filePath );
@@ -63,7 +64,8 @@ Mesh::Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std:
     type_( MeshType::MESH ),
     vertexData_( vertexData ),
     polygonsGroups_( polygonsGroups ),
-    materials_( materials )
+    materials_( materials ),
+    displayVertexNormals_( false )
 {
     init( oglData );
 }
@@ -283,6 +285,16 @@ glm::vec4 Mesh::getCentroid() const
 
 
 /***
+ * 6. Setters
+ ***/
+
+void Mesh::displayVertexNormals( bool display )
+{
+    displayVertexNormals_ = display;
+}
+
+
+/***
  * 7. Intersections.
  ***/
 
@@ -390,7 +402,9 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     }
 
-    drawVertexNormals( openGL, viewProjMatrix, glm::vec4( 1.0f, 0.0f, 0.0f, 0.0f ) );
+    if( displayVertexNormals_ ){
+        drawVertexNormals( openGL, viewProjMatrix, glm::vec4( 1.0f, 0.0f, 0.0f, 0.0f ) );
+    }
 }
 
 

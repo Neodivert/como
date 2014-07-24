@@ -102,6 +102,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
          * 4. Setters
          ***/
         void displayEdges( MeshEdgesDisplayFrequency frequency );
+        void displayVertexNormals( bool display );
 
 
         /***

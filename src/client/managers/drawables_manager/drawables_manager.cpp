@@ -128,6 +128,15 @@ void DrawablesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
     }
 }
 
+
+void DrawablesManager::displayVertexNormals( bool display )
+{
+    for( auto drawablesSelection : drawablesSelections_ ){
+        drawablesSelection.second->displayVertexNormals( display );
+    }
+}
+
+
 /***
  * 5. Drawables administration
  ***/

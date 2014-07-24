@@ -89,6 +89,8 @@ class Mesh : public Drawable
         // Mesh's material.
         std::vector< MaterialConstPtr > materials_;
 
+        bool displayVertexNormals_;
+
 
         /***
          * 1. Construction.
@@ -136,6 +138,11 @@ class Mesh : public Drawable
         MeshType getType() const ;
         glm::vec4 getCentroid() const ;
 
+
+        /***
+         * 6. Setters
+         ***/
+        void displayVertexNormals( bool display );
 
         /***
          * 7. Intersections.

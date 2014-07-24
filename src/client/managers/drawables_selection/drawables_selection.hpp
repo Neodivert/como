@@ -109,6 +109,7 @@ class DrawablesSelection : public Changeable
          ***/
         virtual void setPivotPointMode( PivotPointMode pivotPointMode );
         void displayEdges( bool displayEdges );
+        void displayVertexNormals( bool display );
 
 
         /***

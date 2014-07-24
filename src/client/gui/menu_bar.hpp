@@ -44,6 +44,7 @@ class MenuBar : public QMenuBar
     private:
         QMenu* createViewMenu( DrawablesManager* drawablesManager );
         QMenu* createDisplayEdgesMenu( DrawablesManager* drawablesManager );
+        QMenu* createDisplayVertexNormalsMenu( DrawablesManager* drawablesManager );
     public:
 
         /***

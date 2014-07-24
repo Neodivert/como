@@ -42,6 +42,7 @@ QMenu* MenuBar::createViewMenu( DrawablesManager* drawablesManager )
     QMenu* viewMenu = new QMenu( "View" );
 
     viewMenu->addMenu( createDisplayEdgesMenu( drawablesManager ) );
+    viewMenu->addMenu( createDisplayVertexNormalsMenu( drawablesManager ) );
 
     return viewMenu;
 }
@@ -79,6 +80,41 @@ QMenu* MenuBar::createDisplayEdgesMenu( DrawablesManager* drawablesManager )
     displayEdgesMenu = new QMenu( "Display edges" );
     displayEdgesMenu->addActions( displayEdgesActionGroup->actions() );
     return displayEdgesMenu;
+}
+
+
+QMenu* MenuBar::createDisplayVertexNormalsMenu(DrawablesManager* drawablesManager)
+{
+    QMenu* displayVertexNormalsMenu = nullptr;
+    QActionGroup* displayVertexNormalsActionGroup = nullptr;
+    QAction* displayVertexNormalsAlways = nullptr;
+    QAction* displayVertexNormalsNever = nullptr;
+
+    // Create a menu action for displaying the edges always.
+    displayVertexNormalsAlways = new QAction( QString( "Always" ), nullptr );
+    displayVertexNormalsAlways->setCheckable( true );
+    QObject::connect( displayVertexNormalsAlways, &QAction::triggered, [=](){
+        drawablesManager->displayVertexNormals( true );
+    });
+
+    // Create a menu action for displaying the edges only when selected.
+    displayVertexNormalsNever = new QAction( QString( "Never" ), nullptr );
+    displayVertexNormalsNever->setCheckable( true );
+    QObject::connect( displayVertexNormalsNever, &QAction::triggered, [=](){
+        drawablesManager->displayVertexNormals( false );
+    });
+
+    // Include previous actions in a exclusive group of actions and set the
+    // default action.
+    displayVertexNormalsActionGroup = new QActionGroup( this );
+    displayVertexNormalsActionGroup->addAction( displayVertexNormalsAlways );
+    displayVertexNormalsActionGroup->addAction( displayVertexNormalsNever );
+    displayVertexNormalsNever->setChecked( true );
+
+    // Create a "Display edges" menu including previous actions.
+    displayVertexNormalsMenu = new QMenu( "Display vertex normals" );
+    displayVertexNormalsMenu->addActions( displayVertexNormalsActionGroup->actions() );
+    return displayVertexNormalsMenu;
 }
 
 } // namespace como

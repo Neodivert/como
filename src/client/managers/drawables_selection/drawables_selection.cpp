@@ -227,6 +227,17 @@ void DrawablesSelection::displayEdges( bool displayEdges )
     displayEdges_ = displayEdges;
 }
 
+void DrawablesSelection::displayVertexNormals( bool display )
+{
+    Mesh* currentMesh = nullptr;
+    for( auto drawable : drawables_ ){
+        currentMesh = dynamic_cast< Mesh* >( drawable.second.get() );
+        if( currentMesh ){
+            currentMesh->displayVertexNormals( display );
+        }
+    }
+}
+
 
 /***
  * 4. Transformations
