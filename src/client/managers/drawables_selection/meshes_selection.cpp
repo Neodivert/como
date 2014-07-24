@@ -21,7 +21,17 @@
 namespace como {
 
 /***
- * 3. Getters
+ * 1. Construction
+ ***/
+
+DrawablePtr MeshesSelection::clone()
+{
+    return DrawablePtr( new MeshesSelection( *this ) );
+}
+
+
+/***
+ * 2. Getters
  ***/
 
 glm::vec4 MeshesSelection::getCentroid() const
@@ -83,6 +93,12 @@ void MeshesSelection::addMesh( const ResourceID& id, MeshPtr mesh )
 void MeshesSelection::removeMesh( const ResourceID& id )
 {
     meshes_.erase( id );
+}
+
+
+void MeshesSelection::clear()
+{
+    meshes_.clear();
 }
 
 

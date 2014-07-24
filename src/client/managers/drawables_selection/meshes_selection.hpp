@@ -27,6 +27,10 @@ namespace como {
 
 typedef std::map< ResourceID, MeshPtr > MeshesMap;
 
+class MeshesSelection;
+typedef std::shared_ptr< MeshesSelection > MeshesSelectionPtr;
+
+
 class MeshesSelection : public AbstractMesh
 {
     private:
@@ -40,6 +44,7 @@ class MeshesSelection : public AbstractMesh
         MeshesSelection() = default;
         MeshesSelection( const MeshesSelection& ) = default;
         MeshesSelection( MeshesSelection&& ) = default;
+        virtual DrawablePtr clone();
 
 
         /***
@@ -67,6 +72,7 @@ class MeshesSelection : public AbstractMesh
          ***/
         void addMesh( const ResourceID& id, MeshPtr mesh );
         void removeMesh( const ResourceID& id );
+        void clear();
 
 
         /***

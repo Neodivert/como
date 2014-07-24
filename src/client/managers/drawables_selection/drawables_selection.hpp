@@ -27,6 +27,7 @@
 #include <mutex>
 #include <QObject>
 #include <client/models/utilities/changeable/changeable.hpp>
+#include "meshes_selection.hpp"
 
 namespace como {
 
@@ -49,6 +50,8 @@ class DrawablesSelection : public Changeable
     private:
         // Drawables in the selection.
         DrawablesMap drawables_;
+
+        MeshesSelection meshes_;
 
         // Selection border color.
         glm::vec4 borderColor_;

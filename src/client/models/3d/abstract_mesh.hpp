@@ -29,7 +29,6 @@ class AbstractMesh : public Drawable {
         /***
          * 1. Construction
          ***/
-        AbstractMesh() = delete;
         AbstractMesh( std::string name = "Unnamed" )
             : Drawable( DrawableType::MESH, name ){}
         AbstractMesh( const AbstractMesh& ) = default;
