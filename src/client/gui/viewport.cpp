@@ -439,7 +439,7 @@ void Viewport::render()
     // Draw scene's world axis.
     glDisable( GL_DEPTH_TEST );
     comoApp->getScene()->getOpenGL()->setShadingMode( ShadingMode::SOLID_PLAIN );
-    Mesh::sendMVPMatrixToShader(  projectionMatrix*viewMatrix );
+    Mesh::sendMVPMatrixToShader( viewMatrix );
     comoApp->getScene()->drawWorldAxis();
     glEnable( GL_DEPTH_TEST );
 
