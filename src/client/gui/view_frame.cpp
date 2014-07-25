@@ -24,11 +24,11 @@ namespace como {
  * 1. Initialization
  ***/
 
-ViewFrame::ViewFrame( View view, shared_ptr< ComoApp > comoApp ) :
+ViewFrame::ViewFrame( View view, Projection projection, shared_ptr< ComoApp > comoApp ) :
     QFrame()
 {
     // Create a OpenGL viewport and check OpenGL state.
-    viewport = new Viewport( view, comoApp );
+    viewport = new Viewport( view, projection, comoApp );
 
     // The viewport inherits from QWindow. In order to allow it to live inside a QWidget-based
     // application, we need to create a QWidget wrapper.

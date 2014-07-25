@@ -84,7 +84,7 @@ class Viewport : public QWindow
         Viewport() = delete;
         Viewport( const Viewport& ) = delete;
         Viewport( Viewport&& ) = delete;
-        Viewport( View view, shared_ptr< ComoApp > comoApp );
+        Viewport( View view, Projection projection, shared_ptr< ComoApp > comoApp );
 
         ~Viewport();
 

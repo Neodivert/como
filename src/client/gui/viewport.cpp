@@ -32,7 +32,7 @@ GLint Viewport::viewProjectionMatrixLocation = -1;
  * 1. Initialization and destruction
  ***/
 
-Viewport::Viewport( View view, shared_ptr< ComoApp > comoApp ) :
+Viewport::Viewport( View view, Projection projection, shared_ptr< ComoApp > comoApp ) :
     QWindow(),
     forceRender_( true ),
     lastMouseWorldPos_( 0.0f )
@@ -73,8 +73,8 @@ Viewport::Viewport( View view, shared_ptr< ComoApp > comoApp ) :
             heightInverse = 1.0f / height();
         }
 
-        // Set default projection.
-        setProjection( Projection::ORTHO );
+        // Set the requested projection.
+        setProjection( projection);
 
         OpenGL::checkStatus( "Viewport constructor - end" );
     }catch( std::exception& ex ){

@@ -42,7 +42,7 @@ class ViewFrame : public QFrame
         ViewFrame() = delete;
         ViewFrame( const ViewFrame& ) = delete;
         ViewFrame( ViewFrame&& ) = delete;
-        ViewFrame( View view, shared_ptr< ComoApp > comoApp );
+        ViewFrame( View view, Projection projection, shared_ptr< ComoApp > comoApp );
 
         ~ViewFrame() = default;
 
