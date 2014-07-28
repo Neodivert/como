@@ -34,6 +34,7 @@ GLint Viewport::viewProjectionMatrixLocation = -1;
 
 Viewport::Viewport( View view, Projection projection, shared_ptr< ComoApp > comoApp ) :
     QWindow(),
+    projection_( projection ),
     forceRender_( true ),
     lastMouseWorldPos_( 0.0f )
 {
@@ -67,17 +68,8 @@ Viewport::Viewport( View view, Projection projection, shared_ptr< ComoApp > como
         // Create the camera.
         camera = new Camera( view );
 
-        // Compute dimensions' inverses.
-        if( width() ){
-            widthInverse = 1.0f / width();
-        }
-        if( height() ){
-            heightInverse = 1.0f / height();
-        }
-
-        // Set the requested projection.
+        // Set the requested view.
         setView( view );
-        setProjection( projection);
 
         OpenGL::checkStatus( "Viewport constructor - end" );
     }catch( std::exception& ex ){
@@ -139,11 +131,6 @@ void Viewport::resizeEvent(QResizeEvent *event)
     // compiler from giving us a warning.
     Q_UNUSED(event);
 
-    // Render this viewport if it's exposed.
-    if( isExposed() ){
-        render();
-    }
-
     // Recompute the inverses of canvas' dimensions.
     if( width() ){
         widthInverse = 1.0f / width();
@@ -151,6 +138,10 @@ void Viewport::resizeEvent(QResizeEvent *event)
     if( height() ){
         heightInverse = 1.0f / height();
     }
+
+    // Projection matrix depends on viewport dimensions, so update it.
+    // TODO: remove this dependency and call setProjection() in constructor.
+    setProjection( projection_ );
 }
 
 
@@ -497,7 +488,7 @@ void Viewport::setProjection( Projection projection )
     projection_ = projection;
 
     // TODO: Make both projections share some connection.
-    switch( projection ){
+    switch( projection_ ){
         case Projection::ORTHO:
             projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f );
         break;
