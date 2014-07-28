@@ -82,6 +82,10 @@ QAction *ViewportToolBar::createPerspectiveAction( Viewport* viewport ) const
     QAction* perspectiveAction = new QAction( "Perspective", nullptr );
     perspectiveAction->setCheckable( true );
 
+    if( viewport->getProjection() == Projection::PERSPECTIVE ){
+        perspectiveAction->setChecked( true );
+    }
+
     QObject::connect( perspectiveAction, &QAction::triggered, [=]( bool checked ){
         if( checked ){
             viewport->setProjection( Projection::PERSPECTIVE );
