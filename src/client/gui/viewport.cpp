@@ -52,15 +52,17 @@ Viewport::Viewport( View view, Projection projection, shared_ptr< ComoApp > como
         destroy();
         create();
 
-        comoApp->getScene()->getOpenGLContext()->makeCurrent( this );
+        assert( comoApp->getScene()->getOpenGLContext()->makeCurrent( this ) );
 
         // Get location of uniform shader modelview matrix.
         if( viewProjectionMatrixLocation == -1 ){
             // Get current shader program id.
             glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+            assert( currentShaderProgram != 0 );
 
-            viewProjectionMatrixLocation = glGetUniformLocation( currentShaderProgram, "viewProjectionMatrix" );
+            viewProjectionMatrixLocation = glGetUniformLocation( currentShaderProgram, "mvpMatrix" );
         }
+        assert( viewProjectionMatrixLocation != -1 );
 
         // Create the camera.
         camera = new Camera( view );
@@ -503,7 +505,6 @@ void Viewport::setProjection( Projection projection )
             projectionMatrix =
                     glm::perspective( 45.0f, (float)(width())/(float)(height()), 0.1f, 100.0f ) *
                     glm::scale( glm::mat4( 1.0f ), glm::vec3( 1.0f, 1.0f, -1.0f ) );
-
         break;
     }
 
