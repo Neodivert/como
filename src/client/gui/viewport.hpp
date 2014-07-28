@@ -73,24 +73,31 @@ class Viewport : public QWindow
 
         glm::mat4 projectionMatrix;
 
+        View view_;
+        Projection projection_;
+
         bool forceRender_;
 
         glm::vec3 lastMouseWorldPos_;
 
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
         Viewport() = delete;
         Viewport( const Viewport& ) = delete;
         Viewport( Viewport&& ) = delete;
         Viewport( View view, Projection projection, shared_ptr< ComoApp > comoApp );
 
+
+        /***
+         * 2. Destruction
+         ***/
         ~Viewport();
 
 
         /***
-         * 2. Events
+         * 3. Events
          ***/
         virtual bool event( QEvent *event );
         virtual void exposeEvent( QExposeEvent* event );
@@ -102,7 +109,14 @@ class Viewport : public QWindow
 
 
         /***
-         * 3. Updating and drawing
+         * 4. Getters
+         ***/
+        View getView() const;
+        Projection getProjection() const;
+
+
+        /***
+         * 5. Updating and drawing
          ***/
         virtual void renderIfNeeded();
         virtual void render();
@@ -110,32 +124,36 @@ class Viewport : public QWindow
 
 
         /***
-         * 4. Operators
-         ***/
-        Viewport& operator=( const Viewport& ) = delete ;
-        Viewport& operator=( Viewport&& ) = delete;
-
-
-        /***
-         * 5. Signals
+         * 6. Signals
          ***/
     signals:
         void viewIndexChanged( int viewIndex );
 
+
         /***
-         * 6. Slots
+         * 7. Slots
          ***/
     public slots:
         void setView( View view );
         void setProjection( Projection projection );
         void forceRender();
 
+
         /***
-         * 7. Auxiliar methods
+         * 8. Auxiliar methods
          ***/
+    private:
         glm::vec2 getNormalizedMousePos( const int& x, const int& y ) const ;
         void traceRay( const GLfloat& x, const GLfloat& y, glm::vec3& rayOrigin, glm::vec3& rayDirection ) const ;
         void updateTransformGuideLine( const GLfloat& x, const GLfloat& y );
+
+
+        /***
+         * 9. Operators
+         ***/
+    public:
+        Viewport& operator=( const Viewport& ) = delete ;
+        Viewport& operator=( Viewport&& ) = delete;
 };
 
 } // namespace como

@@ -29,7 +29,7 @@ GLint Viewport::viewProjectionMatrixLocation = -1;
 
 
 /***
- * 1. Initialization and destruction
+ * 1. Construction
  ***/
 
 Viewport::Viewport( View view, Projection projection, shared_ptr< ComoApp > comoApp ) :
@@ -74,6 +74,7 @@ Viewport::Viewport( View view, Projection projection, shared_ptr< ComoApp > como
         }
 
         // Set the requested projection.
+        setView( view );
         setProjection( projection);
 
         OpenGL::checkStatus( "Viewport constructor - end" );
@@ -84,6 +85,10 @@ Viewport::Viewport( View view, Projection projection, shared_ptr< ComoApp > como
 }
 
 
+/***
+ * 2. Destruction
+ ***/
+
 Viewport::~Viewport()
 {
     delete camera;
@@ -93,7 +98,7 @@ Viewport::~Viewport()
 
 
 /***
- * 2. Events
+ * 3. Events
  ***/
 
 bool Viewport::event(QEvent *event)
@@ -392,7 +397,22 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 
 
 /***
- * 3. Updating and drawing
+ * 4. Getters
+ ***/
+
+View Viewport::getView() const
+{
+    return view_;
+}
+
+Projection Viewport::getProjection() const
+{
+    return projection_;
+}
+
+
+/***
+ * 5. Updating and drawing
  ***/
 
 void Viewport::renderIfNeeded()
@@ -451,11 +471,13 @@ void Viewport::render()
 
 
 /***
- * 6. Slots
+ * 7. Slots
  ***/
 
 void Viewport::setView( View view )
 {
+    view_ = view;
+
     comoApp->getScene()->getOpenGLContext()->makeCurrent( this );
     camera->setView( view );
 
@@ -470,6 +492,8 @@ void Viewport::setView( View view )
 
 void Viewport::setProjection( Projection projection )
 {
+    projection_ = projection;
+
     // TODO: Make both projections share some connection.
     switch( projection ){
         case Projection::ORTHO:
@@ -493,7 +517,7 @@ void Viewport::forceRender()
 
 
 /***
- * 7. Auxiliar methods
+ * 8. Auxiliar methods
  ***/
 
 glm::vec2 Viewport::getNormalizedMousePos( const int& x, const int& y ) const
