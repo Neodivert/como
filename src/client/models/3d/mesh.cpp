@@ -372,7 +372,7 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
     }
 
     // Compute MVP matrix and pass it to the shader.
-    sendMVPMatrixToShader( viewProjMatrix * transformationMatrix );
+    openGL->setMVPMatrix( viewProjMatrix * transformationMatrix );
 
     // Bind Mesh VAO and VBOs as the active ones.
     glBindVertexArray( vao );
@@ -421,7 +421,7 @@ void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewProjMatrix,
     GLint colorUniformLocation = -1;
 
     openGL->setShadingMode( ShadingMode::NORMALS );
-    sendMVPMatrixToShader( viewProjMatrix * transformationMatrix );
+    openGL->setMVPMatrix( viewProjMatrix * transformationMatrix );
 
     // We don't want to send UV coordinates to shader.
     if( includesTexture_ ){
@@ -439,31 +439,6 @@ void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewProjMatrix,
     if( includesTexture_ ){
         glEnableVertexAttribArray( SHADER_UV_ATTR_LOCATION );
     }
-}
-
-
-/***
- * 9. Auxliar methods.
- ***/
-
-void Mesh::sendMVPMatrixToShader( const glm::mat4& mvpMatrix )
-{
-    GLint currentProgram = -1;
-    GLint uniformLocation = -1;
-
-    glGetIntegerv( GL_CURRENT_PROGRAM, &currentProgram );
-
-    // Send the given MVP matrix to shader.
-    uniformLocation = glGetUniformLocation( currentProgram, "mvpMatrix" );
-    assert( uniformLocation != -1 );
-    glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, &mvpMatrix[0][0] );
-
-    // Compute normal matrix and send it to shader.
-    glm::mat3 normalMatrix = glm::mat3( glm::transpose( glm::inverse( mvpMatrix ) ) );
-
-    uniformLocation = glGetUniformLocation( currentProgram, "normalMatrix" );
-    assert( uniformLocation != -1 );
-    glUniformMatrix3fv( uniformLocation, 1, GL_FALSE, &normalMatrix[0][0] );
 }
 
 

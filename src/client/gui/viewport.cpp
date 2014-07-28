@@ -442,7 +442,7 @@ void Viewport::render()
     if( ( comoApp->getTransformationType() == TransformationType::ROTATION ) ||
         ( comoApp->getTransformationType() == TransformationType::SCALE ) ){
         comoApp->getScene()->getOpenGL()->setShadingMode( ShadingMode::SOLID_PLAIN );
-        Mesh::sendMVPMatrixToShader(  projectionMatrix*viewMatrix );
+        comoApp->getScene()->getOpenGL()->setMVPMatrix( projectionMatrix*viewMatrix );
         comoApp->getScene()->drawTransformGuideLine();
     }
 
@@ -452,7 +452,7 @@ void Viewport::render()
     // Draw scene's world axis.
     glDisable( GL_DEPTH_TEST );
     comoApp->getScene()->getOpenGL()->setShadingMode( ShadingMode::SOLID_PLAIN );
-    Mesh::sendMVPMatrixToShader( projectionMatrix * viewMatrix );
+    comoApp->getScene()->getOpenGL()->setMVPMatrix( projectionMatrix*viewMatrix );
     comoApp->getScene()->drawWorldAxis();
     glEnable( GL_DEPTH_TEST );
 

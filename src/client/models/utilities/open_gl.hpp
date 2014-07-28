@@ -22,6 +22,7 @@
 #include <map>
 #include <memory>
 #include <client/models/utilities/msl/src/shader_loader.hpp>
+#include <glm/glm.hpp>
 
 namespace como {
 
@@ -65,6 +66,7 @@ class OpenGL
          * 3. Setters
          ***/
         void setShadingMode( ShadingMode shadingMode );
+        void setMVPMatrix( const glm::mat4& mvpMatrix );
 
 
     private:
