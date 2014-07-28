@@ -25,11 +25,11 @@ namespace como {
  * 1. Construction
  ***/
 
-ViewportToolBar::ViewportToolBar( Viewport* viewport, View currentView ) :
+ViewportToolBar::ViewportToolBar( Viewport* viewport ) :
     QToolBar( nullptr )
 {
     addAction( createMaximizeAction() );
-    addWidget( createViewSelector( viewport, currentView ) );
+    addWidget( createViewSelector( viewport ) );
     addAction( createPerspectiveAction( viewport ) );
 }
 
@@ -56,7 +56,7 @@ QAction* ViewportToolBar::createMaximizeAction() const
 }
 
 
-QComboBox* ViewportToolBar::createViewSelector( Viewport* viewport, View currentView ) const
+QComboBox* ViewportToolBar::createViewSelector( Viewport* viewport ) const
 {
     QComboBox* viewSelector = new QComboBox;
 
@@ -65,7 +65,7 @@ QComboBox* ViewportToolBar::createViewSelector( Viewport* viewport, View current
     }
 
     // Select the given view.
-    viewSelector->setCurrentIndex( static_cast< int >( currentView ) );
+    viewSelector->setCurrentIndex( static_cast< int >( viewport->getView() ) );
 
     // When user change view in selector, call Viewport::setView().
     void (QComboBox::*signal)( int ) = &QComboBox::activated;

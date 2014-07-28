@@ -33,7 +33,7 @@ class ViewportToolBar : public QToolBar
          * 1. Construction
          ***/
         ViewportToolBar() = delete;
-        ViewportToolBar( Viewport* viewport, View currentView );
+        ViewportToolBar( Viewport* viewport );
         ViewportToolBar( const ViewportToolBar& ) = delete;
         ViewportToolBar( ViewportToolBar&& ) = delete;
 
@@ -42,7 +42,7 @@ class ViewportToolBar : public QToolBar
          * 2. Initialization
          ***/
         QAction* createMaximizeAction() const;
-        QComboBox* createViewSelector( Viewport* viewport, View currentView ) const;
+        QComboBox* createViewSelector( Viewport* viewport ) const;
         QAction* createPerspectiveAction( Viewport* viewport ) const;
 
 

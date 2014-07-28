@@ -40,7 +40,7 @@ ViewFrame::ViewFrame( View view, Projection projection, shared_ptr< ComoApp > co
     // Make the viewport ocuppy the maximum available space.
     viewportWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
-    toolbar_ = new ViewportToolBar( viewport, view );
+    toolbar_ = new ViewportToolBar( viewport );
 
     // When requested, forward the "viewFrameMaximizationRequested" and
     // "viewFrameMinimizationnRequested" signals to the outside.
