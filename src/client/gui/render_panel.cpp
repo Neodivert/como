@@ -60,7 +60,7 @@ RenderPanel::RenderPanel( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     h2Splitter->addWidget( viewFrames_[2] );
 
     // Create the Bottom right ViewFrame.
-    viewFrames_[3] = new ViewFrame( View::FRONT, Projection::ORTHO, comoApp );
+    viewFrames_[3] = new ViewFrame( View::CAMERA, Projection::PERSPECTIVE, comoApp );
     h2Splitter->addWidget( viewFrames_[3] );
 
     // Maximize a viewport or another if requested.

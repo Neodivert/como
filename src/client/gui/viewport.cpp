@@ -439,7 +439,7 @@ void Viewport::render()
     // Draw scene's world axis.
     glDisable( GL_DEPTH_TEST );
     comoApp->getScene()->getOpenGL()->setShadingMode( ShadingMode::SOLID_PLAIN );
-    Mesh::sendMVPMatrixToShader( viewMatrix );
+    Mesh::sendMVPMatrixToShader( projectionMatrix * viewMatrix );
     comoApp->getScene()->drawWorldAxis();
     glEnable( GL_DEPTH_TEST );
 
@@ -476,7 +476,10 @@ void Viewport::setProjection( Projection projection )
             projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f );
         break;
         case Projection::PERSPECTIVE:
-            projectionMatrix = glm::perspective( 45.0f, (float)(width())/(float)(height()), 0.1f, 100.0f );
+            projectionMatrix =
+                    glm::perspective( 45.0f, (float)(width())/(float)(height()), 0.1f, 100.0f ) *
+                    glm::scale( glm::mat4( 1.0f ), glm::vec3( 1.0f, 1.0f, -1.0f ) );
+
         break;
     }
 

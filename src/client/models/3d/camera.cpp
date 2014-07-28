@@ -59,7 +59,12 @@ void Camera::setView( View view )
             transformationMatrix = glm::rotate( glm::mat4( 1.0f ), PI, Y_AXIS );
         break;
         case View::CAMERA:
+            transformationMatrix =
+                    glm::rotate( glm::mat4( 1.0f ), -HALF_PI / 2.0f, Y_AXIS ) *
+                    glm::rotate( glm::mat4( 1.0f ), HALF_PI / 2.0f, X_AXIS ) *
+                    glm::translate( glm::mat4( 1.0f ), glm::vec3( 0.0f, 0.0f, -1.5f ) );
         break;
+
     }
 
     update();
