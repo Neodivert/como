@@ -60,6 +60,7 @@ class Drawable
         std::string name_;
 
     protected:
+        // TODO: Try to make these attributes private.
         std::array< glm::vec4, 3 > originalOrientation;
         std::array< glm::vec4, 3 > transformedOrientation;
 
@@ -101,6 +102,10 @@ class Drawable
 
 
         virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle = nullptr  ) const = 0;
+
+    private:
+        void applyTransformation( const glm::mat4& newTransformation );
+    public:
 
 
         /***
