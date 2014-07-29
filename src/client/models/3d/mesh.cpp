@@ -409,18 +409,18 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4&
     }
 
     if( displayVertexNormals_ ){
-        drawVertexNormals( openGL, viewMatrix, glm::vec4( 1.0f, 0.0f, 0.0f, 0.0f ) );
+        drawVertexNormals( openGL, viewMatrix, projectionMatrix, glm::vec4( 1.0f, 0.0f, 0.0f, 0.0f ) );
     }
 }
 
 
-void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, glm::vec4 color ) const
+void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, glm::vec4 color ) const
 {
     GLint currentProgram = -1;
     GLint colorUniformLocation = -1;
 
     openGL->setShadingMode( ShadingMode::NORMALS );
-    openGL->setMVPMatrix( transformationMatrix, viewMatrix, glm::mat4( 1.0f ) );
+    openGL->setMVPMatrix( transformationMatrix, viewMatrix, projectionMatrix );
 
     // We don't want to send UV coordinates to shader.
     if( includesTexture_ ){
