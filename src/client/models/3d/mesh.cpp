@@ -428,8 +428,8 @@ void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, con
     }
 
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentProgram );
-    colorUniformLocation = glGetUniformLocation( currentProgram, "color" );
     assert( currentProgram != 0 );
+    colorUniformLocation = glGetUniformLocation( currentProgram, "color" );
     assert( colorUniformLocation != -1 );
     glUniform4fv( colorUniformLocation, 1, &( color[0] ) );
 
