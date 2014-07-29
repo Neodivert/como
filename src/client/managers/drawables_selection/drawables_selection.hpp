@@ -163,7 +163,7 @@ class DrawablesSelection : public Changeable
         /***
          * 8. Drawing
          ***/
-        virtual void draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix ) const ;
+        virtual void draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const ;
 
 
         /***

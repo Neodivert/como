@@ -12,6 +12,6 @@ void main(){
 	gl_Position = inVertex[0].pos;
 	EmitVertex();
 
-	gl_Position = inVertex[0].pos + normalize( vec4( inVertex[0].normal.xyz, 0.0f ) );
+	gl_Position = inVertex[0].pos + vec4( normalize( inVertex[0].normal ), 0.0f );
 	EmitVertex();
 }

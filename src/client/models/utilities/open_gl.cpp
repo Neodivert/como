@@ -80,9 +80,11 @@ void OpenGL::setShadingMode( ShadingMode shadingMode )
     }
 }
 
-void OpenGL::setMVPMatrix( const glm::mat4& mvpMatrix )
+void OpenGL::setMVPMatrix( const glm::mat4& modelMatrix , const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix )
 {
     GLint uniformLocation = -1;
+    const glm::mat4& modelViewMatrix = viewMatrix * modelMatrix;
+    const glm::mat4& mvpMatrix = projectionMatrix * modelViewMatrix;
 
     // Send the given MVP matrix to shader.
     uniformLocation = glGetUniformLocation( currentProgramID_, "mvpMatrix" );
@@ -90,11 +92,13 @@ void OpenGL::setMVPMatrix( const glm::mat4& mvpMatrix )
     glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, &mvpMatrix[0][0] );
 
     // Compute normal matrix and send it to shader.
-    glm::mat3 normalMatrix = glm::mat3( glm::transpose( glm::inverse( mvpMatrix ) ) );
+    const glm::mat3 normalMatrix = glm::mat3( glm::transpose( glm::inverse( modelViewMatrix ) ) );
 
     uniformLocation = glGetUniformLocation( currentProgramID_, "normalMatrix" );
     assert( uniformLocation != -1 );
     glUniformMatrix3fv( uniformLocation, 1, GL_FALSE, &normalMatrix[0][0] );
+
+    checkStatus( "OpenGL::setMVPMatrix()" );
 }
 
 

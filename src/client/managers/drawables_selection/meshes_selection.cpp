@@ -135,10 +135,10 @@ void MeshesSelection::clear()
  * 6. Drawing
  ***/
 
-void MeshesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) const
+void MeshesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const GLfloat* contourColor ) const
 {
     for( auto mesh : meshes_ ){
-        mesh.second->draw( openGL, viewProjMatrix, contourColor );
+        mesh.second->draw( openGL, viewMatrix, projectionMatrix, contourColor );
     }
 }
 

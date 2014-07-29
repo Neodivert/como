@@ -436,13 +436,13 @@ void Viewport::render()
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     // Draw scene.
-    comoApp->getScene()->draw( projectionMatrix*viewMatrix, static_cast< int >( comoApp->getTransformationMode() ) - 1 );
+    comoApp->getScene()->draw( viewMatrix, projectionMatrix, static_cast< int >( comoApp->getTransformationMode() ) - 1 );
 
     // Draw guide rect
     if( ( comoApp->getTransformationType() == TransformationType::ROTATION ) ||
         ( comoApp->getTransformationType() == TransformationType::SCALE ) ){
         comoApp->getScene()->getOpenGL()->setShadingMode( ShadingMode::SOLID_PLAIN );
-        comoApp->getScene()->getOpenGL()->setMVPMatrix( projectionMatrix*viewMatrix );
+        comoApp->getScene()->getOpenGL()->setMVPMatrix( glm::mat4( 1.0f ), viewMatrix, projectionMatrix );
         comoApp->getScene()->drawTransformGuideLine();
     }
 
@@ -452,7 +452,7 @@ void Viewport::render()
     // Draw scene's world axis.
     glDisable( GL_DEPTH_TEST );
     comoApp->getScene()->getOpenGL()->setShadingMode( ShadingMode::SOLID_PLAIN );
-    comoApp->getScene()->getOpenGL()->setMVPMatrix( projectionMatrix*viewMatrix );
+    comoApp->getScene()->getOpenGL()->setMVPMatrix( glm::mat4( 1.0f ), viewMatrix, projectionMatrix );
     comoApp->getScene()->drawWorldAxis();
     glEnable( GL_DEPTH_TEST );
 

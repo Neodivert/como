@@ -340,13 +340,13 @@ ResourceID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3
  * 10. Drawing
  ***/
 
-void DrawablesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewProjMatrix ) const
+void DrawablesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
     DrawablesSelections::const_iterator it;
 
     // Draw the user's selections.
     for( it = drawablesSelections_.begin(); it != drawablesSelections_.end(); it++  ){
-        (it->second)->draw( openGL, viewProjMatrix );
+        (it->second)->draw( openGL, viewMatrix, projectionMatrix );
     }
 }
 

@@ -117,7 +117,7 @@ class Drawable
         virtual void update();
 
     public:
-        virtual void draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloat* contourColor = nullptr ) const = 0;
+        virtual void draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const GLfloat* contourColor = nullptr ) const = 0;
 
         /***
          * 6. Auxiliar methods

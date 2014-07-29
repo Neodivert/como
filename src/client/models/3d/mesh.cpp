@@ -363,7 +363,7 @@ void Mesh::update()
 }
 
 
-void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloat* contourColor ) const
+void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const GLfloat* contourColor ) const
 {
     if( includesTexture_ ){
         openGL->setShadingMode( ShadingMode::SOLID_LIGHTING_AND_TEXTURING );
@@ -372,7 +372,7 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
     }
 
     // Compute MVP matrix and pass it to the shader.
-    openGL->setMVPMatrix( viewProjMatrix * transformationMatrix );
+    openGL->setMVPMatrix( transformationMatrix, viewMatrix, projectionMatrix );
 
     // Bind Mesh VAO and VBOs as the active ones.
     glBindVertexArray( vao );
@@ -409,19 +409,18 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, const GLfloa
     }
 
     if( displayVertexNormals_ ){
-        drawVertexNormals( openGL, viewProjMatrix, glm::vec4( 1.0f, 0.0f, 0.0f, 0.0f ) );
+        drawVertexNormals( openGL, viewMatrix, glm::vec4( 1.0f, 0.0f, 0.0f, 0.0f ) );
     }
 }
 
 
-void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewProjMatrix, glm::vec4 color ) const
+void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, glm::vec4 color ) const
 {
-    (void)( viewProjMatrix );
     GLint currentProgram = -1;
     GLint colorUniformLocation = -1;
 
     openGL->setShadingMode( ShadingMode::NORMALS );
-    openGL->setMVPMatrix( viewProjMatrix * transformationMatrix );
+    openGL->setMVPMatrix( transformationMatrix, viewMatrix, glm::mat4( 1.0f ) );
 
     // We don't want to send UV coordinates to shader.
     if( includesTexture_ ){
@@ -430,7 +429,7 @@ void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewProjMatrix,
 
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentProgram );
     colorUniformLocation = glGetUniformLocation( currentProgram, "color" );
-    assert( currentProgram != -1 );
+    assert( currentProgram != 0 );
     assert( colorUniformLocation != -1 );
     glUniform4fv( colorUniformLocation, 1, &( color[0] ) );
 

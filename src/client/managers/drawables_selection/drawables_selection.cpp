@@ -499,7 +499,7 @@ bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, ResourceID& clos
  * 8. Drawing
  ***/
 
-void DrawablesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix ) const
+void DrawablesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
     DrawablesMap::const_iterator drawable;
 
@@ -516,9 +516,9 @@ void DrawablesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewProjMatrix
                 borderColor = borderColor_;
             }
 
-            drawable->second->draw( openGL, viewProjMatrix, &borderColor[0] );
+            drawable->second->draw( openGL, viewMatrix, projectionMatrix, &borderColor[0] );
         }else{
-            drawable->second->draw( openGL, viewProjMatrix, nullptr );
+            drawable->second->draw( openGL, viewMatrix, projectionMatrix, nullptr );
         }
     }
 

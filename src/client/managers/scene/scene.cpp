@@ -357,24 +357,24 @@ void Scene::takeOpenGLContext()
  * 10. Drawing
  ***/
 
-void Scene::drawIfChanged( const glm::mat4& viewProjMatrix, const int& drawGuideRect )
+void Scene::drawIfChanged( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const int& drawGuideRect )
 {
     if( hasChangedSinceLastQuery() ){
-        draw( viewProjMatrix, drawGuideRect );
+        draw( viewMatrix, projectionMatrix, drawGuideRect );
     }
 }
 
-void Scene::draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect ) const
+void Scene::draw( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const int& drawGuideRect ) const
 {
     GLfloat WHITE_COLOR[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
     // Draw all the drawables.
-    drawablesManager_->drawAll( openGL_, viewProjMatrix );
+    drawablesManager_->drawAll( openGL_, viewMatrix, projectionMatrix );
 
     // Draw a guide rect if asked.
     if( drawGuideRect != -1 ){
         openGL_->setShadingMode( ShadingMode::SOLID_PLAIN );
-        openGL_->setMVPMatrix( viewProjMatrix );
+        openGL_->setMVPMatrix( glm::mat4( 1.0f ), viewMatrix, projectionMatrix );
 
         // Change painting color to white.
         glUniform4fv( uniformColorLocation, 1, WHITE_COLOR );

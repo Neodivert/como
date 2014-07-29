@@ -155,8 +155,8 @@ class Scene : public QOffscreenSurface, public BasicScene, public AbstractChange
         /***
          * 10. Drawing
          ***/
-        void drawIfChanged( const glm::mat4& viewProjMatrix, const int& drawGuideRect = -1 );
-        void draw( const glm::mat4& viewProjMatrix, const int& drawGuideRect = -1 ) const ;
+        void drawIfChanged( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const int& drawGuideRect = -1 );
+        void draw( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const int& drawGuideRect = -1 ) const ;
         void drawWorldAxis() const ;
         void drawTransformGuideLine() const ;
 

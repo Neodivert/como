@@ -66,7 +66,7 @@ class OpenGL
          * 3. Setters
          ***/
         void setShadingMode( ShadingMode shadingMode );
-        void setMVPMatrix( const glm::mat4& mvpMatrix );
+        void setMVPMatrix( const glm::mat4& modelMatrix, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix );
 
 
     private:
