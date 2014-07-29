@@ -32,7 +32,8 @@ DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserI
     localUserID_( localUserID ),
     primitivesDirPath_( primitivesDirPath ),
     oglContext_( oglContext ),
-    log_( log )
+    log_( log ),
+    newMeshesDisplayVertexNormals_( false )
 {
     glm::vec4 selectionColor = localSelectionBorderColor.toVec4();
 
@@ -125,6 +126,17 @@ ElementsMeetingCondition DrawablesManager::displaysVertexNormals() const
     return firstSelectionValue;
 }
 
+unsigned int DrawablesManager::getTotalMeshes() const
+{
+    unsigned int totalMeshes = 0;
+
+    for( auto drawablesSelection : drawablesSelections_ ){
+        totalMeshes += drawablesSelection.second->meshes()->size();
+    }
+
+    return totalMeshes;
+}
+
 
 /***
  * 4. Setters
@@ -150,6 +162,8 @@ void DrawablesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
 
 void DrawablesManager::displayVertexNormals( bool display )
 {
+    newMeshesDisplayVertexNormals_ = display;
+
     for( auto drawablesSelection : drawablesSelections_ ){
         drawablesSelection.second->displayVertexNormals( display );
     }
@@ -177,7 +191,7 @@ void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, Resourc
 
 ResourceID DrawablesManager::createMesh( MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials )
 {
-    DrawablePtr mesh( new Mesh( vertexData, oglData, polygonsGroups, materials ) );
+    DrawablePtr mesh( new Mesh( vertexData, oglData, polygonsGroups, materials, newMeshesDisplayVertexNormals_ ) );
 
     return addDrawable( mesh );
 }
@@ -185,30 +199,11 @@ ResourceID DrawablesManager::createMesh( MeshVertexData vertexData, MeshOpenGLDa
 
 void DrawablesManager::createMesh( ResourceID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials )
 {
-    DrawablePtr mesh( new Mesh( vertexData, oglData, polygonsGroups, materials ) );
+    DrawablePtr mesh( new Mesh( vertexData, oglData, polygonsGroups, materials, newMeshesDisplayVertexNormals_ ) );
 
     addDrawable( meshID.getCreatorID(), mesh, meshID );
 }
 
-
-// FIXME: Duplicated code.
-/*
-void DrawablesManager::createRemoteMesh( ResourceID primitiveID, ResourceID drawableID, ResourceID materialID )
-{
-    // Get the "absolute" path to the specification file of the
-    // primitive used for building this mesh.
-    std::string primitivePath = primitivesManager_->getPrimitiveAbsolutePath( primitiveID, PrimitiveComponent::MESH );
-
-    // Create the mesh.
-    DrawablePtr drawable = DrawablePtr( new Mesh( primitivePath.c_str(), materialsManager_->getMaterial( materialID ) ) );
-
-    log_->debug( "Creating remote mesh - Drawable ID (", drawableID,
-                     ") ResourceID ", materialID, "\n" );
-
-    // Add the mesh to the scene.
-    addDrawable( drawableID.creatorID.getValue(), drawable, drawableID );
-}
-*/
 
 void DrawablesManager::deleteSelection()
 {

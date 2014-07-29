@@ -43,10 +43,10 @@ const char DEFAULT_MESH_NAME[] = "Mesh #";
  * 1. Construction.
  ***/
 
-Mesh::Mesh( MeshType type, const char* filePath, MaterialConstPtr material ) :
+Mesh::Mesh( MeshType type, const char* filePath, MaterialConstPtr material, bool displayVertexNormals ) :
     AbstractMesh( DEFAULT_MESH_NAME ),
     type_( type ),
-    displayVertexNormals_( false )
+    displayVertexNormals_( displayVertexNormals )
 {
     MeshInfo meshInfo;
     PrimitiveFile::read( meshInfo, filePath );
@@ -59,13 +59,13 @@ Mesh::Mesh( MeshType type, const char* filePath, MaterialConstPtr material ) :
 }
 
 
-Mesh::Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials ) :
+Mesh::Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials, bool displayVertexNormals ) :
     AbstractMesh( DEFAULT_MESH_NAME ),
     type_( MeshType::MESH ),
     vertexData_( vertexData ),
     polygonsGroups_( polygonsGroups ),
     materials_( materials ),
-    displayVertexNormals_( false )
+    displayVertexNormals_( displayVertexNormals )
 {
     init( oglData );
 }

@@ -93,6 +93,12 @@ ElementsMeetingCondition MeshesSelection::displaysVertexNormals() const
 }
 
 
+unsigned int MeshesSelection::size() const
+{
+    return meshes_.size();
+}
+
+
 /***
  * 4. Setters
  ***/

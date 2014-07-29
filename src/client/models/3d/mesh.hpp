@@ -96,12 +96,11 @@ class Mesh : public AbstractMesh
          * 1. Construction.
          ***/
     protected:
-        Mesh( MeshType type, const char* file, MaterialConstPtr material );
+        Mesh( MeshType type, const char* file, MaterialConstPtr material, bool displayVertexNormals = false );
     public:
-        Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials );
+        Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials, bool displayVertexNormals = false );
         Mesh( const Mesh& b ) = default;
         Mesh( Mesh&& ) = delete;
-
 
         virtual DrawablePtr clone();
 

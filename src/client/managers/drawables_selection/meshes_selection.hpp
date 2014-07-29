@@ -66,6 +66,7 @@ class MeshesSelection : public AbstractMesh, public Observable
         virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle ) const;
         virtual bool containsProperty( const void *property ) const;
         virtual ElementsMeetingCondition displaysVertexNormals() const;
+        unsigned int size() const;
 
 
         /***

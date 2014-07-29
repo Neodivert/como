@@ -65,6 +65,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
 
         LogPtr log_;
 
+        bool newMeshesDisplayVertexNormals_;
 
     protected:
         MeshEdgesDisplayFrequency meshEdgesDisplayFrequency_;
@@ -97,6 +98,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         glm::vec3 getPivotPoint( UserID userID ) const ;
         bool existsDrawable( const ResourceID& id ) const;
         ElementsMeetingCondition displaysVertexNormals() const;
+        unsigned int getTotalMeshes() const;
 
 
         /***
