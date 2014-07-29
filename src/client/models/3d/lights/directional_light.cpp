@@ -46,7 +46,7 @@ void DirectionalLight::update()
     Mesh::update();
 
     // Compute transformed light vector.
-    lightProperties_->setLightVector( glm::normalize( glm::vec3( transformationMatrix * glm::vec4( 0.0f, -1.0f, 0.0f, 0.0f ) ) ) );
+    lightProperties_->setLightVector( glm::normalize( glm::vec3( modelMatrix_ * glm::vec4( 0.0f, -1.0f, 0.0f, 0.0f ) ) ) );
 }
 
 

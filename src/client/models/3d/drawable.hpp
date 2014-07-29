@@ -59,12 +59,14 @@ class Drawable
         /*! Name given to the drawable */
         std::string name_;
 
+
     protected:
-        // TODO: Try to make these attributes private.
+        // TODO: Try to make these attributes private?.
         std::array< glm::vec4, 3 > originalOrientation;
         std::array< glm::vec4, 3 > transformedOrientation;
 
-        glm::mat4 transformationMatrix;
+        glm::mat4 modelMatrix_;
+
 
     public:
         /***
@@ -83,10 +85,11 @@ class Drawable
         /***
          * 2. Getters
          ***/
-        glm::mat4 getTransformationMatrix();
+        glm::mat4 getModelMatrix() const;
         virtual glm::vec4 getCentroid() const = 0;
         DrawableType getType() const;
         std::string getName() const;
+        virtual bool containsProperty( const void* property ) const = 0;
 
 
         /***
@@ -123,12 +126,6 @@ class Drawable
 
     public:
         virtual void draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const GLfloat* contourColor = nullptr ) const = 0;
-
-        /***
-         * 6. Auxiliar methods
-         ***/
-        static glm::vec4 transformScaleVector( glm::vec4 scaleVector, const glm::mat4& transformMatrix );
-        virtual bool containsProperty( const void* property ) const = 0;
 };
 
 

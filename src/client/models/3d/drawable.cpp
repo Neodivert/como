@@ -28,11 +28,9 @@ namespace como {
 
 Drawable::Drawable( DrawableType type, std::string name ) :
     type_( type ),
-    name_( name )
+    name_( name ),
+    modelMatrix_( 1.0f )
 {
-    // Initialize transformation matrixes to identity matrix.
-    transformationMatrix = glm::mat4( 1.0f );
-
     // Initialize the drawable's original orientation.
     originalOrientation[X] = glm::vec4( 1.0f, 0.0f, 0.0f, 1.0f );
     originalOrientation[Y] = glm::vec4( 0.0f, 1.0f, 0.0f, 1.0f );
@@ -44,9 +42,9 @@ Drawable::Drawable( DrawableType type, std::string name ) :
  * 2. Getters
  ***/
 
-glm::mat4 Drawable::getTransformationMatrix()
+glm::mat4 Drawable::getModelMatrix() const
 {
-    return transformationMatrix;
+    return modelMatrix_;
 }
 
 
@@ -118,7 +116,7 @@ void Drawable::applyTransformation( const glm::mat4& newTransformation )
     // Move the drawable from world to object space, then apply the new
     // transformation and finally move back the drawable from object to world
     // space.
-    transformationMatrix = newTransformation * transformationMatrix;
+    modelMatrix_ = newTransformation * modelMatrix_;
 
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.
@@ -132,48 +130,9 @@ void Drawable::applyTransformation( const glm::mat4& newTransformation )
 
 void Drawable::update()
 {
-    //transformationMatrix = rotationMatrix * translationMatrix;
-
     for( unsigned int i = 0; i<3; i++ ){
-        transformedOrientation[i] = transformationMatrix * originalOrientation[i];
+        transformedOrientation[i] = modelMatrix_ * originalOrientation[i];
     }
 }
-
-
-/***
- * 6. Auxiliar methods
- ***/
-
-glm::vec4 Drawable::transformScaleVector( glm::vec4 scaleVector, const glm::mat4& transformMatrix )
-{
-    glm::vec4 reversalVector;
-
-    // If a coordinate has been inverted, indicate it in the reversal vector.
-    if( scaleVector.x < 0.0f ){
-        reversalVector.x = 1.0f;
-    }
-    if( scaleVector.y < 0.0f ){
-        reversalVector.y = 1.0f;
-    }
-
-    // Transform the scale and the reversal vectors with the given transform matrix.
-    scaleVector = glm::inverse( transformMatrix ) * scaleVector;
-    reversalVector = glm::inverse( transformMatrix ) * reversalVector;
-
-    // When the transformation vector is moved from window to world space, some
-    // components can be inverted due to the rotations inherent to the space change.
-    // Because of that, we use the transformed reversal vector in order to know when a reversion
-    // is "true" (commanded by user) or "false" (due to space change).
-    for( unsigned int i=0; i<3; i++ ){
-        if( abs( reversalVector[i] ) > 0.00001f ){
-            scaleVector[i] = - abs( scaleVector[i] );
-        }else{
-            scaleVector[i] = abs( scaleVector[i] );
-        }
-    }
-
-    return scaleVector;
-}
-
 
 } // namespace como.

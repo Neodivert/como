@@ -344,10 +344,6 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                         break;
                     }
 
-                    // Transform the scale vector from window to world space.
-                    // TODO: Why isn't this nedeed anymore?.
-                    //transformVector = glm::vec3( Drawable::transformScaleVector( glm::vec4( transformVector, 1.0f ), glm::inverse( projectionMatrix * camera->getViewMatrix() ) ) );
-
                     // If requested, attach the tranformation vector to an axis.
                     switch( transformationMode ){
                         case TransformationMode::FIXED_X:

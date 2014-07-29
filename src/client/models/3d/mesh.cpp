@@ -314,8 +314,8 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
 
     // Transform the ray's origin and direction from world to object
     // coordinates.
-    rayOrigin = glm::vec3( glm::inverse( transformationMatrix ) * glm::vec4( rayOrigin, 1.0f ) );
-    rayDirection = glm::vec3( glm::inverse( transformationMatrix ) * glm::vec4( rayDirection, 0.0f ) );
+    rayOrigin = glm::vec3( glm::inverse( modelMatrix_ ) * glm::vec4( rayOrigin, 1.0f ) );
+    rayDirection = glm::vec3( glm::inverse( modelMatrix_ ) * glm::vec4( rayDirection, 0.0f ) );
 
     // Normalize the direction of the ray.
     rayDirection = glm::normalize( rayDirection );
@@ -359,7 +359,7 @@ void Mesh::update()
     Drawable::update();
 
     // Update mesh's centroid.
-    transformedCentroid = transformationMatrix * originalCentroid;
+    transformedCentroid = modelMatrix_ * originalCentroid;
 }
 
 
@@ -372,7 +372,7 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4&
     }
 
     // Compute MVP matrix and pass it to the shader.
-    openGL->setMVPMatrix( transformationMatrix, viewMatrix, projectionMatrix );
+    openGL->setMVPMatrix( modelMatrix_, viewMatrix, projectionMatrix );
 
     // Bind Mesh VAO and VBOs as the active ones.
     glBindVertexArray( vao );
@@ -420,7 +420,7 @@ void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, con
     GLint colorUniformLocation = -1;
 
     openGL->setShadingMode( ShadingMode::NORMALS );
-    openGL->setMVPMatrix( transformationMatrix, viewMatrix, projectionMatrix );
+    openGL->setMVPMatrix( modelMatrix_, viewMatrix, projectionMatrix );
 
     // We don't want to send UV coordinates to shader.
     if( includesTexture_ ){

@@ -41,25 +41,25 @@ void Camera::setView( View view )
 
     switch( view ){
         case View::LEFT:
-            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), HALF_PI, Y_AXIS );
+            modelMatrix_ = glm::rotate( glm::mat4( 1.0f ), HALF_PI, Y_AXIS );
         break;
         case View::RIGHT:
-            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), -HALF_PI, Y_AXIS );
+            modelMatrix_ = glm::rotate( glm::mat4( 1.0f ), -HALF_PI, Y_AXIS );
         break;
         case View::TOP:
-            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), HALF_PI, X_AXIS );
+            modelMatrix_ = glm::rotate( glm::mat4( 1.0f ), HALF_PI, X_AXIS );
         break;
         case View::BOTTOM:
-            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), -HALF_PI, X_AXIS );
+            modelMatrix_ = glm::rotate( glm::mat4( 1.0f ), -HALF_PI, X_AXIS );
         break;
         case View::FRONT:
-            transformationMatrix = glm::mat4( 1.0f );
+            modelMatrix_ = glm::mat4( 1.0f );
         break;
         case View::BACK:
-            transformationMatrix = glm::rotate( glm::mat4( 1.0f ), PI, Y_AXIS );
+            modelMatrix_ = glm::rotate( glm::mat4( 1.0f ), PI, Y_AXIS );
         break;
         case View::CAMERA:
-            transformationMatrix =
+            modelMatrix_ =
                     glm::rotate( glm::mat4( 1.0f ), -HALF_PI / 2.0f, Y_AXIS ) *
                     glm::rotate( glm::mat4( 1.0f ), HALF_PI / 2.0f, X_AXIS ) *
                     glm::translate( glm::mat4( 1.0f ), glm::vec3( 0.0f, 0.0f, -1.5f ) );
@@ -87,12 +87,12 @@ void Camera::update()
     Mesh::update();
 
     // Update transformed camera position and orientation.
-    transformedEye = transformationMatrix * originalEye;
-    transformedUp = transformationMatrix * originalUp;
-    transformedCenter = transformationMatrix * originalCenter;
+    transformedEye = modelMatrix_ * originalEye;
+    transformedUp = modelMatrix_ * originalUp;
+    transformedCenter = modelMatrix_ * originalCenter;
 
     // Update view matrix.
-    viewMatrix = glm::inverse( transformationMatrix );
+    viewMatrix = glm::inverse( modelMatrix_ );
 }
 
 
