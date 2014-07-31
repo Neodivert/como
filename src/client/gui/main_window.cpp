@@ -78,9 +78,9 @@ MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     // Set window layout.
     QHBoxLayout *layout = new QHBoxLayout;
 
-    layout->addWidget( toolsMenu );
-    layout->addWidget( renderPanel );
-    layout->addWidget( usersList );
+    layout->addWidget( toolsMenu, 10 );
+    layout->addWidget( renderPanel, 80 );
+    layout->addWidget( usersList, 10 );
 
     centralWidget()->setLayout( layout );
 }
