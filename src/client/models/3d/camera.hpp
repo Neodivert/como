@@ -41,13 +41,13 @@ const unsigned int N_VIEWS = 7;
 // Available views (strings for GUI output).
 const char viewStrings [N_VIEWS][16] =
 {
-    "Front view",
-    "Back view",
-    "Left view",
-    "Right view",
-    "Top view",
-    "Bottom view",
-    "Camera view"
+    "Front",
+    "Back",
+    "Left",
+    "Right",
+    "Top",
+    "Bottom",
+    "Camera"
 };
 
 class Camera : public Mesh

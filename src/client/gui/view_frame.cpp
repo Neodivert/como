@@ -41,6 +41,7 @@ ViewFrame::ViewFrame( View view, Projection projection, shared_ptr< ComoApp > co
     viewportWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
     toolbar_ = new ViewportToolBar( viewport );
+    toolbar_->setVisible( true );
 
     // When requested, forward the "viewFrameMaximizationRequested" and
     // "viewFrameMinimizationnRequested" signals to the outside.

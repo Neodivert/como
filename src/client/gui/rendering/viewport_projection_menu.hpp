@@ -16,15 +16,15 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef VIEW_PORT_TOOLBAR_HPP
-#define VIEW_PORT_TOOLBAR_HPP
+#ifndef VIEWPORT_PROJECTION_MENU_HPP
+#define VIEWPORT_PROJECTION_MENU_HPP
 
+#include <QMenu>
 #include <client/gui/viewport.hpp>
-#include <QMenuBar>
 
 namespace como {
 
-class ViewportToolBar : public QMenuBar
+class ViewportProjectionMenu : public QMenu
 {
     Q_OBJECT
 
@@ -32,39 +32,33 @@ class ViewportToolBar : public QMenuBar
         /***
          * 1. Construction
          ***/
-        ViewportToolBar( Viewport* viewport );
-        ViewportToolBar() = delete;
-        ViewportToolBar( const ViewportToolBar& ) = delete;
-        ViewportToolBar( ViewportToolBar&& ) = delete;
+        ViewportProjectionMenu( Viewport* viewport );
+        ViewportProjectionMenu() = delete;
+        ViewportProjectionMenu( const ViewportProjectionMenu& ) = delete;
+        ViewportProjectionMenu( ViewportProjectionMenu&& ) = delete;
 
 
         /***
-         * 2. Initialization
+         * 2. Destruction
          ***/
-        QAction* createMaximizeAction() const;
+        ~ViewportProjectionMenu() = default;
 
 
         /***
-         * 3. Destruction
+         * 3. Setters
          ***/
-        ~ViewportToolBar() = default;
+    public slots:
+        void setProjection( Projection projection );
 
 
         /***
          * 4. Operators
          ***/
-        ViewportToolBar& operator = ( const ViewportToolBar& ) = delete;
-        ViewportToolBar& operator = ( ViewportToolBar&& ) = delete;
-
-
-        /***
-         * 5. Signals
-         ***/
-    signals:
-        void viewFrameMaximizationRequested();
-        void viewFrameMinimizationRequested();
+    public:
+        ViewportProjectionMenu& operator = ( const ViewportProjectionMenu& ) = delete;
+        ViewportProjectionMenu& operator = ( ViewportProjectionMenu&& ) = delete;
 };
 
 } // namespace como
 
-#endif // VIEW_PORT_TOOLBAR_HPP
+#endif // VIEWPORT_PROJECTION_MENU_HPP

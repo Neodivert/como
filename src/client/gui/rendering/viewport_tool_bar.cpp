@@ -17,6 +17,8 @@
 ***/
 
 #include "viewport_tool_bar.hpp"
+#include "viewport_view_menu.hpp"
+#include "viewport_projection_menu.hpp"
 
 namespace como {
 
@@ -26,11 +28,11 @@ namespace como {
  ***/
 
 ViewportToolBar::ViewportToolBar( Viewport* viewport ) :
-    QToolBar( nullptr )
+    QMenuBar( nullptr )
 {
+    addMenu( new ViewportViewMenu( viewport ) );
+    addMenu( new ViewportProjectionMenu( viewport ) );
     addAction( createMaximizeAction() );
-    addWidget( createViewSelector( viewport ) );
-    addAction( createPerspectiveAction( viewport ) );
 }
 
 
@@ -53,48 +55,6 @@ QAction* ViewportToolBar::createMaximizeAction() const
     });
 
     return maximizeAction;
-}
-
-
-QComboBox* ViewportToolBar::createViewSelector( Viewport* viewport ) const
-{
-    QComboBox* viewSelector = new QComboBox;
-
-    for( auto viewString : viewStrings ){
-        viewSelector->addItem( tr( viewString ) );
-    }
-
-    // Select the given view.
-    viewSelector->setCurrentIndex( static_cast< int >( viewport->getView() ) );
-
-    // When user change view in selector, call Viewport::setView().
-    void (QComboBox::*signal)( int ) = &QComboBox::activated;
-    connect( viewSelector, signal, [=]( int index ) {
-        viewport->setView( static_cast< View >( index ) );
-    });
-
-    return viewSelector;
-}
-
-
-QAction *ViewportToolBar::createPerspectiveAction( Viewport* viewport ) const
-{
-    QAction* perspectiveAction = new QAction( "Perspective", nullptr );
-    perspectiveAction->setCheckable( true );
-
-    if( viewport->getProjection() == Projection::PERSPECTIVE ){
-        perspectiveAction->setChecked( true );
-    }
-
-    QObject::connect( perspectiveAction, &QAction::triggered, [=]( bool checked ){
-        if( checked ){
-            viewport->setProjection( Projection::PERSPECTIVE );
-        }else{
-            viewport->setProjection( Projection::ORTHO );
-        }
-    });
-
-    return perspectiveAction;
 }
 
 } // namespace como
