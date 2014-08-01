@@ -327,9 +327,15 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
 
                     // Give an affirmative response to the user's selection if the
                     // desired drawable isn't selected by anyone (User ID = 0).
-                    users_.at( sceneCommand->getUserID() );
-                    log_->debug( "Selecting drawable (", (int)( selectDrawable->getResourceID().getCreatorID() ), ", ", (int)( selectDrawable->getResourceID().getResourceIndex() ), ")\n" );
-                    users_.at( sceneCommand->getUserID() )->addSelectionResponse( drawableOwners_.at( selectDrawable->getResourceID() ) == 0 );
+                    if( drawableOwners_.at( selectDrawable->getResourceID() ) == 0 ){
+                        users_.at( sceneCommand->getUserID() )->addSelectionResponse( true );
+                        drawableOwners_.at( selectDrawable->getResourceID() ) = sceneCommand->getUserID();
+
+                        log_->debug( "Drawable (", selectDrawable->getResourceID(), ")  selected by user (", drawableOwners_.at( selectDrawable->getResourceID() ), ")\n" );
+                    }else{
+                        users_.at( sceneCommand->getUserID() )->addSelectionResponse( false );
+                        return;
+                    }
                 break;
             }
         break;
