@@ -146,15 +146,10 @@ void DrawablesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
 {
     switch( frequency ){
         case MeshEdgesDisplayFrequency::ALWAYS:
-            for( auto drawablesSelection : drawablesSelections_ ){
-                drawablesSelection.second->displayEdges( true );
-            }
+            nonSelectedDrawables_->displayEdges( true );
         break;
         case MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED:
-            for( auto drawablesSelection : drawablesSelections_ ){
-                drawablesSelection.second->displayEdges( false );
-            }
-            localDrawablesSelection_->displayEdges( true );
+            nonSelectedDrawables_->displayEdges( false );
         break;
     }
 }

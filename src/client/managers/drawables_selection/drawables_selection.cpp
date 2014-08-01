@@ -30,7 +30,7 @@ DrawablesSelection::DrawablesSelection( glm::vec4 borderColor ) :
     centroid_( 0.0f, 0.0f, 0.0f, 1.0f ),
     pivotPointMode_( PivotPointMode::MEDIAN_POINT ),
     highlightedProperty_( nullptr ),
-    displayEdges_( false )
+    displayEdges_( true )
 {
 }
 
