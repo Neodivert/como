@@ -36,18 +36,6 @@ ResourceID::ResourceID(UserID creatorID, ResourceIndex resourceIndex) :
 {}
 
 
-ResourceID::ResourceID( const ResourceID& b ) :
-    creatorID_( b.creatorID_ ),
-    resourceIndex_( b.resourceIndex_ )
-{}
-
-
-ResourceID::ResourceID( ResourceID&& b ) :
-    creatorID_( b.creatorID_ ),
-    resourceIndex_( b.resourceIndex_ )
-{}
-
-
 /***
  * 3. Getters
  ***/

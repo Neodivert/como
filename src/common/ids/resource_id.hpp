@@ -46,8 +46,8 @@ class ResourceID
          ***/
         ResourceID();
         ResourceID( UserID creatorID, ResourceIndex resourceIndex );
-        ResourceID( const ResourceID& b );
-        ResourceID( ResourceID&& b );
+        ResourceID( const ResourceID& b ) = default;
+        ResourceID( ResourceID&& b ) = default;
 
 
         /***

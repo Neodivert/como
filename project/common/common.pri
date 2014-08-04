@@ -12,6 +12,8 @@ LIBS += -lpthread -lboost_system -lboost_thread -lboost_filesystem
 # C++11 support (http://qt-project.org/forums/viewthread/19989)
 CONFIG += c++11
 
+INCLUDEPATH += ../../src
+
 # C++ flags
 QMAKE_CXXFLAGS_WARN_ON += -Wall -Werror
 QMAKE_CXXFLAGS += -Wall -Werror -Wextra -pthread -pedantic-errors -std=c++11
