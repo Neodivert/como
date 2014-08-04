@@ -138,7 +138,6 @@ const void* PackableFile::unpack( const void* buffer )
 {
     const char* castedBuffer = nullptr;
     char errorMessage[128];
-    char consoleCommand[128];
     std::string filePathBaseName;
 
     // Unpack the file path and size, among other packables held by this
@@ -151,11 +150,7 @@ const void* PackableFile::unpack( const void* buffer )
     // Maybe the file being unpacked will be placed in a directory which
     // doesn't exist. Create it.
     filePathBaseName = filePath_.substr( 0, filePath_.rfind( '/' ) );
-
-    sprintf( consoleCommand, "mkdir -p \"%s\"", filePathBaseName.c_str() );
-
-    int res = system( consoleCommand );
-    (void)(res);
+    boost::filesystem::create_directories( filePathBaseName.c_str() );
 
     // Unpack the file contents from the given buffer and write them to file.
     castedBuffer = static_cast< const char* >( buffer );
