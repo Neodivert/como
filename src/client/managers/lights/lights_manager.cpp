@@ -25,8 +25,8 @@ namespace como {
  ***/
 
 LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server, LogPtr log ) :
+    ResourcesManager( server ),
     drawablesManager_( drawablesManager ),
-    server_( server ),
     log_( log )
 {
     GLint i=0;
@@ -92,9 +92,7 @@ void LightsManager::createDirectionalLight()
                         lightProperties
                         ));
 
-
-
-    server_->sendCommand( CommandConstPtr( new DirectionalLightCreationCommand( server_->getLocalUserID(), lightID, lightColor ) ) );
+    sendCommandToServer( CommandConstPtr( new DirectionalLightCreationCommand( localUserID(), lightID, lightColor ) ) );
 
     log_->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
 
@@ -152,7 +150,7 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Packab
 
 void LightsManager::selectLight( const ResourceID lightID )
 {
-    emit lightSelected( LightHandlerPtr( new LightHandler( lights_.at( lightID ), lightID, server_, std::bind( &LightsManager::setChanged, this ) ) ) );
+    emit lightSelected( LightHandlerPtr( new LightHandler( lights_.at( lightID ), lightID, server(), std::bind( &LightsManager::setChanged, this ) ) ) );
 }
 
 

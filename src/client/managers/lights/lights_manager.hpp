@@ -25,12 +25,13 @@
 #include <common/commands/commands.hpp>
 #include <map>
 #include <common/utilities/observer_pattern/observer.hpp>
+#include <client/managers/resources_manager.hpp>
 
 namespace como {
 
 typedef std::map< ResourceID, LightPropertiesSharedPtr > LightsMap;
 
-class LightsManager : public QObject, public Changeable, public Observer
+class LightsManager : public QObject, public Changeable, public Observer, public ResourcesManager
 {
     Q_OBJECT
 
@@ -41,9 +42,6 @@ class LightsManager : public QObject, public Changeable, public Observer
         // Lights are drawables, so the drawables manager is also implied in
         // lights management.
         DrawablesManagerPtr drawablesManager_;
-
-        // Interface with the server.
-        ServerInterfacePtr server_;
 
         // A stack holding all the free light indices allowed in shader.
         std::stack< GLint > freeLightIndices_;

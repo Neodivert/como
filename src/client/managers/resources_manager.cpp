@@ -39,4 +39,26 @@ void ResourcesManager::sendCommandToServer( CommandConstPtr command )
     server_->sendCommand( command );
 }
 
+
+/***
+ * 5. Server info
+ ***/
+
+UserID ResourcesManager::localUserID() const
+{
+    return server_->getLocalUserID();
+}
+
+
+ResourceID ResourcesManager::newResourceID()
+{
+    return server_->getNewResourceID();
+}
+
+
+ServerInterfacePtr ResourcesManager::server() const
+{
+    return server_;
+}
+
 } // namespace como

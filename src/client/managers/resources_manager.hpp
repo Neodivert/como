@@ -58,6 +58,14 @@ class ResourcesManager : public Observable
          * 4. Server communication
          ***/
         void sendCommandToServer( CommandConstPtr command );
+
+
+        /***
+         * 5. Server info
+         ***/
+        UserID localUserID() const;
+        ResourceID newResourceID();
+        ServerInterfacePtr server() const; // TODO: Make this method unnecessary and remove it.
 };
 
 } // namespace como
