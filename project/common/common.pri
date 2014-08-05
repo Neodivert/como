@@ -97,7 +97,8 @@ HEADERS += \
     ../../src/common/mesh_info/texture_info.hpp \
     ../../src/common/scene/basic_scene.hpp \
     ../../src/common/mesh_info/polygon_group_data.hpp \
-    ../../src/common/commands/light_commands/light_ambient_coefficient_change_command.hpp
+    ../../src/common/commands/light_commands/light_ambient_coefficient_change_command.hpp \
+    ../../src/common/commands/resource_commands/resource_command.hpp
 
 
 # Common sources (used by both client and server).
@@ -147,4 +148,5 @@ SOURCES += \
     ../../src/common/primitives/primitive_file.cpp \
     ../../src/common/scene/basic_scene.cpp \
     ../../src/common/commands/light_commands/light_ambient_coefficient_change_command.cpp \
-    ../../src/common/packables/packable_string.cpp
+    ../../src/common/packables/packable_string.cpp \
+    ../../src/common/commands/resource_commands/resource_command.cpp

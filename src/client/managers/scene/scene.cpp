@@ -509,6 +509,9 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
         case CommandTarget::LIGHT:
             lightsManager_->executeRemoteCommand( dynamic_pointer_cast< const LightCommand >( command ) );
         break;
+        case CommandTarget::RESOURCE:
+            // TODO: Complete
+        break;
     }
 
     log_->debug( "Scene - Executing remote command(",

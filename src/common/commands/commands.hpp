@@ -45,4 +45,7 @@
 // MeshLight commands
 #include "light_commands/light_commands.hpp"
 
+// Resource commands
+#include "resource_commands/resource_command.hpp"
+
 #endif // COMMANDS_HPP

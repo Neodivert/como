@@ -180,6 +180,10 @@ const void* PackableCommandsList::unpack( const void* buffer )
                     break;
                 }
             break;
+
+            case CommandTarget::RESOURCE:
+                command = CommandPtr( new ResourceCommand( ResourceCommand::getType( buffer ) ) );
+            break;
         }
 
         buffer = command->unpack( buffer );
