@@ -510,7 +510,11 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
             lightsManager_->executeRemoteCommand( dynamic_pointer_cast< const LightCommand >( command ) );
         break;
         case CommandTarget::RESOURCE:
-            // TODO: Complete
+            ResourceCommandConstPtr resourceCommand = dynamic_pointer_cast< const ResourceCommand >( command );
+
+            drawablesManager_->executeResourceCommand( resourceCommand );
+            materialsManager_->executeResourceCommand( resourceCommand );
+            lightsManager_->executeResourceCommand( resourceCommand );
         break;
     }
 
