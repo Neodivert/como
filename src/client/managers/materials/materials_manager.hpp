@@ -49,8 +49,6 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
         std::map< ResourceID, MaterialPtr > materials_;
         MaterialsOwnershipMap materialsOwners_;
 
-        ResourceID nextLocalMaterialID_;
-        UserID localUserID_; // TODO: Use a reference or pointer to nextLocalMaterialID_.getCreatorID();
         LogPtr log_;
 
         MaterialHandlerPtr materialHandler_;
@@ -60,7 +58,7 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
          * 1. Creation
          ***/
         MaterialsManager() = delete;
-        MaterialsManager( DrawablesManagerPtr drawablesManager, UserID localUserID, ServerInterfacePtr server, LogPtr log );
+        MaterialsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server, LogPtr log );
         MaterialsManager( const MaterialsManager& ) = delete;
         MaterialsManager( MaterialsManager&& ) = delete;
 

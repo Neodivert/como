@@ -224,7 +224,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, localUserID_, userAcceptancePacket.getSelectionColor(), std::string( "data/scenes/" ) + getName() + std::string( "/primitives" ), oglContext_, log_ ) );
 
         // Initialize the materials manager.
-        materialsManager_ = MaterialsManagerPtr( new MaterialsManager( drawablesManager_, localUserID_, server_, log_ ) );
+        materialsManager_ = MaterialsManagerPtr( new MaterialsManager( drawablesManager_, server_, log_ ) );
 
         // Initialize the primitives manager.
         primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, drawablesManager_, materialsManager_, log_ ) );

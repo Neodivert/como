@@ -25,11 +25,9 @@ namespace como {
  * 1. Creation
  ***/
 
-MaterialsManager::MaterialsManager( DrawablesManagerPtr drawablesManager, UserID localUserID, ServerInterfacePtr server, LogPtr log ) :
+MaterialsManager::MaterialsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server, LogPtr log ) :
     ResourcesManager( server ),
     drawablesManager_( drawablesManager ),
-    nextLocalMaterialID_( localUserID, 0 ),
-    localUserID_( nextLocalMaterialID_.getCreatorID() ),
     log_( log )
 {}
 
@@ -40,22 +38,23 @@ MaterialsManager::MaterialsManager( DrawablesManagerPtr drawablesManager, UserID
 
 ResourceID MaterialsManager::createMaterial( const MaterialInfo &materialInfo )
 {
-    // Create the new material and insert it into the materials container.
-    createMaterial( nextLocalMaterialID_, materialInfo );
+    ResourceID materialID = newResourceID();
 
-    return nextLocalMaterialID_++;
+    // Create the new material and insert it into the materials container.
+    createMaterial( materialID, materialInfo );
+
+    return materialID;
 }
 
 
 void MaterialsManager::createMaterials( const std::vector< MaterialInfo >& materialsInfo, ResourceID& firstMaterialID )
 {
     assert( materialsInfo.size() != 0 );
-
-    firstMaterialID = nextLocalMaterialID_;
+    ResourceID materialID = firstMaterialID = newResourceID();
 
     for( auto materialInfo : materialsInfo ){
-        createMaterial( nextLocalMaterialID_, materialInfo );
-        nextLocalMaterialID_++;
+        createMaterial( materialID, materialInfo );
+        materialID++;
     }
 }
 
@@ -89,7 +88,7 @@ void MaterialsManager::createRemoteMaterials( const std::vector< MaterialInfo >&
 
 void MaterialsManager::selectMaterial( const ResourceID& id )
 {
-    MaterialsManager::selectMaterial( localUserID_, id );
+    MaterialsManager::selectMaterial( localUserID(), id );
 
     // TODO: Send command to server.
 
