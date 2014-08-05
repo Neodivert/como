@@ -26,7 +26,7 @@
 #include <client/models/utilities/changeable/changeable.hpp>
 #include <map>
 #include <QOffscreenSurface>
-#include <common/utilities/observer_pattern/observable.hpp>
+#include <client/managers/resources_manager.hpp>
 
 namespace como {
 
@@ -38,7 +38,7 @@ enum class MeshEdgesDisplayFrequency {
 };
 
 // TODO: Remove AbstractChangeable and use only Observable.
-class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, public Observable
+class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, public ResourcesManager
 {
     Q_OBJECT
 
@@ -47,8 +47,6 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
 
         DrawablesSelectionPtr nonSelectedDrawables_;
         LocalDrawablesSelectionPtr localDrawablesSelection_;
-
-        ServerInterfacePtr server_;
 
         UserID localUserID_;
 

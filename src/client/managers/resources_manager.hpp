@@ -20,12 +20,15 @@
 #define RESOURCES_MANAGER_HPP
 
 #include <client/managers/server_interface/server_interface.hpp>
+#include <common/utilities/observer_pattern/observable.hpp>
+#include <common/commands/command.hpp>
 
 namespace como {
 
-class ResourcesManager
+class ResourcesManager : public Observable
 {
-    ServerInterfacePtr server_;
+    private:
+        ServerInterfacePtr server_;
 
     public:
         /***
@@ -48,6 +51,13 @@ class ResourcesManager
          ***/
         ResourcesManager& operator = ( const ResourcesManager& ) = delete;
         ResourcesManager& operator = ( ResourcesManager&& ) = delete;
+
+
+    protected:
+        /***
+         * 4. Server communication
+         ***/
+        void sendCommandToServer( CommandConstPtr command );
 };
 
 } // namespace como

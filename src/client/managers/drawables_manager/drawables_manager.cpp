@@ -27,8 +27,8 @@ namespace como {
 
 DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
     AbstractChangeable(),
+    ResourcesManager( server ),
     nonSelectedDrawables_( new DrawablesSelection( glm::vec4( 0.0f ) ) ),
-    server_( server ),
     localUserID_( localUserID ),
     primitivesDirPath_( primitivesDirPath ),
     oglContext_( oglContext ),
@@ -206,7 +206,7 @@ void DrawablesManager::deleteSelection()
 
     // Send Command to the server.
     CommandPtr deleteSelectionCommand( new SelectionDeletionCommand( localUserID_ ) );
-    server_->sendCommand( deleteSelectionCommand );
+    sendCommandToServer( deleteSelectionCommand );
 }
 
 
@@ -256,7 +256,7 @@ void DrawablesManager::unselectAll()
     unselectAll( localUserID_ );
 
     // Send command to the server.
-    server_->sendCommand( CommandConstPtr( new FullDeselectionCommand( localUserID_ ) ) );
+    sendCommandToServer( CommandConstPtr( new FullDeselectionCommand( localUserID_ ) ) );
 }
 
 
@@ -293,7 +293,7 @@ ResourceID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3
         log_->debug( "Object picked\n" );
 
         // Send a DRAWABLE_SELECTION command to the server.
-        server_->sendCommand( CommandConstPtr(
+        sendCommandToServer( CommandConstPtr(
                                  new DrawableSelectionCommand( localUserID_,
                                                      closestObject,
                                                      addToSelection ) ) );

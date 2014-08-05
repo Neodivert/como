@@ -25,8 +25,18 @@ namespace como {
  * 1. Construction
  ***/
 
-ResourcesManager::ResourcesManager(ServerInterfacePtr server) :
+ResourcesManager::ResourcesManager( ServerInterfacePtr server ) :
     server_( server )
 {}
+
+
+/***
+ * 4. Server communication
+ ***/
+
+void ResourcesManager::sendCommandToServer( CommandConstPtr command )
+{
+    server_->sendCommand( command );
+}
 
 } // namespace como
