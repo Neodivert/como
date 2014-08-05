@@ -26,7 +26,8 @@ namespace como {
 
 enum class ResourceCommandType : std::uint8_t
 {
-    RESOURCE_LOCK = 0
+    RESOURCE_LOCK = 0,
+    RESOURCE_SELECTION_RESPONSE
 };
 
 class ResourceCommand : public TypeCommand< ResourceCommandType >

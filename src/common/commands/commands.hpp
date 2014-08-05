@@ -46,7 +46,7 @@
 #include "light_commands/light_commands.hpp"
 
 // Resource commands
-#include "resource_commands/resource_command.hpp"
+#include "resource_commands/resource_commands.hpp"
 
 // Resources selection commands
 #include "resources_selection_commands/resources_selection_command.hpp"

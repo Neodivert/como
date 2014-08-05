@@ -22,7 +22,7 @@
 #include <client/managers/server_interface/server_interface.hpp>
 #include <common/utilities/observer_pattern/observable.hpp>
 #include <common/commands/command.hpp>
-#include <common/commands/resource_commands/resource_command.hpp>
+#include <common/commands/resource_commands/resource_commands.hpp>
 
 namespace como {
 

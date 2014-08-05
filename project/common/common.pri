@@ -99,7 +99,9 @@ HEADERS += \
     ../../src/common/mesh_info/polygon_group_data.hpp \
     ../../src/common/commands/light_commands/light_ambient_coefficient_change_command.hpp \
     ../../src/common/commands/resource_commands/resource_command.hpp \
-    ../../src/common/commands/resources_selection_commands/resources_selection_command.hpp
+    ../../src/common/commands/resources_selection_commands/resources_selection_command.hpp \
+    ../../src/common/commands/resource_commands/resource_selection_response.hpp \
+    ../../src/common/commands/resource_commands/resource_commands.hpp
 
 
 # Common sources (used by both client and server).
@@ -151,4 +153,5 @@ SOURCES += \
     ../../src/common/commands/light_commands/light_ambient_coefficient_change_command.cpp \
     ../../src/common/packables/packable_string.cpp \
     ../../src/common/commands/resource_commands/resource_command.cpp \
-    ../../src/common/commands/resources_selection_commands/resources_selection_command.cpp
+    ../../src/common/commands/resources_selection_commands/resources_selection_command.cpp \
+    ../../src/common/commands/resource_commands/resource_selection_response.cpp

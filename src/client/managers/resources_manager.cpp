@@ -72,6 +72,9 @@ void ResourcesManager::executeResourceCommand( ResourceCommandConstPtr command )
         case ResourceCommandType::RESOURCE_LOCK:
             lockResource( command->getResourceID(), command->getUserID() );
         break;
+        case ResourceCommandType::RESOURCE_SELECTION_RESPONSE:
+            // TODO: Complete. Check response and update pending selections queue.
+        break;
     }
 }
 
