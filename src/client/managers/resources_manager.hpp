@@ -22,6 +22,7 @@
 #include <client/managers/server_interface/server_interface.hpp>
 #include <common/utilities/observer_pattern/observable.hpp>
 #include <common/commands/command.hpp>
+#include <common/commands/resource_commands/resource_command.hpp>
 
 namespace como {
 
@@ -67,6 +68,13 @@ class ResourcesManager : public Observable
         UserID localUserID() const;
         ResourceID newResourceID();
         ServerInterfacePtr server() const; // TODO: Make this method unnecessary and remove it.
+
+
+        /***
+         * 6. Command processing // TODO: Make this protected
+         ***/
+    public:
+        virtual void executeResourceCommand( ResourceCommandConstPtr ) = 0;
 };
 
 } // namespace como

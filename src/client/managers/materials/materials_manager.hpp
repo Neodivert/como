@@ -102,6 +102,7 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
          * 6. Remote command execution
          ***/
         void executeRemoteCommand( MaterialCommandConstPtr command );
+        void executeResourceCommand( ResourceCommandConstPtr command );
 
 
         /***

@@ -46,5 +46,13 @@ ResourceCommand::ResourceCommand(const ResourceCommand &b) :
 }
 
 
+/***
+ * 3. Getters
+ ***/
+
+ResourceID ResourceCommand::getResourceID() const
+{
+    return resourceID_.getValue();
+}
 
 } // namespace como

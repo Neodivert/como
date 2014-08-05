@@ -222,6 +222,19 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
 }
 
 
+void LightsManager::executeResourceCommand( ResourceCommandConstPtr command )
+{
+    switch( command->getType() ){
+        case ResourceCommandType::RESOURCE_LOCK:
+        break;
+        case ResourceCommandType::RESOURCE_UNLOCK:
+        break;
+        case ResourceCommandType::RESOURCE_DELETION:
+        break;
+    }
+}
+
+
 void LightsManager::update()
 {
     LightsMap::iterator currentIt, nextIt;

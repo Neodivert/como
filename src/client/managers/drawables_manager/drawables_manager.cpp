@@ -433,6 +433,20 @@ void DrawablesManager::executeRemoteParameterChangeCommand( UserParameterChangeC
 }
 
 
+void DrawablesManager::executeResourceCommand( ResourceCommandConstPtr command )
+{
+    switch( command->getType() ){
+        case ResourceCommandType::RESOURCE_LOCK:
+            selectDrawable( command->getResourceID(), command->getUserID() );
+        break;
+        case ResourceCommandType::RESOURCE_UNLOCK:
+        break;
+        case ResourceCommandType::RESOURCE_DELETION:
+        break;
+    }
+}
+
+
 /***
  * 8. Auxiliar methods
  ***/

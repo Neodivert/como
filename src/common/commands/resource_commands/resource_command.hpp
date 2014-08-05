@@ -54,11 +54,19 @@ class ResourceCommand : public TypeCommand< ResourceCommandType >
 
 
         /***
-         * 3. Operators
+         * 3. Getters
+         ***/
+        ResourceID getResourceID() const;
+
+
+        /***
+         * 4. Operators
          ***/
         ResourceCommand& operator = ( const ResourceCommand& ) = delete;
         ResourceCommand& operator = ( ResourceCommand&& ) = delete;
 };
+
+typedef std::shared_ptr< const ResourceCommand > ResourceCommandConstPtr;
 
 } // namespace como
 

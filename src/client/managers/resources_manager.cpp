@@ -61,4 +61,5 @@ ServerInterfacePtr ResourcesManager::server() const
     return server_;
 }
 
+
 } // namespace como

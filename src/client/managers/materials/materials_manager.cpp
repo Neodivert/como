@@ -208,6 +208,19 @@ void MaterialsManager::executeRemoteCommand( MaterialCommandConstPtr command )
 }
 
 
+void MaterialsManager::executeResourceCommand( ResourceCommandConstPtr command )
+{
+    switch( command->getType() ){
+        case ResourceCommandType::RESOURCE_LOCK:
+        break;
+        case ResourceCommandType::RESOURCE_UNLOCK:
+        break;
+        case ResourceCommandType::RESOURCE_DELETION:
+        break;
+    }
+}
+
+
 void MaterialsManager::update()
 {
     notifyElementModification( materialHandler_->getID() );
