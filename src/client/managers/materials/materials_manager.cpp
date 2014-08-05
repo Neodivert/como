@@ -26,10 +26,10 @@ namespace como {
  ***/
 
 MaterialsManager::MaterialsManager( DrawablesManagerPtr drawablesManager, UserID localUserID, ServerInterfacePtr server, LogPtr log ) :
+    ResourcesManager( server ),
     drawablesManager_( drawablesManager ),
     nextLocalMaterialID_( localUserID, 0 ),
     localUserID_( nextLocalMaterialID_.getCreatorID() ),
-    server_( server ),
     log_( log )
 {}
 
@@ -98,7 +98,7 @@ void MaterialsManager::selectMaterial( const ResourceID& id )
         materialHandler_->removeObserver( this );
     }
 
-    materialHandler_ = MaterialHandlerPtr( new MaterialHandler( id, materials_.at( id ), server_ ) );
+    materialHandler_ = MaterialHandlerPtr( new MaterialHandler( id, materials_.at( id ), server() ) );
 
     materialHandler_->addObserver( this );
 

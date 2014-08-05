@@ -33,12 +33,13 @@
 #include <common/utilities/observer_pattern/observable_container.hpp>
 #include <common/mesh_info/material_info.hpp>
 #include <client/managers/drawables_manager/drawables_manager.hpp>
+#include <client/managers/resources_manager.hpp>
 
 namespace como {
 
 typedef std::map< ResourceID, UserID > MaterialsOwnershipMap;
 
-class MaterialsManager : public QObject, public Changeable, public ObservableContainer< ResourceID >, public Observer
+class MaterialsManager : public QObject, public Changeable, public ObservableContainer< ResourceID >, public Observer, public ResourcesManager
 {
     Q_OBJECT
 
@@ -50,7 +51,6 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
 
         ResourceID nextLocalMaterialID_;
         UserID localUserID_; // TODO: Use a reference or pointer to nextLocalMaterialID_.getCreatorID();
-        ServerInterfacePtr server_;
         LogPtr log_;
 
         MaterialHandlerPtr materialHandler_;
