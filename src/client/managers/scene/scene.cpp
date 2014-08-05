@@ -509,13 +509,20 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
         case CommandTarget::LIGHT:
             lightsManager_->executeRemoteCommand( dynamic_pointer_cast< const LightCommand >( command ) );
         break;
-        case CommandTarget::RESOURCE:
+        case CommandTarget::RESOURCE:{
             ResourceCommandConstPtr resourceCommand = dynamic_pointer_cast< const ResourceCommand >( command );
 
             drawablesManager_->executeResourceCommand( resourceCommand );
             materialsManager_->executeResourceCommand( resourceCommand );
             lightsManager_->executeResourceCommand( resourceCommand );
-        break;
+        }break;
+        case CommandTarget::RESOURCES_SELECTION:{
+            ResourcesSelectionCommandConstPtr selectionCommand = dynamic_pointer_cast< const ResourcesSelectionCommand >( command );
+
+            drawablesManager_->executeResourcesSelectionCommand( selectionCommand );
+            materialsManager_->executeResourcesSelectionCommand( selectionCommand );
+            lightsManager_->executeResourcesSelectionCommand( selectionCommand );
+        }break;
     }
 
     log_->debug( "Scene - Executing remote command(",

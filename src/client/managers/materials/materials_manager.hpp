@@ -102,7 +102,6 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
          * 6. Remote command execution
          ***/
         void executeRemoteCommand( MaterialCommandConstPtr command );
-        void executeResourceCommand( ResourceCommandConstPtr command );
 
 
         /***
@@ -133,6 +132,16 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
     public:
         void highlightMaterial( ResourceID materialID );
         void removeHighlights();
+
+        // ResourcesManager interface
+
+    protected:
+        /***
+         * 10. Resources management
+         ***/
+        virtual void lockResource( const ResourceID& resourceID, UserID userID );
+        virtual void unlockResourcesSelection( UserID userID );
+        virtual void deleteResourcesSelection( UserID userID );
 };
 
 typedef std::shared_ptr< MaterialsManager > MaterialsManagerPtr;

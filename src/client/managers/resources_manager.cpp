@@ -62,4 +62,30 @@ ServerInterfacePtr ResourcesManager::server() const
 }
 
 
+/***
+ * 7. Command processing
+ ***/
+
+void ResourcesManager::executeResourceCommand( ResourceCommandConstPtr command )
+{
+    switch( command->getType() ){
+        case ResourceCommandType::RESOURCE_LOCK:
+            lockResource( command->getResourceID(), command->getUserID() );
+        break;
+    }
+}
+
+void ResourcesManager::executeResourcesSelectionCommand( ResourcesSelectionCommandConstPtr command )
+{
+    switch( command->getType() ){
+        case ResourcesSelectionCommandType::SELECTION_UNLOCK:
+            unlockResourcesSelection( command->getUserID() );
+        break;
+        case ResourcesSelectionCommandType::SELECTION_DELETION:
+            deleteResourcesSelection( command->getUserID() );
+        break;
+    }
+}
+
+
 } // namespace como

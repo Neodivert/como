@@ -87,7 +87,6 @@ class LightsManager : public QObject, public Changeable, public Observer, public
          ***/
     public:
         void executeRemoteCommand( LightCommandConstPtr command );
-        virtual void executeResourceCommand( ResourceCommandConstPtr command );
 
 
         /***
@@ -123,6 +122,14 @@ class LightsManager : public QObject, public Changeable, public Observer, public
     public:
         void highlightLight( ResourceID lightID );
         void removeHighlights(); 
+
+    protected:
+        /***
+         * 9. Resources management
+         ***/
+        virtual void lockResource( const ResourceID& resourceID, UserID userID );
+        virtual void unlockResourcesSelection( UserID userID );
+        virtual void deleteResourcesSelection( UserID userID );
 };
 
 typedef std::shared_ptr< LightsManager > LightsManagerPtr;

@@ -71,10 +71,19 @@ class ResourcesManager : public Observable
 
 
         /***
-         * 6. Command processing // TODO: Make this protected
+         * 6. Resource management
+         ***/
+        virtual void lockResource( const ResourceID& resourceID, UserID userID ) = 0;
+        virtual void unlockResourcesSelection( UserID userID ) = 0;
+        virtual void deleteResourcesSelection( UserID userID ) = 0;
+
+
+        /***
+         * 7. Command processing // TODO: Make this protected
          ***/
     public:
-        virtual void executeResourceCommand( ResourceCommandConstPtr ) = 0;
+        void executeResourceCommand( ResourceCommandConstPtr );
+        void executeResourcesSelectionCommand( ResourcesSelectionCommandConstPtr );
 };
 
 } // namespace como

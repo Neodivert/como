@@ -45,7 +45,8 @@ enum class CommandTarget : std::uint8_t
     PRIMITIVE_CATEGORY,
     MATERIAL,
     LIGHT,
-    RESOURCE
+    RESOURCE,
+    RESOURCES_SELECTION
 };
 
 

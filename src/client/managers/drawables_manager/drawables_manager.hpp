@@ -162,7 +162,6 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         void executeRemoteDrawableCommand( DrawableCommandConstPtr command );
         void executeRemoteSelectionCommand( SelectionCommandConstPtr command );
         void executeRemoteParameterChangeCommand( UserParameterChangeCommandConstPtr command );
-        virtual void executeResourceCommand( ResourceCommandConstPtr command );
 
 
         /***
@@ -176,6 +175,14 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
 
         virtual bool hasChangedSinceLastQuery();
         void highlightProperty( const void* property );
+
+
+        /***
+         * 12. Resource management
+         ***/
+        virtual void lockResource( const ResourceID& resourceID, UserID userID );
+        virtual void unlockResourcesSelection( UserID userID );
+        virtual void deleteResourcesSelection( UserID userID );
 };
 
 typedef shared_ptr< DrawablesManager > DrawablesManagerPtr;

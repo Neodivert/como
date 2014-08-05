@@ -222,19 +222,6 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
 }
 
 
-void LightsManager::executeResourceCommand( ResourceCommandConstPtr command )
-{
-    switch( command->getType() ){
-        case ResourceCommandType::RESOURCE_LOCK:
-        break;
-        case ResourceCommandType::RESOURCE_UNLOCK:
-        break;
-        case ResourceCommandType::RESOURCE_DELETION:
-        break;
-    }
-}
-
-
 void LightsManager::update()
 {
     LightsMap::iterator currentIt, nextIt;
@@ -302,6 +289,32 @@ void LightsManager::highlightLight( ResourceID lightID )
 void LightsManager::removeHighlights()
 {
     drawablesManager_->highlightProperty( nullptr );
+}
+
+
+/***
+ * 9. Resources management
+ ***/
+
+void LightsManager::lockResource( const ResourceID& resourceID, UserID userID )
+{
+    (void)( resourceID );
+    (void)( userID );
+    // TODO: Complete.
+}
+
+
+void LightsManager::unlockResourcesSelection( UserID userID )
+{
+    (void)( userID );
+    // TODO: Complete.
+}
+
+
+void LightsManager::deleteResourcesSelection( UserID userID )
+{
+    (void)( userID );
+    // TODO: Complete.
 }
 
 } // namespace como

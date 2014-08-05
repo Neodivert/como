@@ -433,20 +433,6 @@ void DrawablesManager::executeRemoteParameterChangeCommand( UserParameterChangeC
 }
 
 
-void DrawablesManager::executeResourceCommand( ResourceCommandConstPtr command )
-{
-    switch( command->getType() ){
-        case ResourceCommandType::RESOURCE_LOCK:
-            selectDrawable( command->getResourceID(), command->getUserID() );
-        break;
-        case ResourceCommandType::RESOURCE_UNLOCK:
-        break;
-        case ResourceCommandType::RESOURCE_DELETION:
-        break;
-    }
-}
-
-
 /***
  * 8. Auxiliar methods
  ***/
@@ -478,5 +464,26 @@ void DrawablesManager::highlightProperty( const void *property )
         drawablesSelection.second->highlighDrawableProperty( property );
     }
 }
+
+/***
+ * 12. Resource management
+ ***/
+
+void DrawablesManager::lockResource( const ResourceID& resourceID, UserID userID )
+{
+    selectDrawable( resourceID, userID );
+}
+
+void DrawablesManager::unlockResourcesSelection( UserID userID )
+{
+    unselectAll( userID );
+}
+
+void DrawablesManager::deleteResourcesSelection(UserID userID)
+{
+    deleteSelection( userID );
+}
+
+
 
 } // namespace como

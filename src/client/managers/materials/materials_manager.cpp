@@ -208,19 +208,6 @@ void MaterialsManager::executeRemoteCommand( MaterialCommandConstPtr command )
 }
 
 
-void MaterialsManager::executeResourceCommand( ResourceCommandConstPtr command )
-{
-    switch( command->getType() ){
-        case ResourceCommandType::RESOURCE_LOCK:
-        break;
-        case ResourceCommandType::RESOURCE_UNLOCK:
-        break;
-        case ResourceCommandType::RESOURCE_DELETION:
-        break;
-    }
-}
-
-
 void MaterialsManager::update()
 {
     notifyElementModification( materialHandler_->getID() );
@@ -242,6 +229,32 @@ void MaterialsManager::highlightMaterial( ResourceID materialID )
 void MaterialsManager::removeHighlights()
 {
     drawablesManager_->highlightProperty( nullptr );
+}
+
+
+/***
+ * 10. Resources management
+ ***/
+
+void MaterialsManager::lockResource( const ResourceID& resourceID, UserID userID )
+{
+    (void)( resourceID );
+    (void)( userID );
+    // TODO: Complete.
+}
+
+
+void MaterialsManager::unlockResourcesSelection( UserID userID )
+{
+    (void)( userID );
+    // TODO: Complete.
+}
+
+
+void MaterialsManager::deleteResourcesSelection( UserID userID )
+{
+    (void)( userID );
+    // TODO: Complete.
 }
 
 } // namespace como
