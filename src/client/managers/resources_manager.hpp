@@ -28,6 +28,7 @@ namespace como {
 class ResourcesManager : public Observable
 {
     private:
+        // TODO: Add a log_ attribute and remove it from derived classes.
         ServerInterfacePtr server_;
 
     public:

@@ -36,6 +36,8 @@
 
 namespace como {
 
+// TODO: Inherit from ResourcesManager? This class isn't a full
+// ResourcesManager (it doesn't lock / unlock resources)...
 class ClientPrimitivesManager : public QOffscreenSurface, public AbstractPrimitivesManager
 {
     Q_OBJECT
