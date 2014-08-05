@@ -96,7 +96,8 @@ HEADERS += \
     ../../src/client/models/3d/abstract_mesh.hpp \
     ../../src/client/managers/drawables_selection/meshes_selection.hpp \
     ../../src/client/gui/rendering/viewport_view_menu.hpp \
-    ../../src/client/gui/rendering/viewport_projection_menu.hpp
+    ../../src/client/gui/rendering/viewport_projection_menu.hpp \
+    ../../src/client/managers/resources_manager.hpp
 
 
 # Client sources
@@ -155,4 +156,5 @@ SOURCES += \
     ../../src/client/gui/menu_bar.cpp \
     ../../src/client/managers/drawables_selection/meshes_selection.cpp \
     ../../src/client/gui/rendering/viewport_view_menu.cpp \
-    ../../src/client/gui/rendering/viewport_projection_menu.cpp
+    ../../src/client/gui/rendering/viewport_projection_menu.cpp \
+    ../../src/client/managers/resources_manager.cpp
