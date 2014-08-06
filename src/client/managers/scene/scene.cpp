@@ -26,10 +26,7 @@ namespace como {
 
 Scene::Scene( const char* host, const char* port, const char* userName, LogPtr log ) :
     BasicScene( log ),
-    localUserID_( 1 ), // Will be updated to its final value in Scene::connect().
-    localUserNextDrawableIndex_( 1 ),
-    uniformColorLocation( -1 ),
-    uniformLightingEnabledLocation( -1 )
+    uniformColorLocation( -1 )
 {
     try {
         UserAcceptancePacket userAcceptancePacket;
@@ -48,7 +45,7 @@ Scene::Scene( const char* host, const char* port, const char* userName, LogPtr l
         setBackgroundColor( 0.9f, 0.9f, 0.9f, 0.9f );
 
         OpenGL::checkStatus( "Scene - constructor\n" );
-    }catch( std::exception& ex ){
+    }catch( std::exception& ){
         throw;
     }
 }
@@ -175,9 +172,6 @@ void Scene::initLinesBuffer()
     }
     // Get location of uniform shader variables.
     uniformColorLocation = glGetUniformLocation( currentShaderProgram, "material.color" );
-    uniformLightingEnabledLocation = glGetUniformLocation( currentShaderProgram, "lightingEnabled" );
-
-    log_->debug( "uniformLightingEnabledLocation: ", uniformLightingEnabledLocation, "\n" );
 
     // Set a VBO for the world axis rects.
     glGenBuffers( 1, &linesVBO );
@@ -199,9 +193,6 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
 {
     try{
         log_->debug( "TEMP DIR: [", getTempDirPath(), "]\n" );
-
-        // Retrieve the local user ID.
-        localUserID_ = userAcceptancePacket.getId();
 
         // Signal / slot: when a command is received from server, execute it on
         // the local scene.

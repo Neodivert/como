@@ -76,10 +76,6 @@ class Scene : public QOffscreenSurface, public BasicScene, public AbstractChange
 
         OpenGLPtr openGL_;
 
-        // Local user's ID.
-        UserID localUserID_; // TODO: Remove
-        ResourceIndex localUserNextDrawableIndex_; // TODO: Remove
-
         shared_ptr< QOpenGLContext > oglContext_;
 
         // Interface with the server.
@@ -91,7 +87,6 @@ class Scene : public QOffscreenSurface, public BasicScene, public AbstractChange
         GLuint linesBufferOffsets[N_LINES_BUFFER_OFFSETS];
 
         GLint uniformColorLocation;
-        GLint uniformLightingEnabledLocation;
 
         UserConnectionCommandConstPtr localUserConnectionCommand_;
 

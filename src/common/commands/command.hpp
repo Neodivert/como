@@ -62,13 +62,14 @@ typedef PackableUint8<CommandTarget> PackableCommandTarget;
 */
 const char commandTargetStrings[][32]
 {
-    "USER",
-    "DRAWABLE",
+    "USER"
     "SELECTION",
     "PRIMITIVE",
-    "PRIMITIVE_CATEGORY"
+    "PRIMITIVE_CATEGORY",
     "MATERIAL",
-    "LIGHT"
+    "LIGHT",
+    "RESOURCE",
+    "RESOURCES_SELECTION"
 };
 
 
