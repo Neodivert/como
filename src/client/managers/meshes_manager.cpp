@@ -34,9 +34,16 @@ MeshesManager::MeshesManager( ServerInterfacePtr server, DrawablesManagerPtr dra
 }
 
 
+
 /***
- * 4. Resources ownership management
+ * 5. Resources ownership management
  ***/
+
+void MeshesManager::createResourcesSelection( UserID userID )
+{
+    meshesSelections_[ userID ];
+}
+
 
 void MeshesManager::lockResource( const ResourceID& resourceID, UserID userID )
 {

@@ -59,10 +59,14 @@ class MeshesManager : public ResourcesManager
         MeshesManager& operator = ( const MeshesManager& ) = delete;
         MeshesManager& operator = ( MeshesManager&& ) = delete;
 
+        /***
+         * 4. Resources selections management // TODO: Make this protected and make AbstractOwnershipManager observe a UsersList interface.
+         ***/
+        virtual void createResourcesSelection( UserID userID );
 
     protected:
         /***
-         * 4. Resources ownership management
+         * 5. Resources ownership management
          ***/
         virtual void lockResource( const ResourceID& resourceID, UserID userID );
         virtual void unlockResourcesSelection( UserID userID );

@@ -251,8 +251,9 @@ void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnecte
     // Insert the new user in the users vector.
     users_.insert( std::pair< UserID, UserPtr >( userConnectedCommand->getUserID(), newUser ) );
 
-    // Create an empty drawables selection for the new user.
+    // Create both drawables and meshes empty selection for the new user.
     drawablesManager_->addDrawablesSelection( userConnectedCommand->getUserID(), userConnectedCommand->getSelectionColor() );
+    meshesManager_->createResourcesSelection( userConnectedCommand->getUserID() );
 
     // Emit a UserConnectionCommand signal.
     emit userConnected( userConnectedCommand );
@@ -511,6 +512,7 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
             ResourceCommandConstPtr resourceCommand = dynamic_pointer_cast< const ResourceCommand >( command );
 
             drawablesManager_->executeResourceCommand( resourceCommand );
+            meshesManager_->executeResourceCommand( resourceCommand );
             materialsManager_->executeResourceCommand( resourceCommand );
             lightsManager_->executeResourceCommand( resourceCommand );
         }break;
@@ -518,6 +520,7 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
             ResourcesSelectionCommandConstPtr selectionCommand = dynamic_pointer_cast< const ResourcesSelectionCommand >( command );
 
             drawablesManager_->executeResourcesSelectionCommand( selectionCommand );
+            meshesManager_->executeResourcesSelectionCommand( selectionCommand );
             materialsManager_->executeResourcesSelectionCommand( selectionCommand );
             lightsManager_->executeResourcesSelectionCommand( selectionCommand );
         }break;
