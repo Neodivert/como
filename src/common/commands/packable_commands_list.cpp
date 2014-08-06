@@ -198,7 +198,7 @@ const void* PackableCommandsList::unpack( const void* buffer )
                         command = CommandPtr( new ResourcesSelectionCommand( ResourcesSelectionCommand::getType( buffer ) ) );
                     break;
                     case ResourcesSelectionCommandType::SELECTION_DELETION:
-                        command = CommandPtr( new ResourceSelectionResponse );
+                        command = CommandPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_DELETION ) );
                     break;
                 }
             break;
