@@ -88,15 +88,6 @@ const void* PackableCommandsList::unpack( const void* buffer )
                 }
             break;
 
-            // Drawable commands
-            case CommandTarget::DRAWABLE:
-                switch( DrawableCommand::getType( buffer ) ){
-                    case DrawableCommandType::DRAWABLE_SELECTION:
-                        command = CommandPtr( new DrawableSelectionCommand );
-                    break;
-                }
-            break;
-
             // Selection commands
             case CommandTarget::SELECTION:
                 switch( SelectionCommand::getType( buffer ) ){

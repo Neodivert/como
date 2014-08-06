@@ -189,7 +189,6 @@ class Scene : public QOffscreenSurface, public BasicScene, public AbstractChange
          ***/
     private:
         void executeRemoteUserCommand( UserCommandConstPtr command );
-        void executeRemoteDrawableCommand( DrawableCommandConstPtr command );
 
     public slots:
         void executeRemoteCommand( CommandConstPtr command );

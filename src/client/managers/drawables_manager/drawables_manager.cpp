@@ -281,21 +281,6 @@ void DrawablesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, c
  * 11. Command execution
  ***/
 
-void DrawablesManager::executeRemoteDrawableCommand( DrawableCommandConstPtr command )
-{
-    const DrawableSelectionCommand* selectDrawable = nullptr;
-
-    switch( command->getType() ){
-        case DrawableCommandType::DRAWABLE_SELECTION:
-            // Cast to a DRAWABLE_SELECTION command.
-            selectDrawable = dynamic_cast< const DrawableSelectionCommand* >( command.get() );
-
-            // Select drawable.
-            this->selectDrawable( selectDrawable->getResourceID(), selectDrawable->getUserID() );
-        break;
-    }
-}
-
 void DrawablesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr command )
 {
     const SelectionTransformationCommand* selectionTransformation = nullptr;

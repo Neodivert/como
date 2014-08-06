@@ -33,8 +33,6 @@ HEADERS += \
     ../../src/common/commands/user_commands/user_command.hpp \
     ../../src/common/commands/user_commands/user_connection_command.hpp \
     ../../src/common/commands/user_commands/user_disconnection_command.hpp \
-    ../../src/common/commands/drawable_commands/drawable_command.hpp \
-    ../../src/common/commands/drawable_commands/drawable_selection_command.hpp \
     ../../src/common/commands/selection_commands/selection_transformation_command.hpp \
     ../../src/common/commands/selection_commands/selection_command.hpp \
     ../../src/common/packables/packables.hpp \
@@ -113,8 +111,6 @@ SOURCES += \
     ../../src/common/commands/user_commands/user_command.cpp \
     ../../src/common/commands/user_commands/user_connection_command.cpp \
     ../../src/common/commands/user_commands/user_disconnection_command.cpp \
-    ../../src/common/commands/drawable_commands/drawable_command.cpp \
-    ../../src/common/commands/drawable_commands/drawable_selection_command.cpp \
     ../../src/common/commands/selection_commands/selection_transformation_command.cpp \
     ../../src/common/commands/selection_commands/selection_command.cpp \
     ../../src/common/packets/packet_header.cpp \

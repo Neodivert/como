@@ -39,7 +39,6 @@ namespace como {
 enum class CommandTarget : std::uint8_t
 {
     USER = 0,
-    DRAWABLE,
     SELECTION,
     PRIMITIVE,
     PRIMITIVE_CATEGORY,

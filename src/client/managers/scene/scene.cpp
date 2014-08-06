@@ -491,9 +491,6 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
         case CommandTarget::USER:
             executeRemoteUserCommand( dynamic_pointer_cast< const UserCommand >( command ) );
         break;
-        case CommandTarget::DRAWABLE:
-            drawablesManager_->executeRemoteDrawableCommand( dynamic_pointer_cast< const DrawableCommand>( command ) );
-        break;
         case CommandTarget::SELECTION:
             drawablesManager_->executeRemoteSelectionCommand( dynamic_pointer_cast< const SelectionCommand>( command ) );
         break;

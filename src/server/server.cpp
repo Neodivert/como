@@ -321,8 +321,6 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
     switch( sceneCommand->getTarget() ){
         case CommandTarget::USER:
         break;
-        case CommandTarget::DRAWABLE:
-        break;
         case CommandTarget::SELECTION:
         break;
         case CommandTarget::PRIMITIVE:{
