@@ -324,10 +324,6 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
         case CommandTarget::DRAWABLE:
         break;
         case CommandTarget::SELECTION:
-            if( ( dynamic_cast< const SelectionCommand* >( sceneCommand.get() ) )->getType() == SelectionCommandType::FULL_DESELECTION ){
-                // Unselect all.
-                unselectAll( sceneCommand->getUserID() );
-            }
         break;
         case CommandTarget::PRIMITIVE:{
             const PrimitiveCommand* primitiveCommand = dynamic_cast< const PrimitiveCommand* >( sceneCommand.get() );

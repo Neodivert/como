@@ -100,15 +100,6 @@ const void* PackableCommandsList::unpack( const void* buffer )
             // Selection commands
             case CommandTarget::SELECTION:
                 switch( SelectionCommand::getType( buffer ) ){
-                    case SelectionCommandType::SELECTION_RESPONSE:
-                        command = CommandPtr( new SelectionResponseCommand );
-                    break;
-                    case SelectionCommandType::FULL_DESELECTION:
-                        command =  CommandPtr( new FullDeselectionCommand );
-                    break;
-                    case SelectionCommandType::SELECTION_DELETION:
-                        command = CommandPtr( new SelectionDeletionCommand );
-                    break;
                     case SelectionCommandType::SELECTION_TRANSFORMATION:
                         command = CommandPtr( new SelectionTransformationCommand );
                     break;

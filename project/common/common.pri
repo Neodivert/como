@@ -35,11 +35,8 @@ HEADERS += \
     ../../src/common/commands/user_commands/user_disconnection_command.hpp \
     ../../src/common/commands/drawable_commands/drawable_command.hpp \
     ../../src/common/commands/drawable_commands/drawable_selection_command.hpp \
-    ../../src/common/commands/selection_commands/selection_response_command.hpp \
     ../../src/common/commands/selection_commands/selection_transformation_command.hpp \
-    ../../src/common/commands/selection_commands/full_deselection_command.hpp \
     ../../src/common/commands/selection_commands/selection_command.hpp \
-    ../../src/common/commands/selection_commands/selection_deletion_command.hpp \
     ../../src/common/packables/packables.hpp \
     ../../src/common/packables/packable_string.hpp \
     ../../src/common/packets/packet_header.hpp \
@@ -118,11 +115,8 @@ SOURCES += \
     ../../src/common/commands/user_commands/user_disconnection_command.cpp \
     ../../src/common/commands/drawable_commands/drawable_command.cpp \
     ../../src/common/commands/drawable_commands/drawable_selection_command.cpp \
-    ../../src/common/commands/selection_commands/selection_response_command.cpp \
     ../../src/common/commands/selection_commands/selection_transformation_command.cpp \
-    ../../src/common/commands/selection_commands/full_deselection_command.cpp \
     ../../src/common/commands/selection_commands/selection_command.cpp \
-    ../../src/common/commands/selection_commands/selection_deletion_command.cpp \
     ../../src/common/packets/packet_header.cpp \
     ../../src/common/commands/packable_commands_list.cpp \
     ../../src/common/packables/packable_file.cpp \

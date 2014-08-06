@@ -367,41 +367,10 @@ void DrawablesManager::executeRemoteDrawableCommand( DrawableCommandConstPtr com
 
 void DrawablesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr command )
 {
-    const SelectionResponseCommand* selectionResponse = nullptr;
     const SelectionTransformationCommand* selectionTransformation = nullptr;
     std::array< float, 3 > transformationVector;
 
-    bool selectionConfirmed;
-    unsigned int i;
-
-    ResourceID pendingSelection;
-
     switch( command->getType() ){
-        case SelectionCommandType::SELECTION_DELETION:
-            // Delete user selection.
-            deleteSelection( command->getUserID() );
-        break;
-
-        case SelectionCommandType::SELECTION_RESPONSE:
-            // Cast to a SELECTION_RESPONSE command.
-            selectionResponse = dynamic_cast< const SelectionResponseCommand* >( command.get() );
-
-            for( i = 0; i < selectionResponse->getNSelections(); i++ ){
-                selectionConfirmed = selectionResponse->getSelectionConfirmed() & (1 << i);   
-                if( selectionConfirmed ){
-                    pendingSelection = localUserPendingSelections_.front();
-                    selectDrawable( pendingSelection );
-                    //selectDrawable( selectDrawable->getResourceID() );
-                }
-                localUserPendingSelections_.pop();
-            }
-        break;
-
-        case SelectionCommandType::FULL_DESELECTION:
-            // Unselect all.
-            unselectAll( command->getUserID() );
-        break;
-
         case SelectionCommandType::SELECTION_TRANSFORMATION:
             // Cast to a SELECTION_TRANSFORMATION command.
             selectionTransformation = dynamic_cast< const SelectionTransformationCommand* >( command.get() );
