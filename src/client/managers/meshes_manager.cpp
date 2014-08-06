@@ -24,8 +24,9 @@ namespace como {
  * 1. Construction
  ***/
 
-MeshesManager::MeshesManager( ServerInterfacePtr server ) :
-    ResourcesManager( server )
+MeshesManager::MeshesManager( ServerInterfacePtr server, DrawablesManagerPtr drawablesManager ) :
+    ResourcesManager( server ),
+    drawablesManager_( drawablesManager )
 {
     // Create a selection of non selected meshes and keep a pointer to it.
     meshesSelections_[NO_USER];

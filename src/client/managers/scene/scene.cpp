@@ -212,6 +212,9 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         // Initialize the drawables manager.
         drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, userAcceptancePacket.getSelectionColor(), oglContext_, log_ ) );
 
+        // Initialize the meshes manager.
+        meshesManager_ = MeshesManagerPtr( new MeshesManager( server_, drawablesManager_ ) );
+
         // Initialize the materials manager.
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( drawablesManager_, server_, log_ ) );
 
@@ -283,6 +286,12 @@ shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
 DrawablesManagerPtr Scene::getDrawablesManager() const
 {
     return drawablesManager_;
+}
+
+
+MeshesManagerPtr Scene::getMeshesManager() const
+{
+    return meshesManager_;
 }
 
 

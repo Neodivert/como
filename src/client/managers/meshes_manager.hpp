@@ -19,16 +19,21 @@
 #ifndef MESHES_MANAGER_HPP
 #define MESHES_MANAGER_HPP
 
-#include <client/managers/resources_manager.hpp>
+#include <client/managers/drawables_manager/drawables_manager.hpp>
 #include <client/managers/drawables_selection/meshes_selection.hpp>
 
 namespace como {
+
+class MeshesManager;
+typedef std::shared_ptr< MeshesManager > MeshesManagerPtr;
 
 typedef std::map< UserID, MeshesSelection > MeshesSelectionMap;
 
 class MeshesManager : public ResourcesManager
 {
     private:
+        DrawablesManagerPtr drawablesManager_;
+
         MeshesSelection* nonSelectedMeshes_;
         MeshesSelectionMap meshesSelections_;
 
@@ -36,7 +41,7 @@ class MeshesManager : public ResourcesManager
         /***
          * 1. Construction
          ***/
-        MeshesManager( ServerInterfacePtr server );
+        MeshesManager( ServerInterfacePtr server, DrawablesManagerPtr drawablesManager );
         MeshesManager() = delete;
         MeshesManager( const MeshesManager& ) = delete;
         MeshesManager( MeshesManager&& ) = delete;
@@ -45,7 +50,7 @@ class MeshesManager : public ResourcesManager
         /***
          * 2. Destruction
          ***/
-        ~MeshesManager() = delete;
+        ~MeshesManager() = default;
 
 
         /***
