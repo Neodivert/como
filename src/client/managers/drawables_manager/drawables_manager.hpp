@@ -52,8 +52,6 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
 
         LogPtr log_;
 
-        bool newMeshesDisplayVertexNormals_;
-
     protected:
         MeshEdgesDisplayFrequency meshEdgesDisplayFrequency_;
 
@@ -84,15 +82,12 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         glm::vec3 getPivotPoint() const ;
         glm::vec3 getPivotPoint( UserID userID ) const ;
         bool existsDrawable( const ResourceID& id ) const;
-        ElementsMeetingCondition displaysVertexNormals() const;
-        unsigned int getTotalMeshes() const;
 
 
         /***
          * 4. Setters
          ***/
         void displayEdges( MeshEdgesDisplayFrequency frequency );
-        void displayVertexNormals( bool display );
 
 
         /***
@@ -107,15 +102,6 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
     public:
         ResourceID addDrawable( DrawablePtr drawable );
         void addDrawable( UserID userID, DrawablePtr drawable, ResourceID drawableID );
-
-    public:
-        ResourceID createMesh( MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials );
-        void createMesh( ResourceID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials );
-
-    private:
-        //void createRemoteMesh( ResourceID primitiveID, ResourceID drawableID, ResourceID materialID );
-
-    public:
 
 
         /***

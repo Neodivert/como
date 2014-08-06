@@ -37,6 +37,9 @@ class MeshesManager : public ResourcesManager
         MeshesSelection* nonSelectedMeshes_;
         MeshesSelectionMap meshesSelections_;
 
+        bool newMeshesDisplayVertexNormals_;
+
+
     public:
         /***
          * 1. Construction
@@ -58,6 +61,28 @@ class MeshesManager : public ResourcesManager
          ***/
         MeshesManager& operator = ( const MeshesManager& ) = delete;
         MeshesManager& operator = ( MeshesManager&& ) = delete;
+
+
+        /***
+         * 4. Getters
+         ***/
+        ElementsMeetingCondition displaysVertexNormals() const;
+        unsigned int getTotalMeshes() const;
+        MeshesSelection* getLocalUserSelection();
+
+
+        /***
+         * 5. Setters
+         ***/
+        void displayVertexNormals( bool display );
+
+
+        /***
+         * 6. Meshes management
+         ***/
+        ResourceID createMesh( MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials );
+        void createMesh( ResourceID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials );
+
 
         /***
          * 4. Resources selections management // TODO: Make this protected and make AbstractOwnershipManager observe a UsersList interface.

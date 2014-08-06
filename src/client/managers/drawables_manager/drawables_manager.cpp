@@ -30,8 +30,7 @@ DrawablesManager::DrawablesManager( ServerInterfacePtr server, const PackableCol
     ResourcesManager( server ),
     nonSelectedDrawables_( new DrawablesSelection( glm::vec4( 0.0f ) ) ),
     oglContext_( oglContext ),
-    log_( log ),
-    newMeshesDisplayVertexNormals_( false )
+    log_( log )
 {
     glm::vec4 selectionColor = localSelectionBorderColor.toVec4();
 
@@ -106,36 +105,6 @@ bool DrawablesManager::existsDrawable( const ResourceID& id ) const
 }
 
 
-ElementsMeetingCondition DrawablesManager::displaysVertexNormals() const
-{
-    const ElementsMeetingCondition firstSelectionValue =
-            drawablesSelections_.begin()->second->meshes()->displaysVertexNormals();
-
-    if( firstSelectionValue == ElementsMeetingCondition::SOME ){
-        return ElementsMeetingCondition::SOME;
-    }
-
-    for( auto drawablesSelection : drawablesSelections_ ){
-        if( drawablesSelection.second->meshes()->displaysVertexNormals() != firstSelectionValue ){
-            return ElementsMeetingCondition::SOME;
-        }
-    }
-
-    return firstSelectionValue;
-}
-
-unsigned int DrawablesManager::getTotalMeshes() const
-{
-    unsigned int totalMeshes = 0;
-
-    for( auto drawablesSelection : drawablesSelections_ ){
-        totalMeshes += drawablesSelection.second->meshes()->size();
-    }
-
-    return totalMeshes;
-}
-
-
 /***
  * 4. Setters
  ***/
@@ -149,16 +118,6 @@ void DrawablesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
         case MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED:
             nonSelectedDrawables_->displayEdges( false );
         break;
-    }
-}
-
-
-void DrawablesManager::displayVertexNormals( bool display )
-{
-    newMeshesDisplayVertexNormals_ = display;
-
-    for( auto drawablesSelection : drawablesSelections_ ){
-        drawablesSelection.second->displayVertexNormals( display );
     }
 }
 
@@ -179,22 +138,6 @@ void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, Resourc
     //takeOpenGLContext();
 
     getUserSelection( userID )->addDrawable( drawableID, drawable );
-}
-
-
-ResourceID DrawablesManager::createMesh( MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials )
-{
-    DrawablePtr mesh( new Mesh( vertexData, oglData, polygonsGroups, materials, newMeshesDisplayVertexNormals_ ) );
-
-    return addDrawable( mesh );
-}
-
-
-void DrawablesManager::createMesh( ResourceID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials )
-{
-    DrawablePtr mesh( new Mesh( vertexData, oglData, polygonsGroups, materials, newMeshesDisplayVertexNormals_ ) );
-
-    addDrawable( meshID.getCreatorID(), mesh, meshID );
 }
 
 

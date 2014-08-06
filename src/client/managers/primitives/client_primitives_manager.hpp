@@ -20,7 +20,7 @@
 #define CLIENT_PRIMITIVES_MANAGER_HPP
 
 #include <string>
-#include <client/managers/drawables_manager/drawables_manager.hpp>
+#include <client/managers/meshes_manager.hpp>
 #include <common/utilities/log.hpp>
 #include <common/commands/primitive_category_commands/primitive_category_commands.hpp>
 #include <common/commands/primitive_commands/primitive_commands.hpp>
@@ -45,7 +45,7 @@ class ClientPrimitivesManager : public QOffscreenSurface, public AbstractPrimiti
     private:
         ServerInterfacePtr server_;
 
-        DrawablesManagerPtr drawablesManager_;
+        MeshesManagerPtr meshesManager_;
         MaterialsManagerPtr materialsManager_;
 
     public:
@@ -53,7 +53,7 @@ class ClientPrimitivesManager : public QOffscreenSurface, public AbstractPrimiti
          * 1. Construction
          ***/
         ClientPrimitivesManager() = delete;
-        ClientPrimitivesManager( std::string sceneDirPath, std::string sceneTempDirPath, ServerInterfacePtr server, DrawablesManagerPtr drawablesManager, MaterialsManagerPtr materialsManager, LogPtr log );
+        ClientPrimitivesManager( std::string sceneDirPath, std::string sceneTempDirPath, ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, LogPtr log );
         ClientPrimitivesManager( const ClientPrimitivesManager& ) = delete;
         ClientPrimitivesManager( ClientPrimitivesManager&& ) = delete;
 

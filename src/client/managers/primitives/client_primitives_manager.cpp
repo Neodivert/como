@@ -27,10 +27,10 @@ namespace como {
  * 1. Construction
  ***/
 
-ClientPrimitivesManager::ClientPrimitivesManager( std::string sceneDirPath, std::string sceneTempDirPath, ServerInterfacePtr server, DrawablesManagerPtr drawablesManager, MaterialsManagerPtr materialsManager, LogPtr log ) :
+ClientPrimitivesManager::ClientPrimitivesManager( std::string sceneDirPath, std::string sceneTempDirPath, ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, LogPtr log ) :
     AbstractPrimitivesManager( sceneDirPath, sceneTempDirPath, log ),
     server_( server ),
-    drawablesManager_( drawablesManager ),
+    meshesManager_( meshesManager ),
     materialsManager_( materialsManager )
 {}
 
@@ -88,7 +88,7 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 
     materialsManager_->createMaterials( meshInfo.materialsData, firstMaterialID );
 
-    ResourceID drawableID = drawablesManager_->createMesh( meshInfo.vertexData, meshInfo.oglData, meshInfo.polygonGroupsData, materialsManager_->getMaterials( firstMaterialID, meshInfo.materialsData.size() ) );
+    ResourceID drawableID = meshesManager_->createMesh( meshInfo.vertexData, meshInfo.oglData, meshInfo.polygonGroupsData, materialsManager_->getMaterials( firstMaterialID, meshInfo.materialsData.size() ) );
 
     log_->debug( "Creating local mesh - Drawable ID (", drawableID,
                  ") First materialID ", firstMaterialID, ") nMaterials (", meshInfo.materialsData.size(), ")\n" );
@@ -110,7 +110,7 @@ void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID pr
 
     materialsManager_->createRemoteMaterials( meshInfo.materialsData, materialID );
 
-    drawablesManager_->createMesh( meshID, meshInfo.vertexData, meshInfo.oglData, meshInfo.polygonGroupsData, materialsManager_->getMaterials( materialID, meshInfo.materialsData.size() ) );
+    meshesManager_->createMesh( meshID, meshInfo.vertexData, meshInfo.oglData, meshInfo.polygonGroupsData, materialsManager_->getMaterials( materialID, meshInfo.materialsData.size() ) );
 }
 
 

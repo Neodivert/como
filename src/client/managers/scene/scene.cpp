@@ -219,7 +219,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( drawablesManager_, server_, log_ ) );
 
         // Initialize the primitives manager.
-        primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, drawablesManager_, materialsManager_, log_ ) );
+        primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, meshesManager_, materialsManager_, log_ ) );
 
         // Initialize the lights manager.
         lightsManager_ = LightsManagerPtr( new LightsManager( drawablesManager_, server_, log_ ) );

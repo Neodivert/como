@@ -21,6 +21,7 @@
 
 #include <QMenuBar>
 #include <client/managers/drawables_manager/drawables_manager.hpp>
+#include <client/managers/meshes_manager.hpp>
 
 namespace como {
 
@@ -30,6 +31,7 @@ class MenuBar : public QMenuBar, public Observer
 
     private:
         DrawablesManagerPtr drawablesManager_;
+        MeshesManagerPtr meshesManager_;
 
         QAction* displayVertexNormalsAlways_;
         QAction* displayVertexNormalsNever_;
@@ -40,7 +42,7 @@ class MenuBar : public QMenuBar, public Observer
          * 1. Construction
          ***/
         MenuBar() = delete;
-        MenuBar( DrawablesManagerPtr drawablesManager );
+        MenuBar( DrawablesManagerPtr drawablesManager, MeshesManagerPtr meshesManager );
         MenuBar( const MenuBar& ) = delete;
         MenuBar( MenuBar&& ) = delete;
 
@@ -49,9 +51,9 @@ class MenuBar : public QMenuBar, public Observer
          * 2. Initialization
          ***/
     private:
-        QMenu* createViewMenu( DrawablesManager* drawablesManager );
+        QMenu* createViewMenu( DrawablesManager* drawablesManager, MeshesManager* meshesManager );
         QMenu* createDisplayEdgesMenu( DrawablesManager* drawablesManager );
-        QMenu* createDisplayVertexNormalsMenu( DrawablesManager* drawablesManager );
+        QMenu* createDisplayVertexNormalsMenu( MeshesManager* meshesManager );
     public:
 
         /***

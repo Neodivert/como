@@ -24,11 +24,12 @@ namespace como {
  * 1. Construction
  ***/
 
-MenuBar::MenuBar( DrawablesManagerPtr drawablesManager ) :
+MenuBar::MenuBar( DrawablesManagerPtr drawablesManager, MeshesManagerPtr meshesManager ) :
     QMenuBar( nullptr ),
-    drawablesManager_( drawablesManager )
+    drawablesManager_( drawablesManager ),
+    meshesManager_( meshesManager )
 {
-    addMenu( createViewMenu( drawablesManager.get() ) );
+    addMenu( createViewMenu( drawablesManager.get(), meshesManager.get() ) );
 
     setVisible( true );
 }
@@ -38,12 +39,12 @@ MenuBar::MenuBar( DrawablesManagerPtr drawablesManager ) :
  * 2. Initialization
  ***/
 
-QMenu* MenuBar::createViewMenu( DrawablesManager* drawablesManager )
+QMenu* MenuBar::createViewMenu( DrawablesManager* drawablesManager, MeshesManager* meshesManager )
 {
     QMenu* viewMenu = new QMenu( "View" );
 
     viewMenu->addMenu( createDisplayEdgesMenu( drawablesManager ) );
-    viewMenu->addMenu( createDisplayVertexNormalsMenu( drawablesManager ) );
+    viewMenu->addMenu( createDisplayVertexNormalsMenu( meshesManager ) );
 
     return viewMenu;
 }
@@ -84,26 +85,26 @@ QMenu* MenuBar::createDisplayEdgesMenu( DrawablesManager* drawablesManager )
 }
 
 
-QMenu* MenuBar::createDisplayVertexNormalsMenu( DrawablesManager* drawablesManager )
+QMenu* MenuBar::createDisplayVertexNormalsMenu( MeshesManager* meshesManager )
 {
     QMenu* displayVertexNormalsMenu = nullptr;
     QActionGroup* displayVertexNormalsActionGroup = nullptr;
 
     // Update this menu whenever the local user's meshes selection changes.
-    drawablesManager->getLocalUserSelection()->meshes()->addObserver( this );
+    meshesManager->getLocalUserSelection()->addObserver( this );
 
     // Create a menu action for displaying the edges always.
     displayVertexNormalsAlways_ = new QAction( QString( "Always" ), nullptr );
     displayVertexNormalsAlways_->setCheckable( true );
     QObject::connect( displayVertexNormalsAlways_, &QAction::triggered, [=](){
-        drawablesManager->displayVertexNormals( true );
+        meshesManager->displayVertexNormals( true );
     });
 
     // Create a menu action for displaying the edges only when selected.
     displayVertexNormalsNever_ = new QAction( QString( "Never" ), nullptr );
     displayVertexNormalsNever_->setCheckable( true );
     QObject::connect( displayVertexNormalsNever_, &QAction::triggered, [=](){
-        drawablesManager->displayVertexNormals( false );
+        meshesManager->displayVertexNormals( false );
     });
 
     // Include previous actions in a exclusive group of actions and set the
@@ -126,7 +127,7 @@ QMenu* MenuBar::createDisplayVertexNormalsMenu( DrawablesManager* drawablesManag
 
 void MenuBar::update()
 {
-    switch( drawablesManager_->displaysVertexNormals() ){
+    switch( meshesManager_->displaysVertexNormals() ){
         case ElementsMeetingCondition::ALL:
             displayVertexNormalsAlways_->setChecked( true );
         break;
