@@ -97,7 +97,8 @@ HEADERS += \
     ../../src/client/managers/drawables_selection/meshes_selection.hpp \
     ../../src/client/gui/rendering/viewport_view_menu.hpp \
     ../../src/client/gui/rendering/viewport_projection_menu.hpp \
-    ../../src/client/managers/resources_manager.hpp
+    ../../src/client/managers/resources_manager.hpp \
+    ../../src/client/managers/meshes_manager.hpp
 
 
 # Client sources
@@ -157,4 +158,5 @@ SOURCES += \
     ../../src/client/managers/drawables_selection/meshes_selection.cpp \
     ../../src/client/gui/rendering/viewport_view_menu.cpp \
     ../../src/client/gui/rendering/viewport_projection_menu.cpp \
-    ../../src/client/managers/resources_manager.cpp
+    ../../src/client/managers/resources_manager.cpp \
+    ../../src/client/managers/meshes_manager.cpp

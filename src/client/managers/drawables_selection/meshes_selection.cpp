@@ -137,6 +137,29 @@ void MeshesSelection::clear()
 }
 
 
+bool MeshesSelection::moveMesh( const ResourceID& meshID, MeshesSelection& dstMeshesSelection )
+{
+    if( meshes_.count( meshID ) ){
+        dstMeshesSelection.addMesh( meshID, meshes_.at( meshID ) );
+        removeMesh( meshID );
+
+        return true;
+    }else{
+        return false;
+    }
+}
+
+
+void MeshesSelection::moveAll( MeshesSelection& dstMeshesSelection )
+{
+    for( auto mesh : meshes_ ){
+        dstMeshesSelection.addMesh( mesh.first, mesh.second );
+    }
+
+    meshes_.clear();
+}
+
+
 /***
  * 6. Drawing
  ***/

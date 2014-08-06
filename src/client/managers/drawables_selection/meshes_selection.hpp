@@ -81,6 +81,8 @@ class MeshesSelection : public AbstractMesh, public Observable
         void addMesh( const ResourceID& id, MeshPtr mesh );
         void removeMesh( const ResourceID& id );
         void clear();
+        bool moveMesh( const ResourceID& meshID, MeshesSelection& dstMeshesSelection );
+        void moveAll( MeshesSelection& dstMeshesSelection );
 
 
         /***
