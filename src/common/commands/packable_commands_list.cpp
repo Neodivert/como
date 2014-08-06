@@ -182,7 +182,14 @@ const void* PackableCommandsList::unpack( const void* buffer )
             break;
 
             case CommandTarget::RESOURCE:
-                command = CommandPtr( new ResourceCommand( ResourceCommand::getType( buffer ) ) );
+                switch( ResourceCommand::getType( buffer ) ){
+                    case ResourceCommandType::RESOURCE_LOCK:
+                        command = CommandPtr( new ResourceCommand( ResourceCommandType::RESOURCE_LOCK ) );
+                    break;
+                    case ResourceCommandType::RESOURCE_SELECTION_RESPONSE:
+                        command = CommandPtr( new ResourceSelectionResponse );
+                    break;
+                }
             break;
 
             case CommandTarget::RESOURCES_SELECTION:

@@ -317,30 +317,11 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
 void Server::processSceneCommand( CommandConstPtr sceneCommand )
 {
     const PrimitiveCreationCommand* primitiveCreationCommand = nullptr;
-    const DrawableSelectionCommand* selectDrawable = nullptr;
 
     switch( sceneCommand->getTarget() ){
         case CommandTarget::USER:
         break;
         case CommandTarget::DRAWABLE:
-            switch( ( dynamic_cast< const DrawableCommand* >( sceneCommand.get() ) )->getType() ){
-                case DrawableCommandType::DRAWABLE_SELECTION:
-                    // DRAWABLE_SELECTION command received, cast its pointer.
-                    selectDrawable = dynamic_cast< const DrawableSelectionCommand* >( sceneCommand.get() );
-
-                    // Give an affirmative response to the user's selection if the
-                    // desired drawable isn't selected by anyone (User ID = 0).
-                    if( drawableOwners_.at( selectDrawable->getResourceID() ) == 0 ){
-                        users_.at( sceneCommand->getUserID() )->addSelectionResponse( true );
-                        drawableOwners_.at( selectDrawable->getResourceID() ) = sceneCommand->getUserID();
-
-                        log_->debug( "Drawable (", selectDrawable->getResourceID(), ")  selected by user (", drawableOwners_.at( selectDrawable->getResourceID() ), ")\n" );
-                    }else{
-                        users_.at( sceneCommand->getUserID() )->addSelectionResponse( false );
-                        return;
-                    }
-                break;
-            }
         break;
         case CommandTarget::SELECTION:
             if( ( dynamic_cast< const SelectionCommand* >( sceneCommand.get() ) )->getType() == SelectionCommandType::FULL_DESELECTION ){

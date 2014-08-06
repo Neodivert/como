@@ -50,10 +50,10 @@ void ResourcesOwnershipManager::lockResource( const ResourceID& resourceID, User
     log_->debug( "User (", userID, ") tries to lock resource (", resourceID, "): " );
     if( resourcesOwnershipMap_.at( resourceID ) == NO_USER ){
         resourcesOwnershipMap_.at( resourceID ) = userID;
-        users_.at( userID )->addSelectionResponse( true );
+        users_.at( userID )->addSelectionResponse( resourceID, true );
         log_->debug( "Yes!\n" );
     }else{
-        users_.at( userID )->addSelectionResponse( false );
+        users_.at( userID )->addSelectionResponse( resourceID, false );
         log_->debug( "No, resource already locked! :'-(\n" );
     }
 }

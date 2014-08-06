@@ -324,6 +324,9 @@ ResourceID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3
         worldCollisionPoint = glm::vec3( 0.0f );
     }
 
+    // TODO: Send a request to server even when trying to select another
+    // user's drawables?
+
     return closestObject;
 }
 

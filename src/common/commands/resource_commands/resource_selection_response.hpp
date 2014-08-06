@@ -23,6 +23,7 @@
 
 namespace como {
 
+// TODO: Rename to ResourceSelectionResponseCommand.
 class ResourceSelectionResponse : public ResourceCommand
 {
     private:
@@ -34,7 +35,7 @@ class ResourceSelectionResponse : public ResourceCommand
          ***/
         ResourceSelectionResponse();
         ResourceSelectionResponse( const ResourceID& resourceID, bool response );
-        ResourceSelectionResponse( const ResourceSelectionResponse& ) = delete;
+        ResourceSelectionResponse( const ResourceSelectionResponse& );
         ResourceSelectionResponse( ResourceSelectionResponse&& ) = delete;
 
 

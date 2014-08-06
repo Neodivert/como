@@ -48,8 +48,6 @@ PublicUser::PublicUser( UserID id, const char* name,
     updateRequested_( false ),
     color_( color )
 {
-    selectionResponse_ = SelectionResponseCommandPtr( new SelectionResponseCommand );
-
     readSceneUpdatePacket();
 
     //sync();
@@ -116,7 +114,7 @@ bool PublicUser::needsSceneUpdatePacket() const
 
     mutex_.lock();
     res = ( nextCommand_ < commandsHistoric_->getSize() ) ||
-            ( selectionResponse_->getNSelections() );
+            ( pendingSelectionsResponses_.size() );
     mutex_.unlock();
 
     return res;
@@ -134,8 +132,10 @@ void PublicUser::sendNextSceneUpdatePacket()
 
     // If there is selection responses to be sent to the user, add it to the
     // scene update packet.
-    if( selectionResponse_->getNSelections() ){
-        outSceneUpdatePacketPacket_.addCommand( selectionResponse_ );
+    if( pendingSelectionsResponses_.size() ){
+        log_->debug( "\tSENDING selection response to user ResourceID(", pendingSelectionsResponses_.front().getResourceID(), ") response(", pendingSelectionsResponses_.front().getResponse(), ")\n" );
+        outSceneUpdatePacketPacket_.addCommand( CommandConstPtr( new ResourceSelectionResponse( pendingSelectionsResponses_.front() ) ) );
+        pendingSelectionsResponses_.pop();
     }
 
     nextCommand_ = commandsHistoric_->fillSceneUpdatePacketPacket( outSceneUpdatePacketPacket_, nextCommand_, MAX_COMMANDS_PER_PACKET, getID() );
@@ -168,8 +168,6 @@ void PublicUser::onWriteSceneUpdatePacket( const boost::system::error_code& erro
         log_->error( "ERROR writting SCENE_UPDATE packet: ", errorCode.message(), "\n" );
         removeUserCallback_( getID() );
     }else{
-        selectionResponse_->clear();
-
         log_->debug( "SCENE_UPDATE sent - commands(",
                      dynamic_cast< const SceneUpdatePacket* >( packet.get() )->getCommands()->size(),
                      ") - nextCommand_(",
@@ -192,11 +190,12 @@ void PublicUser::onWriteSceneUpdatePacket( const boost::system::error_code& erro
  * 6. Selection responses
  ***/
 
-void PublicUser::addSelectionResponse( bool selectionResponse )
+void PublicUser::addSelectionResponse( const ResourceID& resourceID, bool selectionResponse )
 {
     mutex_.lock();
 
-    selectionResponse_->addSelectionConfirmation( selectionResponse );
+    ResourceSelectionResponse selectionResponseCommand( resourceID, selectionResponse );
+    pendingSelectionsResponses_.push( selectionResponseCommand );
 
     requestUpdate();
 

@@ -23,6 +23,14 @@ ResourceSelectionResponse::ResourceSelectionResponse( const ResourceID& resource
 }
 
 
+ResourceSelectionResponse::ResourceSelectionResponse( const ResourceSelectionResponse& b ) :
+    ResourceCommand( b ),
+    selectionResponse_( b.selectionResponse_ )
+{
+    addPackable( &selectionResponse_ );
+}
+
+
 /***
  * 3. Getters
  ***/

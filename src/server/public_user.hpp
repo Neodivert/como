@@ -28,6 +28,7 @@
 #include <list>
 #include "commands_historic.hpp"
 #include <common/users/user.hpp>
+#include <queue>
 
 namespace como {
 
@@ -72,7 +73,9 @@ class PublicUser : public User
 
         bool updateRequested_;
 
-        SelectionResponseCommandPtr selectionResponse_;
+        std::queue< ResourceSelectionResponse > pendingSelectionsResponses_;
+
+        //SelectionResponseCommandPtr selectionResponse_;
 
         std::uint32_t color_;
 
@@ -127,7 +130,7 @@ class PublicUser : public User
         /***
          * 6. Selection responses
          ***/
-        void addSelectionResponse( bool selectionResponse );
+        void addSelectionResponse( const ResourceID& resourceID, bool selectionResponse );
 
 
         /***

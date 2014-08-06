@@ -40,7 +40,8 @@ ResourceCommand::ResourceCommand( ResourceCommandType commandType, UserID userID
 
 
 ResourceCommand::ResourceCommand(const ResourceCommand &b) :
-    TypeCommand( b )
+    TypeCommand( b ),
+    resourceID_( b.resourceID_ )
 {
     addPackable( &resourceID_ );
 }
