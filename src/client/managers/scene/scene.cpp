@@ -253,7 +253,7 @@ void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnecte
 
     // Create both drawables and meshes empty selection for the new user.
     drawablesManager_->addDrawablesSelection( userConnectedCommand->getUserID(), userConnectedCommand->getSelectionColor() );
-    meshesManager_->createResourcesSelection( userConnectedCommand->getUserID() );
+    meshesManager_->registerUser( userConnectedCommand->getUserID() );
 
     // Emit a UserConnectionCommand signal.
     emit userConnected( userConnectedCommand );
@@ -264,6 +264,7 @@ void Scene::removeUser( UserID userID )
 {
     // Unselect all drawables selected by user.
     drawablesManager_->unselectAll( userID );
+    meshesManager_->removeUser( userID );
 
     // Remove user from scene.
     if( users_.erase( userID ) ){

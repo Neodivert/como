@@ -34,16 +34,25 @@ MeshesManager::MeshesManager( ServerInterfacePtr server, DrawablesManagerPtr dra
 }
 
 
-
 /***
- * 5. Resources ownership management
+ * 4. Resources selections management
  ***/
 
-void MeshesManager::createResourcesSelection( UserID userID )
+void MeshesManager::registerUser( UserID userID )
 {
     meshesSelections_[ userID ];
 }
 
+void MeshesManager::removeUser( UserID userID )
+{
+    unlockResourcesSelection( userID );
+    meshesSelections_.erase( userID );
+}
+
+
+/***
+ * 5. Resources ownership management
+ ***/
 
 void MeshesManager::lockResource( const ResourceID& resourceID, UserID userID )
 {
@@ -61,7 +70,7 @@ void MeshesManager::unlockResourcesSelection( UserID userID )
 
 void MeshesManager::deleteResourcesSelection( UserID userID )
 {
-    meshesSelections_.erase( userID );
+    meshesSelections_.at( userID ).clear();
 }
 
 } // namespace como

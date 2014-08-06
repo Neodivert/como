@@ -62,7 +62,8 @@ class MeshesManager : public ResourcesManager
         /***
          * 4. Resources selections management // TODO: Make this protected and make AbstractOwnershipManager observe a UsersList interface.
          ***/
-        virtual void createResourcesSelection( UserID userID );
+        virtual void registerUser( UserID userID );
+        virtual void removeUser( UserID userID );
 
     protected:
         /***
