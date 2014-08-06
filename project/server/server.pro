@@ -26,7 +26,8 @@ HEADERS += \
     ../../src/server/server.hpp \
     ../../src/server/public_user.hpp \
     ../../src/server/commands_historic.hpp \
-    ../../src/server/server_primitives_manager.hpp
+    ../../src/server/server_primitives_manager.hpp \
+    ../../src/server/resources_ownership_manager.hpp
 
 # Server sources
 SOURCES += \
@@ -34,4 +35,5 @@ SOURCES += \
     ../../src/server/server.cpp \
     ../../src/server/public_user.cpp \
     ../../src/server/commands_historic.cpp \
-    ../../src/server/server_primitives_manager.cpp
+    ../../src/server/server_primitives_manager.cpp \
+    ../../src/server/resources_ownership_manager.cpp

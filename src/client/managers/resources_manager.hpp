@@ -23,10 +23,11 @@
 #include <common/utilities/observer_pattern/observable.hpp>
 #include <common/commands/command.hpp>
 #include <common/commands/resource_commands/resource_commands.hpp>
+#include <common/managers/abstract_resources_ownership_manager.hpp>
 
 namespace como {
 
-class ResourcesManager : public Observable
+class ResourcesManager : public AbstractResourcesOwnershipManager, public Observable
 {
     private:
         // TODO: Add a log_ attribute and remove it from derived classes.
@@ -76,14 +77,6 @@ class ResourcesManager : public Observable
         virtual void lockResource( const ResourceID& resourceID, UserID userID ) = 0;
         virtual void unlockResourcesSelection( UserID userID ) = 0;
         virtual void deleteResourcesSelection( UserID userID ) = 0;
-
-
-        /***
-         * 7. Command processing // TODO: Make this protected
-         ***/
-    public:
-        void executeResourceCommand( ResourceCommandConstPtr );
-        void executeResourcesSelectionCommand( ResourcesSelectionCommandConstPtr );
 };
 
 } // namespace como

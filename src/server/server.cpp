@@ -17,6 +17,7 @@
 ***/
 
 #include "server.hpp"
+#include <memory>
 
 namespace como {
 
@@ -35,7 +36,8 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
     MAX_SESSIONS( maxSessions ),
     newSocket_( *io_service_ ),
     newId_( 1 ),
-    port_( port_ )
+    port_( port_ ),
+    resourcesOwnershipManager_( users_ )
 {
     unsigned int i;
 
@@ -385,6 +387,14 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
                 // drawable. Mark it with a 0 (no owner).
                 drawableOwners_[lightCommand->getResourceID()] = 0;
             }
+        }break;
+        case CommandTarget::RESOURCE:{
+            ResourceCommandConstPtr resourceCommand = std::dynamic_pointer_cast< const ResourceCommand >( sceneCommand );
+            resourcesOwnershipManager_.executeResourceCommand( resourceCommand );
+        }break;
+        case CommandTarget::RESOURCES_SELECTION:{
+            ResourcesSelectionCommandConstPtr resourcesSelectionCommand = std::dynamic_pointer_cast< const ResourcesSelectionCommand >( sceneCommand );
+            resourcesOwnershipManager_.executeResourcesSelectionCommand( resourcesSelectionCommand );
         }break;
     }
 

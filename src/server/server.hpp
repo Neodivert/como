@@ -36,13 +36,13 @@
 #include <common/utilities/paths.hpp>
 #include <server/server_primitives_manager.hpp>
 #include <common/scene/basic_scene.hpp>
+#include <server/resources_ownership_manager.hpp>
 
 using boost::asio::ip::tcp;
 
 namespace como {
 
 typedef std::map< ResourceID, UserID > DrawableOwners;
-typedef std::map< UserID, PublicUserPtr > UsersMap;
 
 /*! Main server manager */
 class Server : public BasicScene
@@ -87,15 +87,16 @@ class Server : public BasicScene
         // A map that relates each drawable in the scene with its owner.
         DrawableOwners drawableOwners_;
 
-
         std::unique_ptr< ServerPrimitivesManager > primitivesManager_;
-
-
 
         mutable std::recursive_mutex mutex_;
 
         // Container of colors that aren't in use by any user.
         std::queue< std::uint32_t > freeUserColors_;
+
+        // Resources ownership manager
+        ResourcesOwnershipManager resourcesOwnershipManager_;
+
 
     public:
         /***

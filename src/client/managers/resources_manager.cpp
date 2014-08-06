@@ -26,6 +26,7 @@ namespace como {
  ***/
 
 ResourcesManager::ResourcesManager( ServerInterfacePtr server ) :
+    AbstractResourcesOwnershipManager(),
     server_( server )
 {}
 
@@ -59,35 +60,6 @@ ResourceID ResourcesManager::newResourceID()
 ServerInterfacePtr ResourcesManager::server() const
 {
     return server_;
-}
-
-
-/***
- * 7. Command processing
- ***/
-
-void ResourcesManager::executeResourceCommand( ResourceCommandConstPtr command )
-{
-    switch( command->getType() ){
-        case ResourceCommandType::RESOURCE_LOCK:
-            lockResource( command->getResourceID(), command->getUserID() );
-        break;
-        case ResourceCommandType::RESOURCE_SELECTION_RESPONSE:
-            // TODO: Complete. Check response and update pending selections queue.
-        break;
-    }
-}
-
-void ResourcesManager::executeResourcesSelectionCommand( ResourcesSelectionCommandConstPtr command )
-{
-    switch( command->getType() ){
-        case ResourcesSelectionCommandType::SELECTION_UNLOCK:
-            unlockResourcesSelection( command->getUserID() );
-        break;
-        case ResourcesSelectionCommandType::SELECTION_DELETION:
-            deleteResourcesSelection( command->getUserID() );
-        break;
-    }
 }
 
 

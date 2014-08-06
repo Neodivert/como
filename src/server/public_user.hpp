@@ -145,6 +145,7 @@ class PublicUser : public User
 
 
 typedef std::shared_ptr< PublicUser > PublicUserPtr;
+typedef std::map< UserID, PublicUserPtr > UsersMap;
 
 } // namespace como
 
