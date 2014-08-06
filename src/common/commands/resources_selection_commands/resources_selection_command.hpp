@@ -10,7 +10,7 @@ enum class ResourcesSelectionCommandType : std::uint8_t {
     SELECTION_DELETION
 };
 
-
+// TODO: Make constructors protected and inherit specialized commands.
 class ResourcesSelectionCommand : public TypeCommand< ResourcesSelectionCommandType >
 {
     public:
@@ -18,9 +18,7 @@ class ResourcesSelectionCommand : public TypeCommand< ResourcesSelectionCommandT
          * 1. Construction
          ***/
         ResourcesSelectionCommand( ResourcesSelectionCommandType commandType );
-    protected:
         ResourcesSelectionCommand( ResourcesSelectionCommandType commandType, UserID userID );
-    public:
         ResourcesSelectionCommand() = delete;
         ResourcesSelectionCommand( const ResourcesSelectionCommand& ) = delete;
         ResourcesSelectionCommand( ResourcesSelectionCommand&& ) = delete;

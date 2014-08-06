@@ -47,7 +47,7 @@ void ResourcesOwnershipManager::registerResource(const ResourceID& resourceID, U
 
 void ResourcesOwnershipManager::lockResource( const ResourceID& resourceID, UserID userID )
 {
-    log_->debug( "User (", userID, ") locks resource (", resourceID, "): " );
+    log_->debug( "User (", userID, ") tries to lock resource (", resourceID, "): " );
     if( resourcesOwnershipMap_.at( resourceID ) == NO_USER ){
         resourcesOwnershipMap_.at( resourceID ) = userID;
         users_.at( userID )->addSelectionResponse( true );
@@ -60,7 +60,8 @@ void ResourcesOwnershipManager::lockResource( const ResourceID& resourceID, User
 
 void ResourcesOwnershipManager::unlockResourcesSelection( UserID userID )
 {
-    for( auto resourceOwnership : resourcesOwnershipMap_ ){
+    log_->debug( "(User: ", userID, ") Unlocking Selection\n" );
+    for( auto& resourceOwnership : resourcesOwnershipMap_ ){
         if( resourceOwnership.second == userID ){
             resourceOwnership.second = NO_USER;
         }
@@ -69,6 +70,7 @@ void ResourcesOwnershipManager::unlockResourcesSelection( UserID userID )
 
 void ResourcesOwnershipManager::deleteResourcesSelection( UserID userID )
 {
+    log_->debug( "(User: ", userID, ") Deleting Selection\n" );
     ResourcesOwnershipMap::iterator currentElement, nextElement;
 
     currentElement = nextElement = resourcesOwnershipMap_.begin();

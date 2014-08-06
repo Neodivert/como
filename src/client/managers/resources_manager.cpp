@@ -35,10 +35,26 @@ ResourcesManager::ResourcesManager( ServerInterfacePtr server ) :
  * 3. Lock request
  ***/
 
-void ResourcesManager::requestLock( const ResourceID& resourceID )
+void ResourcesManager::requestResourceLock( const ResourceID& resourceID )
 {
     pendingSelections_.push( resourceID );
     sendCommandToServer( CommandConstPtr( new ResourceCommand( ResourceCommandType::RESOURCE_LOCK, localUserID(), resourceID ) ) );
+}
+
+
+void ResourcesManager::requestSelectionUnlock()
+{
+    CommandConstPtr selectionUnlockCommand =
+            CommandConstPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_UNLOCK, localUserID() ) );
+    sendCommandToServer( selectionUnlockCommand );
+}
+
+
+void ResourcesManager::requestSelectionDeletion()
+{
+    CommandConstPtr selectionDeletionCommand =
+            CommandConstPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_DELETION, localUserID() ) );
+    sendCommandToServer( selectionDeletionCommand );
 }
 
 

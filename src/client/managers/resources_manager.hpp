@@ -54,7 +54,9 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
         /***
          * 3. Lock request
          ***/
-        void requestLock( const ResourceID& resourceID );
+        void requestResourceLock( const ResourceID& resourceID );
+        void requestSelectionUnlock();
+        void requestSelectionDeletion();
 
 
         /***

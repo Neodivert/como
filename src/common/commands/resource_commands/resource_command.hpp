@@ -30,6 +30,7 @@ enum class ResourceCommandType : std::uint8_t
     RESOURCE_SELECTION_RESPONSE
 };
 
+// TODO: Make constructors protected and inherit specialized commands.
 class ResourceCommand : public TypeCommand< ResourceCommandType >
 {
     private:

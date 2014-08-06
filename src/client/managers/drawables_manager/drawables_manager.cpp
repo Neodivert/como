@@ -205,8 +205,7 @@ void DrawablesManager::deleteSelection()
     deleteSelection( localUserID_ );
 
     // Send Command to the server.
-    CommandPtr deleteSelectionCommand( new SelectionDeletionCommand( localUserID_ ) );
-    sendCommandToServer( deleteSelectionCommand );
+    requestSelectionDeletion();
 }
 
 
@@ -255,8 +254,7 @@ void DrawablesManager::unselectAll()
 {
     unselectAll( localUserID_ );
 
-    // Send command to the server.
-    sendCommandToServer( CommandConstPtr( new FullDeselectionCommand( localUserID_ ) ) );
+    requestSelectionUnlock();
 }
 
 
@@ -293,7 +291,7 @@ ResourceID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3
         log_->debug( "Object picked\n" );
 
         // Request to the server the lock of the intersected drawable.
-        requestLock( closestObject );
+        requestResourceLock( closestObject );
 
         /*
         // Send a DRAWABLE_SELECTION command to the server.
