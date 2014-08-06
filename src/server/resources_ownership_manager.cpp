@@ -32,7 +32,17 @@ ResourcesOwnershipManager::ResourcesOwnershipManager( UsersMap& usersMap, LogPtr
 
 
 /***
- * 4. Resources ownership management
+ * 3. Resources registation
+ ***/
+
+void ResourcesOwnershipManager::registerResource(const ResourceID& resourceID, UserID ownerID )
+{
+    resourcesOwnershipMap_[ resourceID ] = ownerID;
+}
+
+
+/***
+ * 5. Resources ownership management
  ***/
 
 void ResourcesOwnershipManager::lockResource( const ResourceID& resourceID, UserID userID )

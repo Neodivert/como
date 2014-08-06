@@ -124,6 +124,7 @@ void Server::run()
         drawableOwners_[DIRECTIONAL_LIGHT_ID] = 0;
         std::uint8_t lightColor[4] = { 255, 255, 255, 0 };
 
+        resourcesOwnershipManager_.registerResource( DIRECTIONAL_LIGHT_ID, NO_USER );
         addCommand( CommandConstPtr( new DirectionalLightCreationCommand( NO_USER, DIRECTIONAL_LIGHT_ID, lightColor ) ) );
 
         // Initialize the container of free user colors.
@@ -363,9 +364,7 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
 
                     // Add a node to the Drawable Owners map for the recently added
                     // drawable. Mark it with a 0 (no owner).
-                    ResourceID drawableID = primitiveCommand->getMeshID();
-
-                    drawableOwners_[ drawableID ] = 0;
+                    resourcesOwnershipManager_.registerResource( primitiveCommand->getMeshID(), NO_USER );
 
                     log_->debug( "Mesh added! (", (int)( primitiveCommand->getMeshID().getCreatorID() ),
                                  ", ", (int)( primitiveCommand->getMeshID().getResourceIndex() ), "\n" );
@@ -385,7 +384,7 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
             if( lightCommand->getType() == LightCommandType::LIGHT_CREATION ){
                 // Add a node to the Drawable Owners map for the recently added
                 // drawable. Mark it with a 0 (no owner).
-                drawableOwners_[lightCommand->getResourceID()] = 0;
+                resourcesOwnershipManager_.registerResource( lightCommand->getResourceID(), NO_USER );
             }
         }break;
         case CommandTarget::RESOURCE:{

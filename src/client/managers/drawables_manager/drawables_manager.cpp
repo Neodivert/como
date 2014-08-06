@@ -301,10 +301,9 @@ ResourceID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3
                                  new DrawableSelectionCommand( localUserID_,
                                                      closestObject,
                                                      addToSelection ) ) );
-
+        */
         // Insert the selected drawable's ID in a queue of pending selections.
         localUserPendingSelections_.push( closestObject );
-        */
 
         // Save the collision point (in world coordinates) for returning it to
         // caller.
@@ -387,7 +386,7 @@ void DrawablesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr c
             selectionResponse = dynamic_cast< const SelectionResponseCommand* >( command.get() );
 
             for( i = 0; i < selectionResponse->getNSelections(); i++ ){
-                selectionConfirmed = selectionResponse->getSelectionConfirmed() & (1 << i);
+                selectionConfirmed = selectionResponse->getSelectionConfirmed() & (1 << i);   
                 if( selectionConfirmed ){
                     pendingSelection = localUserPendingSelections_.front();
                     selectDrawable( pendingSelection );

@@ -52,14 +52,20 @@ class ResourcesOwnershipManager : public AbstractResourcesOwnershipManager
 
 
         /***
-         * 3. Operators
+         * 3. Resources registation
+         ***/
+        virtual void registerResource( const ResourceID& resourceID, UserID ownerID );
+
+
+        /***
+         * 4. Operators
          ***/
         ResourcesOwnershipManager& operator = ( const ResourcesOwnershipManager& ) = delete;
         ResourcesOwnershipManager& operator = ( ResourcesOwnershipManager&& ) = delete;
 
     protected:
         /***
-         * 4. Resources ownership management
+         * 5. Resources ownership management
          ***/
         virtual void lockResource( const ResourceID& resourceID, UserID userID );
         virtual void unlockResourcesSelection( UserID userID );
