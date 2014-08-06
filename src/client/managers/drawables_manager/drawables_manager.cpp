@@ -25,12 +25,10 @@ namespace como {
  * 1. Construction
  ***/
 
-DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
+DrawablesManager::DrawablesManager( ServerInterfacePtr server, const PackableColor& localSelectionBorderColor, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
     AbstractChangeable(),
     ResourcesManager( server ),
     nonSelectedDrawables_( new DrawablesSelection( glm::vec4( 0.0f ) ) ),
-    localUserID_( localUserID ),
-    primitivesDirPath_( primitivesDirPath ),
     oglContext_( oglContext ),
     log_( log ),
     newMeshesDisplayVertexNormals_( false )
@@ -42,10 +40,10 @@ DrawablesManager::DrawablesManager( ServerInterfacePtr server, UserID localUserI
     drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( NO_USER, nonSelectedDrawables_ ) );
 
     // Create an empty drawables selection for the local user.
-    localDrawablesSelection_ = LocalDrawablesSelectionPtr( new LocalDrawablesSelection( localUserID_, selectionColor, server ) );
+    localDrawablesSelection_ = LocalDrawablesSelectionPtr( new LocalDrawablesSelection( localUserID(), selectionColor, server ) );
 
     // Insert the recently created selection to the selections map.
-    drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( localUserID_, localDrawablesSelection_ ) );
+    drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( localUserID(), localDrawablesSelection_ ) );
 
     // Set a default mode for displaying the edges of the meshes in this
     // selection.
@@ -77,7 +75,7 @@ DrawablesSelectionPtr DrawablesManager::getUserSelection( UserID userID )
 
 glm::vec3 DrawablesManager::getPivotPoint() const
 {
-    return getPivotPoint( localUserID_ );
+    return getPivotPoint( localUserID() );
 }
 
 
@@ -202,7 +200,7 @@ void DrawablesManager::createMesh( ResourceID meshID, MeshVertexData vertexData,
 
 void DrawablesManager::deleteSelection()
 {
-    deleteSelection( localUserID_ );
+    deleteSelection( localUserID() );
 
     // Send Command to the server.
     requestSelectionDeletion();
@@ -235,7 +233,7 @@ void DrawablesManager::addDrawablesSelection( UserID userID, const PackableColor
 
 void DrawablesManager::selectDrawable( ResourceID drawableID )
 {
-    selectDrawable( drawableID, localUserID_ );
+    selectDrawable( drawableID, localUserID() );
 }
 
 
@@ -252,7 +250,7 @@ void DrawablesManager::selectDrawable( ResourceID drawableID, UserID userID )
 
 void DrawablesManager::unselectAll()
 {
-    unselectAll( localUserID_ );
+    unselectAll( localUserID() );
 
     requestSelectionUnlock();
 }
@@ -274,7 +272,7 @@ ResourceID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3
     float minT = MAX_T;
     ResourceID closestObject;
 
-    DrawablesSelection& userSelection = *( getUserSelection( localUserID_ ) );
+    DrawablesSelection& userSelection = *( getUserSelection( localUserID() ) );
 
     r1 = glm::normalize( r1 );
 
@@ -292,16 +290,6 @@ ResourceID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3
 
         // Request to the server the lock of the intersected drawable.
         requestResourceLock( closestObject );
-
-        /*
-        // Send a DRAWABLE_SELECTION command to the server.
-        sendCommandToServer( CommandConstPtr(
-                                 new DrawableSelectionCommand( localUserID_,
-                                                     closestObject,
-                                                     addToSelection ) ) );
-        */
-        // Insert the selected drawable's ID in a queue of pending selections.
-        localUserPendingSelections_.push( closestObject );
 
         // Save the collision point (in world coordinates) for returning it to
         // caller.
@@ -410,13 +398,6 @@ void DrawablesManager::executeRemoteParameterChangeCommand( UserParameterChangeC
 /***
  * 8. Auxiliar methods
  ***/
-
-void DrawablesManager::registerPrimitivePath( ResourceID primitiveID, std::string primitiveRelPath )
-{
-    // Create a new entry (ID, relative path) for the recently added primitive.
-    primitivePaths_[primitiveID] = primitiveRelPath;
-}
-
 
 bool DrawablesManager::hasChangedSinceLastQuery()
 {

@@ -48,16 +48,6 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         DrawablesSelectionPtr nonSelectedDrawables_;
         LocalDrawablesSelectionPtr localDrawablesSelection_;
 
-        UserID localUserID_;
-
-        std::queue< ResourceID > localUserPendingSelections_; // TODO: Remove this and use ResourcesManager instead.
-
-        // Map ID - PrimitivePath.
-        std::map< ResourceID, std::string > primitivePaths_; // TODO: Remove this and related methods.
-
-        // Relative path to the primitives directory.
-        std::string primitivesDirPath_;
-
         shared_ptr< QOpenGLContext > oglContext_;
 
         LogPtr log_;
@@ -72,7 +62,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         /***
          * 1. Construction
          ***/
-        DrawablesManager( ServerInterfacePtr server, UserID localUserID, const PackableColor& localSelectionBorderColor, std::string primitivesDirPath, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
+        DrawablesManager( ServerInterfacePtr server, const PackableColor& localSelectionBorderColor, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
         DrawablesManager( const DrawablesManager& ) = delete;
         DrawablesManager( DrawablesManager&& ) = delete;
 
@@ -168,9 +158,6 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
          ***/
         DrawablesManager& operator=( const DrawablesManager& ) = delete;
         DrawablesManager& operator=( DrawablesManager&& ) = delete;
-
-        // TODO: Move to a new PrimitivesManager class?
-        void registerPrimitivePath( ResourceID primitiveID, std::string primitiveRelPath );
 
         virtual bool hasChangedSinceLastQuery();
         void highlightProperty( const void* property );

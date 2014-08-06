@@ -198,18 +198,7 @@ void Scene::initLinesBuffer()
 void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
 {
     try{
-        // Initialize the scene.
-        //initScene( "scene" );
-
         log_->debug( "TEMP DIR: [", getTempDirPath(), "]\n" );
-
-        // Create an interface to the server.
-        //server_ = ServerInterfacePtr( new ServerInterface( log_, getTempDirPath() ) );
-
-        // Try to connect to the server. If there is any error, the method
-        // ServerInterface::connect() throws an exception.
-        //log_->debug( "Connecting to (", host, ":", port, ") with name [", userName, "]...\n" );
-        //userAcceptancePacket = server_->connect( host, port, userName );
 
         // Retrieve the local user ID.
         localUserID_ = userAcceptancePacket.getId();
@@ -221,7 +210,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         log_->debug( "Remote command execution signal connected\n" );
 
         // Initialize the drawables manager.
-        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, localUserID_, userAcceptancePacket.getSelectionColor(), std::string( "data/scenes/" ) + getName() + std::string( "/primitives" ), oglContext_, log_ ) );
+        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, userAcceptancePacket.getSelectionColor(), oglContext_, log_ ) );
 
         // Initialize the materials manager.
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( drawablesManager_, server_, log_ ) );

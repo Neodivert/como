@@ -73,15 +73,15 @@ class Scene : public QOffscreenSurface, public BasicScene, public AbstractChange
         OpenGLPtr openGL_;
 
         // Local user's ID.
-        UserID localUserID_;
-        ResourceIndex localUserNextDrawableIndex_;
+        UserID localUserID_; // TODO: Remove
+        ResourceIndex localUserNextDrawableIndex_; // TODO: Remove
 
         shared_ptr< QOpenGLContext > oglContext_;
 
         // Interface with the server.
         ServerInterfacePtr server_;
 
-        // Lines VAO, VBO and offsets.
+        // Lines VAO, VBO and offsets. // TODO: Move to Viewport (x4) / RenderPanel class?
         GLuint linesVAO;
         GLuint linesVBO;
         GLuint linesBufferOffsets[N_LINES_BUFFER_OFFSETS];
