@@ -50,8 +50,6 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
 
         shared_ptr< QOpenGLContext > oglContext_;
 
-        LogPtr log_;
-
     protected:
         MeshEdgesDisplayFrequency meshEdgesDisplayFrequency_;
 

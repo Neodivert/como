@@ -24,8 +24,8 @@ namespace como {
  * 1. Construction
  ***/
 
-MeshesManager::MeshesManager( ServerInterfacePtr server, DrawablesManagerPtr drawablesManager ) :
-    ResourcesManager( server ),
+MeshesManager::MeshesManager( ServerInterfacePtr server, DrawablesManagerPtr drawablesManager, LogPtr log ) :
+    ResourcesManager( server, log ),
     drawablesManager_( drawablesManager ),
     newMeshesDisplayVertexNormals_( false )
 {

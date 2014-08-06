@@ -33,8 +33,6 @@ class ResourcesOwnershipManager : public AbstractResourcesOwnershipManager
         UsersMap& users_;
         ResourcesOwnershipMap resourcesOwnershipMap_;
 
-        LogPtr log_;
-
     public:
         /***
          * 1. Construction

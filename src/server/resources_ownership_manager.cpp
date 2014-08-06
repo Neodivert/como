@@ -26,8 +26,8 @@ namespace como {
  ***/
 
 ResourcesOwnershipManager::ResourcesOwnershipManager( UsersMap& usersMap, LogPtr log ) :
-    users_( usersMap ),
-    log_( log )
+    AbstractResourcesOwnershipManager( log ),
+    users_( usersMap )
 {}
 
 
@@ -47,20 +47,20 @@ void ResourcesOwnershipManager::registerResource(const ResourceID& resourceID, U
 
 void ResourcesOwnershipManager::lockResource( const ResourceID& resourceID, UserID userID )
 {
-    log_->debug( "User (", userID, ") tries to lock resource (", resourceID, "): " );
+    log()->debug( "User (", userID, ") tries to lock resource (", resourceID, "): " );
     if( resourcesOwnershipMap_.at( resourceID ) == NO_USER ){
         resourcesOwnershipMap_.at( resourceID ) = userID;
         users_.at( userID )->addSelectionResponse( resourceID, true );
-        log_->debug( "Yes!\n" );
+        log()->debug( "Yes!\n" );
     }else{
         users_.at( userID )->addSelectionResponse( resourceID, false );
-        log_->debug( "No, resource already locked! :'-(\n" );
+        log()->debug( "No, resource already locked! :'-(\n" );
     }
 }
 
 void ResourcesOwnershipManager::unlockResourcesSelection( UserID userID )
 {
-    log_->debug( "(User: ", userID, ") Unlocking Selection\n" );
+    log()->debug( "(User: ", userID, ") Unlocking Selection\n" );
     for( auto& resourceOwnership : resourcesOwnershipMap_ ){
         if( resourceOwnership.second == userID ){
             resourceOwnership.second = NO_USER;
@@ -70,7 +70,7 @@ void ResourcesOwnershipManager::unlockResourcesSelection( UserID userID )
 
 void ResourcesOwnershipManager::deleteResourcesSelection( UserID userID )
 {
-    log_->debug( "(User: ", userID, ") Deleting Selection\n" );
+    log()->debug( "(User: ", userID, ") Deleting Selection\n" );
     ResourcesOwnershipMap::iterator currentElement, nextElement;
 
     currentElement = nextElement = resourcesOwnershipMap_.begin();

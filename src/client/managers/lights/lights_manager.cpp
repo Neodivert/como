@@ -25,9 +25,8 @@ namespace como {
  ***/
 
 LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server, LogPtr log ) :
-    ResourcesManager( server ),
-    drawablesManager_( drawablesManager ),
-    log_( log )
+    ResourcesManager( server, log ),
+    drawablesManager_( drawablesManager )
 {
     GLint i=0;
 
@@ -94,7 +93,7 @@ void LightsManager::createDirectionalLight()
 
     sendCommandToServer( CommandConstPtr( new DirectionalLightCreationCommand( localUserID(), lightID, lightColor ) ) );
 
-    log_->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
+    log()->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
 
     print();
 
@@ -141,7 +140,7 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Packab
                         lightProperties
                         ));
 
-    log_->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
+    log()->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
     print();
 
     emit lightCreated( lightID, light->getName() );
@@ -156,7 +155,7 @@ void LightsManager::selectLight( const ResourceID lightID )
 
 void LightsManager::removeLight( ResourceID lightID )
 {
-    log_->debug( "LightsManager - removing ID ", lightID, "\n" );
+    log()->debug( "LightsManager - removing ID ", lightID, "\n" );
 
     // Retrieve the light to be removed.
     LightPropertiesSharedPtr light = lights_.at( lightID );
@@ -268,15 +267,15 @@ unsigned int LightsManager::getNextFreeLightIndex( LightType lightType )
 
 void LightsManager::print()
 {
-    log_->lock();
+    log()->lock();
 
-    log_->debug( "LightsManager - lights\n" );
+    log()->debug( "LightsManager - lights\n" );
 
     for( auto it : lights_ ){
-        log_->debug( "\t", it.first, "\n" );
+        log()->debug( "\t", it.first, "\n" );
     }
 
-    log_->unlock();
+    log()->unlock();
 }
 
 

@@ -39,7 +39,7 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
         /***
          * 1. Construction
          ***/
-        ResourcesManager( ServerInterfacePtr server );
+        ResourcesManager( ServerInterfacePtr server, LogPtr log );
         ResourcesManager() = delete;
         ResourcesManager( const ResourcesManager& ) = delete;
         ResourcesManager( ResourcesManager&& ) = delete;

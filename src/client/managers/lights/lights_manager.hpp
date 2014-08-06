@@ -50,9 +50,6 @@ class LightsManager : public QObject, public Changeable, public Observer, public
         std::stack< GLuint > freeDirectionalLightIndices_;
 
 
-        LogPtr log_;
-
-
     public:
         /***
          * 1. Construction

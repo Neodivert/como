@@ -27,10 +27,9 @@ namespace como {
 
 DrawablesManager::DrawablesManager( ServerInterfacePtr server, const PackableColor& localSelectionBorderColor, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
     AbstractChangeable(),
-    ResourcesManager( server ),
+    ResourcesManager( server, log ),
     nonSelectedDrawables_( new DrawablesSelection( glm::vec4( 0.0f ) ) ),
-    oglContext_( oglContext ),
-    log_( log )
+    oglContext_( oglContext )
 {
     glm::vec4 selectionColor = localSelectionBorderColor.toVec4();
 
@@ -229,7 +228,7 @@ ResourceID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3
     // Check if the given ray intersect any of the non selected drawables.
     if( nonSelectedDrawables_->intersect( r0, r1, closestObject, minT ) ){
         // A non selected drawable has been intersected.
-        log_->debug( "Object picked\n" );
+        log()->debug( "Object picked\n" );
 
         // Request to the server the lock of the intersected drawable.
         requestResourceLock( closestObject );
@@ -241,11 +240,11 @@ ResourceID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3
         // If user dind't selected any non-selected drawable, check if he / she
         // clicked on an already selected one.
         if( userSelection.intersect( r0, r1, closestObject, minT ) ){
-            log_->debug( "RETURN 0\n" );
+            log()->debug( "RETURN 0\n" );
             ////emit renderNeeded();
             return NO_RESOURCE;
         }else{
-            log_->debug( "NO CLOSEST OBJECT. Unselecting all\n" );
+            log()->debug( "NO CLOSEST OBJECT. Unselecting all\n" );
             unselectAll();
         }
 

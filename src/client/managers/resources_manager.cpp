@@ -25,8 +25,8 @@ namespace como {
  * 1. Construction
  ***/
 
-ResourcesManager::ResourcesManager( ServerInterfacePtr server ) :
-    AbstractResourcesOwnershipManager(),
+ResourcesManager::ResourcesManager( ServerInterfacePtr server, LogPtr log ) :
+    AbstractResourcesOwnershipManager( log ),
     server_( server )
 {}
 

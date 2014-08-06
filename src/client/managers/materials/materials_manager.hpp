@@ -49,8 +49,6 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
         std::map< ResourceID, MaterialPtr > materials_;
         MaterialsOwnershipMap materialsOwners_;
 
-        LogPtr log_;
-
         MaterialHandlerPtr materialHandler_;
 
     public:

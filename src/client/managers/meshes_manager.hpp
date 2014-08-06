@@ -44,7 +44,7 @@ class MeshesManager : public ResourcesManager
         /***
          * 1. Construction
          ***/
-        MeshesManager( ServerInterfacePtr server, DrawablesManagerPtr drawablesManager );
+        MeshesManager( ServerInterfacePtr server, DrawablesManagerPtr drawablesManager, LogPtr log );
         MeshesManager() = delete;
         MeshesManager( const MeshesManager& ) = delete;
         MeshesManager( MeshesManager&& ) = delete;

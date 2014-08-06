@@ -3,16 +3,21 @@
 
 #include <common/commands/resource_commands/resource_commands.hpp>
 #include <common/commands/resources_selection_commands/resources_selection_command.hpp>
+#include <common/utilities/log.hpp>
 
 namespace como {
 
 class AbstractResourcesOwnershipManager
 {
+    private:
+        LogPtr log_;
+
     public:
         /***
          * 1. Construction
          ***/
-        AbstractResourcesOwnershipManager() = default;
+        AbstractResourcesOwnershipManager( LogPtr log );
+        AbstractResourcesOwnershipManager() = delete;
         AbstractResourcesOwnershipManager( const AbstractResourcesOwnershipManager& ) = default;
         AbstractResourcesOwnershipManager( AbstractResourcesOwnershipManager&& ) = default;
 
@@ -38,6 +43,12 @@ class AbstractResourcesOwnershipManager
 
 
     protected:
+        /***
+         * 5. Getters
+         ***/
+        LogPtr log();
+
+
         /***
          * 6. Resource management
          ***/

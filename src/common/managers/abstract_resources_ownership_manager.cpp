@@ -20,6 +20,16 @@
 
 namespace como {
 
+
+/***
+ * 1. Construction
+ ***/
+
+AbstractResourcesOwnershipManager::AbstractResourcesOwnershipManager( LogPtr log ) :
+    log_( log )
+{}
+
+
 /***
  * 3. Command execution
  ***/
@@ -48,6 +58,15 @@ void AbstractResourcesOwnershipManager::executeResourcesSelectionCommand( Resour
             deleteResourcesSelection( command->getUserID() );
         break;
     }
+}
+
+/***
+ * 5. Getters
+ ***/
+
+LogPtr AbstractResourcesOwnershipManager::log()
+{
+    return log_;
 }
 
 

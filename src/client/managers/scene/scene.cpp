@@ -204,7 +204,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, userAcceptancePacket.getSelectionColor(), oglContext_, log_ ) );
 
         // Initialize the meshes manager.
-        meshesManager_ = MeshesManagerPtr( new MeshesManager( server_, drawablesManager_ ) );
+        meshesManager_ = MeshesManagerPtr( new MeshesManager( server_, drawablesManager_, log_ ) );
 
         // Initialize the materials manager.
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( drawablesManager_, server_, log_ ) );
