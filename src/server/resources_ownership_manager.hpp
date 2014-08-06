@@ -33,11 +33,13 @@ class ResourcesOwnershipManager : public AbstractResourcesOwnershipManager
         UsersMap& users_;
         ResourcesOwnershipMap resourcesOwnershipMap_;
 
+        LogPtr log_;
+
     public:
         /***
          * 1. Construction
          ***/
-        ResourcesOwnershipManager( UsersMap& usersMap );
+        ResourcesOwnershipManager( UsersMap& usersMap, LogPtr log );
         ResourcesOwnershipManager() = delete;
         ResourcesOwnershipManager( const ResourcesOwnershipManager& ) = delete;
         ResourcesOwnershipManager( ResourcesOwnershipManager&& ) = delete;
@@ -62,6 +64,7 @@ class ResourcesOwnershipManager : public AbstractResourcesOwnershipManager
         virtual void lockResource( const ResourceID& resourceID, UserID userID );
         virtual void unlockResourcesSelection( UserID userID );
         virtual void deleteResourcesSelection( UserID userID );
+        virtual void processLockResponse( const ResourceID& resourceID, bool lockResponse );
 };
 
 } // namespace como

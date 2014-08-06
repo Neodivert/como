@@ -25,8 +25,9 @@ namespace como {
  * 1. Construction
  ***/
 
-ResourcesOwnershipManager::ResourcesOwnershipManager( UsersMap& usersMap ) :
-    users_( usersMap )
+ResourcesOwnershipManager::ResourcesOwnershipManager( UsersMap& usersMap, LogPtr log ) :
+    users_( usersMap ),
+    log_( log )
 {}
 
 
@@ -36,11 +37,14 @@ ResourcesOwnershipManager::ResourcesOwnershipManager( UsersMap& usersMap ) :
 
 void ResourcesOwnershipManager::lockResource( const ResourceID& resourceID, UserID userID )
 {
+    log_->debug( "User (", userID, ") locks resource (", resourceID, "): " );
     if( resourcesOwnershipMap_.at( resourceID ) == NO_USER ){
         resourcesOwnershipMap_.at( resourceID ) = userID;
         users_.at( userID )->addSelectionResponse( true );
+        log_->debug( "Yes!\n" );
     }else{
         users_.at( userID )->addSelectionResponse( false );
+        log_->debug( "No, resource already locked! :'-(\n" );
     }
 }
 
@@ -67,6 +71,15 @@ void ResourcesOwnershipManager::deleteResourcesSelection( UserID userID )
 
         currentElement = nextElement;
     }
+}
+
+
+void ResourcesOwnershipManager::processLockResponse( const ResourceID& resourceID, bool lockResponse )
+{
+    // TODO: Make this trick unnecessary.
+    (void)( resourceID );
+    (void)( lockResponse );
+    throw std::runtime_error( "ResourcesOwnershipManager::processLockResponse called!" );
 }
 
 } // namespace como

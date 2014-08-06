@@ -292,6 +292,10 @@ ResourceID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3
         // A non selected drawable has been intersected.
         log_->debug( "Object picked\n" );
 
+        // Request to the server the lock of the intersected drawable.
+        requestLock( closestObject );
+
+        /*
         // Send a DRAWABLE_SELECTION command to the server.
         sendCommandToServer( CommandConstPtr(
                                  new DrawableSelectionCommand( localUserID_,
@@ -300,6 +304,7 @@ ResourceID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3
 
         // Insert the selected drawable's ID in a queue of pending selections.
         localUserPendingSelections_.push( closestObject );
+        */
 
         // Save the collision point (in world coordinates) for returning it to
         // caller.
@@ -479,7 +484,7 @@ void DrawablesManager::unlockResourcesSelection( UserID userID )
     unselectAll( userID );
 }
 
-void DrawablesManager::deleteResourcesSelection(UserID userID)
+void DrawablesManager::deleteResourcesSelection( UserID userID )
 {
     deleteSelection( userID );
 }

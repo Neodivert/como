@@ -37,7 +37,7 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
     newSocket_( *io_service_ ),
     newId_( 1 ),
     port_( port_ ),
-    resourcesOwnershipManager_( users_ )
+    resourcesOwnershipManager_( users_, log_ )
 {
     unsigned int i;
 

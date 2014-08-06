@@ -33,6 +33,8 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
         // TODO: Add a log_ attribute and remove it from derived classes.
         ServerInterfacePtr server_;
 
+        std::queue< ResourceID > pendingSelections_;
+
     public:
         /***
          * 1. Construction
@@ -50,7 +52,13 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 
 
         /***
-         * 3. Operators
+         * 3. Lock request
+         ***/
+        void requestLock( const ResourceID& resourceID );
+
+
+        /***
+         * 4. Operators
          ***/
         ResourcesManager& operator = ( const ResourcesManager& ) = delete;
         ResourcesManager& operator = ( ResourcesManager&& ) = delete;
@@ -58,13 +66,13 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 
     protected:
         /***
-         * 4. Server communication
+         * 5. Server communication
          ***/
         void sendCommandToServer( CommandConstPtr command );
 
 
         /***
-         * 5. Server info
+         * 6. Server info
          ***/
         UserID localUserID() const;
         ResourceID newResourceID();
@@ -72,11 +80,12 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 
 
         /***
-         * 6. Resource management
+         * 7. Resource management
          ***/
         virtual void lockResource( const ResourceID& resourceID, UserID userID ) = 0;
         virtual void unlockResourcesSelection( UserID userID ) = 0;
         virtual void deleteResourcesSelection( UserID userID ) = 0;
+        virtual void processLockResponse( const ResourceID& resourceID, bool lockResponse );
 };
 
 } // namespace como

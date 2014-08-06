@@ -32,7 +32,18 @@ ResourcesManager::ResourcesManager( ServerInterfacePtr server ) :
 
 
 /***
- * 4. Server communication
+ * 3. Lock request
+ ***/
+
+void ResourcesManager::requestLock( const ResourceID& resourceID )
+{
+    pendingSelections_.push( resourceID );
+    sendCommandToServer( CommandConstPtr( new ResourceCommand( ResourceCommandType::RESOURCE_LOCK, localUserID(), resourceID ) ) );
+}
+
+
+/***
+ * 5. Server communication
  ***/
 
 void ResourcesManager::sendCommandToServer( CommandConstPtr command )
@@ -42,7 +53,7 @@ void ResourcesManager::sendCommandToServer( CommandConstPtr command )
 
 
 /***
- * 5. Server info
+ * 6. Server info
  ***/
 
 UserID ResourcesManager::localUserID() const
@@ -62,5 +73,20 @@ ServerInterfacePtr ResourcesManager::server() const
     return server_;
 }
 
+
+/***
+ * 7. Resource management
+ ***/
+
+void ResourcesManager::processLockResponse( const ResourceID& resourceID, bool lockResponse )
+{
+    if( pendingSelections_.front() == resourceID ){
+        if( lockResponse ){
+            lockResource( resourceID, localUserID() );
+        }
+
+        pendingSelections_.pop();
+    }
+}
 
 } // namespace como

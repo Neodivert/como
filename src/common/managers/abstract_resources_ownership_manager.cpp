@@ -30,11 +30,13 @@ void AbstractResourcesOwnershipManager::executeResourceCommand( ResourceCommandC
         case ResourceCommandType::RESOURCE_LOCK:
             lockResource( command->getResourceID(), command->getUserID() );
         break;
-        case ResourceCommandType::RESOURCE_SELECTION_RESPONSE:
-            // TODO: Complete. Check response and update pending selections queue.
-        break;
+        case ResourceCommandType::RESOURCE_SELECTION_RESPONSE:{
+            const ResourceSelectionResponse* responseCommand = dynamic_cast< const ResourceSelectionResponse* >( command.get() );
+            processLockResponse( responseCommand->getResourceID(), responseCommand->getResponse() );
+        }break;
     }
 }
+
 
 void AbstractResourcesOwnershipManager::executeResourcesSelectionCommand( ResourcesSelectionCommandConstPtr command )
 {

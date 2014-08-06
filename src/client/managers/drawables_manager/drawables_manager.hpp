@@ -50,8 +50,7 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
 
         UserID localUserID_;
 
-        // TODO: move this to ServerInterface?
-        std::queue< ResourceID > localUserPendingSelections_;
+        std::queue< ResourceID > localUserPendingSelections_; // TODO: Remove this and use ResourcesManager instead.
 
         // Map ID - PrimitivePath.
         std::map< ResourceID, std::string > primitivePaths_; // TODO: Remove this and related methods.
