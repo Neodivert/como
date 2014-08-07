@@ -93,12 +93,12 @@ void OpenGL::setMVPMatrix( const glm::mat4& modelMatrix , const glm::mat4& viewM
     glUniformMatrix4fv( uniformLocation, 1, GL_FALSE, &mvpMatrix[0][0] );
 
     // Compute normal matrix and send it to shader.
-    glm::mat3 normalMatrix = glm::mat3( 1.0f );
-    if( currentProgramID_ == shaderProgramsIDs_.at( ShaderProgramType::DEFAULT ) ){
-        normalMatrix = glm::transpose( glm::inverse( glm::mat3( modelViewMatrix ) ) );
-    }else{
-        normalMatrix = glm::transpose( glm::inverse( glm::mat3( mvpMatrix ) ) );
+    glm::mat3 normalMatrix = glm::mat3( glm::transpose( glm::inverse( modelViewMatrix ) ) );
+    if( currentProgramID_ == shaderProgramsIDs_.at( ShaderProgramType::NORMALS ) ){
+        //normalMatrix = glm::mat3( projectionMatrix * glm::mat4( normalMatrix ) );
+        normalMatrix = glm::mat3( projectionMatrix ) * normalMatrix;
     }
+
     uniformLocation = glGetUniformLocation( currentProgramID_, "normalMatrix" );
     assert( uniformLocation != -1 );
     glUniformMatrix3fv( uniformLocation, 1, GL_FALSE, &normalMatrix[0][0] );
