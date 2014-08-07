@@ -24,7 +24,7 @@ namespace como {
 enum class ContainerElementAction {
     INSERTION,
     DELETION,
-    MODIFICATION
+    UPDATE
 };
 
 template <class ElementID >

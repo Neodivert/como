@@ -115,7 +115,7 @@ void ObservableContainer<ElementID>::notifyElementDeletion( ElementID id )
 template <class ElementID>
 void ObservableContainer<ElementID>::notifyElementModification( ElementID id )
 {
-    notifyElementAction( id, ContainerElementAction::MODIFICATION );
+    notifyElementAction( id, ContainerElementAction::UPDATE );
 }
 
 

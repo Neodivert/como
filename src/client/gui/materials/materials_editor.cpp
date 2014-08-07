@@ -60,7 +60,7 @@ void MaterialsEditor::update()
         case ContainerElementAction::DELETION:
             // TODO: Complete.
         break;
-        case ContainerElementAction::MODIFICATION:
+        case ContainerElementAction::UPDATE:
             if( materialPanel_->isEnabled() && materialPanel_->getMaterialID() == materialID ){
                 materialPanel_->refresh();
             }
