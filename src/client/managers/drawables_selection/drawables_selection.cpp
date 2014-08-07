@@ -37,7 +37,6 @@ DrawablesSelection::DrawablesSelection( glm::vec4 borderColor ) :
 
 DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
     Observable( b),
-    meshes_( b.meshes_ ),
     borderColor_( b.borderColor_ ),
     centroid_( b.centroid_ ),
     pivotPointMode_( b.pivotPointMode_ ),
@@ -61,7 +60,6 @@ DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
 
 DrawablesSelection::DrawablesSelection( DrawablesSelection&& b ) :
     drawables_( b.drawables_ ),
-    meshes_( b.meshes_ ),
     borderColor_( b.borderColor_ ),
     centroid_( b.centroid_ ),
     pivotPointMode_( b.pivotPointMode_ ),
@@ -207,12 +205,6 @@ unsigned int DrawablesSelection::getSize() const
 }
 
 
-MeshesSelection *DrawablesSelection::meshes()
-{
-    return &meshes_;
-}
-
-
 /***
  * 3. Setters
  ***/
@@ -232,12 +224,6 @@ void DrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 void DrawablesSelection::displayEdges( bool displayEdges )
 {
     displayEdges_ = displayEdges;
-}
-
-
-void DrawablesSelection::displayVertexNormals( bool display )
-{
-    meshes_.displayVertexNormals( display );
 }
 
 
@@ -374,11 +360,6 @@ void DrawablesSelection::addDrawable( ResourceID drawableID, DrawablePtr drawabl
     // Insert the given pair <ID, drawable> into the selection.
     drawables_[ drawableID ] = drawable;
 
-    MeshPtr mesh = dynamic_pointer_cast< Mesh >( drawable );
-    if( mesh != nullptr ){
-        meshes_.addMesh( drawableID, mesh );
-    }
-
     // This selection has changed, so indicate it.
     notifyObservers();
 
@@ -398,7 +379,6 @@ bool DrawablesSelection::moveDrawable( ResourceID drawableID, DrawablesSelection
 
         // Erase drawable from current selection.
         drawables_.erase( drawableID );
-        meshes_.removeMesh( drawableID );
 
         // This selection has changed, so indicate it.
         notifyObservers();
@@ -443,7 +423,6 @@ void DrawablesSelection::clear()
 
     // Clear the current selection.
     drawables_.clear();
-    meshes_.clear();
 
     // This selection has changed, so indicate it.
     notifyObservers();

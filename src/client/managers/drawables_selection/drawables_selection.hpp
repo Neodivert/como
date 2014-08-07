@@ -50,8 +50,6 @@ class DrawablesSelection : public Observable
         // Drawables in the selection.
         DrawablesMap drawables_;
 
-        MeshesSelection meshes_; // TODO: Delete
-
         // Selection border color.
         glm::vec4 borderColor_;
 
@@ -88,7 +86,6 @@ class DrawablesSelection : public Observable
         std::string getName() const;
         std::string getTypeName() const;
         unsigned int getSize() const;
-        MeshesSelection* meshes(); // TODO: Delete
 
 
         /*!
@@ -112,7 +109,6 @@ class DrawablesSelection : public Observable
          ***/
         virtual void setPivotPointMode( PivotPointMode pivotPointMode );
         void displayEdges( bool displayEdges );
-        void displayVertexNormals( bool display );
 
 
         /***
