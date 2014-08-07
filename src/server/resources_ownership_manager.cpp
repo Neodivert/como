@@ -42,7 +42,17 @@ void ResourcesOwnershipManager::registerResource(const ResourceID& resourceID, U
 
 
 /***
- * 5. Resources ownership management
+ * 5. Owners management
+ ***/
+
+void ResourcesOwnershipManager::removeUser( UserID userID )
+{
+    unlockResourcesSelection( userID );
+}
+
+
+/***
+ * 6. Resources ownership management
  ***/
 
 void ResourcesOwnershipManager::lockResource( const ResourceID& resourceID, UserID userID )

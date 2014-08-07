@@ -400,6 +400,9 @@ void Server::deleteUser( UserID id )
     // Return user's color to free colors container.
     freeUserColors_.push( users_.at( id )->getColor() );
 
+    // Unlock its current selection.
+    resourcesOwnershipManager_.removeUser( id );
+
     // Delete the requested user.
     users_.erase( id );
 
