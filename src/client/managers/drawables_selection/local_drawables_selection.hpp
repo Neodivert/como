@@ -34,16 +34,11 @@ class LocalDrawablesSelection : public DrawablesSelection
          */
         ServerInterfacePtr server_;
 
-        UserID localUserID_; // TODO: Remove.
-
-        // Unique ID to be given to the next drawable added to this selection.
-        ResourceID nextResourceID_; // TODO: Remove.
-
     public:
         /***
          * 1. Construction
          ***/
-        LocalDrawablesSelection( UserID localUserID, glm::vec4 selectionBorderColor, ServerInterfacePtr server );
+        LocalDrawablesSelection( glm::vec4 selectionBorderColor, ServerInterfacePtr server );
         LocalDrawablesSelection( const LocalDrawablesSelection& ) = delete;
         LocalDrawablesSelection( LocalDrawablesSelection&& ) = delete;
 
@@ -78,8 +73,8 @@ class LocalDrawablesSelection : public DrawablesSelection
         /***
          * 6. Operators
          ***/
-        LocalDrawablesSelection& operator=( const LocalDrawablesSelection& ) = delete ;
-        LocalDrawablesSelection& operator=( LocalDrawablesSelection&& ) = delete;
+        LocalDrawablesSelection& operator = ( const LocalDrawablesSelection& ) = delete;
+        LocalDrawablesSelection& operator = ( LocalDrawablesSelection&& ) = delete;
 
 
     private:

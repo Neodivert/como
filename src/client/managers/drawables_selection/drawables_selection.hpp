@@ -32,7 +32,6 @@ namespace como {
 
 typedef std::map< ResourceID, DrawablePtr > DrawablesMap;
 
-typedef std::function<void (void)> NotificationCallback;
 
 const unsigned int N_PIVOT_POINT_MODES = 3;
 

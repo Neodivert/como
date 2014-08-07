@@ -22,11 +22,9 @@ namespace como {
 
 const unsigned int TRANSFORMATION_FLOAT_PRECISION = 10000;
 
-LocalDrawablesSelection::LocalDrawablesSelection( UserID localUserID, glm::vec4 selectionBorderColor, ServerInterfacePtr server ) :
+LocalDrawablesSelection::LocalDrawablesSelection( glm::vec4 selectionBorderColor, ServerInterfacePtr server ) :
     DrawablesSelection( selectionBorderColor ),
-    server_( server ),
-    localUserID_( localUserID ),
-    nextResourceID_( localUserID_, 0 )
+    server_( server )
 {}
 
 
@@ -38,7 +36,7 @@ void LocalDrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 {
     DrawablesSelection::setPivotPointMode( pivotPointMode );
 
-    server_->sendCommand( CommandConstPtr( new UserParameterChangeCommand( localUserID_, pivotPointMode ) ) );
+    server_->sendCommand( CommandConstPtr( new UserParameterChangeCommand( server_->getLocalUserID(), pivotPointMode ) ) );
 }
 
 
@@ -48,13 +46,9 @@ void LocalDrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 
 ResourceID LocalDrawablesSelection::addDrawable( DrawablePtr drawable )
 {
-    ResourceID newResourceID = nextResourceID_;
+    ResourceID newResourceID = server_->getNewResourceID();
 
-    DrawablesSelection::addDrawable( nextResourceID_, drawable );
-
-    // Increment the drawable index to be given to the next drawable added to
-    // this selection.
-    nextResourceID_++;
+    DrawablesSelection::addDrawable( newResourceID, drawable );
 
     return newResourceID;
 }
@@ -68,7 +62,7 @@ void LocalDrawablesSelection::translate( glm::vec3 direction )
 {
     // Only aplly the transformation if there are drawables selected.
     if( getSize() ){
-        SelectionTransformationCommand translationCommand( localUserID_ );
+        SelectionTransformationCommand translationCommand( server_->getLocalUserID() );
 
         // Round the transformation magnitude.
         roundTransformationMagnitude( direction );
@@ -87,7 +81,7 @@ void LocalDrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
 {
     // Only aplly the transformation if there are drawables selected.
     if( getSize() ){
-        SelectionTransformationCommand rotationCommand( localUserID_ );
+        SelectionTransformationCommand rotationCommand( server_->getLocalUserID() );
 
         // Round the transformation magnitude.
         roundTransformationMagnitude( angle, axis );
@@ -106,7 +100,7 @@ void LocalDrawablesSelection::scale( glm::vec3 scaleFactors )
 {
     // Only aplly the transformation if there are drawables selected.
     if( getSize() ){
-        SelectionTransformationCommand scaleCommand( localUserID_ );
+        SelectionTransformationCommand scaleCommand( server_->getLocalUserID() );
 
         // Round the transformation magnitude.
         roundTransformationMagnitude( scaleFactors );

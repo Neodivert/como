@@ -36,7 +36,7 @@ DrawablesManager::DrawablesManager( ServerInterfacePtr server, const PackableCol
     drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( NO_USER, nonSelectedDrawables_ ) );
 
     // Create an empty drawables selection for the local user.
-    localDrawablesSelection_ = LocalDrawablesSelectionPtr( new LocalDrawablesSelection( localUserID(), selectionColor, server ) );
+    localDrawablesSelection_ = LocalDrawablesSelectionPtr( new LocalDrawablesSelection( selectionColor, server ) );
 
     // Insert the recently created selection to the selections map.
     drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( localUserID(), localDrawablesSelection_ ) );
