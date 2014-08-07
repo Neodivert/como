@@ -308,8 +308,8 @@ void OBJPrimitivesImporter::computeVertexNormals( const MeshVertexData &vertexDa
     // in the triangle.
     for( auto triangle : vertexData.vertexTriangles ){
         faceNormal = glm::cross(
-                    vertexData.vertices[ triangle[2] ] - vertexData.vertices[ triangle[0] ],
-                    vertexData.vertices[ triangle[1] ] - vertexData.vertices[ triangle[0] ] );
+                    vertexData.vertices[ triangle[1] ] - vertexData.vertices[ triangle[0] ],
+                    vertexData.vertices[ triangle[2] ] - vertexData.vertices[ triangle[0] ] );
 
         normalData.normals[ triangle[0] ] += faceNormal;
         normalData.normals[ triangle[1] ] += faceNormal;
