@@ -11,8 +11,9 @@ INCLUDEPATH += ../../src/
 LIBS += -lboost_unit_test_framework
 
 SOURCES += \
-    ../../src/tests/common/ids/test_resource_id.cpp
+    ../../src/tests/common/ids/test_resource_id.cpp \
+    ../../src/tests/common/packables/packable_integers.cpp \
+    ../../src/tests/common/tests_main.cpp
 
-HEADERS += \
-    ../../src/tests/common/tests_header.hpp
+HEADERS +=
 

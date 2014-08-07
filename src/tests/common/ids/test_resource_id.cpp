@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include <tests/common/tests_header.hpp>
+#include <boost/test/unit_test.hpp>
 #include <common/ids/resource_id.hpp>
 
 BOOST_AUTO_TEST_CASE( ResourceID_Getters )
