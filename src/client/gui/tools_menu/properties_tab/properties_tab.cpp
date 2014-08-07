@@ -26,48 +26,23 @@ namespace como {
  * 1. Construction
  ***/
 
-PropertiesTab::PropertiesTab( LocalDrawablesSelectionPtr userSelection ) :
-    userSelection_( userSelection )
+PropertiesTab::PropertiesTab( LocalDrawablesSelectionPtr localDrawablesSelection, MeshesSelection* localMeshesSelection )
 {
     // Create the layout for this widget.
     QVBoxLayout* layout = new QVBoxLayout;
 
     // Construct the General Info menu.
-    generalInfoMenu_ = new GeneralInfoMenu( userSelection_ );
+    generalInfoMenu_ = new GeneralInfoMenu( localDrawablesSelection );
 
     // Construct the Mesh Info menu.
-    meshInfoMenu_ = new MeshInfoMenu( userSelection_ );
+    meshInfoMenu_ = new MeshInfoMenu( localMeshesSelection );
 
     // Add required widgets to the layout and set the latter as the current
     // layout.
     layout->addWidget( generalInfoMenu_ );
     layout->addWidget( meshInfoMenu_ );
     setLayout( layout );
-
-    // Every time the user's selection changes, refres this properties tab.
-    userSelection->addObserver( this );
-
-    // Perform a first updating.
-    update();
 }
 
-
-/***
- * 3. Updating (Observer pattern)
- ***/
-
-void PropertiesTab::update()
-{
-    generalInfoMenu_->refresh();
-
-    // If the user selection contains meshes, make the mesh panel
-    // visible to user and refresh it.
-    if( userSelection_->contains( DrawableType::MESH ) ){
-        meshInfoMenu_->setVisible( true );
-        meshInfoMenu_->refresh();
-    }else{
-        meshInfoMenu_->setVisible( false );
-    }
-}
 
 } // namespace como

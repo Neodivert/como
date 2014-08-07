@@ -32,15 +32,11 @@ namespace como {
  * \brief Tools menu's tab that allows the user to view and to modify the
  * properties of the current selected 3D object.
  */
-class PropertiesTab : public QFrame, public Observer
+class PropertiesTab : public QFrame
 {
     Q_OBJECT
 
     private:
-        /*! Local user's (drawables) selection. */
-        LocalDrawablesSelectionPtr userSelection_;
-
-
         /*!
          * Menu for manipulating the general info about the currently selected
          * 3D object.
@@ -61,7 +57,7 @@ class PropertiesTab : public QFrame, public Observer
          ***/
 
         /*! \brief Default constructor */
-        PropertiesTab( LocalDrawablesSelectionPtr userSelection );
+        PropertiesTab( LocalDrawablesSelectionPtr localDrawablesSelection, MeshesSelection* localMeshesSelection );
 
         /*! \brief Copy constructor */
         PropertiesTab( const PropertiesTab& ) = delete;
@@ -78,13 +74,7 @@ class PropertiesTab : public QFrame, public Observer
 
 
         /***
-         * 3. Updating (Observer pattern)
-         ***/
-        void update();
-
-
-        /***
-         * 4. Operators
+         * 3. Operators
          ***/
         /*! \brief Copy assignment operator */
         PropertiesTab& operator = ( const PropertiesTab& ) = delete;

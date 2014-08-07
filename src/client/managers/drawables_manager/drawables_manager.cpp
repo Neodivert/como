@@ -25,10 +25,9 @@ namespace como {
  * 1. Construction
  ***/
 
-DrawablesManager::DrawablesManager( ServerInterfacePtr server, const PackableColor& localSelectionBorderColor, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
+DrawablesManager::DrawablesManager( ServerInterfacePtr server, const PackableColor& localSelectionBorderColor, LogPtr log ) :
     ResourcesManager( server, log ),
-    nonSelectedDrawables_( new DrawablesSelection( glm::vec4( 0.0f ) ) ),
-    oglContext_( oglContext )
+    nonSelectedDrawables_( new DrawablesSelection( glm::vec4( 0.0f ) ) )
 {
     glm::vec4 selectionColor = localSelectionBorderColor.toVec4();
 

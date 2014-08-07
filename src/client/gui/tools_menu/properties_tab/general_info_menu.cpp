@@ -41,6 +41,9 @@ GeneralInfoMenu::GeneralInfoMenu( LocalDrawablesSelectionPtr userSelection ) :
     layout->addRow( new QLabel( "Name:" ), objectName_ );
     layout->addRow( new QLabel( "Type:" ), objectType_ );
     setLayout( layout );
+
+    userSelection_->addObserver( this );
+    update();
 }
 
 
@@ -48,7 +51,7 @@ GeneralInfoMenu::GeneralInfoMenu( LocalDrawablesSelectionPtr userSelection ) :
  * 4. Refreshing
  ***/
 
-void GeneralInfoMenu::refresh()
+void GeneralInfoMenu::update()
 {
     objectName_->setText( userSelection_->getName().c_str() );
     objectType_->setText( userSelection_->getTypeName().c_str() );

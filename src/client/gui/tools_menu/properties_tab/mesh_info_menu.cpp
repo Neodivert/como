@@ -25,7 +25,7 @@ namespace como {
  * 1. Construction
  ***/
 
-MeshInfoMenu::MeshInfoMenu( LocalDrawablesSelectionPtr userSelection ) :
+MeshInfoMenu::MeshInfoMenu( MeshesSelection* userSelection ) :
     userSelection_( userSelection )
 {
     // Create the layout for this tab.
@@ -36,10 +36,11 @@ MeshInfoMenu::MeshInfoMenu( LocalDrawablesSelectionPtr userSelection ) :
 
     // Add widgets to the layout and set it as the current one.
     layout->addRow( "Centroid position:", centroidPosition_ );
-    layout->addWidget( createVertexNormalsDisplayGroupBox( userSelection->meshes() ) );
+    layout->addWidget( createVertexNormalsDisplayGroupBox( userSelection ) );
     setLayout( layout );
 
-    refresh();
+    userSelection->addObserver( this );
+    update();
 }
 
 
@@ -82,10 +83,15 @@ QGroupBox* MeshInfoMenu::createVertexNormalsDisplayGroupBox( MeshesSelection* me
  * 4. Refreshing
  ***/
 
-void MeshInfoMenu::refresh()
+void MeshInfoMenu::update()
 {
     char centroidStr[50] = {0};
     glm::vec4 centroid = userSelection_->getCentroid();
+
+    setVisible( userSelection_->size() );
+    if( !( userSelection_->size() ) ){
+        return;
+    }
 
     // Convert the requested centroid into a string.
     sprintf( centroidStr, "(%.3f, %.3f, %.3f)", centroid.x, centroid.y, centroid.z );
@@ -93,7 +99,7 @@ void MeshInfoMenu::refresh()
     // Write the previous "centroid string" to its corresponding label.
     centroidPosition_->setText( centroidStr );
 
-    switch( userSelection_->meshes()->displaysVertexNormals() ){
+    switch( userSelection_->displaysVertexNormals() ){
         case ElementsMeetingCondition::ALL:
             displayVertexNormalsAlways_->setChecked( true );
         break;
@@ -113,12 +119,6 @@ void MeshInfoMenu::refresh()
             displayVertexNormalsNever_->setAutoExclusive( true );
         break;
     }
-}
-
-
-void MeshInfoMenu::update()
-{
-    refresh();
 }
 
 } // namespace como

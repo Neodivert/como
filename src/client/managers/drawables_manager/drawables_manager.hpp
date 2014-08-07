@@ -37,19 +37,14 @@ enum class MeshEdgesDisplayFrequency {
 };
 
 
-class DrawablesManager : public QOffscreenSurface, public ResourcesManager, public Observer
+class DrawablesManager : public ResourcesManager, public Observer
 {
-    Q_OBJECT
-
     private:
         DrawablesSelections drawablesSelections_;
 
         DrawablesSelectionPtr nonSelectedDrawables_;
         LocalDrawablesSelectionPtr localDrawablesSelection_;
 
-        shared_ptr< QOpenGLContext > oglContext_;
-
-    protected:
         MeshEdgesDisplayFrequency meshEdgesDisplayFrequency_;
 
 
@@ -57,7 +52,7 @@ class DrawablesManager : public QOffscreenSurface, public ResourcesManager, publ
         /***
          * 1. Construction
          ***/
-        DrawablesManager( ServerInterfacePtr server, const PackableColor& localSelectionBorderColor, shared_ptr< QOpenGLContext > oglContext, LogPtr log );
+        DrawablesManager( ServerInterfacePtr server, const PackableColor& localSelectionBorderColor, LogPtr log );
         DrawablesManager( const DrawablesManager& ) = delete;
         DrawablesManager( DrawablesManager&& ) = delete;
 

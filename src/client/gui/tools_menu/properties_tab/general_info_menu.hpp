@@ -26,7 +26,7 @@
 
 namespace como {
 
-class GeneralInfoMenu : public QWidget
+class GeneralInfoMenu : public QWidget, public Observer
 {
     Q_OBJECT
 
@@ -71,11 +71,10 @@ class GeneralInfoMenu : public QWidget
 
 
         /***
-         * 4. Refreshing
+         * 4. Updating (Observer pattern)
          ***/
 
-        /*! \brief Refresh the info about the user's selection properties */
-        void refresh();
+        void update();
 
 
         /***

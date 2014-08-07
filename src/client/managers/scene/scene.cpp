@@ -201,7 +201,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         log_->debug( "Remote command execution signal connected\n" );
 
         // Initialize the drawables manager.
-        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, userAcceptancePacket.getSelectionColor(), oglContext_, log_ ) );
+        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, userAcceptancePacket.getSelectionColor(), log_ ) );
         drawablesManager_->addObserver( this );
 
         // Initialize the meshes manager.
