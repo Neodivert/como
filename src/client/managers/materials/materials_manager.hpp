@@ -38,7 +38,7 @@ namespace como {
 
 typedef std::map< ResourceID, UserID > MaterialsOwnershipMap;
 
-class MaterialsManager : public QObject, public ObservableContainer< ResourceID >, public Observer, public ResourcesManager
+class MaterialsManager : public QObject, public Observer, public ResourcesManager, public ObservableContainer< ResourceID >
 {
     Q_OBJECT
 

@@ -37,30 +37,34 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
     QObject::connect( materialsManager_.get(), &MaterialsManager::materialSelectionConfirmed,
                       materialPanel_, &MaterialPanel::openMaterial );
 
-    materialsManager_->ObservableContainer::addObserver( this, ContainerActionType::ALL );
+    materialsManager_->ObservableContainer<ResourceID>::addObserver( this );
 }
 
 
 /***
- * 3. ContainerObserver interface
+ * 3. Updating (Observer pattern).
  ***/
 
-void MaterialsEditor::onElementInsertion( ResourceID materialID )
+void MaterialsEditor::update()
 {
-    materialsList_->addMaterial( materialID,
-                                 materialsManager_->getMaterial( materialID )->getName() );
-}
+    ResourceID materialID;
+    ContainerElementAction materialAction;
 
-void MaterialsEditor::onElementDeletion( ResourceID materialID )
-{
-    // TODO: Complete.
-    Q_UNUSED( materialID );
-}
+    materialsManager_->getLastAction( materialID, materialAction );
 
-void MaterialsEditor::onElementModification( ResourceID materialID )
-{
-    if( materialPanel_->isEnabled() && materialPanel_->getMaterialID() == materialID ){
-        materialPanel_->refresh();
+    switch( materialAction ){
+        case ContainerElementAction::INSERTION:
+            materialsList_->addMaterial( materialID,
+                                         materialsManager_->getMaterial( materialID )->getName() );
+        break;
+        case ContainerElementAction::DELETION:
+            // TODO: Complete.
+        break;
+        case ContainerElementAction::MODIFICATION:
+            if( materialPanel_->isEnabled() && materialPanel_->getMaterialID() == materialID ){
+                materialPanel_->refresh();
+            }
+        break;
     }
 }
 

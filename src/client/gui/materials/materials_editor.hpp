@@ -21,14 +21,13 @@
 
 #include <QFrame>
 #include <client/managers/materials/materials_manager.hpp>
-#include <common/utilities/observer_pattern/container_observer.hpp>
 
 #include "materials_list.hpp"
 #include "material_panel.hpp"
 
 namespace como {
 
-class MaterialsEditor : public QFrame, public ContainerObserver< ResourceID >
+class MaterialsEditor : public QFrame, public Observer
 {
     Q_OBJECT
 
@@ -54,11 +53,9 @@ class MaterialsEditor : public QFrame, public ContainerObserver< ResourceID >
 
 
         /***
-         * 3. ContainerObserver interface
+         * 3. Updating (Observer pattern).
          ***/
-        virtual void onElementInsertion( ResourceID materialID );
-        virtual void onElementDeletion( ResourceID materialID );
-        virtual void onElementModification( ResourceID materialID );
+        virtual void update();
 
 
         /***
