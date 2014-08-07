@@ -22,26 +22,25 @@
 #include <client/managers/server_interface/server_interface.hpp>
 #include <client/models/3d/lights/light_properties.hpp>
 #include <functional>
+#include <common/utilities/observer_pattern/observable.hpp>
 
 namespace como {
 
-class LightHandler
+class LightHandler : public Observable
 {
     private:
         LightPropertiesSharedPtr light_;
         ResourceID lightID_;
         ServerInterfacePtr server_;
 
-        // Call this method when a notification has changed.
-        std::function< void(void) > notifyChange_;
-
     public:
         /***
          * 1. Construction
          ***/
-        LightHandler( LightPropertiesSharedPtr light, ResourceID lightID, ServerInterfacePtr server, std::function< void(void) > notifyChange );
+        LightHandler( LightPropertiesSharedPtr light, ResourceID lightID, ServerInterfacePtr server );
         LightHandler( const LightHandler& ) = delete;
         LightHandler( LightHandler&& ) = delete;
+
 
         /***
          * 2. Destruction

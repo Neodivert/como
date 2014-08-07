@@ -24,11 +24,10 @@ namespace como {
  * 1. Construction
  ***/
 
-LightHandler::LightHandler( LightPropertiesSharedPtr light, ResourceID lightID, ServerInterfacePtr server, std::function< void(void) > notifyChange ) :
+LightHandler::LightHandler( LightPropertiesSharedPtr light, ResourceID lightID, ServerInterfacePtr server ) :
     light_( light ),
     lightID_( lightID ),
-    server_( server ),
-    notifyChange_( notifyChange )
+    server_( server )
 {}
 
 
@@ -64,7 +63,7 @@ void LightHandler::setLightColor( const PackableColor& lightColor)
 
     server_->sendCommand( CommandConstPtr( new LightColorChangeCommand( server_->getLocalUserID(), lightID_, lightColor ) ) );
 
-    notifyChange_();
+    notifyObservers();
 }
 
 
@@ -74,7 +73,7 @@ void LightHandler::setAmbientCoefficient( float coefficient )
 
     server_->sendCommand( CommandConstPtr( new LightAmbientCoefficientChangeCommand( server_->getLocalUserID(), lightID_, coefficient ) ) );
 
-    notifyChange_();
+    notifyObservers();
 }
 
 } // namespace como

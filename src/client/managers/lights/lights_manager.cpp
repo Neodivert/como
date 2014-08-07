@@ -149,7 +149,11 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Packab
 
 void LightsManager::selectLight( const ResourceID lightID )
 {
-    emit lightSelected( LightHandlerPtr( new LightHandler( lights_.at( lightID ), lightID, server(), std::bind( &LightsManager::notifyObservers, this ) ) ) );
+    LightHandlerPtr lightHandler( new LightHandler( lights_.at( lightID ), lightID, server() ) );
+
+    lightHandler->addObserver( this );
+
+    emit lightSelected( lightHandler );
 }
 
 
@@ -238,6 +242,8 @@ void LightsManager::update()
 
         currentIt = nextIt;
     }
+
+    notifyObservers();
 }
 
 
