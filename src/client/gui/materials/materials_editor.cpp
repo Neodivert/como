@@ -50,7 +50,7 @@ void MaterialsEditor::update()
     ResourceID materialID;
     ContainerElementAction materialAction;
 
-    materialsManager_->getLastAction( materialID, materialAction );
+    materialsManager_->getLastElementAction( materialID, materialAction );
 
     switch( materialAction ){
         case ContainerElementAction::INSERTION:

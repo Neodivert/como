@@ -96,7 +96,8 @@ HEADERS += \
     ../../src/common/commands/resources_selection_commands/resources_selection_command.hpp \
     ../../src/common/commands/resource_commands/resource_selection_response.hpp \
     ../../src/common/commands/resource_commands/resource_commands.hpp \
-    ../../src/common/managers/abstract_resources_ownership_manager.hpp
+    ../../src/common/managers/abstract_resources_ownership_manager.hpp \
+    ../../src/common/utilities/container_observer/informer_container.hpp
 
 
 # Common sources (used by both client and server).

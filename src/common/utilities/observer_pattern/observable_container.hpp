@@ -20,22 +20,15 @@
 #define OBSERVABLE_CONTAINER_HPP
 
 #include <unordered_set>
-#include "observer.hpp"
+#include <common/utilities/observer_pattern/observer.hpp>
+#include <common/utilities/container_observer/informer_container.hpp>
 
 namespace como {
 
-enum class ContainerElementAction {
-    INSERTION,
-    DELETION,
-    MODIFICATION
-};
 
-template <class IDType>
-class ObservableContainer {
+template <class ElementID>
+class ObservableContainer : public InformerContainer< ElementID > {
     private:
-        IDType lastElementModified_;
-        ContainerElementAction lastElementAction_;
-
         std::unordered_set< Observer* > observers_;
 
     public:
@@ -43,8 +36,8 @@ class ObservableContainer {
          * 1. Construction
          ***/
         ObservableContainer() = default;
-        ObservableContainer( const ObservableContainer<IDType>& ) = delete;
-        ObservableContainer( ObservableContainer<IDType>&& ) = delete;
+        ObservableContainer( const ObservableContainer<ElementID>& ) = delete;
+        ObservableContainer( ObservableContainer<ElementID>&& ) = delete;
 
 
         /***
@@ -61,84 +54,66 @@ class ObservableContainer {
 
 
         /***
-         * 4. Getters
+         * 4. Operators
          ***/
-        void getLastAction( IDType& id, ContainerElementAction& action ) const;
-
-
-        /***
-         * 5. Operators
-         ***/
-        ObservableContainer& operator = ( const ObservableContainer<IDType>& ) = delete;
-        ObservableContainer& operator = ( ObservableContainer<IDType>&& ) = delete;
+        ObservableContainer& operator = ( const ObservableContainer<ElementID>& ) = delete;
+        ObservableContainer& operator = ( ObservableContainer<ElementID>&& ) = delete;
 
 
     protected:
         /***
-         * 6. Notifications
+         * 5. Notifications
          ***/
-        void notifyElementInsertion( IDType id );
-        void notifyElementDeletion( IDType id );
-        void notifyElementModification( IDType id );
+        void notifyElementInsertion( ElementID id );
+        void notifyElementDeletion( ElementID id );
+        void notifyElementModification( ElementID id );
 
 
     private:
         /***
-         * 7. Auxiliar methods
+         * 6. Auxiliar methods
          ***/
-        void notifyElementAction( IDType id, ContainerElementAction action );
+        void notifyElementAction( ElementID id, ContainerElementAction action );
 };
 
 /***
  * 3. Observables management
  ***/
 
-template <class IDType>
-void ObservableContainer<IDType>::addObserver( Observer* observer )
+template <class ElementID>
+void ObservableContainer<ElementID>::addObserver( Observer* observer )
 {
     observers_.insert( observer );
 }
 
 
-template <class IDType>
-void ObservableContainer<IDType>::removeObserver( Observer* observer )
+template <class ElementID>
+void ObservableContainer<ElementID>::removeObserver( Observer* observer )
 {
     observers_.erase( observer );
 }
 
 
 /***
- * 4. Getters
+ * 5. Notifications
  ***/
 
-template <class IDType>
-void ObservableContainer<IDType>::getLastAction( IDType& id, ContainerElementAction& action ) const
-{
-    id = lastElementModified_;
-    action = lastElementAction_;
-}
-
-
-/***
- * 6. Notifications
- ***/
-
-template <class IDType>
-void ObservableContainer<IDType>::notifyElementInsertion( IDType id )
+template <class ElementID>
+void ObservableContainer<ElementID>::notifyElementInsertion( ElementID id )
 {
     notifyElementAction( id, ContainerElementAction::INSERTION );
 }
 
 
-template <class IDType>
-void ObservableContainer<IDType>::notifyElementDeletion( IDType id )
+template <class ElementID>
+void ObservableContainer<ElementID>::notifyElementDeletion( ElementID id )
 {
     notifyElementAction( id, ContainerElementAction::DELETION );
 }
 
 
-template <class IDType>
-void ObservableContainer<IDType>::notifyElementModification( IDType id )
+template <class ElementID>
+void ObservableContainer<ElementID>::notifyElementModification( ElementID id )
 {
     notifyElementAction( id, ContainerElementAction::MODIFICATION );
 }
@@ -148,11 +123,10 @@ void ObservableContainer<IDType>::notifyElementModification( IDType id )
  * 7. Auxiliar methods
  ***/
 
-template <class IDType>
-void ObservableContainer<IDType>::notifyElementAction( IDType id, ContainerElementAction action )
+template <class ElementID>
+void ObservableContainer<ElementID>::notifyElementAction( ElementID id, ContainerElementAction action )
 {
-    lastElementModified_ = id;
-    lastElementAction_ = action;
+    this->setLastElementAction( id, action );
 
     for( auto observer : observers_ ){
         observer->update();
