@@ -141,6 +141,7 @@ class DrawablesManager : public QOffscreenSurface, public ResourcesManager, publ
         /***
          * 12. Resource management
          ***/
+    protected:
         virtual void lockResource( const ResourceID& resourceID, UserID userID );
         virtual void unlockResourcesSelection( UserID userID );
         virtual void deleteResourcesSelection( UserID userID );

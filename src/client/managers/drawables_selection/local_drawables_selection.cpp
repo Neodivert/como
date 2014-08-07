@@ -23,7 +23,6 @@ namespace como {
 const unsigned int TRANSFORMATION_FLOAT_PRECISION = 10000;
 
 LocalDrawablesSelection::LocalDrawablesSelection( UserID localUserID, glm::vec4 selectionBorderColor, ServerInterfacePtr server ) :
-    QObject(),
     DrawablesSelection( selectionBorderColor ),
     server_( server ),
     localUserID_( localUserID ),

@@ -25,10 +25,8 @@
 
 namespace como {
 
-class LocalDrawablesSelection : public QObject, public DrawablesSelection
+class LocalDrawablesSelection : public DrawablesSelection
 {
-    Q_OBJECT
-
     private:
         /*!
          * \brief Interface with the server. Used for sending all the
@@ -36,10 +34,10 @@ class LocalDrawablesSelection : public QObject, public DrawablesSelection
          */
         ServerInterfacePtr server_;
 
-        UserID localUserID_;
+        UserID localUserID_; // TODO: Remove.
 
         // Unique ID to be given to the next drawable added to this selection.
-        ResourceID nextResourceID_;
+        ResourceID nextResourceID_; // TODO: Remove.
 
     public:
         /***
@@ -84,20 +82,12 @@ class LocalDrawablesSelection : public QObject, public DrawablesSelection
         LocalDrawablesSelection& operator=( LocalDrawablesSelection&& ) = delete;
 
 
+    private:
         /***
          * 7. Auxiliar methods
          ***/
-    private:
         void roundTransformationMagnitude( glm::vec3& v );
         void roundTransformationMagnitude( float& angle, glm::vec3& v );
-    public:
-
-
-        /***
-         * 8. Signals
-         ***/
-    signals:
-        void hasChanged();
 };
 
 typedef std::shared_ptr< LocalDrawablesSelection > LocalDrawablesSelectionPtr;
