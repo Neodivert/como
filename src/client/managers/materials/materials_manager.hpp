@@ -28,7 +28,6 @@
 #include <QObject>
 #include <memory>
 #include <common/commands/material_commands/material_commands.hpp>
-#include <client/models/utilities/changeable/changeable.hpp>
 #include <functional>
 #include <common/utilities/observer_pattern/observable_container.hpp>
 #include <common/mesh_info/material_info.hpp>
@@ -39,7 +38,7 @@ namespace como {
 
 typedef std::map< ResourceID, UserID > MaterialsOwnershipMap;
 
-class MaterialsManager : public QObject, public Changeable, public ObservableContainer< ResourceID >, public Observer, public ResourcesManager
+class MaterialsManager : public QObject, public ObservableContainer< ResourceID >, public Observer, public ResourcesManager
 {
     Q_OBJECT
 
@@ -105,7 +104,6 @@ class MaterialsManager : public QObject, public Changeable, public ObservableCon
         /***
          * 7. Updating
          ***/
-        virtual void onChange(){}
         virtual void update();
 
 

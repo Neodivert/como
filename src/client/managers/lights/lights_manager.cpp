@@ -149,7 +149,7 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Packab
 
 void LightsManager::selectLight( const ResourceID lightID )
 {
-    emit lightSelected( LightHandlerPtr( new LightHandler( lights_.at( lightID ), lightID, server(), std::bind( &LightsManager::setChanged, this ) ) ) );
+    emit lightSelected( LightHandlerPtr( new LightHandler( lights_.at( lightID ), lightID, server(), std::bind( &LightsManager::notifyObservers, this ) ) ) );
 }
 
 
@@ -205,7 +205,7 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
 
             emit lightModified( lightCommand->getResourceID() );
 
-            setChanged();
+            notifyObservers();
         }break;
         case LightCommandType::LIGHT_AMBIENT_COEFFICIENT_CHANGE:{
             const LightAmbientCoefficientChangeCommand* lightCommand =
@@ -215,7 +215,7 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
 
             emit lightModified( lightCommand->getResourceID() );
 
-            setChanged();
+            notifyObservers();
         }break;
     }
 }

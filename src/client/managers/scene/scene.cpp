@@ -202,19 +202,22 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
 
         // Initialize the drawables manager.
         drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, userAcceptancePacket.getSelectionColor(), oglContext_, log_ ) );
+        drawablesManager_->addObserver( this );
 
         // Initialize the meshes manager.
         meshesManager_ = MeshesManagerPtr( new MeshesManager( server_, drawablesManager_, log_ ) );
+        meshesManager_->addObserver( this );
 
         // Initialize the materials manager.
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( drawablesManager_, server_, log_ ) );
+        materialsManager_->Observable::addObserver( this );
 
         // Initialize the primitives manager.
         primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, meshesManager_, materialsManager_, log_ ) );
 
         // Initialize the lights manager.
         lightsManager_ = LightsManagerPtr( new LightsManager( drawablesManager_, server_, log_ ) );
-
+        lightsManager_->addObserver( this );
 
         drawablesManager_->addObserver( lightsManager_.get() );
 
@@ -347,13 +350,6 @@ void Scene::takeOpenGLContext()
 /***
  * 10. Drawing
  ***/
-
-void Scene::drawIfChanged( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const int& drawGuideRect )
-{
-    if( hasChangedSinceLastQuery() ){
-        draw( viewMatrix, projectionMatrix, drawGuideRect );
-    }
-}
 
 void Scene::draw( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const int& drawGuideRect ) const
 {
@@ -520,25 +516,6 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
                  ") ...OK\n" );
 }
 
-bool Scene::hasChangedSinceLastQuery()
-{
-    // FIXME: This "if( drawablesManager_)" is necessary because this method
-    // is invoked since Scene is instantiated, but drawablesManager_ ISN'T
-    // initialized until we connect to a server.
-    if( drawablesManager_ && drawablesManager_->hasChangedSinceLastQuery() ){
-        return true;
-    }
-
-    if( materialsManager_ && materialsManager_->hasChangedSinceLastQuery() ){
-        return true;
-    }
-
-    if( lightsManager_ && lightsManager_->hasChangedSinceLastQuery() ){
-        return true;
-    }
-
-    return false;
-}
 
 void Scene::run()
 {
@@ -549,6 +526,16 @@ void Scene::run()
     emit userConnected( localUserConnectionCommand_ );
 
     server_->run();
+}
+
+
+/***
+ * 15. Updating (Observer pattern)
+ ***/
+
+void Scene::update()
+{
+    notifyObservers();
 }
 
 } // namespace como

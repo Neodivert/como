@@ -123,18 +123,6 @@ void LocalDrawablesSelection::scale( glm::vec3 scaleFactors )
 
 
 /***
- * 6. Updating
- ***/
-
-void LocalDrawablesSelection::onChange()
-{
-    DrawablesSelection::onChange();
-
-    emit hasChanged();
-}
-
-
-/***
  * 7. Auxiliar methods
  ***/
 

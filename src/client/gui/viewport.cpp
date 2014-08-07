@@ -406,7 +406,7 @@ Projection Viewport::getProjection() const
 
 void Viewport::renderIfNeeded()
 {
-    if( forceRender_ || comoApp->getScene()->hasChangedSinceLastQuery() ){
+    if( forceRender_ ){
         render();
     }
 }

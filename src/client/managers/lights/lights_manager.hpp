@@ -31,7 +31,7 @@ namespace como {
 
 typedef std::map< ResourceID, LightPropertiesSharedPtr > LightsMap;
 
-class LightsManager : public QObject, public Changeable, public Observer, public ResourcesManager
+class LightsManager : public QObject, public Observer, public ResourcesManager
 {
     Q_OBJECT
 
@@ -107,7 +107,6 @@ class LightsManager : public QObject, public Changeable, public Observer, public
          * 7. Updating
          ***/
     private:
-        virtual void onChange(){}
         virtual void update();
 
 

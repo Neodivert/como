@@ -36,7 +36,7 @@ DrawablesSelection::DrawablesSelection( glm::vec4 borderColor ) :
 
 
 DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
-    Changeable( b ),
+    Observable( b),
     meshes_( b.meshes_ ),
     borderColor_( b.borderColor_ ),
     centroid_( b.centroid_ ),
@@ -55,12 +55,11 @@ DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
     }
 
     // This selection has changed, so indicate it.
-    setChanged();
+    notifyObservers();
 }
 
 
 DrawablesSelection::DrawablesSelection( DrawablesSelection&& b ) :
-    Changeable( b ),
     drawables_( b.drawables_ ),
     meshes_( b.meshes_ ),
     borderColor_( b.borderColor_ ),
@@ -224,7 +223,7 @@ void DrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
     pivotPointMode_ = pivotPointMode;
 
     // This selection has changed, so indicate it.
-    setChanged();
+    notifyObservers();
 
     mutex_.unlock();
 }
@@ -257,8 +256,10 @@ void DrawablesSelection::translate( glm::vec3 direction )
         drawable->second->translate( direction );
     }
 
+    updateSelectionCentroid();
+
     // This selection has changed, so indicate it.
-    setChanged();
+    notifyObservers();
 
     mutex_.unlock();
 }
@@ -290,8 +291,10 @@ void DrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
         break;
     }
 
+    updateSelectionCentroid();
+
     // This selection has changed, so indicate it.
-    setChanged();
+    notifyObservers();
 
     mutex_.unlock();
 }
@@ -323,8 +326,10 @@ void DrawablesSelection::scale( glm::vec3 scaleFactors )
         break;
     }
 
+    updateSelectionCentroid();
+
     // This selection has changed, so indicate it.
-    setChanged();
+    notifyObservers();
 
     mutex_.unlock();
 }
@@ -333,13 +338,6 @@ void DrawablesSelection::scale( glm::vec3 scaleFactors )
 /***
  * 5. Updating
  ***/
-
-void DrawablesSelection::onChange()
-{
-    // This selection has changed, so update its centroid.
-    updateSelectionCentroid();
-}
-
 
 void DrawablesSelection::updateSelectionCentroid()
 {
@@ -382,7 +380,7 @@ void DrawablesSelection::addDrawable( ResourceID drawableID, DrawablePtr drawabl
     }
 
     // This selection has changed, so indicate it.
-    setChanged();
+    notifyObservers();
 
     mutex_.unlock();
 }
@@ -403,7 +401,7 @@ bool DrawablesSelection::moveDrawable( ResourceID drawableID, DrawablesSelection
         meshes_.removeMesh( drawableID );
 
         // This selection has changed, so indicate it.
-        setChanged();
+        notifyObservers();
 
         mutex_.unlock();
         return true;
@@ -433,7 +431,7 @@ void DrawablesSelection::moveAll( DrawablesSelection& destinySelection )
     clear();
 
     // This selection has changed, so indicate it.
-    setChanged();
+    notifyObservers();
 
     mutex_.unlock();
 }
@@ -448,7 +446,7 @@ void DrawablesSelection::clear()
     meshes_.clear();
 
     // This selection has changed, so indicate it.
-    setChanged();
+    notifyObservers();
 
     mutex_.unlock();
 }

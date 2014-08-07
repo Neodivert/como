@@ -45,23 +45,18 @@ PropertiesTab::PropertiesTab( LocalDrawablesSelectionPtr userSelection ) :
     setLayout( layout );
 
     // Every time the user's selection changes, refres this properties tab.
-    connect( userSelection_.get(), &LocalDrawablesSelection::hasChanged, this, &PropertiesTab::refresh );
+    userSelection->addObserver( this );
 
-    // Perform a first refreshing.
-    refresh();
+    // Perform a first updating.
+    update();
 }
 
 
 /***
- * 2. Initialization
+ * 3. Updating (Observer pattern)
  ***/
 
-
-/***
- * 3. Refreshing
- ***/
-
-void PropertiesTab::refresh()
+void PropertiesTab::update()
 {
     generalInfoMenu_->refresh();
 

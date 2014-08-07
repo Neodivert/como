@@ -26,7 +26,6 @@ namespace como {
  ***/
 
 DrawablesManager::DrawablesManager( ServerInterfacePtr server, const PackableColor& localSelectionBorderColor, shared_ptr< QOpenGLContext > oglContext, LogPtr log ) :
-    AbstractChangeable(),
     ResourcesManager( server, log ),
     nonSelectedDrawables_( new DrawablesSelection( glm::vec4( 0.0f ) ) ),
     oglContext_( oglContext )
@@ -165,7 +164,9 @@ void DrawablesManager::deleteSelection( const unsigned int& userId )
 
 void DrawablesManager::addDrawablesSelection( UserID userID, const PackableColor& selectionBorderColor )
 {
-    drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( userID, DrawablesSelectionPtr( new DrawablesSelection( selectionBorderColor.toVec4() ) ) ) );
+    DrawablesSelectionPtr newDrawablesSelection( new DrawablesSelection( selectionBorderColor.toVec4() ) );
+    drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( userID, newDrawablesSelection ) );
+    newDrawablesSelection->addObserver( this );
 }
 
 
@@ -326,20 +327,6 @@ void DrawablesManager::executeRemoteParameterChangeCommand( UserParameterChangeC
  * 8. Auxiliar methods
  ***/
 
-bool DrawablesManager::hasChangedSinceLastQuery()
-{
-    DrawablesSelections::iterator it;
-
-    for( it = drawablesSelections_.begin(); it != drawablesSelections_.end(); it++ ){
-        if( it->second->hasChangedSinceLastQuery() ){
-            return true;
-        }
-    }
-
-    return false;
-}
-
-
 void DrawablesManager::highlightProperty( const void *property )
 {
     for( auto drawablesSelection : drawablesSelections_ ){
@@ -364,6 +351,16 @@ void DrawablesManager::unlockResourcesSelection( UserID userID )
 void DrawablesManager::deleteResourcesSelection( UserID userID )
 {
     deleteSelection( userID );
+}
+
+
+/***
+ * 13. Updating (Observer pattern)
+ ***/
+
+void DrawablesManager::update()
+{
+
 }
 
 

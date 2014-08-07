@@ -26,7 +26,6 @@
 #include <functional>
 #include <mutex>
 #include <QObject>
-#include <client/models/utilities/changeable/changeable.hpp>
 #include "meshes_selection.hpp"
 
 namespace como {
@@ -45,13 +44,13 @@ const char pivotPointModeStrings[N_PIVOT_POINT_MODES][32] =
      "World origin"
 };
 
-class DrawablesSelection : public Changeable
+class DrawablesSelection : public Observable
 {
     private:
         // Drawables in the selection.
         DrawablesMap drawables_;
 
-        MeshesSelection meshes_;
+        MeshesSelection meshes_; // TODO: Delete
 
         // Selection border color.
         glm::vec4 borderColor_;
@@ -89,7 +88,7 @@ class DrawablesSelection : public Changeable
         std::string getName() const;
         std::string getTypeName() const;
         unsigned int getSize() const;
-        MeshesSelection* meshes();
+        MeshesSelection* meshes(); // TODO: Delete
 
 
         /*!
@@ -127,14 +126,6 @@ class DrawablesSelection : public Changeable
         /***
          * 5. Updating
          ***/
-    protected:
-
-        /*!
-         * \brief This method is automatically called when setChanged is
-         * called so inherited objects can perfom actions whenever they
-         * change.
-         */
-        virtual void onChange();
 
     private:
         void updateSelectionCentroid();

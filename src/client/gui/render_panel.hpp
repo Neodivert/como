@@ -28,7 +28,7 @@ QT_FORWARD_DECLARE_CLASS(QSplitter)
 
 namespace como {
 
-class RenderPanel : public QFrame
+class RenderPanel : public QFrame, public Observer
 {
     Q_OBJECT
 
@@ -38,6 +38,8 @@ class RenderPanel : public QFrame
 
         //
         ViewFrame* viewFrames_[4];
+
+        bool forceRender_;
 
     public:
         /***
@@ -65,6 +67,13 @@ class RenderPanel : public QFrame
         void renderIfNeeded();
         void maximizeViewFrame( ViewFrame* viewFrame );
         void minimizeViewFrames();
+
+
+    public:
+        /***
+         * 4. Updating (Observer)
+         ***/
+        virtual void update();
 };
 
 } // namespace como

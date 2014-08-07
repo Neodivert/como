@@ -78,12 +78,6 @@ class LocalDrawablesSelection : public QObject, public DrawablesSelection
 
 
         /***
-         * 5. Updating
-         ***/
-        virtual void onChange();
-
-
-        /***
          * 6. Operators
          ***/
         LocalDrawablesSelection& operator=( const LocalDrawablesSelection& ) = delete ;

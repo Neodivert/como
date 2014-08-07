@@ -27,7 +27,8 @@ namespace como {
 
 RenderPanel::RenderPanel( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     QFrame( parent ),
-    viewFrames_{ nullptr }
+    viewFrames_{ nullptr },
+    forceRender_( true )
 {
     QSplitter* vSplitter = nullptr;
     QSplitter* h1Splitter = nullptr;
@@ -88,6 +89,9 @@ RenderPanel::RenderPanel( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     QTimer* timer = new QTimer( this );
     connect( timer, &QTimer::timeout, this, &RenderPanel::renderIfNeeded );
     timer->start( 22 );
+
+    // Start observing the scene.
+    this->comoApp->getScene()->addObserver( this );
 }
 
 
@@ -103,11 +107,11 @@ RenderPanel::~RenderPanel()
 
 void RenderPanel::renderIfNeeded()
 {
-    for( unsigned int i=0; i<4; i++ ){
-        if( comoApp->getScene()->hasChangedSinceLastQuery() ){
+    unsigned int i;
+
+    if( forceRender_ ){
+        for( i = 0; i < 4; i++ ){
             viewFrames_[i]->render();
-        }else{
-            viewFrames_[i]->renderIfNeeded();
         }
     }
 }
@@ -132,6 +136,16 @@ void RenderPanel::minimizeViewFrames()
     for( i = 0; i < 4; i++ ){
         viewFrames_[i]->show();
     }
+}
+
+
+/***
+ * 4. Updating (Observer)
+ ***/
+
+void RenderPanel::update()
+{
+    forceRender_ = true;
 }
 
 } // namespace como

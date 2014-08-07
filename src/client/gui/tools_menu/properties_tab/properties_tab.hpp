@@ -32,7 +32,7 @@ namespace como {
  * \brief Tools menu's tab that allows the user to view and to modify the
  * properties of the current selected 3D object.
  */
-class PropertiesTab : public QFrame
+class PropertiesTab : public QFrame, public Observer
 {
     Q_OBJECT
 
@@ -73,24 +73,19 @@ class PropertiesTab : public QFrame
         /***
          * 2. Destruction
          ***/
-
         /*! \brief Destructor */
         ~PropertiesTab() = default;
 
 
         /***
-         * 3. Refreshing
+         * 3. Updating (Observer pattern)
          ***/
-
-        /*! \brief Refresh the info about the user's selection properties */
-    public slots:
-        void refresh();
+        void update();
 
 
         /***
          * 4. Operators
          ***/
-    public:
         /*! \brief Copy assignment operator */
         PropertiesTab& operator = ( const PropertiesTab& ) = delete;
 

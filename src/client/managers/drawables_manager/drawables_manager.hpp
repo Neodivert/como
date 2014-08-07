@@ -23,7 +23,6 @@
 #include <client/managers/drawables_selection/drawables_selection.hpp>
 #include <client/managers/drawables_selection/local_drawables_selection.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
-#include <client/models/utilities/changeable/changeable.hpp>
 #include <map>
 #include <QOffscreenSurface>
 #include <client/managers/resources_manager.hpp>
@@ -37,8 +36,8 @@ enum class MeshEdgesDisplayFrequency {
     ONLY_WHEN_SELECTED
 };
 
-// TODO: Remove AbstractChangeable and use only Observable.
-class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, public ResourcesManager
+
+class DrawablesManager : public QOffscreenSurface, public ResourcesManager, public Observer
 {
     Q_OBJECT
 
@@ -89,12 +88,6 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
 
 
         /***
-         * 5. Changeable
-         ***/
-        void onChange(){}
-
-
-        /***
          * 6. Drawables administration
          ***/
     public:
@@ -142,7 +135,6 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         DrawablesManager& operator=( const DrawablesManager& ) = delete;
         DrawablesManager& operator=( DrawablesManager&& ) = delete;
 
-        virtual bool hasChangedSinceLastQuery();
         void highlightProperty( const void* property );
 
 
@@ -152,6 +144,11 @@ class DrawablesManager : public QOffscreenSurface, public AbstractChangeable, pu
         virtual void lockResource( const ResourceID& resourceID, UserID userID );
         virtual void unlockResourcesSelection( UserID userID );
         virtual void deleteResourcesSelection( UserID userID );
+
+        /***
+         * 13. Updating (Observer pattern)
+         ***/
+        virtual void update();
 };
 
 typedef shared_ptr< DrawablesManager > DrawablesManagerPtr;
