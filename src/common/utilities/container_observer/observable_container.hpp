@@ -66,14 +66,14 @@ class ObservableContainer : public InformerContainer< ElementID > {
          ***/
         void notifyElementInsertion( ElementID id );
         void notifyElementDeletion( ElementID id );
-        void notifyElementModification( ElementID id );
+        void notifyContainerUpdate();
 
 
     private:
         /***
          * 6. Auxiliar methods
          ***/
-        void notifyElementAction( ElementID id, ContainerElementAction action );
+        void notifyElementAction( ElementID id, ContainerAction action );
 };
 
 /***
@@ -101,21 +101,21 @@ void ObservableContainer<ElementID>::removeObserver( Observer* observer )
 template <class ElementID>
 void ObservableContainer<ElementID>::notifyElementInsertion( ElementID id )
 {
-    notifyElementAction( id, ContainerElementAction::INSERTION );
+    notifyElementAction( id, ContainerAction::ELEMENT_INSERTION );
 }
 
 
 template <class ElementID>
 void ObservableContainer<ElementID>::notifyElementDeletion( ElementID id )
 {
-    notifyElementAction( id, ContainerElementAction::DELETION );
+    notifyElementAction( id, ContainerAction::ELEMENT_DELETION );
 }
 
 
 template <class ElementID>
-void ObservableContainer<ElementID>::notifyElementModification( ElementID id )
+void ObservableContainer<ElementID>::notifyContainerUpdate()
 {
-    notifyElementAction( id, ContainerElementAction::UPDATE );
+    notifyElementAction( ElementID(), ContainerAction::CONTAINER_UPDATE );
 }
 
 
@@ -124,7 +124,7 @@ void ObservableContainer<ElementID>::notifyElementModification( ElementID id )
  ***/
 
 template <class ElementID>
-void ObservableContainer<ElementID>::notifyElementAction( ElementID id, ContainerElementAction action )
+void ObservableContainer<ElementID>::notifyElementAction( ElementID id, ContainerAction action )
 {
     this->setLastElementAction( id, action );
 

@@ -48,19 +48,19 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
 void MaterialsEditor::update()
 {
     ResourceID materialID;
-    ContainerElementAction materialAction;
+    ContainerAction materialAction;
 
     materialsManager_->getLastElementAction( materialID, materialAction );
 
     switch( materialAction ){
-        case ContainerElementAction::INSERTION:
+        case ContainerAction::ELEMENT_INSERTION:
             materialsList_->addMaterial( materialID,
                                          materialsManager_->getMaterial( materialID )->getName() );
         break;
-        case ContainerElementAction::DELETION:
+        case ContainerAction::ELEMENT_DELETION:
             // TODO: Complete.
         break;
-        case ContainerElementAction::UPDATE:
+        case ContainerAction::CONTAINER_UPDATE:
             if( materialPanel_->isEnabled() && materialPanel_->getMaterialID() == materialID ){
                 materialPanel_->refresh();
             }

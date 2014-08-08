@@ -199,7 +199,7 @@ void MaterialsManager::executeRemoteCommand( MaterialCommandConstPtr command )
                 }break;
             }
 
-            notifyElementModification( command->getMaterialID() );
+            //notifyElementModification( command->getMaterialID() );
 
             notifyObservers();
         }break;
@@ -209,7 +209,7 @@ void MaterialsManager::executeRemoteCommand( MaterialCommandConstPtr command )
 
 void MaterialsManager::update()
 {
-    notifyElementModification( materialHandler_->getID() );
+    //notifyElementModification( materialHandler_->getID() );
 
     notifyObservers();
 }

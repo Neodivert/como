@@ -63,7 +63,7 @@ class ContainerObserver : public Observer {
          ***/
         virtual void onElementInsertion( ElementID ) = 0;
         virtual void onElementDeletion( ElementID ) = 0;
-        virtual void onElementUpdate( ElementID ) = 0;
+        virtual void onContainerUpdate() = 0;
 };
 
 
@@ -75,18 +75,20 @@ template <class ElementID>
 void ContainerObserver::update()
 {
     ElementID elementID;
-    ContainerElementAction elementAction;
+    ContainerAction elementAction;
 
     observedContainer_->getLastElementAction( elementID, elementAction );
     switch( elementAction ){
-        case ContainerElementAction::INSERTION:
-            onElementInsertion();
+        case ContainerAction::ELEMENT_INSERTION:
+            onElementInsertion( elementID );
+            onContainerUpdate();
         break;
-        case ContainerElementAction::DELETION:
-            onElementInsertion();
+        case ContainerAction::ELEMENT_DELETION:
+            onElementDeletion( elementID );
+            onContainerUpdate();
         break;
-        case ContainerElementAction::UPDATE:
-            onElementUpdate();
+        case ContainerAction::CONTAINER_UPDATE:
+            onContainerUpdate();
         break;
     }
 }
