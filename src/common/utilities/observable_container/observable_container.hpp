@@ -32,8 +32,8 @@ class ObservableContainer : public InformerContainer< ElementID >, public Observ
          * 1. Construction
          ***/
         ObservableContainer() = default;
-        ObservableContainer( const ObservableContainer<ElementID>& ) = delete;
-        ObservableContainer( ObservableContainer<ElementID>&& ) = delete;
+        ObservableContainer( const ObservableContainer<ElementID>& ) = default;
+        ObservableContainer( ObservableContainer<ElementID>&& ) = default;
 
 
         /***
@@ -45,8 +45,8 @@ class ObservableContainer : public InformerContainer< ElementID >, public Observ
         /***
          * 3. Operators
          ***/
-        ObservableContainer& operator = ( const ObservableContainer<ElementID>& ) = delete;
-        ObservableContainer& operator = ( ObservableContainer<ElementID>&& ) = delete;
+        ObservableContainer& operator = ( const ObservableContainer<ElementID>& ) = default;
+        ObservableContainer& operator = ( ObservableContainer<ElementID>&& ) = default;
 
 
     protected:

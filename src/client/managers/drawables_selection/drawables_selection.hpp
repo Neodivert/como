@@ -27,6 +27,7 @@
 #include <mutex>
 #include <QObject>
 #include "meshes_selection.hpp"
+#include <common/utilities/observable_container/observable_container.hpp>
 
 namespace como {
 
@@ -43,7 +44,7 @@ const char pivotPointModeStrings[N_PIVOT_POINT_MODES][32] =
      "World origin"
 };
 
-class DrawablesSelection : public Observable
+class DrawablesSelection : public ObservableContainer<ResourceID>
 {
     private:
         // Drawables in the selection.

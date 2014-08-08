@@ -36,7 +36,7 @@ DrawablesSelection::DrawablesSelection( glm::vec4 borderColor ) :
 
 
 DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
-    Observable( b),
+    ObservableContainer( b ),
     borderColor_( b.borderColor_ ),
     centroid_( b.centroid_ ),
     pivotPointMode_( b.pivotPointMode_ ),
@@ -240,12 +240,11 @@ void DrawablesSelection::translate( glm::vec3 direction )
     // Translate every drawable in the selection.
     for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
         drawable->second->translate( direction );
+
+        notifyElementUpdate( drawable->first );
     }
 
     updateSelectionCentroid();
-
-    // This selection has changed, so indicate it.
-    notifyObservers();
 
     mutex_.unlock();
 }
@@ -263,24 +262,28 @@ void DrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
             for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
                 drawable->second->rotate( angle, axis, glm::vec3( drawable->second->getCentroid() ) );
+
+                notifyElementUpdate( drawable->first );
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
             for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
                 drawable->second->rotate( angle, axis, glm::vec3( centroid_ ) );
+
+                notifyElementUpdate( drawable->first );
             }
         break;
         case PivotPointMode::WORLD_ORIGIN:
             for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
                 drawable->second->rotate( angle, axis );
+
+                notifyElementUpdate( drawable->first );
             }
         break;
     }
 
     updateSelectionCentroid();
 
-    // This selection has changed, so indicate it.
-    notifyObservers();
 
     mutex_.unlock();
 }
@@ -298,24 +301,27 @@ void DrawablesSelection::scale( glm::vec3 scaleFactors )
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
             for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
                 drawable->second->scale( scaleFactors, glm::vec3( drawable->second->getCentroid() ) );
+
+                notifyElementUpdate( drawable->first );
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
             for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
                 drawable->second->scale( scaleFactors, glm::vec3( centroid_ ) );
+
+                notifyElementUpdate( drawable->first );
             }
         break;
         case PivotPointMode::WORLD_ORIGIN:
             for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
                 drawable->second->scale( scaleFactors );
+
+                notifyElementUpdate( drawable->first );
             }
         break;
     }
 
     updateSelectionCentroid();
-
-    // This selection has changed, so indicate it.
-    notifyObservers();
 
     mutex_.unlock();
 }
@@ -361,7 +367,7 @@ void DrawablesSelection::addDrawable( ResourceID drawableID, DrawablePtr drawabl
     drawables_[ drawableID ] = drawable;
 
     // This selection has changed, so indicate it.
-    notifyObservers();
+    notifyElementInsertion( drawableID );
 
     mutex_.unlock();
 }
@@ -381,7 +387,7 @@ bool DrawablesSelection::moveDrawable( ResourceID drawableID, DrawablesSelection
         drawables_.erase( drawableID );
 
         // This selection has changed, so indicate it.
-        notifyObservers();
+        notifyElementDeletion( drawableID );
 
         mutex_.unlock();
         return true;
@@ -405,13 +411,12 @@ void DrawablesSelection::moveAll( DrawablesSelection& destinySelection )
     // COPY every drawable from current selection to destiny.
     for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
         destinySelection.addDrawable( drawable->first, drawable->second );
+
+        notifyElementDeletion( drawable->first );
     }
 
     // Clear the current selection.
     clear();
-
-    // This selection has changed, so indicate it.
-    notifyObservers();
 
     mutex_.unlock();
 }
@@ -421,11 +426,12 @@ void DrawablesSelection::clear()
 {
     mutex_.lock();
 
+    for( auto drawable : drawables_ ){
+        notifyElementDeletion( drawable.first );
+    }
+
     // Clear the current selection.
     drawables_.clear();
-
-    // This selection has changed, so indicate it.
-    notifyObservers();
 
     mutex_.unlock();
 }
