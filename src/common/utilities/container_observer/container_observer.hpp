@@ -19,7 +19,7 @@
 #ifndef CONTAINER_OBSERVER_HPP
 #define CONTAINER_OBSERVER_HPP
 
-#include <common/utilities/container_observer/observable_container.hpp> // TODO: Move to this dir.
+#include <common/utilities/container_observer/observable_container.hpp>
 #include <common/utilities/observer_pattern/observer.hpp>
 
 namespace como {
