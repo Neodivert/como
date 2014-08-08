@@ -45,25 +45,22 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
  * 3. Updating (Observer pattern).
  ***/
 
-void MaterialsEditor::update()
+void MaterialsEditor::update( ContainerAction lastContainerAction, ResourceID resourceID )
 {
-    ResourceID materialID;
-    ContainerElementAction materialAction;
-
-    materialsManager_->getLastElementAction( materialID, materialAction );
-
-    switch( materialAction ){
-        case ContainerElementAction::INSERTION:
-            materialsList_->addMaterial( materialID,
-                                         materialsManager_->getMaterial( materialID )->getName() );
+    switch( lastContainerAction ){
+        case ContainerAction::ELEMENT_INSERTION:
+            materialsList_->addMaterial( resourceID,
+                                         materialsManager_->getMaterial( resourceID )->getName() );
         break;
-        case ContainerElementAction::DELETION:
+        case ContainerAction::ELEMENT_DELETION:
             // TODO: Complete.
         break;
-        case ContainerElementAction::UPDATE:
-            if( materialPanel_->isEnabled() && materialPanel_->getMaterialID() == materialID ){
+        case ContainerAction::ELEMENT_UPDATE:
+            if( materialPanel_->isEnabled() && materialPanel_->getMaterialID() == resourceID ){
                 materialPanel_->refresh();
             }
+        break;
+        case ContainerAction::CONTAINER_UPDATE:
         break;
     }
 }

@@ -27,7 +27,7 @@
 
 namespace como {
 
-class MaterialsEditor : public QFrame, public Observer
+class MaterialsEditor : public QFrame, public ContainerObserver<ResourceID>
 {
     Q_OBJECT
 
@@ -55,7 +55,7 @@ class MaterialsEditor : public QFrame, public Observer
         /***
          * 3. Updating (Observer pattern).
          ***/
-        virtual void update();
+        virtual void update( ContainerAction lastContainerAction, ResourceID lastElementModified );
 
 
         /***

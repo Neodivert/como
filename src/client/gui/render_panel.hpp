@@ -71,7 +71,7 @@ class RenderPanel : public QFrame, public Observer
 
     public:
         /***
-         * 4. Updating (Observer)
+         * 4. Updating (Observer pattern)
          ***/
         virtual void update();
 };

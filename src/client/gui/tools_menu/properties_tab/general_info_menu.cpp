@@ -42,7 +42,7 @@ GeneralInfoMenu::GeneralInfoMenu( LocalDrawablesSelectionPtr userSelection ) :
     layout->addRow( new QLabel( "Type:" ), objectType_ );
     setLayout( layout );
 
-    userSelection_->addObserver( this );
+    userSelection_->Observable::addObserver( this );
     update();
 }
 

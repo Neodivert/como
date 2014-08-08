@@ -202,11 +202,11 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
 
         // Initialize the drawables manager.
         drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, userAcceptancePacket.getSelectionColor(), log_ ) );
-        drawablesManager_->addObserver( this );
+        drawablesManager_->Observable::addObserver( this );
 
         // Initialize the meshes manager.
         meshesManager_ = MeshesManagerPtr( new MeshesManager( server_, drawablesManager_, log_ ) );
-        meshesManager_->addObserver( this );
+        meshesManager_->Observable::addObserver( this );
 
         // Initialize the materials manager.
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( drawablesManager_, server_, log_ ) );
@@ -217,9 +217,9 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
 
         // Initialize the lights manager.
         lightsManager_ = LightsManagerPtr( new LightsManager( drawablesManager_, server_, log_ ) );
-        lightsManager_->addObserver( this );
+        lightsManager_->Observable::addObserver( this );
 
-        drawablesManager_->addObserver( lightsManager_.get() );
+        drawablesManager_->Observable::addObserver( lightsManager_.get() );
 
         localUserConnectionCommand_ = UserConnectionCommandConstPtr( new UserConnectionCommand( userAcceptancePacket ) );
 
