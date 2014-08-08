@@ -29,7 +29,7 @@
 #include <memory>
 #include <common/commands/material_commands/material_commands.hpp>
 #include <functional>
-#include <common/utilities/container_observer/observable_container.hpp>
+#include <common/utilities/observable_container/observable_container.hpp>
 #include <common/mesh_info/material_info.hpp>
 #include <client/managers/drawables_manager/drawables_manager.hpp>
 #include <client/managers/resources_manager.hpp>

@@ -20,7 +20,7 @@
 #define OBSERVABLE_CONTAINER_HPP
 
 #include <common/utilities/observer_pattern/observable.hpp>
-#include <common/utilities/container_observer/informer_container.hpp>
+#include <common/utilities/observable_container/informer_container.hpp>
 
 namespace como {
 

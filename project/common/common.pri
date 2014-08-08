@@ -65,7 +65,7 @@ HEADERS += \
     ../../src/common/commands/user_commands/user_parameter_change_command.hpp \
     ../../src/common/commands/parameter_change_command.hpp \
     ../../src/common/commands/light_commands/light_color_change_command.hpp \
-    ../../src/common/utilities/container_observer/observable_container.hpp \
+    ../../src/common/utilities/observable_container/observable_container.hpp \
     ../../src/common/utilities/paths.hpp \
     ../../src/common/commands/primitive_category_commands/primitive_category_command.hpp \
     ../../src/common/commands/primitive_category_commands/primitive_category_creation_command.hpp \
@@ -97,7 +97,7 @@ HEADERS += \
     ../../src/common/commands/resource_commands/resource_selection_response.hpp \
     ../../src/common/commands/resource_commands/resource_commands.hpp \
     ../../src/common/managers/abstract_resources_ownership_manager.hpp \
-    ../../src/common/utilities/container_observer/informer_container.hpp
+    ../../src/common/utilities/observable_container/informer_container.hpp
 
 
 # Common sources (used by both client and server).
