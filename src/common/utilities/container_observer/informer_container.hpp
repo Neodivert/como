@@ -21,10 +21,10 @@
 
 namespace como {
 
-enum class ContainerAction {
-    ELEMENT_INSERTION,
-    ELEMENT_DELETION,
-    CONTAINER_UPDATE
+enum class ContainerElementAction {
+    INSERTION,
+    DELETION,
+    UPDATE
 };
 
 template <class ElementID >
@@ -32,7 +32,7 @@ class InformerContainer
 {
     private:
         ElementID lastElementModified_;
-        ContainerAction lastElementAction_;
+        ContainerElementAction lastElementAction_;
 
     public:
         /***
@@ -52,7 +52,7 @@ class InformerContainer
         /***
          * 3. Getters
          ***/
-        void getLastElementAction( ElementID& id, ContainerAction& actionType ) const;
+        void getLastElementAction( ElementID& id, ContainerElementAction& actionType ) const;
 
 
         /***
@@ -66,7 +66,7 @@ class InformerContainer
         /***
          * 5. Setters
          ***/
-        void setLastElementAction( ElementID id, ContainerAction actionType );
+        void setLastElementAction( ElementID id, ContainerElementAction actionType );
 };
 
 
@@ -75,7 +75,7 @@ class InformerContainer
  ***/
 
 template <class ElementID>
-void InformerContainer<ElementID>::getLastElementAction( ElementID& id, ContainerAction& actionType ) const
+void InformerContainer<ElementID>::getLastElementAction( ElementID& id, ContainerElementAction& actionType ) const
 {
     id = lastElementModified_;
     actionType = lastElementAction_;
@@ -87,7 +87,7 @@ void InformerContainer<ElementID>::getLastElementAction( ElementID& id, Containe
  ***/
 
 template <class ElementID>
-void InformerContainer<ElementID>::setLastElementAction( ElementID id, ContainerAction actionType )
+void InformerContainer<ElementID>::setLastElementAction( ElementID id, ContainerElementAction actionType )
 {
     lastElementModified_ = id;
     lastElementAction_ = actionType;

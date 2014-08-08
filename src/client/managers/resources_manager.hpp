@@ -20,14 +20,14 @@
 #define RESOURCES_MANAGER_HPP
 
 #include <client/managers/server_interface/server_interface.hpp>
-#include <common/utilities/observer_pattern/observable.hpp>
+#include <common/utilities/container_observer/observable_container.hpp>
 #include <common/commands/command.hpp>
 #include <common/commands/resource_commands/resource_commands.hpp>
 #include <common/managers/abstract_resources_ownership_manager.hpp>
 
 namespace como {
 
-class ResourcesManager : public AbstractResourcesOwnershipManager, public Observable
+class ResourcesManager : public AbstractResourcesOwnershipManager, public ObservableContainer< ResourceID >
 {
     private:
         ServerInterfacePtr server_;
