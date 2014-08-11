@@ -35,14 +35,9 @@ enum class MeshEdgesDisplayFrequency {
 };
 
 
-class DrawablesManager : public ResourcesManager< Drawable >, public ContainerObserver<ResourceID>
+class DrawablesManager : public ResourcesManager< Drawable, DrawablesSelection, LocalDrawablesSelection >
 {
     private:
-        DrawablesSelections drawablesSelections_;
-
-        DrawablesSelectionPtr nonSelectedDrawables_;
-        LocalDrawablesSelectionPtr localDrawablesSelection_;
-
         MeshEdgesDisplayFrequency meshEdgesDisplayFrequency_;
 
 
@@ -58,14 +53,13 @@ class DrawablesManager : public ResourcesManager< Drawable >, public ContainerOb
         /***
          * 2. Destruction
          ***/
-        ~DrawablesManager();
+        ~DrawablesManager() = default;
 
 
         /***
          * 3. Getters
          ***/
         virtual string getResourceName( const ResourceID& resourceID) const;
-        LocalDrawablesSelectionPtr getLocalUserSelection() const ;
     private:
         DrawablesSelectionPtr getUserSelection( UserID userID ) const ;
         DrawablesSelectionPtr getUserSelection( UserID userID );
@@ -139,12 +133,6 @@ class DrawablesManager : public ResourcesManager< Drawable >, public ContainerOb
         virtual void lockResource( const ResourceID& resourceID, UserID userID );
         virtual void unlockResourcesSelection( UserID userID );
         virtual void deleteResourcesSelection( UserID userID );
-
-
-        /***
-         * 13. Updating (Observer pattern)
-         ***/
-        virtual void update( ContainerAction lastContainerAction, ResourceID lastElementModified );   
 };
 
 typedef shared_ptr< DrawablesManager > DrawablesManagerPtr;

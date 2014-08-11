@@ -496,7 +496,7 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
 
             drawablesManager_->executeResourceCommand( resourceCommand );
             meshesManager_->executeResourceCommand( resourceCommand );
-            materialsManager_->executeResourceCommand( resourceCommand );
+            // TODO: materialsManager_->executeResourceCommand( resourceCommand );
             lightsManager_->executeResourceCommand( resourceCommand );
         }break;
         case CommandTarget::RESOURCES_SELECTION:{
@@ -504,7 +504,7 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
 
             drawablesManager_->executeResourcesSelectionCommand( selectionCommand );
             meshesManager_->executeResourcesSelectionCommand( selectionCommand );
-            materialsManager_->executeResourcesSelectionCommand( selectionCommand );
+            // TODO: materialsManager_->executeResourcesSelectionCommand( selectionCommand );
             lightsManager_->executeResourcesSelectionCommand( selectionCommand );
         }break;
     }

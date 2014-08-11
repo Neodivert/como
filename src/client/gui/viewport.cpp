@@ -240,7 +240,7 @@ void Viewport::keyPressEvent( QKeyEvent *e )
 
 void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 {
-    LocalDrawablesSelectionPtr localUserSelection = comoApp->getScene()->getDrawablesManager()->getLocalUserSelection();
+    LocalDrawablesSelectionPtr localUserSelection = comoApp->getScene()->getDrawablesManager()->getLocalResourcesSelection();
 
     // Reference axis used in rotations.
     const glm::vec3 xAxis( 1.0f, 0.0f, 0.0f );

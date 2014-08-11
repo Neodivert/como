@@ -39,7 +39,7 @@ MeshInfoMenu::MeshInfoMenu( MeshesSelection* userSelection ) :
     layout->addWidget( createVertexNormalsDisplayGroupBox( userSelection ) );
     setLayout( layout );
 
-    userSelection->addObserver( this );
+    userSelection->Observable::addObserver( this );
     update();
 }
 
@@ -71,7 +71,7 @@ QGroupBox* MeshInfoMenu::createVertexNormalsDisplayGroupBox( MeshesSelection* me
     layout->addWidget( displayVertexNormalsAlways_ );
     layout->addWidget( displayVertexNormalsNever_ );
 
-    meshesSelection->addObserver( this );
+    meshesSelection->Observable::addObserver( this );
 
     displayVertexNormalsGroupBox = new QGroupBox( "Display vertex normals" );
     displayVertexNormalsGroupBox->setLayout( layout );

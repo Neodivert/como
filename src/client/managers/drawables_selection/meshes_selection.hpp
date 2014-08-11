@@ -23,6 +23,7 @@
 #include <map>
 #include <common/ids/resource_id.hpp>
 #include <common/utilities/observer_pattern/observable.hpp>
+#include <client/managers/selections/resources/resources_selection.hpp>
 
 namespace como {
 
@@ -37,7 +38,7 @@ enum class ElementsMeetingCondition {
     SOME
 };
 
-class MeshesSelection : public AbstractMesh, public Observable
+class MeshesSelection : public AbstractMesh, public virtual ResourcesSelection< Mesh >
 {
     private:
         MeshesMap meshes_;

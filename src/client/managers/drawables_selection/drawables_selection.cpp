@@ -25,6 +25,16 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
+DrawablesSelection::DrawablesSelection() :
+    borderColor_( 1.0f ),
+    centroid_( 0.0f, 0.0f, 0.0f, 1.0f ),
+    pivotPointMode_( PivotPointMode::MEDIAN_POINT ),
+    highlightedProperty_( nullptr ),
+    displayEdges_( true )
+{
+}
+
+
 DrawablesSelection::DrawablesSelection( glm::vec4 borderColor ) :
     borderColor_( borderColor ),
     centroid_( 0.0f, 0.0f, 0.0f, 1.0f ),
@@ -34,9 +44,9 @@ DrawablesSelection::DrawablesSelection( glm::vec4 borderColor ) :
 {
 }
 
-
+/*
 DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
-    ObservableContainer( b ),
+    ResourcesSelection( b ),
     borderColor_( b.borderColor_ ),
     centroid_( b.centroid_ ),
     pivotPointMode_( b.pivotPointMode_ ),
@@ -66,7 +76,7 @@ DrawablesSelection::DrawablesSelection( DrawablesSelection&& b ) :
     displayEdges_( b.displayEdges_ )
 {
 }
-
+*/
 
 /***
  * 2. Getters

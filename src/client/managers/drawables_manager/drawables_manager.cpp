@@ -26,38 +26,15 @@ namespace como {
  ***/
 
 DrawablesManager::DrawablesManager( ServerInterfacePtr server, const PackableColor& localSelectionBorderColor, LogPtr log ) :
-    ResourcesManager( server, log ),
-    nonSelectedDrawables_( new DrawablesSelection( glm::vec4( 0.0f ) ) )
+    ResourcesManager<Drawable, DrawablesSelection, LocalDrawablesSelection >( server, log )
 {
+    // TODO: Set local selection color.
     glm::vec4 selectionColor = localSelectionBorderColor.toVec4();
-
-    // Add a selection of unselected drawables to the map of selections as a
-    // selection associated to NO_USER).   
-    drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( NO_USER, nonSelectedDrawables_ ) );
-    nonSelectedDrawables_->addObserver( this );
-
-    // Create an empty drawables selection for the local user.
-    localDrawablesSelection_ = LocalDrawablesSelectionPtr( new LocalDrawablesSelection( selectionColor, server ) );
-    localDrawablesSelection_->addObserver( this );
-
-    // Insert the recently created selection to the selections map.
-    drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( localUserID(), localDrawablesSelection_ ) );
+    (void)( selectionColor );
 
     // Set a default mode for displaying the edges of the meshes in this
     // selection.
     displayEdges( MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED );
-}
-
-
-/***
- * 2. Destruction
- ***/
-
-DrawablesManager::~DrawablesManager()
-{
-    for( auto& drawablesSelection : drawablesSelections_ ){
-        drawablesSelection.second->removeObserver( this );
-    }
 }
 
 
@@ -68,7 +45,7 @@ DrawablesManager::~DrawablesManager()
 string DrawablesManager::getResourceName( const ResourceID& resourceID ) const
 {
     std::string resourceName;
-    for( auto drawablesSelection : drawablesSelections_ ){
+    for( auto drawablesSelection : resourcesSelections_ ){
         if( drawablesSelection.second->existsDrawable( resourceID ) ){
             resourceName = drawablesSelection.second->getDrawableName( resourceID );
             return resourceName;
@@ -79,21 +56,15 @@ string DrawablesManager::getResourceName( const ResourceID& resourceID ) const
 }
 
 
-LocalDrawablesSelectionPtr DrawablesManager::getLocalUserSelection() const
-{
-    return localDrawablesSelection_;
-}
-
-
 DrawablesSelectionPtr DrawablesManager::getUserSelection( UserID userID ) const
 {
-    return drawablesSelections_.at( userID );
+    return resourcesSelections_.at( userID );
 }
 
 
 DrawablesSelectionPtr DrawablesManager::getUserSelection( UserID userID )
 {
-    return drawablesSelections_.at( userID );
+    return resourcesSelections_.at( userID );
 }
 
 
@@ -121,7 +92,7 @@ bool DrawablesManager::existsDrawable( const ResourceID& id ) const
 {
     DrawablesSelections::const_iterator it;
 
-    for( it = drawablesSelections_.begin(); it != drawablesSelections_.end(); it++ ){
+    for( it = resourcesSelections_.begin(); it != resourcesSelections_.end(); it++ ){
         if( it->second->existsDrawable( id ) ){
             return true;
         }
@@ -138,10 +109,10 @@ void DrawablesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
 {
     switch( frequency ){
         case MeshEdgesDisplayFrequency::ALWAYS:
-            nonSelectedDrawables_->displayEdges( true );
+            getResourcesSelection( NO_USER )->displayEdges( true );
         break;
         case MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED:
-            nonSelectedDrawables_->displayEdges( false );
+            getResourcesSelection( NO_USER )->displayEdges( false );
         break;
     }
 }
@@ -155,7 +126,7 @@ ResourceID DrawablesManager::addDrawable( DrawablePtr drawable )
 {
     //takeOpenGLContext();
 
-    return localDrawablesSelection_->addDrawable( drawable );
+    return getLocalResourcesSelection()->addDrawable( drawable );
 }
 
 void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, ResourceID drawableID )
@@ -191,9 +162,10 @@ void DrawablesManager::deleteSelection( const unsigned int& userId )
 
 void DrawablesManager::addDrawablesSelection( UserID userID, const PackableColor& selectionBorderColor )
 {
+    // TODO: Set color.
     DrawablesSelectionPtr newDrawablesSelection( new DrawablesSelection( selectionBorderColor.toVec4() ) );
-    drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( userID, newDrawablesSelection ) );
-    newDrawablesSelection->addObserver( this );
+    resourcesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( userID, newDrawablesSelection ) );
+    newDrawablesSelection->Observable::addObserver( this );
 }
 
 
@@ -214,7 +186,7 @@ void DrawablesManager::selectDrawable( ResourceID drawableID, UserID userID )
 
     // Check if the desired drawable is among the non selected ones, and move
     // it to the user's selection in that case.
-    nonSelectedDrawables_->moveDrawable( drawableID, userSelection );
+    getResourcesSelection( NO_USER )->moveDrawable( drawableID, userSelection );
 }
 
 
@@ -231,7 +203,7 @@ void DrawablesManager::unselectAll( UserID userID )
     DrawablesSelection& userSelection = *( getUserSelection( userID ) );
 
     // Move all drawables from user selection to non selected set.
-    userSelection.moveAll( *nonSelectedDrawables_ );
+    userSelection.moveAll( *getResourcesSelection( NO_USER ) );
 }
 
 
@@ -254,7 +226,7 @@ ResourceID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3
     }
 
     // Check if the given ray intersect any of the non selected drawables.
-    if( nonSelectedDrawables_->intersect( r0, r1, closestObject, minT ) ){
+    if( getResourcesSelection( NO_USER )->intersect( r0, r1, closestObject, minT ) ){
         // A non selected drawable has been intersected.
         log()->debug( "Object picked\n" );
 
@@ -298,7 +270,7 @@ void DrawablesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, c
     DrawablesSelections::const_iterator it;
 
     // Draw the user's selections.
-    for( it = drawablesSelections_.begin(); it != drawablesSelections_.end(); it++  ){
+    for( it = resourcesSelections_.begin(); it != resourcesSelections_.end(); it++  ){
         (it->second)->draw( openGL, viewMatrix, projectionMatrix );
     }
 }
@@ -356,7 +328,7 @@ void DrawablesManager::executeRemoteParameterChangeCommand( UserParameterChangeC
 
 void DrawablesManager::highlightProperty( const void *property )
 {
-    for( auto drawablesSelection : drawablesSelections_ ){
+    for( auto drawablesSelection : resourcesSelections_ ){
         drawablesSelection.second->highlighDrawableProperty( property );
     }
 }
@@ -380,18 +352,6 @@ void DrawablesManager::deleteResourcesSelection( UserID userID )
 {
     deleteSelection( userID );
 }
-
-
-/***
- * 13. Updating (Observer pattern)
- ***/
-
-void DrawablesManager::update( ContainerAction lastContainerAction, ResourceID lastElementModified )
-{
-    // Simply "rethrow" the notification.
-    notifyElementAction( lastContainerAction, lastElementModified );
-}
-
 
 
 } // namespace como

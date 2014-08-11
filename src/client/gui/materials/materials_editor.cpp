@@ -37,7 +37,7 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
     QObject::connect( materialsManager_.get(), &MaterialsManager::materialSelectionConfirmed,
                       materialPanel_, &MaterialPanel::openMaterial );
 
-    materialsManager_->ObservableContainer<ResourceID>::addObserver( this );
+    materialsManager_->addObserver( this );
 }
 
 

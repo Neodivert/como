@@ -21,6 +21,7 @@
 
 #include <QObject>
 #include <client/managers/drawables_selection/local_drawables_selection.hpp>
+#include <client/managers/meshes_manager.hpp>
 #include <QGroupBox>
 
 namespace como {

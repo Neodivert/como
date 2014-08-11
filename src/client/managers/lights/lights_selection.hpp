@@ -25,7 +25,7 @@
 
 namespace como {
 
-class LightsSelection : public ResourcesSelection<LightPropertiesSharedPtr>, public ContainerObserver<ResourceID>
+class LightsSelection : public virtual ResourcesSelection<LightProperties>, public ContainerObserver<ResourceID>
 {
     public:
         /***

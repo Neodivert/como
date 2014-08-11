@@ -24,12 +24,20 @@
 #include <common/commands/command.hpp>
 #include <common/commands/resource_commands/resource_commands.hpp>
 #include <common/managers/abstract_resources_ownership_manager.hpp>
+#include <client/managers/selections/resources/resources_selection.hpp>
+#include <client/managers/selections/resources/local_resources_selection.hpp>
+
 
 namespace como {
 
-template <class ResourceType>
-class ResourcesManager : public AbstractResourcesOwnershipManager, public ObservableContainer< ResourceID >
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+class ResourcesManager : public AbstractResourcesOwnershipManager, public Observable, public Observer
 {
+    static_assert( std::is_base_of<ResourcesSelection<ResourceType>, ResourcesSelectionType>::value, "" );
+    static_assert( std::is_base_of<LocalResourcesSelection<ResourceType>, LocalResourcesSelectionType>::value, "" );
+    static_assert( std::is_base_of<ResourcesSelection<ResourceType>, LocalResourcesSelection<ResourceType>>::value, "" );
+
+
     public:
         /***
          * 1. Construction
@@ -43,12 +51,13 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
         /***
          * 2. Destruction
          ***/
-        ~ResourcesManager() = default;
+        ~ResourcesManager();
 
 
         /***
          * 3. Getters
          ***/
+        std::shared_ptr< LocalResourcesSelectionType > getLocalResourcesSelection() const;
         virtual std::string getResourceName( const ResourceID& resourceID ) const = 0;
 
 
@@ -61,7 +70,13 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 
 
         /***
-         * 5. Operators
+         * 5. Updating (Observer pattern)
+         ***/
+        virtual void update();
+
+
+        /***
+         * 6. Operators
          ***/
         ResourcesManager& operator = ( const ResourcesManager& ) = delete;
         ResourcesManager& operator = ( ResourcesManager&& ) = delete;
@@ -69,13 +84,19 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 
     protected:
         /***
-         * 6. Server communication
+         * 7. Protected getters
+         ***/
+        std::shared_ptr< ResourcesSelectionType > getResourcesSelection( UserID userID ) const;
+
+
+        /***
+         * 8. Server communication
          ***/
         void sendCommandToServer( CommandConstPtr command );
 
 
         /***
-         * 7. Server info
+         * 9. Server info
          ***/
         UserID localUserID() const;
         ResourceID newResourceID();
@@ -83,7 +104,7 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 
 
         /***
-         * 8. Resource management
+         * 10. Resource management
          ***/
         virtual void lockResource( const ResourceID& resourceID, UserID userID ) = 0;
         virtual void unlockResourcesSelection( UserID userID ) = 0;
@@ -95,6 +116,13 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
         ServerInterfacePtr server_;
 
         std::queue< ResourceID > pendingSelections_;
+
+
+    protected:
+        std::map< UserID, std::shared_ptr< ResourcesSelectionType > > resourcesSelections_;
+
+        std::shared_ptr< ResourcesSelectionType > nonSelectedResources_;
+        std::shared_ptr< LocalResourcesSelectionType > localResourcesSelection_;
 };
 
 
@@ -102,27 +130,59 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
  * 1. Construction
  ***/
 
-template <class ResourceType>
-ResourcesManager<ResourceType>::ResourcesManager( ServerInterfacePtr server, LogPtr log ) :
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::ResourcesManager( ServerInterfacePtr server, LogPtr log ) :
     AbstractResourcesOwnershipManager( log ),
     server_( server )
-{}
+{
+    resourcesSelections_[NO_USER] = std::shared_ptr< ResourcesSelectionType >( new ResourcesSelection<ResourceType> );
+    nonSelectedResources_ = resourcesSelections_.at( NO_USER );
+    nonSelectedResources_->Observable::addObserver( this );
+
+    resourcesSelections_[localUserID()] = std::shared_ptr< LocalResourcesSelectionType >( new LocalResourcesSelection<ResourceType>( server_ ) );
+    localResourcesSelection_ = std::dynamic_pointer_cast< LocalResourcesSelectionType >( resourcesSelections_.at( localUserID() ) );
+    localResourcesSelection_->Observable::addObserver( this );
+}
+
+
+/***
+ * 2. Destruction
+ ***/
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::~ResourcesManager()
+{
+    for( auto& resourcesSelectionPair : resourcesSelections_ ){
+        resourcesSelectionPair.second->Observable::removeObserver( this );
+    }
+}
+
+
+/***
+ * 3. Getters
+ ***/
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+std::shared_ptr<LocalResourcesSelectionType> ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getLocalResourcesSelection() const
+{
+    return localResourcesSelection_;
+}
 
 
 /***
  * 4. Lock request
  ***/
 
-template <class ResourceType>
-void ResourcesManager<ResourceType>::requestResourceLock( const ResourceID& resourceID )
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::requestResourceLock( const ResourceID& resourceID )
 {
     pendingSelections_.push( resourceID );
     sendCommandToServer( CommandConstPtr( new ResourceCommand( ResourceCommandType::RESOURCE_LOCK, localUserID(), resourceID ) ) );
 }
 
 
-template <class ResourceType>
-void ResourcesManager<ResourceType>::requestSelectionUnlock()
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::requestSelectionUnlock()
 {
     CommandConstPtr selectionUnlockCommand =
             CommandConstPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_UNLOCK, localUserID() ) );
@@ -130,8 +190,8 @@ void ResourcesManager<ResourceType>::requestSelectionUnlock()
 }
 
 
-template <class ResourceType>
-void ResourcesManager<ResourceType>::requestSelectionDeletion()
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::requestSelectionDeletion()
 {
     CommandConstPtr selectionDeletionCommand =
             CommandConstPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_DELETION, localUserID() ) );
@@ -140,47 +200,70 @@ void ResourcesManager<ResourceType>::requestSelectionDeletion()
 
 
 /***
- * 6. Server communication
+ * 5. Updating (Observer pattern)
  ***/
 
-template <class ResourceType>
-void ResourcesManager<ResourceType>::sendCommandToServer( CommandConstPtr command )
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::update()
+{
+    // Simply forward the notification.
+    notifyObservers();
+}
+
+
+/***
+ * 7. Protected getters
+ ***/
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+std::shared_ptr<ResourcesSelectionType> ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getResourcesSelection( UserID userID ) const
+{
+    return resourcesSelections_.at( userID );
+}
+
+
+/***
+ * 8. Server communication
+ ***/
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::sendCommandToServer( CommandConstPtr command )
 {
     server_->sendCommand( command );
 }
 
 
 /***
- * 7. Server info
+ * 9. Server info
  ***/
 
-template <class ResourceType>
-UserID ResourcesManager<ResourceType>::localUserID() const
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+UserID ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::localUserID() const
 {
     return server_->getLocalUserID();
 }
 
 
-template <class ResourceType>
-ResourceID ResourcesManager<ResourceType>::newResourceID()
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+ResourceID ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::newResourceID()
 {
     return server_->getNewResourceID();
 }
 
 
-template <class ResourceType>
-ServerInterfacePtr ResourcesManager<ResourceType>::server() const
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+ServerInterfacePtr ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::server() const
 {
     return server_;
 }
 
 
 /***
- * 8. Resource management
+ * 10. Resource management
  ***/
 
-template <class ResourceType>
-void ResourcesManager<ResourceType>::processLockResponse( const ResourceID& resourceID, bool lockResponse )
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::processLockResponse( const ResourceID& resourceID, bool lockResponse )
 {
     if( pendingSelections_.front() == resourceID ){
         if( lockResponse ){

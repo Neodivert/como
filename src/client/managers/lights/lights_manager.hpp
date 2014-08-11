@@ -26,12 +26,13 @@
 #include <map>
 #include <common/utilities/observer_pattern/observer.hpp>
 #include <client/managers/resources_manager.hpp>
+#include <client/managers/lights/local_lights_selection.hpp>
 
 namespace como {
 
 typedef std::map< ResourceID, LightPropertiesSharedPtr > LightsMap;
 
-class LightsManager : public ContainerObserver<ResourceID>, public Observer, public ResourcesManager< LightProperties >
+class LightsManager : public ContainerObserver<ResourceID>, public ResourcesManager< LightProperties, LightsSelection, LocalLightsSelection >
 {
     private:
         // Lights vector.

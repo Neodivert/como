@@ -21,6 +21,7 @@
 
 #include <client/managers/drawables_manager/drawables_manager.hpp>
 #include <client/managers/drawables_selection/meshes_selection.hpp>
+#include <client/managers/selections/meshes/local_meshes_selection.hpp>
 
 namespace como {
 
@@ -29,7 +30,7 @@ typedef std::shared_ptr< MeshesManager > MeshesManagerPtr;
 
 typedef std::map< UserID, MeshesSelection > MeshesSelectionMap;
 
-class MeshesManager : public ResourcesManager< Mesh >
+class MeshesManager : public ResourcesManager< Mesh, MeshesSelection, LocalMeshesSelection >
 {
     private:
         DrawablesManagerPtr drawablesManager_;

@@ -25,9 +25,7 @@
 #include <map>
 #include <functional>
 #include <mutex>
-#include <QObject>
-#include "meshes_selection.hpp"
-#include <common/utilities/observable_container/observable_container.hpp>
+#include <client/managers/selections/resources/resources_selection.hpp>
 
 namespace como {
 
@@ -44,7 +42,7 @@ const char pivotPointModeStrings[N_PIVOT_POINT_MODES][32] =
      "World origin"
 };
 
-class DrawablesSelection : public ObservableContainer<ResourceID>
+class DrawablesSelection : public virtual ResourcesSelection<Drawable>
 {
     private:
         // Drawables in the selection.
@@ -71,9 +69,10 @@ class DrawablesSelection : public ObservableContainer<ResourceID>
         /***
          * 1. Initialization and destruction
          ***/
+        DrawablesSelection();
         DrawablesSelection( glm::vec4 borderColor );
-        DrawablesSelection( const DrawablesSelection& );
-        DrawablesSelection( DrawablesSelection&& );
+        DrawablesSelection( const DrawablesSelection& ) = delete;
+        DrawablesSelection( DrawablesSelection&& ) = delete;
 
         ~DrawablesSelection() = default;
 

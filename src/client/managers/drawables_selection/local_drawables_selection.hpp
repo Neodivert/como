@@ -22,18 +22,12 @@
 #include "drawables_selection.hpp"
 #include <client/managers/server_interface/server_interface.hpp>
 #include <common/commands/commands.hpp>
+#include <client/managers/selections/resources/local_resources_selection.hpp>
 
 namespace como {
 
-class LocalDrawablesSelection : public DrawablesSelection
+class LocalDrawablesSelection : public DrawablesSelection, public LocalResourcesSelection<Drawable>
 {
-    private:
-        /*!
-         * \brief Interface with the server. Used for sending all the
-         * transformations made to this selection.
-         */
-        ServerInterfacePtr server_;
-
     public:
         /***
          * 1. Construction

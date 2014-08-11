@@ -62,6 +62,7 @@ class LocalResourcesSelection : public virtual ResourcesSelection< ResourceType 
          * 5. Server communication
          ***/
         void sendCommandToServer( CommandConstPtr command );
+        UserID localUserID();
 
 
     private:
@@ -88,7 +89,7 @@ ResourceID LocalResourcesSelection<ResourceType>::addResource( std::shared_ptr<R
 {
     ResourceID resourceID = server_->getNewResourceID();
 
-    addResource( resourceID, resource );
+    this->ResourcesSelection<ResourceType>::addResource( resourceID, resource );
 
     return resourceID;
 }
@@ -102,6 +103,13 @@ template <class ResourceType>
 void LocalResourcesSelection<ResourceType>::sendCommandToServer( CommandConstPtr command )
 {
     server_->sendCommand( command );
+}
+
+
+template <class ResourceType>
+UserID LocalResourcesSelection<ResourceType>::localUserID()
+{
+    return server_->getLocalUserID();
 }
 
 } // namespace como
