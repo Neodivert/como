@@ -32,7 +32,6 @@ class ResourcesSelection : public ObservableContainer<ResourceID> {
         ResourcesSelection& operator = ( ResourcesSelection&& ) = delete;
 
 
-    protected:
         /***
          * 4. Resources insertion / removal
          ***/
