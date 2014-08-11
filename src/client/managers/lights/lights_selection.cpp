@@ -48,7 +48,7 @@ LightsSelection::~LightsSelection()
 void LightsSelection::update( ContainerAction lastContainerAction, ResourceID lastElementModified )
 {
     if( lastContainerAction == ContainerAction::ELEMENT_DELETION ){
-        lightsProperties_.erase( lastElementModified );
+        removeResource( lastElementModified );
     }
 }
 

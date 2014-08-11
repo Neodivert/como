@@ -26,6 +26,7 @@
 #include <client/managers/scene/scene.hpp>
 #include <SDL2/SDL_image.h>
 
+
 int main( int argc, char *argv[] )
 {
     // FIXME: Study why this is necessary.

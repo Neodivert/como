@@ -21,11 +21,11 @@
 
 #include <client/managers/drawables_selection/drawables_selection.hpp>
 #include <client/models/3d/lights/light_properties.hpp>
-#include <map>
+#include <client/managers/selections/resources/resources_selection.hpp>
 
 namespace como {
 
-class LightsSelection : public ContainerObserver<ResourceID>
+class LightsSelection : public ResourcesSelection<LightPropertiesSharedPtr>, public ContainerObserver<ResourceID>
 {
     public:
         /***
@@ -58,8 +58,6 @@ class LightsSelection : public ContainerObserver<ResourceID>
 
     private:
         DrawablesSelectionPtr drawablesSelection_;
-
-        std::map< ResourceID, LightPropertiesSharedPtr > lightsProperties_;
 };
 
 } // namespace como
