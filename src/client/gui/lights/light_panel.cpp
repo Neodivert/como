@@ -46,12 +46,6 @@ LightPanel::LightPanel( LightsManagerPtr lightsManager ) :
         currentLight_->setLightColor( color );
     });
 
-    QObject::connect( lightsManager_.get(), &LightsManager::lightModified, [this]( ResourceID lightID ){
-        if( currentLight_ && ( lightID == currentLight_->getResourceID() ) ){
-            update();
-        }
-    });
-
     void (QDoubleSpinBox::*ambientCoefficientChangeSignal)( double ) = &QDoubleSpinBox::valueChanged;
     QObject::connect( lightAmbientCoefficientSpinBox_, ambientCoefficientChangeSignal, [this]( double value ){
         currentLight_->setAmbientCoefficient( static_cast< float >( value ) );

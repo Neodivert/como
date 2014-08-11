@@ -232,9 +232,7 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
 
             lights_.at( lightCommand->getResourceID() )->setLightColor( lightCommand->getLightColor() );
 
-            emit lightModified( lightCommand->getResourceID() );
-
-            notifyObservers();
+            notifyElementUpdate( lightCommand->getResourceID() );
         }break;
         case LightCommandType::LIGHT_AMBIENT_COEFFICIENT_CHANGE:{
             const LightAmbientCoefficientChangeCommand* lightCommand =
@@ -242,9 +240,7 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
 
             lights_.at( lightCommand->getResourceID() )->setAmbientCoefficient( lightCommand->getAmbientCoefficient() );
 
-            emit lightModified( lightCommand->getResourceID() );
-
-            notifyObservers();
+            notifyElementUpdate( lightCommand->getResourceID() );
         }break;
     }
 }

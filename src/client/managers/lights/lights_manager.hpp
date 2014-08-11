@@ -104,13 +104,6 @@ class LightsManager : public QObject, public ContainerObserver<ResourceID>, publ
 
 
         /***
-         * 7. Signals
-         ***/
-    signals:
-        void lightModified( ResourceID id );
-
-
-        /***
          * 8. Updating
          ***/
     private:
