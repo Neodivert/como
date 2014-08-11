@@ -91,6 +91,7 @@ class MaterialsManager : public QObject, public Observer, public ResourcesManage
          * 5. Getters
          ***/
     public:
+        MaterialHandlerPtr getCurrentMaterial() const;
         virtual string getResourceName( const ResourceID& resourceID ) const;
         MaterialConstPtr getMaterial( const ResourceID& id ) const;
         std::vector< MaterialConstPtr > getMaterials( const ResourceID& firstMaterialID, unsigned int nMaterials ) const;
