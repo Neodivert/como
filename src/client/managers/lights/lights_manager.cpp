@@ -41,6 +41,9 @@ LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterf
     for( i=3; i>=0; i-- ){
         freeDirectionalLightIndices_.push( i );
     }
+
+
+    drawablesManager_->addObserver( this );
 }
 
 
@@ -151,7 +154,7 @@ void LightsManager::selectLight( const ResourceID lightID )
 {
     LightHandlerPtr lightHandler( new LightHandler( lights_.at( lightID ), lightID, server() ) );
 
-    lightHandler->addObserver( this );
+    lightHandler->Observable::addObserver( this );
 
     emit lightSelected( lightHandler );
 }
@@ -225,25 +228,26 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
 }
 
 
+/***
+ * 7. Updating
+ ***/
+
 void LightsManager::update()
 {
-    LightsMap::iterator currentIt, nextIt;
+    notifyObservers();
+}
 
-    // Remove all the lights that are not longer present in the drawables
-    // manager.
-    currentIt = nextIt = lights_.begin();
 
-    while( currentIt != lights_.end() ){
-        nextIt++;
-
-        if( !( drawablesManager_->existsDrawable( currentIt->first ) ) ){
-            removeLight( currentIt->first );
+void LightsManager::update( ContainerAction lastContainerAction, ResourceID lastElementModified )
+{
+    if( lastContainerAction == ContainerAction::ELEMENT_DELETION ){
+        if( lights_.count( lastElementModified ) ){
+            log()->debug( "Notified, removing light\n" );
+            removeLight( lastElementModified );
         }
-
-        currentIt = nextIt;
     }
 
-    notifyObservers();
+    notifyElementAction( lastContainerAction, lastElementModified );
 }
 
 

@@ -219,8 +219,6 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         lightsManager_ = LightsManagerPtr( new LightsManager( drawablesManager_, server_, log_ ) );
         lightsManager_->Observable::addObserver( this );
 
-        drawablesManager_->Observable::addObserver( lightsManager_.get() );
-
         localUserConnectionCommand_ = UserConnectionCommandConstPtr( new UserConnectionCommand( userAcceptancePacket ) );
 
         // Add the local user to the scene.

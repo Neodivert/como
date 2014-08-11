@@ -387,7 +387,7 @@ bool DrawablesSelection::moveDrawable( ResourceID drawableID, DrawablesSelection
         drawables_.erase( drawableID );
 
         // This selection has changed, so indicate it.
-        notifyElementDeletion( drawableID );
+        //notifyElementDeletion( drawableID );
 
         mutex_.unlock();
         return true;
@@ -412,7 +412,7 @@ void DrawablesSelection::moveAll( DrawablesSelection& destinySelection )
     for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
         destinySelection.addDrawable( drawable->first, drawable->second );
 
-        notifyElementDeletion( drawable->first );
+        //notifyElementDeletion( drawable->first );
     }
 
     // Clear the current selection.
