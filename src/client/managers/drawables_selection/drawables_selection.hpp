@@ -102,6 +102,7 @@ class DrawablesSelection : public ObservableContainer<ResourceID>
         bool contains( MeshType meshType ) const ;
 
         bool existsDrawable( const ResourceID& id ) const;
+        std::string getDrawableName( const ResourceID& id ) const;
 
 
         /***

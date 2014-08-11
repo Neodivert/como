@@ -62,6 +62,8 @@ class MeshesSelection : public AbstractMesh, public Observable
         /***
          * 3. Getters
          ***/
+        bool containsResource( const ResourceID& resourceID ) const;
+        std::string getResourceName( const ResourceID& resourceID ) const;
         virtual glm::vec4 getCentroid() const;
         virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle ) const;
         virtual bool containsProperty( const void *property ) const;

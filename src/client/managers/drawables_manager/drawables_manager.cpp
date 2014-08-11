@@ -65,6 +65,20 @@ DrawablesManager::~DrawablesManager()
  * 3. Getters
  ***/
 
+string DrawablesManager::getResourceName( const ResourceID& resourceID ) const
+{
+    std::string resourceName;
+    for( auto drawablesSelection : drawablesSelections_ ){
+        if( drawablesSelection.second->existsDrawable( resourceID ) ){
+            resourceName = drawablesSelection.second->getDrawableName( resourceID );
+            return resourceName;
+        }
+    }
+
+    throw std::runtime_error( "DrawablesManager::getResourceName() - drawable not found" );
+}
+
+
 LocalDrawablesSelectionPtr DrawablesManager::getLocalUserSelection() const
 {
     return localDrawablesSelection_;

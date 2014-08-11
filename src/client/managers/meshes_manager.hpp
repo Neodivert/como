@@ -66,6 +66,7 @@ class MeshesManager : public ResourcesManager
         /***
          * 4. Getters
          ***/
+        virtual string getResourceName( const ResourceID& resourceID ) const;
         ElementsMeetingCondition displaysVertexNormals() const;
         unsigned int getTotalMeshes() const;
         MeshesSelection* getLocalUserSelection();

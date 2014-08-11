@@ -117,6 +117,12 @@ void MaterialsManager::selectMaterial( UserID userID, const ResourceID& id )
  * 5. Getters
  ***/
 
+string MaterialsManager::getResourceName( const ResourceID& resourceID ) const
+{
+    return drawablesManager_->getResourceName( resourceID );
+}
+
+
 MaterialConstPtr MaterialsManager::getMaterial( const ResourceID& id ) const
 {
     return materials_.at( id );

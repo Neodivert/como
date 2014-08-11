@@ -64,6 +64,7 @@ class DrawablesManager : public ResourcesManager, public ContainerObserver<Resou
         /***
          * 3. Getters
          ***/
+        virtual string getResourceName( const ResourceID& resourceID) const;
         LocalDrawablesSelectionPtr getLocalUserSelection() const ;
     private:
         DrawablesSelectionPtr getUserSelection( UserID userID ) const ;
@@ -143,7 +144,7 @@ class DrawablesManager : public ResourcesManager, public ContainerObserver<Resou
         /***
          * 13. Updating (Observer pattern)
          ***/
-        virtual void update( ContainerAction lastContainerAction, ResourceID lastElementModified );
+        virtual void update( ContainerAction lastContainerAction, ResourceID lastElementModified );   
 };
 
 typedef shared_ptr< DrawablesManager > DrawablesManagerPtr;

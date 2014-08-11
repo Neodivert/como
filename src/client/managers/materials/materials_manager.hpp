@@ -91,6 +91,7 @@ class MaterialsManager : public QObject, public Observer, public ResourcesManage
          * 5. Getters
          ***/
     public:
+        virtual string getResourceName( const ResourceID& resourceID ) const;
         MaterialConstPtr getMaterial( const ResourceID& id ) const;
         std::vector< MaterialConstPtr > getMaterials( const ResourceID& firstMaterialID, unsigned int nMaterials ) const;
 
@@ -137,7 +138,7 @@ class MaterialsManager : public QObject, public Observer, public ResourcesManage
          ***/
         virtual void lockResource( const ResourceID& resourceID, UserID userID );
         virtual void unlockResourcesSelection( UserID userID );
-        virtual void deleteResourcesSelection( UserID userID );
+        virtual void deleteResourcesSelection( UserID userID );       
 };
 
 typedef std::shared_ptr< MaterialsManager > MaterialsManagerPtr;

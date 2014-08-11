@@ -48,7 +48,17 @@ LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterf
 
 
 /***
- * 3. Lights management
+ * 3. Getters
+ ***/
+
+std::string LightsManager::getResourceName( const ResourceID& lightID ) const
+{
+    return drawablesManager_->getResourceName( lightID );
+}
+
+
+/***
+ * 4. Lights management
  ***/
 
 void LightsManager::createDirectionalLight()
@@ -181,7 +191,7 @@ void LightsManager::removeLight( ResourceID lightID )
 
 
 /***
- * 4. Remote command execution
+ * 5. Remote command execution
  ***/
 
 // TODO: Change this and use a LightCommandConstPtr
@@ -228,7 +238,7 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
 
 
 /***
- * 7. Updating
+ * 8. Updating
  ***/
 
 void LightsManager::update()
@@ -251,7 +261,7 @@ void LightsManager::update( ContainerAction lastContainerAction, ResourceID last
 
 
 /***
- * 8. Auxiliar methods
+ * 9. Auxiliar methods
  ***/
 
 unsigned int LightsManager::getNextFreeLightIndex( LightType lightType )
@@ -301,7 +311,7 @@ void LightsManager::removeHighlights()
 
 
 /***
- * 9. Resources management
+ * 10. Resources management
  ***/
 
 void LightsManager::lockResource( const ResourceID& resourceID, UserID userID )

@@ -141,6 +141,11 @@ bool DrawablesSelection::existsDrawable( const ResourceID &id ) const
     return drawables_.count( id );
 }
 
+std::string DrawablesSelection::getDrawableName( const ResourceID& id ) const
+{
+    return drawables_.at( id )->getName();
+}
+
 
 std::string DrawablesSelection::getName() const
 {

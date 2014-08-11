@@ -39,6 +39,18 @@ MeshesManager::MeshesManager( ServerInterfacePtr server, DrawablesManagerPtr dra
  * 4. Getters
  ***/
 
+string MeshesManager::getResourceName( const ResourceID& resourceID) const
+{
+    for( auto meshesSelection : meshesSelections_ ){
+        if( meshesSelection.second.containsResource( resourceID ) ){
+            return meshesSelection.second.getResourceName( resourceID );
+        }
+    }
+
+    throw std::runtime_error( "MeshesManager::getResourceName() - resource not found" );
+}
+
+
 ElementsMeetingCondition MeshesManager::displaysVertexNormals() const
 {
     const ElementsMeetingCondition firstSelectionValue =

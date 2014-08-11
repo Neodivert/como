@@ -32,7 +32,7 @@ ResourcesManager::ResourcesManager( ServerInterfacePtr server, LogPtr log ) :
 
 
 /***
- * 3. Lock request
+ * 4. Lock request
  ***/
 
 void ResourcesManager::requestResourceLock( const ResourceID& resourceID )
@@ -59,7 +59,7 @@ void ResourcesManager::requestSelectionDeletion()
 
 
 /***
- * 5. Server communication
+ * 6. Server communication
  ***/
 
 void ResourcesManager::sendCommandToServer( CommandConstPtr command )
@@ -69,7 +69,7 @@ void ResourcesManager::sendCommandToServer( CommandConstPtr command )
 
 
 /***
- * 6. Server info
+ * 7. Server info
  ***/
 
 UserID ResourcesManager::localUserID() const
@@ -91,7 +91,7 @@ ServerInterfacePtr ResourcesManager::server() const
 
 
 /***
- * 7. Resource management
+ * 8. Resource management
  ***/
 
 void ResourcesManager::processLockResponse( const ResourceID& resourceID, bool lockResponse )

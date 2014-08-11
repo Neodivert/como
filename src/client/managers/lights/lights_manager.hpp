@@ -67,7 +67,13 @@ class LightsManager : public QObject, public ContainerObserver<ResourceID>, publ
 
 
         /***
-         * 3. Lights management
+         * 3. Getters
+         ***/
+        std::string getResourceName( const ResourceID& lightID ) const;
+
+
+        /***
+         * 4. Lights management
          ***/
     public slots:
         void createDirectionalLight();
@@ -80,21 +86,21 @@ class LightsManager : public QObject, public ContainerObserver<ResourceID>, publ
 
 
         /***
-         * 4. Remote command execution
+         * 5. Remote command execution
          ***/
     public:
         void executeRemoteCommand( LightCommandConstPtr command );
 
 
         /***
-         * 5. Operators
+         * 6. Operators
          ***/
         LightsManager& operator = ( const LightsManager& ) = delete;
         LightsManager& operator = ( LightsManager&& ) = delete;
 
 
         /***
-         * 6. Signals
+         * 7. Signals
          ***/
     signals:
         void lightCreated( ResourceID id, std::string name );
@@ -103,7 +109,7 @@ class LightsManager : public QObject, public ContainerObserver<ResourceID>, publ
 
 
         /***
-         * 7. Updating
+         * 8. Updating
          ***/
     private:
         virtual void update();
@@ -111,7 +117,7 @@ class LightsManager : public QObject, public ContainerObserver<ResourceID>, publ
 
 
         /***
-         * 8. Auxiliar methods
+         * 9. Auxiliar methods
          ***/
         unsigned int getNextFreeLightIndex( LightType lightType );
         void print();
@@ -121,7 +127,7 @@ class LightsManager : public QObject, public ContainerObserver<ResourceID>, publ
 
     protected:
         /***
-         * 9. Resources management
+         * 10. Resources management
          ***/
         virtual void lockResource( const ResourceID& resourceID, UserID userID );
         virtual void unlockResourcesSelection( UserID userID );

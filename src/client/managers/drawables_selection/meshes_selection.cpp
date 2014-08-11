@@ -34,6 +34,18 @@ DrawablePtr MeshesSelection::clone()
  * 2. Getters
  ***/
 
+bool MeshesSelection::containsResource( const ResourceID& resourceID ) const
+{
+    return meshes_.count( resourceID );
+}
+
+
+string MeshesSelection::getResourceName( const ResourceID& resourceID ) const
+{
+    return meshes_.at( resourceID )->getName();
+}
+
+
 glm::vec4 MeshesSelection::getCentroid() const
 {
     glm::vec4 centroid( 0.0f );

@@ -51,7 +51,13 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 
 
         /***
-         * 3. Lock request
+         * 3. Getters
+         ***/
+        virtual std::string getResourceName( const ResourceID& resourceID ) const = 0;
+
+
+        /***
+         * 4. Lock request
          ***/
         void requestResourceLock( const ResourceID& resourceID );
         void requestSelectionUnlock();
@@ -59,7 +65,7 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 
 
         /***
-         * 4. Operators
+         * 5. Operators
          ***/
         ResourcesManager& operator = ( const ResourcesManager& ) = delete;
         ResourcesManager& operator = ( ResourcesManager&& ) = delete;
@@ -67,13 +73,13 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 
     protected:
         /***
-         * 5. Server communication
+         * 6. Server communication
          ***/
         void sendCommandToServer( CommandConstPtr command );
 
 
         /***
-         * 6. Server info
+         * 7. Server info
          ***/
         UserID localUserID() const;
         ResourceID newResourceID();
@@ -81,7 +87,7 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 
 
         /***
-         * 7. Resource management
+         * 8. Resource management
          ***/
         virtual void lockResource( const ResourceID& resourceID, UserID userID ) = 0;
         virtual void unlockResourcesSelection( UserID userID ) = 0;
