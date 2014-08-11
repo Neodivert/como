@@ -103,7 +103,6 @@ class LightsManager : public QObject, public ContainerObserver<ResourceID>, publ
          * 7. Signals
          ***/
     signals:
-        void lightCreated( ResourceID id, std::string name );
         void lightSelected( LightHandlerPtr light );
         void lightModified( ResourceID id );
 

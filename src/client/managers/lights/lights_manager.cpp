@@ -111,7 +111,7 @@ void LightsManager::createDirectionalLight()
     print();
 
     // Indicate to the GUI that a new light has been created.
-    emit lightCreated( lightID, light->getName() );
+    notifyElementInsertion( lightID );
 }
 
 
@@ -156,7 +156,7 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Packab
     log()->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
     print();
 
-    emit lightCreated( lightID, light->getName() );
+    notifyElementInsertion( lightID );
 }
 
 

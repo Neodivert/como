@@ -28,9 +28,6 @@ namespace como {
 LightsList::LightsList( LightsManagerPtr lightsManager ) :
     lightsManager_( lightsManager )
 {
-    QObject::connect( lightsManager.get(), &LightsManager::lightCreated,
-                      this, &LightsList::addLight );
-
     QObject::connect( this, &LightsList::itemActivated, [=]( QListWidgetItem * item ){
         emit lightSelected( ( dynamic_cast< LightsListItem* >( item ) )->getResourceID() );
     });
@@ -86,6 +83,8 @@ void LightsList::update( ContainerAction lastContainerAction, ResourceID lastEle
 {
     if( lastContainerAction == ContainerAction::ELEMENT_DELETION ){
         removeLight( lastElementModified );
+    }else if( lastContainerAction == ContainerAction::ELEMENT_INSERTION ){
+        addLight( lastElementModified, lightsManager_->getResourceName( lastElementModified ) );
     }
 }
 
