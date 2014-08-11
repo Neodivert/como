@@ -98,7 +98,8 @@ HEADERS += \
     ../../src/client/managers/resources_manager.hpp \
     ../../src/client/managers/meshes_manager.hpp \
     ../../src/client/managers/lights/lights_selection.hpp \
-    ../../src/client/managers/selections/resources/resources_selection.hpp
+    ../../src/client/managers/selections/resources/resources_selection.hpp \
+    ../../src/client/managers/selections/resources/local_resources_selection.hpp
 
 
 # Client sources
