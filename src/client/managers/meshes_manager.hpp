@@ -29,7 +29,7 @@ typedef std::shared_ptr< MeshesManager > MeshesManagerPtr;
 
 typedef std::map< UserID, MeshesSelection > MeshesSelectionMap;
 
-class MeshesManager : public ResourcesManager
+class MeshesManager : public ResourcesManager< Mesh >
 {
     private:
         DrawablesManagerPtr drawablesManager_;

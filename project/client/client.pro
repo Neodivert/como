@@ -158,6 +158,5 @@ SOURCES += \
     ../../src/client/managers/drawables_selection/meshes_selection.cpp \
     ../../src/client/gui/rendering/viewport_view_menu.cpp \
     ../../src/client/gui/rendering/viewport_projection_menu.cpp \
-    ../../src/client/managers/resources_manager.cpp \
     ../../src/client/managers/meshes_manager.cpp \
     ../../src/client/managers/lights/lights_selection.cpp

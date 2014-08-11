@@ -35,7 +35,7 @@ enum class MeshEdgesDisplayFrequency {
 };
 
 
-class DrawablesManager : public ResourcesManager, public ContainerObserver<ResourceID>
+class DrawablesManager : public ResourcesManager< Drawable >, public ContainerObserver<ResourceID>
 {
     private:
         DrawablesSelections drawablesSelections_;

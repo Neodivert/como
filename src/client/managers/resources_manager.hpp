@@ -27,13 +27,9 @@
 
 namespace como {
 
+template <class ResourceType>
 class ResourcesManager : public AbstractResourcesOwnershipManager, public ObservableContainer< ResourceID >
 {
-    private:
-        ServerInterfacePtr server_;
-
-        std::queue< ResourceID > pendingSelections_;
-
     public:
         /***
          * 1. Construction
@@ -93,7 +89,107 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
         virtual void unlockResourcesSelection( UserID userID ) = 0;
         virtual void deleteResourcesSelection( UserID userID ) = 0;
         virtual void processLockResponse( const ResourceID& resourceID, bool lockResponse );
+
+
+    private:
+        ServerInterfacePtr server_;
+
+        std::queue< ResourceID > pendingSelections_;
 };
+
+
+/***
+ * 1. Construction
+ ***/
+
+template <class ResourceType>
+ResourcesManager<ResourceType>::ResourcesManager( ServerInterfacePtr server, LogPtr log ) :
+    AbstractResourcesOwnershipManager( log ),
+    server_( server )
+{}
+
+
+/***
+ * 4. Lock request
+ ***/
+
+template <class ResourceType>
+void ResourcesManager<ResourceType>::requestResourceLock( const ResourceID& resourceID )
+{
+    pendingSelections_.push( resourceID );
+    sendCommandToServer( CommandConstPtr( new ResourceCommand( ResourceCommandType::RESOURCE_LOCK, localUserID(), resourceID ) ) );
+}
+
+
+template <class ResourceType>
+void ResourcesManager<ResourceType>::requestSelectionUnlock()
+{
+    CommandConstPtr selectionUnlockCommand =
+            CommandConstPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_UNLOCK, localUserID() ) );
+    sendCommandToServer( selectionUnlockCommand );
+}
+
+
+template <class ResourceType>
+void ResourcesManager<ResourceType>::requestSelectionDeletion()
+{
+    CommandConstPtr selectionDeletionCommand =
+            CommandConstPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_DELETION, localUserID() ) );
+    sendCommandToServer( selectionDeletionCommand );
+}
+
+
+/***
+ * 6. Server communication
+ ***/
+
+template <class ResourceType>
+void ResourcesManager<ResourceType>::sendCommandToServer( CommandConstPtr command )
+{
+    server_->sendCommand( command );
+}
+
+
+/***
+ * 7. Server info
+ ***/
+
+template <class ResourceType>
+UserID ResourcesManager<ResourceType>::localUserID() const
+{
+    return server_->getLocalUserID();
+}
+
+
+template <class ResourceType>
+ResourceID ResourcesManager<ResourceType>::newResourceID()
+{
+    return server_->getNewResourceID();
+}
+
+
+template <class ResourceType>
+ServerInterfacePtr ResourcesManager<ResourceType>::server() const
+{
+    return server_;
+}
+
+
+/***
+ * 8. Resource management
+ ***/
+
+template <class ResourceType>
+void ResourcesManager<ResourceType>::processLockResponse( const ResourceID& resourceID, bool lockResponse )
+{
+    if( pendingSelections_.front() == resourceID ){
+        if( lockResponse ){
+            lockResource( resourceID, localUserID() );
+        }
+
+        pendingSelections_.pop();
+    }
+}
 
 } // namespace como
 

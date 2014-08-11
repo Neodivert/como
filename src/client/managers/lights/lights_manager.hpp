@@ -31,7 +31,7 @@ namespace como {
 
 typedef std::map< ResourceID, LightPropertiesSharedPtr > LightsMap;
 
-class LightsManager : public ContainerObserver<ResourceID>, public Observer, public ResourcesManager
+class LightsManager : public ContainerObserver<ResourceID>, public Observer, public ResourcesManager< LightProperties >
 {
     private:
         // Lights vector.
