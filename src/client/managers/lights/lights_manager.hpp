@@ -31,10 +31,8 @@ namespace como {
 
 typedef std::map< ResourceID, LightPropertiesSharedPtr > LightsMap;
 
-class LightsManager : public QObject, public ContainerObserver<ResourceID>, public Observer, public ResourcesManager
+class LightsManager : public ContainerObserver<ResourceID>, public Observer, public ResourcesManager
 {
-    Q_OBJECT
-
     private:
         // Lights vector.
         LightsMap lights_;
@@ -79,7 +77,6 @@ class LightsManager : public QObject, public ContainerObserver<ResourceID>, publ
         /***
          * 4. Lights management
          ***/
-    public slots:
         void createDirectionalLight();
     private:
         void addDirectionalLight( const ResourceID& lightID, const PackableColor& lightColor );
