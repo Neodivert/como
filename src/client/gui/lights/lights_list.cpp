@@ -44,7 +44,7 @@ LightsList::LightsList( LightsManagerPtr lightsManager ) :
         lightsManager_->highlightLight( lightID );
     });
 
-    QObject::connect( lightsManager_.get(), &LightsManager::lightRemoved, this, &LightsList::removeLight );
+    lightsManager_->addObserver( this );
 }
 
 
@@ -74,6 +74,18 @@ void LightsList::removeLight( ResourceID id )
                 takeItem( i );
             }
         }
+    }
+}
+
+
+/***
+ * 6. Updating (Observer pattern)
+ ***/
+
+void LightsList::update( ContainerAction lastContainerAction, ResourceID lastElementModified )
+{
+    if( lastContainerAction == ContainerAction::ELEMENT_DELETION ){
+        removeLight( lastElementModified );
     }
 }
 

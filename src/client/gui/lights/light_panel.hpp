@@ -24,10 +24,11 @@
 #include <client/managers/lights/lights_manager.hpp>
 #include <client/managers/lights/light_handler.hpp>
 #include <client/gui/utilities/color_button.hpp>
+#include <common/utilities/observable_container/container_observer.hpp>
 
 namespace como {
 
-class LightPanel : public QFrame
+class LightPanel : public QFrame, ContainerObserver<ResourceID>, Observer
 {
     Q_OBJECT
 
@@ -62,9 +63,10 @@ class LightPanel : public QFrame
 
 
         /***
-         * 4. Refreshing
+         * 4. Updating
          ***/
-        void refresh();
+        virtual void update( ContainerAction lastContainerAction, ResourceID lastElementModified );
+        virtual void update();
 
 
         /***

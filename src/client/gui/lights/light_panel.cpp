@@ -46,15 +46,9 @@ LightPanel::LightPanel( LightsManagerPtr lightsManager ) :
         currentLight_->setLightColor( color );
     });
 
-    QObject::connect( lightsManager_.get(), &LightsManager::lightRemoved, [this]( ResourceID lightID ){
-        if( currentLight_ && ( lightID == currentLight_->getResourceID() ) ){
-            closeLight();
-        }
-    });
-
     QObject::connect( lightsManager_.get(), &LightsManager::lightModified, [this]( ResourceID lightID ){
         if( currentLight_ && ( lightID == currentLight_->getResourceID() ) ){
-            refresh();
+            update();
         }
     });
 
@@ -65,22 +59,37 @@ LightPanel::LightPanel( LightsManagerPtr lightsManager ) :
 
     // Initially there is no light selected, so disable this panel.
     setEnabled( false );
+
+    lightsManager_->Observable::addObserver( this );
+    lightsManager_->ObservableContainer::addObserver( this );
 }
 
 /***
- * 4. Refreshing
+ * 4. Update(ContainerAction lastContainerAction, ResourceID lastElementModified)
  ***/
 
-void LightPanel::refresh()
+void LightPanel::update( ContainerAction lastContainerAction, ResourceID lastElementModified )
 {
-    lightColorButton_->setColor( currentLight_->getLightColor() );
+    if( ( lastContainerAction == ContainerAction::ELEMENT_DELETION ) &&
+        currentLight_ &&
+        ( lastElementModified == currentLight_->getResourceID() ) ){
+        closeLight();
+    }
+}
 
-    // We don't want to emmit signals from lightAmbientCoefficientSpinBox_ when
-    // we call setValue() directly, so we block them temporarily.
-    // TODO: is there a more elegant way?
-    bool oldBlockingState = lightAmbientCoefficientSpinBox_->blockSignals( true );
-    lightAmbientCoefficientSpinBox_->setValue( currentLight_->getAmbientCoefficient() );
-    lightAmbientCoefficientSpinBox_->blockSignals( oldBlockingState );
+
+void LightPanel::update()
+{
+    if( currentLight_ ){
+        lightColorButton_->setColor( currentLight_->getLightColor() );
+
+        // We don't want to emmit signals from lightAmbientCoefficientSpinBox_ when
+        // we call setValue() directly, so we block them temporarily.
+        // TODO: is there a more elegant way?
+        bool oldBlockingState = lightAmbientCoefficientSpinBox_->blockSignals( true );
+        lightAmbientCoefficientSpinBox_->setValue( currentLight_->getAmbientCoefficient() );
+        lightAmbientCoefficientSpinBox_->blockSignals( oldBlockingState );
+    }
 }
 
 
@@ -94,7 +103,7 @@ void LightPanel::openLight( LightHandlerPtr light )
 
     setEnabled( true );
 
-    refresh();
+    update();
 }
 
 

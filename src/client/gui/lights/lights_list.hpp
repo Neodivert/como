@@ -23,12 +23,13 @@
 #include <QListWidget>
 #include <client/managers/drawables_manager/drawables_manager.hpp>
 #include <map>
+#include <common/utilities/observable_container/container_observer.hpp>
 
 namespace como {
 
 // TODO: Can't use "private QListWidget", what interests me because I don't
 // want user to use QListWidget methods here.
-class LightsList : public QListWidget
+class LightsList : public QListWidget, ContainerObserver<ResourceID>
 {
     Q_OBJECT
 
@@ -71,6 +72,13 @@ class LightsList : public QListWidget
          ***/
     signals:
         void lightSelected( ResourceID id );
+
+
+    public:
+        /***
+         * 6. Updating (Observer pattern)
+         ***/
+        virtual void update( ContainerAction lastContainerAction, ResourceID lastElementModified );
 };
 
 } // namespace como

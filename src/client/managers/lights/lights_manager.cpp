@@ -177,7 +177,6 @@ void LightsManager::removeLight( ResourceID lightID )
 
     // Remove the light from lights_ vector and signal it.
     lights_.erase( lightID );
-    emit lightRemoved( lightID );
 }
 
 

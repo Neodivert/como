@@ -426,10 +426,6 @@ void DrawablesSelection::clear()
 {
     mutex_.lock();
 
-    for( auto drawable : drawables_ ){
-        notifyElementDeletion( drawable.first );
-    }
-
     // Clear the current selection.
     drawables_.clear();
 
@@ -440,6 +436,10 @@ void DrawablesSelection::clear()
 void DrawablesSelection::erase()
 {
     mutex_.unlock();
+
+    for( auto drawable : drawables_ ){
+        notifyElementDeletion( drawable.first );
+    }
 
     clear();
 
