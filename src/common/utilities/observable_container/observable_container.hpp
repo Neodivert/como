@@ -69,11 +69,10 @@ class ObservableContainer : public Observable {
         void notifyContainerUpdate();
 
 
-    private:
         /***
          * 6. Auxiliar methods
          ***/
-        void notifyElementAction( ElementID id, ContainerAction action );
+        void notifyElementAction( ContainerAction action, ElementID id );
 };
 
 
@@ -101,28 +100,28 @@ void ObservableContainer<ElementID>::removeObserver( ContainerObserver<ElementID
 template <class ElementID>
 void ObservableContainer<ElementID>::notifyElementInsertion( ElementID id )
 {
-    notifyElementAction( id, ContainerAction::ELEMENT_INSERTION );
+    notifyElementAction( ContainerAction::ELEMENT_INSERTION, id );
 }
 
 
 template <class ElementID>
 void ObservableContainer<ElementID>::notifyElementUpdate( ElementID id )
 {
-    notifyElementAction( id, ContainerAction::ELEMENT_UPDATE );
+    notifyElementAction( ContainerAction::ELEMENT_UPDATE, id );
 }
 
 
 template <class ElementID>
 void ObservableContainer<ElementID>::notifyElementDeletion( ElementID id )
 {
-    notifyElementAction( id, ContainerAction::ELEMENT_DELETION );
+    notifyElementAction( ContainerAction::ELEMENT_DELETION, id );
 }
 
 
 template <class ElementID>
 void ObservableContainer<ElementID>::notifyContainerUpdate()
 {
-    notifyElementAction( ElementID(), ContainerAction::CONTAINER_UPDATE );
+    notifyElementAction( ContainerAction::CONTAINER_UPDATE, ElementID() );
 }
 
 
@@ -131,7 +130,7 @@ void ObservableContainer<ElementID>::notifyContainerUpdate()
  ***/
 
 template <class ElementID>
-void ObservableContainer<ElementID>::notifyElementAction( ElementID id, ContainerAction action )
+void ObservableContainer<ElementID>::notifyElementAction( ContainerAction action, ElementID id )
 {
     for( auto observer : observers_ ){
         observer->update( action, id );

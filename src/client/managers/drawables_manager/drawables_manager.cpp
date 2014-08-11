@@ -165,7 +165,7 @@ void DrawablesManager::addDrawablesSelection( UserID userID, const PackableColor
 {
     DrawablesSelectionPtr newDrawablesSelection( new DrawablesSelection( selectionBorderColor.toVec4() ) );
     drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( userID, newDrawablesSelection ) );
-    newDrawablesSelection->Observable::addObserver( this );
+    newDrawablesSelection->addObserver( this );
 }
 
 
@@ -333,6 +333,7 @@ void DrawablesManager::highlightProperty( const void *property )
     }
 }
 
+
 /***
  * 12. Resource management
  ***/
@@ -357,11 +358,10 @@ void DrawablesManager::deleteResourcesSelection( UserID userID )
  * 13. Updating (Observer pattern)
  ***/
 
-void DrawablesManager::update()
+void DrawablesManager::update( ContainerAction lastContainerAction, ResourceID lastElementModified )
 {
-    // TODO: Update last element action (How I guess which observed container
-    // performed the last element action?).
-    notifyObservers();
+    // Simply "rethrow" the notification.
+    notifyElementAction( lastContainerAction, lastElementModified );
 }
 
 

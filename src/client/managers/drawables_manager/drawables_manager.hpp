@@ -19,12 +19,10 @@
 #ifndef DRAWABLES_MANAGER_HPP
 #define DRAWABLES_MANAGER_HPP
 
-#include <client/models/3d/lights/lights.hpp>
 #include <client/managers/drawables_selection/drawables_selection.hpp>
 #include <client/managers/drawables_selection/local_drawables_selection.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
 #include <map>
-#include <QOffscreenSurface>
 #include <client/managers/resources_manager.hpp>
 
 namespace como {
@@ -37,7 +35,7 @@ enum class MeshEdgesDisplayFrequency {
 };
 
 
-class DrawablesManager : public ResourcesManager, public Observer
+class DrawablesManager : public ResourcesManager, public ContainerObserver<ResourceID>
 {
     private:
         DrawablesSelections drawablesSelections_;
@@ -141,10 +139,11 @@ class DrawablesManager : public ResourcesManager, public Observer
         virtual void unlockResourcesSelection( UserID userID );
         virtual void deleteResourcesSelection( UserID userID );
 
+
         /***
          * 13. Updating (Observer pattern)
          ***/
-        virtual void update();
+        virtual void update( ContainerAction lastContainerAction, ResourceID lastElementModified );
 };
 
 typedef shared_ptr< DrawablesManager > DrawablesManagerPtr;
