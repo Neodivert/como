@@ -187,6 +187,8 @@ void LightsManager::removeLight( ResourceID lightID )
 
     // Remove the light from lights_ vector and signal it.
     lights_.erase( lightID );
+
+    notifyElementDeletion( lightID );
 }
 
 
@@ -255,8 +257,6 @@ void LightsManager::update( ContainerAction lastContainerAction, ResourceID last
             removeLight( lastElementModified );
         }
     }
-
-    notifyElementAction( lastContainerAction, lastElementModified );
 }
 
 
