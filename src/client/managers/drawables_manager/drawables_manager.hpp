@@ -58,7 +58,7 @@ class DrawablesManager : public ResourcesManager, public ContainerObserver<Resou
         /***
          * 2. Destruction
          ***/
-        ~DrawablesManager() = default;
+        ~DrawablesManager();
 
 
         /***

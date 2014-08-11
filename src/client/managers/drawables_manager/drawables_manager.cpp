@@ -32,11 +32,13 @@ DrawablesManager::DrawablesManager( ServerInterfacePtr server, const PackableCol
     glm::vec4 selectionColor = localSelectionBorderColor.toVec4();
 
     // Add a selection of unselected drawables to the map of selections as a
-    // selection associated to NO_USER).
+    // selection associated to NO_USER).   
     drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( NO_USER, nonSelectedDrawables_ ) );
+    nonSelectedDrawables_->addObserver( this );
 
     // Create an empty drawables selection for the local user.
     localDrawablesSelection_ = LocalDrawablesSelectionPtr( new LocalDrawablesSelection( selectionColor, server ) );
+    localDrawablesSelection_->addObserver( this );
 
     // Insert the recently created selection to the selections map.
     drawablesSelections_.insert( std::pair< UserID, DrawablesSelectionPtr >( localUserID(), localDrawablesSelection_ ) );
@@ -44,6 +46,18 @@ DrawablesManager::DrawablesManager( ServerInterfacePtr server, const PackableCol
     // Set a default mode for displaying the edges of the meshes in this
     // selection.
     displayEdges( MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED );
+}
+
+
+/***
+ * 2. Destruction
+ ***/
+
+DrawablesManager::~DrawablesManager()
+{
+    for( auto& drawablesSelection : drawablesSelections_ ){
+        drawablesSelection.second->removeObserver( this );
+    }
 }
 
 
