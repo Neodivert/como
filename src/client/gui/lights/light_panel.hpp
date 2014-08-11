@@ -70,9 +70,9 @@ class LightPanel : public QFrame, ContainerObserver<ResourceID>, Observer
 
 
         /***
-         * 5. Slots
+         * 5. Light opening / closing
          ***/
-    public slots:
+    private:
         void openLight( LightHandlerPtr light );
         void closeLight();
 };

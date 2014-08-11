@@ -37,12 +37,8 @@ LightsEditor::LightsEditor( LightsManagerPtr lightsManager ) :
 
     setLayout( layout );
 
-    QObject::connect( lightsManager.get(), &LightsManager::lightSelected,
-                      lightPanel, &LightPanel::openLight );
-
     QObject::connect( directionalLightCreationButton, &QPushButton::pressed,
                       lightsManager.get(), &LightsManager::createDirectionalLight );
-
 }
 
 

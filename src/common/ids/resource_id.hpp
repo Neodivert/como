@@ -68,6 +68,7 @@ class ResourceID
          ***/
         bool operator < ( const ResourceID& b ) const;
         bool operator == ( const ResourceID& b ) const;
+        bool operator != ( const ResourceID& b ) const;
 
         ResourceID& operator = (const ResourceID& b );
         ResourceID& operator = ( ResourceID&& );

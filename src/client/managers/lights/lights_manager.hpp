@@ -50,6 +50,9 @@ class LightsManager : public QObject, public ContainerObserver<ResourceID>, publ
         std::stack< GLuint > freeDirectionalLightIndices_;
 
 
+        LightHandlerPtr currentLight_;
+
+
     public:
         /***
          * 1. Construction
@@ -69,6 +72,7 @@ class LightsManager : public QObject, public ContainerObserver<ResourceID>, publ
         /***
          * 3. Getters
          ***/
+        LightHandlerPtr getCurrentLight() const;
         std::string getResourceName( const ResourceID& lightID ) const;
 
 
@@ -103,7 +107,6 @@ class LightsManager : public QObject, public ContainerObserver<ResourceID>, publ
          * 7. Signals
          ***/
     signals:
-        void lightSelected( LightHandlerPtr light );
         void lightModified( ResourceID id );
 
 

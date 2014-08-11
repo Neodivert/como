@@ -64,6 +64,7 @@ LightPanel::LightPanel( LightsManagerPtr lightsManager ) :
     lightsManager_->ObservableContainer::addObserver( this );
 }
 
+
 /***
  * 4. Update(ContainerAction lastContainerAction, ResourceID lastElementModified)
  ***/
@@ -74,13 +75,19 @@ void LightPanel::update( ContainerAction lastContainerAction, ResourceID lastEle
         currentLight_ &&
         ( lastElementModified == currentLight_->getResourceID() ) ){
         closeLight();
+    }else{
+        if( ( lightsManager_->getCurrentLight() != nullptr ) &&
+                ( ( !currentLight_ ) ||
+                  ( currentLight_->getResourceID() != lightsManager_->getCurrentLight()->getResourceID() ) ) ){
+            openLight( lightsManager_->getCurrentLight() );
+        }
     }
 }
 
 
 void LightPanel::update()
 {
-    if( currentLight_ ){
+    if( currentLight_ != nullptr ){
         lightColorButton_->setColor( currentLight_->getLightColor() );
 
         // We don't want to emmit signals from lightAmbientCoefficientSpinBox_ when
@@ -94,7 +101,7 @@ void LightPanel::update()
 
 
 /***
- * 5. Slots
+ * 5. 5. Light opening / closing
  ***/
 
 void LightPanel::openLight( LightHandlerPtr light )
@@ -102,8 +109,6 @@ void LightPanel::openLight( LightHandlerPtr light )
     currentLight_ = light;
 
     setEnabled( true );
-
-    update();
 }
 
 

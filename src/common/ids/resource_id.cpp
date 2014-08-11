@@ -69,6 +69,12 @@ bool ResourceID::operator == ( const ResourceID& b ) const
              (resourceIndex_ == b.resourceIndex_ ) );
 }
 
+bool ResourceID::operator != (const ResourceID &b) const
+{
+    // TODO: Add test cases.
+    return ( creatorID_ != b.creatorID_ ) || ( resourceIndex_ != b.resourceIndex_ );
+}
+
 
 ResourceID& ResourceID::operator = ( const ResourceID& b )
 {

@@ -26,7 +26,8 @@ namespace como {
 
 LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server, LogPtr log ) :
     ResourcesManager( server, log ),
-    drawablesManager_( drawablesManager )
+    drawablesManager_( drawablesManager ),
+    currentLight_( nullptr )
 {
     GLint i=0;
 
@@ -50,6 +51,12 @@ LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterf
 /***
  * 3. Getters
  ***/
+
+LightHandlerPtr LightsManager::getCurrentLight() const
+{
+    return currentLight_;
+}
+
 
 std::string LightsManager::getResourceName( const ResourceID& lightID ) const
 {
@@ -162,11 +169,15 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Packab
 
 void LightsManager::selectLight( const ResourceID lightID )
 {
-    LightHandlerPtr lightHandler( new LightHandler( lights_.at( lightID ), lightID, server() ) );
+    if( currentLight_ ){
+        currentLight_->removeObserver( this );
+    }
 
-    lightHandler->Observable::addObserver( this );
+    currentLight_ = LightHandlerPtr( new LightHandler( lights_.at( lightID ), lightID, server() ) );
 
-    emit lightSelected( lightHandler );
+    currentLight_->Observable::addObserver( this );
+
+    notifyElementUpdate( lightID );
 }
 
 
