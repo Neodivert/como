@@ -135,11 +135,11 @@ ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionTy
     AbstractResourcesOwnershipManager( log ),
     server_( server )
 {
-    resourcesSelections_[NO_USER] = std::shared_ptr< ResourcesSelectionType >( new ResourcesSelection<ResourceType> );
+    resourcesSelections_[NO_USER] = std::shared_ptr< ResourcesSelectionType >( new ResourcesSelectionType );
     nonSelectedResources_ = resourcesSelections_.at( NO_USER );
     nonSelectedResources_->Observable::addObserver( this );
 
-    resourcesSelections_[localUserID()] = std::shared_ptr< LocalResourcesSelectionType >( new LocalResourcesSelection<ResourceType>( server_ ) );
+    resourcesSelections_[localUserID()] = std::shared_ptr< ResourcesSelectionType >( new LocalResourcesSelectionType( server_ ) );
     localResourcesSelection_ = std::dynamic_pointer_cast< LocalResourcesSelectionType >( resourcesSelections_.at( localUserID() ) );
     localResourcesSelection_->Observable::addObserver( this );
 }

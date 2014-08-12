@@ -64,7 +64,7 @@ void MaterialsManager::createMaterial( ResourceID id, const MaterialInfo& materi
     // Set the creator of the material as its current owner.
     materialsOwners_[id] = id.getCreatorID();
 
-    notifyElementInsertion( id );
+    //notifyElementInsertion( id );
 }
 
 

@@ -32,7 +32,7 @@ class LocalDrawablesSelection : public DrawablesSelection, public LocalResources
         /***
          * 1. Construction
          ***/
-        LocalDrawablesSelection( glm::vec4 selectionBorderColor, ServerInterfacePtr server );
+        LocalDrawablesSelection( ServerInterfacePtr server );
         LocalDrawablesSelection( const LocalDrawablesSelection& ) = delete;
         LocalDrawablesSelection( LocalDrawablesSelection&& ) = delete;
 

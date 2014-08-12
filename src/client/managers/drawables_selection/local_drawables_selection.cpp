@@ -22,8 +22,8 @@ namespace como {
 
 const unsigned int TRANSFORMATION_FLOAT_PRECISION = 10000;
 
-LocalDrawablesSelection::LocalDrawablesSelection( glm::vec4 selectionBorderColor, ServerInterfacePtr server ) :
-    DrawablesSelection( selectionBorderColor ),
+LocalDrawablesSelection::LocalDrawablesSelection( ServerInterfacePtr server ) :
+    DrawablesSelection( glm::vec4( 1.0f ) ), // TODO: Retrieve selection color from server.
     LocalResourcesSelection( server )
 {}
 
