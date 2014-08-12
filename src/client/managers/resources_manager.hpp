@@ -151,6 +151,7 @@ ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionTy
     resourcesSelections_[localUserID()] = std::shared_ptr< ResourcesSelectionType >( new LocalResourcesSelectionType( server_ ) );
     localResourcesSelection_ = std::dynamic_pointer_cast< LocalResourcesSelectionType >( resourcesSelections_.at( localUserID() ) );
     localResourcesSelection_->Observable::addObserver( this );
+    initializeResourcesSelection( localUserID() );
 }
 
 
@@ -242,6 +243,9 @@ template <class ResourceType, class ResourcesSelectionType, class LocalResources
 void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::createResourcesSelection( UserID userID )
 {
     resourcesSelections_[userID] = std::shared_ptr< ResourcesSelectionType >( new ResourcesSelectionType );
+
+    initializeResourcesSelection( userID );
+
     addResourcesSelectionObserver( userID, this );
 }
 
