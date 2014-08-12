@@ -27,7 +27,7 @@ namespace como {
 class LocalMeshesSelection : public MeshesSelection, public LocalResourcesSelection< Mesh >
 {
 public:
-    LocalMeshesSelection();
+    LocalMeshesSelection( ServerInterfacePtr server );
 };
 
 } // namespace como

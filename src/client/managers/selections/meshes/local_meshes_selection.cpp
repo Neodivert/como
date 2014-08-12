@@ -20,8 +20,8 @@
 
 namespace como {
 
-LocalMeshesSelection::LocalMeshesSelection()
-{
-}
+LocalMeshesSelection::LocalMeshesSelection( ServerInterfacePtr server ) :
+    LocalResourcesSelection( server )
+{}
 
 } // namespace como
