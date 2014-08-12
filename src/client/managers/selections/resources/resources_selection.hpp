@@ -40,7 +40,7 @@ class ResourcesSelection : public ObservableContainer<ResourceID> {
         /***
          * 2. Destruction
          ***/
-        ~ResourcesSelection() = default;
+        virtual ~ResourcesSelection() = default;
 
 
         /***
