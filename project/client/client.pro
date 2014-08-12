@@ -75,7 +75,6 @@ HEADERS += \
     ../../src/client/gui/materials/materials_list_item.hpp \
     ../../src/client/managers/materials/material_handler.hpp \
     ../../src/client/managers/lights/lights_manager.hpp \
-    ../../src/client/gui/lights/light_panel.hpp \
     ../../src/client/managers/lights/light_handler.hpp \
     ../../src/client/models/3d/lights/abstract_light.hpp \
     ../../src/client/models/3d/lights/light_properties.hpp \
@@ -100,7 +99,8 @@ HEADERS += \
     ../../src/client/managers/lights/local_lights_selection.hpp \
     ../../src/client/managers/selections/meshes/local_meshes_selection.hpp \
     ../../src/client/managers/selections/materials/materials_selection.hpp \
-    ../../src/client/managers/selections/materials/local_materials_selection.hpp
+    ../../src/client/managers/selections/materials/local_materials_selection.hpp \
+    ../../src/client/gui/tools_menu/properties_tab/lights_menu.hpp
 
 
 # Client sources
@@ -141,7 +141,6 @@ SOURCES += \
     ../../src/client/gui/materials/materials_list_item.cpp \
     ../../src/client/managers/materials/material_handler.cpp \
     ../../src/client/managers/lights/lights_manager.cpp \
-    ../../src/client/gui/lights/light_panel.cpp \
     ../../src/client/managers/lights/light_handler.cpp \
     ../../src/client/models/3d/lights/light_properties.cpp \
     ../../src/client/models/3d/lights/directional_light_properties.cpp \
@@ -161,4 +160,5 @@ SOURCES += \
     ../../src/client/managers/lights/local_lights_selection.cpp \
     ../../src/client/managers/selections/meshes/local_meshes_selection.cpp \
     ../../src/client/managers/selections/materials/materials_selection.cpp \
-    ../../src/client/managers/selections/materials/local_materials_selection.cpp
+    ../../src/client/managers/selections/materials/local_materials_selection.cpp \
+    ../../src/client/gui/tools_menu/properties_tab/lights_menu.cpp

@@ -16,8 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef LIGHT_PANEL_HPP
-#define LIGHT_PANEL_HPP
+#ifndef LIGHTS_MENU_HPP
+#define LIGHTS_MENU_HPP
 
 #include <QFrame>
 #include <QLineEdit>
@@ -28,7 +28,7 @@
 
 namespace como {
 
-class LightPanel : public QFrame, ContainerObserver<ResourceID>, Observer
+class LightsMenu : public QFrame, ContainerObserver<ResourceID>, Observer
 {
     Q_OBJECT
 
@@ -44,22 +44,22 @@ class LightPanel : public QFrame, ContainerObserver<ResourceID>, Observer
         /***
          * 1. Construction
          ***/
-        LightPanel( LightsManagerPtr lightsManager );
-        LightPanel( const LightPanel& ) = delete;
-        LightPanel( LightPanel&& ) = delete;
+        LightsMenu( LightsManagerPtr lightsManager );
+        LightsMenu( const LightsMenu& ) = delete;
+        LightsMenu( LightsMenu&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~LightPanel() = default;
+        ~LightsMenu() = default;
 
 
         /***
          * 3. Operators
          ***/
-        LightPanel& operator = ( const LightPanel& ) = delete;
-        LightPanel& operator = ( LightPanel&& ) = delete;
+        LightsMenu& operator = ( const LightsMenu& ) = delete;
+        LightsMenu& operator = ( LightsMenu&& ) = delete;
 
 
         /***
@@ -79,4 +79,4 @@ class LightPanel : public QFrame, ContainerObserver<ResourceID>, Observer
 
 } // namespace como
 
-#endif // LIGHT_PANEL_HPP
+#endif // LIGHTS_MENU_HPP

@@ -16,12 +16,12 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "light_panel.hpp"
+#include "lights_menu.hpp"
 #include <QFormLayout>
 
 namespace como {
 
-LightPanel::LightPanel( LightsManagerPtr lightsManager ) :
+LightsMenu::LightsMenu( LightsManagerPtr lightsManager ) :
     QFrame(),
     lightsManager_( lightsManager )
 {
@@ -63,7 +63,7 @@ LightPanel::LightPanel( LightsManagerPtr lightsManager ) :
  * 4. Update(ContainerAction lastContainerAction, ResourceID lastElementModified)
  ***/
 
-void LightPanel::update( ContainerAction lastContainerAction, ResourceID lastElementModified )
+void LightsMenu::update( ContainerAction lastContainerAction, ResourceID lastElementModified )
 {
     if( ( lastContainerAction == ContainerAction::ELEMENT_DELETION ) &&
         currentLight_ &&
@@ -79,7 +79,7 @@ void LightPanel::update( ContainerAction lastContainerAction, ResourceID lastEle
 }
 
 
-void LightPanel::update()
+void LightsMenu::update()
 {
     if( currentLight_ != nullptr ){
         lightColorButton_->setColor( currentLight_->getLightColor() );
@@ -98,7 +98,7 @@ void LightPanel::update()
  * 5. 5. Light opening / closing
  ***/
 
-void LightPanel::openLight( LightHandlerPtr light )
+void LightsMenu::openLight( LightHandlerPtr light )
 {
     currentLight_ = light;
 
@@ -106,7 +106,7 @@ void LightPanel::openLight( LightHandlerPtr light )
 }
 
 
-void LightPanel::closeLight()
+void LightsMenu::closeLight()
 {
     currentLight_ = nullptr;
 
