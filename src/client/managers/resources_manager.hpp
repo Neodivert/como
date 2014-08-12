@@ -89,6 +89,7 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
          * 7. Selections management
          ***/
         void createResourcesSelection( UserID userID );
+        virtual void initializeResourcesSelection( UserID userID );
         void removeResourcesSelection( UserID userID );
 
 
@@ -242,6 +243,13 @@ void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
 {
     resourcesSelections_[userID] = std::shared_ptr< ResourcesSelectionType >( new ResourcesSelectionType );
     addResourcesSelectionObserver( userID, this );
+}
+
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::initializeResourcesSelection( UserID userID )
+{
+    (void)( userID );
 }
 
 
