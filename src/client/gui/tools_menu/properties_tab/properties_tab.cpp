@@ -26,16 +26,16 @@ namespace como {
  * 1. Construction
  ***/
 
-PropertiesTab::PropertiesTab( LocalDrawablesSelectionPtr localDrawablesSelection, MeshesSelection* localMeshesSelection )
+PropertiesTab::PropertiesTab( ScenePtr scene )
 {
     // Create the layout for this widget.
     QVBoxLayout* layout = new QVBoxLayout;
 
     // Construct the General Info menu.
-    generalInfoMenu_ = new GeneralInfoMenu( localDrawablesSelection );
+    generalInfoMenu_ = new GeneralInfoMenu( scene->getDrawablesManager()->getLocalResourcesSelection() );
 
     // Construct the Mesh Info menu.
-    meshInfoMenu_ = new MeshInfoMenu( localMeshesSelection );
+    meshInfoMenu_ = new MeshInfoMenu( scene->getMeshesManager()->getLocalResourcesSelection() );
 
     // Add required widgets to the layout and set the latter as the current
     // layout.

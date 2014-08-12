@@ -25,7 +25,7 @@ namespace como {
  * 1. Construction
  ***/
 
-MeshInfoMenu::MeshInfoMenu( MeshesSelection* userSelection ) :
+MeshInfoMenu::MeshInfoMenu( std::shared_ptr< LocalMeshesSelection > userSelection ) :
     userSelection_( userSelection )
 {
     // Create the layout for this tab.
@@ -48,7 +48,7 @@ MeshInfoMenu::MeshInfoMenu( MeshesSelection* userSelection ) :
  * 3. Initialization
  ***/
 
-QGroupBox* MeshInfoMenu::createVertexNormalsDisplayGroupBox( MeshesSelection* meshesSelection )
+QGroupBox* MeshInfoMenu::createVertexNormalsDisplayGroupBox( std::shared_ptr< LocalMeshesSelection > meshesSelection )
 {
     QGroupBox* displayVertexNormalsGroupBox = nullptr;
     QVBoxLayout* layout = nullptr;

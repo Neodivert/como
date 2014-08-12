@@ -22,7 +22,7 @@
 #include <QFrame>
 #include "general_info_menu.hpp"
 #include "mesh_info_menu.hpp"
-#include <client/managers/drawables_selection/local_drawables_selection.hpp>
+#include <client/managers/scene/scene.hpp>
 
 namespace como {
 
@@ -56,8 +56,10 @@ class PropertiesTab : public QFrame
          * 1. Construction
          ***/
 
+        PropertiesTab( ScenePtr scene );
+
         /*! \brief Default constructor */
-        PropertiesTab( LocalDrawablesSelectionPtr localDrawablesSelection, MeshesSelection* localMeshesSelection );
+        PropertiesTab() = delete;
 
         /*! \brief Copy constructor */
         PropertiesTab( const PropertiesTab& ) = delete;

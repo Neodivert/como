@@ -32,7 +32,7 @@ class MeshInfoMenu : public QWidget, public Observer
 
     private:
         /*! Local user's (drawables) selection */
-        MeshesSelectionPtr userSelection_;
+        std::shared_ptr< LocalMeshesSelection > userSelection_;
 
         /*! Position of the user's selection centroid */
         QLabel* centroidPosition_;
@@ -47,7 +47,7 @@ class MeshInfoMenu : public QWidget, public Observer
          ***/
 
         /*! \brief Default constructor */
-        MeshInfoMenu( MeshesSelection* userSelection );
+        MeshInfoMenu( std::shared_ptr< LocalMeshesSelection > userSelection );
 
         /*! \brief Copy constructor */
         MeshInfoMenu( const MeshInfoMenu& ) = delete;
@@ -67,7 +67,7 @@ class MeshInfoMenu : public QWidget, public Observer
         /***
          * 3. Initialization
          ***/
-        QGroupBox* createVertexNormalsDisplayGroupBox( MeshesSelection* meshesSelection );
+        QGroupBox* createVertexNormalsDisplayGroupBox( std::shared_ptr< LocalMeshesSelection > meshesSelection );
 
 
         /***
