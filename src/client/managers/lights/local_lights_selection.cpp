@@ -20,4 +20,8 @@
 
 namespace como {
 
+LocalLightsSelection::LocalLightsSelection( ServerInterfacePtr server ) :
+    LocalResourcesSelection( server )
+{}
+
 } // namespace como

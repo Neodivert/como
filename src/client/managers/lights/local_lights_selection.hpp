@@ -27,7 +27,7 @@ namespace como {
 class LocalLightsSelection : public LightsSelection, public LocalResourcesSelection< LightProperties >
 {
 public:
-    LocalLightsSelection();
+    LocalLightsSelection( ServerInterfacePtr server );
 };
 
 } // namespace como

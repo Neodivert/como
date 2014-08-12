@@ -28,7 +28,7 @@ namespace como {
 class LocalMaterialsSelection : public MaterialsSelection, public LocalResourcesSelection<Material>
 {
 public:
-    LocalMaterialsSelection();
+    LocalMaterialsSelection( ServerInterfacePtr server );
 };
 
 } // namespace como

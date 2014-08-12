@@ -20,7 +20,8 @@
 
 namespace como {
 
-LocalMaterialsSelection::LocalMaterialsSelection()
+LocalMaterialsSelection::LocalMaterialsSelection( ServerInterfacePtr server ) :
+    LocalResourcesSelection( server )
 {
 }
 

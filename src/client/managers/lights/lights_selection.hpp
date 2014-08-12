@@ -31,7 +31,7 @@ class LightsSelection : public virtual ResourcesSelection<LightProperties>, publ
         /***
          * 1. Construction
          ***/
-        LightsSelection() = delete;
+        LightsSelection() = default;
         LightsSelection( DrawablesSelectionPtr drawablesSelection );
         LightsSelection( const LightsSelection& ) = delete;
         LightsSelection( LightsSelection&& ) = delete;
