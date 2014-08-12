@@ -70,6 +70,12 @@ class ResourcesSelection : public ObservableContainer<ResourceID> {
         void clear();
 
 
+        /***
+         * 7. Getters
+         ***/
+        unsigned int size();
+
+
     protected:
         std::map< ResourceID, std::shared_ptr< ResourceType > > resources_;
 };
@@ -130,6 +136,17 @@ void ResourcesSelection<ResourceType>::clear()
     }
 
     resources_.clear();
+}
+
+
+/***
+ * 7. Getters
+ ***/
+
+template <class ResourceType>
+unsigned int ResourcesSelection<ResourceType>::size()
+{
+    return resources_.size();
 }
 
 }

@@ -41,17 +41,15 @@ LightsMenu::LightsMenu( LocalLightsSelection* lights ) :
 
     // Connect the signals emitted when user changes a material parameter to
     // the corresponding methods which change those parameters.
-    /*
     QObject::connect( lightColorButton_, &ColorButton::colorChanged, [=]( PackableColor color )
     {
-        currentLight_->setLightColor( color );
+        lights_->setLightColor( color );
     });
 
     void (QDoubleSpinBox::*ambientCoefficientChangeSignal)( double ) = &QDoubleSpinBox::valueChanged;
     QObject::connect( lightAmbientCoefficientSpinBox_, ambientCoefficientChangeSignal, [this]( double value ){
-        currentLight_->setAmbientCoefficient( static_cast< float >( value ) );
+        lights_->setAmbientCoefficient( static_cast< float >( value ) );
     } );
-    */
 
     // Initially there is no light selected, so disable this panel.
     setEnabled( false );
@@ -67,17 +65,21 @@ LightsMenu::LightsMenu( LocalLightsSelection* lights ) :
 void LightsMenu::update()
 {
     // TODO: Complete.
-    // if( lights_->size) setEnabled( ) ...
-        /*
-        lightColorButton_->setColor( currentLight_->getLightColor() );
+    if( lights_->size() ){
+        setEnabled( true );
+
+        lightColorButton_->setColor( lights_->getLightColor() );
 
         // We don't want to emmit signals from lightAmbientCoefficientSpinBox_ when
         // we call setValue() directly, so we block them temporarily.
         // TODO: is there a more elegant way?
         bool oldBlockingState = lightAmbientCoefficientSpinBox_->blockSignals( true );
-        lightAmbientCoefficientSpinBox_->setValue( currentLight_->getAmbientCoefficient() );
+        lightAmbientCoefficientSpinBox_->setValue( lights_->getAmbientCoefficient() );
         lightAmbientCoefficientSpinBox_->blockSignals( oldBlockingState );
-        */
+
+    }else{
+        setEnabled( false );
+    }
 }
 
 } // namespace como
