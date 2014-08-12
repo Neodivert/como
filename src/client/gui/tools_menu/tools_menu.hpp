@@ -25,7 +25,7 @@
 #include <QDir>
 #include <client/managers/como_app.hpp>
 #include <client/gui/materials/materials_editor.hpp>
-#include <client/gui/lights/lights_editor.hpp>
+
 
 namespace como {
 
@@ -33,35 +33,20 @@ class ToolsMenu : public QTabWidget
 {
     Q_OBJECT
 
-    protected:
-        shared_ptr< ComoApp > comoApp_;
-
-        // Current color (used when creating new drawables)
-        QColor currentColor_;
-
-        // Current ambient light color.
-        QColor currentDirectionalLightColor_;
-
-        // Label indicating the current color.
-        QLabel* currentColorLabel_;
-
-        /***
-         * 1. Initialization and destruction
-         ***/
     public:
+        /***
+         * 1. Construction
+         ***/
         ToolsMenu() = delete;
         ToolsMenu( const ToolsMenu& ) = delete;
         ToolsMenu( ToolsMenu&& ) = delete;
         ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp );
 
-        ~ToolsMenu() = default;
-
 
         /***
-         * 2. Getters
+         * 2. Destruction
          ***/
-    public:
-        QColor getCurrentColor() const ;
+        ~ToolsMenu() = default;
 
 
         /***
@@ -71,14 +56,8 @@ class ToolsMenu : public QTabWidget
         ToolsMenu& operator = ( ToolsMenu&& ) = delete;
 
 
-        /***
-         * 4. Auxiliar methods
-         ***/
-    protected:
-        void changeCurrentColor();
-
-    signals:
-        void currentDirectionalLightColorChanged( QColor newColor );
+    private:
+        shared_ptr< ComoApp > comoApp_;
 };
 
 } // namespace como

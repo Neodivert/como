@@ -31,28 +31,12 @@ namespace como {
 
 ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     QTabWidget( parent ),
-    comoApp_( comoApp ),
-    currentColor_( 255, 0, 0, 255 ),
-    currentDirectionalLightColor_( 255, 0, 0, 255 )
+    comoApp_( comoApp )
 {
     addTab( new CreationTab( comoApp_->getScene() ), "Creation" );
     addTab( new TransformationTab( comoApp_ ), "Transformation" );
     addTab( new PropertiesTab( comoApp_->getScene()->getDrawablesManager()->getLocalResourcesSelection(), comoApp_->getScene()->getMeshesManager()->getLocalUserSelection() ), "Properties" );
     //addTab( new MaterialsEditor( comoApp_->getScene()->getMaterialsManager() ), "Materials" );
-    addTab( new LightsEditor( comoApp_->getScene()->getLightsManager() ), "Lights" );
 }
-
-
-/***
- * 2. Getters
- ***/
-
-QColor ToolsMenu::getCurrentColor() const
-{
-    return currentColor_;
-}
-
-
-
 
 } // namespace como
