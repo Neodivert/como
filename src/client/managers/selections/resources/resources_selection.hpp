@@ -70,7 +70,7 @@ class ResourcesSelection : public ObservableContainer<ResourceID> {
         void clear();
 
 
-    private:
+    protected:
         std::map< ResourceID, std::shared_ptr< ResourceType > > resources_;
 };
 

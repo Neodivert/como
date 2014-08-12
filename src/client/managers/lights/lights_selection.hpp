@@ -25,7 +25,7 @@
 
 namespace como {
 
-class LightsSelection : public virtual ResourcesSelection<LightProperties>, public ContainerObserver<ResourceID>
+class LightsSelection : public virtual ResourcesSelection<LightProperties>, public ContainerObserver<ResourceID>, public AbstractLight
 {
     public:
         /***
@@ -44,13 +44,27 @@ class LightsSelection : public virtual ResourcesSelection<LightProperties>, publ
 
 
         /***
-         * 3. Updating (Observer pattern).
+         * 3. Getters
+         ***/
+        virtual PackableColor getLightColor() const;
+        virtual float getAmbientCoefficient() const;
+
+
+        /***
+         * 4. Setters
+         ***/
+        virtual void setLightColor( const PackableColor& color );
+        virtual void setAmbientCoefficient( float coefficient );
+
+
+        /***
+         * 5. Updating (Observer pattern).
          ***/
         virtual void update( ContainerAction lastContainerAction, ResourceID lastElementModified );
 
 
         /***
-         * 3. Operators
+         * 6. Operators
          ***/
         LightsSelection& operator = ( const LightsSelection& ) = delete;
         LightsSelection& operator = ( LightsSelection&& ) = delete;

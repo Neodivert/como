@@ -42,7 +42,50 @@ LightsSelection::~LightsSelection()
 
 
 /***
- * 3. Updating (Observer pattern).
+ * 3. Getters
+ ***/
+
+PackableColor LightsSelection::getLightColor() const
+{
+    if( resources_.size() == 0 ){
+        throw std::runtime_error( "LightsSelection::getLightColor() called on empty LightsSelection" );
+    }
+    return resources_.begin()->second->getLightColor();
+}
+
+
+float LightsSelection::getAmbientCoefficient() const
+{
+    if( resources_.size() == 0 ){
+        throw std::runtime_error( "LightsSelection::getAmbientCoefficient() called on empty LightsSelection" );
+    }
+    return resources_.begin()->second->getAmbientCoefficient();
+}
+
+
+/***
+ * 4. Setters
+ ***/
+
+void LightsSelection::setLightColor( const PackableColor& color)
+{
+    if( resources_.size() == 0 ){
+        throw std::runtime_error( "LightsSelection::setLightColor() called on empty LightsSelection" );
+    }
+    return resources_.begin()->second->setLightColor( color );
+}
+
+void LightsSelection::setAmbientCoefficient( float coefficient )
+{
+    if( resources_.size() == 0 ){
+        throw std::runtime_error( "LightsSelection::setAmbientCoefficient() called on empty LightsSelection" );
+    }
+    return resources_.begin()->second->setAmbientCoefficient( coefficient );
+}
+
+
+/***
+ * 5. Updating (Observer pattern).
  ***/
 
 void LightsSelection::update( ContainerAction lastContainerAction, ResourceID lastElementModified )
