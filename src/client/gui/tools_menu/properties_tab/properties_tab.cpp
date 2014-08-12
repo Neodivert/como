@@ -18,6 +18,9 @@
 
 #include "properties_tab.hpp"
 #include <QVBoxLayout>
+#include <client/gui/tools_menu/properties_tab/general_info_menu.hpp>
+#include <client/gui/tools_menu/properties_tab/mesh_info_menu.hpp>
+#include <client/gui/tools_menu/properties_tab/lights_menu.hpp>
 
 namespace como {
 
@@ -35,6 +38,7 @@ PropertiesTab::PropertiesTab( ScenePtr scene )
     // layout.
     layout->addWidget( new GeneralInfoMenu( scene->getDrawablesManager()->getLocalResourcesSelection() ) );
     layout->addWidget( new MeshInfoMenu( scene->getMeshesManager()->getLocalResourcesSelection() ) );
+    layout->addWidget( new LightsMenu( scene->getLightsManager()->getLocalResourcesSelection().get() ) );
     setLayout( layout );
 }
 

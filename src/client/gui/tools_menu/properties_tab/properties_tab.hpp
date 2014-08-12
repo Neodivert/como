@@ -20,8 +20,6 @@
 #define PROPERTIES_TAB_HPP
 
 #include <QFrame>
-#include "general_info_menu.hpp"
-#include "mesh_info_menu.hpp"
 #include <client/managers/scene/scene.hpp>
 
 namespace como {
