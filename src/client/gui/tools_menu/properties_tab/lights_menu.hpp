@@ -20,22 +20,18 @@
 #define LIGHTS_MENU_HPP
 
 #include <QFrame>
-#include <QLineEdit>
-#include <client/managers/lights/lights_manager.hpp>
-#include <client/managers/lights/light_handler.hpp>
+#include <client/managers/lights/local_lights_selection.hpp>
 #include <client/gui/utilities/color_button.hpp>
-#include <common/utilities/observable_container/container_observer.hpp>
+#include <QDoubleSpinBox>
 
 namespace como {
 
-class LightsMenu : public QFrame, ContainerObserver<ResourceID>, Observer
+class LightsMenu : public QFrame, public Observer
 {
     Q_OBJECT
 
     private:
-        LightsManagerPtr lightsManager_;
-
-        LightHandlerPtr currentLight_;
+        LocalLightsSelection* lights_;
 
         ColorButton* lightColorButton_;
         QDoubleSpinBox* lightAmbientCoefficientSpinBox_;
@@ -44,7 +40,7 @@ class LightsMenu : public QFrame, ContainerObserver<ResourceID>, Observer
         /***
          * 1. Construction
          ***/
-        LightsMenu( LightsManagerPtr lightsManager );
+        LightsMenu( LocalLightsSelection* lights );
         LightsMenu( const LightsMenu& ) = delete;
         LightsMenu( LightsMenu&& ) = delete;
 
@@ -63,18 +59,9 @@ class LightsMenu : public QFrame, ContainerObserver<ResourceID>, Observer
 
 
         /***
-         * 4. Updating
+         * 4. Updating (Observer pattern)
          ***/
-        virtual void update( ContainerAction lastContainerAction, ResourceID lastElementModified );
         virtual void update();
-
-
-        /***
-         * 5. Light opening / closing
-         ***/
-    private:
-        void openLight( LightHandlerPtr light );
-        void closeLight();
 };
 
 } // namespace como

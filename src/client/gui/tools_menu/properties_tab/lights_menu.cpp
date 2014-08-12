@@ -21,9 +21,9 @@
 
 namespace como {
 
-LightsMenu::LightsMenu( LightsManagerPtr lightsManager ) :
+LightsMenu::LightsMenu( LocalLightsSelection* lights ) :
     QFrame(),
-    lightsManager_( lightsManager )
+    lights_( lights )
 {
     // Create the widgets for modifying light properties.
     QFormLayout* layout = new QFormLayout();
@@ -41,6 +41,7 @@ LightsMenu::LightsMenu( LightsManagerPtr lightsManager ) :
 
     // Connect the signals emitted when user changes a material parameter to
     // the corresponding methods which change those parameters.
+    /*
     QObject::connect( lightColorButton_, &ColorButton::colorChanged, [=]( PackableColor color )
     {
         currentLight_->setLightColor( color );
@@ -50,12 +51,12 @@ LightsMenu::LightsMenu( LightsManagerPtr lightsManager ) :
     QObject::connect( lightAmbientCoefficientSpinBox_, ambientCoefficientChangeSignal, [this]( double value ){
         currentLight_->setAmbientCoefficient( static_cast< float >( value ) );
     } );
+    */
 
     // Initially there is no light selected, so disable this panel.
     setEnabled( false );
 
-    lightsManager_->Observable::addObserver( this );
-    lightsManager_->getLocalResourcesSelection()->addObserver( this );
+    lights_->Observable::addObserver( this );
 }
 
 
@@ -63,25 +64,11 @@ LightsMenu::LightsMenu( LightsManagerPtr lightsManager ) :
  * 4. Update(ContainerAction lastContainerAction, ResourceID lastElementModified)
  ***/
 
-void LightsMenu::update( ContainerAction lastContainerAction, ResourceID lastElementModified )
-{
-    if( ( lastContainerAction == ContainerAction::ELEMENT_DELETION ) &&
-        currentLight_ &&
-        ( lastElementModified == currentLight_->getResourceID() ) ){
-        closeLight();
-    }else{
-        if( ( lightsManager_->getCurrentLight() != nullptr ) &&
-                ( ( !currentLight_ ) ||
-                  ( currentLight_->getResourceID() != lightsManager_->getCurrentLight()->getResourceID() ) ) ){
-            openLight( lightsManager_->getCurrentLight() );
-        }
-    }
-}
-
-
 void LightsMenu::update()
 {
-    if( currentLight_ != nullptr ){
+    // TODO: Complete.
+    // if( lights_->size) setEnabled( ) ...
+        /*
         lightColorButton_->setColor( currentLight_->getLightColor() );
 
         // We don't want to emmit signals from lightAmbientCoefficientSpinBox_ when
@@ -90,27 +77,7 @@ void LightsMenu::update()
         bool oldBlockingState = lightAmbientCoefficientSpinBox_->blockSignals( true );
         lightAmbientCoefficientSpinBox_->setValue( currentLight_->getAmbientCoefficient() );
         lightAmbientCoefficientSpinBox_->blockSignals( oldBlockingState );
-    }
-}
-
-
-/***
- * 5. 5. Light opening / closing
- ***/
-
-void LightsMenu::openLight( LightHandlerPtr light )
-{
-    currentLight_ = light;
-
-    setEnabled( true );
-}
-
-
-void LightsMenu::closeLight()
-{
-    currentLight_ = nullptr;
-
-    setEnabled( false );
+        */
 }
 
 } // namespace como
