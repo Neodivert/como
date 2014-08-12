@@ -117,8 +117,7 @@ void LightsManager::createDirectionalLight()
 
     print();
 
-    // Indicate to the GUI that a new light has been created.
-    notifyElementInsertion( lightID );
+    notifyObservers();
 }
 
 
@@ -163,7 +162,7 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Packab
     log()->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
     print();
 
-    notifyElementInsertion( lightID );
+    notifyObservers();
 }
 
 
@@ -177,7 +176,7 @@ void LightsManager::selectLight( const ResourceID lightID )
 
     currentLight_->Observable::addObserver( this );
 
-    notifyElementUpdate( lightID );
+    notifyObservers();
 }
 
 
@@ -199,7 +198,7 @@ void LightsManager::removeLight( ResourceID lightID )
     // Remove the light from lights_ vector and signal it.
     lights_.erase( lightID );
 
-    notifyElementDeletion( lightID );
+    notifyObservers();
 }
 
 
@@ -232,7 +231,7 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
 
             lights_.at( lightCommand->getResourceID() )->setLightColor( lightCommand->getLightColor() );
 
-            notifyElementUpdate( lightCommand->getResourceID() );
+            notifyObservers();
         }break;
         case LightCommandType::LIGHT_AMBIENT_COEFFICIENT_CHANGE:{
             const LightAmbientCoefficientChangeCommand* lightCommand =
@@ -240,7 +239,7 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
 
             lights_.at( lightCommand->getResourceID() )->setAmbientCoefficient( lightCommand->getAmbientCoefficient() );
 
-            notifyElementUpdate( lightCommand->getResourceID() );
+            notifyObservers();
         }break;
     }
 }

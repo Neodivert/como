@@ -38,7 +38,7 @@ enum class ElementsMeetingCondition {
     SOME
 };
 
-class MeshesSelection : public AbstractMesh, public virtual ResourcesSelection< Mesh >
+class MeshesSelection : public virtual ResourcesSelection< Mesh >, public AbstractMesh
 {
     private:
         MeshesMap meshes_;

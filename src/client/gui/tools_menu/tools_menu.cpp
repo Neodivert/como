@@ -38,7 +38,7 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     addTab( new CreationTab( comoApp_->getScene() ), "Creation" );
     addTab( new TransformationTab( comoApp_ ), "Transformation" );
     addTab( new PropertiesTab( comoApp_->getScene()->getDrawablesManager()->getLocalResourcesSelection(), comoApp_->getScene()->getMeshesManager()->getLocalUserSelection() ), "Properties" );
-    addTab( new MaterialsEditor( comoApp_->getScene()->getMaterialsManager() ), "Materials" );
+    //addTab( new MaterialsEditor( comoApp_->getScene()->getMaterialsManager() ), "Materials" );
     addTab( new LightsEditor( comoApp_->getScene()->getLightsManager() ), "Lights" );
 }
 

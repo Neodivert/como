@@ -20,6 +20,7 @@
 
 namespace como {
 
+/*
 MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
     QFrame(),
     materialsManager_( materialsManager )
@@ -37,13 +38,13 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
     QObject::connect( materialsManager_.get(), &MaterialsManager::materialSelectionConfirmed,
                       materialPanel_, &MaterialPanel::openMaterial );
 
-    materialsManager_->addObserver( this );
+    materialsManager_->ObservableContainer<ResourceID>::addObserver( this );
 }
 
 
-/***
+***
  * 3. Updating (Observer pattern).
- ***/
+ ***
 
 void MaterialsEditor::update( ContainerAction lastContainerAction, ResourceID resourceID )
 {
@@ -66,9 +67,9 @@ void MaterialsEditor::update( ContainerAction lastContainerAction, ResourceID re
 }
 
 
-/***
+***
  * 4. Events
- ***/
+ ***
 
 void MaterialsEditor::enterEvent( QEvent *event )
 {
@@ -88,5 +89,6 @@ void MaterialsEditor::leaveEvent( QEvent * event )
 
     materialsManager_->removeHighlights();
 }
+*/
 
 } // namespace como

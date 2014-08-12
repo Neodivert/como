@@ -26,7 +26,7 @@ namespace como {
  ***/
 
 DrawablesManager::DrawablesManager( ServerInterfacePtr server, const PackableColor& localSelectionBorderColor, LogPtr log ) :
-    ResourcesManager<Drawable, DrawablesSelection, LocalDrawablesSelection >( server, log )
+    ResourcesManager( server, log )
 {
     // TODO: Set local selection color.
     glm::vec4 selectionColor = localSelectionBorderColor.toVec4();

@@ -27,7 +27,7 @@
 namespace como {
 
 template <class ResourceType>
-class ResourcesSelection : public virtual ObservableContainer<ResourceID> {
+class ResourcesSelection : public ObservableContainer<ResourceID> {
     public:
         /***
          * 1. Construction

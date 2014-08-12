@@ -55,7 +55,7 @@ LightPanel::LightPanel( LightsManagerPtr lightsManager ) :
     setEnabled( false );
 
     lightsManager_->Observable::addObserver( this );
-    lightsManager_->ObservableContainer::addObserver( this );
+    lightsManager_->getLocalResourcesSelection()->addObserver( this );
 }
 
 

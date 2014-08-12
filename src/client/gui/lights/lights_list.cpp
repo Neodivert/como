@@ -41,7 +41,7 @@ LightsList::LightsList( LightsManagerPtr lightsManager ) :
         lightsManager_->highlightLight( lightID );
     });
 
-    lightsManager_->addObserver( this );
+    lightsManager_->getLocalResourcesSelection()->addObserver( this );
 }
 
 
