@@ -44,12 +44,14 @@ class AbstractLight
          * 3. Getters
          ***/
         virtual PackableColor getLightColor() const = 0;
+        virtual float getAmbientCoefficient() const = 0;
 
 
         /***
          * 4. Setters
          ***/
         virtual void setLightColor( const PackableColor& color ) = 0;
+        virtual void setAmbientCoefficient( float coefficient ) = 0;
 
 
         /***
