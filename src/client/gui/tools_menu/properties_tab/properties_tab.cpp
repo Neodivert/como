@@ -31,16 +31,10 @@ PropertiesTab::PropertiesTab( ScenePtr scene )
     // Create the layout for this widget.
     QVBoxLayout* layout = new QVBoxLayout;
 
-    // Construct the General Info menu.
-    generalInfoMenu_ = new GeneralInfoMenu( scene->getDrawablesManager()->getLocalResourcesSelection() );
-
-    // Construct the Mesh Info menu.
-    meshInfoMenu_ = new MeshInfoMenu( scene->getMeshesManager()->getLocalResourcesSelection() );
-
     // Add required widgets to the layout and set the latter as the current
     // layout.
-    layout->addWidget( generalInfoMenu_ );
-    layout->addWidget( meshInfoMenu_ );
+    layout->addWidget( new GeneralInfoMenu( scene->getDrawablesManager()->getLocalResourcesSelection() ) );
+    layout->addWidget( new MeshInfoMenu( scene->getMeshesManager()->getLocalResourcesSelection() ) );
     setLayout( layout );
 }
 

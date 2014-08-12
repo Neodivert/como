@@ -36,21 +36,6 @@ class PropertiesTab : public QFrame
 {
     Q_OBJECT
 
-    private:
-        /*!
-         * Menu for manipulating the general info about the currently selected
-         * 3D object.
-         */
-        GeneralInfoMenu* generalInfoMenu_;
-
-
-        /*!
-         * Menu for manipulating the properties of the mesh(es) selected by
-         * user.
-         */
-        MeshInfoMenu* meshInfoMenu_;
-
-
     public:
         /***
          * 1. Construction
