@@ -51,8 +51,8 @@ LightsMenu::LightsMenu( LocalLightsSelection* lights ) :
         lights_->setAmbientCoefficient( static_cast< float >( value ) );
     } );
 
-    // Initially there is no light selected, so disable this panel.
-    setEnabled( false );
+    // Initially there is no light selected, so make this panel no visible.
+    setVisible( false );
 
     lights_->Observable::addObserver( this );
 }
@@ -64,9 +64,8 @@ LightsMenu::LightsMenu( LocalLightsSelection* lights ) :
 
 void LightsMenu::update()
 {
-    // TODO: Complete.
     if( lights_->size() ){
-        setEnabled( true );
+        setVisible( true );
 
         lightColorButton_->setColor( lights_->getLightColor() );
 
@@ -78,7 +77,7 @@ void LightsMenu::update()
         lightAmbientCoefficientSpinBox_->blockSignals( oldBlockingState );
 
     }else{
-        setEnabled( false );
+        setVisible( false );
     }
 }
 

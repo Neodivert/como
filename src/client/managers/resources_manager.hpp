@@ -84,19 +84,28 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 
     protected:
         /***
-         * 7. Protected getters
+         * 7. Selections management
+         ***/
+        void createResourcesSelection( UserID userID );
+        void removeResourcesSelection( UserID userID );
+        void addResourcesSelectionObserver( UserID userID, Observer* observer );
+        void removeResourcesSelectionObserver( UserID userID, Observer* observer );
+
+
+        /***
+         * 8. Protected getters
          ***/
         std::shared_ptr< ResourcesSelectionType > getResourcesSelection( UserID userID ) const;
 
 
         /***
-         * 8. Server communication
+         * 9. Server communication
          ***/
         void sendCommandToServer( CommandConstPtr command );
 
 
         /***
-         * 9. Server info
+         * 10. Server info
          ***/
         UserID localUserID() const;
         ResourceID newResourceID();
@@ -104,7 +113,7 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 
 
         /***
-         * 10. Resource management
+         * 11. Resource management
          ***/
         virtual void lockResource( const ResourceID& resourceID, UserID userID ) = 0;
         virtual void unlockResourcesSelection( UserID userID ) = 0;
@@ -135,9 +144,8 @@ ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionTy
     AbstractResourcesOwnershipManager( log ),
     server_( server )
 {
-    resourcesSelections_[NO_USER] = std::shared_ptr< ResourcesSelectionType >( new ResourcesSelectionType );
+    createResourcesSelection( NO_USER );
     nonSelectedResources_ = resourcesSelections_.at( NO_USER );
-    nonSelectedResources_->Observable::addObserver( this );
 
     resourcesSelections_[localUserID()] = std::shared_ptr< ResourcesSelectionType >( new LocalResourcesSelectionType( server_ ) );
     localResourcesSelection_ = std::dynamic_pointer_cast< LocalResourcesSelectionType >( resourcesSelections_.at( localUserID() ) );
@@ -212,7 +220,40 @@ void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
 
 
 /***
- * 7. Protected getters
+ * 7. Selections management
+ ***/
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::createResourcesSelection( UserID userID )
+{
+    resourcesSelections_[userID] = std::shared_ptr< ResourcesSelectionType >( new ResourcesSelectionType );
+    addResourcesSelectionObserver( userID, this );
+}
+
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::removeResourcesSelection(UserID userID)
+{
+    resourcesSelections_.erase( userID );
+}
+
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::addResourcesSelectionObserver( UserID userID, Observer *observer )
+{
+    resourcesSelections_.at( userID )->Observable::addObserver( observer );
+}
+
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::removeResourcesSelectionObserver( UserID userID, Observer *observer )
+{
+    resourcesSelections_.at( userID )->Observable::removeObserver( observer );
+}
+
+
+/***
+ * 8. Protected getters
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
@@ -223,7 +264,7 @@ std::shared_ptr<ResourcesSelectionType> ResourcesManager<ResourceType, Resources
 
 
 /***
- * 8. Server communication
+ * 9. Server communication
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
@@ -234,7 +275,7 @@ void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
 
 
 /***
- * 9. Server info
+ * 10. Server info
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
@@ -259,7 +300,7 @@ ServerInterfacePtr ResourcesManager<ResourceType, ResourcesSelectionType, LocalR
 
 
 /***
- * 10. Resource management
+ * 11. Resource management
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
