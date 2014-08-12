@@ -101,7 +101,9 @@ HEADERS += \
     ../../src/client/managers/selections/resources/resources_selection.hpp \
     ../../src/client/managers/selections/resources/local_resources_selection.hpp \
     ../../src/client/managers/lights/local_lights_selection.hpp \
-    ../../src/client/managers/selections/meshes/local_meshes_selection.hpp
+    ../../src/client/managers/selections/meshes/local_meshes_selection.hpp \
+    ../../src/client/managers/selections/materials/materials_selection.hpp \
+    ../../src/client/managers/selections/materials/local_materials_selection.hpp
 
 
 # Client sources
@@ -163,4 +165,6 @@ SOURCES += \
     ../../src/client/managers/meshes_manager.cpp \
     ../../src/client/managers/lights/lights_selection.cpp \
     ../../src/client/managers/lights/local_lights_selection.cpp \
-    ../../src/client/managers/selections/meshes/local_meshes_selection.cpp
+    ../../src/client/managers/selections/meshes/local_meshes_selection.cpp \
+    ../../src/client/managers/selections/materials/materials_selection.cpp \
+    ../../src/client/managers/selections/materials/local_materials_selection.cpp

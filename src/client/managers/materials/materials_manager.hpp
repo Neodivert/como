@@ -34,11 +34,14 @@
 #include <client/managers/drawables_manager/drawables_manager.hpp>
 #include <client/managers/resources_manager.hpp>
 
+#include <client/managers/resources_manager.hpp>
+#include <client/managers/selections/materials/local_materials_selection.hpp>
+
 namespace como {
 
 typedef std::map< ResourceID, UserID > MaterialsOwnershipMap;
 
-class MaterialsManager : public QObject, public Observer, public Observable //, public ResourcesManager< Material >
+class MaterialsManager : public QObject, public ResourcesManager< Material, MaterialsSelection, LocalMaterialsSelection >
 {
     Q_OBJECT
 
