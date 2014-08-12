@@ -70,9 +70,11 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 
 
         /***
-         * 5. Updating (Observer pattern)
+         * 5. Observer pattern
          ***/
         virtual void update();
+        void addResourcesSelectionObserver( UserID userID, Observer* observer );
+        void removeResourcesSelectionObserver( UserID userID, Observer* observer );
 
 
         /***
@@ -88,8 +90,6 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
          ***/
         void createResourcesSelection( UserID userID );
         void removeResourcesSelection( UserID userID );
-        void addResourcesSelectionObserver( UserID userID, Observer* observer );
-        void removeResourcesSelectionObserver( UserID userID, Observer* observer );
 
 
         /***
@@ -208,7 +208,7 @@ void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
 
 
 /***
- * 5. Updating (Observer pattern)
+ * 5. Observer pattern
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
@@ -216,6 +216,20 @@ void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
 {
     // Simply forward the notification.
     notifyObservers();
+}
+
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::addResourcesSelectionObserver( UserID userID, Observer *observer )
+{
+    resourcesSelections_.at( userID )->Observable::addObserver( observer );
+}
+
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::removeResourcesSelectionObserver( UserID userID, Observer *observer )
+{
+    resourcesSelections_.at( userID )->Observable::removeObserver( observer );
 }
 
 
@@ -235,20 +249,6 @@ template <class ResourceType, class ResourcesSelectionType, class LocalResources
 void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::removeResourcesSelection(UserID userID)
 {
     resourcesSelections_.erase( userID );
-}
-
-
-template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::addResourcesSelectionObserver( UserID userID, Observer *observer )
-{
-    resourcesSelections_.at( userID )->Observable::addObserver( observer );
-}
-
-
-template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::removeResourcesSelectionObserver( UserID userID, Observer *observer )
-{
-    resourcesSelections_.at( userID )->Observable::removeObserver( observer );
 }
 
 
