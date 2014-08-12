@@ -25,16 +25,6 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-DrawablesSelection::DrawablesSelection() :
-    borderColor_( 1.0f ),
-    centroid_( 0.0f, 0.0f, 0.0f, 1.0f ),
-    pivotPointMode_( PivotPointMode::MEDIAN_POINT ),
-    highlightedProperty_( nullptr ),
-    displayEdges_( true )
-{
-}
-
-
 DrawablesSelection::DrawablesSelection( glm::vec4 borderColor ) :
     borderColor_( borderColor ),
     centroid_( 0.0f, 0.0f, 0.0f, 1.0f ),

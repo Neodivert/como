@@ -69,8 +69,8 @@ class DrawablesSelection : public virtual ResourcesSelection<Drawable>
         /***
          * 1. Initialization and destruction
          ***/
-        DrawablesSelection();
         DrawablesSelection( glm::vec4 borderColor );
+        DrawablesSelection() = delete;
         DrawablesSelection( const DrawablesSelection& ) = delete;
         DrawablesSelection( DrawablesSelection&& ) = delete;
 
