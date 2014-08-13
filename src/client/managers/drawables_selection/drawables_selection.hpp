@@ -81,20 +81,6 @@ class DrawablesSelection : public virtual ResourcesSelection<Drawable>
         std::string getName() const;
         std::string getTypeName() const;
 
-
-        /*!
-         * \brief Returns true if the selection contains one or more drawables
-         * of the type given as an argument.
-         */
-        bool contains( DrawableType drawableType ) const ;
-
-
-        /*!
-         * \brief Returns true if the selection contains one or more meshes
-         * of the type given as an argument.
-         */
-        bool contains( MeshType meshType ) const ;
-
         bool existsDrawable( const ResourceID& id ) const;
         std::string getDrawableName( const ResourceID& id ) const;
 
