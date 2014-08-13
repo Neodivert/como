@@ -126,14 +126,14 @@ ResourceID DrawablesManager::addDrawable( DrawablePtr drawable )
 {
     //takeOpenGLContext();
 
-    return getLocalResourcesSelection()->addDrawable( drawable );
+    return getLocalResourcesSelection()->addResource( drawable );
 }
 
 void DrawablesManager::addDrawable( UserID userID, DrawablePtr drawable, ResourceID drawableID )
 {
     //takeOpenGLContext();
 
-    getUserSelection( userID )->addDrawable( drawableID, drawable );
+    getUserSelection( userID )->addResource( drawableID, drawable );
 }
 
 

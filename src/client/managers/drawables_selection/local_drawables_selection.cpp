@@ -41,16 +41,6 @@ void LocalDrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 
 
 /***
- * 4. Drawables management
- ***/
-
-ResourceID LocalDrawablesSelection::addDrawable( DrawablePtr drawable )
-{
-    return addResource( drawable );
-}
-
-
-/***
  * 5. Transformations
  ***/
 

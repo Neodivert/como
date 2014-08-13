@@ -310,25 +310,7 @@ void DrawablesSelection::updateSelectionCentroid()
 
 
 /***
- * 6. Drawables management
- ***/
-
-void DrawablesSelection::addDrawable( ResourceID drawableID, DrawablePtr drawable )
-{
-    mutex_.lock();
-
-    // Insert the given pair <ID, drawable> into the selection.
-    resources_[ drawableID ] = drawable;
-
-    // This selection has changed, so indicate it.
-    notifyElementInsertion( drawableID );
-
-    mutex_.unlock();
-}
-
-
-/***
- * 7. Ray picking
+ * 6. Ray picking
  ***/
 
 bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, ResourceID& closestDrawable, float& minT ) const
@@ -359,7 +341,7 @@ bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, ResourceID& clos
 
 
 /***
- * 8. Drawing
+ * 7. Drawing
  ***/
 
 void DrawablesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
@@ -390,7 +372,7 @@ void DrawablesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, co
 
 
 /***
- * 10. Auxiliar methods
+ * 9. Auxiliar methods
  ***/
 
 void DrawablesSelection::highlighDrawableProperty( const void* property )

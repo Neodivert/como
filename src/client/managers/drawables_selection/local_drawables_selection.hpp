@@ -50,12 +50,6 @@ class LocalDrawablesSelection : public DrawablesSelection, public LocalResources
 
 
         /***
-         * 4. Drawables management
-         ***/
-        ResourceID addDrawable( DrawablePtr drawable );
-
-
-        /***
          * 4. Transformations
          ***/
         virtual void translate( glm::vec3 direction );

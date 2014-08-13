@@ -100,43 +100,35 @@ class DrawablesSelection : public virtual ResourcesSelection<Drawable>
         virtual void scale( glm::vec3 scaleFactors );
 
 
+    private:
         /***
          * 5. Updating
          ***/
-
-    private:
         void updateSelectionCentroid();
 
 
-
-        /***
-         * 6. Drawables management
-         ***/
     public:
-        void addDrawable( ResourceID drawableID, DrawablePtr drawable );
-
-
         /***
-         * 7. Ray picking
+         * 6. Ray picking
          ***/
         bool intersect( glm::vec3 r0, glm::vec3 r1, ResourceID& closestDrawable, float& minT ) const ;
 
 
         /***
-         * 8. Drawing
+         * 7. Drawing
          ***/
         virtual void draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const ;
 
 
         /***
-         * 9. Operators
+         * 8. Operators
          ***/
         DrawablesSelection& operator=( const DrawablesSelection& ) = delete ;
         DrawablesSelection& operator=( DrawablesSelection&& ) = delete;
 
 
         /***
-         * 10. Auxiliar methods
+         * 9. Auxiliar methods
          ***/
         void highlighDrawableProperty( const void* property );
 };
