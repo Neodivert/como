@@ -23,7 +23,7 @@ namespace como {
 const unsigned int TRANSFORMATION_FLOAT_PRECISION = 10000;
 
 LocalDrawablesSelection::LocalDrawablesSelection( ServerInterfacePtr server ) :
-    DrawablesSelection( glm::vec4( 1.0f ) ), // TODO: Retrieve selection color from server.
+    DrawablesSelection( server->getLocalUserColor().toVec4() ),
     LocalResourcesSelection( server )
 {}
 
@@ -129,10 +129,8 @@ void LocalDrawablesSelection::roundTransformationMagnitude( float& angle, glm::v
 {
     // Round transformation magnitude to 3 decimal places.
     // http://stackoverflow.com/questions/1343890/rounding-number-to-2-decimal-places-in-c
-    angle = floorf( angle * TRANSFORMATION_FLOAT_PRECISION + 0.5) / TRANSFORMATION_FLOAT_PRECISION;
-    v.x = floorf( v.x * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
-    v.y = floorf( v.y * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
-    v.z = floorf( v.z * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
+    angle = floorf( angle * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
+    roundTransformationMagnitude( v );
 }
 
 } // namespace como

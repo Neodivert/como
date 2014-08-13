@@ -55,6 +55,7 @@ class ServerInterface : public QObject
         boost::asio::deadline_timer timer_;
 
         ResourceID nextResourceID_;
+        PackableColor localUserColor_;
 
         // Log
         LogPtr log_;
@@ -115,6 +116,7 @@ class ServerInterface : public QObject
     public:
         ResourceID getNewResourceID();
         UserID getLocalUserID() const;
+        PackableColor getLocalUserColor() const;
 
 
         /***

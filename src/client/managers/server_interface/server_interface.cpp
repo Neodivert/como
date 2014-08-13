@@ -41,6 +41,7 @@ ServerInterface::ServerInterface( const char *host, const char *port, const char
         connect( host, port, userName, userAcceptancePacket );
 
         nextResourceID_ = ResourceID( userAcceptancePacket.getId(), 0 );
+        localUserColor_ = userAcceptancePacket.getSelectionColor();
 
         // Create the "worker threads" which will be communicating with the server.
         for( unsigned int i=0; i<2; i++ ){
@@ -292,6 +293,12 @@ ResourceID ServerInterface::getNewResourceID()
 UserID ServerInterface::getLocalUserID() const
 {
     return nextResourceID_.getCreatorID();
+}
+
+
+PackableColor ServerInterface::getLocalUserColor() const
+{
+    return localUserColor_;
 }
 
 } // namespace como
