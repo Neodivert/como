@@ -88,8 +88,9 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
         /***
          * 7. Selections management
          ***/
-        void createResourcesSelection( UserID userID );
-        virtual void initializeResourcesSelection( UserID userID );
+        template <typename... Args>
+        void createResourcesSelection( UserID userID, Args... args );
+
         void removeResourcesSelection( UserID userID );
 
 
@@ -151,7 +152,6 @@ ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionTy
     resourcesSelections_[localUserID()] = std::shared_ptr< ResourcesSelectionType >( new LocalResourcesSelectionType( server_ ) );
     localResourcesSelection_ = std::dynamic_pointer_cast< LocalResourcesSelectionType >( resourcesSelections_.at( localUserID() ) );
     localResourcesSelection_->Observable::addObserver( this );
-    initializeResourcesSelection( localUserID() );
 }
 
 
@@ -240,20 +240,12 @@ void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::createResourcesSelection( UserID userID )
+template <typename... Args>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::createResourcesSelection( UserID userID, Args... args )
 {
-    resourcesSelections_[userID] = std::shared_ptr< ResourcesSelectionType >( new ResourcesSelectionType );
-
-    initializeResourcesSelection( userID );
+    resourcesSelections_[userID] = std::shared_ptr< ResourcesSelectionType >( new ResourcesSelectionType( args... ) );
 
     addResourcesSelectionObserver( userID, this );
-}
-
-
-template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::initializeResourcesSelection( UserID userID )
-{
-    (void)( userID );
 }
 
 
