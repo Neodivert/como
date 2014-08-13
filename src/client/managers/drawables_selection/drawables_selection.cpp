@@ -34,39 +34,6 @@ DrawablesSelection::DrawablesSelection( glm::vec4 borderColor ) :
 {
 }
 
-/*
-DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
-    ResourcesSelection( b ),
-    borderColor_( b.borderColor_ ),
-    centroid_( b.centroid_ ),
-    pivotPointMode_( b.pivotPointMode_ ),
-    highlightedProperty_( nullptr ),
-    displayEdges_( b.displayEdges_ )
-{
-    DrawablesMap::const_iterator it;
-
-    // Clone all the drawables held by b.
-    for( it = b.resources_.begin(); it != b.resources_.end(); it++ ){ // Make this in MeshesSelection copy constructor.
-        resources_.insert( std::pair< ResourceID, DrawablePtr >(
-                               it->first,
-                               it->second->clone()
-                            ) );
-    }
-
-    // This selection has changed, so indicate it.
-    notifyObservers();
-}
-
-
-DrawablesSelection::DrawablesSelection( DrawablesSelection&& b ) :
-    resources_( b.resources_ ),
-    borderColor_( b.borderColor_ ),
-    centroid_( b.centroid_ ),
-    pivotPointMode_( b.pivotPointMode_ ),
-    displayEdges_( b.displayEdges_ )
-{
-}
-*/
 
 /***
  * 2. Getters
