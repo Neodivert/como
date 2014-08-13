@@ -46,8 +46,8 @@ DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
     DrawablesMap::const_iterator it;
 
     // Clone all the drawables held by b.
-    for( it = b.drawables_.begin(); it != b.drawables_.end(); it++ ){ // Make this in MeshesSelection copy constructor.
-        drawables_.insert( std::pair< ResourceID, DrawablePtr >(
+    for( it = b.resources_.begin(); it != b.resources_.end(); it++ ){ // Make this in MeshesSelection copy constructor.
+        resources_.insert( std::pair< ResourceID, DrawablePtr >(
                                it->first,
                                it->second->clone()
                             ) );
@@ -59,7 +59,7 @@ DrawablesSelection::DrawablesSelection( const DrawablesSelection& b ) :
 
 
 DrawablesSelection::DrawablesSelection( DrawablesSelection&& b ) :
-    drawables_( b.drawables_ ),
+    resources_( b.resources_ ),
     borderColor_( b.borderColor_ ),
     centroid_( b.centroid_ ),
     pivotPointMode_( b.pivotPointMode_ ),
@@ -102,7 +102,7 @@ bool DrawablesSelection::contains( DrawableType drawableType ) const
 
     mutex_.lock();
 
-    for( it = drawables_.begin(); it != drawables_.end(); it++ ){
+    for( it = resources_.begin(); it != resources_.end(); it++ ){
         if( it->second->getType() == drawableType ){
             mutex_.unlock();
             return true;
@@ -121,7 +121,7 @@ bool DrawablesSelection::contains( MeshType meshType ) const
 
     mutex_.lock();
 
-    for( it = drawables_.begin(); it != drawables_.end(); it++ ){
+    for( it = resources_.begin(); it != resources_.end(); it++ ){
         drawable = it->second.get();
 
         if( ( drawable->getType() == DrawableType::MESH ) &&
@@ -138,12 +138,12 @@ bool DrawablesSelection::contains( MeshType meshType ) const
 
 bool DrawablesSelection::existsDrawable( const ResourceID &id ) const
 {
-    return drawables_.count( id );
+    return resources_.count( id );
 }
 
 std::string DrawablesSelection::getDrawableName( const ResourceID& id ) const
 {
-    return drawables_.at( id )->getName();
+    return resources_.at( id )->getName();
 }
 
 
@@ -151,10 +151,10 @@ std::string DrawablesSelection::getName() const
 {
     const Drawable* drawable = nullptr;
 
-    if( getSize() == 0 ){
+    if( size() == 0 ){
         return std::string( "Nothing selected" );
-    }else if( getSize() == 1 ){
-        drawable = drawables_.begin()->second.get();
+    }else if( size() == 1 ){
+        drawable = resources_.begin()->second.get();
 
         return std::string( drawable->getName() );
     }else{
@@ -166,10 +166,10 @@ std::string DrawablesSelection::getTypeName() const
 {
     const Drawable* drawable = nullptr;
 
-    if( getSize() == 0 ){
+    if( size() == 0 ){
         return std::string( "Nothing selected" );
-    }else if( getSize() == 1 ){
-        drawable = drawables_.begin()->second.get();
+    }else if( size() == 1 ){
+        drawable = resources_.begin()->second.get();
         switch( drawable->getType() ){
             case DrawableType::MESH:
                 switch( ( dynamic_cast< const Mesh* >( drawable ) )->getType() ){
@@ -195,18 +195,6 @@ std::string DrawablesSelection::getTypeName() const
     }else{
         return std::string( "Selection" );
     }
-}
-
-
-unsigned int DrawablesSelection::getSize() const
-{
-    unsigned int size = 0;
-
-    mutex_.lock();
-    size = drawables_.size();
-    mutex_.unlock();
-
-    return size;
 }
 
 
@@ -243,7 +231,7 @@ void DrawablesSelection::translate( glm::vec3 direction )
     mutex_.lock();
 
     // Translate every drawable in the selection.
-    for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
+    for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
         drawable->second->translate( direction );
 
         notifyElementUpdate( drawable->first );
@@ -265,21 +253,21 @@ void DrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
     // pivot point mode.
     switch( pivotPointMode_ ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
-            for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
+            for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
                 drawable->second->rotate( angle, axis, glm::vec3( drawable->second->getCentroid() ) );
 
                 notifyElementUpdate( drawable->first );
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
-            for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
+            for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
                 drawable->second->rotate( angle, axis, glm::vec3( centroid_ ) );
 
                 notifyElementUpdate( drawable->first );
             }
         break;
         case PivotPointMode::WORLD_ORIGIN:
-            for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
+            for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
                 drawable->second->rotate( angle, axis );
 
                 notifyElementUpdate( drawable->first );
@@ -304,21 +292,21 @@ void DrawablesSelection::scale( glm::vec3 scaleFactors )
     // pivot point mode.
     switch( pivotPointMode_ ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
-            for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
+            for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
                 drawable->second->scale( scaleFactors, glm::vec3( drawable->second->getCentroid() ) );
 
                 notifyElementUpdate( drawable->first );
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
-            for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
+            for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
                 drawable->second->scale( scaleFactors, glm::vec3( centroid_ ) );
 
                 notifyElementUpdate( drawable->first );
             }
         break;
         case PivotPointMode::WORLD_ORIGIN:
-            for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
+            for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
                 drawable->second->scale( scaleFactors );
 
                 notifyElementUpdate( drawable->first );
@@ -346,13 +334,13 @@ void DrawablesSelection::updateSelectionCentroid()
     centroid_ = glm::vec4( 0.0f );
 
     // Sum every drawable's centroid in the selection.
-    for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
+    for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
         centroid_ += drawable->second->getCentroid();
     }
 
     // Get the selection centroid.
-    if( drawables_.size() ){
-        centroid_ /= drawables_.size();
+    if( resources_.size() ){
+        centroid_ /= resources_.size();
     }
     centroid_.w = 1.0f;
 
@@ -369,7 +357,7 @@ void DrawablesSelection::addDrawable( ResourceID drawableID, DrawablePtr drawabl
     mutex_.lock();
 
     // Insert the given pair <ID, drawable> into the selection.
-    drawables_[ drawableID ] = drawable;
+    resources_[ drawableID ] = drawable;
 
     // This selection has changed, so indicate it.
     notifyElementInsertion( drawableID );
@@ -384,12 +372,12 @@ bool DrawablesSelection::moveDrawable( ResourceID drawableID, DrawablesSelection
     mutex_.lock();
 
     // Check if the required drawable is in this selection.
-    if( drawables_.count( drawableID ) ){
+    if( resources_.count( drawableID ) ){
         // Move drawable from current selection to destiny one.
-        destinySelection.addDrawable( drawableID, drawables_.at( drawableID ) );
+        destinySelection.addDrawable( drawableID, resources_.at( drawableID ) );
 
         // Erase drawable from current selection.
-        drawables_.erase( drawableID );
+        resources_.erase( drawableID );
 
         // This selection has changed, so indicate it.
         //notifyElementDeletion( drawableID );
@@ -414,7 +402,7 @@ void DrawablesSelection::moveAll( DrawablesSelection& destinySelection )
     mutex_.lock();
 
     // COPY every drawable from current selection to destiny.
-    for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
+    for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
         destinySelection.addDrawable( drawable->first, drawable->second );
 
         //notifyElementDeletion( drawable->first );
@@ -432,7 +420,7 @@ void DrawablesSelection::clear()
     mutex_.lock();
 
     // Clear the current selection.
-    drawables_.clear();
+    resources_.clear();
 
     mutex_.unlock();
 }
@@ -442,7 +430,7 @@ void DrawablesSelection::erase()
 {
     mutex_.unlock();
 
-    for( auto drawable : drawables_ ){
+    for( auto drawable : resources_ ){
         notifyElementDeletion( drawable.first );
     }
 
@@ -465,7 +453,7 @@ bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, ResourceID& clos
     mutex_.lock();
 
     // Check if the given ray intersects any drawable in the selection.
-    for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
+    for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
         drawable->second->intersects( r0, r1, t );
 
         // New closest object, get its ID and distance.
@@ -494,7 +482,7 @@ void DrawablesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, co
     mutex_.lock();
 
     // Draw every drawable in current selection.
-    for( drawable = drawables_.begin(); drawable != drawables_.end(); drawable++ ){
+    for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
         glm::vec4 borderColor;
 
         if( displayEdges_ || drawable->second->containsProperty( highlightedProperty_ ) ){

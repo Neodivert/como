@@ -57,7 +57,7 @@ ResourceID LocalDrawablesSelection::addDrawable( DrawablePtr drawable )
 void LocalDrawablesSelection::translate( glm::vec3 direction )
 {
     // Only aplly the transformation if there are drawables selected.
-    if( getSize() ){
+    if( size() ){
         SelectionTransformationCommand translationCommand( localUserID() );
 
         // Round the transformation magnitude.
@@ -76,7 +76,7 @@ void LocalDrawablesSelection::translate( glm::vec3 direction )
 void LocalDrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
 {
     // Only aplly the transformation if there are drawables selected.
-    if( getSize() ){
+    if( size() ){
         SelectionTransformationCommand rotationCommand( localUserID() );
 
         // Round the transformation magnitude.
@@ -95,7 +95,7 @@ void LocalDrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
 void LocalDrawablesSelection::scale( glm::vec3 scaleFactors )
 {
     // Only aplly the transformation if there are drawables selected.
-    if( getSize() ){
+    if( size() ){
         SelectionTransformationCommand scaleCommand( localUserID() );
 
         // Round the transformation magnitude.

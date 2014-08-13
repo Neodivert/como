@@ -73,7 +73,7 @@ class ResourcesSelection : public ObservableContainer<ResourceID> {
         /***
          * 7. Getters
          ***/
-        unsigned int size();
+        unsigned int size() const;
 
 
     protected:
@@ -118,7 +118,7 @@ void ResourcesSelection<ResourceType>::moveResource( ResourceID resourceID, Reso
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::moveAll( ResourcesSelection<ResourceType>& dstSelection )
 {
-    for( auto resourcePair : resources_ ){
+    for( auto& resourcePair : resources_ ){
         moveResource( resourcePair.first, dstSelection );
     }
 }
@@ -144,7 +144,7 @@ void ResourcesSelection<ResourceType>::clear()
  ***/
 
 template <class ResourceType>
-unsigned int ResourcesSelection<ResourceType>::size()
+unsigned int ResourcesSelection<ResourceType>::size() const
 {
     return resources_.size();
 }

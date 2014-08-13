@@ -45,9 +45,6 @@ const char pivotPointModeStrings[N_PIVOT_POINT_MODES][32] =
 class DrawablesSelection : public virtual ResourcesSelection<Drawable>
 {
     private:
-        // Drawables in the selection.
-        DrawablesMap drawables_;
-
         // Selection border color.
         glm::vec4 borderColor_;
 
@@ -83,7 +80,6 @@ class DrawablesSelection : public virtual ResourcesSelection<Drawable>
         PivotPointMode getPivotPointMode() const ;
         std::string getName() const;
         std::string getTypeName() const;
-        unsigned int getSize() const;
 
 
         /*!

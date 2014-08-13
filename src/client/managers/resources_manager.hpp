@@ -84,7 +84,6 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
         ResourcesManager& operator = ( ResourcesManager&& ) = delete;
 
 
-    protected:
         /***
          * 7. Selections management
          ***/
@@ -94,6 +93,7 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
         void removeResourcesSelection( UserID userID );
 
 
+    protected:
         /***
          * 8. Protected getters
          ***/

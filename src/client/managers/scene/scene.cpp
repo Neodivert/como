@@ -244,7 +244,7 @@ void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnecte
     users_.insert( std::pair< UserID, UserPtr >( userConnectedCommand->getUserID(), newUser ) );
 
     // Create both drawables and meshes empty selection for the new user.
-    drawablesManager_->addDrawablesSelection( userConnectedCommand->getUserID(), userConnectedCommand->getSelectionColor() );
+    drawablesManager_->createResourcesSelection( userConnectedCommand->getUserID(), userConnectedCommand->getSelectionColor().toVec4() );
     meshesManager_->registerUser( userConnectedCommand->getUserID() );
 
     // Emit a UserConnectionCommand signal.
