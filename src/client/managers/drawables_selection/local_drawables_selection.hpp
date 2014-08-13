@@ -52,7 +52,6 @@ class LocalDrawablesSelection : public DrawablesSelection, public LocalResources
         /***
          * 4. Drawables management
          ***/
-
         ResourceID addDrawable( DrawablePtr drawable );
 
 

@@ -148,7 +148,7 @@ void DrawablesManager::deleteSelection()
 
 void DrawablesManager::deleteSelection( const unsigned int& userId )
 {
-    getUserSelection( userId )->erase();
+    getUserSelection( userId )->clear();
 
     notifyObservers();
 
@@ -186,7 +186,7 @@ void DrawablesManager::selectDrawable( ResourceID drawableID, UserID userID )
 
     // Check if the desired drawable is among the non selected ones, and move
     // it to the user's selection in that case.
-    getResourcesSelection( NO_USER )->moveDrawable( drawableID, userSelection );
+    getResourcesSelection( NO_USER )->moveResource( drawableID, userSelection );
 }
 
 

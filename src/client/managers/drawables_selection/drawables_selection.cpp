@@ -308,10 +308,10 @@ void DrawablesSelection::updateSelectionCentroid()
     mutex_.unlock();
 }
 
+
 /***
  * 6. Drawables management
  ***/
-
 
 void DrawablesSelection::addDrawable( ResourceID drawableID, DrawablePtr drawable )
 {
@@ -324,80 +324,6 @@ void DrawablesSelection::addDrawable( ResourceID drawableID, DrawablePtr drawabl
     notifyElementInsertion( drawableID );
 
     mutex_.unlock();
-}
-
-// TODO: ¿Possible dead lock (if A moves a drawable to B and B moves a drawable
-// to A at the same time)?
-bool DrawablesSelection::moveDrawable( ResourceID drawableID, DrawablesSelection& destinySelection )
-{
-    mutex_.lock();
-
-    // Check if the required drawable is in this selection.
-    if( resources_.count( drawableID ) ){
-        // Move drawable from current selection to destiny one.
-        destinySelection.addDrawable( drawableID, resources_.at( drawableID ) );
-
-        // Erase drawable from current selection.
-        resources_.erase( drawableID );
-
-        // This selection has changed, so indicate it.
-        //notifyElementDeletion( drawableID );
-
-        mutex_.unlock();
-        return true;
-    }else{
-
-        // Drawable not found.
-        mutex_.unlock();
-        return false;
-    }
-}
-
-
-// TODO: ¿Possible dead lock (if A moves all to B and B moves all to A at the
-// same time)?
-void DrawablesSelection::moveAll( DrawablesSelection& destinySelection )
-{
-    DrawablesMap::iterator drawable;
-
-    mutex_.lock();
-
-    // COPY every drawable from current selection to destiny.
-    for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
-        destinySelection.addDrawable( drawable->first, drawable->second );
-
-        //notifyElementDeletion( drawable->first );
-    }
-
-    // Clear the current selection.
-    clear();
-
-    mutex_.unlock();
-}
-
-
-void DrawablesSelection::clear()
-{
-    mutex_.lock();
-
-    // Clear the current selection.
-    resources_.clear();
-
-    mutex_.unlock();
-}
-
-
-void DrawablesSelection::erase()
-{
-    mutex_.unlock();
-
-    for( auto drawable : resources_ ){
-        notifyElementDeletion( drawable.first );
-    }
-
-    clear();
-
-    mutex_.lock();
 }
 
 

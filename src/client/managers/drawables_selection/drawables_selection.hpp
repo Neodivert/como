@@ -114,12 +114,6 @@ class DrawablesSelection : public virtual ResourcesSelection<Drawable>
          ***/
     public:
         void addDrawable( ResourceID drawableID, DrawablePtr drawable );
-        bool moveDrawable( ResourceID drawableID, DrawablesSelection& destinySelection );
-        void moveAll( DrawablesSelection& destinySelection );
-    private:
-        void clear();
-    public:
-        void erase();
 
 
         /***
