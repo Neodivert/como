@@ -18,6 +18,7 @@
 
 #include "entity.hpp"
 #include <stdexcept>
+#include <cstdlib>
 
 namespace como {
 
@@ -69,54 +70,32 @@ void Entity::translate( glm::vec3 direction )
     // Compute the translation matrix.
     const glm::mat4 newTranslation = glm::translate( glm::mat4( 1.0f ), direction );
 
-    applyTransformation( newTranslation );
-}
-
-#include <cstdlib>
-
-void Entity::rotate( GLfloat angle, glm::vec3 axis )
-{
-    // Normalize the vector "axis".
-    axis = glm::normalize( axis );
-
-    // Compute the rotation matrix for the given angle and the axis converted to
-    // object space.
-    const glm::mat4 newRotation = glm::rotate( glm::mat4( 1.0f ), angle, axis );
-
-    applyTransformation( newRotation );
+    applyTransformationMatrix( newTranslation );
 }
 
 
-void Entity::rotate( const GLfloat& angle, glm::vec3 axis, const glm::vec3& pivot )
+void Entity::rotate( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot )
 {
     translate( -pivot );
-    rotate( angle, axis );
+    rotateAroundOrigin( angle, axis );
     translate( pivot );
 }
 
 
-void Entity::scale( glm::vec3 scaleFactors )
-{
-    // Compute the scale matrix.
-    const glm::mat4 newScale = glm::scale( glm::mat4( 1.0f ), scaleFactors );
-
-    applyTransformation( newScale );
-}
-
-void Entity::scale( glm::vec3 scaleFactors, const glm::vec3& pivotPoint )
+void Entity::scale( const glm::vec3& scaleFactors, const glm::vec3& pivotPoint )
 {
     translate( -pivotPoint );
-    scale( scaleFactors );
+    scaleAroundOrigin( scaleFactors );
     translate( pivotPoint );
 }
 
 
-void Entity::applyTransformation( const glm::mat4& newTransformation )
+void Entity::applyTransformationMatrix( const glm::mat4& transformation )
 {
     // Move the drawable from world to object space, then apply the new
     // transformation and finally move back the drawable from object to world
     // space.
-    modelMatrix_ = newTransformation * modelMatrix_;
+    modelMatrix_ = transformation * modelMatrix_;
 
     // Update the transformed vertices using the original ones and the
     // previous transformation matrix.

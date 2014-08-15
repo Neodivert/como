@@ -277,16 +277,14 @@ MeshType Mesh::getType() const
     return type_;
 }
 
-
-glm::vec4 Mesh::getCentroid() const
-{
-    return transformedCentroid;
-}
-
-
 bool Mesh::displaysVertexNormals() const
 {
     return displayVertexNormals_;
+}
+
+glm::vec3 Mesh::centroid() const
+{
+    return glm::vec3( transformedCentroid );
 }
 
 

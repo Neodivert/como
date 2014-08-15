@@ -42,13 +42,7 @@ class AbstractMesh : public Entity {
 
 
         /***
-         * 3. Getters
-         ***/
-        virtual glm::vec4 getCentroid() const = 0;
-
-
-        /***
-         * 4. Setters
+         * 3. Setters
          ***/
         virtual void displayVertexNormals( bool display ) = 0;
 

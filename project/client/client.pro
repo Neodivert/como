@@ -101,7 +101,8 @@ HEADERS += \
     ../../src/client/managers/selections/materials/local_materials_selection.hpp \
     ../../src/client/gui/tools_menu/properties_tab/lights_menu.hpp \
     ../../src/client/models/3d/entity.hpp \
-    ../../src/client/models/3d/drawable.hpp
+    ../../src/client/models/3d/drawable.hpp \
+    ../../src/client/models/3d/transformable.hpp
 
 
 # Client sources
@@ -162,4 +163,5 @@ SOURCES += \
     ../../src/client/managers/selections/materials/materials_selection.cpp \
     ../../src/client/managers/selections/materials/local_materials_selection.cpp \
     ../../src/client/gui/tools_menu/properties_tab/lights_menu.cpp \
-    ../../src/client/models/3d/entity.cpp
+    ../../src/client/models/3d/entity.cpp \
+    ../../src/client/models/3d/transformable.cpp

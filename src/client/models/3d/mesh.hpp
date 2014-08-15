@@ -137,6 +137,7 @@ class Mesh : public AbstractMesh
         MeshType getType() const ;
         virtual glm::vec4 getCentroid() const;
         bool displaysVertexNormals() const;
+        virtual glm::vec3 centroid() const;
 
 
         /***

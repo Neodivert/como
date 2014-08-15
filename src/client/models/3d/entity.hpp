@@ -20,6 +20,7 @@
 #define ENTITY_HPP
 
 #include <client/models/3d/drawable.hpp>
+#include <client/models/3d/transformable.hpp>
 #include <client/models/dependencies.hpp>
 #include <client/models/utilities/open_gl.hpp>
 
@@ -51,7 +52,7 @@ typedef std::shared_ptr< Entity > DrawablePtr;
 typedef std::shared_ptr< const Entity > DrawableConstPtr;
 
 
-class Entity : public Drawable
+class Entity : public Drawable, public Transformable
 {
     private:
         /*! Type of drawable */
@@ -97,19 +98,13 @@ class Entity : public Drawable
          * 3. Transformations
          ***/
         virtual void translate( glm::vec3 direction );
-
-        virtual void rotate( GLfloat angle, glm::vec3 axis );
-        virtual void rotate( const GLfloat& angle, glm::vec3 axis, const glm::vec3& pivot );
-
-        virtual void scale( glm::vec3 scaleFactors );
-        virtual void scale( glm::vec3 scaleFactors, const glm::vec3& pivot );
+        virtual void rotate( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
+        virtual void scale( const glm::vec3& scaleFactors, const glm::vec3& pivot );
 
 
         virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle = nullptr  ) const = 0;
 
-    private:
-        void applyTransformation( const glm::mat4& newTransformation );
-    public:
+        virtual void applyTransformationMatrix( const glm::mat4& newTransformation );
 
 
         /***
