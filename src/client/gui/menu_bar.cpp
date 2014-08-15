@@ -91,7 +91,7 @@ QMenu* MenuBar::createDisplayVertexNormalsMenu( MeshesManager* meshesManager )
     QActionGroup* displayVertexNormalsActionGroup = nullptr;
 
     // Update this menu whenever the local user's meshes selection changes.
-    meshesManager->getLocalUserSelection()->Observable::addObserver( this );
+    meshesManager->getLocalResourcesSelection()->Observable::addObserver( this );
 
     // Create a menu action for displaying the edges always.
     displayVertexNormalsAlways_ = new QAction( QString( "Always" ), nullptr );

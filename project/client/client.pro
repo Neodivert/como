@@ -102,7 +102,8 @@ HEADERS += \
     ../../src/client/models/3d/drawable.hpp \
     ../../src/client/models/3d/transformable.hpp \
     ../../src/client/models/3d/entities_set.hpp \
-    ../../src/client/models/3d/lights/light.hpp
+    ../../src/client/models/3d/lights/light.hpp \
+    ../../src/client/managers/entities_manager.hpp
 
 
 # Client sources
@@ -163,4 +164,5 @@ SOURCES += \
     ../../src/client/gui/tools_menu/properties_tab/lights_menu.cpp \
     ../../src/client/models/3d/entity.cpp \
     ../../src/client/models/3d/transformable.cpp \
-    ../../src/client/models/3d/lights/light.cpp
+    ../../src/client/models/3d/lights/light.cpp \
+    ../../src/client/managers/entities_manager.cpp

@@ -205,7 +205,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         drawablesManager_->Observable::addObserver( this );
 
         // Initialize the meshes manager.
-        meshesManager_ = MeshesManagerPtr( new MeshesManager( server_, drawablesManager_, log_ ) );
+        meshesManager_ = MeshesManagerPtr( new MeshesManager( server_, log_ ) );
         meshesManager_->Observable::addObserver( this );
 
         // Initialize the materials manager.

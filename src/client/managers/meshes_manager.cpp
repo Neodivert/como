@@ -24,9 +24,8 @@ namespace como {
  * 1. Construction
  ***/
 
-MeshesManager::MeshesManager( ServerInterfacePtr server, DrawablesManagerPtr drawablesManager, LogPtr log ) :
+MeshesManager::MeshesManager( ServerInterfacePtr server, LogPtr log ) :
     ResourcesManager( server, log ),
-    drawablesManager_( drawablesManager ),
     newMeshesDisplayVertexNormals_( false )
 {
     // Create a selection of non selected meshes and keep a pointer to it.
@@ -82,12 +81,6 @@ unsigned int MeshesManager::getTotalMeshes() const
 }
 
 
-MeshesSelection* MeshesManager::getLocalUserSelection()
-{
-    return &( meshesSelections_.at( localUserID() ) );
-}
-
-
 /***
  * 5. Setters
  ***/
@@ -110,8 +103,7 @@ ResourceID MeshesManager::createMesh( MeshVertexData vertexData, MeshOpenGLData 
 {
     MeshPtr mesh( new Mesh( vertexData, oglData, polygonsGroups, materials, newMeshesDisplayVertexNormals_ ) );
 
-    ResourceID meshID = drawablesManager_->addDrawable( mesh );
-    getLocalUserSelection()->addMesh( meshID, mesh ); // TODO: Or I have add it to the non selected meshes selection?
+    ResourceID meshID = getLocalResourcesSelection()->addResource( mesh );
 
     return meshID;
 }
@@ -121,8 +113,7 @@ void MeshesManager::createMesh( ResourceID meshID, MeshVertexData vertexData, Me
 {
     MeshPtr mesh( new Mesh( vertexData, oglData, polygonsGroups, materials, newMeshesDisplayVertexNormals_ ) );
 
-    meshesSelections_.at( meshID.getCreatorID() ).addMesh( meshID, mesh );
-    drawablesManager_->addDrawable( meshID.getCreatorID(), mesh, meshID );
+    getResourcesSelection( meshID.getCreatorID() )->addResource( meshID, mesh );
 }
 
 

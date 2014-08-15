@@ -33,8 +33,6 @@ typedef std::map< UserID, MeshesSelection > MeshesSelectionMap;
 class MeshesManager : public ResourcesManager< Mesh, MeshesSelection, LocalMeshesSelection >
 {
     private:
-        DrawablesManagerPtr drawablesManager_;
-
         MeshesSelection* nonSelectedMeshes_;
         MeshesSelectionMap meshesSelections_;
 
@@ -45,7 +43,7 @@ class MeshesManager : public ResourcesManager< Mesh, MeshesSelection, LocalMeshe
         /***
          * 1. Construction
          ***/
-        MeshesManager( ServerInterfacePtr server, DrawablesManagerPtr drawablesManager, LogPtr log );
+        MeshesManager( ServerInterfacePtr server, LogPtr log );
         MeshesManager() = delete;
         MeshesManager( const MeshesManager& ) = delete;
         MeshesManager( MeshesManager&& ) = delete;
@@ -70,7 +68,6 @@ class MeshesManager : public ResourcesManager< Mesh, MeshesSelection, LocalMeshe
         virtual string getResourceName( const ResourceID& resourceID ) const;
         ElementsMeetingCondition displaysVertexNormals() const;
         unsigned int getTotalMeshes() const;
-        MeshesSelection* getLocalUserSelection();
 
 
         /***
