@@ -345,8 +345,8 @@ void Scene::draw( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix
 {
     GLfloat WHITE_COLOR[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-    // Draw all the drawables.
-    drawablesManager_->drawAll( openGL_, viewMatrix, projectionMatrix );
+    // Draw all the entities.
+    entitiesManager_->drawAll( openGL_, viewMatrix, projectionMatrix );
 
     // Draw a guide rect if asked.
     if( drawGuideRect != -1 ){

@@ -112,6 +112,13 @@ class LightsManager : public ResourcesManager< Light, LightsSelection, LocalLigh
         void highlightLight( ResourceID lightID );
         void removeHighlights(); 
 
+
+        /***
+         * Drawing
+         ***/
+        void drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const;
+
+
     protected:
         /***
          * 10. Resources management

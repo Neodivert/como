@@ -46,4 +46,10 @@ LightsManagerPtr EntitiesManager::getLightsManager()
     return lightsManager_;
 }
 
+
+void EntitiesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
+{
+    lightsManager_->drawAll( openGL, viewMatrix, projectionMatrix );
+}
+
 } // namespace como

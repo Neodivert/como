@@ -56,6 +56,12 @@ class EntitiesManager
         EntitiesManager& operator = ( EntitiesManager&& ) = default;
 
 
+        /***
+         * 5. Drawing
+         ***/
+        void drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const;
+
+
     private:
         MeshesManagerPtr meshesManager_;
         LightsManagerPtr lightsManager_;

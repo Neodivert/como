@@ -27,7 +27,7 @@
 namespace como {
 
 template <class EntitySubtype>
-class EntitiesSet : public Drawable, public Transformable, public virtual ResourcesSelection< EntitySubtype >
+class EntitiesSet : public Transformable, public virtual ResourcesSelection< EntitySubtype >
 {
     public:
         /***
@@ -70,7 +70,7 @@ class EntitiesSet : public Drawable, public Transformable, public virtual Resour
         /***
          * 6. Drawing
          ***/
-        virtual void draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const GLfloat *contourColor ) const;
+        virtual void drawAll( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix ) const;
 
 
         /***
@@ -230,10 +230,10 @@ void EntitiesSet<EntitySubtype>::applyTransformationMatrix( const glm::mat4& tra
  ***/
 
 template <class EntitySubtype>
-void EntitiesSet<EntitySubtype>::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const GLfloat* contourColor ) const
+void EntitiesSet<EntitySubtype>::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) const
 {
     for( auto& entityPair : this->resources_ ){
-        entityPair.second->draw( openGL, viewMatrix, projectionMatrix, contourColor );
+        entityPair.second->draw( openGL, viewMatrix, projectionMatrix, nullptr );
     }
 }
 

@@ -272,6 +272,18 @@ void LightsManager::removeHighlights()
 
 
 /***
+ * Drawing
+ ***/
+
+void LightsManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
+{
+    for( auto lightsSelection : resourcesSelections_ ){
+        lightsSelection.second->drawAll( openGL, viewMatrix, projectionMatrix );
+    }
+}
+
+
+/***
  * 10. Resources management
  ***/
 
