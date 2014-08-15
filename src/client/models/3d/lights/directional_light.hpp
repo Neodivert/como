@@ -19,8 +19,8 @@
 #ifndef DIRECTIONAL_LIGHT_HPP
 #define DIRECTIONAL_LIGHT_HPP
 
-#include <client/models/3d/mesh.hpp>
-#include "directional_light_properties.hpp"
+#include <client/models/3d/lights/light.hpp>
+#include "directional_light.hpp"
 
 namespace como {
 
@@ -29,28 +29,26 @@ namespace como {
  *
  * \brief A far, far away light.
  */
-class DirectionalLight : public Mesh
+class DirectionalLight : public Light
 {
     private:
-        DirectionalLightPropertiesSharedPtr lightProperties_;
+        /*! Location of the light index in GLSL shader. */
+        GLint lightIndexLocation_;
+
+        /*! Location of the light vector in GLSL shader. */
+        GLint lightVectorLocation_;
+
+        /*! Location of the half vector in GLSL shader. */
+        GLint halfVectorLocation_;
 
 
     public:
         /***
          * 1. Construction
          ***/
-
         DirectionalLight() = delete;
-        DirectionalLight( DirectionalLightPropertiesSharedPtr lightProperties, MaterialConstPtr meshMaterial );
-
-        /*! \brief Copy constructor */
-        // TODO: Define a proper copy constructor and a clone() method when
-        // inplementing multiple lights
-        // ("location attributes" would point to different places from light to
-        // light).
-        DirectionalLight( const DirectionalLight& ) = default;
-
-        /*! \brief Move constructor */
+        DirectionalLight( GLuint directionalLightIndex, GLint lightIndex, const PackableColor& lightColor, const glm::vec3& lightVector, MaterialConstPtr meshMaterial );
+        DirectionalLight( const DirectionalLight& ) = default; // TODO: Implement (or remove clone()).
         DirectionalLight( DirectionalLight&& ) = delete;
 
         virtual DrawablePtr clone();
@@ -59,14 +57,23 @@ class DirectionalLight : public Mesh
         /***
          * 2. Destruction
          ***/
-
-        /*! \brief Destructor */
-        ~DirectionalLight() = default;
+        ~DirectionalLight();
 
 
         /***
-         * 3. Setters
+         * 3. Getters
          ***/
+        glm::vec3 getLightVector() const;
+        glm::vec3 getHalfVector() const;
+        GLint getLightIndex() const;
+
+
+        /***
+         * 4. Setters
+         ***/
+        void setLightVector( const glm::vec3& lightVector );
+
+
 
     private:
         void update();

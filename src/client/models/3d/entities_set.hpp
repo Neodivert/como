@@ -27,7 +27,7 @@
 namespace como {
 
 template <class EntitySubtype>
-class EntitiesSet : public Drawable, Transformable, ResourcesSelection< EntitySubtype >
+class EntitiesSet : public Drawable, public Transformable, public virtual ResourcesSelection< EntitySubtype >
 {
     public:
         /***
@@ -61,8 +61,8 @@ class EntitiesSet : public Drawable, Transformable, ResourcesSelection< EntitySu
          * 5. Transformations
          ***/
         virtual void translate( glm::vec3 direction );
-        virtual void rotate( const GLfloat &angle, const glm::vec3& axis, const glm::vec3& pivot );
-        virtual void scale( const glm::vec3& scaleFactors, const glm::vec3& pivot );
+        virtual void rotate( const GLfloat& angle, const glm::vec3& axis );
+        virtual void scale( const glm::vec3& scaleFactors );
         virtual void applyTransformationMatrix( const glm::mat4& transformation );
 
 
@@ -90,7 +90,7 @@ class EntitiesSet : public Drawable, Transformable, ResourcesSelection< EntitySu
  ***/
 
 template <class EntitySubtype>
-EntitiesSet<EntitySubType>::EntitiesSet( PivotPointMode mode ) :
+EntitiesSet<EntitySubtype>::EntitiesSet( PivotPointMode mode ) :
     pivotPointMode_( mode )
 {}
 
@@ -100,16 +100,16 @@ EntitiesSet<EntitySubType>::EntitiesSet( PivotPointMode mode ) :
  ***/
 
 template <class EntitySubtype>
-glm::vec3 EntitiesSet::centroid() const
+glm::vec3 EntitiesSet<EntitySubtype>::centroid() const
 {
     glm::vec3 centroid( 0.0f );
 
-    for( auto entity : resources_ ){
-        centroid += entity->centroid();
+    for( auto entityPair : this->resources_ ){
+        centroid += entityPair.second->centroid();
     }
 
-    if( size() ){
-        centroid /= size();
+    if( this->size() ){
+        centroid /= this->size();
     }
 
     return centroid;
@@ -117,7 +117,7 @@ glm::vec3 EntitiesSet::centroid() const
 
 
 template <class EntitySubtype>
-PivotPointMode EntitiesSet::pivotPointMode() const
+PivotPointMode EntitiesSet<EntitySubtype>::pivotPointMode() const
 {
     return pivotPointMode_;
 }
@@ -127,7 +127,8 @@ PivotPointMode EntitiesSet::pivotPointMode() const
  * 4. Setters
  ***/
 
-void EntitiesSet::setPivotPointMode( PivotPointMode& mode)
+template <class EntitySubtype>
+void EntitiesSet<EntitySubtype>::setPivotPointMode( PivotPointMode& mode)
 {
     pivotPointMode_ = mode;
 }
@@ -137,16 +138,17 @@ void EntitiesSet::setPivotPointMode( PivotPointMode& mode)
  * 5. Transformations
  ***/
 
-
-void EntitiesSet::translate( glm::vec3 direction )
+template <class EntitySubtype>
+void EntitiesSet<EntitySubtype>::translate( glm::vec3 direction )
 {
-    for( auto& entityPair : resources_ ){
+    for( auto& entityPair : this->resources_ ){
         entityPair.second->translate( direction );
     }
 }
 
 
-void EntitiesSet::rotate( GLfloat angle, glm::vec3 axis )
+template <class EntitySubtype>
+void EntitiesSet<EntitySubtype>::rotate( const GLfloat& angle, const glm::vec3& axis )
 {
     //mutex_.lock();
 
@@ -154,33 +156,34 @@ void EntitiesSet::rotate( GLfloat angle, glm::vec3 axis )
     // pivot point mode.
     switch( pivotPointMode_ ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
-            for( auto& entityPair : resources_ ){
+            for( auto& entityPair : this->resources_ ){
                 entityPair.second->rotateAroundCentroid( angle, axis );
-                notifyElementUpdate( entityPair.first );
+                this->notifyElementUpdate( entityPair.first );
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
-            for( auto& entityPair : resources_ ){
+            for( auto& entityPair : this->resources_ ){
                 entityPair.second->rotateAroundPivot( angle, axis, centroid() );
-                notifyElementUpdate( entityPair.first );
+                this->notifyElementUpdate( entityPair.first );
             }
         break;
         case PivotPointMode::WORLD_ORIGIN:
-            for( auto& entityPair : resources_ ){
+            for( auto& entityPair : this->resources_ ){
                 entityPair.second->rotateAroundOrigin( angle, axis );
-                notifyElementUpdate( entityPair.first );
+                this->notifyElementUpdate( entityPair.first );
             }
         break;
     }
 
-    updateSelectionCentroid();
+    //updateSelectionCentroid();
 
 
     //mutex_.unlock();
 }
 
 
-void EntitiesSet::scale( glm::vec3 scaleFactors )
+template <class EntitySubtype>
+void EntitiesSet<EntitySubtype>::scale( const glm::vec3& scaleFactors )
 {
     // mutex_.lock();
 
@@ -188,34 +191,35 @@ void EntitiesSet::scale( glm::vec3 scaleFactors )
     // pivot point mode.
     switch( pivotPointMode_ ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
-            for( auto& entityPair : resources_ ){
+            for( auto& entityPair : this->resources_ ){
                 entityPair.second->scaleAroundCentroid( scaleFactors );
-                notifyElementUpdate( entityPair.first );
+                this->notifyElementUpdate( entityPair.first );
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
-            for( auto& entityPair : resources_ ){
+            for( auto& entityPair : this->resources_ ){
                 entityPair.second->scaleAroundPivot( scaleFactors, centroid() );
-                notifyElementUpdate( entityPair.first );
+                this->notifyElementUpdate( entityPair.first );
             }
         break;
         case PivotPointMode::WORLD_ORIGIN:
-            for( auto& entityPair : resources_ ){
+            for( auto& entityPair : this->resources_ ){
                 entityPair.second->scaleAroundOrigin( scaleFactors );
-                notifyElementUpdate( entityPair.first );
+                this->notifyElementUpdate( entityPair.first );
             }
         break;
     }
 
-    updateSelectionCentroid();
+    //updateSelectionCentroid();
 
     //mutex_.unlock();
 }
 
 
-void EntitiesSet::applyTransformationMatrix( const glm::mat4& transformation )
+template <class EntitySubtype>
+void EntitiesSet<EntitySubtype>::applyTransformationMatrix( const glm::mat4& transformation )
 {
-    for( auto& entityPair : resources_ ){
+    for( auto& entityPair : this->resources_ ){
         entityPair.second->applyTransformationMatrix( transformation );
     }
 }
@@ -225,9 +229,10 @@ void EntitiesSet::applyTransformationMatrix( const glm::mat4& transformation )
  * 6. Drawing
  ***/
 
-void EntitiesSet::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const GLfloat* contourColor ) const
+template <class EntitySubtype>
+void EntitiesSet<EntitySubtype>::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const GLfloat* contourColor ) const
 {
-    for( auto& entityPair : resources_ ){
+    for( auto& entityPair : this->resources_ ){
         entityPair.second->draw( openGL, viewMatrix, projectionMatrix, contourColor );
     }
 }

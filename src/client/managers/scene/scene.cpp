@@ -216,7 +216,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, meshesManager_, materialsManager_, log_ ) );
 
         // Initialize the lights manager.
-        lightsManager_ = LightsManagerPtr( new LightsManager( drawablesManager_, server_, log_ ) );
+        lightsManager_ = LightsManagerPtr( new LightsManager( server_, log_ ) );
         lightsManager_->Observable::addObserver( this );
 
         localUserConnectionCommand_ = UserConnectionCommandConstPtr( new UserConnectionCommand( userAcceptancePacket ) );

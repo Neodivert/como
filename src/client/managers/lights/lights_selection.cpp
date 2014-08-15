@@ -20,26 +20,6 @@
 
 namespace como {
 
-/***
- * 1. Construction
- ***/
-
-LightsSelection::LightsSelection( DrawablesSelectionPtr drawablesSelection ) :
-    drawablesSelection_( drawablesSelection )
-{
-    drawablesSelection->addObserver( this );
-}
-
-
-/***
- * 2. Destruction
- ***/
-
-LightsSelection::~LightsSelection()
-{
-    drawablesSelection_->removeObserver( this );
-}
-
 
 /***
  * 3. Getters
@@ -75,24 +55,13 @@ void LightsSelection::setLightColor( const PackableColor& color)
     return resources_.begin()->second->setLightColor( color );
 }
 
+
 void LightsSelection::setAmbientCoefficient( float coefficient )
 {
     if( resources_.size() == 0 ){
         throw std::runtime_error( "LightsSelection::setAmbientCoefficient() called on empty LightsSelection" );
     }
     return resources_.begin()->second->setAmbientCoefficient( coefficient );
-}
-
-
-/***
- * 5. Updating (Observer pattern).
- ***/
-
-void LightsSelection::update( ContainerAction lastContainerAction, ResourceID lastElementModified )
-{
-    if( lastContainerAction == ContainerAction::ELEMENT_DELETION ){
-        removeResource( lastElementModified );
-    }
 }
 
 } // namespace como

@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "light_properties.hpp"
+#include "light.hpp"
 
 namespace como {
 
@@ -25,7 +25,8 @@ namespace como {
  * 1. Construction
  ***/
 
-LightProperties::LightProperties( LightType type, GLuint index, const PackableColor& color ) :
+Light::Light( LightType type, GLuint index, const PackableColor& color, std::string path, MaterialConstPtr meshMaterial ) :
+    Mesh( MeshType::LIGHT, path.c_str(), meshMaterial ),
     type_( type ),
     index_( index )
 {
@@ -56,12 +57,12 @@ LightProperties::LightProperties( LightType type, GLuint index, const PackableCo
  * 3. Getters
  ***/
 
-LightType LightProperties::getLightType() const
+LightType Light::getLightType() const
 {
     return type_;
 }
 
-PackableColor LightProperties::getLightColor() const
+PackableColor Light::getLightColor() const
 {
     GLint currentShaderProgram = -1;
     glm::vec3 color( 0.0f );
@@ -73,7 +74,7 @@ PackableColor LightProperties::getLightColor() const
 }
 
 
-float LightProperties::getAmbientCoefficient() const
+float Light::getAmbientCoefficient() const
 {
     GLint currentShaderProgram = -1;
     float ambientCoefficient;
@@ -85,7 +86,7 @@ float LightProperties::getAmbientCoefficient() const
 }
 
 
-GLuint LightProperties::getBaseLightIndex() const
+GLuint Light::getBaseLightIndex() const
 {
     return index_;
 }
@@ -95,13 +96,13 @@ GLuint LightProperties::getBaseLightIndex() const
  * 4. Setters
  ***/
 
-void LightProperties::setLightColor( const PackableColor &color )
+void Light::setLightColor( const PackableColor &color )
 {
     glUniform3fv( colorLocation_, 1, &color.toVec3()[0] );
 }
 
 
-void LightProperties::setAmbientCoefficient( float coefficient )
+void Light::setAmbientCoefficient( float coefficient )
 {
     glUniform1f( ambientCoefficientLocation_, coefficient );
 }

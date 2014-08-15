@@ -24,9 +24,8 @@ namespace como {
  * 1. Construction
  ***/
 
-LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server, LogPtr log ) :
+LightsManager::LightsManager( ServerInterfacePtr server, LogPtr log ) :
     ResourcesManager( server, log ),
-    drawablesManager_( drawablesManager ),
     currentLight_( nullptr )
 {
     GLint i=0;
@@ -42,9 +41,6 @@ LightsManager::LightsManager( DrawablesManagerPtr drawablesManager, ServerInterf
     for( i=3; i>=0; i-- ){
         freeDirectionalLightIndices_.push( i );
     }
-
-
-    drawablesManager_->addObserver( this );
 }
 
 
@@ -60,7 +56,8 @@ LightHandlerPtr LightsManager::getCurrentLight() const
 
 std::string LightsManager::getResourceName( const ResourceID& lightID ) const
 {
-    return drawablesManager_->getResourceName( lightID );
+    (void)( lightID );
+    return "Light";
 }
 
 
@@ -95,27 +92,16 @@ void LightsManager::createDirectionalLight()
     PackableColor lightColor( 255, 0, 0, 255 );
 
     // Create a struct with the light's properties.
-    DirectionalLightPropertiesSharedPtr lightProperties(
-                new DirectionalLightProperties( directionalLightIndex, lightIndex, lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ) ) );
-
-    // Create a light with the previous light and material properties.
-    DrawablePtr light = DrawablePtr( new DirectionalLight( lightProperties, lightMaterial ) );
+    DirectionalLightPtr light(
+                new DirectionalLight( directionalLightIndex, lightIndex, lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), lightMaterial ) );
 
     // Add the created light to the Drawables Manager and retrieve the ID given
     // to it.
-    ResourceID lightID = drawablesManager_->addDrawable( light );
-
-    // Insert the light's properties into the lights map.
-    lights_.insert( std::pair< ResourceID, LightPropertiesSharedPtr >(
-                        lightID,
-                        lightProperties
-                        ));
+    ResourceID lightID = getLocalResourcesSelection()->addResource( light );
 
     sendCommandToServer( CommandConstPtr( new DirectionalLightCreationCommand( localUserID(), lightID, lightColor ) ) );
 
     log()->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
-
-    print();
 
     notifyObservers();
 }
@@ -143,24 +129,12 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Packab
 
     MaterialConstPtr lightMaterial( new Material( PackableColor( 255, 0, 0, 255 ) ) );
 
-    // Create a struct with the light's properties.
-    DirectionalLightPropertiesSharedPtr lightProperties(
-                new DirectionalLightProperties( directionalLightIndex, lightIndex, lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ) ) );
+    DirectionalLightPtr light( new DirectionalLight( directionalLightIndex, lightIndex, lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), lightMaterial ) );
 
-    DrawablePtr light = DrawablePtr( new DirectionalLight( lightProperties, lightMaterial ) );
+    getResourcesSelection( lightID.getCreatorID() )->addResource( lightID, light );
 
-    drawablesManager_->addDrawable( lightID.getCreatorID(),
-                                    light,
-                                    lightID );
-
-    // Insert the light's properties into the lights map.
-    lights_.insert( std::pair< ResourceID, LightPropertiesSharedPtr >(
-                        lightID,
-                        lightProperties
-                        ));
 
     log()->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
-    print();
 
     notifyObservers();
 }
@@ -168,6 +142,8 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Packab
 
 void LightsManager::selectLight( const ResourceID lightID )
 {
+    (void)( lightID );
+    /*
     if( currentLight_ ){
         currentLight_->removeObserver( this );
     }
@@ -177,15 +153,18 @@ void LightsManager::selectLight( const ResourceID lightID )
     currentLight_->Observable::addObserver( this );
 
     notifyObservers();
+    */
 }
 
 
 void LightsManager::removeLight( ResourceID lightID )
 {
+    (void)( lightID );
+    /*
     log()->debug( "LightsManager - removing ID ", lightID, "\n" );
 
     // Retrieve the light to be removed.
-    LightPropertiesSharedPtr light = lights_.at( lightID );
+    LightSharedPtr light = lights_.at( lightID );
 
     // Free the indices held by the light.
     freeLightIndices_.push( light->getBaseLightIndex() );
@@ -199,6 +178,7 @@ void LightsManager::removeLight( ResourceID lightID )
     lights_.erase( lightID );
 
     notifyObservers();
+    */
 }
 
 
@@ -229,7 +209,7 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
             const LightColorChangeCommand* lightCommand =
                     dynamic_cast< const LightColorChangeCommand* >( command.get() );
 
-            lights_.at( lightCommand->getResourceID() )->setLightColor( lightCommand->getLightColor() );
+            getResourcesSelection( lightCommand->getUserID() )->setLightColor( lightCommand->getLightColor() );
 
             notifyObservers();
         }break;
@@ -237,7 +217,7 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
             const LightAmbientCoefficientChangeCommand* lightCommand =
                     dynamic_cast< const LightAmbientCoefficientChangeCommand* >( command.get() );
 
-            lights_.at( lightCommand->getResourceID() )->setAmbientCoefficient( lightCommand->getAmbientCoefficient() );
+            getResourcesSelection( lightCommand->getUserID() )->setAmbientCoefficient( lightCommand->getAmbientCoefficient() );
 
             notifyObservers();
         }break;
@@ -252,17 +232,6 @@ void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
 void LightsManager::update()
 {
     notifyObservers();
-}
-
-
-void LightsManager::update( ContainerAction lastContainerAction, ResourceID lastElementModified )
-{
-    if( lastContainerAction == ContainerAction::ELEMENT_DELETION ){
-        if( lights_.count( lastElementModified ) ){
-            log()->debug( "Notified, removing light\n" );
-            removeLight( lastElementModified );
-        }
-    }
 }
 
 
@@ -289,30 +258,16 @@ unsigned int LightsManager::getNextFreeLightIndex( LightType lightType )
     return 0;
 }
 
-
-void LightsManager::print()
-{
-    log()->lock();
-
-    log()->debug( "LightsManager - lights\n" );
-
-    for( auto it : lights_ ){
-        log()->debug( "\t", it.first, "\n" );
-    }
-
-    log()->unlock();
-}
-
-
 void LightsManager::highlightLight( ResourceID lightID )
 {
-    drawablesManager_->highlightProperty( lights_.at( lightID ).get() );
+    (void)( lightID );
+    //drawablesManager_->highlightProperty( lights_.at( lightID ).get() );
 }
 
 
 void LightsManager::removeHighlights()
 {
-    drawablesManager_->highlightProperty( nullptr );
+    //drawablesManager_->highlightProperty( nullptr );
 }
 
 

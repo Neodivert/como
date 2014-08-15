@@ -16,16 +16,17 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef LIGHT_PROPERTIES_HPP
-#define LIGHT_PROPERTIES_HPP
+#ifndef LIGHT_HPP
+#define LIGHT_HPP
 
 #include "client/models/3d/entity.hpp" // GL types.
+#include "client/models/3d/mesh.hpp"
 #include <common/commands/light_commands/light_creation_command.hpp> // "LightType" type.
 #include "abstract_light.hpp"
 
 namespace como {
 
-class LightProperties : public AbstractLight
+class Light : public AbstractLight, public Mesh
 {
     private:
         /*! MeshLight type */
@@ -46,18 +47,18 @@ class LightProperties : public AbstractLight
         /***
          * 1. Construction
          ***/
-        LightProperties() = delete;
+        Light() = delete;
     protected:
-        LightProperties( LightType type, GLuint index, const PackableColor& color );
+        Light( LightType type, GLuint index, const PackableColor& color, std::string path, MaterialConstPtr meshMaterial );
     public:
-        LightProperties( const LightProperties& ) = delete; // TODO: Implement using shader limit (MAX_LIGHTS).
-        LightProperties( LightProperties&& ) = delete;
+        Light( const Light& ) = default; // TODO: Implement using shader limit (MAX_LIGHTS) (or remove clone()).
+        Light( Light&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~LightProperties() = default;
+        ~Light() = default;
 
 
         /***
@@ -80,13 +81,13 @@ class LightProperties : public AbstractLight
         /***
          * 5. Operators
          ***/
-        LightProperties& operator = ( const LightProperties& ) = delete;
-        LightProperties& operator = ( LightProperties&& ) = delete;
+        Light& operator = ( const Light& ) = delete;
+        Light& operator = ( Light&& ) = delete;
 };
 
-typedef std::shared_ptr< LightProperties > LightPropertiesSharedPtr;
-typedef std::shared_ptr< const LightProperties > LightPropertiesConstSharedPtr;
+typedef std::shared_ptr< Light > LightSharedPtr;
+typedef std::shared_ptr< const Light > LightConstSharedPtr;
 
 } // namespace como
 
-#endif // LIGHT_PROPERTIES_HPP
+#endif // LIGHT

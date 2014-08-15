@@ -30,17 +30,13 @@
 
 namespace como {
 
-typedef std::map< ResourceID, LightPropertiesSharedPtr > LightsMap;
+typedef std::map< ResourceID, LightSharedPtr > LightsMap;
 
-class LightsManager : public ContainerObserver<ResourceID>, public ResourcesManager< LightProperties, LightsSelection, LocalLightsSelection >
+class LightsManager : public ResourcesManager< Light, LightsSelection, LocalLightsSelection >
 {
     private:
         // Lights vector.
-        LightsMap lights_;
-
-        // Lights are drawables, so the drawables manager is also implied in
-        // lights management.
-        DrawablesManagerPtr drawablesManager_;
+        //LightsMap lights_;
 
         // A stack holding all the free light indices allowed in shader.
         std::stack< GLint > freeLightIndices_;
@@ -57,7 +53,7 @@ class LightsManager : public ContainerObserver<ResourceID>, public ResourcesMana
          * 1. Construction
          ***/
         LightsManager() = delete;
-        LightsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server, LogPtr log );
+        LightsManager( ServerInterfacePtr server, LogPtr log );
         LightsManager( const LightsManager& ) = delete;
         LightsManager( LightsManager&& ) = delete;
 
@@ -106,14 +102,12 @@ class LightsManager : public ContainerObserver<ResourceID>, public ResourcesMana
          ***/
     private:
         virtual void update();
-        virtual void update( ContainerAction lastContainerAction, ResourceID lastElementModified );
 
 
         /***
          * 9. Auxiliar methods
          ***/
         unsigned int getNextFreeLightIndex( LightType lightType );
-        void print();
     public:
         void highlightLight( ResourceID lightID );
         void removeHighlights(); 

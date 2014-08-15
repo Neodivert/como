@@ -76,8 +76,6 @@ HEADERS += \
     ../../src/client/managers/lights/lights_manager.hpp \
     ../../src/client/managers/lights/light_handler.hpp \
     ../../src/client/models/3d/lights/abstract_light.hpp \
-    ../../src/client/models/3d/lights/light_properties.hpp \
-    ../../src/client/models/3d/lights/directional_light_properties.hpp \
     ../../src/client/models/utilities/open_gl.hpp \
     ../../src/client/gui/users/users_list_item.hpp \
     ../../src/client/managers/primitives/client_primitives_manager.hpp \
@@ -103,7 +101,8 @@ HEADERS += \
     ../../src/client/models/3d/entity.hpp \
     ../../src/client/models/3d/drawable.hpp \
     ../../src/client/models/3d/transformable.hpp \
-    ../../src/client/models/3d/entities_set.hpp
+    ../../src/client/models/3d/entities_set.hpp \
+    ../../src/client/models/3d/lights/light.hpp
 
 
 # Client sources
@@ -144,8 +143,6 @@ SOURCES += \
     ../../src/client/managers/materials/material_handler.cpp \
     ../../src/client/managers/lights/lights_manager.cpp \
     ../../src/client/managers/lights/light_handler.cpp \
-    ../../src/client/models/3d/lights/light_properties.cpp \
-    ../../src/client/models/3d/lights/directional_light_properties.cpp \
     ../../src/client/models/utilities/open_gl.cpp \
     ../../src/client/gui/users/users_list_item.cpp \
     ../../src/client/managers/primitives/client_primitives_manager.cpp \
@@ -165,4 +162,5 @@ SOURCES += \
     ../../src/client/managers/selections/materials/local_materials_selection.cpp \
     ../../src/client/gui/tools_menu/properties_tab/lights_menu.cpp \
     ../../src/client/models/3d/entity.cpp \
-    ../../src/client/models/3d/transformable.cpp
+    ../../src/client/models/3d/transformable.cpp \
+    ../../src/client/models/3d/lights/light.cpp

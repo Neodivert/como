@@ -24,7 +24,7 @@ namespace como {
  * 1. Construction
  ***/
 
-LightHandler::LightHandler( LightPropertiesSharedPtr light, ResourceID lightID, ServerInterfacePtr server ) :
+LightHandler::LightHandler( LightSharedPtr light, ResourceID lightID, ServerInterfacePtr server ) :
     light_( light ),
     lightID_( lightID ),
     server_( server )

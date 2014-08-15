@@ -20,19 +20,18 @@
 #define LIGHT_SSELECTION_HPP
 
 #include <client/managers/drawables_selection/drawables_selection.hpp>
-#include <client/models/3d/lights/light_properties.hpp>
-#include <client/managers/selections/resources/resources_selection.hpp>
+#include <client/models/3d/lights/lights.hpp>
+#include <client/models/3d/entities_set.hpp>
 
 namespace como {
 
-class LightsSelection : public virtual ResourcesSelection<LightProperties>, public ContainerObserver<ResourceID>, public AbstractLight
+class LightsSelection : public virtual EntitiesSet<DirectionalLight>, public AbstractLight
 {
     public:
         /***
          * 1. Construction
          ***/
         LightsSelection() = default;
-        LightsSelection( DrawablesSelectionPtr drawablesSelection );
         LightsSelection( const LightsSelection& ) = delete;
         LightsSelection( LightsSelection&& ) = delete;
 
@@ -40,7 +39,7 @@ class LightsSelection : public virtual ResourcesSelection<LightProperties>, publ
         /***
          * 2. Destruction
          ***/
-        ~LightsSelection();
+        ~LightsSelection() = default;
 
 
         /***
@@ -58,20 +57,10 @@ class LightsSelection : public virtual ResourcesSelection<LightProperties>, publ
 
 
         /***
-         * 5. Updating (Observer pattern).
-         ***/
-        virtual void update( ContainerAction lastContainerAction, ResourceID lastElementModified );
-
-
-        /***
-         * 6. Operators
+         * 5. Operators
          ***/
         LightsSelection& operator = ( const LightsSelection& ) = delete;
         LightsSelection& operator = ( LightsSelection&& ) = delete;
-
-
-    private:
-        DrawablesSelectionPtr drawablesSelection_;
 };
 
 } // namespace como

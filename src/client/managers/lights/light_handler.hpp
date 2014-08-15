@@ -20,7 +20,7 @@
 #define LIGHT_HANDLER_HPP
 
 #include <client/managers/server_interface/server_interface.hpp>
-#include <client/models/3d/lights/light_properties.hpp>
+#include <client/models/3d/lights/light.hpp>
 #include <functional>
 #include <common/utilities/observer_pattern/observable.hpp>
 
@@ -29,7 +29,7 @@ namespace como {
 class LightHandler : public Observable
 {
     private:
-        LightPropertiesSharedPtr light_;
+        LightSharedPtr light_;
         ResourceID lightID_;
         ServerInterfacePtr server_;
 
@@ -37,7 +37,7 @@ class LightHandler : public Observable
         /***
          * 1. Construction
          ***/
-        LightHandler( LightPropertiesSharedPtr light, ResourceID lightID, ServerInterfacePtr server );
+        LightHandler( LightSharedPtr light, ResourceID lightID, ServerInterfacePtr server );
         LightHandler( const LightHandler& ) = delete;
         LightHandler( LightHandler&& ) = delete;
 
