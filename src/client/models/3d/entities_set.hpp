@@ -221,6 +221,18 @@ void EntitiesSet::applyTransformationMatrix( const glm::mat4& transformation )
 }
 
 
+/***
+ * 6. Drawing
+ ***/
+
+void EntitiesSet::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const GLfloat* contourColor ) const
+{
+    for( auto& entityPair : resources_ ){
+        entityPair.second->draw( openGL, viewMatrix, projectionMatrix, contourColor );
+    }
+}
+
+
 } // namespace como
 
 #endif // ENTITIES_SET_HPP
