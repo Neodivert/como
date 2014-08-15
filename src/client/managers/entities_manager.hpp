@@ -45,8 +45,8 @@ class EntitiesManager
         /***
          * 3. Getters
          ***/
-        MeshesManager* getMeshesManager();
-        LightsManager* getLightsManager();
+        MeshesManagerPtr getMeshesManager();
+        LightsManagerPtr getLightsManager();
 
 
         /***
@@ -57,9 +57,11 @@ class EntitiesManager
 
 
     private:
-        MeshesManager meshesManager_;
-        LightsManager lightsManager_;
+        MeshesManagerPtr meshesManager_;
+        LightsManagerPtr lightsManager_;
 };
+
+typedef std::shared_ptr< EntitiesManager > EntitiesManagerPtr;
 
 } // namespace como
 

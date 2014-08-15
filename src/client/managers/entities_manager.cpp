@@ -26,8 +26,8 @@ namespace como {
  ***/
 
 EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log ) :
-    meshesManager_( server, log ),
-    lightsManager_( server, log )
+    meshesManager_( new MeshesManager( server, log ) ),
+    lightsManager_( new LightsManager( server, log ) )
 {}
 
 
@@ -35,19 +35,15 @@ EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log ) :
  * 3. Getters
  ***/
 
-MeshesManager* EntitiesManager::getMeshesManager()
+MeshesManagerPtr EntitiesManager::getMeshesManager()
 {
-    return &meshesManager_;
+    return meshesManager_;
 }
 
 
-LightsManager *EntitiesManager::getLightsManager()
+LightsManagerPtr EntitiesManager::getLightsManager()
 {
-    return &lightsManager_;
+    return lightsManager_;
 }
-
-
-
-
 
 } // namespace como

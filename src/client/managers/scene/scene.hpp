@@ -36,6 +36,7 @@
 #include <client/managers/primitives/client_primitives_manager.hpp>
 #include <client/managers/meshes_manager.hpp>
 #include <common/scene/basic_scene.hpp>
+#include <client/managers/entities_manager.hpp>
 
 Q_DECLARE_METATYPE( como::CommandConstPtr )
 
@@ -67,11 +68,9 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
          */
         DrawablesManagerPtr drawablesManager_;
 
-        MeshesManagerPtr meshesManager_;
-
         MaterialsManagerPtr materialsManager_;
 
-        LightsManagerPtr lightsManager_;
+        EntitiesManagerPtr entitiesManager_;
 
 
         OpenGLPtr openGL_;

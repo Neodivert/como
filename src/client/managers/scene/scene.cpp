@@ -204,20 +204,14 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, userAcceptancePacket.getSelectionColor(), log_ ) );
         drawablesManager_->Observable::addObserver( this );
 
-        // Initialize the meshes manager.
-        meshesManager_ = MeshesManagerPtr( new MeshesManager( server_, log_ ) );
-        meshesManager_->Observable::addObserver( this );
+        entitiesManager_ = EntitiesManagerPtr( new EntitiesManager( server_, log_ ) );
 
         // Initialize the materials manager.
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( drawablesManager_, server_, log_ ) );
         materialsManager_->Observable::addObserver( this );
 
         // Initialize the primitives manager.
-        primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, meshesManager_, materialsManager_, log_ ) );
-
-        // Initialize the lights manager.
-        lightsManager_ = LightsManagerPtr( new LightsManager( server_, log_ ) );
-        lightsManager_->Observable::addObserver( this );
+        primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, entitiesManager_->getMeshesManager(), materialsManager_, log_ ) );
 
         localUserConnectionCommand_ = UserConnectionCommandConstPtr( new UserConnectionCommand( userAcceptancePacket ) );
 
@@ -245,7 +239,7 @@ void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnecte
 
     // Create both drawables and meshes empty selection for the new user.
     drawablesManager_->createResourcesSelection( userConnectedCommand->getUserID(), userConnectedCommand->getSelectionColor().toVec4() );
-    meshesManager_->registerUser( userConnectedCommand->getUserID() );
+    entitiesManager_->getMeshesManager()->registerUser( userConnectedCommand->getUserID() );
 
     // Emit a UserConnectionCommand signal.
     emit userConnected( userConnectedCommand );
@@ -256,15 +250,13 @@ void Scene::removeUser( UserID userID )
 {
     // Unselect all drawables selected by user.
     drawablesManager_->unselectAll( userID );
-    meshesManager_->removeUser( userID );
+    entitiesManager_->getMeshesManager()->removeUser( userID );
 
     // Remove user from scene.
     if( users_.erase( userID ) ){
         emit userDisconnected( userID );
     }
 }
-
-
 
 
 /***
@@ -285,7 +277,7 @@ DrawablesManagerPtr Scene::getDrawablesManager() const
 
 MeshesManagerPtr Scene::getMeshesManager() const
 {
-    return meshesManager_;
+    return entitiesManager_->getMeshesManager();
 }
 
 
@@ -296,7 +288,7 @@ MaterialsManagerPtr Scene::getMaterialsManager() const
 
 LightsManagerPtr Scene::getLightsManager() const
 {
-    return lightsManager_;
+    return entitiesManager_->getLightsManager();
 }
 
 ClientPrimitivesManagerPtr Scene::getPrimitivesManager() const
@@ -489,23 +481,23 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
             materialsManager_->executeRemoteCommand( dynamic_pointer_cast< const MaterialCommand >( command ) );
         break;
         case CommandTarget::LIGHT:
-            lightsManager_->executeRemoteCommand( dynamic_pointer_cast< const LightCommand >( command ) );
+            entitiesManager_->getLightsManager()->executeRemoteCommand( dynamic_pointer_cast< const LightCommand >( command ) );
         break;
         case CommandTarget::RESOURCE:{
             ResourceCommandConstPtr resourceCommand = dynamic_pointer_cast< const ResourceCommand >( command );
 
             drawablesManager_->executeResourceCommand( resourceCommand );
-            meshesManager_->executeResourceCommand( resourceCommand );
+            entitiesManager_->getMeshesManager()->executeResourceCommand( resourceCommand );
             // TODO: materialsManager_->executeResourceCommand( resourceCommand );
-            lightsManager_->executeResourceCommand( resourceCommand );
+            entitiesManager_->getLightsManager()->executeResourceCommand( resourceCommand );
         }break;
         case CommandTarget::RESOURCES_SELECTION:{
             ResourcesSelectionCommandConstPtr selectionCommand = dynamic_pointer_cast< const ResourcesSelectionCommand >( command );
 
             drawablesManager_->executeResourcesSelectionCommand( selectionCommand );
-            meshesManager_->executeResourcesSelectionCommand( selectionCommand );
+            entitiesManager_->getMeshesManager()->executeResourcesSelectionCommand( selectionCommand );
             // TODO: materialsManager_->executeResourcesSelectionCommand( selectionCommand );
-            lightsManager_->executeResourcesSelectionCommand( selectionCommand );
+            entitiesManager_->getLightsManager()->executeResourcesSelectionCommand( selectionCommand );
         }break;
     }
 
