@@ -19,6 +19,7 @@
 #ifndef ENTITY_HPP
 #define ENTITY_HPP
 
+#include <client/models/3d/drawable.hpp>
 #include <client/models/dependencies.hpp>
 #include <client/models/utilities/open_gl.hpp>
 
@@ -50,7 +51,7 @@ typedef std::shared_ptr< Entity > DrawablePtr;
 typedef std::shared_ptr< const Entity > DrawableConstPtr;
 
 
-class Entity
+class Entity : public Drawable
 {
     private:
         /*! Type of drawable */
