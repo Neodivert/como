@@ -24,6 +24,15 @@ namespace como {
  * 4. Transformations
  ***/
 
+void Transformable::translate( glm::vec3 direction )
+{
+    // Compute the translation matrix.
+    const glm::mat4 newTranslation = glm::translate( glm::mat4( 1.0f ), direction );
+
+    applyTransformationMatrix( newTranslation );
+}
+
+
 void Transformable::rotateAroundOrigin( GLfloat angle, glm::vec3 axis )
 {
     // Normalize the vector "axis".
@@ -38,7 +47,23 @@ void Transformable::rotateAroundOrigin( GLfloat angle, glm::vec3 axis )
 
 void Transformable::rotateAroundCentroid( GLfloat angle, const glm::vec3& axis )
 {
-    rotate( angle, axis, centroid() );
+    rotateAroundPivot( angle, axis, centroid() );
+}
+
+
+void Transformable::rotateAroundPivot( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot )
+{
+    translate( -pivot );
+    rotateAroundOrigin( angle, axis );
+    translate( pivot );
+}
+
+
+void Transformable::scaleAroundPivot( const glm::vec3& scaleFactors, const glm::vec3& pivotPoint )
+{
+    translate( -pivotPoint );
+    scaleAroundOrigin( scaleFactors );
+    translate( pivotPoint );
 }
 
 
@@ -52,7 +77,8 @@ void Transformable::scaleAroundOrigin( const glm::vec3& scaleFactors )
 
 void Transformable::scaleAroundCentroid( const glm::vec3& scaleFactors )
 {
-    scale( scaleFactors, centroid() );
+    scaleAroundPivot( scaleFactors, centroid() );
 }
+
 
 } // namespace como

@@ -102,7 +102,8 @@ HEADERS += \
     ../../src/client/gui/tools_menu/properties_tab/lights_menu.hpp \
     ../../src/client/models/3d/entity.hpp \
     ../../src/client/models/3d/drawable.hpp \
-    ../../src/client/models/3d/transformable.hpp
+    ../../src/client/models/3d/transformable.hpp \
+    ../../src/client/models/3d/entities_set.hpp
 
 
 # Client sources

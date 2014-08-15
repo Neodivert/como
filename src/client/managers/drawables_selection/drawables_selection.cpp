@@ -182,21 +182,21 @@ void DrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
     switch( pivotPointMode_ ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
             for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
-                drawable->second->rotate( angle, axis, glm::vec3( drawable->second->getCentroid() ) );
+                drawable->second->rotateAroundCentroid( angle, axis );
 
                 notifyElementUpdate( drawable->first );
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
             for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
-                drawable->second->rotate( angle, axis, glm::vec3( centroid_ ) );
+                drawable->second->rotateAroundPivot( angle, axis, glm::vec3( centroid_ ) );
 
                 notifyElementUpdate( drawable->first );
             }
         break;
         case PivotPointMode::WORLD_ORIGIN:
             for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
-                drawable->second->rotate( angle, axis );
+                drawable->second->rotateAroundOrigin( angle, axis );
 
                 notifyElementUpdate( drawable->first );
             }
@@ -221,21 +221,21 @@ void DrawablesSelection::scale( glm::vec3 scaleFactors )
     switch( pivotPointMode_ ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
             for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
-                drawable->second->scale( scaleFactors, glm::vec3( drawable->second->getCentroid() ) );
+                drawable->second->scaleAroundCentroid( scaleFactors );
 
                 notifyElementUpdate( drawable->first );
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
             for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
-                drawable->second->scale( scaleFactors, glm::vec3( centroid_ ) );
+                drawable->second->scaleAroundPivot( scaleFactors, glm::vec3( centroid_ ) );
 
                 notifyElementUpdate( drawable->first );
             }
         break;
         case PivotPointMode::WORLD_ORIGIN:
             for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
-                drawable->second->scale( scaleFactors );
+                drawable->second->scaleAroundOrigin( scaleFactors );
 
                 notifyElementUpdate( drawable->first );
             }
@@ -263,7 +263,7 @@ void DrawablesSelection::updateSelectionCentroid()
 
     // Sum every drawable's centroid in the selection.
     for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
-        centroid_ += drawable->second->getCentroid();
+        centroid_ += glm::vec4( drawable->second->centroid(), 1.0f );
     }
 
     // Get the selection centroid.

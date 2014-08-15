@@ -86,7 +86,7 @@ QGroupBox* MeshInfoMenu::createVertexNormalsDisplayGroupBox( std::shared_ptr< Lo
 void MeshInfoMenu::update()
 {
     char centroidStr[50] = {0};
-    glm::vec4 centroid = userSelection_->getCentroid();
+    glm::vec4 centroid = glm::vec4( userSelection_->centroid(), 1.0f );
 
     setVisible( userSelection_->size() );
     if( !( userSelection_->size() ) ){

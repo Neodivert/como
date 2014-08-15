@@ -46,12 +46,12 @@ string MeshesSelection::getResourceName( const ResourceID& resourceID ) const
 }
 
 
-glm::vec4 MeshesSelection::getCentroid() const
+glm::vec3 MeshesSelection::centroid() const
 {
-    glm::vec4 centroid( 0.0f );
+    glm::vec3 centroid( 0.0f );
 
     for( auto mesh : meshes_ ){
-        centroid += mesh.second->getCentroid();
+        centroid += mesh.second->centroid();
     }
 
     if( meshes_.size() ){

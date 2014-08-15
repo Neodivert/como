@@ -65,31 +65,6 @@ std::string Entity::getName() const
  * 3. Transformations
  ***/
 
-void Entity::translate( glm::vec3 direction )
-{
-    // Compute the translation matrix.
-    const glm::mat4 newTranslation = glm::translate( glm::mat4( 1.0f ), direction );
-
-    applyTransformationMatrix( newTranslation );
-}
-
-
-void Entity::rotate( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot )
-{
-    translate( -pivot );
-    rotateAroundOrigin( angle, axis );
-    translate( pivot );
-}
-
-
-void Entity::scale( const glm::vec3& scaleFactors, const glm::vec3& pivotPoint )
-{
-    translate( -pivotPoint );
-    scaleAroundOrigin( scaleFactors );
-    translate( pivotPoint );
-}
-
-
 void Entity::applyTransformationMatrix( const glm::mat4& transformation )
 {
     // Move the drawable from world to object space, then apply the new

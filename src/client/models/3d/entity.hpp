@@ -88,7 +88,6 @@ class Entity : public Drawable, public Transformable
          * 2. Getters
          ***/
         glm::mat4 getModelMatrix() const;
-        virtual glm::vec4 getCentroid() const = 0;
         DrawableType getType() const;
         std::string getName() const;
         virtual bool containsProperty( const void* property ) const = 0;
@@ -97,11 +96,6 @@ class Entity : public Drawable, public Transformable
         /***
          * 3. Transformations
          ***/
-        virtual void translate( glm::vec3 direction );
-        virtual void rotate( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
-        virtual void scale( const glm::vec3& scaleFactors, const glm::vec3& pivot );
-
-
         virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle = nullptr  ) const = 0;
 
         virtual void applyTransformationMatrix( const glm::mat4& newTransformation );

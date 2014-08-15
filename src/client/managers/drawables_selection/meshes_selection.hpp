@@ -65,7 +65,7 @@ class MeshesSelection : public virtual ResourcesSelection< Mesh >, public Abstra
          ***/
         bool containsResource( const ResourceID& resourceID ) const;
         std::string getResourceName( const ResourceID& resourceID ) const;
-        virtual glm::vec4 getCentroid() const;
+        virtual glm::vec3 centroid() const;
         virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle ) const;
         virtual bool containsProperty( const void *property ) const;
         virtual ElementsMeetingCondition displaysVertexNormals() const;

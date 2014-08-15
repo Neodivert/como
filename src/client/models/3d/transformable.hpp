@@ -49,15 +49,15 @@ class Transformable
         /***
          * 4. Transformations
          ***/
-        virtual void translate( glm::vec3 direction ) = 0;
+        virtual void translate( glm::vec3 direction );
 
         void rotateAroundOrigin( GLfloat angle, glm::vec3 axis );
         void rotateAroundCentroid( GLfloat angle, const glm::vec3& axis );
-        virtual void rotate( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot ) = 0;
+        void rotateAroundPivot( const GLfloat& angle, const glm::vec3& axis, const glm::vec3& pivot );
 
         void scaleAroundOrigin( const glm::vec3& scaleFactors );
         void scaleAroundCentroid( const glm::vec3& scaleFactors );
-        virtual void scale( const glm::vec3& scaleFactors, const glm::vec3& pivot ) = 0;
+        void scaleAroundPivot( const glm::vec3& scaleFactors, const glm::vec3& pivot );
 
         virtual void applyTransformationMatrix( const glm::mat4& transformation ) = 0;
 
