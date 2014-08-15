@@ -19,18 +19,18 @@
 #ifndef ABSTRACT_MESH_HPP
 #define ABSTRACT_MESH_HPP
 
-#include "drawable.hpp"
+#include "entity.hpp"
 
 namespace como {
 
-class AbstractMesh : public Drawable {
+class AbstractMesh : public Entity {
 
     public:
         /***
          * 1. Construction
          ***/
         AbstractMesh( std::string name = "Unnamed" )
-            : Drawable( DrawableType::MESH, name ){}
+            : Entity( DrawableType::MESH, name ){}
         AbstractMesh( const AbstractMesh& ) = default;
         AbstractMesh( AbstractMesh&& ) = default;
 

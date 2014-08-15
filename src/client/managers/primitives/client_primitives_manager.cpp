@@ -90,7 +90,7 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 
     ResourceID drawableID = meshesManager_->createMesh( meshInfo.vertexData, meshInfo.oglData, meshInfo.polygonGroupsData, materialsManager_->getMaterials( firstMaterialID, meshInfo.materialsData.size() ) );
 
-    log_->debug( "Creating local mesh - Drawable ID (", drawableID,
+    log_->debug( "Creating local mesh - Entity ID (", drawableID,
                  ") First materialID ", firstMaterialID, ") nMaterials (", meshInfo.materialsData.size(), ")\n" );
 
     // Send the command to the server (the MaterialCreationCommand command was

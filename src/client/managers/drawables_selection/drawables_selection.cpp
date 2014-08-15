@@ -77,7 +77,7 @@ std::string DrawablesSelection::getDrawableName( const ResourceID& id ) const
 
 std::string DrawablesSelection::getName() const
 {
-    const Drawable* drawable = nullptr;
+    const Entity* drawable = nullptr;
 
     if( size() == 0 ){
         return std::string( "Nothing selected" );
@@ -92,7 +92,7 @@ std::string DrawablesSelection::getName() const
 
 std::string DrawablesSelection::getTypeName() const
 {
-    const Drawable* drawable = nullptr;
+    const Entity* drawable = nullptr;
 
     if( size() == 0 ){
         return std::string( "Nothing selected" );

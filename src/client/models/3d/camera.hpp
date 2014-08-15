@@ -76,7 +76,7 @@ class Camera : public Mesh
 
         virtual DrawablePtr clone();
 
-        // TODO: Is this problematic with Drawable's virtual destructor?
+        // TODO: Is this problematic with Entity's virtual destructor?
         ~Camera() = default;
 
         /***

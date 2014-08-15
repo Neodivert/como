@@ -19,7 +19,7 @@
 #ifndef DRAWABLES_SELECTION_HPP
 #define DRAWABLES_SELECTION_HPP
 
-#include <client/models/3d/drawable.hpp>
+#include <client/models/3d/entity.hpp>
 #include <client/models/3d/mesh.hpp>
 #include <common/commands/user_commands/user_parameter_change_command.hpp> // For PivotPointMode type.
 #include <map>
@@ -42,7 +42,7 @@ const char pivotPointModeStrings[N_PIVOT_POINT_MODES][32] =
      "World origin"
 };
 
-class DrawablesSelection : public virtual ResourcesSelection<Drawable>
+class DrawablesSelection : public virtual ResourcesSelection<Entity>
 {
     private:
         // Selection border color.

@@ -35,7 +35,7 @@ enum class MeshEdgesDisplayFrequency {
 };
 
 
-class DrawablesManager : public ResourcesManager< Drawable, DrawablesSelection, LocalDrawablesSelection >
+class DrawablesManager : public ResourcesManager< Entity, DrawablesSelection, LocalDrawablesSelection >
 {
     private:
         MeshEdgesDisplayFrequency meshEdgesDisplayFrequency_;

@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "drawable.hpp"
+#include "entity.hpp"
 #include <stdexcept>
 
 namespace como {
@@ -26,7 +26,7 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-Drawable::Drawable( DrawableType type, std::string name ) :
+Entity::Entity( DrawableType type, std::string name ) :
     type_( type ),
     name_( name ),
     modelMatrix_( 1.0f )
@@ -42,19 +42,19 @@ Drawable::Drawable( DrawableType type, std::string name ) :
  * 2. Getters
  ***/
 
-glm::mat4 Drawable::getModelMatrix() const
+glm::mat4 Entity::getModelMatrix() const
 {
     return modelMatrix_;
 }
 
 
-DrawableType Drawable::getType() const
+DrawableType Entity::getType() const
 {
     return type_;
 }
 
 
-std::string Drawable::getName() const
+std::string Entity::getName() const
 {
     return name_;
 }
@@ -64,7 +64,7 @@ std::string Drawable::getName() const
  * 3. Transformations
  ***/
 
-void Drawable::translate( glm::vec3 direction )
+void Entity::translate( glm::vec3 direction )
 {
     // Compute the translation matrix.
     const glm::mat4 newTranslation = glm::translate( glm::mat4( 1.0f ), direction );
@@ -74,7 +74,7 @@ void Drawable::translate( glm::vec3 direction )
 
 #include <cstdlib>
 
-void Drawable::rotate( GLfloat angle, glm::vec3 axis )
+void Entity::rotate( GLfloat angle, glm::vec3 axis )
 {
     // Normalize the vector "axis".
     axis = glm::normalize( axis );
@@ -87,7 +87,7 @@ void Drawable::rotate( GLfloat angle, glm::vec3 axis )
 }
 
 
-void Drawable::rotate( const GLfloat& angle, glm::vec3 axis, const glm::vec3& pivot )
+void Entity::rotate( const GLfloat& angle, glm::vec3 axis, const glm::vec3& pivot )
 {
     translate( -pivot );
     rotate( angle, axis );
@@ -95,7 +95,7 @@ void Drawable::rotate( const GLfloat& angle, glm::vec3 axis, const glm::vec3& pi
 }
 
 
-void Drawable::scale( glm::vec3 scaleFactors )
+void Entity::scale( glm::vec3 scaleFactors )
 {
     // Compute the scale matrix.
     const glm::mat4 newScale = glm::scale( glm::mat4( 1.0f ), scaleFactors );
@@ -103,7 +103,7 @@ void Drawable::scale( glm::vec3 scaleFactors )
     applyTransformation( newScale );
 }
 
-void Drawable::scale( glm::vec3 scaleFactors, const glm::vec3& pivotPoint )
+void Entity::scale( glm::vec3 scaleFactors, const glm::vec3& pivotPoint )
 {
     translate( -pivotPoint );
     scale( scaleFactors );
@@ -111,7 +111,7 @@ void Drawable::scale( glm::vec3 scaleFactors, const glm::vec3& pivotPoint )
 }
 
 
-void Drawable::applyTransformation( const glm::mat4& newTransformation )
+void Entity::applyTransformation( const glm::mat4& newTransformation )
 {
     // Move the drawable from world to object space, then apply the new
     // transformation and finally move back the drawable from object to world
@@ -128,7 +128,7 @@ void Drawable::applyTransformation( const glm::mat4& newTransformation )
  * 5. Updating and drawing
  ***/
 
-void Drawable::update()
+void Entity::update()
 {
     for( unsigned int i = 0; i<3; i++ ){
         transformedOrientation[i] = modelMatrix_ * originalOrientation[i];

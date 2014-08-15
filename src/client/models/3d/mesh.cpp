@@ -73,7 +73,7 @@ Mesh::Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std:
 
 /*
 Mesh::Mesh( const Mesh& b ) :
-    Drawable( b ),
+    Entity( b ),
     type_( b.type_ ),
     vertexData_( b.vertexData_ ),
     triangles( b.triangles ),
@@ -356,7 +356,7 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
 void Mesh::update()
 {
     // Update mesh's orientation.
-    Drawable::update();
+    Entity::update();
 
     // Update mesh's centroid.
     transformedCentroid = modelMatrix_ * originalCentroid;

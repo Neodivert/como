@@ -16,8 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef DRAWABLE_HPP
-#define DRAWABLE_HPP
+#ifndef ENTITY_HPP
+#define ENTITY_HPP
 
 #include <client/models/dependencies.hpp>
 #include <client/models/utilities/open_gl.hpp>
@@ -45,12 +45,12 @@ enum class DrawableType : std::uint8_t
  * Main file class
  ***/
 
-class Drawable;
-typedef std::shared_ptr< Drawable > DrawablePtr;
-typedef std::shared_ptr< const Drawable > DrawableConstPtr;
+class Entity;
+typedef std::shared_ptr< Entity > DrawablePtr;
+typedef std::shared_ptr< const Entity > DrawableConstPtr;
 
 
-class Drawable
+class Entity
 {
     private:
         /*! Type of drawable */
@@ -73,13 +73,13 @@ class Drawable
          * 1. Initialization and destruction
          ***/
         // Constructor. Initialize transformation matrix to identity matrix.
-        Drawable( DrawableType type, std::string name );
-        Drawable( const Drawable& ) = default;
-        Drawable( Drawable&& ) = delete;
+        Entity( DrawableType type, std::string name );
+        Entity( const Entity& ) = default;
+        Entity( Entity&& ) = delete;
 
         virtual DrawablePtr clone() = 0;
 
-        virtual ~Drawable(){}
+        virtual ~Entity(){}
 
 
         /***
@@ -114,8 +114,8 @@ class Drawable
         /***
          * 4. Operators
          ***/
-        Drawable& operator=( const Drawable& ) = delete ;
-        Drawable& operator=( Drawable&& ) = delete;
+        Entity& operator=( const Entity& ) = delete ;
+        Entity& operator=( Entity&& ) = delete;
 
 
         /***
@@ -132,4 +132,4 @@ class Drawable
 
 } // namespace como
 
-#endif // DRAWABLE_ENTITY_HPP
+#endif // ENTITY_HPP

@@ -46,7 +46,6 @@ HEADERS += \
     ../../src/client/managers/scene/scene.hpp \
     ../../src/client/managers/como_app.hpp \
     ../../src/client/models/3d/mesh.hpp \
-    ../../src/client/models/3d/drawable.hpp \
     ../../src/client/models/3d/camera.hpp \
     ../../src/client/models/utilities/msl/src/shader_loader.hpp \
     ../../src/client/gui/connection_wizard/connection_wizard.hpp \
@@ -100,7 +99,8 @@ HEADERS += \
     ../../src/client/managers/selections/meshes/local_meshes_selection.hpp \
     ../../src/client/managers/selections/materials/materials_selection.hpp \
     ../../src/client/managers/selections/materials/local_materials_selection.hpp \
-    ../../src/client/gui/tools_menu/properties_tab/lights_menu.hpp
+    ../../src/client/gui/tools_menu/properties_tab/lights_menu.hpp \
+    ../../src/client/models/3d/entity.hpp
 
 
 # Client sources
@@ -113,7 +113,6 @@ SOURCES += \
     ../../src/client/managers/scene/scene.cpp \
     ../../src/client/managers/como_app.cpp \
     ../../src/client/models/3d/mesh.cpp \
-    ../../src/client/models/3d/drawable.cpp \
     ../../src/client/models/3d/camera.cpp \
     ../../src/client/models/utilities/msl/src/shader_loader.cpp \
     ../../src/client/main.cpp \
@@ -161,4 +160,5 @@ SOURCES += \
     ../../src/client/managers/selections/meshes/local_meshes_selection.cpp \
     ../../src/client/managers/selections/materials/materials_selection.cpp \
     ../../src/client/managers/selections/materials/local_materials_selection.cpp \
-    ../../src/client/gui/tools_menu/properties_tab/lights_menu.cpp
+    ../../src/client/gui/tools_menu/properties_tab/lights_menu.cpp \
+    ../../src/client/models/3d/entity.cpp

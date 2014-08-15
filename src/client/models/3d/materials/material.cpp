@@ -17,7 +17,7 @@
 ***/
 
 #include "material.hpp"
-#include <client/models/3d/drawable.hpp>
+#include <client/models/3d/entity.hpp>
 #include <boost/tokenizer.hpp>
 
 
