@@ -66,9 +66,14 @@ class EntitiesSet : public Transformable, public virtual ResourcesSelection< Ent
         virtual void applyTransformationMatrix( const glm::mat4& transformation );
 
 
+        /***
+         * 6. Intersections
+         ***/
+        bool intersectsRay( glm::vec3 r0, glm::vec3 r1, ResourceID& closestEntity, float& minT ) const;
+
 
         /***
-         * 6. Drawing
+         * 7. Drawing
          ***/
         virtual void drawAll( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix ) const;
 
@@ -226,7 +231,34 @@ void EntitiesSet<EntitySubtype>::applyTransformationMatrix( const glm::mat4& tra
 
 
 /***
- * 6. Drawing
+ * 6. Intersections
+ ***/
+
+template <class EntitySubtype>
+bool EntitiesSet<EntitySubtype>::intersectsRay( glm::vec3 r0, glm::vec3 r1, ResourceID& closestEntity, float& minT ) const
+{
+    float t;
+    bool entityIntersected = false;
+
+    // Check if the given ray intersects any drawable in the selection.
+    for( auto entityPair : this->resources_ ){
+        entityPair.second->intersects( r0, r1, t );
+
+        // New closest object, get its ID and distance.
+        if( ( t >= 0.0f ) && ( t < minT ) ){
+            entityIntersected = true;
+
+            closestEntity = entityPair.first;
+            minT = t;
+        }
+    }
+
+    return entityIntersected;
+}
+
+
+/***
+ * 7. Drawing
  ***/
 
 template <class EntitySubtype>

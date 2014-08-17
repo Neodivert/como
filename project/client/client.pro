@@ -103,7 +103,8 @@ HEADERS += \
     ../../src/client/models/3d/transformable.hpp \
     ../../src/client/models/3d/entities_set.hpp \
     ../../src/client/models/3d/lights/light.hpp \
-    ../../src/client/managers/entities_manager.hpp
+    ../../src/client/managers/entities_manager.hpp \
+    ../../src/client/managers/abstract_entities_manager.hpp
 
 
 # Client sources

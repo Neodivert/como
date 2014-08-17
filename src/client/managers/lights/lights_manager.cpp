@@ -25,7 +25,7 @@ namespace como {
  ***/
 
 LightsManager::LightsManager( ServerInterfacePtr server, LogPtr log ) :
-    ResourcesManager( server, log ),
+    AbstractEntitiesManager( server, log ),
     currentLight_( nullptr )
 {
     GLint i=0;
