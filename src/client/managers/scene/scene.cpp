@@ -296,6 +296,11 @@ ClientPrimitivesManagerPtr Scene::getPrimitivesManager() const
     return primitivesManager_;
 }
 
+EntitiesManagerPtr Scene::getEntitiesManager() const
+{
+    return entitiesManager_;
+}
+
 OpenGLPtr Scene::getOpenGL() const
 {
     return openGL_;

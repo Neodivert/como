@@ -164,7 +164,7 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
         addToSelection = mousePressEvent->modifiers() & Qt::ControlModifier;
 
         // Do the ray picking.
-        comoApp->getScene()->getLightsManager()->selectEntityByRayPicking( rayOrigin,
+        comoApp->getScene()->getEntitiesManager()->selectEntityByRayPicking( rayOrigin,
                                                          rayDirection,
                                                          addToSelection,
                                                          lastMouseWorldPos_ );

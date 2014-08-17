@@ -50,16 +50,22 @@ class EntitiesManager
 
 
         /***
-         * 4. Operators
+         * 4. Entity picking
          ***/
-        EntitiesManager& operator = ( const EntitiesManager& ) = default;
-        EntitiesManager& operator = ( EntitiesManager&& ) = default;
+        ResourceID selectEntityByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint );
 
 
         /***
          * 5. Drawing
          ***/
         void drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const;
+
+
+        /***
+         * 6. Operators
+         ***/
+        EntitiesManager& operator = ( const EntitiesManager& ) = default;
+        EntitiesManager& operator = ( EntitiesManager&& ) = default;
 
 
     private:

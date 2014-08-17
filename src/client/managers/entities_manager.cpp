@@ -47,6 +47,22 @@ LightsManagerPtr EntitiesManager::getLightsManager()
 }
 
 
+/***
+ * 4. Entity picking
+ ***/
+
+ResourceID EntitiesManager::selectEntityByRayPicking(glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint )
+{
+    // TODO: Call also to MeshesManager::selectEntityByRayPicking() and lock
+    // only the closest entity between both managers.
+    return lightsManager_->selectEntityByRayPicking( r0, r1, addToSelection, worldCollisionPoint );
+}
+
+
+/***
+ * 5. Drawing
+ ***/
+
 void EntitiesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
     lightsManager_->drawAll( openGL, viewMatrix, projectionMatrix );
