@@ -45,7 +45,7 @@ class AbstractEntitiesManager : public ResourcesManager<ResourceType, ResourcesS
         /***
          * 3. Entities picking
          ***/
-        virtual ResourceID selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint );
+        virtual ResourceID selectEntityByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint );
 
 
         /***
@@ -71,7 +71,7 @@ AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSele
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-ResourceID AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint )
+ResourceID AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::selectEntityByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint )
 {
     const float MAX_T = 9999999.0f;
     float minT = MAX_T;
@@ -94,7 +94,7 @@ ResourceID AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalRe
 
         // Request to the server the lock of the intersected drawable.
         // TODO: Request resource lock in the caller. I'll call
-        // selectDrawableByRayPicking() on multiple managers.
+        // selectEntityByRayPicking() on multiple managers.
         this->requestResourceLock( closestObject );
 
         // Save the collision point (in world coordinates) for returning it to
