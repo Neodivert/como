@@ -26,7 +26,7 @@
 namespace como {
 
 template <class ElementID>
-class ObservableContainer : public Observable {
+class ObservableContainer : public virtual Observable {
     private:
         std::unordered_set< ContainerObserver<ElementID>* > observers_;
 
@@ -36,7 +36,7 @@ class ObservableContainer : public Observable {
          ***/
         ObservableContainer() = default;
         ObservableContainer( const ObservableContainer<ElementID>& ) = default;
-        ObservableContainer( ObservableContainer<ElementID>&& ) = default;
+        ObservableContainer( ObservableContainer<ElementID>&& ) = delete;
 
 
         /***
@@ -56,7 +56,7 @@ class ObservableContainer : public Observable {
          * 4. Operators
          ***/
         ObservableContainer& operator = ( const ObservableContainer<ElementID>& ) = default;
-        ObservableContainer& operator = ( ObservableContainer<ElementID>&& ) = default;
+        ObservableContainer& operator = ( ObservableContainer<ElementID>&& ) = delete;
 
 
     protected:
@@ -132,7 +132,7 @@ void ObservableContainer<ElementID>::notifyContainerUpdate()
 template <class ElementID>
 void ObservableContainer<ElementID>::notifyElementAction( ContainerAction action, ElementID id )
 {
-    for( auto observer : observers_ ){
+    for( auto& observer : observers_ ){
         observer->update( action, id );
     }
 

@@ -25,16 +25,15 @@
 
 namespace como {
 
-template <class EntitySubtype>
-class AbstractEntitiesSet : public Transformable, public virtual ResourcesSelection< EntitySubtype >
+class AbstractEntitiesSet : public Transformable, public virtual Observable // TODO: Inherit from an abstraction: public virtual ResourcesSelection< EntitySubtype >
 {
     public:
         /***
          * 1. Construction
          ***/
         AbstractEntitiesSet() = default;
-        AbstractEntitiesSet( const AbstractEntitiesSet<EntitySubtype>& ) = default;
-        AbstractEntitiesSet( AbstractEntitiesSet<EntitySubtype>&& ) = default;
+        AbstractEntitiesSet( const AbstractEntitiesSet& ) = default;
+        AbstractEntitiesSet( AbstractEntitiesSet&& ) = delete;
 
 
         /***
@@ -49,6 +48,7 @@ class AbstractEntitiesSet : public Transformable, public virtual ResourcesSelect
         virtual glm::vec3 centroid() const = 0;
         virtual PivotPointMode pivotPointMode() const = 0;
         virtual glm::vec4 borderColor() const = 0;
+        virtual unsigned int size() const = 0;
 
 
         /***
@@ -82,8 +82,8 @@ class AbstractEntitiesSet : public Transformable, public virtual ResourcesSelect
         /***
          * 8. Operators
          ***/
-        AbstractEntitiesSet& operator = ( const AbstractEntitiesSet<EntitySubtype>& ) = default;
-        AbstractEntitiesSet& operator = ( AbstractEntitiesSet<EntitySubtype>&& ) = default;
+        AbstractEntitiesSet& operator = ( const AbstractEntitiesSet& ) = delete;
+        AbstractEntitiesSet& operator = ( AbstractEntitiesSet&& ) = delete;
 };
 
 } // namespace como

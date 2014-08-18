@@ -73,7 +73,7 @@ class ResourcesSelection : public ObservableContainer<ResourceID> {
         /***
          * 7. Getters
          ***/
-        unsigned int size() const;
+        virtual unsigned int size() const;
 
 
     protected:

@@ -26,7 +26,7 @@ namespace como {
 const glm::vec4 DEFAULT_BORDER_COLOR = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
 
 template <class EntitySubtype>
-class EntitiesSet : public AbstractEntitiesSet< EntitySubtype >
+class EntitiesSet : public AbstractEntitiesSet, public virtual ResourcesSelection< EntitySubtype >
 {
     public:
         /***
@@ -49,6 +49,7 @@ class EntitiesSet : public AbstractEntitiesSet< EntitySubtype >
         virtual glm::vec3 centroid() const;
         PivotPointMode pivotPointMode() const;
         glm::vec4 borderColor() const;
+        virtual unsigned int size() const;
 
 
         /***
@@ -136,6 +137,13 @@ template <class EntitySubtype>
 glm::vec4 EntitiesSet<EntitySubtype>::borderColor() const
 {
     return borderColor_;
+}
+
+
+template <class EntitySubtype>
+unsigned int EntitiesSet<EntitySubtype>::size() const
+{
+    return this->ResourcesSelection<EntitySubtype>::size();
 }
 
 
