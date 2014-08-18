@@ -62,12 +62,6 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
 
         ClientPrimitivesManagerPtr primitivesManager_;
 
-        /*!
-         * \brief Drawables mmanager. This object acts as a container and an
-         * interface to all the drawables present in the scene.
-         */
-        DrawablesManagerPtr drawablesManager_;
-
         MaterialsManagerPtr materialsManager_;
 
         EntitiesManagerPtr entitiesManager_;
@@ -125,7 +119,6 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
          * 5. Getters
          ***/
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
-        DrawablesManagerPtr getDrawablesManager() const ;
         MeshesManagerPtr getMeshesManager() const;
         MaterialsManagerPtr getMaterialsManager() const;
         LightsManagerPtr getLightsManager() const;

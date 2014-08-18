@@ -39,7 +39,7 @@ MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     // Set window's title and dimensions.
     setWindowTitle( tr( "Cooperative Modeller" ) );
 
-    setMenuBar( new MenuBar( comoApp->getScene()->getDrawablesManager(), comoApp->getScene()->getMeshesManager() ) );
+    setMenuBar( new MenuBar( comoApp->getScene()->getEntitiesManager() ) );
 
     // Create a instance of Log.
     log_ = comoApp->getLog();

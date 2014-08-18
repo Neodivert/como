@@ -31,7 +31,6 @@
 #include <functional>
 #include <common/utilities/observable_container/observable_container.hpp>
 #include <common/mesh_info/material_info.hpp>
-#include <client/managers/drawables_manager/drawables_manager.hpp>
 #include <client/managers/resources_manager.hpp>
 
 #include <client/managers/resources_manager.hpp>
@@ -46,8 +45,6 @@ class MaterialsManager : public QObject, public ResourcesManager< Material, Mate
     Q_OBJECT
 
     private:
-        DrawablesManagerPtr drawablesManager_;
-
         std::map< ResourceID, MaterialPtr > materials_;
         MaterialsOwnershipMap materialsOwners_;
 
@@ -58,7 +55,7 @@ class MaterialsManager : public QObject, public ResourcesManager< Material, Mate
          * 1. Creation
          ***/
         MaterialsManager() = delete;
-        MaterialsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server, LogPtr log );
+        MaterialsManager( ServerInterfacePtr server, LogPtr log );
         MaterialsManager( const MaterialsManager& ) = delete;
         MaterialsManager( MaterialsManager&& ) = delete;
 

@@ -23,10 +23,9 @@ namespace como {
 
 /***
  * 1. Construction
- ***/
+ ***
 
-DrawablesManager::DrawablesManager( ServerInterfacePtr server, const PackableColor& localSelectionBorderColor, LogPtr log ) :
-    ResourcesManager( server, log )
+DrawablesManager::DrawablesManager( ServerInterfacePtr server, const PackableColor& localSelectionBorderColor, LogPtr log )
 {
     // TODO: Set local selection color.
     glm::vec4 selectionColor = localSelectionBorderColor.toVec4();
@@ -38,9 +37,9 @@ DrawablesManager::DrawablesManager( ServerInterfacePtr server, const PackableCol
 }
 
 
-/***
+***
  * 3. Getters
- ***/
+ ***
 
 string DrawablesManager::getResourceName( const ResourceID& resourceID ) const
 {
@@ -101,9 +100,9 @@ bool DrawablesManager::existsDrawable( const ResourceID& id ) const
 }
 
 
-/***
+***
  * 4. Setters
- ***/
+ ***
 
 void DrawablesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
 {
@@ -118,9 +117,9 @@ void DrawablesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
 }
 
 
-/***
+***
  * 5. Drawables administration
- ***/
+ ***
 
 ResourceID DrawablesManager::addDrawable( DrawablePtr drawable )
 {
@@ -156,9 +155,9 @@ void DrawablesManager::deleteSelection( const unsigned int& userId )
 }
 
 
-/***
+***
  * 5. Selections management
- ***/
+ ***
 
 void DrawablesManager::addDrawablesSelection( UserID userID, const PackableColor& selectionBorderColor )
 {
@@ -169,9 +168,9 @@ void DrawablesManager::addDrawablesSelection( UserID userID, const PackableColor
 }
 
 
-/***
+***
  * 6. Drawables (de)seletion.
- ***/
+ ***
 
 void DrawablesManager::selectDrawable( ResourceID drawableID )
 {
@@ -261,9 +260,9 @@ ResourceID DrawablesManager::selectDrawableByRayPicking( glm::vec3 r0, glm::vec3
 }
 
 
-/***
+***
  * 10. Drawing
- ***/
+ ***
 
 void DrawablesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
@@ -276,9 +275,9 @@ void DrawablesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, c
 }
 
 
-/***
+***
  * 8. Auxiliar methods
- ***/
+ ***
 
 void DrawablesManager::highlightProperty( const void *property )
 {
@@ -288,9 +287,9 @@ void DrawablesManager::highlightProperty( const void *property )
 }
 
 
-/***
+***
  * 12. Resource management
- ***/
+ ***
 
 void DrawablesManager::lockResource( const ResourceID& resourceID, UserID userID )
 {
@@ -307,5 +306,6 @@ void DrawablesManager::deleteResourcesSelection( UserID userID )
     deleteSelection( userID );
 }
 
+*/
 
 } // namespace como

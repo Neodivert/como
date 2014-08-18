@@ -133,7 +133,6 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
         std::map< UserID, std::shared_ptr< ResourcesSelectionType > > resourcesSelections_;
 
         std::shared_ptr< ResourcesSelectionType > nonSelectedResources_;
-        std::shared_ptr< LocalResourcesSelectionType > localResourcesSelection_;
 };
 
 
@@ -149,9 +148,9 @@ ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionTy
     createResourcesSelection( NO_USER );
     nonSelectedResources_ = resourcesSelections_.at( NO_USER );
 
-    resourcesSelections_[localUserID()] = std::shared_ptr< ResourcesSelectionType >( new LocalResourcesSelectionType( server_ ) );
-    localResourcesSelection_ = std::dynamic_pointer_cast< LocalResourcesSelectionType >( resourcesSelections_.at( localUserID() ) );
-    localResourcesSelection_->Observable::addObserver( this );
+    std::shared_ptr< LocalResourcesSelectionType > localResourcesSelection = std::shared_ptr< LocalResourcesSelectionType >( new LocalResourcesSelectionType( server_ ) );
+    localResourcesSelection->Observable::addObserver( this );
+    resourcesSelections_[localUserID()] = localResourcesSelection;
 }
 
 
@@ -175,7 +174,7 @@ ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionTy
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 std::shared_ptr<LocalResourcesSelectionType> ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getLocalResourcesSelection() const
 {
-    return localResourcesSelection_;
+    return std::static_pointer_cast< LocalResourcesSelectionType >( resourcesSelections_.at( localUserID() ) );
 }
 
 

@@ -68,6 +68,8 @@ class EntitiesManager
          ***/
         void executeRemoteSelectionCommand( SelectionCommandConstPtr command );
         void executeRemoteParameterChangeCommand( UserParameterChangeCommandConstPtr command );
+        void executeResourceCommand( ResourceCommandConstPtr command );
+        void executeResourcesSelectionCommand( ResourcesSelectionCommandConstPtr command );
 
 
         /***
@@ -88,6 +90,8 @@ class EntitiesManager
 
         MeshesManagerPtr meshesManager_;
         LightsManagerPtr lightsManager_;
+
+        std::vector< std::shared_ptr< AbstractResourcesOwnershipManager > > managers_;
 };
 
 typedef std::shared_ptr< EntitiesManager > EntitiesManagerPtr;

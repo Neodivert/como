@@ -200,14 +200,11 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
 
         log_->debug( "Remote command execution signal connected\n" );
 
-        // Initialize the drawables manager.
-        drawablesManager_ = DrawablesManagerPtr( new DrawablesManager( server_, userAcceptancePacket.getSelectionColor(), log_ ) );
-        drawablesManager_->Observable::addObserver( this );
-
+        // Initialize the entities manager.
         entitiesManager_ = EntitiesManagerPtr( new EntitiesManager( server_, log_ ) );
 
         // Initialize the materials manager.
-        materialsManager_ = MaterialsManagerPtr( new MaterialsManager( drawablesManager_, server_, log_ ) );
+        materialsManager_ = MaterialsManagerPtr( new MaterialsManager( server_, log_ ) );
         materialsManager_->Observable::addObserver( this );
 
         // Initialize the primitives manager.
@@ -247,9 +244,9 @@ void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnecte
 
 void Scene::removeUser( UserID userID )
 {
-    // Unselect all drawables selected by user.
-    drawablesManager_->unselectAll( userID );
-    entitiesManager_->getMeshesManager()->removeUser( userID );
+    // TODO: Call to entitiesManager_ instead.
+    entitiesManager_->getLightsManager()->requestSelectionUnlock();
+    entitiesManager_->removeUserSelection( userID );
 
     // Remove user from scene.
     if( users_.erase( userID ) ){
@@ -265,12 +262,6 @@ void Scene::removeUser( UserID userID )
 shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
 {
     return oglContext_;
-}
-
-
-DrawablesManagerPtr Scene::getDrawablesManager() const
-{
-    return drawablesManager_;
 }
 
 
@@ -490,18 +481,14 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
         case CommandTarget::RESOURCE:{
             ResourceCommandConstPtr resourceCommand = dynamic_pointer_cast< const ResourceCommand >( command );
 
-            drawablesManager_->executeResourceCommand( resourceCommand );
-            entitiesManager_->getMeshesManager()->executeResourceCommand( resourceCommand );
+            entitiesManager_->executeResourceCommand( resourceCommand );
             // TODO: materialsManager_->executeResourceCommand( resourceCommand );
-            entitiesManager_->getLightsManager()->executeResourceCommand( resourceCommand );
         }break;
         case CommandTarget::RESOURCES_SELECTION:{
             ResourcesSelectionCommandConstPtr selectionCommand = dynamic_pointer_cast< const ResourcesSelectionCommand >( command );
 
-            drawablesManager_->executeResourcesSelectionCommand( selectionCommand );
-            entitiesManager_->getMeshesManager()->executeResourcesSelectionCommand( selectionCommand );
+            entitiesManager_->executeResourcesSelectionCommand( selectionCommand );
             // TODO: materialsManager_->executeResourcesSelectionCommand( selectionCommand );
-            entitiesManager_->getLightsManager()->executeResourcesSelectionCommand( selectionCommand );
         }break;
     }
 

@@ -29,6 +29,9 @@ EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log ) :
     meshesManager_( new MeshesManager( server, log ) ),
     lightsManager_( new LightsManager( server, log ) )
 {
+    managers_.push_back( lightsManager_ );
+    // TODO: Push meshesManager_ too.
+
     entitiesSelections_[NO_USER] = EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( NO_USER ).get() ) );
     entitiesSelections_[server->getLocalUserID()] = EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getLocalResourcesSelection().get() ) );
 }
@@ -40,8 +43,8 @@ EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log ) :
 
 void EntitiesManager::createUserSelection( UserID userID )
 {
+    // TODO: Apply to all managers.
     lightsManager_->createResourcesSelection( userID );
-    meshesManager_->createResourcesSelection( userID );
 
     entitiesSelections_[userID] = EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( userID ).get() ) );
 }
@@ -49,6 +52,9 @@ void EntitiesManager::createUserSelection( UserID userID )
 
 void EntitiesManager::removeUserSelection( UserID userID )
 {
+    // TODO: Apply to all managers.
+    lightsManager_->removeResourcesSelection( userID );
+
     entitiesSelections_.erase( userID );
 }
 
@@ -127,12 +133,29 @@ void EntitiesManager::executeRemoteParameterChangeCommand( UserParameterChangeCo
 }
 
 
+void EntitiesManager::executeResourceCommand( ResourceCommandConstPtr command )
+{
+    for( auto& manager : managers_ ){
+        manager->executeResourceCommand( command );
+    }
+}
+
+
+void EntitiesManager::executeResourcesSelectionCommand( ResourcesSelectionCommandConstPtr command )
+{
+    for( auto& manager : managers_ ){
+        manager->executeResourcesSelectionCommand( command );
+    }
+}
+
+
 /***
  * 7. Drawing
  ***/
 
 void EntitiesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
+    // TODO: Apply to all managers.
     lightsManager_->drawAll( openGL, viewMatrix, projectionMatrix );
 }
 

@@ -221,7 +221,7 @@ void Viewport::keyPressEvent( QKeyEvent *e )
             }
         break;
         case Qt::Key_Delete:
-            comoApp->getScene()->getDrawablesManager()->deleteSelection();
+            // TODO: Implement comoApp->getScene()->getEntitiesManager()->removeUserSelection();
         break;
         case Qt::Key_0:
             setView( View::FRONT );
@@ -240,7 +240,8 @@ void Viewport::keyPressEvent( QKeyEvent *e )
 
 void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 {
-    LocalDrawablesSelectionPtr localUserSelection = comoApp->getScene()->getDrawablesManager()->getLocalResourcesSelection();
+    // TODO: Get the selection from entities manager.
+    std::shared_ptr< LocalLightsSelection > localUserSelection = comoApp->getScene()->getEntitiesManager()->getLightsManager()->getLocalResourcesSelection();
 
     // Reference axis used in rotations.
     const glm::vec3 xAxis( 1.0f, 0.0f, 0.0f );
@@ -250,8 +251,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     // Variables used for computing the magnitude of the transformation.
     glm::vec3 transformVector;
     float angle;
-    const glm::vec3 scenePivotPoint = comoApp->getScene()->getDrawablesManager()->getPivotPoint();
-
+    const glm::vec3 scenePivotPoint = glm::vec3( 0.0f ); // TODO: Retrieve real pivot point.
     glm::vec3 rayOrigin, rayDirection;
     traceRay( mouseMoveEvent->x(), height() - mouseMoveEvent->y() - 1, rayOrigin, rayDirection );
 
@@ -542,7 +542,7 @@ void Viewport::updateTransformGuideLine( const GLfloat& x, const GLfloat& y )
     glm::vec3 destination;
 
     // The scene's current pivot point will be the rect's origin.
-    glm::vec3 origin = comoApp->getScene()->getDrawablesManager()->getPivotPoint();
+    glm::vec3 origin = glm::vec3( 0.0f ); // TODO: Retrieve real pivot point.
 
     // Get the equation of a plane which contains the origin point and whose normal
     // is the opposite of the camera's center vector.

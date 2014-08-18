@@ -25,9 +25,8 @@ namespace como {
  * 1. Creation
  ***/
 
-MaterialsManager::MaterialsManager( DrawablesManagerPtr drawablesManager, ServerInterfacePtr server, LogPtr log ) :
-    ResourcesManager( server, log ),
-    drawablesManager_( drawablesManager )
+MaterialsManager::MaterialsManager( ServerInterfacePtr server, LogPtr log ) :
+    ResourcesManager( server, log )
 {}
 
 
@@ -125,7 +124,8 @@ MaterialHandlerPtr MaterialsManager::getCurrentMaterial() const
 
 string MaterialsManager::getResourceName( const ResourceID& resourceID ) const
 {
-    return drawablesManager_->getResourceName( resourceID );
+    (void)( resourceID );
+    return "Material";
 }
 
 
@@ -233,13 +233,14 @@ void MaterialsManager::update()
 
 void MaterialsManager::highlightMaterial( ResourceID materialID )
 {
-    drawablesManager_->highlightProperty( getMaterial( materialID ).get() );
+    (void)( materialID );
+    //drawablesManager_->highlightProperty( getMaterial( materialID ).get() );
 }
 
 
 void MaterialsManager::removeHighlights()
 {
-    drawablesManager_->highlightProperty( nullptr );
+    //drawablesManager_->highlightProperty( nullptr );
 }
 
 
