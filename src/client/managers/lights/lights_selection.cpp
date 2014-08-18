@@ -56,21 +56,19 @@ float LightsSelection::getAmbientCoefficient() const
  * 4. Setters
  ***/
 
-void LightsSelection::setLightColor( const PackableColor& color)
+void LightsSelection::setLightColor( const PackableColor& color )
 {
-    if( resources_.size() == 0 ){
-        throw std::runtime_error( "LightsSelection::setLightColor() called on empty LightsSelection" );
+    for( auto& lightPair : resources_ ){
+        lightPair.second->setLightColor( color );
     }
-    return resources_.begin()->second->setLightColor( color );
 }
 
 
 void LightsSelection::setAmbientCoefficient( float coefficient )
 {
-    if( resources_.size() == 0 ){
-        throw std::runtime_error( "LightsSelection::setAmbientCoefficient() called on empty LightsSelection" );
+    for( auto& lightPair : resources_ ){
+        lightPair.second->setAmbientCoefficient( coefficient );
     }
-    return resources_.begin()->second->setAmbientCoefficient( coefficient );
 }
 
 } // namespace como
