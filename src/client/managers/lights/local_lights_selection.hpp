@@ -27,7 +27,26 @@ namespace como {
 class LocalLightsSelection : public LightsSelection, public LocalResourcesSelection< DirectionalLight >
 {
     public:
+        /***
+         * 1. Construction
+         ***/
         LocalLightsSelection( ServerInterfacePtr server );
+        LocalLightsSelection() = delete;
+        LocalLightsSelection( const LocalLightsSelection& ) = delete;
+        LocalLightsSelection( LocalLightsSelection&& ) = delete;
+
+
+        /***
+         * 2. Destruction
+         ***/
+        ~LocalLightsSelection() = default;
+
+
+        /***
+         * 3. Operators
+         ***/
+        LocalLightsSelection& operator = ( const LocalLightsSelection& ) = delete;
+        LocalLightsSelection& operator = ( LocalLightsSelection&& ) = delete;
 };
 
 } // namespace como
