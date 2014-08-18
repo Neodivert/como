@@ -285,7 +285,7 @@ template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) const
 {
     for( auto& entityPair : this->resources_ ){
-        entityPair.second->draw( openGL, viewMatrix, projectionMatrix, nullptr );
+        entityPair.second->draw( openGL, viewMatrix, projectionMatrix, &( borderColor_[0] ) );
     }
 }
 
