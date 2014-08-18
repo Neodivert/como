@@ -23,8 +23,9 @@
 #include <client/models/3d/entity.hpp>
 #include <common/commands/user_commands/user_parameter_change_command.hpp> // PivotPointMode type
 
-
 namespace como {
+
+const glm::vec4 DEFAULT_BORDER_COLOR = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
 
 template <class EntitySubtype>
 class EntitiesSet : public Transformable, public virtual ResourcesSelection< EntitySubtype >
@@ -33,7 +34,7 @@ class EntitiesSet : public Transformable, public virtual ResourcesSelection< Ent
         /***
          * 1. Construction
          ***/
-        EntitiesSet( glm::vec4 borderColor = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f ), PivotPointMode mode = PivotPointMode::WORLD_ORIGIN );
+        EntitiesSet( glm::vec4 borderColor = DEFAULT_BORDER_COLOR, PivotPointMode mode = PivotPointMode::WORLD_ORIGIN );
         EntitiesSet( const EntitiesSet& ) = default;
         EntitiesSet( EntitiesSet&& ) = default;
 

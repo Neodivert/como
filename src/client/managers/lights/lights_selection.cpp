@@ -22,6 +22,15 @@ namespace como {
 
 
 /***
+ * 1. Construction
+ ***/
+
+LightsSelection::LightsSelection( glm::vec4 borderColor ) :
+    EntitiesSet( borderColor )
+{}
+
+
+/***
  * 3. Getters
  ***/
 

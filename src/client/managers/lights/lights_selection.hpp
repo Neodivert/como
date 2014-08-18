@@ -31,7 +31,7 @@ class LightsSelection : public virtual EntitiesSet<DirectionalLight>, public Abs
         /***
          * 1. Construction
          ***/
-        LightsSelection() = default;
+        LightsSelection( glm::vec4 borderColor = DEFAULT_BORDER_COLOR );
         LightsSelection( const LightsSelection& ) = delete;
         LightsSelection( LightsSelection&& ) = delete;
 

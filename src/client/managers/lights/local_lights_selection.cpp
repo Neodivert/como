@@ -21,6 +21,7 @@
 namespace como {
 
 LocalLightsSelection::LocalLightsSelection( ServerInterfacePtr server ) :
+    LightsSelection( server->getLocalUserColor().toVec4() ),
     LocalResourcesSelection( server )
 {}
 
