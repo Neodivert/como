@@ -19,16 +19,14 @@
 #ifndef ENTITIES_SET_HPP
 #define ENTITIES_SET_HPP
 
-#include <client/managers/selections/resources/resources_selection.hpp>
-#include <client/models/3d/entity.hpp>
-#include <common/commands/user_commands/user_parameter_change_command.hpp> // PivotPointMode type
+#include <client/models/3d/abstract_entities_set.hpp>
 
 namespace como {
 
 const glm::vec4 DEFAULT_BORDER_COLOR = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
 
 template <class EntitySubtype>
-class EntitiesSet : public Transformable, public virtual ResourcesSelection< EntitySubtype >
+class EntitiesSet : public AbstractEntitiesSet< EntitySubtype >
 {
     public:
         /***
