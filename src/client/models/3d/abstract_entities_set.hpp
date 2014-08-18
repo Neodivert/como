@@ -54,7 +54,7 @@ class AbstractEntitiesSet : public Transformable, public virtual Observable // T
         /***
          * 4. Setters
          ***/
-        virtual void setPivotPointMode( PivotPointMode& mode ) = 0;
+        virtual void setPivotPointMode( PivotPointMode mode ) = 0;
         virtual void setBorderColor( const glm::vec4& borderColor ) = 0;
 
 

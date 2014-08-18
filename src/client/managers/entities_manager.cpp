@@ -82,7 +82,53 @@ ResourceID EntitiesManager::selectEntityByRayPicking(glm::vec3 r0, glm::vec3 r1,
 
 
 /***
- * 6. Drawing
+ * 6. Command execution
+ ***/
+
+void EntitiesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr command )
+{
+    const SelectionTransformationCommand* selectionTransformation = nullptr;
+    std::array< float, 3 > transformationVector;
+
+    switch( command->getType() ){
+        case SelectionCommandType::SELECTION_TRANSFORMATION:
+            // Cast to a SELECTION_TRANSFORMATION command.
+            selectionTransformation = dynamic_cast< const SelectionTransformationCommand* >( command.get() );
+
+            // Transform the user's selection.
+            transformationVector = selectionTransformation->getTransformationVector();
+
+            // Execute one transformation or another according to the requested
+            // type.
+            switch( selectionTransformation->getTransformationType() ){
+                case SelectionTransformationCommandType::TRANSLATION:
+                    entitiesSelections_.at( selectionTransformation->getUserID() )->translate( glm::vec3( transformationVector[0], transformationVector[1], transformationVector[2] ) );
+                break;
+                case SelectionTransformationCommandType::ROTATION:
+                    entitiesSelections_.at( selectionTransformation->getUserID() )->rotate( selectionTransformation->getTransformationAngle(), glm::vec3( transformationVector[0], transformationVector[1], transformationVector[2] ) );
+                break;
+                case SelectionTransformationCommandType::SCALE:
+                    entitiesSelections_.at( selectionTransformation->getUserID() )->scale( glm::vec3( transformationVector[0], transformationVector[1], transformationVector[2] ) );
+                break;
+            }
+        break;
+    }
+}
+
+
+void EntitiesManager::executeRemoteParameterChangeCommand( UserParameterChangeCommandConstPtr command )
+{
+    // Change parameter.
+    switch( command->getParameterType() ){
+        case ParameterType::PIVOT_POINT_MODE:
+            entitiesSelections_.at( command->getUserID() )->setPivotPointMode( command->getPivotPointMode() );
+        break;
+    }
+}
+
+
+/***
+ * 7. Drawing
  ***/
 
 void EntitiesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const

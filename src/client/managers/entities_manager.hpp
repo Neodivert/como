@@ -64,13 +64,20 @@ class EntitiesManager
 
 
         /***
-         * 6. Drawing
+         * 6. Command execution
+         ***/
+        void executeRemoteSelectionCommand( SelectionCommandConstPtr command );
+        void executeRemoteParameterChangeCommand( UserParameterChangeCommandConstPtr command );
+
+
+        /***
+         * 7. Drawing
          ***/
         void drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const;
 
 
         /***
-         * 7. Operators
+         * 8. Operators
          ***/
         EntitiesManager& operator = ( const EntitiesManager& ) = default;
         EntitiesManager& operator = ( EntitiesManager&& ) = default;

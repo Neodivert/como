@@ -77,7 +77,7 @@ unsigned int EntitiesSelection::size() const
  * 4. Setters
  ***/
 
-void EntitiesSelection::setPivotPointMode( PivotPointMode& mode )
+void EntitiesSelection::setPivotPointMode( PivotPointMode mode )
 {
     pivotPointMode_ = mode;
     for( auto& selection : specializedEntitiesSelections_ ){

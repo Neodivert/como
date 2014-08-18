@@ -55,7 +55,7 @@ class EntitiesSet : public AbstractEntitiesSet, public virtual ResourcesSelectio
         /***
          * 4. Setters
          ***/
-        void setPivotPointMode( PivotPointMode& mode );
+        void setPivotPointMode( PivotPointMode mode );
         void setBorderColor( const glm::vec4& borderColor );
 
 
@@ -152,7 +152,7 @@ unsigned int EntitiesSet<EntitySubtype>::size() const
  ***/
 
 template <class EntitySubtype>
-void EntitiesSet<EntitySubtype>::setPivotPointMode( PivotPointMode& mode)
+void EntitiesSet<EntitySubtype>::setPivotPointMode( PivotPointMode mode)
 {
     pivotPointMode_ = mode;
 }

@@ -456,7 +456,7 @@ void Scene::executeRemoteUserCommand( UserCommandConstPtr command )
         case UserCommandType::PARAMETER_CHANGE:
             // TODO: Change the ParameterChange hierarchy for distinguishing
             // those that affects selections from others.
-            drawablesManager_->executeRemoteParameterChangeCommand( dynamic_pointer_cast< const UserParameterChangeCommand >( command ) );
+            entitiesManager_->executeRemoteParameterChangeCommand( dynamic_pointer_cast< const UserParameterChangeCommand >( command ) );
         break;
     }
 }
@@ -473,7 +473,7 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
             executeRemoteUserCommand( dynamic_pointer_cast< const UserCommand >( command ) );
         break;
         case CommandTarget::SELECTION:
-            drawablesManager_->executeRemoteSelectionCommand( dynamic_pointer_cast< const SelectionCommand>( command ) );
+            entitiesManager_->executeRemoteSelectionCommand( dynamic_pointer_cast< const SelectionCommand>( command ) );
         break;
         case CommandTarget::PRIMITIVE:
             primitivesManager_->executeRemoteCommand( dynamic_pointer_cast< const PrimitiveCommand>( command ) );

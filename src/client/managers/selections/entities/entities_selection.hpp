@@ -55,7 +55,7 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer
         /***
          * 4. Setters
          ***/
-        virtual void setPivotPointMode(PivotPointMode& mode );
+        virtual void setPivotPointMode( PivotPointMode mode );
         virtual void setBorderColor( const glm::vec4& borderColor );
 
 
