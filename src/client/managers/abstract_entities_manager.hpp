@@ -49,10 +49,25 @@ class AbstractEntitiesManager : public ResourcesManager<ResourceType, ResourcesS
 
 
         /***
-         * 4. Operators
+         * 4. Drawing
+         ***/
+        void drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const;
+
+
+        /***
+         * 5. Operators
          ***/
         AbstractEntitiesManager& operator = ( const AbstractEntitiesManager& ) = default;
         AbstractEntitiesManager& operator = ( AbstractEntitiesManager&& ) = default;
+
+
+    protected:
+        /***
+         * 6. Resources locking / unlocking
+         ***/
+        void lockResource( const ResourceID& resourceID, UserID userID );
+        void unlockResourcesSelection( UserID userID );
+        void deleteResourcesSelection( UserID userID );
 };
 
 
@@ -67,7 +82,7 @@ AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSele
 
 
 /***
- * 5. Entities picking
+ * 3. Entities picking
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
@@ -125,6 +140,43 @@ ResourceID AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalRe
     return closestObject;
 }
 
+
+/***
+ * 4. Drawing
+ ***/
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
+{
+    for( auto entitiesSelectionPair : this->resourcesSelections_ ){
+        entitiesSelectionPair.second->drawAll( openGL, viewMatrix, projectionMatrix );
+    }
+}
+
+
+/***
+ * 6. Resources locking / unlocking
+ ***/
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::lockResource( const ResourceID& resourceID, UserID userID )
+{
+    this->getResourcesSelection( NO_USER )->moveResource( resourceID, *( this->getResourcesSelection( userID ) ) );
+}
+
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::unlockResourcesSelection( UserID userID )
+{
+    this->getResourcesSelection( userID )->moveAll( *( this->getResourcesSelection( NO_USER ) ) );
+}
+
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::deleteResourcesSelection( UserID userID )
+{
+    this->getResourcesSelection( userID )->clear();
+}
 
 } // namespace como
 

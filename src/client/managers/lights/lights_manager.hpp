@@ -111,21 +111,6 @@ class LightsManager : public AbstractEntitiesManager< Light, LightsSelection, Lo
     public:
         void highlightLight( ResourceID lightID );
         void removeHighlights(); 
-
-
-        /***
-         * Drawing
-         ***/
-        void drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const;
-
-
-    protected:
-        /***
-         * 10. Resources management
-         ***/
-        virtual void lockResource( const ResourceID& resourceID, UserID userID );
-        virtual void unlockResourcesSelection( UserID userID );
-        virtual void deleteResourcesSelection( UserID userID );
 };
 
 typedef std::shared_ptr< LightsManager > LightsManagerPtr;
