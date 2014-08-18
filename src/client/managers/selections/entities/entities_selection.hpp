@@ -21,6 +21,7 @@
 
 #include <client/managers/lights/lights_selection.hpp>
 #include <client/models/3d/abstract_entities_set.hpp>
+#include <client/managers/selections/resources/resources_selection.hpp>
 
 namespace como {
 
@@ -48,6 +49,7 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer
         virtual glm::vec3 centroid() const;
         virtual PivotPointMode pivotPointMode() const;
         virtual glm::vec4 borderColor() const;
+        virtual unsigned int size() const;
 
 
         /***
@@ -99,6 +101,9 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer
         PivotPointMode pivotPointMode_;
         glm::vec3 centroid_;
 };
+
+
+typedef std::shared_ptr< EntitiesSelection > EntitiesSelectionPtr;
 
 } // namespace como
 

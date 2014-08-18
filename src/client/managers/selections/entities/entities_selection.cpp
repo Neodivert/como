@@ -61,6 +61,18 @@ glm::vec4 EntitiesSelection::borderColor() const
 }
 
 
+unsigned int EntitiesSelection::size() const
+{
+    unsigned int size = 0;
+
+    for( auto selection : specializedEntitiesSelections_ ){
+        size += selection->size();
+    }
+
+    return size;
+}
+
+
 /***
  * 4. Setters
  ***/

@@ -21,6 +21,7 @@
 
 #include <client/managers/lights/lights_manager.hpp>
 #include <client/managers/meshes_manager.hpp>
+#include <client/managers/selections/entities/entities_selection.hpp>
 
 namespace como {
 
@@ -43,32 +44,41 @@ class EntitiesManager
 
 
         /***
-         * 3. Getters
+         * 3. Selections management
+         ***/
+        void createUserSelection( UserID userID );
+        void removeUserSelection( UserID userID );
+
+
+        /***
+         * 4. Getters
          ***/
         MeshesManagerPtr getMeshesManager();
         LightsManagerPtr getLightsManager();
 
 
         /***
-         * 4. Entity picking
+         * 5. Entity picking
          ***/
         ResourceID selectEntityByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint );
 
 
         /***
-         * 5. Drawing
+         * 6. Drawing
          ***/
         void drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const;
 
 
         /***
-         * 6. Operators
+         * 7. Operators
          ***/
         EntitiesManager& operator = ( const EntitiesManager& ) = default;
         EntitiesManager& operator = ( EntitiesManager&& ) = default;
 
 
     private:
+        std::map< UserID, EntitiesSelectionPtr > entitiesSelections_;
+
         MeshesManagerPtr meshesManager_;
         LightsManagerPtr lightsManager_;
 };

@@ -28,11 +28,33 @@ namespace como {
 EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log ) :
     meshesManager_( new MeshesManager( server, log ) ),
     lightsManager_( new LightsManager( server, log ) )
-{}
+{
+    entitiesSelections_[NO_USER] = EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( NO_USER ).get() ) );
+    entitiesSelections_[server->getLocalUserID()] = EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getLocalResourcesSelection().get() ) );
+}
 
 
 /***
- * 3. Getters
+ * 3. Selections management
+ ***/
+
+void EntitiesManager::createUserSelection( UserID userID )
+{
+    lightsManager_->createResourcesSelection( userID );
+    meshesManager_->createResourcesSelection( userID );
+
+    entitiesSelections_[userID] = EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( userID ).get() ) );
+}
+
+
+void EntitiesManager::removeUserSelection( UserID userID )
+{
+    entitiesSelections_.erase( userID );
+}
+
+
+/***
+ * 4. Getters
  ***/
 
 MeshesManagerPtr EntitiesManager::getMeshesManager()
@@ -48,7 +70,7 @@ LightsManagerPtr EntitiesManager::getLightsManager()
 
 
 /***
- * 4. Entity picking
+ * 5. Entity picking
  ***/
 
 ResourceID EntitiesManager::selectEntityByRayPicking(glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint )
@@ -60,7 +82,7 @@ ResourceID EntitiesManager::selectEntityByRayPicking(glm::vec3 r0, glm::vec3 r1,
 
 
 /***
- * 5. Drawing
+ * 6. Drawing
  ***/
 
 void EntitiesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
