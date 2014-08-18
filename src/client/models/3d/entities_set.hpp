@@ -33,7 +33,7 @@ class EntitiesSet : public Transformable, public virtual ResourcesSelection< Ent
         /***
          * 1. Construction
          ***/
-        EntitiesSet( PivotPointMode mode = PivotPointMode::WORLD_ORIGIN );
+        EntitiesSet( glm::vec4 borderColor = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f ), PivotPointMode mode = PivotPointMode::WORLD_ORIGIN );
         EntitiesSet( const EntitiesSet& ) = default;
         EntitiesSet( EntitiesSet&& ) = default;
 
@@ -49,12 +49,14 @@ class EntitiesSet : public Transformable, public virtual ResourcesSelection< Ent
          ***/
         virtual glm::vec3 centroid() const;
         PivotPointMode pivotPointMode() const;
+        glm::vec4 borderColor() const;
 
 
         /***
          * 4. Setters
          ***/
         void setPivotPointMode( PivotPointMode& mode );
+        void setBorderColor( const glm::vec4& borderColor );
 
 
         /***
@@ -87,6 +89,8 @@ class EntitiesSet : public Transformable, public virtual ResourcesSelection< Ent
 
     private:
         PivotPointMode pivotPointMode_;
+
+        glm::vec4 borderColor_;
 };
 
 
@@ -95,8 +99,9 @@ class EntitiesSet : public Transformable, public virtual ResourcesSelection< Ent
  ***/
 
 template <class EntitySubtype>
-EntitiesSet<EntitySubtype>::EntitiesSet( PivotPointMode mode ) :
-    pivotPointMode_( mode )
+EntitiesSet<EntitySubtype>::EntitiesSet( glm::vec4 borderColor, PivotPointMode mode ) :
+    pivotPointMode_( mode ),
+    borderColor_( borderColor )
 {}
 
 
@@ -128,6 +133,13 @@ PivotPointMode EntitiesSet<EntitySubtype>::pivotPointMode() const
 }
 
 
+template <class EntitySubtype>
+glm::vec4 EntitiesSet<EntitySubtype>::borderColor() const
+{
+    return borderColor_;
+}
+
+
 /***
  * 4. Setters
  ***/
@@ -136,6 +148,13 @@ template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::setPivotPointMode( PivotPointMode& mode)
 {
     pivotPointMode_ = mode;
+}
+
+
+template <class EntitySubtype>
+void EntitiesSet<EntitySubtype>::setBorderColor( const glm::vec4& borderColor )
+{
+    borderColor_ = borderColor;
 }
 
 
