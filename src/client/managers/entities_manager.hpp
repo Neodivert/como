@@ -21,7 +21,7 @@
 
 #include <client/managers/lights/lights_manager.hpp>
 #include <client/managers/meshes_manager.hpp>
-#include <client/managers/selections/entities/entities_selection.hpp>
+#include <client/managers/selections/entities/local_entities_selection.hpp>
 
 namespace como {
 

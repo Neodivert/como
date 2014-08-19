@@ -26,12 +26,13 @@
 #include <common/managers/abstract_resources_ownership_manager.hpp>
 #include <client/managers/selections/resources/resources_selection.hpp>
 #include <client/managers/selections/resources/local_resources_selection.hpp>
+#include <client/managers/utilities/server_writer.hpp>
 
 
 namespace como {
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-class ResourcesManager : public AbstractResourcesOwnershipManager, public Observable, public Observer
+class ResourcesManager : public AbstractResourcesOwnershipManager, public ServerWriter, public Observable, public Observer
 {
     //static_assert( std::is_base_of<ResourcesSelection<ResourceType>, ResourcesSelectionType>::value, "" );
     //static_assert( std::is_base_of<LocalResourcesSelection<ResourceType>, LocalResourcesSelectionType>::value, "" );
@@ -101,21 +102,7 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 
 
         /***
-         * 9. Server communication
-         ***/
-        void sendCommandToServer( CommandConstPtr command );
-
-
-        /***
-         * 10. Server info
-         ***/
-        UserID localUserID() const;
-        ResourceID newResourceID();
-        ServerInterfacePtr server() const; // TODO: Make this method unnecessary and remove it.
-
-
-        /***
-         * 11. Resource management
+         * 9. Resource management
          ***/
         virtual void lockResource( const ResourceID& resourceID, UserID userID ) = 0;
         virtual void unlockResourcesSelection( UserID userID ) = 0;
@@ -124,8 +111,6 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 
 
     private:
-        ServerInterfacePtr server_;
-
         std::queue< ResourceID > pendingSelections_;
 
 
@@ -143,12 +128,12 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Observ
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::ResourcesManager( ServerInterfacePtr server, LogPtr log ) :
     AbstractResourcesOwnershipManager( log ),
-    server_( server )
+    ServerWriter( server )
 {
     createResourcesSelection( NO_USER );
     nonSelectedResources_ = resourcesSelections_.at( NO_USER );
 
-    std::shared_ptr< LocalResourcesSelectionType > localResourcesSelection( new LocalResourcesSelectionType{ server_ } );
+    std::shared_ptr< LocalResourcesSelectionType > localResourcesSelection( new LocalResourcesSelectionType( server ) );
     localResourcesSelection->Observable::addObserver( this );
     resourcesSelections_[localUserID()] = localResourcesSelection;
 }
@@ -271,43 +256,7 @@ std::shared_ptr<ResourcesSelectionType> ResourcesManager<ResourceType, Resources
 
 
 /***
- * 9. Server communication
- ***/
-
-template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::sendCommandToServer( CommandConstPtr command )
-{
-    server_->sendCommand( command );
-}
-
-
-/***
- * 10. Server info
- ***/
-
-template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-UserID ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::localUserID() const
-{
-    return server_->getLocalUserID();
-}
-
-
-template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-ResourceID ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::newResourceID()
-{
-    return server_->getNewResourceID();
-}
-
-
-template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-ServerInterfacePtr ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::server() const
-{
-    return server_;
-}
-
-
-/***
- * 11. Resource management
+ * 9. Resource management
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>

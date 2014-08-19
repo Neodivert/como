@@ -16,9 +16,48 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "local_drawables_selection.hpp"
+#include "server_writer.hpp"
 
 namespace como {
 
+/***
+ * 1. Construction
+ ***/
+
+ServerWriter::ServerWriter( ServerInterfacePtr server ) :
+    server_( server )
+{}
+
+
+/***
+ * 4. Protected getters
+ ***/
+
+UserID ServerWriter::localUserID() const
+{
+    return server_->getLocalUserID();
+}
+
+
+ResourceID ServerWriter::newResourceID()
+{
+    return server_->getNewResourceID();
+}
+
+
+ServerInterfacePtr ServerWriter::server() const
+{
+    return server_;
+}
+
+
+/***
+ * 5. Server communication
+ ***/
+
+void ServerWriter::sendCommandToServer( CommandConstPtr command )
+{
+    server_->sendCommand( command );
+}
 
 } // namespace como

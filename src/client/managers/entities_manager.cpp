@@ -34,7 +34,7 @@ EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log ) :
     // TODO: Push meshesManager_ too.
 
     entitiesSelections_[NO_USER] = EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( NO_USER ).get() ) );
-    entitiesSelections_[server->getLocalUserID()] = EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getLocalResourcesSelection().get() ) );
+    entitiesSelections_[server->getLocalUserID()] = EntitiesSelectionPtr( new LocalEntitiesSelection( server, lightsManager_->getLocalResourcesSelection().get() ) );
 }
 
 

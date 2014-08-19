@@ -106,7 +106,9 @@ HEADERS += \
     ../../src/client/managers/entities_manager.hpp \
     ../../src/client/managers/abstract_entities_manager.hpp \
     ../../src/client/managers/selections/entities/entities_selection.hpp \
-    ../../src/client/models/3d/abstract_entities_set.hpp
+    ../../src/client/models/3d/abstract_entities_set.hpp \
+    ../../src/client/managers/selections/entities/local_entities_selection.hpp \
+    ../../src/client/managers/utilities/server_writer.hpp
 
 
 # Client sources
@@ -170,4 +172,6 @@ SOURCES += \
     ../../src/client/models/3d/lights/light.cpp \
     ../../src/client/managers/entities_manager.cpp \
     ../../src/client/managers/selections/entities/entities_selection.cpp \
-    ../../src/client/models/3d/abstract_entities_set.cpp
+    ../../src/client/models/3d/abstract_entities_set.cpp \
+    ../../src/client/managers/selections/entities/local_entities_selection.cpp \
+    ../../src/client/managers/utilities/server_writer.cpp
