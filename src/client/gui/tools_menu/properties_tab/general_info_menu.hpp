@@ -22,7 +22,7 @@
 #include <QWidget>
 #include <QLineEdit>
 #include <QLabel>
-#include <client/managers/drawables_selection/local_drawables_selection.hpp>
+#include <client/managers/selections/entities/local_entities_selection.hpp>
 
 namespace como {
 
@@ -31,8 +31,8 @@ class GeneralInfoMenu : public QWidget, public Observer
     Q_OBJECT
 
     private:
-        /*! Local user's (drawables) selection */
-        LocalDrawablesSelectionPtr userSelection_;
+        /*! Local user's (entities) selection */
+        LocalEntitiesSelectionPtr userSelection_;
 
         /*! Name of the currently selected 3D object. */
         QLineEdit* objectName_;
@@ -46,7 +46,7 @@ class GeneralInfoMenu : public QWidget, public Observer
          ***/
 
         /*! \brief Default constructor */
-        GeneralInfoMenu( LocalDrawablesSelectionPtr userSelection );
+        GeneralInfoMenu( LocalEntitiesSelectionPtr userSelection );
 
         /*! \brief Copy constructor */
         GeneralInfoMenu( const GeneralInfoMenu& ) = delete;

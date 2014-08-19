@@ -20,7 +20,6 @@
 #define DRAWABLES_MANAGER_HPP
 
 #include <client/managers/drawables_selection/drawables_selection.hpp>
-#include <client/managers/drawables_selection/local_drawables_selection.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
 #include <map>
 #include <client/managers/resources_manager.hpp>
