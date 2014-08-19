@@ -26,6 +26,7 @@ namespace como {
  ***/
 
 EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log ) :
+    server_( server ),
     meshesManager_( new MeshesManager( server, log ) ),
     lightsManager_( new LightsManager( server, log ) )
 {
@@ -47,6 +48,13 @@ void EntitiesManager::createUserSelection( UserID userID )
     lightsManager_->createResourcesSelection( userID );
 
     entitiesSelections_[userID] = EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( userID ).get() ) );
+}
+
+
+void EntitiesManager::removeUserSelection()
+{
+    // TODO: Apply to all managers.
+    lightsManager_->removeResourcesSelection( server_->getLocalUserID() );
 }
 
 

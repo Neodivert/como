@@ -47,6 +47,7 @@ class EntitiesManager
          * 3. Selections management
          ***/
         void createUserSelection( UserID userID );
+        void removeUserSelection();
         void removeUserSelection( UserID userID );
 
 
@@ -86,6 +87,8 @@ class EntitiesManager
 
 
     private:
+        ServerInterfacePtr server_;
+
         std::map< UserID, EntitiesSelectionPtr > entitiesSelections_;
 
         MeshesManagerPtr meshesManager_;

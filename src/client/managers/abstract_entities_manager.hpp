@@ -98,8 +98,7 @@ ResourceID AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalRe
     // a new one? If that's NOT the case, we need to clear the set of selected drawables
     // first.
     if( !addToSelection ){
-        this->getLocalResourcesSelection()->moveAll( *( this->getResourcesSelection( NO_USER ) ) );
-        // TODO: Make this: this->requestSelectionUnlock( this->localUserID() );
+        this->requestSelectionUnlock();
     }
 
     // Check if the given ray intersect any of the non selected drawables.
@@ -124,8 +123,7 @@ ResourceID AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalRe
             return NO_RESOURCE;
         }else{
             this->log()->debug( "NO CLOSEST OBJECT. Unselecting all\n" );
-            this->getLocalResourcesSelection()->moveAll( *( this->getResourcesSelection( NO_USER ) ) );
-            // TODO: Make this: this->requestSelectionUnlock( this->localUserID() );
+            this->requestSelectionUnlock();
         }
 
         // Even if no object is collided, we return in "worldCollisionPoint"
