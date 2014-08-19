@@ -196,6 +196,8 @@ void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
     CommandConstPtr selectionUnlockCommand =
             CommandConstPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_UNLOCK, localUserID() ) );
     sendCommandToServer( selectionUnlockCommand );
+
+    unlockResourcesSelection( localUserID() );
 }
 
 
@@ -205,6 +207,8 @@ void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
     CommandConstPtr selectionDeletionCommand =
             CommandConstPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_DELETION, localUserID() ) );
     sendCommandToServer( selectionDeletionCommand );
+
+    deleteResourcesSelection( localUserID() );
 }
 
 
