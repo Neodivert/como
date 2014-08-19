@@ -54,6 +54,7 @@ class EntitiesManager
         /***
          * 4. Getters
          ***/
+        LocalEntitiesSelectionPtr getLocalSelection() const;
         MeshesManagerPtr getMeshesManager();
         LightsManagerPtr getLightsManager();
 

@@ -76,6 +76,9 @@ class LocalEntitiesSelection : public EntitiesSelection, public ServerWriter
         ServerInterfacePtr server_;
 };
 
+
+typedef std::shared_ptr< LocalEntitiesSelection > LocalEntitiesSelectionPtr;
+
 } // namespace como
 
 #endif // LOCAL_ENTITIES_MANAGER_HPP

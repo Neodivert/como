@@ -240,8 +240,7 @@ void Viewport::keyPressEvent( QKeyEvent *e )
 
 void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 {
-    // TODO: Get the selection from entities manager.
-    std::shared_ptr< LocalLightsSelection > localUserSelection = comoApp->getScene()->getEntitiesManager()->getLightsManager()->getLocalResourcesSelection();
+    LocalEntitiesSelectionPtr localUserSelection = comoApp->getScene()->getEntitiesManager()->getLocalSelection();
 
     // Reference axis used in rotations.
     const glm::vec3 xAxis( 1.0f, 0.0f, 0.0f );

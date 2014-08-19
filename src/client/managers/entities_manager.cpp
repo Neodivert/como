@@ -71,6 +71,12 @@ void EntitiesManager::removeUserSelection( UserID userID )
  * 4. Getters
  ***/
 
+LocalEntitiesSelectionPtr EntitiesManager::getLocalSelection() const
+{
+    return std::dynamic_pointer_cast< LocalEntitiesSelection >( entitiesSelections_.at( server_->getLocalUserID() ) );
+}
+
+
 MeshesManagerPtr EntitiesManager::getMeshesManager()
 {
     return meshesManager_;
