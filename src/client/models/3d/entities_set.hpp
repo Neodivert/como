@@ -162,7 +162,7 @@ void EntitiesSet<EntitySubtype>::setPivotPointMode( PivotPointMode mode)
 template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::setBorderColor( const glm::vec4& borderColor )
 {
-    borderColor_ = borderColor;
+    this->borderColor_ = borderColor;
 }
 
 

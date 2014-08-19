@@ -21,8 +21,10 @@
 namespace como {
 
 LocalLightsSelection::LocalLightsSelection( ServerInterfacePtr server ) :
+    EntitiesSet( server->getLocalUserColor().toVec4() ),
     LightsSelection( server->getLocalUserColor().toVec4() ),
     LocalResourcesSelection( server )
-{}
+{
+}
 
 } // namespace como

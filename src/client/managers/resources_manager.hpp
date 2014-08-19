@@ -148,7 +148,7 @@ ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionTy
     createResourcesSelection( NO_USER );
     nonSelectedResources_ = resourcesSelections_.at( NO_USER );
 
-    std::shared_ptr< LocalResourcesSelectionType > localResourcesSelection( new LocalResourcesSelectionType( server_ ) );
+    std::shared_ptr< LocalResourcesSelectionType > localResourcesSelection( new LocalResourcesSelectionType{ server_ } );
     localResourcesSelection->Observable::addObserver( this );
     resourcesSelections_[localUserID()] = localResourcesSelection;
 }

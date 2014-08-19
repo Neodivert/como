@@ -234,8 +234,10 @@ void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnecte
     // Insert the new user in the users vector.
     users_.insert( std::pair< UserID, UserPtr >( userConnectedCommand->getUserID(), newUser ) );
 
-    // Create an entities selection for the user.
-    entitiesManager_->createUserSelection( userConnectedCommand->getUserID() );
+    if( userConnectedCommand->getUserID() != server_->getLocalUserID() ){
+        // Create an entities selection for the user.
+        entitiesManager_->createUserSelection( userConnectedCommand->getUserID() );
+    }
 
     // Emit a UserConnectionCommand signal.
     emit userConnected( userConnectedCommand );
