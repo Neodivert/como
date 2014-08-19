@@ -42,7 +42,7 @@ GeneralInfoMenu::GeneralInfoMenu( LocalDrawablesSelectionPtr userSelection ) :
     layout->addRow( new QLabel( "Type:" ), objectType_ );
     setLayout( layout );
 
-    userSelection_->Observable::addObserver( this );
+    //userSelection_->Observable::addObserver( this );
     update();
 }
 
@@ -53,8 +53,10 @@ GeneralInfoMenu::GeneralInfoMenu( LocalDrawablesSelectionPtr userSelection ) :
 
 void GeneralInfoMenu::update()
 {
+    /*
     objectName_->setText( userSelection_->getName().c_str() );
     objectType_->setText( userSelection_->getTypeName().c_str() );
+    */
 }
 
 } // namespace como

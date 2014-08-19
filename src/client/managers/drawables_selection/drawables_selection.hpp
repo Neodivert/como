@@ -42,7 +42,7 @@ const char pivotPointModeStrings[N_PIVOT_POINT_MODES][32] =
      "World origin"
 };
 
-class DrawablesSelection : public virtual ResourcesSelection<Entity>
+class DrawablesSelection : public ResourcesSelection<Entity>
 {
     private:
         // Selection border color.

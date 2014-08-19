@@ -176,7 +176,7 @@ void MeshesSelection::moveAll( MeshesSelection& dstMeshesSelection )
  * 6. Drawing
  ***/
 
-void MeshesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const GLfloat* contourColor ) const
+void MeshesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec4* contourColor ) const
 {
     for( auto mesh : meshes_ ){
         mesh.second->draw( openGL, viewMatrix, projectionMatrix, contourColor );

@@ -88,18 +88,18 @@ class ResourcesSelection : public ObservableContainer<ResourceID> {
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::addResource( ResourceID id, std::shared_ptr< ResourceType > resource )
 {
-    resources_[id] = resource;
+    this->resources_[id] = resource;
 
-    notifyElementInsertion( id );
+    this->notifyElementInsertion( id );
 }
 
 
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::removeResource( ResourceID id )
 {
-    resources_.erase( id );
+    this->resources_.erase( id );
 
-    notifyElementDeletion( id );
+    this->notifyElementDeletion( id );
 }
 
 
@@ -110,16 +110,16 @@ void ResourcesSelection<ResourceType>::removeResource( ResourceID id )
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::moveResource( ResourceID resourceID, ResourcesSelection<ResourceType>& dstSelection )
 {
-    dstSelection.addResource( resourceID, resources_.at( resourceID ) );
-    removeResource( resourceID );
+    dstSelection.addResource( resourceID, this->resources_.at( resourceID ) );
+    this->removeResource( resourceID );
 }
 
 
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::moveAll( ResourcesSelection<ResourceType>& dstSelection )
 {
-    for( auto& resourcePair : resources_ ){
-        moveResource( resourcePair.first, dstSelection );
+    for( auto& resourcePair : this->resources_ ){
+        this->moveResource( resourcePair.first, dstSelection );
     }
 }
 
@@ -132,10 +132,10 @@ template <class ResourceType>
 void ResourcesSelection<ResourceType>::clear()
 {
     for( auto resourcePair : resources_ ){
-        notifyElementDeletion( resourcePair.first );
+        this->notifyElementDeletion( resourcePair.first );
     }
 
-    resources_.clear();
+    this->resources_.clear();
 }
 
 
@@ -146,7 +146,7 @@ void ResourcesSelection<ResourceType>::clear()
 template <class ResourceType>
 unsigned int ResourcesSelection<ResourceType>::size() const
 {
-    return resources_.size();
+    return this->resources_.size();
 }
 
 }

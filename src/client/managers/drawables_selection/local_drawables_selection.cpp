@@ -22,15 +22,16 @@ namespace como {
 
 const unsigned int TRANSFORMATION_FLOAT_PRECISION = 10000;
 
+/*
 LocalDrawablesSelection::LocalDrawablesSelection( ServerInterfacePtr server ) :
     DrawablesSelection( server->getLocalUserColor().toVec4() ),
     LocalResourcesSelection( server )
 {}
 
 
-/***
+***
  * 3. Setters
- ***/
+ ***
 
 void LocalDrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 {
@@ -40,9 +41,9 @@ void LocalDrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 }
 
 
-/***
+***
  * 5. Transformations
- ***/
+ ***
 
 void LocalDrawablesSelection::translate( glm::vec3 direction )
 {
@@ -101,9 +102,9 @@ void LocalDrawablesSelection::scale( glm::vec3 scaleFactors )
 }
 
 
-/***
+***
  * 7. Auxiliar methods
- ***/
+ ***
 
 void LocalDrawablesSelection::roundTransformationMagnitude( glm::vec3& v )
 {
@@ -122,5 +123,5 @@ void LocalDrawablesSelection::roundTransformationMagnitude( float& angle, glm::v
     angle = floorf( angle * TRANSFORMATION_FLOAT_PRECISION + 0.5f) / TRANSFORMATION_FLOAT_PRECISION;
     roundTransformationMagnitude( v );
 }
-
+*/
 } // namespace como

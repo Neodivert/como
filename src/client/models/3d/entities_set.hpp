@@ -20,6 +20,7 @@
 #define ENTITIES_SET_HPP
 
 #include <client/models/3d/abstract_entities_set.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace como {
 
@@ -291,7 +292,7 @@ template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) const
 {
     for( auto& entityPair : this->resources_ ){
-        entityPair.second->draw( openGL, viewMatrix, projectionMatrix, &( borderColor_[0] ) );
+        entityPair.second->draw( openGL, viewMatrix, projectionMatrix, &borderColor_ );
     }
 }
 

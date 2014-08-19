@@ -20,6 +20,7 @@
 
 #define GLM_FORCE_RADIANS
 #include <glm/gtx/intersect.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <common/primitives/primitive_file.hpp>
 
 #include <iostream>
@@ -361,7 +362,7 @@ void Mesh::update()
 }
 
 
-void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const GLfloat* contourColor ) const
+void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec4* contourColor ) const
 {
     if( includesTexture_ ){
         openGL->setShadingMode( ShadingMode::SOLID_LIGHTING_AND_TEXTURING );
@@ -392,7 +393,8 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4&
     if( contourColor != nullptr ){
         openGL->setShadingMode( ShadingMode::SOLID_PLAIN );
 
-        glUniform4fv( uniformColorLocation, 1, contourColor );
+        glUniform4fv( uniformColorLocation, 1, glm::value_ptr( *contourColor ) );
+        OpenGL::checkStatus( "contourColor sent to shader" );
 
         // Now we'll draw mesh's contour. Set polygon mode for rendering
         // lines.

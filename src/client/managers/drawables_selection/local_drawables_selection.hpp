@@ -26,7 +26,7 @@
 
 namespace como {
 
-class LocalDrawablesSelection : public DrawablesSelection, public LocalResourcesSelection<Entity>
+class LocalDrawablesSelection //: public DrawablesSelection, public LocalResourcesSelection<Entity>
 {
     public:
         /***

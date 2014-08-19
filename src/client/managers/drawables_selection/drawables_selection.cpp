@@ -328,7 +328,7 @@ void DrawablesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, co
                 borderColor = borderColor_;
             }
 
-            drawable->second->draw( openGL, viewMatrix, projectionMatrix, &borderColor[0] );
+            drawable->second->draw( openGL, viewMatrix, projectionMatrix, &borderColor );
         }else{
             drawable->second->draw( openGL, viewMatrix, projectionMatrix, nullptr );
         }

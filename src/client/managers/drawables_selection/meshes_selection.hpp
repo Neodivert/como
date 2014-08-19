@@ -91,7 +91,7 @@ class MeshesSelection : public virtual EntitiesSet< Mesh >, public AbstractMesh
         /***
          * 6. Drawing
          ***/
-        virtual void draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const GLfloat* contourColor ) const;
+        virtual void draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec4* contourColor ) const;
 
 
         /***

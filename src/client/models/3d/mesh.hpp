@@ -159,7 +159,7 @@ class Mesh : public AbstractMesh
 
     public:
         // Send mesh to OpenGL server for rendering it.
-        virtual void draw( OpenGLPtr openGL, const glm::mat4& view, const glm::mat4& projection, const GLfloat* contourColor = nullptr ) const;
+        virtual void draw( OpenGLPtr openGL, const glm::mat4& view, const glm::mat4& projection, const glm::vec4* contourColor = nullptr ) const;
     private:
         virtual void drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, glm::vec4 color ) const;
     public:

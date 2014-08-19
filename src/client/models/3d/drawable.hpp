@@ -43,7 +43,7 @@ class Drawable
         /***
          * 3. Drawing
          ***/
-        virtual void draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const GLfloat* contourColor = nullptr ) const = 0;
+        virtual void draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec4* contourColor = nullptr ) const = 0;
 
 
         /***
