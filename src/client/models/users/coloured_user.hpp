@@ -16,50 +16,49 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef USER_HPP
-#define USER_HPP
+#ifndef COLOURED_USER_HPP
+#define COLOURED_USER_HPP
 
-#include <common/ids/user_id.hpp>
-#include <memory>
+#include <common/users/user.hpp>
+#include <common/commands/user_commands/user_connection_command.hpp>
 
 namespace como {
 
-// TODO: Convert into a monitor.
-class User : public std::enable_shared_from_this< User >
+class ColouredUser : public User
 {
-    private:
-        // User's id and name.
-        UserID id_;
-        std::string name_;
-
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
-        User( UserID id, std::string name );
-        User() = delete;
-        User( const User& ) = default;
-        User( User&& ) = default;
-
-        ~User() = default;
+        ColouredUser( const UserConnectionCommand& command );
+        ColouredUser() = delete;
+        ColouredUser( const ColouredUser& ) = default;
+        ColouredUser( ColouredUser&& ) = default;
 
 
         /***
-         * 2. Getters
+         * 2. Destruction
          ***/
-        UserID getID() const ;
-        std::string getName() const ;
+        ~ColouredUser() = default;
 
 
         /***
-         * 3. Operators
+         * 3. Getters
          ***/
-        User& operator = (const User& ) = delete;
-        User& operator = ( User&& ) = delete;
+        glm::vec4 color() const;
+
+
+        /***
+         * 4. Operators
+         ***/
+        ColouredUser& operator = ( const ColouredUser& ) = delete;
+        ColouredUser& operator = ( ColouredUser&& ) = delete;
+
+
+    private:
+        glm::vec4 color_;
 };
-
-typedef std::shared_ptr< User > UserPtr;
 
 } // namespace como
 
-#endif // USER_HPP
+#endif // COLOURED_USER_HPP

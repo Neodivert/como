@@ -200,6 +200,9 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
 
         log_->debug( "Remote command execution signal connected\n" );
 
+        // Initialize the users manager with the local user.
+        usersManager_ = UsersManagerPtr( new UsersManager( userAcceptancePacket ) );
+
         // Initialize the entities manager.
         entitiesManager_ = EntitiesManagerPtr( new EntitiesManager( server_, log_ ) );
 
@@ -211,9 +214,6 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, entitiesManager_->getMeshesManager(), materialsManager_, log_ ) );
 
         localUserConnectionCommand_ = UserConnectionCommandConstPtr( new UserConnectionCommand( userAcceptancePacket ) );
-
-        // Add the local user to the scene.
-        addUser( std::shared_ptr< const UserConnectionCommand >( new UserConnectionCommand( userAcceptancePacket ) ) );
     }catch( std::exception& ex ){
         std::cerr << ex.what() << std::endl;
         throw;
@@ -228,6 +228,8 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
 
 void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnectedCommand )
 {
+    (void)( userConnectedCommand );
+    /*
     // Create the new user from the given USER_CONNECTION command.
     UserPtr newUser( new User( userConnectedCommand->getUserID(), userConnectedCommand->getName() ) );
 
@@ -241,11 +243,14 @@ void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnecte
 
     // Emit a UserConnectionCommand signal.
     emit userConnected( userConnectedCommand );
+    */
 }
 
 
 void Scene::removeUser( UserID userID )
 {
+    (void)( userID );
+    /*
     // TODO: Call to entitiesManager_ instead.
     entitiesManager_->getLightsManager()->requestSelectionUnlock();
     entitiesManager_->removeUserSelection( userID );
@@ -254,6 +259,7 @@ void Scene::removeUser( UserID userID )
     if( users_.erase( userID ) ){
         emit userDisconnected( userID );
     }
+    */
 }
 
 
@@ -422,39 +428,6 @@ void Scene::emitRenderNeeded()
  * 13. Slots
  ***/
 
-void Scene::executeRemoteUserCommand( UserCommandConstPtr command )
-{
-    const UserConnectionCommand* userConnected = nullptr;
-
-    switch( ( dynamic_pointer_cast< const UserCommand >( command ) )->getType() ){
-        case UserCommandType::USER_CONNECTION:
-            // Cast to an USER_CONNECTION command.
-            userConnected = dynamic_cast< const UserConnectionCommand* >( command.get() );
-
-            log_->debug( "USER CONNECTED(",
-                         (int)( userConnected->getSelectionColor()[0].getValue() ), ", ",
-                         (int)( userConnected->getSelectionColor()[1].getValue() ), ", ",
-                         (int)( userConnected->getSelectionColor()[2].getValue() ), ", ",
-                         (int)( userConnected->getSelectionColor()[3].getValue() ), ")\n" );
-
-            // Add user to the scene.
-            addUser( std::shared_ptr< const UserConnectionCommand>( new UserConnectionCommand( *userConnected ) ) );
-        break;
-
-        case UserCommandType::USER_DISCONNECTION:
-            // Remove user from the scene.
-            removeUser( command->getUserID() );
-        break;
-
-        case UserCommandType::PARAMETER_CHANGE:
-            // TODO: Change the ParameterChange hierarchy for distinguishing
-            // those that affects selections from others.
-            entitiesManager_->executeRemoteParameterChangeCommand( dynamic_pointer_cast< const UserParameterChangeCommand >( command ) );
-        break;
-    }
-}
-
-
 void Scene::executeRemoteCommand( CommandConstPtr command )
 {
     log_->debug( "Scene - Executing remote command(",
@@ -463,7 +436,7 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
 
     switch( command->getTarget() ){
         case CommandTarget::USER:
-            executeRemoteUserCommand( dynamic_pointer_cast< const UserCommand >( command ) );
+            usersManager_->executeRemoteCommand( dynamic_cast< const UserCommand& >( *command ) );
         break;
         case CommandTarget::SELECTION:
             entitiesManager_->executeRemoteSelectionCommand( dynamic_pointer_cast< const SelectionCommand>( command ) );

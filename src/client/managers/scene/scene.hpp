@@ -37,6 +37,7 @@
 #include <client/managers/meshes_manager.hpp>
 #include <common/scene/basic_scene.hpp>
 #include <client/managers/entities_manager.hpp>
+#include <client/managers/users/users_manager.hpp>
 
 Q_DECLARE_METATYPE( como::CommandConstPtr )
 
@@ -58,14 +59,13 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
 
     private:
         // Users sharing this scene.
-        UsersMap users_;
+        UsersManagerPtr usersManager_;
 
         ClientPrimitivesManagerPtr primitivesManager_;
 
         MaterialsManagerPtr materialsManager_;
 
         EntitiesManagerPtr entitiesManager_;
-
 
         OpenGLPtr openGL_;
 
@@ -174,9 +174,6 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
         /***
          * 13. Slots
          ***/
-    private:
-        void executeRemoteUserCommand( UserCommandConstPtr command );
-
     public slots:
         void executeRemoteCommand( CommandConstPtr command );
 
