@@ -42,12 +42,14 @@ EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log ) :
  * 3. Selections management
  ***/
 
-void EntitiesManager::createUserSelection( UserID userID )
+void EntitiesManager::createUserSelection( const UserConnectionCommand* userConnectionCommand )
 {
     // TODO: Apply to all managers.
-    lightsManager_->createResourcesSelection( userID );
+    lightsManager_->createResourcesSelection( userConnectionCommand->getUserID(),
+                                              userConnectionCommand->getSelectionColor().toVec4() );
 
-    entitiesSelections_[userID] = EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( userID ).get() ) );
+    entitiesSelections_[userConnectionCommand->getUserID()] =
+            EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( userConnectionCommand->getUserID() ).get() ) );
 }
 
 

@@ -236,7 +236,7 @@ void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnecte
 
     if( userConnectedCommand->getUserID() != server_->getLocalUserID() ){
         // Create an entities selection for the user.
-        entitiesManager_->createUserSelection( userConnectedCommand->getUserID() );
+        entitiesManager_->createUserSelection( userConnectedCommand.get() );
     }
 
     // Emit a UserConnectionCommand signal.

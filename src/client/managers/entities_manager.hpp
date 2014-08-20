@@ -46,7 +46,7 @@ class EntitiesManager
         /***
          * 3. Selections management
          ***/
-        void createUserSelection( UserID userID );
+        void createUserSelection( const UserConnectionCommand* userConnectionCommand );
         void removeUserSelection();
         void removeUserSelection( UserID userID );
 
