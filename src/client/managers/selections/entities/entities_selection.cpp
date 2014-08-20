@@ -110,11 +110,11 @@ void EntitiesSelection::rotate(const GLfloat &angle, const glm::vec3 &axis)
 {
     if( pivotPointMode_ == PivotPointMode::MEDIAN_POINT ){
         for( auto& selection : specializedEntitiesSelections_ ){
-            selection->rotate( angle, axis );
+            selection->rotateAroundPivot( angle, axis, centroid() );
         }
     }else{
         for( auto& selection : specializedEntitiesSelections_ ){
-            selection->rotateAroundPivot( angle, axis, centroid() );
+            selection->rotate( angle, axis );
         }
     }
 }
@@ -124,11 +124,11 @@ void EntitiesSelection::scale(const glm::vec3 &scaleFactors)
 {
     if( pivotPointMode_ == PivotPointMode::MEDIAN_POINT ){
         for( auto& selection : specializedEntitiesSelections_ ){
-            selection->scaleAroundPivot( scaleFactors, centroid() );
+            selection->scale( scaleFactors );
         }
     }else{
         for( auto& selection : specializedEntitiesSelections_ ){
-            selection->scale( scaleFactors );
+            selection->scaleAroundPivot( scaleFactors, centroid() );
         }
     }
 }
@@ -161,16 +161,16 @@ bool EntitiesSelection::intersectsRay(glm::vec3 r0, glm::vec3 r1, ResourceID &cl
 void EntitiesSelection::update()
 {
     centroid_ = glm::vec3( 0.0f );
-    unsigned int nEntities = 0;
+    unsigned int nSelections = 0;
 
     for( auto selection : specializedEntitiesSelections_ ){
         centroid_ += selection->centroid();
 
-        nEntities += selection->size();
+        nSelections += selection->size();
     }
 
-    if( nEntities ){
-        centroid_ /= nEntities;
+    if( nSelections ){
+        centroid_ /= nSelections;
     }
 }
 

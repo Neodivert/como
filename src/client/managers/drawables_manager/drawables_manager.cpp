@@ -67,25 +67,6 @@ DrawablesSelectionPtr DrawablesManager::getUserSelection( UserID userID )
 }
 
 
-glm::vec3 DrawablesManager::getPivotPoint() const
-{
-    return getPivotPoint( localUserID() );
-}
-
-
-glm::vec3 DrawablesManager::getPivotPoint( UserID userID ) const
-{
-    switch( getUserSelection( userID )->getPivotPointMode() ){
-        case PivotPointMode::INDIVIDUAL_CENTROIDS:
-        case PivotPointMode::MEDIAN_POINT:
-            return glm::vec3( getUserSelection( userID )->getCentroid() );
-        break;
-        default:
-            return glm::vec3( 0.0f, 0.0f, 0.0f );
-        break;
-    }
-}
-
 
 bool DrawablesManager::existsDrawable( const ResourceID& id ) const
 {

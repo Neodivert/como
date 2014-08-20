@@ -34,6 +34,7 @@ GLint Viewport::viewProjectionMatrixLocation = -1;
 
 Viewport::Viewport( View view, Projection projection, shared_ptr< ComoApp > comoApp ) :
     QWindow(),
+    localEntitiesSelection_( comoApp->getScene()->getEntitiesManager()->getLocalSelection() ),
     projection_( projection ),
     forceRender_( true ),
     lastMouseWorldPos_( 0.0f )
@@ -240,8 +241,6 @@ void Viewport::keyPressEvent( QKeyEvent *e )
 
 void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 {
-    LocalEntitiesSelectionPtr localUserSelection = comoApp->getScene()->getEntitiesManager()->getLocalSelection();
-
     // Reference axis used in rotations.
     const glm::vec3 xAxis( 1.0f, 0.0f, 0.0f );
     const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
@@ -250,7 +249,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     // Variables used for computing the magnitude of the transformation.
     glm::vec3 transformVector;
     float angle;
-    const glm::vec3 scenePivotPoint = glm::vec3( 0.0f ); // TODO: Retrieve real pivot point.
+    const glm::vec3 scenePivotPoint = localEntitiesSelection_->graphicPivotPoint();
     glm::vec3 rayOrigin, rayDirection;
     traceRay( mouseMoveEvent->x(), height() - mouseMoveEvent->y() - 1, rayOrigin, rayDirection );
 
@@ -299,7 +298,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 }
 
                 // Do the translation.
-                localUserSelection->translate( glm::vec3( transformVector ) );
+                localEntitiesSelection_->translate( glm::vec3( transformVector ) );
             break;
             case TransformationType::ROTATION:{
                 angle = glm::orientedAngle(
@@ -311,16 +310,16 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 // transformationMode.
                 switch( transformationMode ){
                     case TransformationMode::FIXED_X:
-                        localUserSelection->rotate( angle, xAxis );
+                        localEntitiesSelection_->rotate( angle, xAxis );
                     break;
                     case TransformationMode::FIXED_Y:
-                        localUserSelection->rotate( angle, yAxis );
+                        localEntitiesSelection_->rotate( angle, yAxis );
                     break;
                     case TransformationMode::FIXED_Z:
-                        localUserSelection->rotate( angle, zAxis );
+                        localEntitiesSelection_->rotate( angle, zAxis );
                     break;
                     case TransformationMode::FREE:
-                        localUserSelection->rotate( angle, glm::vec3( -camera->getCenterVector() ) );
+                        localEntitiesSelection_->rotate( angle, glm::vec3( -camera->getCenterVector() ) );
                     break;
                 }
             }break;
@@ -367,7 +366,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                         transformVector.y != 0.0f &&
                         transformVector.z != 0.0f ){
                         // Do the scale.
-                        localUserSelection->scale( glm::vec3( transformVector ) );
+                        localEntitiesSelection_->scale( glm::vec3( transformVector ) );
                     }
                 }
             }break;
@@ -540,8 +539,8 @@ void Viewport::updateTransformGuideLine( const GLfloat& x, const GLfloat& y )
     GLfloat t;
     glm::vec3 destination;
 
-    // The scene's current pivot point will be the rect's origin.
-    glm::vec3 origin = glm::vec3( 0.0f ); // TODO: Retrieve real pivot point.
+    // The current pivot point will be the rect's origin.
+    glm::vec3 origin = localEntitiesSelection_->graphicPivotPoint();
 
     // Get the equation of a plane which contains the origin point and whose normal
     // is the opposite of the camera's center vector.

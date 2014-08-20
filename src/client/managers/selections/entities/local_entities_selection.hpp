@@ -45,13 +45,19 @@ class LocalEntitiesSelection : public EntitiesSelection, public ServerWriter
 
 
         /***
-         * 3. Setters
+         * 3. Getters
+         ***/
+        glm::vec3 graphicPivotPoint() const;
+
+
+        /***
+         * 4. Setters
          ***/
         void setPivotPointMode( PivotPointMode pivotPointMode );
 
 
         /***
-         * 4. Transformations
+         * 5. Transformations
          ***/
         void translate( glm::vec3 direction );
         void rotate( GLfloat angle, glm::vec3 axis );
@@ -59,21 +65,17 @@ class LocalEntitiesSelection : public EntitiesSelection, public ServerWriter
 
 
         /***
-         * 5. Auxiliar methods
+         * 6. Auxiliar methods
          ***/
         void roundTransformationMagnitude( glm::vec3& v );
         void roundTransformationMagnitude( float& angle, glm::vec3& v );
 
 
         /***
-         * 6. Operators
+         * 7. Operators
          ***/
         LocalEntitiesSelection& operator = ( const LocalEntitiesSelection& ) = delete;
         LocalEntitiesSelection& operator = ( LocalEntitiesSelection&& ) = delete;
-
-
-    private:
-        ServerInterfacePtr server_;
 };
 
 

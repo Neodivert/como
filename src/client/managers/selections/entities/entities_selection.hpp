@@ -31,7 +31,7 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer
         /***
          * 1. Construction
          ***/
-        EntitiesSelection( LightsSelection* lightsSelection, PivotPointMode pivotPointMode = PivotPointMode::WORLD_ORIGIN );
+        EntitiesSelection( LightsSelection* lightsSelection, PivotPointMode pivotPointMode = PivotPointMode::MEDIAN_POINT );
         EntitiesSelection() = delete;
         EntitiesSelection( const EntitiesSelection& ) = delete;
         EntitiesSelection( EntitiesSelection&& ) = delete;

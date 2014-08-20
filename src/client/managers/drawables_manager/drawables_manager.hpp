@@ -63,8 +63,6 @@ class DrawablesManager //: public ResourcesManager< Entity, DrawablesSelection, 
         DrawablesSelectionPtr getUserSelection( UserID userID ) const ;
         DrawablesSelectionPtr getUserSelection( UserID userID );
     public:
-        glm::vec3 getPivotPoint() const ;
-        glm::vec3 getPivotPoint( UserID userID ) const ;
         bool existsDrawable( const ResourceID& id ) const;
 
 

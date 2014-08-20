@@ -33,7 +33,25 @@ LocalEntitiesSelection::LocalEntitiesSelection( ServerInterfacePtr server, Local
 
 
 /***
- * 3. Setters
+ * 3. Getters
+ ***/
+
+glm::vec3 LocalEntitiesSelection::graphicPivotPoint() const
+{
+    switch( pivotPointMode() ){
+        case PivotPointMode::INDIVIDUAL_CENTROIDS:
+        case PivotPointMode::MEDIAN_POINT:
+            return centroid();
+        break;
+        default:
+            return glm::vec3( 0.0f, 0.0f, 0.0f );
+        break;
+    }
+}
+
+
+/***
+ * 4. Setters
  ***/
 
 void LocalEntitiesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
@@ -45,7 +63,7 @@ void LocalEntitiesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 
 
 /***
- * 4. Transformations
+ * 5. Transformations
  ***/
 
 void LocalEntitiesSelection::translate( glm::vec3 direction )
@@ -106,7 +124,7 @@ void LocalEntitiesSelection::scale( glm::vec3 scaleFactors )
 
 
 /***
- * 5. Auxiliar methods
+ * 6. Auxiliar methods
  ***/
 
 void LocalEntitiesSelection::roundTransformationMagnitude( glm::vec3& v )

@@ -35,6 +35,13 @@ Scene::Scene( const char* host, const char* port, const char* userName, LogPtr l
 
         server_ = ServerInterfacePtr( new ServerInterface( host, port, userName, getTempDirPath(), log, userAcceptancePacket ) );
 
+        // Signal / slot: when a command is received from server, execute it on
+        // the local scene.
+        // TODO: this randomly causes a command to be executed when Scene isn't
+        // initialized yet.
+        QObject::connect( server_.get(), &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
+        log_->debug( "Remote command execution signal connected\n" );
+
         initManagers( userAcceptancePacket );
 
         initOpenGL();
@@ -45,6 +52,7 @@ Scene::Scene( const char* host, const char* port, const char* userName, LogPtr l
         setBackgroundColor( 0.9f, 0.9f, 0.9f, 0.9f );
 
         OpenGL::checkStatus( "Scene - constructor\n" );
+
     }catch( std::exception& ){
         throw;
     }
@@ -193,12 +201,6 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
 {
     try{
         log_->debug( "TEMP DIR: [", getTempDirPath(), "]\n" );
-
-        // Signal / slot: when a command is received from server, execute it on
-        // the local scene.
-        QObject::connect( server_.get(), &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
-
-        log_->debug( "Remote command execution signal connected\n" );
 
         // Initialize the users manager with the local user.
         usersManager_ = UsersManagerPtr( new UsersManager( userAcceptancePacket ) );

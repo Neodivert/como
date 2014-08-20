@@ -58,6 +58,8 @@ class Viewport : public QWindow
         // Pointer to app's current state.
         shared_ptr< ComoApp > comoApp;
 
+        LocalEntitiesSelectionPtr localEntitiesSelection_;
+
         // Camera associated with the OpenGL canvas.
         Camera* camera;
 
