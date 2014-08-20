@@ -56,23 +56,14 @@ MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     renderPanel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
     // Create the user's list.
-    usersList = new UsersList( this, log_ );
+    usersList = new UsersList( this, log_, comoApp->getScene()->getUsersManager() );
 
     // FIXME: Study why this is necessary.
     qRegisterMetaType< UserConnectionCommandConstPtr >();
     qRegisterMetaType< UserConnectionCommandConstPtr >( "UserConnectionCommandConstPtr" );
     qRegisterMetaType< UserID >( "UserID" );
 
-    // Signal / slot: when an user connects to the scene, add it to the GUI
-    // user's list.
-    connect( comoApp->getScene().get(), &Scene::userConnected, usersList, &UsersList::addUser );
-
-    // Signal / slot: when an user disconnects from the scene, remove it from
-    // the GUI user's list.
-    connect( comoApp->getScene().get(), &Scene::userDisconnected, usersList, &UsersList::removeUser );
-
-    // Signal / slot: when an user connects to a scene, add the scene name to
-    // the window title.
+    // Set the window title.
     setWindowTitle( ( comoApp->getScene()->getName() + " - Cooperative Modeller" ).c_str() );
 
     // Set window layout.

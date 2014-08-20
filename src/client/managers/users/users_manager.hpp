@@ -46,13 +46,19 @@ class UsersManager : public ObservableContainer< UserID >
 
 
         /***
-         * 3. Command execution
+         * 3. Getters
+         ***/
+        ColouredUser user( UserID userID ) const;
+
+
+        /***
+         * 4. Command execution
          ***/
         void executeRemoteCommand( const UserCommand& userCommand );
 
 
         /***
-         * 4. Operators
+         * 5. Operators
          ***/
         UsersManager& operator = ( const UsersManager& ) = delete;
         UsersManager& operator = ( UsersManager&& ) = delete;
@@ -60,7 +66,7 @@ class UsersManager : public ObservableContainer< UserID >
 
     protected:
         /***
-         * 5. Users management
+         * 6. Users management
          ***/
         void addUser( const UserConnectionCommand& command );
         void removeUser( UserID userID );

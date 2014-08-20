@@ -273,6 +273,12 @@ shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
 }
 
 
+UsersManagerPtr Scene::getUsersManager() const
+{
+    return usersManager_;
+}
+
+
 MeshesManagerPtr Scene::getMeshesManager() const
 {
     return entitiesManager_->getMeshesManager();

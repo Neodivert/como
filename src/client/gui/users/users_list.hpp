@@ -24,16 +24,19 @@
 #include <QListWidget>
 #include <map>
 #include "users_list_item.hpp"
+#include <common/utilities/observable_container/container_observer.hpp>
+#include <client/managers/users/users_manager.hpp>
 
 namespace como {
 
-class UsersList : public QListWidget
+class UsersList : public QListWidget, public ContainerObserver<UserID>
 {
     Q_OBJECT
 
     private:
         // Log
         LogPtr log_;
+        UsersManagerPtr usersManager_;
 
     public:
         /***
@@ -42,7 +45,7 @@ class UsersList : public QListWidget
         UsersList() = delete;
         UsersList( const UsersList& ) = delete;
         UsersList( UsersList&& ) = delete;
-        UsersList( QWidget* parent, LogPtr log );
+        UsersList( QWidget* parent, LogPtr log, UsersManagerPtr usersManager );
 
         ~UsersList() = default;
 
@@ -55,10 +58,16 @@ class UsersList : public QListWidget
 
 
         /***
-         * 3. Users insertion / deletion
+         * 3. Uptading (observer pattern)
          ***/
-    public slots:
-        void addUser( UserConnectionCommandConstPtr userConnectedPacket );
+        virtual void update( ContainerAction lastContainerAction, UserID lastElementModified );
+
+
+    protected:
+        /***
+         * 4. Users management
+         ***/
+        void addUser( const ColouredUser& user );
         void removeUser( UserID userID );
 };
 

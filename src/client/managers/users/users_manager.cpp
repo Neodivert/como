@@ -33,7 +33,17 @@ UsersManager::UsersManager( const UserAcceptancePacket& userPacket )
 
 
 /***
- * 3. Command execution
+ * 3. Getters
+ ***/
+
+ColouredUser UsersManager::user( UserID userID ) const
+{
+    return users_.at( userID );
+}
+
+
+/***
+ * 4. Command execution
  ***/
 
 void UsersManager::executeRemoteCommand( const UserCommand& userCommand )
@@ -55,7 +65,7 @@ void UsersManager::executeRemoteCommand( const UserCommand& userCommand )
 
 
 /***
- * 5. Users management
+ * 6. Users management
  ***/
 
 void UsersManager::addUser( const UserConnectionCommand& command )
@@ -64,12 +74,16 @@ void UsersManager::addUser( const UserConnectionCommand& command )
         throw std::runtime_error( "UsersManager::addUser - user already created!" );
     }
     users_.emplace( command.getUserID(), command );
+
+    notifyElementInsertion( command.getUserID() );
 }
 
 
 void UsersManager::removeUser( UserID userID )
 {
     users_.erase( userID );
+
+    notifyElementDeletion( userID );
 }
 
 

@@ -119,6 +119,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
          * 5. Getters
          ***/
         shared_ptr< QOpenGLContext > getOpenGLContext() const ;
+        UsersManagerPtr getUsersManager() const;
         MeshesManagerPtr getMeshesManager() const;
         MaterialsManagerPtr getMaterialsManager() const;
         LightsManagerPtr getLightsManager() const;

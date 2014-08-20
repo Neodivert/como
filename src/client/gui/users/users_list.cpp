@@ -24,24 +24,46 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-UsersList::UsersList( QWidget* parent, LogPtr log ) :
+UsersList::UsersList( QWidget* parent, LogPtr log, UsersManagerPtr usersManager ) :
     QListWidget( parent ),
-    log_( log )
+    log_( log ),
+    usersManager_( usersManager )
 {
+    usersManager_->addObserver( this );
 }
 
 
 /***
- * 3. Users insertion / deletion
+ * 3. Uptading (observer pattern)
  ***/
 
-void UsersList::addUser( UserConnectionCommandConstPtr userConnectedPacket )
+void UsersList::update( ContainerAction lastContainerAction, UserID lastElementModified )
+{
+    switch( lastContainerAction ){
+        case ContainerAction::ELEMENT_INSERTION:
+            addUser( usersManager_->user( lastElementModified ) );
+        break;
+        case ContainerAction::ELEMENT_DELETION:
+            removeUser( lastElementModified );
+        break;
+        default:
+            // TODO: Complete.
+        break;
+    }
+}
+
+
+/***
+ * 4. Users management
+ ***/
+
+void UsersList::addUser( const ColouredUser& user )
 {
     PackableColor userSelectionColor;
     QPixmap pixmap( 50, 50 );
 
     // Retrieve user's selection color.
-    userSelectionColor = userConnectedPacket->getSelectionColor();
+    userSelectionColor = user.color();
 
     // Generate a "icon" colored in user's color.
     pixmap.fill( QColor(
@@ -53,7 +75,7 @@ void UsersList::addUser( UserConnectionCommandConstPtr userConnectedPacket )
     QIcon userIcon ( pixmap );
 
     // Add the user's name to the list.
-    UsersListItem* newUser = new UsersListItem( userConnectedPacket->getUserID(), userConnectedPacket->getName(), userIcon );
+    UsersListItem* newUser = new UsersListItem( user.getID(), user.getName(), userIcon );
     addItem( newUser );
 }
 
