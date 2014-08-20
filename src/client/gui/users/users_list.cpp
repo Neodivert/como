@@ -30,6 +30,9 @@ UsersList::UsersList( QWidget* parent, LogPtr log, UsersManagerPtr usersManager 
     usersManager_( usersManager )
 {
     usersManager_->addObserver( this );
+
+    // The users manager already has a local user; add it to the users list.
+    addUser( usersManager_->localUser() );
 }
 
 

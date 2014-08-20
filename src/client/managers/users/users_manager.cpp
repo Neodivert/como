@@ -24,7 +24,8 @@ namespace como {
  * 1. Construction
  ***/
 
-UsersManager::UsersManager( const UserAcceptancePacket& userPacket )
+UsersManager::UsersManager( const UserAcceptancePacket& userPacket ) :
+    localUserID_( userPacket.getId() )
 {
     UserConnectionCommand userConnectionCommand( userPacket );
 
@@ -39,6 +40,12 @@ UsersManager::UsersManager( const UserAcceptancePacket& userPacket )
 ColouredUser UsersManager::user( UserID userID ) const
 {
     return users_.at( userID );
+}
+
+
+ColouredUser UsersManager::localUser() const
+{
+    return users_.at( localUserID_ );
 }
 
 

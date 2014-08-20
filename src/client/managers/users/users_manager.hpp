@@ -49,6 +49,7 @@ class UsersManager : public ObservableContainer< UserID >
          * 3. Getters
          ***/
         ColouredUser user( UserID userID ) const;
+        ColouredUser localUser() const;
 
 
         /***
@@ -74,6 +75,7 @@ class UsersManager : public ObservableContainer< UserID >
 
     private:
         std::map< UserID, ColouredUser > users_;
+        const UserID localUserID_;
 };
 
 typedef std::shared_ptr< UsersManager > UsersManagerPtr;
