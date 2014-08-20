@@ -65,18 +65,16 @@ std::string LightsManager::getResourceName( const ResourceID& lightID ) const
  * 4. Lights management
  ***/
 
-void LightsManager::createDirectionalLight()
+bool LightsManager::createDirectionalLight()
 {
     // FIXME: Duplicated code (except for error message).
     GLint lightIndex;
     GLuint directionalLightIndex;
 
+    // TODO: What happens if two users create the last allowed directional
+    // light at the same time? I need confirmation from server...
     if( !freeDirectionalLightIndices_.size() ){
-        QMessageBox errorMsg( QMessageBox::Warning,
-                              "Could't create a directional light",
-                              "Reached the limit of allowed directional lights" );
-        errorMsg.exec();
-        return;
+        return false;
     }
 
     // Reserve both directional and light indices for the new light.
@@ -104,6 +102,8 @@ void LightsManager::createDirectionalLight()
     log()->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
 
     notifyObservers();
+
+    return true;
 }
 
 

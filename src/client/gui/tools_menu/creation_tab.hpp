@@ -60,6 +60,7 @@ class CreationTab : public QFrame
     private:
         QFrame* createMeshFromPrimitiveCreationMenu();
         QPushButton* createPrimitiveImportButton() const;
+        QFrame* createLightsCreationPanel() const;
     public:
 
 

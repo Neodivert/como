@@ -33,6 +33,7 @@ CreationTab::CreationTab( ScenePtr scene ) :
     // Add widgets to the previous layout.
     layout->addWidget( createMeshFromPrimitiveCreationMenu() );
     layout->addWidget( createPrimitiveImportButton() );
+    layout->addWidget( createLightsCreationPanel() );
 
     // Set the previous layout as this tab's layout.
     setLayout( layout );
@@ -92,6 +93,31 @@ QPushButton* CreationTab::createPrimitiveImportButton() const
     });
 
     return importPrimitiveButton;
+}
+
+
+QFrame *CreationTab::createLightsCreationPanel() const
+{
+    QFrame* lightsCreationFrame = new QFrame;
+
+    QPushButton* createDirectionalLightButton =
+            new QPushButton( "Create directional light" );
+
+    QObject::connect( createDirectionalLightButton, &QPushButton::pressed, [this](){
+        if( !( scene_->getEntitiesManager()->getLightsManager()->createDirectionalLight() ) ){
+            QMessageBox errorMsg( QMessageBox::Warning,
+                                  "Could't create a directional light",
+                                  "Reached the limit of allowed directional lights" );
+            errorMsg.exec();
+        }
+    });
+
+    QVBoxLayout* layout = new QVBoxLayout;
+    layout->addWidget( new QLabel( "Lights creation" ) );
+    layout->addWidget( createDirectionalLightButton );
+    lightsCreationFrame->setLayout( layout );
+
+    return lightsCreationFrame;
 }
 
 } // namespace como

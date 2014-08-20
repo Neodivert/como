@@ -76,7 +76,7 @@ class LightsManager : public AbstractEntitiesManager< Light, LightsSelection, Lo
         /***
          * 4. Lights management
          ***/
-        void createDirectionalLight();
+        bool createDirectionalLight();
     private:
         void addDirectionalLight( const ResourceID& lightID, const PackableColor& lightColor );
     public:
