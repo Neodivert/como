@@ -112,7 +112,8 @@ HEADERS += \
     ../../src/client/models/users/coloured_user.hpp \
     ../../src/client/managers/resources/resources_ownership_requester.hpp \
     ../../src/client/managers/resources/resource_commands_executer.hpp \
-    ../../src/client/models/3d/sets/drawables_set.hpp
+    ../../src/client/models/3d/sets/drawables_set.hpp \
+    ../../src/client/models/3d/sets/pickables_set.hpp
 
 
 # Client sources
