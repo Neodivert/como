@@ -59,15 +59,6 @@ class AbstractEntitiesManager : public ResourcesManager<ResourceType, ResourcesS
          ***/
         AbstractEntitiesManager& operator = ( const AbstractEntitiesManager& ) = default;
         AbstractEntitiesManager& operator = ( AbstractEntitiesManager&& ) = default;
-
-
-    protected:
-        /***
-         * 6. Resources locking / unlocking
-         ***/
-        void lockResource( const ResourceID& resourceID, UserID userID );
-        void unlockResourcesSelection( UserID userID );
-        void deleteResourcesSelection( UserID userID );
 };
 
 
@@ -104,7 +95,7 @@ ResourceID AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalRe
     // Check if the given ray intersect any of the non selected drawables.
     if( this->getResourcesSelection( NO_USER )->intersectsRay( r0, r1, closestObject, minT ) ){
         // A non selected drawable has been intersected.
-        this->log()->debug( "Object picked\n" );
+        //this->log()->debug( "Object picked\n" );
 
         // Request to the server the lock of the intersected drawable.
         // TODO: Request resource lock in the caller. I'll call
@@ -118,11 +109,11 @@ ResourceID AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalRe
         // If user dind't selected any non-selected drawable, check if he / she
         // clicked on an already selected one.
         if( this->getLocalResourcesSelection()->intersectsRay( r0, r1, closestObject, minT ) ){
-            this->log()->debug( "RETURN 0\n" );
+            //this->log()->debug( "RETURN 0\n" );
             ////emit renderNeeded();
             return NO_RESOURCE;
         }else{
-            this->log()->debug( "NO CLOSEST OBJECT. Unselecting all\n" );
+            //this->log()->debug( "NO CLOSEST OBJECT. Unselecting all\n" );
             this->requestSelectionUnlock();
         }
 
@@ -149,31 +140,6 @@ void AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResource
     for( auto entitiesSelectionPair : this->resourcesSelections_ ){
         entitiesSelectionPair.second->drawAll( openGL, viewMatrix, projectionMatrix );
     }
-}
-
-
-/***
- * 6. Resources locking / unlocking
- ***/
-
-template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-void AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::lockResource( const ResourceID& resourceID, UserID userID )
-{
-    this->getResourcesSelection( NO_USER )->moveResource( resourceID, *( this->getResourcesSelection( userID ) ) );
-}
-
-
-template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-void AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::unlockResourcesSelection( UserID userID )
-{
-    this->getResourcesSelection( userID )->moveAll( *( this->getResourcesSelection( NO_USER ) ) );
-}
-
-
-template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-void AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::deleteResourcesSelection( UserID userID )
-{
-    this->getResourcesSelection( userID )->clear();
 }
 
 } // namespace como

@@ -151,17 +151,23 @@ void EntitiesManager::executeRemoteParameterChangeCommand( UserParameterChangeCo
 
 void EntitiesManager::executeResourceCommand( ResourceCommandConstPtr command )
 {
+    (void)( command );
+    /*
     for( auto& manager : managers_ ){
         manager->executeResourceCommand( command );
     }
+    */
 }
 
 
 void EntitiesManager::executeResourcesSelectionCommand( ResourcesSelectionCommandConstPtr command )
 {
+    (void)( command );
+    /*
     for( auto& manager : managers_ ){
         manager->executeResourcesSelectionCommand( command );
     }
+    */
 }
 
 

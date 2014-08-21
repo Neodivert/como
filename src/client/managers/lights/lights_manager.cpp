@@ -99,7 +99,7 @@ bool LightsManager::createDirectionalLight()
 
     sendCommandToServer( CommandConstPtr( new DirectionalLightCreationCommand( localUserID(), lightID, lightColor ) ) );
 
-    log()->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
+    //log()->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
 
     notifyObservers();
 
@@ -134,7 +134,7 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Packab
     getResourcesSelection( lightID.getCreatorID() )->addResource( lightID, light );
 
 
-    log()->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
+    //log()->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
 
     notifyObservers();
 }

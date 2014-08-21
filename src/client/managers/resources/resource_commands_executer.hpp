@@ -29,7 +29,8 @@ class ResourceCommandsExecuter : public ResourcesOwnershipRequester
         /***
          * 1. Construction
          ***/
-        ResourceCommandsExecuter();
+        ResourceCommandsExecuter( ServerInterfacePtr server );
+        ResourceCommandsExecuter() = delete;
         ResourceCommandsExecuter( const ResourceCommandsExecuter& ) = delete;
         ResourceCommandsExecuter( ResourceCommandsExecuter&& ) = delete;
 

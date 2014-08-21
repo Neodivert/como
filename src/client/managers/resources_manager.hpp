@@ -19,20 +19,17 @@
 #ifndef RESOURCES_MANAGER_HPP
 #define RESOURCES_MANAGER_HPP
 
-#include <client/managers/server_interface/server_interface.hpp>
 #include <common/utilities/observable_container/observable_container.hpp>
 #include <common/commands/command.hpp>
-#include <common/commands/resource_commands/resource_commands.hpp>
-#include <common/managers/abstract_resources_ownership_manager.hpp>
 #include <client/managers/selections/resources/resources_selection.hpp>
 #include <client/managers/selections/resources/local_resources_selection.hpp>
-#include <client/managers/utilities/server_writer.hpp>
+#include <client/managers/resources/resource_commands_executer.hpp>
 
 
 namespace como {
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-class ResourcesManager : public AbstractResourcesOwnershipManager, public ServerWriter, public Observable, public Observer
+class ResourcesManager : public ResourceCommandsExecuter, public Observable, public Observer
 {
     //static_assert( std::is_base_of<ResourcesSelection<ResourceType>, ResourcesSelectionType>::value, "" );
     //static_assert( std::is_base_of<LocalResourcesSelection<ResourceType>, LocalResourcesSelectionType>::value, "" );
@@ -60,14 +57,6 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Server
          ***/
         std::shared_ptr< LocalResourcesSelectionType > getLocalResourcesSelection() const;
         virtual std::string getResourceName( const ResourceID& resourceID ) const = 0;
-
-
-        /***
-         * 4. Lock request
-         ***/
-        void requestResourceLock( const ResourceID& resourceID );
-        void requestSelectionUnlock();
-        void requestSelectionDeletion();
 
 
         /***
@@ -104,15 +93,9 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Server
         /***
          * 9. Resource management
          ***/
-        virtual void lockResource( const ResourceID& resourceID, UserID userID ) = 0;
-        virtual void unlockResourcesSelection( UserID userID ) = 0;
-        virtual void deleteResourcesSelection( UserID userID ) = 0;
-        virtual void processLockResponse( const ResourceID& resourceID, bool lockResponse );
-
-
-    private:
-        std::queue< ResourceID > pendingSelections_;
-
+        virtual void lockResource( const ResourceID& resourceID, UserID newOwner );
+        virtual void unlockResourcesSelection( UserID userID );
+        virtual void clearResourcesSelection(UserID currentOwner);
 
     protected:
         std::map< UserID, std::shared_ptr< ResourcesSelectionType > > resourcesSelections_;
@@ -127,9 +110,11 @@ class ResourcesManager : public AbstractResourcesOwnershipManager, public Server
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::ResourcesManager( ServerInterfacePtr server, LogPtr log ) :
-    AbstractResourcesOwnershipManager( log ),
-    ServerWriter( server )
+    ResourceCommandsExecuter( server )
 {
+    // TODO: Remove log (or not?).
+    (void)(log);
+
     createResourcesSelection( NO_USER );
     nonSelectedResources_ = resourcesSelections_.at( NO_USER );
 
@@ -160,40 +145,6 @@ template <class ResourceType, class ResourcesSelectionType, class LocalResources
 std::shared_ptr<LocalResourcesSelectionType> ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getLocalResourcesSelection() const
 {
     return std::static_pointer_cast< LocalResourcesSelectionType >( resourcesSelections_.at( localUserID() ) );
-}
-
-
-/***
- * 4. Lock request
- ***/
-
-template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::requestResourceLock( const ResourceID& resourceID )
-{
-    pendingSelections_.push( resourceID );
-    sendCommandToServer( CommandConstPtr( new ResourceCommand( ResourceCommandType::RESOURCE_LOCK, localUserID(), resourceID ) ) );
-}
-
-
-template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::requestSelectionUnlock()
-{
-    CommandConstPtr selectionUnlockCommand =
-            CommandConstPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_UNLOCK, localUserID() ) );
-    sendCommandToServer( selectionUnlockCommand );
-
-    unlockResourcesSelection( localUserID() );
-}
-
-
-template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::requestSelectionDeletion()
-{
-    CommandConstPtr selectionDeletionCommand =
-            CommandConstPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_DELETION, localUserID() ) );
-    sendCommandToServer( selectionDeletionCommand );
-
-    deleteResourcesSelection( localUserID() );
 }
 
 
@@ -260,15 +211,23 @@ std::shared_ptr<ResourcesSelectionType> ResourcesManager<ResourceType, Resources
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::processLockResponse( const ResourceID& resourceID, bool lockResponse )
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::lockResource( const ResourceID& resourceID, UserID newOwner )
 {
-    if( pendingSelections_.front() == resourceID ){
-        if( lockResponse ){
-            lockResource( resourceID, localUserID() );
-        }
+    this->getResourcesSelection( NO_USER )->moveResource( resourceID, *( this->getResourcesSelection( newOwner ) ) );
+}
 
-        pendingSelections_.pop();
-    }
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::unlockResourcesSelection( UserID currentOwner )
+{
+    this->getResourcesSelection( currentOwner )->moveAll( *( this->getResourcesSelection( NO_USER ) ) );
+}
+
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::clearResourcesSelection( UserID currentOwner )
+{
+    this->getResourcesSelection( currentOwner )->clear();
 }
 
 } // namespace como

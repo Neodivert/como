@@ -20,10 +20,19 @@
 
 namespace como {
 
+
+/***
+ * 1. Construction
+ ***/
+
+ResourceCommandsExecuter::ResourceCommandsExecuter(ServerInterfacePtr server) :
+    ResourcesOwnershipRequester( server )
+{}
+
+
 /***
  * 3. Command execution
  ***/
-
 
 void ResourceCommandsExecuter::executeResourceCommand( const ResourceCommand& command )
 {

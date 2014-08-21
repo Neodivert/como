@@ -157,14 +157,14 @@ std::vector<MaterialConstPtr> MaterialsManager::getMaterials( const ResourceID& 
 
 void MaterialsManager::executeRemoteCommand( MaterialCommandConstPtr command )
 {
-    log()->debug( "MaterialsManager - executing remote command - Material ID: ", command->getMaterialID(), "\n" );
+    //log()->debug( "MaterialsManager - executing remote command - Material ID: ", command->getMaterialID(), "\n" );
 
     switch( command->getType() ){
         case MaterialCommandType::MATERIAL_CREATION:{
             const MaterialCreationCommand* materialCreationCommand =
                     dynamic_cast< const MaterialCreationCommand* >( command.get() );
 
-            log()->debug( "\tMaterial name: ", materialCreationCommand->getMaterialInfo().name, "\n" );
+            //log()->debug( "\tMaterial name: ", materialCreationCommand->getMaterialInfo().name, "\n" );
 
             createMaterial( materialCreationCommand->getMaterialID(),
                             materialCreationCommand->getMaterialInfo() );

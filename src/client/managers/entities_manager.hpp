@@ -95,7 +95,7 @@ class EntitiesManager
         MeshesManagerPtr meshesManager_;
         LightsManagerPtr lightsManager_;
 
-        std::vector< std::shared_ptr< AbstractResourcesOwnershipManager > > managers_;
+        std::vector< std::shared_ptr< ResourcesOwnershipManager > > managers_;
 };
 
 typedef std::shared_ptr< EntitiesManager > EntitiesManagerPtr;

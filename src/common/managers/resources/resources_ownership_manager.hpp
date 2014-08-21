@@ -50,7 +50,7 @@ class ResourcesOwnershipManager {
         /***
          * 4. Resources ownership management
          ***/
-        virtual void lockResource( ResourceID resourceID, UserID newOwner ) = 0;
+        virtual void lockResource( const ResourceID& resourceID, UserID newOwner ) = 0;
         virtual void unlockResourcesSelection( UserID currentOwner ) = 0;
         virtual void clearResourcesSelection( UserID currentOwner ) = 0;
 };
