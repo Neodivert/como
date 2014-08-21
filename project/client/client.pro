@@ -103,7 +103,7 @@ HEADERS += \
     ../../src/client/models/3d/entities_set.hpp \
     ../../src/client/models/3d/lights/light.hpp \
     ../../src/client/managers/entities_manager.hpp \
-    ../../src/client/managers/abstract_entities_manager.hpp \
+    ../../src/client/managers/specialized_entities_manager.hpp \
     ../../src/client/managers/selections/entities/entities_selection.hpp \
     ../../src/client/models/3d/abstract_entities_set.hpp \
     ../../src/client/managers/selections/entities/local_entities_selection.hpp \

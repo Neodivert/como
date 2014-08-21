@@ -25,14 +25,14 @@
 #include <common/commands/commands.hpp>
 #include <map>
 #include <common/utilities/observer_pattern/observer.hpp>
-#include <client/managers/abstract_entities_manager.hpp>
+#include <client/managers/specialized_entities_manager.hpp>
 #include <client/managers/lights/local_lights_selection.hpp>
 
 namespace como {
 
 typedef std::map< ResourceID, LightSharedPtr > LightsMap;
 
-class LightsManager : public AbstractEntitiesManager< Light, LightsSelection, LocalLightsSelection >
+class LightsManager : public SpecializedEntitiesManager< Light, LightsSelection, LocalLightsSelection >
 {
     friend class EntitiesManager; // TODO: A better approach?
 

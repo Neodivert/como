@@ -16,30 +16,30 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef ABSTRACT_ENTITIES_MANAGER_HPP
-#define ABSTRACT_ENTITIES_MANAGER_HPP
+#ifndef SPECIALIZED_ENTITIES_MANAGER_HPP
+#define SPECIALIZED_ENTITIES_MANAGER_HPP
 
 #include <client/managers/resources_manager.hpp>
 
 namespace como {
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-class AbstractEntitiesManager : public ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType >
+class SpecializedEntitiesManager : public ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType >
 {
     public:
         /***
          * 1. Construction
          ***/
-        AbstractEntitiesManager( ServerInterfacePtr server, LogPtr log );
-        AbstractEntitiesManager() = default;
-        AbstractEntitiesManager( AbstractEntitiesManager& ) = default;
-        AbstractEntitiesManager( AbstractEntitiesManager&& ) = default;
+        SpecializedEntitiesManager( ServerInterfacePtr server, LogPtr log );
+        SpecializedEntitiesManager() = default;
+        SpecializedEntitiesManager( SpecializedEntitiesManager& ) = default;
+        SpecializedEntitiesManager( SpecializedEntitiesManager&& ) = default;
 
 
         /***
          * 2. Destruction
          ***/
-        ~AbstractEntitiesManager() = default;
+        ~SpecializedEntitiesManager() = default;
 
 
         /***
@@ -57,8 +57,8 @@ class AbstractEntitiesManager : public ResourcesManager<ResourceType, ResourcesS
         /***
          * 5. Operators
          ***/
-        AbstractEntitiesManager& operator = ( const AbstractEntitiesManager& ) = default;
-        AbstractEntitiesManager& operator = ( AbstractEntitiesManager&& ) = default;
+        SpecializedEntitiesManager& operator = ( const SpecializedEntitiesManager& ) = default;
+        SpecializedEntitiesManager& operator = ( SpecializedEntitiesManager&& ) = default;
 };
 
 
@@ -67,7 +67,7 @@ class AbstractEntitiesManager : public ResourcesManager<ResourceType, ResourcesS
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::AbstractEntitiesManager( ServerInterfacePtr server, LogPtr log ) :
+SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::SpecializedEntitiesManager( ServerInterfacePtr server, LogPtr log ) :
     ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>( server, log )
 {}
 
@@ -77,7 +77,7 @@ AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSele
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-ResourceID AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::selectEntityByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint )
+ResourceID SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::selectEntityByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint )
 {
     const float MAX_T = 9999999.0f;
     float minT = MAX_T;
@@ -135,7 +135,7 @@ ResourceID AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalRe
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-void AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
+void SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
     for( auto entitiesSelectionPair : this->resourcesSelections_ ){
         entitiesSelectionPair.second->drawAll( openGL, viewMatrix, projectionMatrix );
@@ -144,4 +144,4 @@ void AbstractEntitiesManager<ResourceType, ResourcesSelectionType, LocalResource
 
 } // namespace como
 
-#endif // ABSTRACT_ENTITIES_MANAGER_HPP
+#endif // SPECIALIZED_ENTITIES_MANAGER_HPP
