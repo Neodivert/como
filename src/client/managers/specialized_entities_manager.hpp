@@ -68,6 +68,7 @@ class SpecializedEntitiesManager : public ResourcesManager<ResourceType, Resourc
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::SpecializedEntitiesManager( ServerInterfacePtr server, LogPtr log ) :
+    ResourceCommandsExecuter( server ),
     ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>( server, log )
 {}
 

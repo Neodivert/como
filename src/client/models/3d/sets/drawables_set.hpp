@@ -30,7 +30,6 @@ class DrawablesSet
          * 1. Construction
          ***/
         DrawablesSet( const glm::vec4& borderColor = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-        DrawablesSet() = delete;
         DrawablesSet( const DrawablesSet& ) = default;
         DrawablesSet( DrawablesSet&& ) = default;
 

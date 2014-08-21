@@ -26,6 +26,7 @@ namespace como {
  ***/
 
 MaterialsManager::MaterialsManager( ServerInterfacePtr server, LogPtr log ) :
+    ResourceCommandsExecuter( server ),
     ResourcesManager( server, log )
 {}
 

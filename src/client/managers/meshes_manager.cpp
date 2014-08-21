@@ -25,6 +25,7 @@ namespace como {
  ***/
 
 MeshesManager::MeshesManager( ServerInterfacePtr server, LogPtr log ) :
+    ResourceCommandsExecuter( server ),
     ResourcesManager( server, log ),
     newMeshesDisplayVertexNormals_( false )
 {
