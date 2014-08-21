@@ -109,7 +109,8 @@ HEADERS += \
     ../../src/client/managers/selections/entities/local_entities_selection.hpp \
     ../../src/client/managers/utilities/server_writer.hpp \
     ../../src/client/managers/users/users_manager.hpp \
-    ../../src/client/models/users/coloured_user.hpp
+    ../../src/client/models/users/coloured_user.hpp \
+    ../../src/client/managers/resources/resources_ownership_requester.hpp
 
 
 # Client sources
@@ -176,4 +177,5 @@ SOURCES += \
     ../../src/client/managers/selections/entities/local_entities_selection.cpp \
     ../../src/client/managers/utilities/server_writer.cpp \
     ../../src/client/managers/users/users_manager.cpp \
-    ../../src/client/models/users/coloured_user.cpp
+    ../../src/client/models/users/coloured_user.cpp \
+    ../../src/client/managers/resources/resources_ownership_requester.cpp
