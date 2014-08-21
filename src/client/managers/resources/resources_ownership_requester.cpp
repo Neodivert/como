@@ -62,4 +62,17 @@ void ResourcesOwnershipRequester::requestSelectionDeletion()
     clearResourcesSelection( localUserID() );
 }
 
+
+/***
+ * 5. Lock response processing
+ ***/
+
+void ResourcesOwnershipRequester::processLockResponse( const ResourceID &resourceID, bool lockResponse )
+{
+    pendingSelections_.erase( resourceID );
+    if( lockResponse ){
+        lockResource( resourceID, localUserID() );
+    }
+}
+
 } // namespace como
