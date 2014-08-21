@@ -111,7 +111,8 @@ HEADERS += \
     ../../src/client/managers/users/users_manager.hpp \
     ../../src/client/models/users/coloured_user.hpp \
     ../../src/client/managers/resources/resources_ownership_requester.hpp \
-    ../../src/client/managers/resources/resource_commands_executer.hpp
+    ../../src/client/managers/resources/resource_commands_executer.hpp \
+    ../../src/client/models/3d/sets/drawables_set.hpp
 
 
 # Client sources
@@ -180,4 +181,5 @@ SOURCES += \
     ../../src/client/managers/users/users_manager.cpp \
     ../../src/client/models/users/coloured_user.cpp \
     ../../src/client/managers/resources/resources_ownership_requester.cpp \
-    ../../src/client/managers/resources/resource_commands_executer.cpp
+    ../../src/client/managers/resources/resource_commands_executer.cpp \
+    ../../src/client/models/3d/sets/drawables_set.cpp
