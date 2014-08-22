@@ -40,15 +40,11 @@ enum class ElementsMeetingCondition {
 
 class MeshesSelection : public virtual EntitiesSet< Mesh >, public AbstractMesh
 {
-    private:
-        MeshesMap meshes_;
-
-
     public:
         /***
          * 1. Construction
          ***/
-        MeshesSelection() = default;
+        MeshesSelection( glm::vec4 borderColor = DEFAULT_BORDER_COLOR );
         MeshesSelection( const MeshesSelection& ) = default;
         MeshesSelection( MeshesSelection&& ) = default;
         virtual DrawablePtr clone();

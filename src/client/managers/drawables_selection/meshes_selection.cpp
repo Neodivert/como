@@ -24,6 +24,11 @@ namespace como {
  * 1. Construction
  ***/
 
+MeshesSelection::MeshesSelection( glm::vec4 borderColor ) :
+    EntitiesSet( borderColor )
+{}
+
+
 DrawablePtr MeshesSelection::clone()
 {
     return DrawablePtr( new MeshesSelection( *this ) );
@@ -36,13 +41,13 @@ DrawablePtr MeshesSelection::clone()
 
 bool MeshesSelection::containsResource( const ResourceID& resourceID ) const
 {
-    return meshes_.count( resourceID );
+    return resources_.count( resourceID );
 }
 
 
 string MeshesSelection::getResourceName( const ResourceID& resourceID ) const
 {
-    return meshes_.at( resourceID )->getName();
+    return resources_.at( resourceID )->getName();
 }
 
 
@@ -50,12 +55,12 @@ glm::vec3 MeshesSelection::centroid() const
 {
     glm::vec3 centroid( 0.0f );
 
-    for( auto mesh : meshes_ ){
+    for( auto mesh : resources_ ){
         centroid += mesh.second->centroid();
     }
 
-    if( meshes_.size() ){
-        centroid /= meshes_.size();
+    if( resources_.size() ){
+        centroid /= resources_.size();
     }
 
     return centroid;
@@ -64,14 +69,14 @@ glm::vec3 MeshesSelection::centroid() const
 
 void MeshesSelection::intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle ) const
 {
-    for( auto mesh : meshes_ ){
+    for( const auto& mesh : resources_ ){
         mesh.second->intersects( r0, r1, t, triangle );
     }
 }
 
 bool MeshesSelection::containsProperty( const void* property ) const
 {
-    for( auto mesh : meshes_ ){
+    for( const auto& mesh : resources_ ){
         if( mesh.second->containsProperty( property ) ){
             return true;
         }
@@ -83,13 +88,13 @@ ElementsMeetingCondition MeshesSelection::displaysVertexNormals() const
 {
     // Check whether first mesh in the selection is displaying normals or not.
     bool firstMeshDisplaysVertexNormals = false;
-    if( meshes_.size() ){
-        firstMeshDisplaysVertexNormals = meshes_.begin()->second->displaysVertexNormals();
+    if( resources_.size() ){
+        firstMeshDisplaysVertexNormals = resources_.begin()->second->displaysVertexNormals();
     }
 
     // Check whether any other mesh in the selection isn't displaying vertex
     // normals when the first mesh does so or viceversa.
-    for( auto mesh : meshes_ ){
+    for( auto mesh : resources_ ){
         if( mesh.second->displaysVertexNormals() != firstMeshDisplaysVertexNormals ){
             return ElementsMeetingCondition::SOME;
         }
@@ -107,7 +112,7 @@ ElementsMeetingCondition MeshesSelection::displaysVertexNormals() const
 
 unsigned int MeshesSelection::size() const
 {
-    return meshes_.size();
+    return resources_.size();
 }
 
 
@@ -117,7 +122,7 @@ unsigned int MeshesSelection::size() const
 
 void MeshesSelection::displayVertexNormals( bool display )
 {
-    for( auto mesh : meshes_ ){
+    for( auto& mesh : resources_ ){
         mesh.second->displayVertexNormals( display );
     }
     notifyObservers();
@@ -130,29 +135,29 @@ void MeshesSelection::displayVertexNormals( bool display )
 
 void MeshesSelection::addMesh( const ResourceID& id, MeshPtr mesh )
 {
-    meshes_[id] = mesh;
+    resources_[id] = mesh;
     notifyObservers();
 }
 
 
 void MeshesSelection::removeMesh( const ResourceID& id )
 {
-    meshes_.erase( id );
+    resources_.erase( id );
     notifyObservers();
 }
 
 
 void MeshesSelection::clear()
 {
-    meshes_.clear();
+    resources_.clear();
     notifyObservers();
 }
 
 
 bool MeshesSelection::moveMesh( const ResourceID& meshID, MeshesSelection& dstMeshesSelection )
 {
-    if( meshes_.count( meshID ) ){
-        dstMeshesSelection.addMesh( meshID, meshes_.at( meshID ) );
+    if( resources_.count( meshID ) ){
+        dstMeshesSelection.addMesh( meshID, resources_.at( meshID ) );
         removeMesh( meshID );
 
         return true;
@@ -164,11 +169,11 @@ bool MeshesSelection::moveMesh( const ResourceID& meshID, MeshesSelection& dstMe
 
 void MeshesSelection::moveAll( MeshesSelection& dstMeshesSelection )
 {
-    for( auto mesh : meshes_ ){
+    for( auto mesh : resources_ ){
         dstMeshesSelection.addMesh( mesh.first, mesh.second );
     }
 
-    meshes_.clear();
+    resources_.clear();
 }
 
 
@@ -178,7 +183,7 @@ void MeshesSelection::moveAll( MeshesSelection& dstMeshesSelection )
 
 void MeshesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec4* contourColor ) const
 {
-    for( auto mesh : meshes_ ){
+    for( auto mesh : resources_ ){
         mesh.second->draw( openGL, viewMatrix, projectionMatrix, contourColor );
     }
 }

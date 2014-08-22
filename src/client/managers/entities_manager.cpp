@@ -51,7 +51,7 @@ void EntitiesManager::createUserSelection( UserID userID, const glm::vec4& selec
 {
     // TODO: Apply to all managers uniformly.
     lightsManager_->createResourcesSelection( userID, selectionColor );
-    meshesManager_->createResourcesSelection( userID );
+    meshesManager_->createResourcesSelection( userID, selectionColor );
 
     entitiesSelections_[userID] =
             EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( userID ).get(), meshesManager_->getResourcesSelection( userID ).get() ) );
