@@ -27,6 +27,8 @@ namespace como {
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 class SpecializedEntitiesManager : public AbstractEntitiesManager, public ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType >
 {
+    friend class EntitiesManager; // TODO: A better approach?
+
     public:
         /***
          * 1. Construction

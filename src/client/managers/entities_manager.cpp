@@ -34,10 +34,10 @@ EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log, UsersMa
     lightsManager_( new LightsManager( server, log ) )
 {
     managers_.push_back( lightsManager_ );
-    // TODO: Push meshesManager_ too.
+    managers_.push_back( meshesManager_ );
 
-    entitiesSelections_[NO_USER] = EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( NO_USER ).get() ) );
-    entitiesSelections_[server->getLocalUserID()] = EntitiesSelectionPtr( new LocalEntitiesSelection( server, lightsManager_->getLocalResourcesSelection().get() ) );
+    entitiesSelections_[NO_USER] = EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( NO_USER ).get(), meshesManager_->getResourcesSelection( NO_USER ).get() ) );
+    entitiesSelections_[server->getLocalUserID()] = EntitiesSelectionPtr( new LocalEntitiesSelection( server, lightsManager_->getLocalResourcesSelection().get(), meshesManager_->getLocalResourcesSelection().get() ) );
 
     usersManager_->addObserver( this );
 }
@@ -49,11 +49,12 @@ EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log, UsersMa
 
 void EntitiesManager::createUserSelection( UserID userID, const glm::vec4& selectionColor )
 {
-    // TODO: Apply to all managers.
+    // TODO: Apply to all managers uniformly.
     lightsManager_->createResourcesSelection( userID, selectionColor );
+    meshesManager_->createResourcesSelection( userID );
 
     entitiesSelections_[userID] =
-            EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( userID ).get() ) );
+            EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( userID ).get(), meshesManager_->getResourcesSelection( userID ).get() ) );
 }
 
 
@@ -65,8 +66,8 @@ void EntitiesManager::removeUserSelection()
 
 void EntitiesManager::removeUserSelection( UserID userID )
 {
-    // TODO: Apply to all managers.
     lightsManager_->removeResourcesSelection( userID );
+    meshesManager_->removeResourcesSelection( userID );
 
     entitiesSelections_.erase( userID );
 }
@@ -168,8 +169,9 @@ void EntitiesManager::executeRemoteParameterChangeCommand( UserParameterChangeCo
 
 void EntitiesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
-    // TODO: Apply to all managers.
-    lightsManager_->drawAll( openGL, viewMatrix, projectionMatrix );
+    for( const auto& manager : managers_ ){
+        manager->drawAll( openGL, viewMatrix, projectionMatrix );
+    }
 }
 
 
@@ -207,6 +209,7 @@ void EntitiesManager::unlockResourcesSelection(UserID currentOwner)
         manager->unlockResourcesSelection( currentOwner );
     }
 }
+
 
 void EntitiesManager::clearResourcesSelection(UserID currentOwner)
 {

@@ -34,8 +34,6 @@ typedef std::map< ResourceID, LightSharedPtr > LightsMap;
 
 class LightsManager : public SpecializedEntitiesManager< Light, LightsSelection, LocalLightsSelection >
 {
-    friend class EntitiesManager; // TODO: A better approach?
-
     private:
         // Lights vector.
         //LightsMap lights_;

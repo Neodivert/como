@@ -26,8 +26,8 @@ const unsigned int TRANSFORMATION_FLOAT_PRECISION = 10000;
  * 1. Construction
  ***/
 
-LocalEntitiesSelection::LocalEntitiesSelection( ServerInterfacePtr server, LocalLightsSelection* lightsSelection ) :
-    EntitiesSelection( lightsSelection ),
+LocalEntitiesSelection::LocalEntitiesSelection( ServerInterfacePtr server, LocalLightsSelection* lightsSelection, LocalMeshesSelection* meshesSelection ) :
+    EntitiesSelection( lightsSelection, meshesSelection ),
     ServerWriter( server )
 {}
 

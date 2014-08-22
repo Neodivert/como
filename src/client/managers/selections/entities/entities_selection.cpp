@@ -25,11 +25,13 @@ namespace como {
  * 1. Construction
  ***/
 
-EntitiesSelection::EntitiesSelection( LightsSelection* lightsSelection, PivotPointMode pivotPointMode ) :
+EntitiesSelection::EntitiesSelection( LightsSelection* lightsSelection, MeshesSelection* meshesSelection, PivotPointMode pivotPointMode ) :
     lightsSelection_( lightsSelection ),
+    meshesSelection_( meshesSelection ),
     centroid_( 0.0f )
 {
     specializedEntitiesSelections_.push_back( lightsSelection_ );
+    specializedEntitiesSelections_.push_back( meshesSelection_ );
 
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->Observable::addObserver( this );
@@ -148,9 +150,24 @@ void EntitiesSelection::applyTransformationMatrix(const glm::mat4 &transformatio
 
 bool EntitiesSelection::intersectsRay(glm::vec3 r0, glm::vec3 r1, ResourceID &closestEntity, float &minT) const
 {
-    // TODO: Select / lock only the closest entity of all personalized entities
-    // selections.
-    return lightsSelection_->intersectsRay( r0, r1, closestEntity, minT );
+    // TODO: Return also the index of the closest intersected manager for
+    // manipulating the closest entity faster after intersecting it?
+    minT = FLT_MAX;
+    float selectionT;
+    ResourceID selectionClosestEntity;
+    unsigned int nIntersectedSelections = 0;
+
+    for( auto& selection : specializedEntitiesSelections_ ){
+        if( selection->intersectsRay( r0, r1, selectionClosestEntity, selectionT ) ){
+            nIntersectedSelections++;
+        }
+        if( selectionT < minT ){
+            minT = selectionT;
+            closestEntity = selectionClosestEntity;
+        }
+    }
+
+    return (nIntersectedSelections > 0);
 }
 
 

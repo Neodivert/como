@@ -20,6 +20,7 @@
 #define ENTITIES_SELECTION_HPP
 
 #include <client/managers/lights/lights_selection.hpp>
+#include <client/managers/drawables_selection/meshes_selection.hpp>
 #include <client/models/3d/abstract_entities_set.hpp>
 #include <client/managers/selections/resources/resources_selection.hpp>
 
@@ -31,7 +32,8 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer
         /***
          * 1. Construction
          ***/
-        EntitiesSelection( LightsSelection* lightsSelection, PivotPointMode pivotPointMode = PivotPointMode::MEDIAN_POINT );
+        // TODO: Pass *selections in a vector?
+        EntitiesSelection( LightsSelection* lightsSelection, MeshesSelection* meshesSelection, PivotPointMode pivotPointMode = PivotPointMode::MEDIAN_POINT );
         EntitiesSelection() = delete;
         EntitiesSelection( const EntitiesSelection& ) = delete;
         EntitiesSelection( EntitiesSelection&& ) = delete;
@@ -97,6 +99,7 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer
         std::vector< AbstractEntitiesSet* > specializedEntitiesSelections_;
 
         LightsSelection* lightsSelection_;
+        MeshesSelection* meshesSelection_;
 
         PivotPointMode pivotPointMode_;
         glm::vec3 centroid_;
