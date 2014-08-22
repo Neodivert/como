@@ -22,10 +22,11 @@
 #include <client/managers/lights/lights_manager.hpp>
 #include <client/managers/meshes_manager.hpp>
 #include <client/managers/selections/entities/local_entities_selection.hpp>
+#include <client/managers/abstract_entities_manager.hpp>
 
 namespace como {
 
-class EntitiesManager
+class EntitiesManager : public AbstractEntitiesManager
 {
     public:
         /***
@@ -62,7 +63,7 @@ class EntitiesManager
         /***
          * 5. Entity picking
          ***/
-        ResourceID selectEntityByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint );
+        virtual bool pick( const glm::vec3 &rayOrigin, glm::vec3 rayDirection, ResourceID &pickedElement, float &t, const float &MAX_T = FLT_MAX ) const;
 
 
         /***
@@ -70,8 +71,6 @@ class EntitiesManager
          ***/
         void executeRemoteSelectionCommand( SelectionCommandConstPtr command );
         void executeRemoteParameterChangeCommand( UserParameterChangeCommandConstPtr command );
-        void executeResourceCommand( ResourceCommandConstPtr command );
-        void executeResourcesSelectionCommand( ResourcesSelectionCommandConstPtr command );
 
 
         /***
@@ -85,6 +84,15 @@ class EntitiesManager
          ***/
         EntitiesManager& operator = ( const EntitiesManager& ) = default;
         EntitiesManager& operator = ( EntitiesManager&& ) = default;
+
+
+    protected:
+        /***
+         * 9. Resources locking / unlocking
+         ***/
+        virtual void lockResource(const ResourceID &resourceID, UserID newOwner);
+        virtual void unlockResourcesSelection(UserID currentOwner);
+        virtual void clearResourcesSelection(UserID currentOwner);
 
 
     private:

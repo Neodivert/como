@@ -20,11 +20,12 @@
 #define SPECIALIZED_ENTITIES_MANAGER_HPP
 
 #include <client/managers/resources_manager.hpp>
+#include <client/managers/abstract_entities_manager.hpp>
 
 namespace como {
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-class SpecializedEntitiesManager : public ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType >
+class SpecializedEntitiesManager : public AbstractEntitiesManager, public ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType >
 {
     public:
         /***
@@ -43,19 +44,25 @@ class SpecializedEntitiesManager : public ResourcesManager<ResourceType, Resourc
 
 
         /***
-         * 3. Entities picking
+         * 3. Getters
          ***/
-        virtual ResourceID selectEntityByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint );
+        virtual string getResourceName(const ResourceID &resourceID) const;
 
 
         /***
-         * 4. Drawing
+         * 4. Entities picking
+         ***/
+        virtual bool pick( const glm::vec3 &rayOrigin, glm::vec3 rayDirection, ResourceID &closestObject, float &t, const float &MAX_T = FLT_MAX ) const;
+
+
+        /***
+         * 5. Drawing
          ***/
         void drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const;
 
 
         /***
-         * 5. Operators
+         * 6. Operators
          ***/
         SpecializedEntitiesManager& operator = ( const SpecializedEntitiesManager& ) = default;
         SpecializedEntitiesManager& operator = ( SpecializedEntitiesManager&& ) = default;
@@ -69,65 +76,55 @@ class SpecializedEntitiesManager : public ResourcesManager<ResourceType, Resourc
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::SpecializedEntitiesManager( ServerInterfacePtr server, LogPtr log ) :
     ResourceCommandsExecuter( server ),
+    AbstractEntitiesManager( server ),
     ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>( server, log )
 {}
 
 
 /***
- * 3. Entities picking
+ * 3. Getters
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-ResourceID SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::selectEntityByRayPicking( glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint )
+string SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getResourceName(const ResourceID &resourceID) const
 {
-    const float MAX_T = 9999999.0f;
-    float minT = MAX_T;
-    ResourceID closestObject;
+    (void)( resourceID );
+    return "light";
+}
 
-    r1 = glm::normalize( r1 );
 
-    // Does the user want to keep the actual set of selected objects and simply add
-    // a new one? If that's NOT the case, we need to clear the set of selected drawables
-    // first.
-    if( !addToSelection ){
-        this->requestSelectionUnlock();
-    }
+/***
+ * 4. Entities picking
+ ***/
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+bool SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::pick(const glm::vec3 &rayOrigin, glm::vec3 rayDirection, ResourceID& closestObject, float &t, const float &MAX_T) const
+{
+    t = MAX_T;
+    rayDirection = glm::normalize( rayDirection );
 
     // Check if the given ray intersect any of the non selected drawables.
-    if( this->getResourcesSelection( NO_USER )->intersectsRay( r0, r1, closestObject, minT ) ){
+    if( this->getResourcesSelection( NO_USER )->intersectsRay( rayOrigin, rayDirection, closestObject, t ) ){
         // A non selected drawable has been intersected.
         //this->log()->debug( "Object picked\n" );
-
-        // Request to the server the lock of the intersected drawable.
-        // TODO: Request resource lock in the caller. I'll call
-        // selectEntityByRayPicking() on multiple managers.
-        this->requestResourceLock( closestObject );
-
-        // Save the collision point (in world coordinates) for returning it to
-        // caller.
-        worldCollisionPoint = r0 + r1 * minT;
     }else{
         // If user dind't selected any non-selected drawable, check if he / she
         // clicked on an already selected one.
-        if( this->getLocalResourcesSelection()->intersectsRay( r0, r1, closestObject, minT ) ){
+        if( this->getLocalResourcesSelection()->intersectsRay( rayOrigin, rayDirection, closestObject, t ) ){
             //this->log()->debug( "RETURN 0\n" );
             ////emit renderNeeded();
-            return NO_RESOURCE;
-        }else{
-            //this->log()->debug( "NO CLOSEST OBJECT. Unselecting all\n" );
-            this->requestSelectionUnlock();
+            return false;
         }
 
         // Even if no object is collided, we return in "worldCollisionPoint"
         // the "collision" with the near plane.
-        //worldCollisionPoint = r0;
-        worldCollisionPoint = glm::vec3( 0.0f );
+        t = 0;
     }
 
     // TODO: Send a request to server even when trying to select another
     // user's drawables?
 
-    return closestObject;
+    return true;
 }
 
 

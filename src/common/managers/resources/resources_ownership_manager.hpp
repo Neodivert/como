@@ -24,6 +24,8 @@
 namespace como {
 
 class ResourcesOwnershipManager {
+    friend class EntitiesManager; // FIXME
+
     public:
         /***
          * 1. Construction

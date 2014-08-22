@@ -50,13 +50,19 @@ class AbstractEntitiesManager : public virtual ResourceCommandsExecuter, public 
 
 
         /***
-         * 3. Drawing
+         * 3. Selecting
+         ***/
+        virtual ResourceID selectEntityByRayPicking( glm::vec3 rayOrigin, glm::vec3 rayDirection, bool addToSelection, float& t, const float& MAX_T = FLT_MAX );
+
+
+        /***
+         * 4. Drawing
          ***/
         virtual void drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const = 0;
 
 
         /***
-         * 4. Operators
+         * 5. Operators
          ***/
         AbstractEntitiesManager& operator = ( const AbstractEntitiesManager& ) = default;
         AbstractEntitiesManager& operator = ( AbstractEntitiesManager&& ) = default;

@@ -20,6 +20,7 @@
 #define PICKABLES_SET_HPP
 
 #include "glm/glm.hpp"
+#include <common/ids/resource_id.hpp>
 
 namespace como {
 
@@ -44,8 +45,8 @@ class PickablesSet
          * 3. Object picking
          ***/
         virtual bool pick( const glm::vec3& rayOrigin,
-                           const glm::vec3& rayDirection,
-                           const ResourceID& pickedElement,
+                           glm::vec3 rayDirection,
+                           ResourceID& pickedElement,
                            float& t,
                            const float& MAX_T = FLT_MAX ) const = 0;
 

@@ -26,6 +26,8 @@ namespace como {
  ***/
 
 EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log ) :
+    ResourceCommandsExecuter( server ), // TODO: Remove all this duplicity?
+    AbstractEntitiesManager( server ),
     server_( server ),
     meshesManager_( new MeshesManager( server, log ) ),
     lightsManager_( new LightsManager( server, log ) )
@@ -95,11 +97,10 @@ LightsManagerPtr EntitiesManager::getLightsManager()
  * 5. Entity picking
  ***/
 
-ResourceID EntitiesManager::selectEntityByRayPicking(glm::vec3 r0, glm::vec3 r1, bool addToSelection, glm::vec3& worldCollisionPoint )
+bool EntitiesManager::pick(const glm::vec3 &rayOrigin, glm::vec3 rayDirection, ResourceID &pickedElement, float &t, const float &MAX_T) const
 {
-    // TODO: Call also to MeshesManager::selectEntityByRayPicking() and lock
-    // only the closest entity between both managers.
-    return lightsManager_->selectEntityByRayPicking( r0, r1, addToSelection, worldCollisionPoint );
+    // TODO: Use managers vector intead. Return the closest entity among all.
+    return lightsManager_->pick( rayOrigin, rayDirection, pickedElement, t, MAX_T );
 }
 
 
@@ -149,28 +150,6 @@ void EntitiesManager::executeRemoteParameterChangeCommand( UserParameterChangeCo
 }
 
 
-void EntitiesManager::executeResourceCommand( ResourceCommandConstPtr command )
-{
-    (void)( command );
-    /*
-    for( auto& manager : managers_ ){
-        manager->executeResourceCommand( command );
-    }
-    */
-}
-
-
-void EntitiesManager::executeResourcesSelectionCommand( ResourcesSelectionCommandConstPtr command )
-{
-    (void)( command );
-    /*
-    for( auto& manager : managers_ ){
-        manager->executeResourcesSelectionCommand( command );
-    }
-    */
-}
-
-
 /***
  * 7. Drawing
  ***/
@@ -179,6 +158,32 @@ void EntitiesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, co
 {
     // TODO: Apply to all managers.
     lightsManager_->drawAll( openGL, viewMatrix, projectionMatrix );
+}
+
+
+/***
+ * 9. Resources locking / unlocking
+ ***/
+
+void EntitiesManager::lockResource(const ResourceID &resourceID, UserID newOwner)
+{
+    (void)( resourceID );
+    (void)( newOwner );
+    // TODO: Search the resource among the managers and lock it.
+}
+
+void EntitiesManager::unlockResourcesSelection(UserID currentOwner)
+{
+    for( auto& manager : managers_ ){
+        manager->unlockResourcesSelection( currentOwner );
+    }
+}
+
+void EntitiesManager::clearResourcesSelection(UserID currentOwner)
+{
+    for( auto& manager : managers_ ){
+        manager->clearResourcesSelection( currentOwner );
+    }
 }
 
 } // namespace como

@@ -462,15 +462,11 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
             entitiesManager_->getLightsManager()->executeRemoteCommand( dynamic_pointer_cast< const LightCommand >( command ) );
         break;
         case CommandTarget::RESOURCE:{
-            ResourceCommandConstPtr resourceCommand = dynamic_pointer_cast< const ResourceCommand >( command );
-
-            entitiesManager_->executeResourceCommand( resourceCommand );
+            entitiesManager_->executeResourceCommand( dynamic_cast< const ResourceCommand& >( *command ) );
             // TODO: materialsManager_->executeResourceCommand( resourceCommand );
         }break;
         case CommandTarget::RESOURCES_SELECTION:{
-            ResourcesSelectionCommandConstPtr selectionCommand = dynamic_pointer_cast< const ResourcesSelectionCommand >( command );
-
-            entitiesManager_->executeResourcesSelectionCommand( selectionCommand );
+            entitiesManager_->executeResourcesSelectionCommand( dynamic_cast< const ResourcesSelectionCommand& >( *command ) );
             // TODO: materialsManager_->executeResourcesSelectionCommand( selectionCommand );
         }break;
     }

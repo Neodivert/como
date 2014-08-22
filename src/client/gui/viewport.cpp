@@ -149,6 +149,7 @@ void Viewport::resizeEvent(QResizeEvent *event)
 void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
 {
     glm::vec3 rayOrigin, rayDirection;
+    float t;
     bool addToSelection = false;
 
     // Do one thing or another depending on which transformation mode we are in.
@@ -168,7 +169,9 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
         comoApp->getScene()->getEntitiesManager()->selectEntityByRayPicking( rayOrigin,
                                                          rayDirection,
                                                          addToSelection,
-                                                         lastMouseWorldPos_ );
+                                                         t );
+
+        lastMouseWorldPos_ = rayOrigin + glm::normalize( rayDirection ) * t;
     }else{
         // We were in transformation mode. This mouse press is for droping
         // the current selection.
