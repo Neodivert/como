@@ -206,7 +206,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         usersManager_ = UsersManagerPtr( new UsersManager( userAcceptancePacket ) );
 
         // Initialize the entities manager.
-        entitiesManager_ = EntitiesManagerPtr( new EntitiesManager( server_, log_ ) );
+        entitiesManager_ = EntitiesManagerPtr( new EntitiesManager( server_, log_, usersManager_ ) );
 
         // Initialize the materials manager.
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( server_, log_ ) );

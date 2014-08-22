@@ -25,10 +25,11 @@ namespace como {
  * 1. Construction
  ***/
 
-EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log ) :
+EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log, UsersManagerPtr usersManager ) :
     ResourceCommandsExecuter( server ), // TODO: Remove all this duplicity?
     AbstractEntitiesManager( server ),
     server_( server ),
+    usersManager_( usersManager ),
     meshesManager_( new MeshesManager( server, log ) ),
     lightsManager_( new LightsManager( server, log ) )
 {
@@ -37,6 +38,8 @@ EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log ) :
 
     entitiesSelections_[NO_USER] = EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( NO_USER ).get() ) );
     entitiesSelections_[server->getLocalUserID()] = EntitiesSelectionPtr( new LocalEntitiesSelection( server, lightsManager_->getLocalResourcesSelection().get() ) );
+
+    usersManager_->addObserver( this );
 }
 
 
@@ -44,21 +47,19 @@ EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log ) :
  * 3. Selections management
  ***/
 
-void EntitiesManager::createUserSelection( const UserConnectionCommand* userConnectionCommand )
+void EntitiesManager::createUserSelection( UserID userID, const glm::vec4& selectionColor )
 {
     // TODO: Apply to all managers.
-    lightsManager_->createResourcesSelection( userConnectionCommand->getUserID(),
-                                              userConnectionCommand->getSelectionColor().toVec4() );
+    lightsManager_->createResourcesSelection( userID, selectionColor );
 
-    entitiesSelections_[userConnectionCommand->getUserID()] =
-            EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( userConnectionCommand->getUserID() ).get() ) );
+    entitiesSelections_[userID] =
+            EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( userID ).get() ) );
 }
 
 
 void EntitiesManager::removeUserSelection()
 {
-    // TODO: Apply to all managers.
-    lightsManager_->removeResourcesSelection( server_->getLocalUserID() );
+    removeUserSelection( localUserID() );
 }
 
 
@@ -173,7 +174,21 @@ void EntitiesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, co
 
 
 /***
- * 9. Resources locking / unlocking
+ * 8. Updating (observer pattern)
+ ***/
+
+void EntitiesManager::update( ContainerAction lastContainerAction, UserID lastElementModified )
+{
+    if( lastContainerAction == ContainerAction::ELEMENT_INSERTION ){
+        createUserSelection( lastElementModified, usersManager_->user( lastElementModified  ).color() );
+    }else if( lastContainerAction == ContainerAction::ELEMENT_DELETION ){
+        removeUserSelection( lastElementModified );
+    }
+}
+
+
+/***
+ * 10. Resources locking / unlocking
  ***/
 
 void EntitiesManager::lockResource(const ResourceID &resourceID, UserID newOwner)

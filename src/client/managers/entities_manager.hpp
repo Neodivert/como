@@ -23,16 +23,17 @@
 #include <client/managers/meshes_manager.hpp>
 #include <client/managers/selections/entities/local_entities_selection.hpp>
 #include <client/managers/abstract_entities_manager.hpp>
+#include <client/managers/users/users_manager.hpp>
 
 namespace como {
 
-class EntitiesManager : public AbstractEntitiesManager
+class EntitiesManager : public AbstractEntitiesManager, public ContainerObserver< UserID >
 {
     public:
         /***
          * 1. Construction
          ***/
-        EntitiesManager( ServerInterfacePtr server, LogPtr log );
+        EntitiesManager( ServerInterfacePtr server, LogPtr log, UsersManagerPtr usersManager );
         EntitiesManager() = delete;
         EntitiesManager( const EntitiesManager& ) = delete;
         EntitiesManager( EntitiesManager&& ) = delete;
@@ -47,7 +48,7 @@ class EntitiesManager : public AbstractEntitiesManager
         /***
          * 3. Selections management
          ***/
-        void createUserSelection( const UserConnectionCommand* userConnectionCommand );
+        void createUserSelection( UserID userID, const glm::vec4& selectionColor );
         void removeUserSelection();
         void removeUserSelection( UserID userID );
 
@@ -81,7 +82,13 @@ class EntitiesManager : public AbstractEntitiesManager
 
 
         /***
-         * 8. Operators
+         * 8. Updating (observer pattern)
+         ***/
+        virtual void update( ContainerAction lastContainerAction, UserID lastElementModified );
+
+
+        /***
+         * 9. Operators
          ***/
         EntitiesManager& operator = ( const EntitiesManager& ) = default;
         EntitiesManager& operator = ( EntitiesManager&& ) = default;
@@ -89,7 +96,7 @@ class EntitiesManager : public AbstractEntitiesManager
 
     protected:
         /***
-         * 9. Resources locking / unlocking
+         * 10. Resources locking / unlocking
          ***/
         virtual void lockResource(const ResourceID &resourceID, UserID newOwner);
         virtual void unlockResourcesSelection(UserID currentOwner);
@@ -97,7 +104,9 @@ class EntitiesManager : public AbstractEntitiesManager
 
 
     private:
-        ServerInterfacePtr server_;
+        ServerInterfacePtr server_; // TODO: Remove.
+
+        UsersManagerPtr usersManager_;
 
         std::map< UserID, EntitiesSelectionPtr > entitiesSelections_;
 
