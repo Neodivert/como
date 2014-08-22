@@ -114,27 +114,10 @@ bool SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResou
     rayDirection = glm::normalize( rayDirection );
 
     // Check if the given ray intersect any of the non selected drawables.
-    if( this->getResourcesSelection( NO_USER )->intersectsRay( rayOrigin, rayDirection, closestObject, t ) ){
-        // A non selected drawable has been intersected.
-        return true;
-        //this->log()->debug( "Object picked\n" );
-    }else{
-        // If user dind't selected any non-selected drawable, check if he / she
-        // clicked on an already selected one.
-        if( this->getLocalResourcesSelection()->intersectsRay( rayOrigin, rayDirection, closestObject, t ) ){
-            //this->log()->debug( "RETURN 0\n" );
-            ////emit renderNeeded();
-            return false;
-        }
-
-        // Even if no object is collided, we return in "worldCollisionPoint"
-        // the "collision" with the near plane.
-        t = 0;
-    }
+    return this->getResourcesSelection( NO_USER )->intersectsRay( rayOrigin, rayDirection, closestObject, t );
 
     // TODO: Send a request to server even when trying to select another
     // user's drawables?
-    return false;
 }
 
 

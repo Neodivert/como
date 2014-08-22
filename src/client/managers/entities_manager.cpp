@@ -112,8 +112,18 @@ bool EntitiesManager::containsResource(const ResourceID &resourceID) const
 
 bool EntitiesManager::pick(const glm::vec3 &rayOrigin, glm::vec3 rayDirection, ResourceID &pickedElement, float &t, const float &MAX_T) const
 {
-    // TODO: Use managers vector intead. Return the closest entity among all.
-    return lightsManager_->pick( rayOrigin, rayDirection, pickedElement, t, MAX_T );
+    unsigned int nIntersectedManagers = 0;
+    float maxT = MAX_T;
+
+    for( const auto& manager : managers_ ){
+        if( manager->pick( rayOrigin, rayDirection, pickedElement, t, maxT ) ){
+            nIntersectedManagers++;
+        }
+        // Force the following manager to find a closer element.
+        maxT = t;
+    }
+
+    return (nIntersectedManagers > 0);
 }
 
 
