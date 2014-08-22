@@ -50,7 +50,6 @@ class ResourcesOwnershipRequester : public ResourcesOwnershipManager, public Ser
         ResourcesOwnershipRequester& operator = ( ResourcesOwnershipRequester&& ) = delete;
 
 
-    protected:
         /***
          * 4. Ownership requests
          ***/
@@ -59,6 +58,7 @@ class ResourcesOwnershipRequester : public ResourcesOwnershipManager, public Ser
         void requestSelectionDeletion();
 
 
+    protected:
         /***
          * 5. Lock response processing
          ***/
