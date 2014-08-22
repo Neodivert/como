@@ -47,6 +47,7 @@ class SpecializedEntitiesManager : public AbstractEntitiesManager, public Resour
          * 3. Getters
          ***/
         virtual string getResourceName(const ResourceID &resourceID) const;
+        virtual bool containsResource( const ResourceID& resourceID ) const;
 
 
         /***
@@ -93,6 +94,13 @@ string SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalRes
 }
 
 
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+bool SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::containsResource(const ResourceID &resourceID) const
+{
+    return this->ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::containsResource( resourceID );
+}
+
+
 /***
  * 4. Entities picking
  ***/
@@ -106,6 +114,7 @@ bool SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResou
     // Check if the given ray intersect any of the non selected drawables.
     if( this->getResourcesSelection( NO_USER )->intersectsRay( rayOrigin, rayDirection, closestObject, t ) ){
         // A non selected drawable has been intersected.
+        return true;
         //this->log()->debug( "Object picked\n" );
     }else{
         // If user dind't selected any non-selected drawable, check if he / she
@@ -123,8 +132,7 @@ bool SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResou
 
     // TODO: Send a request to server even when trying to select another
     // user's drawables?
-
-    return true;
+    return false;
 }
 
 

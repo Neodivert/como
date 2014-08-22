@@ -58,6 +58,7 @@ class EntitiesManager : public AbstractEntitiesManager
         LocalEntitiesSelectionPtr getLocalSelection() const;
         MeshesManagerPtr getMeshesManager();
         LightsManagerPtr getLightsManager();
+        virtual bool containsResource(const ResourceID &resourceID) const;
 
 
         /***
@@ -103,7 +104,7 @@ class EntitiesManager : public AbstractEntitiesManager
         MeshesManagerPtr meshesManager_;
         LightsManagerPtr lightsManager_;
 
-        std::vector< std::shared_ptr< ResourcesOwnershipManager > > managers_;
+        std::vector< std::shared_ptr< AbstractEntitiesManager > > managers_;
 };
 
 typedef std::shared_ptr< EntitiesManager > EntitiesManagerPtr;

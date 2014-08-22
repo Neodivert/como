@@ -74,6 +74,7 @@ class ResourcesSelection : public ObservableContainer<ResourceID> {
          * 7. Getters
          ***/
         virtual unsigned int size() const;
+        bool containsResource( const ResourceID& resourceID ) const;
 
 
     protected:
@@ -147,6 +148,13 @@ template <class ResourceType>
 unsigned int ResourcesSelection<ResourceType>::size() const
 {
     return this->resources_.size();
+}
+
+
+template <class ResourceType>
+bool ResourcesSelection<ResourceType>::containsResource(const ResourceID &resourceID) const
+{
+    return ( this->resources_.count( resourceID ) != 0 );
 }
 
 }

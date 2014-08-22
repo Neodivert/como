@@ -12,7 +12,7 @@ AbstractEntitiesManager::AbstractEntitiesManager( ServerInterfacePtr server ) :
 
 
 /***
- * 3. Selecting
+ * 4. Selecting
  ***/
 
 ResourceID AbstractEntitiesManager::selectEntityByRayPicking(glm::vec3 rayOrigin, glm::vec3 rayDirection, bool addToSelection, float &t, const float &MAX_T)

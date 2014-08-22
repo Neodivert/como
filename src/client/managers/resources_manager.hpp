@@ -55,6 +55,7 @@ class ResourcesManager : public virtual ResourceCommandsExecuter, public Observa
         /***
          * 3. Getters
          ***/
+        virtual bool containsResource( const ResourceID& resourceID ) const;
         std::shared_ptr< LocalResourcesSelectionType > getLocalResourcesSelection() const;
         virtual std::string getResourceName( const ResourceID& resourceID ) const = 0;
 
@@ -140,6 +141,19 @@ ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionTy
 /***
  * 3. Getters
  ***/
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+bool ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::containsResource( const ResourceID& resourceID ) const
+{
+    for( const auto& selection : resourcesSelections_ ){
+        if( selection.second->containsResource( resourceID ) ){
+            return true;
+        }
+    }
+
+    return false;
+}
+
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 std::shared_ptr<LocalResourcesSelectionType> ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getLocalResourcesSelection() const

@@ -93,6 +93,17 @@ LightsManagerPtr EntitiesManager::getLightsManager()
 }
 
 
+bool EntitiesManager::containsResource(const ResourceID &resourceID) const
+{
+    for( const auto& manager : managers_ ){
+        if( manager->containsResource( resourceID ) ){
+            return true;
+        }
+    }
+    return false;
+}
+
+
 /***
  * 5. Entity picking
  ***/
@@ -167,10 +178,13 @@ void EntitiesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, co
 
 void EntitiesManager::lockResource(const ResourceID &resourceID, UserID newOwner)
 {
-    (void)( resourceID );
-    (void)( newOwner );
-    // TODO: Search the resource among the managers and lock it.
+    for( auto& manager : managers_ ){
+        if( manager->containsResource( resourceID ) ){
+            manager->lockResource( resourceID, newOwner );
+        }
+    }
 }
+
 
 void EntitiesManager::unlockResourcesSelection(UserID currentOwner)
 {
