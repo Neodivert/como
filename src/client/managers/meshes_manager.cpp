@@ -26,13 +26,9 @@ namespace como {
 
 MeshesManager::MeshesManager( ServerInterfacePtr server, LogPtr log ) :
     ResourceCommandsExecuter( server ),
-    ResourcesManager( server, log ),
+    SpecializedEntitiesManager( server, log ),
     newMeshesDisplayVertexNormals_( false )
-{
-    // Create a selection of non selected meshes and keep a pointer to it.
-    meshesSelections_[NO_USER];
-    nonSelectedMeshes_ = &( meshesSelections_.at( NO_USER ) );
-}
+{}
 
 
 /***
@@ -41,9 +37,9 @@ MeshesManager::MeshesManager( ServerInterfacePtr server, LogPtr log ) :
 
 string MeshesManager::getResourceName( const ResourceID& resourceID) const
 {
-    for( auto meshesSelection : meshesSelections_ ){
-        if( meshesSelection.second.containsResource( resourceID ) ){
-            return meshesSelection.second.getResourceName( resourceID );
+    for( auto meshesSelection : resourcesSelections_ ){
+        if( meshesSelection.second->containsResource( resourceID ) ){
+            return meshesSelection.second->getResourceName( resourceID );
         }
     }
 
@@ -54,14 +50,14 @@ string MeshesManager::getResourceName( const ResourceID& resourceID) const
 ElementsMeetingCondition MeshesManager::displaysVertexNormals() const
 {
     const ElementsMeetingCondition firstSelectionValue =
-            meshesSelections_.begin()->second.displaysVertexNormals();
+            resourcesSelections_.begin()->second->displaysVertexNormals();
 
     if( firstSelectionValue == ElementsMeetingCondition::SOME ){
         return ElementsMeetingCondition::SOME;
     }
 
-    for( auto meshesSelection : meshesSelections_ ){
-        if( meshesSelection.second.displaysVertexNormals() != firstSelectionValue ){
+    for( auto meshesSelection : resourcesSelections_ ){
+        if( meshesSelection.second->displaysVertexNormals() != firstSelectionValue ){
             return ElementsMeetingCondition::SOME;
         }
     }
@@ -74,8 +70,8 @@ unsigned int MeshesManager::getTotalMeshes() const
 {
     unsigned int totalMeshes = 0;
 
-    for( auto meshesSelection : meshesSelections_ ){
-        totalMeshes += meshesSelection.second.size();
+    for( auto meshesSelection : resourcesSelections_ ){
+        totalMeshes += meshesSelection.second->size();
     }
 
     return totalMeshes;
@@ -90,8 +86,8 @@ void MeshesManager::displayVertexNormals( bool display )
 {
     newMeshesDisplayVertexNormals_ = display;
 
-    for( auto meshesSelection : meshesSelections_ ){
-        meshesSelection.second.displayVertexNormals( display );
+    for( auto meshesSelection : resourcesSelections_ ){
+        meshesSelection.second->displayVertexNormals( display );
     }
 }
 
@@ -125,35 +121,14 @@ void MeshesManager::createMesh( ResourceID meshID, MeshVertexData vertexData, Me
 
 void MeshesManager::registerUser( UserID userID )
 {
-    meshesSelections_[ userID ];
+    resourcesSelections_[ userID ];
 }
 
 void MeshesManager::removeUser( UserID userID )
 {
     unlockResourcesSelection( userID );
-    meshesSelections_.erase( userID );
+    resourcesSelections_.erase( userID );
 }
 
-
-/***
- * 5. Resources ownership management
- ***/
-
-void MeshesManager::lockResource( const ResourceID& resourceID, UserID userID )
-{
-    nonSelectedMeshes_->moveMesh( resourceID, meshesSelections_.at( userID ) );
-}
-
-
-void MeshesManager::unlockResourcesSelection( UserID userID )
-{
-    meshesSelections_.at( userID ).moveAll( *nonSelectedMeshes_ );
-}
-
-
-void MeshesManager::deleteResourcesSelection( UserID userID )
-{
-    meshesSelections_.at( userID ).clear();
-}
 
 } // namespace como

@@ -19,7 +19,7 @@
 #ifndef MESHES_MANAGER_HPP
 #define MESHES_MANAGER_HPP
 
-#include <client/managers/drawables_manager/drawables_manager.hpp>
+#include <client/managers/specialized_entities_manager.hpp>
 #include <client/managers/drawables_selection/meshes_selection.hpp>
 #include <client/managers/selections/meshes/local_meshes_selection.hpp>
 
@@ -30,12 +30,9 @@ typedef std::shared_ptr< MeshesManager > MeshesManagerPtr;
 
 typedef std::map< UserID, MeshesSelection > MeshesSelectionMap;
 
-class MeshesManager : public ResourcesManager< Mesh, MeshesSelection, LocalMeshesSelection >
+class MeshesManager : public SpecializedEntitiesManager< Mesh, MeshesSelection, LocalMeshesSelection >
 {
     private:
-        MeshesSelection* nonSelectedMeshes_;
-        MeshesSelectionMap meshesSelections_;
-
         bool newMeshesDisplayVertexNormals_;
 
 
@@ -88,14 +85,6 @@ class MeshesManager : public ResourcesManager< Mesh, MeshesSelection, LocalMeshe
          ***/
         virtual void registerUser( UserID userID );
         virtual void removeUser( UserID userID );
-
-    protected:
-        /***
-         * 5. Resources ownership management
-         ***/
-        virtual void lockResource( const ResourceID& resourceID, UserID userID );
-        virtual void unlockResourcesSelection( UserID userID );
-        virtual void deleteResourcesSelection( UserID userID );
 };
 
 } // namespace como
