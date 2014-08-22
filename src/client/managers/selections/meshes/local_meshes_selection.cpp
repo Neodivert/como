@@ -21,6 +21,8 @@
 namespace como {
 
 LocalMeshesSelection::LocalMeshesSelection( ServerInterfacePtr server ) :
+    EntitiesSet( server->getLocalUserColor().toVec4() ),
+    MeshesSelection( server->getLocalUserColor().toVec4() ),
     LocalResourcesSelection( server )
 {}
 
