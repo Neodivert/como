@@ -54,7 +54,7 @@ LightsMenu::LightsMenu( LocalLightsSelection* lights ) :
     // Initially there is no light selected, so make this panel no visible.
     setVisible( false );
 
-    //lights_->Observable::addObserver( this );
+    lights_->Observable::addObserver( this );
 }
 
 

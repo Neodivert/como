@@ -110,12 +110,6 @@ ElementsMeetingCondition MeshesSelection::displaysVertexNormals() const
 }
 
 
-unsigned int MeshesSelection::size() const
-{
-    return resources_.size();
-}
-
-
 /***
  * 4. Setters
  ***/

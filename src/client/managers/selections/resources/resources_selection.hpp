@@ -119,9 +119,11 @@ void ResourcesSelection<ResourceType>::moveResource( ResourceID resourceID, Reso
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::moveAll( ResourcesSelection<ResourceType>& dstSelection )
 {
-    for( auto& resourcePair : this->resources_ ){
-        this->moveResource( resourcePair.first, dstSelection );
+    // TODO: Maybe a more efficient way?
+    for( const auto& resourcePair : this->resources_ ){
+        dstSelection.addResource( resourcePair.first, this->resources_.at( resourcePair.first ) );
     }
+    clear();
 }
 
 
