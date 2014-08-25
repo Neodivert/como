@@ -33,9 +33,6 @@ class MeshInfoMenu : public QWidget, public Observer
         /*! Local user's (drawables) selection */
         std::shared_ptr< LocalMeshesSelection > userSelection_;
 
-        /*! Position of the user's selection centroid */
-        QLabel* centroidPosition_;
-
         QGroupBox* displayVertexNormalsGroupBox_;
         QRadioButton* displayVertexNormalsAlways_;
         QRadioButton* displayVertexNormalsNever_;

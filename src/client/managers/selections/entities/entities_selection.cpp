@@ -189,6 +189,8 @@ void EntitiesSelection::update()
     if( nSelections ){
         centroid_ /= nSelections;
     }
+
+    notifyObservers();
 }
 
 

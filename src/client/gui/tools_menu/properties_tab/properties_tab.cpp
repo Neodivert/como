@@ -36,7 +36,7 @@ PropertiesTab::PropertiesTab( ScenePtr scene )
 
     // Add required widgets to the layout and set the latter as the current
     // layout.
-    // TODO: Implement layout->addWidget( new GeneralInfoMenu( scene->getEntitiesManager()->getLocalResourcesSelection() ) );
+    layout->addWidget( new GeneralInfoMenu( scene->getEntitiesManager()->getLocalSelection() ) );
     layout->addWidget( new MeshInfoMenu( scene->getMeshesManager()->getLocalResourcesSelection() ) );
     layout->addWidget( new LightsMenu( scene->getLightsManager()->getLocalResourcesSelection().get() ) );
     setLayout( layout );

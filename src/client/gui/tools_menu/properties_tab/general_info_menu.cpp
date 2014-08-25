@@ -37,12 +37,16 @@ GeneralInfoMenu::GeneralInfoMenu( LocalEntitiesSelectionPtr userSelection ) :
     // Create a label with the type of the object.
     objectType_ = new QLabel( "Unknown" );
 
+    // Create a label for displaying the centroid of the user's selection.
+    centroidPosition_ = new QLabel( "Undefined" );
+
     // Add widgets to the layout and set the latter as the current one.
     layout->addRow( new QLabel( "Name:" ), objectName_ );
     layout->addRow( new QLabel( "Type:" ), objectType_ );
+    layout->addRow( "Centroid position:", centroidPosition_ );
     setLayout( layout );
 
-    //userSelection_->Observable::addObserver( this );
+    userSelection_->addObserver( this );
     update();
 }
 
@@ -53,6 +57,14 @@ GeneralInfoMenu::GeneralInfoMenu( LocalEntitiesSelectionPtr userSelection ) :
 
 void GeneralInfoMenu::update()
 {
+    // Convert the requested centroid into a string.
+    char centroidStr[50] = {0};
+    glm::vec3 centroid = userSelection_->centroid();
+    sprintf( centroidStr, "(%.3f, %.3f, %.3f)", centroid.x, centroid.y, centroid.z );
+
+    // Write the previous "centroid string" to its corresponding label.
+    centroidPosition_->setText( centroidStr );
+
     /*
     objectName_->setText( userSelection_->getName().c_str() );
     objectType_->setText( userSelection_->getTypeName().c_str() );

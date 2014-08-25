@@ -31,11 +31,7 @@ MeshInfoMenu::MeshInfoMenu( std::shared_ptr< LocalMeshesSelection > userSelectio
     // Create the layout for this tab.
     QFormLayout* layout = new QFormLayout;
 
-    // Create a label for displaying the centroid of the user's selection.
-    centroidPosition_ = new QLabel( "Undefined" );
-
     // Add widgets to the layout and set it as the current one.
-    layout->addRow( "Centroid position:", centroidPosition_ );
     layout->addWidget( createVertexNormalsDisplayGroupBox( userSelection ) );
     setLayout( layout );
 
@@ -85,19 +81,10 @@ QGroupBox* MeshInfoMenu::createVertexNormalsDisplayGroupBox( std::shared_ptr< Lo
 
 void MeshInfoMenu::update()
 {
-    char centroidStr[50] = {0};
-    glm::vec4 centroid = glm::vec4( userSelection_->centroid(), 1.0f );
-
     setVisible( userSelection_->size() );
     if( !( userSelection_->size() ) ){
         return;
     }
-
-    // Convert the requested centroid into a string.
-    sprintf( centroidStr, "(%.3f, %.3f, %.3f)", centroid.x, centroid.y, centroid.z );
-
-    // Write the previous "centroid string" to its corresponding label.
-    centroidPosition_->setText( centroidStr );
 
     switch( userSelection_->displaysVertexNormals() ){
         case ElementsMeetingCondition::ALL:

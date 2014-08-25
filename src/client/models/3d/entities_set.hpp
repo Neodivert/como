@@ -176,6 +176,7 @@ void EntitiesSet<EntitySubtype>::translate( glm::vec3 direction )
     for( auto& entityPair : this->resources_ ){
         entityPair.second->translate( direction );
     }
+    this->notifyObservers();
 }
 
 
@@ -190,23 +191,21 @@ void EntitiesSet<EntitySubtype>::rotate( const GLfloat& angle, const glm::vec3& 
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
             for( auto& entityPair : this->resources_ ){
                 entityPair.second->rotateAroundCentroid( angle, axis );
-                this->notifyElementUpdate( entityPair.first );
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
             for( auto& entityPair : this->resources_ ){
                 entityPair.second->rotateAroundPivot( angle, axis, centroid() );
-                this->notifyElementUpdate( entityPair.first );
             }
         break;
         case PivotPointMode::WORLD_ORIGIN:
             for( auto& entityPair : this->resources_ ){
                 entityPair.second->rotateAroundOrigin( angle, axis );
-                this->notifyElementUpdate( entityPair.first );
             }
         break;
     }
 
+    this->notifyObservers();
     //updateSelectionCentroid();
 
 
@@ -225,23 +224,21 @@ void EntitiesSet<EntitySubtype>::scale( const glm::vec3& scaleFactors )
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
             for( auto& entityPair : this->resources_ ){
                 entityPair.second->scaleAroundCentroid( scaleFactors );
-                this->notifyElementUpdate( entityPair.first );
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
             for( auto& entityPair : this->resources_ ){
                 entityPair.second->scaleAroundPivot( scaleFactors, centroid() );
-                this->notifyElementUpdate( entityPair.first );
             }
         break;
         case PivotPointMode::WORLD_ORIGIN:
             for( auto& entityPair : this->resources_ ){
                 entityPair.second->scaleAroundOrigin( scaleFactors );
-                this->notifyElementUpdate( entityPair.first );
             }
         break;
     }
 
+    this->notifyObservers();
     //updateSelectionCentroid();
 
     //mutex_.unlock();

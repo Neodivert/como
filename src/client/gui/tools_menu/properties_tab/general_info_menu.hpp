@@ -34,6 +34,8 @@ class GeneralInfoMenu : public QWidget, public Observer
         /*! Local user's (entities) selection */
         LocalEntitiesSelectionPtr userSelection_;
 
+        QLabel* centroidPosition_;
+
         /*! Name of the currently selected 3D object. */
         QLineEdit* objectName_;
 
