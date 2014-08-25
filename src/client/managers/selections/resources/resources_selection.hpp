@@ -54,7 +54,7 @@ class ResourcesSelection : public virtual Observable {
         /***
          * 4. Resources insertion / removal
          ***/
-        void addResource( ResourceID id, std::unique_ptr< ResourceType > resource );
+        void addResource( ResourceID id, std::unique_ptr< ResourceType > resource, bool notifyObservers = true );
         void removeResource( ResourceID id );
 
 
@@ -88,11 +88,13 @@ class ResourcesSelection : public virtual Observable {
  ***/
 
 template <class ResourceType>
-void ResourcesSelection<ResourceType>::addResource( ResourceID id, std::unique_ptr< ResourceType > resource )
+void ResourcesSelection<ResourceType>::addResource( ResourceID id, std::unique_ptr< ResourceType > resource, bool notifyObservers )
 {
     this->resources_[id] = std::move( resource );
 
-    this->notifyObservers();
+    if( notifyObservers ){
+        this->notifyObservers();
+    }
 }
 
 
@@ -112,8 +114,12 @@ void ResourcesSelection<ResourceType>::removeResource( ResourceID id )
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::moveResource( ResourceID resourceID, ResourcesSelection<ResourceType>& dstSelection )
 {
-    dstSelection.addResource( resourceID, std::move( this->resources_.at( resourceID ) ) );
+    // Don't notify observers when adding resource to destiny.
+    // Observers may query source selection, which holds a
+    // null "moved" pointer at that time.
+    dstSelection.addResource( resourceID, std::move( this->resources_.at( resourceID ) ), false );
     this->removeResource( resourceID );
+    dstSelection.notifyObservers();
 }
 
 

@@ -37,7 +37,7 @@ MeshesManager::MeshesManager( ServerInterfacePtr server, LogPtr log ) :
 
 string MeshesManager::getResourceName( const ResourceID& resourceID) const
 {
-    for( auto meshesSelection : resourcesSelections_ ){
+    for( const auto& meshesSelection : resourcesSelections_ ){
         if( meshesSelection.second->containsResource( resourceID ) ){
             return meshesSelection.second->getResourceName( resourceID );
         }
@@ -70,7 +70,7 @@ unsigned int MeshesManager::getTotalMeshes() const
 {
     unsigned int totalMeshes = 0;
 
-    for( auto meshesSelection : resourcesSelections_ ){
+    for( const auto& meshesSelection : resourcesSelections_ ){
         totalMeshes += meshesSelection.second->size();
     }
 
@@ -86,7 +86,7 @@ void MeshesManager::displayVertexNormals( bool display )
 {
     newMeshesDisplayVertexNormals_ = display;
 
-    for( auto meshesSelection : resourcesSelections_ ){
+    for( auto& meshesSelection : resourcesSelections_ ){
         meshesSelection.second->displayVertexNormals( display );
     }
 }

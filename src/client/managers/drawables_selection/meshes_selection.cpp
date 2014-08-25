@@ -72,7 +72,7 @@ ElementsMeetingCondition MeshesSelection::displaysVertexNormals() const
 
     // Check whether any other mesh in the selection isn't displaying vertex
     // normals when the first mesh does so or viceversa.
-    for( auto& meshPair : resources_ ){
+    for( const auto& meshPair : resources_ ){
         if( meshPair.second->displaysVertexNormals() != firstMeshDisplaysVertexNormals ){
             return ElementsMeetingCondition::SOME;
         }
