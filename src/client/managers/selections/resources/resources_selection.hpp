@@ -128,7 +128,7 @@ void ResourcesSelection<ResourceType>::moveAll( ResourcesSelection<ResourceType>
 {
     // TODO: Maybe a more efficient way?
     for( auto& resourcePair : this->resources_ ){
-        dstSelection.addResource( resourcePair.first, std::move( resourcePair.second ) );
+        dstSelection.addResource( resourcePair.first, std::move( resourcePair.second ), false );
     }
     this->clear();
 }
