@@ -47,7 +47,6 @@ class MeshesSelection : public virtual EntitiesSet< Mesh >, public AbstractMesh
         MeshesSelection( glm::vec4 borderColor = DEFAULT_BORDER_COLOR );
         MeshesSelection( const MeshesSelection& ) = default;
         MeshesSelection( MeshesSelection&& ) = default;
-        virtual DrawablePtr clone();
 
 
         /***
@@ -61,7 +60,6 @@ class MeshesSelection : public virtual EntitiesSet< Mesh >, public AbstractMesh
          ***/
         bool containsResource( const ResourceID& resourceID ) const;
         std::string getResourceName( const ResourceID& resourceID ) const;
-        virtual glm::vec3 centroid() const;
         virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle ) const;
         virtual bool containsProperty( const void *property ) const;
         virtual ElementsMeetingCondition displaysVertexNormals() const;
@@ -74,23 +72,7 @@ class MeshesSelection : public virtual EntitiesSet< Mesh >, public AbstractMesh
 
 
         /***
-         * 5. Meshes management
-         ***/
-        void addMesh( const ResourceID& id, MeshPtr mesh );
-        void removeMesh( const ResourceID& id );
-        void clear();
-        bool moveMesh( const ResourceID& meshID, MeshesSelection& dstMeshesSelection );
-        void moveAll( MeshesSelection& dstMeshesSelection );
-
-
-        /***
-         * 6. Drawing
-         ***/
-        virtual void draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec4* contourColor ) const;
-
-
-        /***
-         * 7. Operators
+         * 5. Operators
          ***/
         MeshesSelection& operator = ( const MeshesSelection& ) = default;
         MeshesSelection& operator = ( MeshesSelection&& ) = default;

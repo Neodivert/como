@@ -79,8 +79,6 @@ class Entity : public Drawable, public Transformable
         Entity( const Entity& ) = default;
         Entity( Entity&& ) = delete;
 
-        virtual DrawablePtr clone() = 0;
-
         virtual ~Entity(){}
 
 

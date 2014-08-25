@@ -45,7 +45,7 @@ const char DEFAULT_MESH_NAME[] = "Mesh #";
  ***/
 
 Mesh::Mesh( MeshType type, const char* filePath, MaterialConstPtr material, bool displayVertexNormals ) :
-    AbstractMesh( DEFAULT_MESH_NAME ),
+    Entity( DrawableType::MESH, DEFAULT_MESH_NAME ),
     type_( type ),
     displayVertexNormals_( displayVertexNormals )
 {
@@ -61,7 +61,7 @@ Mesh::Mesh( MeshType type, const char* filePath, MaterialConstPtr material, bool
 
 
 Mesh::Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials, bool displayVertexNormals ) :
-    AbstractMesh( DEFAULT_MESH_NAME ),
+    Entity( DrawableType::MESH, DEFAULT_MESH_NAME ),
     type_( MeshType::MESH ),
     vertexData_( vertexData ),
     polygonsGroups_( polygonsGroups ),
@@ -86,11 +86,6 @@ Mesh::Mesh( const Mesh& b ) :
     // TODO: Copy buffers.
 }
 */
-
-DrawablePtr Mesh::clone()
-{
-    return DrawablePtr( new Mesh( *this ) );
-}
 
 
 /***

@@ -74,8 +74,6 @@ class Camera : public Mesh
         Camera( Camera&& ) = default;
         Camera( View view = View::FRONT );
 
-        virtual DrawablePtr clone();
-
         // TODO: Is this problematic with Entity's virtual destructor?
         ~Camera() = default;
 

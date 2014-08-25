@@ -23,14 +23,13 @@
 
 namespace como {
 
-class AbstractMesh : public Entity {
+class AbstractMesh {
 
     public:
         /***
          * 1. Construction
          ***/
-        AbstractMesh( std::string name = "Unnamed" )
-            : Entity( DrawableType::MESH, name ){}
+        AbstractMesh() = default;
         AbstractMesh( const AbstractMesh& ) = default;
         AbstractMesh( AbstractMesh&& ) = default;
 

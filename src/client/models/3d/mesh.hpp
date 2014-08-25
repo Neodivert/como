@@ -47,7 +47,7 @@ enum class MeshType : std::uint8_t {
  * File main class
  ***/
 
-class Mesh : public AbstractMesh
+class Mesh : public AbstractMesh, public Entity
 {
     private:
         // Mesh type
@@ -101,8 +101,6 @@ class Mesh : public AbstractMesh
         Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials, bool displayVertexNormals = false );
         Mesh( const Mesh& b ) = default;
         Mesh( Mesh&& ) = delete;
-
-        virtual DrawablePtr clone();
 
 
         /***

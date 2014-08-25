@@ -29,12 +29,6 @@ MeshesSelection::MeshesSelection( glm::vec4 borderColor ) :
 {}
 
 
-DrawablePtr MeshesSelection::clone()
-{
-    return DrawablePtr( new MeshesSelection( *this ) );
-}
-
-
 /***
  * 2. Getters
  ***/
@@ -48,22 +42,6 @@ bool MeshesSelection::containsResource( const ResourceID& resourceID ) const
 string MeshesSelection::getResourceName( const ResourceID& resourceID ) const
 {
     return resources_.at( resourceID )->getName();
-}
-
-
-glm::vec3 MeshesSelection::centroid() const
-{
-    glm::vec3 centroid( 0.0f );
-
-    for( auto mesh : resources_ ){
-        centroid += mesh.second->centroid();
-    }
-
-    if( resources_.size() ){
-        centroid /= resources_.size();
-    }
-
-    return centroid;
 }
 
 
@@ -94,8 +72,8 @@ ElementsMeetingCondition MeshesSelection::displaysVertexNormals() const
 
     // Check whether any other mesh in the selection isn't displaying vertex
     // normals when the first mesh does so or viceversa.
-    for( auto mesh : resources_ ){
-        if( mesh.second->displaysVertexNormals() != firstMeshDisplaysVertexNormals ){
+    for( auto& meshPair : resources_ ){
+        if( meshPair.second->displaysVertexNormals() != firstMeshDisplaysVertexNormals ){
             return ElementsMeetingCondition::SOME;
         }
     }
@@ -122,64 +100,5 @@ void MeshesSelection::displayVertexNormals( bool display )
     notifyObservers();
 }
 
-
-/***
- * 5. Meshes management
- ***/
-
-void MeshesSelection::addMesh( const ResourceID& id, MeshPtr mesh )
-{
-    resources_[id] = mesh;
-    notifyObservers();
-}
-
-
-void MeshesSelection::removeMesh( const ResourceID& id )
-{
-    resources_.erase( id );
-    notifyObservers();
-}
-
-
-void MeshesSelection::clear()
-{
-    resources_.clear();
-    notifyObservers();
-}
-
-
-bool MeshesSelection::moveMesh( const ResourceID& meshID, MeshesSelection& dstMeshesSelection )
-{
-    if( resources_.count( meshID ) ){
-        dstMeshesSelection.addMesh( meshID, resources_.at( meshID ) );
-        removeMesh( meshID );
-
-        return true;
-    }else{
-        return false;
-    }
-}
-
-
-void MeshesSelection::moveAll( MeshesSelection& dstMeshesSelection )
-{
-    for( auto mesh : resources_ ){
-        dstMeshesSelection.addMesh( mesh.first, mesh.second );
-    }
-
-    resources_.clear();
-}
-
-
-/***
- * 6. Drawing
- ***/
-
-void MeshesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec4* contourColor ) const
-{
-    for( auto mesh : resources_ ){
-        mesh.second->draw( openGL, viewMatrix, projectionMatrix, contourColor );
-    }
-}
 
 } // namespace como

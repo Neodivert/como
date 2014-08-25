@@ -23,11 +23,12 @@
 #include <common/ids/resource_id.hpp>
 #include <common/utilities/observable_container/observable_container.hpp>
 #include <memory>
+#include <queue>
 
 namespace como {
 
 template <class ResourceType>
-class ResourcesSelection : public ObservableContainer<ResourceID> {
+class ResourcesSelection : public virtual Observable {
     public:
         /***
          * 1. Construction
@@ -53,7 +54,7 @@ class ResourcesSelection : public ObservableContainer<ResourceID> {
         /***
          * 4. Resources insertion / removal
          ***/
-        void addResource( ResourceID id, std::shared_ptr< ResourceType > resource );
+        void addResource( ResourceID id, std::unique_ptr< ResourceType > resource );
         void removeResource( ResourceID id );
 
 
@@ -78,7 +79,7 @@ class ResourcesSelection : public ObservableContainer<ResourceID> {
 
 
     protected:
-        std::map< ResourceID, std::shared_ptr< ResourceType > > resources_;
+        std::map< ResourceID, std::unique_ptr< ResourceType > > resources_;
 };
 
 
@@ -87,11 +88,11 @@ class ResourcesSelection : public ObservableContainer<ResourceID> {
  ***/
 
 template <class ResourceType>
-void ResourcesSelection<ResourceType>::addResource( ResourceID id, std::shared_ptr< ResourceType > resource )
+void ResourcesSelection<ResourceType>::addResource( ResourceID id, std::unique_ptr< ResourceType > resource )
 {
-    this->resources_[id] = resource;
+    this->resources_[id] = std::move( resource );
 
-    this->notifyElementInsertion( id );
+    this->notifyObservers();
 }
 
 
@@ -100,7 +101,7 @@ void ResourcesSelection<ResourceType>::removeResource( ResourceID id )
 {
     this->resources_.erase( id );
 
-    this->notifyElementDeletion( id );
+    this->notifyObservers();
 }
 
 
@@ -111,7 +112,7 @@ void ResourcesSelection<ResourceType>::removeResource( ResourceID id )
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::moveResource( ResourceID resourceID, ResourcesSelection<ResourceType>& dstSelection )
 {
-    dstSelection.addResource( resourceID, this->resources_.at( resourceID ) );
+    dstSelection.addResource( resourceID, std::move( this->resources_.at( resourceID ) ) );
     this->removeResource( resourceID );
 }
 
@@ -120,10 +121,10 @@ template <class ResourceType>
 void ResourcesSelection<ResourceType>::moveAll( ResourcesSelection<ResourceType>& dstSelection )
 {
     // TODO: Maybe a more efficient way?
-    for( const auto& resourcePair : this->resources_ ){
-        dstSelection.addResource( resourcePair.first, this->resources_.at( resourcePair.first ) );
+    for( auto& resourcePair : this->resources_ ){
+        dstSelection.addResource( resourcePair.first, std::move( resourcePair.second ) );
     }
-    clear();
+    this->clear();
 }
 
 
@@ -134,11 +135,9 @@ void ResourcesSelection<ResourceType>::moveAll( ResourcesSelection<ResourceType>
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::clear()
 {
-    for( auto resourcePair : resources_ ){
-        this->notifyElementDeletion( resourcePair.first );
-    }
-
     this->resources_.clear();
+
+    this->notifyObservers();
 }
 
 

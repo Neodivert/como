@@ -59,12 +59,6 @@ DirectionalLight::DirectionalLight( GLuint directionalLightIndex, GLint lightInd
 }
 
 
-DrawablePtr DirectionalLight::clone()
-{
-    return DrawablePtr( new DirectionalLight( *this ) );
-}
-
-
 /***
  * 2. Destruction
  ***/

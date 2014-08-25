@@ -54,7 +54,7 @@ class LocalResourcesSelection : public virtual ResourcesSelection< ResourceType 
         /***
          * 4. Local resources insertion
          ***/
-        ResourceID addResource( std::shared_ptr<ResourceType> resource );
+        ResourceID addResource( std::unique_ptr<ResourceType> resource );
 
 
     protected:
@@ -85,11 +85,11 @@ LocalResourcesSelection<ResourceType>::LocalResourcesSelection( ServerInterfaceP
  ***/
 
 template <class ResourceType>
-ResourceID LocalResourcesSelection<ResourceType>::addResource( std::shared_ptr<ResourceType> resource )
+ResourceID LocalResourcesSelection<ResourceType>::addResource( std::unique_ptr<ResourceType> resource )
 {
     ResourceID resourceID = server_->getNewResourceID();
 
-    this->ResourcesSelection<ResourceType>::addResource( resourceID, resource );
+    this->ResourcesSelection<ResourceType>::addResource( resourceID, std::move( resource ) );
 
     return resourceID;
 }

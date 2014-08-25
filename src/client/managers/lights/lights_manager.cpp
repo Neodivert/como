@@ -91,12 +91,13 @@ bool LightsManager::createDirectionalLight()
     PackableColor lightColor( 255, 0, 0, 255 );
 
     // Create a struct with the light's properties.
-    DirectionalLightPtr light(
+    std::unique_ptr< DirectionalLight > light(
                 new DirectionalLight( directionalLightIndex, lightIndex, lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), lightMaterial ) );
 
     // Add the created light to the Drawables Manager and retrieve the ID given
     // to it.
-    ResourceID lightID = getLocalResourcesSelection()->addResource( light );
+    ResourceID lightID =
+            getLocalResourcesSelection()->addResource( std::move( light ) );
 
     sendCommandToServer( CommandConstPtr( new DirectionalLightCreationCommand( localUserID(), lightID, lightColor ) ) );
 
@@ -130,10 +131,10 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Packab
 
     MaterialConstPtr lightMaterial( new Material( PackableColor( 255, 0, 0, 255 ) ) );
 
-    DirectionalLightPtr light( new DirectionalLight( directionalLightIndex, lightIndex, lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), lightMaterial ) );
+    std::unique_ptr< DirectionalLight >
+            light( new DirectionalLight( directionalLightIndex, lightIndex, lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), lightMaterial ) );
 
-    getResourcesSelection( lightID.getCreatorID() )->addResource( lightID, light );
-
+    getResourcesSelection( lightID.getCreatorID() )->addResource( lightID, std::move( light ) );
 
     //log()->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
 

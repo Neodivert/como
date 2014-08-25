@@ -51,8 +51,6 @@ class DirectionalLight : public Light
         DirectionalLight( const DirectionalLight& ) = default; // TODO: Implement (or remove clone()).
         DirectionalLight( DirectionalLight&& ) = delete;
 
-        virtual DrawablePtr clone();
-
 
         /***
          * 2. Destruction

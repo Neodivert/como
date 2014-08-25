@@ -98,9 +98,9 @@ void MeshesManager::displayVertexNormals( bool display )
 
 ResourceID MeshesManager::createMesh( MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials )
 {
-    MeshPtr mesh( new Mesh( vertexData, oglData, polygonsGroups, materials, newMeshesDisplayVertexNormals_ ) );
+    std::unique_ptr< Mesh > mesh( new Mesh( vertexData, oglData, polygonsGroups, materials, newMeshesDisplayVertexNormals_ ) );
 
-    ResourceID meshID = getLocalResourcesSelection()->addResource( mesh );
+    ResourceID meshID = getLocalResourcesSelection()->addResource( std::move( mesh ) );
 
     return meshID;
 }
@@ -108,9 +108,9 @@ ResourceID MeshesManager::createMesh( MeshVertexData vertexData, MeshOpenGLData 
 
 void MeshesManager::createMesh( ResourceID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials )
 {
-    MeshPtr mesh( new Mesh( vertexData, oglData, polygonsGroups, materials, newMeshesDisplayVertexNormals_ ) );
+    std::unique_ptr< Mesh > mesh( new Mesh( vertexData, oglData, polygonsGroups, materials, newMeshesDisplayVertexNormals_ ) );
 
-    getResourcesSelection( meshID.getCreatorID() )->addResource( meshID, mesh );
+    getResourcesSelection( meshID.getCreatorID() )->addResource( meshID, std::move( mesh ) );
 }
 
 

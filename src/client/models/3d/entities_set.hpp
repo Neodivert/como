@@ -115,7 +115,7 @@ glm::vec3 EntitiesSet<EntitySubtype>::centroid() const
 {
     glm::vec3 centroid( 0.0f );
 
-    for( auto entityPair : this->resources_ ){
+    for( const auto& entityPair : this->resources_ ){
         centroid += entityPair.second->centroid();
     }
 
@@ -265,7 +265,7 @@ bool EntitiesSet<EntitySubtype>::intersectsRay( glm::vec3 r0, glm::vec3 r1, Reso
     bool entityIntersected = false;
 
     // Check if the given ray intersects any drawable in the selection.
-    for( auto entityPair : this->resources_ ){
+    for( const auto& entityPair : this->resources_ ){
         entityPair.second->intersects( r0, r1, t );
 
         // New closest object, get its ID and distance.

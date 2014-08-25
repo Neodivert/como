@@ -23,7 +23,7 @@ namespace como {
 
 /***
  * 1. Initialization and destruction
- ***/
+ ***
 
 DrawablesSelection::DrawablesSelection( glm::vec4 borderColor ) :
     borderColor_( borderColor ),
@@ -35,9 +35,9 @@ DrawablesSelection::DrawablesSelection( glm::vec4 borderColor ) :
 }
 
 
-/***
+***
  * 2. Getters
- ***/
+ ***
 
 glm::vec4 DrawablesSelection::getCentroid() const
 {
@@ -126,9 +126,9 @@ std::string DrawablesSelection::getTypeName() const
 }
 
 
-/***
+***
  * 3. Setters
- ***/
+ ***
 
 void DrawablesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 {
@@ -148,21 +148,19 @@ void DrawablesSelection::displayEdges( bool displayEdges )
 }
 
 
-/***
+***
  * 4. Transformations
- ***/
+ ***
 
 void DrawablesSelection::translate( glm::vec3 direction )
 {   
-    DrawablesMap::iterator drawable;
-
     mutex_.lock();
 
     // Translate every drawable in the selection.
-    for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
-        drawable->second->translate( direction );
+    for( auto& drawablePair : resources_ ){
+        drawablePair.second->translate( direction );
 
-        notifyElementUpdate( drawable->first );
+        notifyElementUpdate( drawablePair.first );
     }
 
     updateSelectionCentroid();
@@ -173,38 +171,35 @@ void DrawablesSelection::translate( glm::vec3 direction )
 
 void DrawablesSelection::rotate( GLfloat angle, glm::vec3 axis )
 {
-    DrawablesMap::iterator drawable;
-
     mutex_.lock();
 
     // Rotate every drawable in the selection according to the selected
     // pivot point mode.
     switch( pivotPointMode_ ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
-            for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
-                drawable->second->rotateAroundCentroid( angle, axis );
+            for( auto& drawablePair : resources_ ){
+                drawablePair.second->rotateAroundCentroid( angle, axis );
 
-                notifyElementUpdate( drawable->first );
+                notifyElementUpdate( drawablePair.first );
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
-            for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
-                drawable->second->rotateAroundPivot( angle, axis, glm::vec3( centroid_ ) );
+            for( auto& drawablePair : resources_ ){
+                drawablePair.second->rotateAroundPivot( angle, axis, glm::vec3( centroid_ ) );
 
-                notifyElementUpdate( drawable->first );
+                notifyElementUpdate( drawablePair.first );
             }
         break;
         case PivotPointMode::WORLD_ORIGIN:
-            for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
-                drawable->second->rotateAroundOrigin( angle, axis );
+            for( auto& drawablePair : resources_ ){
+                drawablePair.second->rotateAroundOrigin( angle, axis );
 
-                notifyElementUpdate( drawable->first );
+                notifyElementUpdate( drawablePair.first );
             }
         break;
     }
 
     updateSelectionCentroid();
-
 
     mutex_.unlock();
 }
@@ -220,10 +215,10 @@ void DrawablesSelection::scale( glm::vec3 scaleFactors )
     // pivot point mode.
     switch( pivotPointMode_ ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
-            for( drawable = resources_.begin(); drawable != resources_.end(); drawable++ ){
-                drawable->second->scaleAroundCentroid( scaleFactors );
+            for( auto& drawablePair : resources_ ){
+                drawablePair.second->scaleAroundCentroid( scaleFactors );
 
-                notifyElementUpdate( drawable->first );
+                notifyElementUpdate( drawablePair.first );
             }
         break;
         case PivotPointMode::MEDIAN_POINT:
@@ -248,9 +243,9 @@ void DrawablesSelection::scale( glm::vec3 scaleFactors )
 }
 
 
-/***
+***
  * 5. Updating
- ***/
+ ***
 
 void DrawablesSelection::updateSelectionCentroid()
 {
@@ -276,9 +271,9 @@ void DrawablesSelection::updateSelectionCentroid()
 }
 
 
-/***
+***
  * 6. Ray picking
- ***/
+ ***
 
 bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, ResourceID& closestDrawable, float& minT ) const
 {
@@ -307,9 +302,9 @@ bool DrawablesSelection::intersect( glm::vec3 r0, glm::vec3 r1, ResourceID& clos
 }
 
 
-/***
+***
  * 7. Drawing
- ***/
+ ***
 
 void DrawablesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
@@ -338,13 +333,13 @@ void DrawablesSelection::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, co
 }
 
 
-/***
+***
  * 9. Auxiliar methods
- ***/
+ ***
 
 void DrawablesSelection::highlighDrawableProperty( const void* property )
 {
     highlightedProperty_ = property;
 }
-
+*/
 } // namespace como
