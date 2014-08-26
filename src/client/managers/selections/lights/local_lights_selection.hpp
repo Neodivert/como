@@ -19,7 +19,7 @@
 #ifndef LOCAL_LIGHTS_SELECTION_HPP
 #define LOCAL_LIGHTS_SELECTION_HPP
 
-#include <client/managers/lights/lights_selection.hpp>
+#include <client/managers/selections/lights/lights_selection.hpp>
 #include <client/managers/selections/resources/local_resources_selection.hpp>
 #include <client/managers/utilities/server_writer.hpp>
 

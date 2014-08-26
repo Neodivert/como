@@ -19,7 +19,7 @@
 #ifndef ENTITIES_SELECTION_HPP
 #define ENTITIES_SELECTION_HPP
 
-#include <client/managers/lights/lights_selection.hpp>
+#include <client/managers/selections/lights/lights_selection.hpp>
 #include <client/managers/selections/meshes/meshes_selection.hpp>
 #include <client/models/3d/abstract_entities_set.hpp>
 #include <client/managers/selections/resources/resources_selection.hpp>

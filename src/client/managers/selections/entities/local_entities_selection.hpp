@@ -20,7 +20,7 @@
 #define LOCAL_ENTITIES_MANAGER_HPP
 
 #include <client/managers/selections/entities/entities_selection.hpp>
-#include <client/managers/lights/local_lights_selection.hpp>
+#include <client/managers/selections/lights/local_lights_selection.hpp>
 #include <client/managers/selections/meshes/local_meshes_selection.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
 #include <client/managers/utilities/server_writer.hpp>

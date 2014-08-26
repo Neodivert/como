@@ -20,7 +20,7 @@
 #define LIGHTS_MENU_HPP
 
 #include <QFrame>
-#include <client/managers/lights/local_lights_selection.hpp>
+#include <client/managers/selections/lights/local_lights_selection.hpp>
 #include <client/gui/utilities/color_button.hpp>
 #include <QDoubleSpinBox>
 

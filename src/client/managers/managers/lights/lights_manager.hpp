@@ -24,7 +24,7 @@
 #include <map>
 #include <common/utilities/observer_pattern/observer.hpp>
 #include <client/managers/specialized_entities_manager.hpp>
-#include <client/managers/lights/local_lights_selection.hpp>
+#include <client/managers/selections/lights/local_lights_selection.hpp>
 
 namespace como {
 
