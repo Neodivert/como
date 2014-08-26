@@ -20,7 +20,7 @@
 #define MENU_BAR_HPP
 
 #include <QMenuBar>
-#include <client/managers/entities_manager.hpp>
+#include <client/managers/managers/entities/entities_manager.hpp>
 #include <client/managers/meshes_manager.hpp>
 
 namespace como {

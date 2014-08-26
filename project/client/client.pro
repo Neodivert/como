@@ -99,8 +99,8 @@ HEADERS += \
     ../../src/client/models/3d/transformable.hpp \
     ../../src/client/models/3d/entities_set.hpp \
     ../../src/client/models/3d/lights/light.hpp \
-    ../../src/client/managers/entities_manager.hpp \
-    ../../src/client/managers/specialized_entities_manager.hpp \
+    ../../src/client/managers/managers/entities/entities_manager.hpp \
+    ../../src/client/managers/managers/entities/specialized_entities_manager.hpp \
     ../../src/client/managers/selections/entities/entities_selection.hpp \
     ../../src/client/models/3d/abstract_entities_set.hpp \
     ../../src/client/managers/selections/entities/local_entities_selection.hpp \
@@ -111,7 +111,7 @@ HEADERS += \
     ../../src/client/managers/managers/resources/resource_commands_executer.hpp \
     ../../src/client/models/3d/sets/drawables_set.hpp \
     ../../src/client/models/3d/sets/pickables_set.hpp \
-    ../../src/client/managers/abstract_entities_manager.hpp
+    ../../src/client/managers/managers/entities/abstract_entities_manager.hpp
 
 
 # Client sources
@@ -169,7 +169,7 @@ SOURCES += \
     ../../src/client/models/3d/entity.cpp \
     ../../src/client/models/3d/transformable.cpp \
     ../../src/client/models/3d/lights/light.cpp \
-    ../../src/client/managers/entities_manager.cpp \
+    ../../src/client/managers/managers/entities/entities_manager.cpp \
     ../../src/client/managers/selections/entities/entities_selection.cpp \
     ../../src/client/models/3d/abstract_entities_set.cpp \
     ../../src/client/managers/selections/entities/local_entities_selection.cpp \
@@ -179,4 +179,4 @@ SOURCES += \
     ../../src/client/managers/managers/resources/resources_ownership_requester.cpp \
     ../../src/client/managers/managers/resources/resource_commands_executer.cpp \
     ../../src/client/models/3d/sets/drawables_set.cpp \
-    ../../src/client/managers/abstract_entities_manager.cpp
+    ../../src/client/managers/managers/entities/abstract_entities_manager.cpp
