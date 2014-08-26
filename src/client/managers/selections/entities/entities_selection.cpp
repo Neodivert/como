@@ -111,8 +111,12 @@ void EntitiesSelection::translate( glm::vec3 direction )
 void EntitiesSelection::rotate(const GLfloat &angle, const glm::vec3 &axis)
 {
     if( pivotPointMode_ == PivotPointMode::MEDIAN_POINT ){
+        // The selection's centroid updates every time we transform a
+        // subselection, so we retrieve the centroid now for transforming
+        // all selections relative to it.
+        const glm::vec3 selectionCentroid = centroid();
         for( auto& selection : specializedEntitiesSelections_ ){
-            selection->rotateAroundPivot( angle, axis, centroid() );
+            selection->rotateAroundPivot( angle, axis, selectionCentroid );
         }
     }else{
         for( auto& selection : specializedEntitiesSelections_ ){
@@ -125,12 +129,16 @@ void EntitiesSelection::rotate(const GLfloat &angle, const glm::vec3 &axis)
 void EntitiesSelection::scale(const glm::vec3 &scaleFactors)
 {
     if( pivotPointMode_ == PivotPointMode::MEDIAN_POINT ){
+        // The selection's centroid updates every time we transform a
+        // subselection, so we retrieve the centroid now for transforming
+        // all selections relative to it.
+        const glm::vec3 selectionCentroid = centroid();
         for( auto& selection : specializedEntitiesSelections_ ){
-            selection->scale( scaleFactors );
+            selection->scaleAroundPivot( scaleFactors, selectionCentroid );
         }
     }else{
         for( auto& selection : specializedEntitiesSelections_ ){
-            selection->scaleAroundPivot( scaleFactors, centroid() );
+            selection->scale( scaleFactors );
         }
     }
 }
