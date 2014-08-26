@@ -19,7 +19,7 @@
 #ifndef ENTITIES_MANAGER_HPP
 #define ENTITIES_MANAGER_HPP
 
-#include <client/managers/lights/lights_manager.hpp>
+#include <client/managers/managers/lights/lights_manager.hpp>
 #include <client/managers/meshes_manager.hpp>
 #include <client/managers/selections/entities/local_entities_selection.hpp>
 #include <client/managers/abstract_entities_manager.hpp>
