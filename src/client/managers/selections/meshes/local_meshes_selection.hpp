@@ -19,7 +19,7 @@
 #ifndef LOCAL_MESHES_SELECTION_HPP
 #define LOCAL_MESHES_SELECTION_HPP
 
-#include <client/managers/drawables_selection/meshes_selection.hpp>
+#include <client/managers/selections/meshes/meshes_selection.hpp>
 #include <client/managers/selections/resources/local_resources_selection.hpp>
 #include <client/managers/utilities/server_writer.hpp>
 

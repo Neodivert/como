@@ -20,7 +20,7 @@
 #define MESHES_MANAGER_HPP
 
 #include <client/managers/specialized_entities_manager.hpp>
-#include <client/managers/drawables_selection/meshes_selection.hpp>
+#include <client/managers/selections/meshes/meshes_selection.hpp>
 #include <client/managers/selections/meshes/local_meshes_selection.hpp>
 
 namespace como {
