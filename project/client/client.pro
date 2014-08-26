@@ -55,7 +55,6 @@ HEADERS += \
     ../../src/client/gui/connection_wizard/page_ids.hpp \
     ../../src/client/gui/users/users_list.hpp \
     ../../src/client/managers/server_interface/server_interface.hpp \
-    ../../src/client/managers/drawables_selection/drawables_selection.hpp \
     ../../src/client/models/3d/lights/directional_light.hpp \
     ../../src/client/models/3d/lights/lights.hpp \
     ../../src/client/gui/tools_menu/creation_tab.hpp \
@@ -63,7 +62,6 @@ HEADERS += \
     ../../src/client/gui/tools_menu/properties_tab/properties_tab.hpp \
     ../../src/client/gui/tools_menu/properties_tab/general_info_menu.hpp \
     ../../src/client/gui/tools_menu/properties_tab/mesh_info_menu.hpp \
-    ../../src/client/managers/drawables_manager/drawables_manager.hpp \
     ../../src/client/models/3d/materials/material.hpp \
     ../../src/client/gui/utilities/color_button.hpp \
     ../../src/client/managers/materials/materials_manager.hpp \
@@ -136,14 +134,12 @@ SOURCES += \
     ../../src/client/gui/connection_wizard/intro_page.cpp \
     ../../src/client/gui/users/users_list.cpp \
     ../../src/client/managers/server_interface/server_interface.cpp \
-    ../../src/client/managers/drawables_selection/drawables_selection.cpp \
     ../../src/client/models/3d/lights/directional_light.cpp \
     ../../src/client/gui/tools_menu/creation_tab.cpp \
     ../../src/client/gui/tools_menu/transformation_tab.cpp \
     ../../src/client/gui/tools_menu/properties_tab/properties_tab.cpp \
     ../../src/client/gui/tools_menu/properties_tab/general_info_menu.cpp \
     ../../src/client/gui/tools_menu/properties_tab/mesh_info_menu.cpp \
-    ../../src/client/managers/drawables_manager/drawables_manager.cpp \
     ../../src/client/models/3d/materials/material.cpp \
     ../../src/client/gui/utilities/color_button.cpp \
     ../../src/client/managers/materials/materials_manager.cpp \

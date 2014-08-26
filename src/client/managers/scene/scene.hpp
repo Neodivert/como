@@ -25,10 +25,8 @@
 #include <common/utilities/log.hpp>
 #include <common/commands/commands.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
-#include <client/managers/drawables_selection/drawables_selection.hpp>
 #include <queue>
 #include <client/models/3d/lights/lights.hpp>
-#include <client/managers/drawables_manager/drawables_manager.hpp>
 #include <client/managers/materials/materials_manager.hpp>
 #include <client/managers/lights/lights_manager.hpp>
 #include <common/users/user.hpp>

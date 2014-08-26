@@ -19,7 +19,6 @@
 #ifndef LIGHTS_MANAGER_HPP
 #define LIGHTS_MANAGER_HPP
 
-#include <client/managers/drawables_manager/drawables_manager.hpp>
 #include <client/models/3d/lights/lights.hpp>
 #include <client/managers/lights/light_handler.hpp>
 #include <common/commands/commands.hpp>

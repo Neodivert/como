@@ -19,7 +19,6 @@
 #ifndef LIGHT_SSELECTION_HPP
 #define LIGHT_SSELECTION_HPP
 
-#include <client/managers/drawables_selection/drawables_selection.hpp>
 #include <client/models/3d/lights/lights.hpp>
 #include <client/models/3d/entities_set.hpp>
 
