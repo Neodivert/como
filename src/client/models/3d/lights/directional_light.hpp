@@ -73,6 +73,7 @@ class DirectionalLight : public Light
 
 
 
+
     private:
         void update();
     public:
@@ -85,7 +86,13 @@ class DirectionalLight : public Light
 
 
         /***
-         * 6. Operators
+         * 6. Drawing
+         ***/
+        virtual void draw(OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const glm::vec4 *contourColor) const;
+
+
+        /***
+         * 7. Operators
          ***/
 
         /*! \brief Copy assignment operator */
@@ -96,9 +103,11 @@ class DirectionalLight : public Light
 
 
         /***
-         * 7. Auxiliar methods
+         * 8. Auxiliar methods
          ***/
         virtual bool containsProperty( const void* property ) const;
+
+
 };
 
 typedef shared_ptr< DirectionalLight > DirectionalLightPtr;

@@ -17,8 +17,11 @@
 ***/
 
 #include "directional_light.hpp"
+#include <glm/gtc/type_ptr.hpp>
 
 namespace como {
+
+const glm::vec4 DEFAULT_LIGHT_VECTOR = glm::vec4( 0.0f, 1.0f, 0.0f, 0.0f );
 
 /***
  * 1. Construction
@@ -27,6 +30,8 @@ namespace como {
 DirectionalLight::DirectionalLight( GLuint directionalLightIndex, GLint lightIndex, const PackableColor& lightColor, const glm::vec3& lightVector, MaterialConstPtr meshMaterial ) :
     Light( LightType::DIRECTIONAL_LIGHT, lightIndex, lightColor, "data/system/primitives/directional_light.prim", meshMaterial ) // TODO: Load material from file.
 {
+    (void)( lightVector ); // TODO: Remove this argument.
+
     GLint currentShaderProgram = 0;
     char uniformName[64];
 
@@ -54,8 +59,7 @@ DirectionalLight::DirectionalLight( GLuint directionalLightIndex, GLint lightInd
     glUniform1i( lightIndexLocation_, lightIndex );
 
     // Initialize light vector in shader.
-    setLightVector( lightVector );
-    //setHalfVector( halfVector ); // TODO: Uncomment.
+    setLightVector( glm::vec3( DEFAULT_LIGHT_VECTOR ) );
 }
 
 
@@ -131,7 +135,7 @@ void DirectionalLight::update()
     Light::update();
 
     // Compute transformed light vector.
-    setLightVector( glm::normalize( glm::vec3( modelMatrix_ * glm::vec4( 0.0f, -1.0f, 0.0f, 0.0f ) ) ) );
+    setLightVector( glm::normalize( glm::vec3( modelMatrix_ * DEFAULT_LIGHT_VECTOR ) ) );
 }
 
 
@@ -147,7 +151,61 @@ unsigned int DirectionalLight::getMaxLights()
 
 
 /***
- * 7. Auxiliar methods
+ * 6. Drawing
+ ***/
+
+void DirectionalLight::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec4* contourColor ) const
+{
+    openGL->setShadingMode( ShadingMode::SOLID_PLAIN );
+
+    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
+    // Compute MVP matrix and pass it to the shader.
+    openGL->setMVPMatrix( modelMatrix_, viewMatrix, projectionMatrix );
+
+    // Bind Mesh VAO and VBOs as the active ones.
+    glBindVertexArray( vao );
+    glBindBuffer( GL_ARRAY_BUFFER, vbo );
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
+
+    for( auto polygonsGroup : polygonsGroups_ ){
+        // Send this mesh's material to shader.
+        materials_[polygonsGroup.materialIndex]->sendToShader();
+
+        glDrawElements( GL_TRIANGLES,
+                        polygonsGroup.nTriangles * 3,
+                        GL_UNSIGNED_INT,
+                        ( std::intptr_t* )( polygonsGroup.firstTriangle * 3 * sizeof( GL_UNSIGNED_INT ) ) );
+    }
+
+
+    // Set the color for the mesh's contour.
+    // TODO: Use only one condition (force contourColor to be passed as a
+    // reference?)
+    if( displayEdges_ && ( contourColor != nullptr ) ){
+        openGL->setShadingMode( ShadingMode::SOLID_PLAIN );
+
+        glUniform4fv( uniformColorLocation, 1, glm::value_ptr( *contourColor ) );
+        OpenGL::checkStatus( "contourColor sent to shader" );
+
+        // Now we'll draw mesh's contour. Set polygon mode for rendering
+        // lines.
+        // TODO: I still have to use polygon offset.
+        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
+        // Draw Mesh's contour
+        glDrawElements( GL_TRIANGLES, nEboElements_, GL_UNSIGNED_INT, NULL );
+
+        // Return polygon mode to previos GL_FILL.
+        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    }
+
+    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+}
+
+
+/***
+ * 8. Auxiliar methods
  ***/
 
 bool DirectionalLight::containsProperty( const void *property ) const

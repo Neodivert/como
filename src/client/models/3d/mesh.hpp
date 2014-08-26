@@ -49,6 +49,8 @@ enum class MeshType : std::uint8_t {
 
 class Mesh : public AbstractMesh, public Entity
 {
+    friend class DirectionalLight; // TODO: Remove
+
     private:
         // Mesh type
         MeshType type_;
