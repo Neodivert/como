@@ -19,7 +19,7 @@
 #ifndef SPECIALIZED_ENTITIES_MANAGER_HPP
 #define SPECIALIZED_ENTITIES_MANAGER_HPP
 
-#include <client/managers/resources_manager.hpp>
+#include <client/managers/managers/resources/resources_manager.hpp>
 #include <client/managers/managers/entities/abstract_entities_manager.hpp>
 
 namespace como {

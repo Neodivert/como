@@ -20,7 +20,7 @@
 #define CLIENT_PRIMITIVES_MANAGER_HPP
 
 #include <string>
-#include <client/managers/meshes_manager.hpp>
+#include <client/managers/managers/meshes/meshes_manager.hpp>
 #include <common/utilities/log.hpp>
 #include <common/commands/primitive_category_commands/primitive_category_commands.hpp>
 #include <common/commands/primitive_commands/primitive_commands.hpp>

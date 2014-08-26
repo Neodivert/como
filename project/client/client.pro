@@ -84,8 +84,8 @@ HEADERS += \
     ../../src/client/managers/selections/meshes/meshes_selection.hpp \
     ../../src/client/gui/rendering/viewport_view_menu.hpp \
     ../../src/client/gui/rendering/viewport_projection_menu.hpp \
-    ../../src/client/managers/managers/resources_manager.hpp \
-    ../../src/client/managers/meshes_manager.hpp \
+    ../../src/client/managers/managers/managers/resources/resources_manager.hpp \
+    ../../src/client/managers/managers/meshes/meshes_manager.hpp \
     ../../src/client/managers/selections/lights/lights_selection.hpp \
     ../../src/client/managers/selections/resources/resources_selection.hpp \
     ../../src/client/managers/selections/resources/local_resources_selection.hpp \
@@ -159,7 +159,7 @@ SOURCES += \
     ../../src/client/managers/selections/meshes/meshes_selection.cpp \
     ../../src/client/gui/rendering/viewport_view_menu.cpp \
     ../../src/client/gui/rendering/viewport_projection_menu.cpp \
-    ../../src/client/managers/meshes_manager.cpp \
+    ../../src/client/managers/managers/meshes/meshes_manager.cpp \
     ../../src/client/managers/selections/lights/lights_selection.cpp \
     ../../src/client/managers/selections/lights/local_lights_selection.cpp \
     ../../src/client/managers/selections/meshes/local_meshes_selection.cpp \

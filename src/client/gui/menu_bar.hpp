@@ -21,7 +21,7 @@
 
 #include <QMenuBar>
 #include <client/managers/managers/entities/entities_manager.hpp>
-#include <client/managers/meshes_manager.hpp>
+#include <client/managers/managers/meshes/meshes_manager.hpp>
 
 namespace como {
 
