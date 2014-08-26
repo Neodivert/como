@@ -25,7 +25,7 @@
 #include <map>
 #include "users_list_item.hpp"
 #include <common/utilities/observable_container/container_observer.hpp>
-#include <client/managers/users/users_manager.hpp>
+#include <client/managers/managers/users/users_manager.hpp>
 
 namespace como {
 

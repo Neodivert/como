@@ -33,7 +33,7 @@
 #include <client/managers/managers/primitives/client_primitives_manager.hpp>
 #include <common/scene/basic_scene.hpp>
 #include <client/managers/entities_manager.hpp>
-#include <client/managers/users/users_manager.hpp>
+#include <client/managers/managers/users/users_manager.hpp>
 
 Q_DECLARE_METATYPE( como::CommandConstPtr )
 

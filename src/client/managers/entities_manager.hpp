@@ -23,7 +23,7 @@
 #include <client/managers/meshes_manager.hpp>
 #include <client/managers/selections/entities/local_entities_selection.hpp>
 #include <client/managers/abstract_entities_manager.hpp>
-#include <client/managers/users/users_manager.hpp>
+#include <client/managers/managers/users/users_manager.hpp>
 
 namespace como {
 
