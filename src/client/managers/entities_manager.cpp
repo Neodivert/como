@@ -192,12 +192,13 @@ void EntitiesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, co
  * 8. Updating (observer pattern)
  ***/
 
-void EntitiesManager::update( ContainerAction lastContainerAction, UserID lastElementModified )
+void EntitiesManager::update( ContainerAction lastContainerAction, UserID modifiedUser )
 {
     if( lastContainerAction == ContainerAction::ELEMENT_INSERTION ){
-        createUserSelection( lastElementModified, usersManager_->user( lastElementModified  ).color() );
+        createUserSelection( modifiedUser, usersManager_->user( modifiedUser  ).color() );
     }else if( lastContainerAction == ContainerAction::ELEMENT_DELETION ){
-        removeUserSelection( lastElementModified );
+        unlockResourcesSelection( modifiedUser );
+        removeUserSelection( modifiedUser );
     }
 }
 

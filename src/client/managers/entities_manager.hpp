@@ -84,7 +84,7 @@ class EntitiesManager : public AbstractEntitiesManager, public ContainerObserver
         /***
          * 8. Updating (observer pattern)
          ***/
-        virtual void update( ContainerAction lastContainerAction, UserID lastElementModified );
+        virtual void update( ContainerAction lastContainerAction, UserID modifiedUser );
 
 
         /***
