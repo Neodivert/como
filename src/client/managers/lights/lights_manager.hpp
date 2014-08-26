@@ -20,7 +20,6 @@
 #define LIGHTS_MANAGER_HPP
 
 #include <client/models/3d/lights/lights.hpp>
-#include <client/managers/lights/light_handler.hpp>
 #include <common/commands/commands.hpp>
 #include <map>
 #include <common/utilities/observer_pattern/observer.hpp>
@@ -34,17 +33,11 @@ typedef std::map< ResourceID, LightSharedPtr > LightsMap;
 class LightsManager : public SpecializedEntitiesManager< Light, LightsSelection, LocalLightsSelection >
 {
     private:
-        // Lights vector.
-        //LightsMap lights_;
-
         // A stack holding all the free light indices allowed in shader.
         std::stack< GLint > freeLightIndices_;
 
         // A stack holding all the free directional light indices allowed in shader.
         std::stack< GLuint > freeDirectionalLightIndices_;
-
-
-        LightHandlerPtr currentLight_;
 
 
     public:
@@ -66,7 +59,6 @@ class LightsManager : public SpecializedEntitiesManager< Light, LightsSelection,
         /***
          * 3. Getters
          ***/
-        LightHandlerPtr getCurrentLight() const;
         std::string getResourceName( const ResourceID& lightID ) const;
 
 
@@ -76,10 +68,6 @@ class LightsManager : public SpecializedEntitiesManager< Light, LightsSelection,
         bool createDirectionalLight();
     private:
         void addDirectionalLight( const ResourceID& lightID, const PackableColor& lightColor );
-    public:
-        void selectLight( const ResourceID lightID );
-    private:
-        void removeLight( ResourceID lightID );
 
 
         /***

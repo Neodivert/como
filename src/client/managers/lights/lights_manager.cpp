@@ -26,8 +26,7 @@ namespace como {
 
 LightsManager::LightsManager( ServerInterfacePtr server, LogPtr log ) :
     ResourceCommandsExecuter( server ),
-    SpecializedEntitiesManager( server, log ),
-    currentLight_( nullptr )
+    SpecializedEntitiesManager( server, log )
 {
     GLint i=0;
 
@@ -48,12 +47,6 @@ LightsManager::LightsManager( ServerInterfacePtr server, LogPtr log ) :
 /***
  * 3. Getters
  ***/
-
-LightHandlerPtr LightsManager::getCurrentLight() const
-{
-    return currentLight_;
-}
-
 
 std::string LightsManager::getResourceName( const ResourceID& lightID ) const
 {
@@ -139,48 +132,6 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Packab
     //log()->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
 
     notifyObservers();
-}
-
-
-void LightsManager::selectLight( const ResourceID lightID )
-{
-    (void)( lightID );
-    /*
-    if( currentLight_ ){
-        currentLight_->removeObserver( this );
-    }
-
-    currentLight_ = LightHandlerPtr( new LightHandler( lights_.at( lightID ), lightID, server() ) );
-
-    currentLight_->Observable::addObserver( this );
-
-    notifyObservers();
-    */
-}
-
-
-void LightsManager::removeLight( ResourceID lightID )
-{
-    (void)( lightID );
-    /*
-    log()->debug( "LightsManager - removing ID ", lightID, "\n" );
-
-    // Retrieve the light to be removed.
-    LightSharedPtr light = lights_.at( lightID );
-
-    // Free the indices held by the light.
-    freeLightIndices_.push( light->getBaseLightIndex() );
-    switch( light->getLightType() ){
-        case LightType::DIRECTIONAL_LIGHT:
-            freeDirectionalLightIndices_.push( light->getLightIndex() );
-        break;
-    }
-
-    // Remove the light from lights_ vector and signal it.
-    lights_.erase( lightID );
-
-    notifyObservers();
-    */
 }
 
 

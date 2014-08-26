@@ -71,7 +71,6 @@ HEADERS += \
     ../../src/client/gui/materials/materials_list_item.hpp \
     ../../src/client/managers/materials/material_handler.hpp \
     ../../src/client/managers/lights/lights_manager.hpp \
-    ../../src/client/managers/lights/light_handler.hpp \
     ../../src/client/models/3d/lights/abstract_light.hpp \
     ../../src/client/models/utilities/open_gl.hpp \
     ../../src/client/gui/users/users_list_item.hpp \
@@ -149,7 +148,6 @@ SOURCES += \
     ../../src/client/gui/materials/materials_list_item.cpp \
     ../../src/client/managers/materials/material_handler.cpp \
     ../../src/client/managers/lights/lights_manager.cpp \
-    ../../src/client/managers/lights/light_handler.cpp \
     ../../src/client/models/utilities/open_gl.cpp \
     ../../src/client/gui/users/users_list_item.cpp \
     ../../src/client/managers/primitives/client_primitives_manager.cpp \
