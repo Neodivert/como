@@ -32,7 +32,7 @@ class GeneralInfoMenu : public QWidget, public Observer
 
     private:
         /*! Local user's (entities) selection */
-        LocalEntitiesSelectionPtr userSelection_;
+        LocalEntitiesSelection* userSelection_;
 
         QLabel* centroidPosition_;
 
@@ -48,7 +48,7 @@ class GeneralInfoMenu : public QWidget, public Observer
          ***/
 
         /*! \brief Default constructor */
-        GeneralInfoMenu( LocalEntitiesSelectionPtr userSelection );
+        GeneralInfoMenu( LocalEntitiesSelection* userSelection );
 
         /*! \brief Copy constructor */
         GeneralInfoMenu( const GeneralInfoMenu& ) = delete;

@@ -38,7 +38,7 @@ PropertiesTab::PropertiesTab( ScenePtr scene )
     // layout.
     layout->addWidget( new GeneralInfoMenu( scene->getEntitiesManager()->getLocalSelection() ) );
     layout->addWidget( new MeshInfoMenu( scene->getMeshesManager()->getLocalResourcesSelection() ) );
-    layout->addWidget( new LightsMenu( scene->getLightsManager()->getLocalResourcesSelection().get() ) );
+    layout->addWidget( new LightsMenu( scene->getLightsManager()->getLocalResourcesSelection() ) );
     setLayout( layout );
 }
 

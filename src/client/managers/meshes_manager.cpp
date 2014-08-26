@@ -56,7 +56,7 @@ ElementsMeetingCondition MeshesManager::displaysVertexNormals() const
         return ElementsMeetingCondition::SOME;
     }
 
-    for( auto meshesSelection : resourcesSelections_ ){
+    for( const auto& meshesSelection : resourcesSelections_ ){
         if( meshesSelection.second->displaysVertexNormals() != firstSelectionValue ){
             return ElementsMeetingCondition::SOME;
         }

@@ -36,8 +36,11 @@ EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log, UsersMa
     managers_.push_back( lightsManager_ );
     managers_.push_back( meshesManager_ );
 
-    entitiesSelections_[NO_USER] = EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( NO_USER ).get(), meshesManager_->getResourcesSelection( NO_USER ).get() ) );
-    entitiesSelections_[server->getLocalUserID()] = EntitiesSelectionPtr( new LocalEntitiesSelection( server, lightsManager_->getLocalResourcesSelection().get(), meshesManager_->getLocalResourcesSelection().get() ) );
+    entitiesSelections_[NO_USER] =
+            std::unique_ptr<EntitiesSelection>( new EntitiesSelection( lightsManager_->getResourcesSelection( NO_USER ), meshesManager_->getResourcesSelection( NO_USER ) ) );
+
+    entitiesSelections_[server->getLocalUserID()] =
+            std::unique_ptr<EntitiesSelection>( new LocalEntitiesSelection( server, lightsManager_->getLocalResourcesSelection(), meshesManager_->getLocalResourcesSelection() ) );
 
     usersManager_->addObserver( this );
 }
@@ -54,7 +57,7 @@ void EntitiesManager::createUserSelection( UserID userID, const glm::vec4& selec
     meshesManager_->createResourcesSelection( userID, selectionColor );
 
     entitiesSelections_[userID] =
-            EntitiesSelectionPtr( new EntitiesSelection( lightsManager_->getResourcesSelection( userID ).get(), meshesManager_->getResourcesSelection( userID ).get() ) );
+            std::unique_ptr<EntitiesSelection>( new EntitiesSelection( lightsManager_->getResourcesSelection( userID ), meshesManager_->getResourcesSelection( userID ) ) );
 }
 
 
@@ -77,9 +80,9 @@ void EntitiesManager::removeUserSelection( UserID userID )
  * 4. Getters
  ***/
 
-LocalEntitiesSelectionPtr EntitiesManager::getLocalSelection() const
+LocalEntitiesSelection* EntitiesManager::getLocalSelection() const
 {
-    return std::dynamic_pointer_cast< LocalEntitiesSelection >( entitiesSelections_.at( server_->getLocalUserID() ) );
+    return dynamic_cast< LocalEntitiesSelection* >( entitiesSelections_.at( localUserID() ).get() );
 }
 
 

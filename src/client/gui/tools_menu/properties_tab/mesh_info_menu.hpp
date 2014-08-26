@@ -31,7 +31,7 @@ class MeshInfoMenu : public QWidget, public Observer
 
     private:
         /*! Local user's (drawables) selection */
-        std::shared_ptr< LocalMeshesSelection > userSelection_;
+        LocalMeshesSelection* userSelection_;
 
         QGroupBox* displayVertexNormalsGroupBox_;
         QRadioButton* displayVertexNormalsAlways_;
@@ -43,7 +43,7 @@ class MeshInfoMenu : public QWidget, public Observer
          ***/
 
         /*! \brief Default constructor */
-        MeshInfoMenu( std::shared_ptr< LocalMeshesSelection > userSelection );
+        MeshInfoMenu( LocalMeshesSelection* userSelection );
 
         /*! \brief Copy constructor */
         MeshInfoMenu( const MeshInfoMenu& ) = delete;
@@ -63,7 +63,7 @@ class MeshInfoMenu : public QWidget, public Observer
         /***
          * 3. Initialization
          ***/
-        QGroupBox* createVertexNormalsDisplayGroupBox( std::shared_ptr< LocalMeshesSelection > meshesSelection );
+        QGroupBox* createVertexNormalsDisplayGroupBox( LocalMeshesSelection* meshesSelection );
 
 
         /***

@@ -128,7 +128,7 @@ bool SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResou
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 void SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
-    for( auto entitiesSelectionPair : this->resourcesSelections_ ){
+    for( const auto& entitiesSelectionPair : this->resourcesSelections_ ){
         entitiesSelectionPair.second->drawAll( openGL, viewMatrix, projectionMatrix );
     }
 }

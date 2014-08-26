@@ -56,7 +56,7 @@ class ResourcesManager : public virtual ResourceCommandsExecuter, public Observa
          * 3. Getters
          ***/
         virtual bool containsResource( const ResourceID& resourceID ) const;
-        std::shared_ptr< LocalResourcesSelectionType > getLocalResourcesSelection() const;
+        LocalResourcesSelectionType* getLocalResourcesSelection() const; // TODO: Return a undeletable pointer.
         virtual std::string getResourceName( const ResourceID& resourceID ) const = 0;
 
 
@@ -88,7 +88,7 @@ class ResourcesManager : public virtual ResourceCommandsExecuter, public Observa
         /***
          * 8. Protected getters
          ***/
-        std::shared_ptr< ResourcesSelectionType > getResourcesSelection( UserID userID ) const;
+        ResourcesSelectionType* getResourcesSelection( UserID userID ) const;
 
 
         /***
@@ -99,9 +99,9 @@ class ResourcesManager : public virtual ResourceCommandsExecuter, public Observa
         virtual void clearResourcesSelection(UserID currentOwner);
 
     protected:
-        std::map< UserID, std::shared_ptr< ResourcesSelectionType > > resourcesSelections_;
+        std::map< UserID, std::unique_ptr< ResourcesSelectionType > > resourcesSelections_;
 
-        std::shared_ptr< ResourcesSelectionType > nonSelectedResources_;
+        ResourcesSelectionType* nonSelectedResources_;
 };
 
 
@@ -117,11 +117,11 @@ ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionTy
     (void)(log);
 
     createResourcesSelection( NO_USER );
-    nonSelectedResources_ = resourcesSelections_.at( NO_USER );
+    nonSelectedResources_ = resourcesSelections_.at( NO_USER ).get();
 
-    std::shared_ptr< LocalResourcesSelectionType > localResourcesSelection( new LocalResourcesSelectionType( server ) );
-    localResourcesSelection->Observable::addObserver( this );
-    resourcesSelections_[localUserID()] = localResourcesSelection;
+    resourcesSelections_[localUserID()] =
+            std::unique_ptr< LocalResourcesSelectionType >( new LocalResourcesSelectionType( server ) );
+    resourcesSelections_.at( localUserID() )->addObserver( this );
 }
 
 
@@ -156,9 +156,9 @@ bool ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
 
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-std::shared_ptr<LocalResourcesSelectionType> ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getLocalResourcesSelection() const
+LocalResourcesSelectionType* ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getLocalResourcesSelection() const
 {
-    return std::static_pointer_cast< LocalResourcesSelectionType >( resourcesSelections_.at( localUserID() ) );
+    return static_cast< LocalResourcesSelectionType* >( resourcesSelections_.at( localUserID() ).get() );
 }
 
 
@@ -196,7 +196,7 @@ template <class ResourceType, class ResourcesSelectionType, class LocalResources
 template <typename... Args>
 void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::createResourcesSelection( UserID userID, Args... args )
 {
-    resourcesSelections_[userID] = std::shared_ptr< ResourcesSelectionType >( new ResourcesSelectionType( args... ) );
+    resourcesSelections_[userID] = std::unique_ptr< ResourcesSelectionType >( new ResourcesSelectionType( args... ) );
 
     addResourcesSelectionObserver( userID, this );
 }
@@ -214,9 +214,9 @@ void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-std::shared_ptr<ResourcesSelectionType> ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getResourcesSelection( UserID userID ) const
+ResourcesSelectionType* ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getResourcesSelection( UserID userID ) const
 {
-    return resourcesSelections_.at( userID );
+    return resourcesSelections_.at( userID ).get();
 }
 
 
@@ -227,14 +227,14 @@ std::shared_ptr<ResourcesSelectionType> ResourcesManager<ResourceType, Resources
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::lockResource( const ResourceID& resourceID, UserID newOwner )
 {
-    this->getResourcesSelection( NO_USER )->moveResource( resourceID, *( this->getResourcesSelection( newOwner ) ) );
+    this->nonSelectedResources_->moveResource( resourceID, *( this->getResourcesSelection( newOwner ) ) );
 }
 
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::unlockResourcesSelection( UserID currentOwner )
 {
-    this->getResourcesSelection( currentOwner )->moveAll( *( this->getResourcesSelection( NO_USER ) ) );
+    this->getResourcesSelection( currentOwner )->moveAll( *( this->nonSelectedResources_ ) );
 }
 
 

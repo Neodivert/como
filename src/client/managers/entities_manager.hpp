@@ -56,7 +56,7 @@ class EntitiesManager : public AbstractEntitiesManager, public ContainerObserver
         /***
          * 4. Getters
          ***/
-        LocalEntitiesSelectionPtr getLocalSelection() const;
+        LocalEntitiesSelection* getLocalSelection() const; // TODO: Return a undeletable pointer.
         MeshesManagerPtr getMeshesManager();
         LightsManagerPtr getLightsManager();
         virtual bool containsResource(const ResourceID &resourceID) const;
@@ -108,7 +108,7 @@ class EntitiesManager : public AbstractEntitiesManager, public ContainerObserver
 
         UsersManagerPtr usersManager_;
 
-        std::map< UserID, EntitiesSelectionPtr > entitiesSelections_;
+        std::map< UserID, std::unique_ptr<EntitiesSelection> > entitiesSelections_;
 
         MeshesManagerPtr meshesManager_;
         LightsManagerPtr lightsManager_;
