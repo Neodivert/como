@@ -27,7 +27,7 @@
 #include <client/managers/server_interface/server_interface.hpp>
 #include <queue>
 #include <client/models/3d/lights/lights.hpp>
-#include <client/managers/materials/materials_manager.hpp>
+#include <client/managers/managers/materials/materials_manager.hpp>
 #include <common/users/user.hpp>
 #include <common/utilities/paths.hpp>
 #include <client/managers/primitives/client_primitives_manager.hpp>

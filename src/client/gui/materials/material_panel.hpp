@@ -21,7 +21,7 @@
 
 #include <QFrame>
 #include <QLineEdit>
-#include <client/managers/materials/material_handler.hpp>
+#include <client/managers/managers/materials/material_handler.hpp>
 #include <client/gui/utilities/color_button.hpp>
 
 namespace como {

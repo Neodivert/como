@@ -64,12 +64,12 @@ HEADERS += \
     ../../src/client/gui/tools_menu/properties_tab/mesh_info_menu.hpp \
     ../../src/client/models/3d/materials/material.hpp \
     ../../src/client/gui/utilities/color_button.hpp \
-    ../../src/client/managers/materials/materials_manager.hpp \
+    ../../src/client/managers/managers/materials/materials_manager.hpp \
     ../../src/client/gui/materials/materials_editor.hpp \
     ../../src/client/gui/materials/materials_list.hpp \
     ../../src/client/gui/materials/material_panel.hpp \
     ../../src/client/gui/materials/materials_list_item.hpp \
-    ../../src/client/managers/materials/material_handler.hpp \
+    ../../src/client/managers/managers/materials/material_handler.hpp \
     ../../src/client/managers/managers/lights/lights_manager.hpp \
     ../../src/client/models/3d/lights/abstract_light.hpp \
     ../../src/client/models/utilities/open_gl.hpp \
@@ -141,12 +141,12 @@ SOURCES += \
     ../../src/client/gui/tools_menu/properties_tab/mesh_info_menu.cpp \
     ../../src/client/models/3d/materials/material.cpp \
     ../../src/client/gui/utilities/color_button.cpp \
-    ../../src/client/managers/materials/materials_manager.cpp \
+    ../../src/client/managers/managers/materials/materials_manager.cpp \
     ../../src/client/gui/materials/materials_editor.cpp \
     ../../src/client/gui/materials/materials_list.cpp \
     ../../src/client/gui/materials/material_panel.cpp \
     ../../src/client/gui/materials/materials_list_item.cpp \
-    ../../src/client/managers/materials/material_handler.cpp \
+    ../../src/client/managers/managers/materials/material_handler.cpp \
     ../../src/client/managers/managers/lights/lights_manager.cpp \
     ../../src/client/models/utilities/open_gl.cpp \
     ../../src/client/gui/users/users_list_item.cpp \

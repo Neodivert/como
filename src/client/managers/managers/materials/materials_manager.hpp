@@ -21,7 +21,7 @@
 
 #include <list>
 #include <map>
-#include <client/managers/materials/material_handler.hpp>
+#include <client/managers/managers/materials/material_handler.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
 #include <common/ids/resource_id.hpp>
 #include <string>

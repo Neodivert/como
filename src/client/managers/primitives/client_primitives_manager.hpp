@@ -28,7 +28,7 @@
 #include <common/managers/primitives/abstract_primitives_manager.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
 #include <QObject>
-#include <client/managers/materials/materials_manager.hpp>
+#include <client/managers/managers/materials/materials_manager.hpp>
 #include <cstdio>
 #include <fstream>
 #include <common/primitives/obj_primitives_importer.hpp>
