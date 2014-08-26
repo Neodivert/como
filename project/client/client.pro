@@ -74,7 +74,7 @@ HEADERS += \
     ../../src/client/models/3d/lights/abstract_light.hpp \
     ../../src/client/models/utilities/open_gl.hpp \
     ../../src/client/gui/users/users_list_item.hpp \
-    ../../src/client/managers/primitives/client_primitives_manager.hpp \
+    ../../src/client/managers/managers/primitives/client_primitives_manager.hpp \
     ../../src/client/gui/primitives/primitive_import_dialog.hpp \
     ../../src/client/gui/resources/resource_selector.hpp \
     ../../src/client/models/3d/textures/texture.hpp \
@@ -84,7 +84,7 @@ HEADERS += \
     ../../src/client/managers/selections/meshes/meshes_selection.hpp \
     ../../src/client/gui/rendering/viewport_view_menu.hpp \
     ../../src/client/gui/rendering/viewport_projection_menu.hpp \
-    ../../src/client/managers/resources_manager.hpp \
+    ../../src/client/managers/managers/resources_manager.hpp \
     ../../src/client/managers/meshes_manager.hpp \
     ../../src/client/managers/selections/lights/lights_selection.hpp \
     ../../src/client/managers/selections/resources/resources_selection.hpp \
@@ -107,8 +107,8 @@ HEADERS += \
     ../../src/client/managers/utilities/server_writer.hpp \
     ../../src/client/managers/users/users_manager.hpp \
     ../../src/client/models/users/coloured_user.hpp \
-    ../../src/client/managers/resources/resources_ownership_requester.hpp \
-    ../../src/client/managers/resources/resource_commands_executer.hpp \
+    ../../src/client/managers/managers/resources/resources_ownership_requester.hpp \
+    ../../src/client/managers/managers/resources/resource_commands_executer.hpp \
     ../../src/client/models/3d/sets/drawables_set.hpp \
     ../../src/client/models/3d/sets/pickables_set.hpp \
     ../../src/client/managers/abstract_entities_manager.hpp
@@ -150,7 +150,7 @@ SOURCES += \
     ../../src/client/managers/managers/lights/lights_manager.cpp \
     ../../src/client/models/utilities/open_gl.cpp \
     ../../src/client/gui/users/users_list_item.cpp \
-    ../../src/client/managers/primitives/client_primitives_manager.cpp \
+    ../../src/client/managers/managers/primitives/client_primitives_manager.cpp \
     ../../src/client/gui/primitives/primitive_import_dialog.cpp \
     ../../src/client/gui/resources/resource_selector.cpp \
     ../../src/client/models/3d/textures/texture.cpp \
@@ -176,7 +176,7 @@ SOURCES += \
     ../../src/client/managers/utilities/server_writer.cpp \
     ../../src/client/managers/users/users_manager.cpp \
     ../../src/client/models/users/coloured_user.cpp \
-    ../../src/client/managers/resources/resources_ownership_requester.cpp \
-    ../../src/client/managers/resources/resource_commands_executer.cpp \
+    ../../src/client/managers/managers/resources/resources_ownership_requester.cpp \
+    ../../src/client/managers/managers/resources/resource_commands_executer.cpp \
     ../../src/client/models/3d/sets/drawables_set.cpp \
     ../../src/client/managers/abstract_entities_manager.cpp

@@ -23,7 +23,7 @@
 #include <common/commands/command.hpp>
 #include <client/managers/selections/resources/resources_selection.hpp>
 #include <client/managers/selections/resources/local_resources_selection.hpp>
-#include <client/managers/resources/resource_commands_executer.hpp>
+#include <client/managers/managers/resources/resource_commands_executer.hpp>
 
 
 namespace como {

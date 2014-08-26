@@ -19,7 +19,7 @@
 #ifndef ABSTRACT_ENTITIES_MANAGER_HPP
 #define ABSTRACT_ENTITIES_MANAGER_HPP
 
-#include <client/managers/resources/resource_commands_executer.hpp>
+#include <client/managers/managers/resources/resource_commands_executer.hpp>
 #include <client/models/3d/sets/drawables_set.hpp>
 #include <client/models/3d/sets/pickables_set.hpp>
 

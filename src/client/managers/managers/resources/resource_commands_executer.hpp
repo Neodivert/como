@@ -19,7 +19,7 @@
 #ifndef RESOURCE_COMMANDS_EXECUTER_HPP
 #define RESOURCE_COMMANDS_EXECUTER_HPP
 
-#include <client/managers/resources/resources_ownership_requester.hpp>
+#include <client/managers/managers/resources/resources_ownership_requester.hpp>
 
 namespace como {
 

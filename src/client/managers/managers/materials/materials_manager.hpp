@@ -32,8 +32,6 @@
 #include <common/utilities/observable_container/observable_container.hpp>
 #include <common/mesh_info/material_info.hpp>
 #include <client/managers/resources_manager.hpp>
-
-#include <client/managers/resources_manager.hpp>
 #include <client/managers/selections/materials/local_materials_selection.hpp>
 
 namespace como {

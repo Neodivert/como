@@ -24,7 +24,6 @@
 #include <common/utilities/log.hpp>
 #include <common/ids/resource_id.hpp>
 #include <common/ids/resource_id.hpp>
-#include <common/managers/primitives/abstract_primitives_manager.hpp>
 #include <list>
 #include <common/primitives/primitive_info.hpp>
 

@@ -20,7 +20,7 @@
 #define PRIMITIVE_IMPORT_DIALOG_HPP
 
 #include <QDialog>
-#include <client/managers/primitives/client_primitives_manager.hpp>
+#include <client/managers/managers/primitives/client_primitives_manager.hpp>
 #include <QFormLayout>
 #include <QPushButton>
 #include <QFileDialog>
