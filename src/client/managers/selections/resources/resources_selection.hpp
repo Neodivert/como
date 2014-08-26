@@ -54,7 +54,7 @@ class ResourcesSelection : public virtual Observable {
         /***
          * 4. Resources insertion / removal
          ***/
-        void addResource( ResourceID id, std::unique_ptr< ResourceType > resource, bool notifyObservers = true );
+        virtual void addResource( ResourceID id, std::unique_ptr< ResourceType > resource, bool notifyObservers = true );
         void removeResource( ResourceID id );
 
 

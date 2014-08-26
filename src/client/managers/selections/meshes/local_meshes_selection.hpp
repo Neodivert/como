@@ -21,13 +21,19 @@
 
 #include <client/managers/drawables_selection/meshes_selection.hpp>
 #include <client/managers/selections/resources/local_resources_selection.hpp>
+#include <client/managers/utilities/server_writer.hpp>
 
 namespace como {
 
-class LocalMeshesSelection : public MeshesSelection, public LocalResourcesSelection< Mesh >
+class LocalMeshesSelection : public MeshesSelection, public ServerWriter
 {
 public:
     LocalMeshesSelection( ServerInterfacePtr server );
+
+    /***
+     * 3. Meshes management
+     ***/
+    ResourceID addResource( std::unique_ptr<Mesh> resource );
 };
 
 } // namespace como

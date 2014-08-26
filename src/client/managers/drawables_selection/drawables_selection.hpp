@@ -59,8 +59,6 @@ class DrawablesSelection : public ResourcesSelection<Entity>
 
         const void* highlightedProperty_;
 
-        bool displayEdges_;
-
 
     public:
         /***
@@ -89,7 +87,7 @@ class DrawablesSelection : public ResourcesSelection<Entity>
          * 3. Setters
          ***/
         virtual void setPivotPointMode( PivotPointMode pivotPointMode );
-        void displayEdges( bool displayEdges );
+
 
 
         /***

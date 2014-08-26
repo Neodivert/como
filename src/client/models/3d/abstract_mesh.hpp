@@ -44,6 +44,7 @@ class AbstractMesh {
          * 3. Setters
          ***/
         virtual void displayVertexNormals( bool display ) = 0;
+        virtual void displayEdges( bool display ) = 0;
 
 
         /***

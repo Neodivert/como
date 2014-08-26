@@ -85,17 +85,7 @@ bool DrawablesManager::existsDrawable( const ResourceID& id ) const
  * 4. Setters
  ***
 
-void DrawablesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
-{
-    switch( frequency ){
-        case MeshEdgesDisplayFrequency::ALWAYS:
-            getResourcesSelection( NO_USER )->displayEdges( true );
-        break;
-        case MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED:
-            getResourcesSelection( NO_USER )->displayEdges( false );
-        break;
-    }
-}
+
 
 
 ***

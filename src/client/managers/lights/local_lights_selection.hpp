@@ -21,10 +21,11 @@
 
 #include <client/managers/lights/lights_selection.hpp>
 #include <client/managers/selections/resources/local_resources_selection.hpp>
+#include <client/managers/utilities/server_writer.hpp>
 
 namespace como {
 
-class LocalLightsSelection : public LightsSelection, public LocalResourcesSelection< DirectionalLight >
+class LocalLightsSelection : public LightsSelection, public ServerWriter
 {
     public:
         /***
@@ -43,7 +44,13 @@ class LocalLightsSelection : public LightsSelection, public LocalResourcesSelect
 
 
         /***
-         * 3. Operators
+         * 3. Lights management
+         ***/
+        ResourceID addResource( std::unique_ptr<DirectionalLight> resource );
+
+
+        /***
+         * 4. Operators
          ***/
         LocalLightsSelection& operator = ( const LocalLightsSelection& ) = delete;
         LocalLightsSelection& operator = ( LocalLightsSelection&& ) = delete;

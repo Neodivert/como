@@ -56,7 +56,13 @@ class MeshesSelection : public virtual EntitiesSet< Mesh >, public AbstractMesh
 
 
         /***
-         * 3. Getters
+         * 3. Resources management
+         ***/
+        virtual void addResource( ResourceID id, std::unique_ptr<Mesh> resource, bool notifyObservers = true );
+
+
+        /***
+         * 4. Getters
          ***/
         bool containsResource( const ResourceID& resourceID ) const;
         std::string getResourceName( const ResourceID& resourceID ) const;
@@ -66,16 +72,21 @@ class MeshesSelection : public virtual EntitiesSet< Mesh >, public AbstractMesh
 
 
         /***
-         * 4. Setters
+         * 5. Setters
          ***/
         virtual void displayVertexNormals( bool display );
+        virtual void displayEdges( bool display );
 
 
         /***
-         * 5. Operators
+         * 6. Operators
          ***/
         MeshesSelection& operator = ( const MeshesSelection& ) = default;
         MeshesSelection& operator = ( MeshesSelection&& ) = default;
+
+
+    private:
+        bool displayEdges_;
 };
 
 } // namespace como

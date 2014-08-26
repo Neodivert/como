@@ -28,18 +28,8 @@ namespace como {
 
 typedef std::map< UserID, DrawablesSelectionPtr > DrawablesSelections;
 
-enum class MeshEdgesDisplayFrequency {
-    ALWAYS,
-    ONLY_WHEN_SELECTED
-};
-
-
 class DrawablesManager //: public ResourcesManager< Entity, DrawablesSelection, LocalDrawablesSelection >
 {
-    private:
-        MeshEdgesDisplayFrequency meshEdgesDisplayFrequency_;
-
-
     public:
         /***
          * 1. Construction
@@ -69,7 +59,6 @@ class DrawablesManager //: public ResourcesManager< Entity, DrawablesSelection, 
         /***
          * 4. Setters
          ***/
-        void displayEdges( MeshEdgesDisplayFrequency frequency );
 
 
         /***

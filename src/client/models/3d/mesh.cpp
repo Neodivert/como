@@ -47,7 +47,8 @@ const char DEFAULT_MESH_NAME[] = "Mesh #";
 Mesh::Mesh( MeshType type, const char* filePath, MaterialConstPtr material, bool displayVertexNormals ) :
     Entity( DrawableType::MESH, DEFAULT_MESH_NAME ),
     type_( type ),
-    displayVertexNormals_( displayVertexNormals )
+    displayVertexNormals_( displayVertexNormals ),
+    displayEdges_( true )
 {
     MeshInfo meshInfo;
     PrimitiveFile::read( meshInfo, filePath );
@@ -66,7 +67,8 @@ Mesh::Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std:
     vertexData_( vertexData ),
     polygonsGroups_( polygonsGroups ),
     materials_( materials ),
-    displayVertexNormals_( displayVertexNormals )
+    displayVertexNormals_( displayVertexNormals ),
+    displayEdges_( true )
 {
     init( oglData );
 }
@@ -294,6 +296,12 @@ void Mesh::displayVertexNormals( bool display )
 }
 
 
+void Mesh::displayEdges( bool display )
+{
+    displayEdges_ = display;
+}
+
+
 /***
  * 7. Intersections.
  ***/
@@ -385,7 +393,9 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4&
 
 
     // Set the color for the mesh's contour.
-    if( contourColor != nullptr ){
+    // TODO: Use only one condition (force contourColor to be passed as a
+    // reference?)
+    if( displayEdges_ && ( contourColor != nullptr ) ){
         openGL->setShadingMode( ShadingMode::SOLID_PLAIN );
 
         glUniform4fv( uniformColorLocation, 1, glm::value_ptr( *contourColor ) );
@@ -402,6 +412,7 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4&
         // Return polygon mode to previos GL_FILL.
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     }
+
 
     if( displayVertexNormals_ ){
         drawVertexNormals( openGL, viewMatrix, projectionMatrix, glm::vec4( 1.0f, 0.0f, 0.0f, 0.0f ) );

@@ -51,7 +51,7 @@ class MenuBar : public QMenuBar, public Observer
          ***/
     private:
         QMenu* createViewMenu( EntitiesManager* entitiesManager );
-        QMenu* createDisplayEdgesMenu( EntitiesManager* entitiesManager );
+        QMenu* createDisplayEdgesMenu( MeshesManager* meshesManager );
         QMenu* createDisplayVertexNormalsMenu( MeshesManager* meshesManager );
     public:
 

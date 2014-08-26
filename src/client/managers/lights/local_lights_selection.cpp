@@ -20,11 +20,31 @@
 
 namespace como {
 
+/***
+ * 1. Construction
+ ***/
+
 LocalLightsSelection::LocalLightsSelection( ServerInterfacePtr server ) :
     EntitiesSet( server->getLocalUserColor().toVec4() ),
     LightsSelection( server->getLocalUserColor().toVec4() ),
-    LocalResourcesSelection( server )
+    ServerWriter( server )
 {
 }
+
+
+/***
+ * 3. Lights management
+ ***/
+
+ResourceID LocalLightsSelection::addResource( std::unique_ptr<DirectionalLight> resource )
+{
+    // FIXME: Duplicated code in LocalMeshesSelection::addResource().
+    ResourceID resourceID = newResourceID();
+
+    LightsSelection::addResource( resourceID, std::move( resource ) );
+
+    return resourceID;
+}
+
 
 } // namespace como

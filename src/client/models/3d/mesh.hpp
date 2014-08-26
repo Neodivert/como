@@ -91,6 +91,8 @@ class Mesh : public AbstractMesh, public Entity
 
         bool displayVertexNormals_;
 
+        bool displayEdges_;
+
 
         /***
          * 1. Construction.
@@ -141,6 +143,8 @@ class Mesh : public AbstractMesh, public Entity
          * 6. Setters
          ***/
         void displayVertexNormals( bool display );
+        virtual void displayEdges( bool display );
+
 
         /***
          * 7. Intersections.

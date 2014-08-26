@@ -23,7 +23,22 @@ namespace como {
 LocalMeshesSelection::LocalMeshesSelection( ServerInterfacePtr server ) :
     EntitiesSet( server->getLocalUserColor().toVec4() ),
     MeshesSelection( server->getLocalUserColor().toVec4() ),
-    LocalResourcesSelection( server )
+    ServerWriter( server )
 {}
+
+
+/***
+ * 3. Meshes management
+ ***/
+
+ResourceID LocalMeshesSelection::addResource( std::unique_ptr<Mesh> resource )
+{
+    // FIXME: Duplicated code in LocalLightsSelection::addResource().
+    ResourceID resourceID = newResourceID();
+
+    MeshesSelection::addResource( resourceID, std::move( resource ) );
+
+    return resourceID;
+}
 
 } // namespace como

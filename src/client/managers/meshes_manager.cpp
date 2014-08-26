@@ -28,7 +28,9 @@ MeshesManager::MeshesManager( ServerInterfacePtr server, LogPtr log ) :
     ResourceCommandsExecuter( server ),
     SpecializedEntitiesManager( server, log ),
     newMeshesDisplayVertexNormals_( false )
-{}
+{
+    displayEdges( MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED );
+}
 
 
 /***
@@ -88,6 +90,19 @@ void MeshesManager::displayVertexNormals( bool display )
 
     for( auto& meshesSelection : resourcesSelections_ ){
         meshesSelection.second->displayVertexNormals( display );
+    }
+}
+
+
+void MeshesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
+{
+    switch( frequency ){
+        case MeshEdgesDisplayFrequency::ALWAYS:
+            getResourcesSelection( NO_USER )->displayEdges( true );
+        break;
+        case MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED:
+            getResourcesSelection( NO_USER )->displayEdges( false );
+        break;
     }
 }
 

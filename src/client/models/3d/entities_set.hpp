@@ -27,7 +27,7 @@ namespace como {
 const glm::vec4 DEFAULT_BORDER_COLOR = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
 
 template <class EntitySubtype>
-class EntitiesSet : public AbstractEntitiesSet, public virtual ResourcesSelection< EntitySubtype >
+class EntitiesSet : public AbstractEntitiesSet, public ResourcesSelection< EntitySubtype >
 {
     public:
         /***

@@ -25,17 +25,16 @@
 
 namespace como {
 
+enum class MeshEdgesDisplayFrequency {
+    ALWAYS,
+    ONLY_WHEN_SELECTED
+};
+
 class MeshesManager;
 typedef std::shared_ptr< MeshesManager > MeshesManagerPtr;
 
-typedef std::map< UserID, MeshesSelection > MeshesSelectionMap;
-
 class MeshesManager : public SpecializedEntitiesManager< Mesh, MeshesSelection, LocalMeshesSelection >
 {
-    private:
-        bool newMeshesDisplayVertexNormals_;
-
-
     public:
         /***
          * 1. Construction
@@ -71,6 +70,7 @@ class MeshesManager : public SpecializedEntitiesManager< Mesh, MeshesSelection, 
          * 5. Setters
          ***/
         void displayVertexNormals( bool display );
+        void displayEdges( MeshEdgesDisplayFrequency frequency );
 
 
         /***
@@ -83,8 +83,13 @@ class MeshesManager : public SpecializedEntitiesManager< Mesh, MeshesSelection, 
         /***
          * 4. Resources selections management // TODO: Make this protected and make AbstractOwnershipManager observe a UsersList interface.
          ***/
+        // TODO: Remove.
         virtual void registerUser( UserID userID );
         virtual void removeUser( UserID userID );
+
+
+    private:
+        bool newMeshesDisplayVertexNormals_;
 };
 
 } // namespace como

@@ -25,12 +25,25 @@ namespace como {
  ***/
 
 MeshesSelection::MeshesSelection( glm::vec4 borderColor ) :
-    EntitiesSet( borderColor )
+    EntitiesSet( borderColor ),
+    displayEdges_( true )
 {}
 
 
 /***
- * 2. Getters
+ * 3. Resources management
+ ***/
+
+void MeshesSelection::addResource( ResourceID id, std::unique_ptr<Mesh> resource, bool notifyObservers )
+{
+    resource->displayEdges( displayEdges_ );
+
+    EntitiesSet<Mesh>::addResource( id, std::move( resource ), notifyObservers );
+}
+
+
+/***
+ * 4. Getters
  ***/
 
 bool MeshesSelection::containsResource( const ResourceID& resourceID ) const
@@ -89,7 +102,7 @@ ElementsMeetingCondition MeshesSelection::displaysVertexNormals() const
 
 
 /***
- * 4. Setters
+ * 5. Setters
  ***/
 
 void MeshesSelection::displayVertexNormals( bool display )
@@ -97,6 +110,17 @@ void MeshesSelection::displayVertexNormals( bool display )
     for( auto& mesh : resources_ ){
         mesh.second->displayVertexNormals( display );
     }
+    notifyObservers();
+}
+
+
+void MeshesSelection::displayEdges( bool display )
+{
+    for( auto& mesh : resources_ ){
+        mesh.second->displayEdges( display );
+    }
+    displayEdges_ = display;
+
     notifyObservers();
 }
 

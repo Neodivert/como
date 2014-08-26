@@ -42,16 +42,15 @@ QMenu* MenuBar::createViewMenu( EntitiesManager* entitiesManager )
 {
     QMenu* viewMenu = new QMenu( "View" );
 
-    viewMenu->addMenu( createDisplayEdgesMenu( entitiesManager ) );
+    viewMenu->addMenu( createDisplayEdgesMenu( entitiesManager->getMeshesManager().get() ) );
     viewMenu->addMenu( createDisplayVertexNormalsMenu( entitiesManager->getMeshesManager().get() ) );
 
     return viewMenu;
 }
 
 
-QMenu* MenuBar::createDisplayEdgesMenu( EntitiesManager* entitiesManager )
+QMenu* MenuBar::createDisplayEdgesMenu( MeshesManager* meshesManager )
 {
-    (void)( entitiesManager ); // TODO: Remove this and make use of entitiesManager.
     QMenu* displayEdgesMenu = nullptr;
     QActionGroup* displayEdgesActionGroup = nullptr;
     QAction* displayEdgesAlways = nullptr;
@@ -61,14 +60,14 @@ QMenu* MenuBar::createDisplayEdgesMenu( EntitiesManager* entitiesManager )
     displayEdgesAlways = new QAction( QString( "Always" ), nullptr );
     displayEdgesAlways->setCheckable( true );
     QObject::connect( displayEdgesAlways, &QAction::triggered, [=](){
-        //entitiesManager->displayEdges( MeshEdgesDisplayFrequency::ALWAYS );
+        meshesManager->displayEdges( MeshEdgesDisplayFrequency::ALWAYS );
     });
 
     // Create a menu action for displaying the edges only when selected.
     displayEdgesOnlyWhenSelected = new QAction( QString( "Only when selected" ), nullptr );
     displayEdgesOnlyWhenSelected->setCheckable( true );
     QObject::connect( displayEdgesOnlyWhenSelected, &QAction::triggered, [=](){
-        //entitiesManager->displayEdges( MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED );
+        meshesManager->displayEdges( MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED );
     });
 
     // Include previous actions in a exclusive group of actions and set the

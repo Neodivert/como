@@ -25,6 +25,7 @@
 
 namespace como {
 
+// TODO: Remove this class?
 template <class ResourceType>
 class LocalResourcesSelection : public virtual ResourcesSelection< ResourceType > {
     public:
