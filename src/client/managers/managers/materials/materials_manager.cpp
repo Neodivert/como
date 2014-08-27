@@ -216,4 +216,22 @@ void MaterialsManager::update()
     notifyObservers();
 }
 
+
+void MaterialsManager::lockMaterials( const std::vector<ResourceID> &materialsIDs, UserID newOwner )
+{
+    for( const auto& materialID : materialsIDs ){
+        materialsOwners_.at( materialID ) = newOwner;
+    }
+}
+
+
+void MaterialsManager::removeMaterials( const std::vector<ResourceID> &materialsIDs )
+{
+    for( const auto& materialID : materialsIDs ){
+        materials_.erase( materialID );
+        materialsOwners_.erase( materialID );
+    }
+}
+
+
 } // namespace como

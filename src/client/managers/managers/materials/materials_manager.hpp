@@ -40,6 +40,14 @@ class MaterialsManager : public QObject, public ServerWriter, public Observer, p
 {
     Q_OBJECT
 
+    // TODO: Use a better alternative for only allowing MeshesManager to
+    // lock and remove materials and anyone to retrieve current material
+    // handler.
+    // - Maybe make both methods public, and create a base base class X
+    // with the method X::selectMaterial(). MaterialsManager will be
+    // private to MeshesManager and X will be public?
+    friend class MeshesManager;
+
     private:
         std::map< ResourceID, MaterialPtr > materials_;
         MaterialsOwnershipMap materialsOwners_;
@@ -103,14 +111,28 @@ class MaterialsManager : public QObject, public ServerWriter, public Observer, p
 
 
         /***
-         * 7. Operators
+         * 8. Materials locking
+         ***/
+    private:
+        void lockMaterials( const std::vector< ResourceID >& materialsIDs, UserID newOwner );
+
+
+        /***
+         * 9. Materials destruction
+         ***/
+        void removeMaterials( const std::vector< ResourceID >& materialsIDs );
+
+
+    public:
+        /***
+         * 10. Operators
          ***/
         MaterialsManager& operator = ( const MaterialsManager& ) = delete;
         MaterialsManager& operator = ( MaterialsManager&& ) = delete;
 
 
         /***
-         * 8. Signals
+         * 11. Signals
          ***/
     signals:
         void materialSelectionConfirmed( MaterialHandlerPtr material );
