@@ -205,12 +205,12 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         // Initialize the users manager with the local user.
         usersManager_ = UsersManagerPtr( new UsersManager( userAcceptancePacket ) );
 
-        // Initialize the entities manager.
-        entitiesManager_ = EntitiesManagerPtr( new EntitiesManager( server_, log_, usersManager_ ) );
-
         // Initialize the materials manager.
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( server_, log_ ) );
         materialsManager_->Observable::addObserver( this );
+
+        // Initialize the entities manager.
+        entitiesManager_ = EntitiesManagerPtr( new EntitiesManager( server_, log_, usersManager_, materialsManager_ ) );
 
         // Initialize the primitives manager.
         primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, entitiesManager_->getMeshesManager(), materialsManager_, log_ ) );

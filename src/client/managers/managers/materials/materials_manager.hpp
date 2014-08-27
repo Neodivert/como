@@ -36,6 +36,7 @@ namespace como {
 
 typedef std::map< ResourceID, UserID > MaterialsOwnershipMap;
 
+
 class MaterialsManager : public QObject, public ServerWriter, public Observer, public Observable
 {
     Q_OBJECT
@@ -51,6 +52,7 @@ class MaterialsManager : public QObject, public ServerWriter, public Observer, p
     private:
         std::map< ResourceID, MaterialPtr > materials_;
         MaterialsOwnershipMap materialsOwners_;
+        std::map< ResourceID, std::vector< ResourceID > > meshMaterials_;
 
         MaterialHandlerPtr materialHandler_;
 
@@ -75,8 +77,8 @@ class MaterialsManager : public QObject, public ServerWriter, public Observer, p
          ***/
     public:
         ResourceID createMaterial( const MaterialInfo& materialInfo );
-        void createMaterials( const std::vector<MaterialInfo>& materialsInfo, ResourceID& firstMaterialID );
-        void createRemoteMaterials( const std::vector< MaterialInfo >& materialsInfo, const ResourceID& firstMaterialID );
+        void createMaterials( const ResourceID& meshID, const std::vector<MaterialInfo>& materialsInfo, ResourceID& firstMaterialID );
+        void createRemoteMaterials( const ResourceID& meshID, const std::vector< MaterialInfo >& materialsInfo, const ResourceID& firstMaterialID );
     //private:
         void createMaterial( ResourceID id, const MaterialInfo &materialInfo );
 
@@ -114,14 +116,20 @@ class MaterialsManager : public QObject, public ServerWriter, public Observer, p
          * 8. Materials locking
          ***/
     private:
-        void lockMaterial( const ResourceID& materialID, UserID newOwner );
-        void lockMaterials( const std::vector< ResourceID >& materialsIDs, UserID newOwner );
+        void lockMaterial( const ResourceID &materialID, UserID newOwner );
+        void lockMeshMaterials( const ResourceID& meshID, UserID newOwner );
+
+        void unlockMaterial( const ResourceID &materialID );
+        void unlockMeshMaterials( const ResourceID &meshID );
+        void unlockUserMaterials( UserID userID );
 
 
         /***
          * 9. Materials destruction
          ***/
-        void removeMaterials( const std::vector< ResourceID >& materialsIDs );
+        void removeMaterial( const ResourceID& materialID );
+        void removeMeshMaterials( const ResourceID& meshID );
+        void removeUserMaterials( UserID userID );
 
 
     public:

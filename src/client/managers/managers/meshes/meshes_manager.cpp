@@ -154,21 +154,24 @@ void MeshesManager::removeUser( UserID userID )
 void MeshesManager::lockResource( const ResourceID &resourceID, UserID newOwner )
 {
     ResourcesManager::lockResource( resourceID, newOwner );
-    // TODO: Lock materials.
+
+    materialsManager_->lockMeshMaterials( resourceID, newOwner );
 }
 
 
 void MeshesManager::unlockResourcesSelection( UserID currentOwner )
 {
     ResourcesManager::unlockResourcesSelection( currentOwner );
-    // TODO: Unlock materials.
+
+    materialsManager_->unlockUserMaterials( currentOwner );
 }
 
 
 void MeshesManager::clearResourcesSelection( UserID currentOwner )
 {
     ResourcesManager::clearResourcesSelection( currentOwner );
-    // TODO: Remove materials.
+
+    materialsManager_->removeUserMaterials( currentOwner );
 }
 
 

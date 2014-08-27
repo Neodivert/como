@@ -46,13 +46,16 @@ ResourceID MaterialsManager::createMaterial( const MaterialInfo &materialInfo )
 }
 
 
-void MaterialsManager::createMaterials( const std::vector< MaterialInfo >& materialsInfo, ResourceID& firstMaterialID )
+void MaterialsManager::createMaterials( const ResourceID& meshID, const std::vector< MaterialInfo >& materialsInfo, ResourceID& firstMaterialID )
 {
     assert( materialsInfo.size() != 0 );
     ResourceID materialID = firstMaterialID = newResourceID();
 
+    meshMaterials_[meshID] = std::vector<ResourceID>();
+
     for( auto materialInfo : materialsInfo ){
         createMaterial( materialID, materialInfo );
+        meshMaterials_.at( meshID ).push_back( materialID );
         materialID++;
     }
 }
@@ -64,19 +67,6 @@ void MaterialsManager::createMaterial( ResourceID id, const MaterialInfo& materi
 
     // Set the creator of the material as its current owner.
     lockMaterial( id, id.getCreatorID() );
-}
-
-
-void MaterialsManager::createRemoteMaterials( const std::vector< MaterialInfo >& materialsInfo, const ResourceID& firstMaterialID )
-{
-    assert( materialsInfo.size() != 0 );
-
-    ResourceID materialID = firstMaterialID;
-
-    for( auto materialInfo : materialsInfo ){
-        createMaterial( materialID, materialInfo );
-        materialID++;
-    }
 }
 
 
@@ -226,10 +216,45 @@ void MaterialsManager::lockMaterial( const ResourceID &materialID, UserID newOwn
 }
 
 
-void MaterialsManager::lockMaterials( const std::vector<ResourceID> &materialsIDs, UserID newOwner )
+void MaterialsManager::lockMeshMaterials( const ResourceID& meshID, UserID newOwner )
 {
-    for( const auto& materialID : materialsIDs ){
+    for( const auto& materialID : meshMaterials_.at( meshID ) ){
         lockMaterial( materialID, newOwner );
+    }
+}
+
+
+void MaterialsManager::unlockMaterial(const ResourceID &materialID)
+{
+    materialsOwners_[materialID] = NO_USER;
+}
+
+
+void MaterialsManager::unlockMeshMaterials(const ResourceID &meshID )
+{
+    for( const auto& materialID : meshMaterials_.at( meshID ) ){
+        unlockMaterial( materialID );
+    }
+}
+
+
+void MaterialsManager::unlockUserMaterials( UserID userID )
+{
+    std::list< ResourceID > meshesToBeUnlocked;
+
+    // All the materials associated to a same mesh have the same owner, so
+    // we check the owner of the first material for every mesh and mark
+    // the mesh (its materials) to be unlocked if needed.
+    // TODO: Change this and iterate over the resources_ map if
+    // we allow materials non associated to a mesh.
+    for( const auto& meshPair : meshMaterials_ ){
+        if( meshPair.second.size() && ( materialsOwners_.at( meshPair.second[0] ) == userID ) ){
+            meshesToBeUnlocked.push_back( meshPair.first );
+        }
+    }
+
+    for( const auto& meshID: meshesToBeUnlocked ){
+        unlockMeshMaterials( meshID );
     }
 }
 
@@ -238,11 +263,38 @@ void MaterialsManager::lockMaterials( const std::vector<ResourceID> &materialsID
  * 9. Materials destruction
  ***/
 
-void MaterialsManager::removeMaterials( const std::vector<ResourceID> &materialsIDs )
+void MaterialsManager::removeMaterial( const ResourceID &materialID )
 {
-    for( const auto& materialID : materialsIDs ){
-        materials_.erase( materialID );
-        materialsOwners_.erase( materialID );
+    materials_.erase( materialID );
+    materialsOwners_.erase( materialID );
+}
+
+
+void MaterialsManager::removeMeshMaterials(const ResourceID &meshID)
+{
+    for( const auto& materialID : meshMaterials_.at( meshID ) ){
+        removeMaterial( materialID );
+    }
+    meshMaterials_.erase( meshID );
+}
+
+
+void MaterialsManager::removeUserMaterials(UserID userID)
+{
+    std::list< ResourceID > meshesToBeRemoved;
+
+    // All the materials associated to a same mesh have the same owner, so
+    // we check the owner of the first material for every mesh and mark
+    // the mesh (its materials) to be deleted if needed.
+    // TODO: Change this and iterate over the resources_ map if
+    // we allow materials non associated to a mesh.
+    for( const auto& meshPair : meshMaterials_ ){
+        if( meshPair.second.size() && ( materialsOwners_.at( meshPair.second[0] ) == userID ) ){
+            meshesToBeRemoved.push_back( meshPair.first );
+        }
+    }
+    for( const auto& meshID: meshesToBeRemoved ){
+        removeMeshMaterials( meshID );
     }
 }
 

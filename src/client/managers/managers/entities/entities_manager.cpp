@@ -25,12 +25,12 @@ namespace como {
  * 1. Construction
  ***/
 
-EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log, UsersManagerPtr usersManager ) :
+EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log, UsersManagerPtr usersManager, MaterialsManagerPtr materialsManager ) :
     ResourceCommandsExecuter( server ), // TODO: Remove all this duplicity?
     AbstractEntitiesManager( server ),
     server_( server ),
     usersManager_( usersManager ),
-    meshesManager_( new MeshesManager( server, log, MaterialsManagerPtr( new MaterialsManager( server, log ) ) ) ),
+    meshesManager_( new MeshesManager( server, log, materialsManager ) ),
     lightsManager_( new LightsManager( server, log ) )
 {
     managers_.push_back( lightsManager_ );
