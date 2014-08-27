@@ -21,9 +21,10 @@
 namespace como {
 
 
-MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
+MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager, LocalMeshesSelection* localMeshesSelection ) :
     QFrame(),
-    materialsManager_( materialsManager )
+    materialsManager_( materialsManager ),
+    localMeshesSelection_( localMeshesSelection )
 {
     QVBoxLayout* layout = new QVBoxLayout();
     materialsList_ = new MaterialsList( materialsManager );
@@ -48,21 +49,33 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
 
 void MaterialsEditor::update( ContainerAction lastContainerAction, ResourceID resourceID )
 {
-    switch( lastContainerAction ){
-        case ContainerAction::ELEMENT_INSERTION:
-            materialsList_->addMaterial( resourceID,
-                                         materialsManager_->getMaterial( resourceID )->getName() );
-        break;
-        case ContainerAction::ELEMENT_DELETION:
-            // TODO: Complete.
-        break;
-        case ContainerAction::ELEMENT_UPDATE:
-            if( materialEditor_->isEnabled() && materialEditor_->getMaterialID() == resourceID ){
-                materialEditor_->refresh();
-            }
-        break;
-        case ContainerAction::CONTAINER_UPDATE:
-        break;
+    if( localMeshesSelection_->size() ){
+        setVisible( true );
+
+        (void)( lastContainerAction );
+        (void)( resourceID );
+        /*
+        switch( lastContainerAction ){
+            case ContainerAction::ELEMENT_INSERTION:
+                materialsList_->addMaterial( resourceID,
+                                             materialsManager_->getMaterial( resourceID )->getName() );
+            break;
+            case ContainerAction::ELEMENT_DELETION:
+                materialsList_->removeMaterial( resourceID );
+            break;
+            case ContainerAction::ELEMENT_UPDATE:
+                if( materialEditor_->isEnabled()
+                        && ( materialEditor_->getMaterialID() == resourceID )
+                        && materialsManager_->materialOwnedByLocalUser( resourceID ) ){
+                    materialEditor_->refresh();
+                }
+            break;
+            case ContainerAction::CONTAINER_UPDATE:
+            break;
+        }
+        */
+    }else{
+        setVisible( false );
     }
 }
 

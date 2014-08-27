@@ -24,6 +24,7 @@
 
 #include "materials_list.hpp"
 #include "material_editor.hpp"
+#include <client/managers/selections/meshes/local_meshes_selection.hpp>
 
 namespace como {
 
@@ -33,6 +34,7 @@ class MaterialsEditor : public QFrame, public ContainerObserver<ResourceID>
 
     private:
         MaterialsManagerPtr materialsManager_;
+        LocalMeshesSelection* localMeshesSelection_;
 
         MaterialsList* materialsList_;
         MaterialEditor* materialEditor_;
@@ -41,7 +43,7 @@ class MaterialsEditor : public QFrame, public ContainerObserver<ResourceID>
         /***
          * 1. Construction
          ***/
-        MaterialsEditor( MaterialsManagerPtr materialsManager );
+        MaterialsEditor( MaterialsManagerPtr materialsManager, LocalMeshesSelection* localMeshesSelection );
         MaterialsEditor( const MaterialsEditor& ) = delete;
         MaterialsEditor( MaterialsEditor&& ) = default;
 

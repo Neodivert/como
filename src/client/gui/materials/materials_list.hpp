@@ -19,7 +19,7 @@
 #ifndef MATERIALS_LIST_HPP
 #define MATERIALS_LIST_HPP
 
-#include <QListWidget>
+#include <QComboBox>
 #include <client/managers/managers/materials/materials_manager.hpp>
 #include <map>
 #include "materials_list_item.hpp"
@@ -28,7 +28,7 @@ namespace como {
 
 // TODO: Can't use "private QListWidget", what interests me because I don't
 // want user to use QListWidget methods here.
-class MaterialsList : public QListWidget
+class MaterialsList : public QComboBox
 {
     Q_OBJECT
 
@@ -56,17 +56,12 @@ class MaterialsList : public QListWidget
 
 
         /***
-         * 4. Slots
+         * 4. Popup
          ***/
-    public slots:
-        void addMaterial( ResourceID id, std::string name );
+        virtual void showPopup();
 
-
-        /***
-         * 5. Signals
-         ***/
-    signals:
-        void materialSelected( ResourceID id );
+    private:
+        MaterialsManagerPtr materialsManager_;
 };
 
 } // namespace como

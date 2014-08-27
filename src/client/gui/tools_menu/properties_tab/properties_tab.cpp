@@ -40,7 +40,7 @@ PropertiesTab::PropertiesTab( ScenePtr scene )
     layout->addWidget( new GeneralInfoMenu( scene->getEntitiesManager()->getLocalSelection() ) );
     layout->addWidget( new MeshInfoMenu( scene->getMeshesManager()->getLocalResourcesSelection() ) );
     layout->addWidget( new LightsMenu( scene->getLightsManager()->getLocalResourcesSelection() ) );
-    layout->addWidget( new MaterialsEditor( scene->getMaterialsManager() ) );
+    layout->addWidget( new MaterialsEditor( scene->getMaterialsManager(), scene->getMeshesManager()->getLocalResourcesSelection() ) );
     setLayout( layout );
 }
 

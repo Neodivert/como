@@ -103,6 +103,30 @@ MaterialHandlerPtr MaterialsManager::selectMaterial( const ResourceID& id )
  * 5. Getters
  ***/
 
+MaterialsHeadersList MaterialsManager::getLocalMaterialsHeaders() const
+{
+    MaterialsHeadersList materialsHeadersList;
+    MaterialHeader materialHeader;
+
+    for( const auto& materialPair : materials_ ){
+        if( materialsOwners_.at( materialPair.first ) == localUserID() ){
+            materialHeader.id = materialPair.first;
+            materialHeader.name = materialPair.second->getName();
+
+            materialsHeadersList.push_back( materialHeader );
+        }
+    }
+
+    return materialsHeadersList;
+}
+
+
+bool MaterialsManager::materialOwnedByLocalUser( const ResourceID& resourceID ) const
+{
+    return ( materialsOwners_.at( resourceID ) == localUserID() );
+}
+
+
 string MaterialsManager::getResourceName( const ResourceID& resourceID ) const
 {
     (void)( resourceID );

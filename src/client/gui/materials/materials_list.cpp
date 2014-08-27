@@ -25,31 +25,28 @@ namespace como {
  * 1. Construction
  ***/
 
-MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager )
-{
-    QObject::connect( this, &MaterialsList::itemActivated, [=]( QListWidgetItem * item ){
-        emit materialSelected( ( dynamic_cast< MaterialsListItem* >( item ) )->getMaterialID() );
-    });
-
-    QObject::connect( this, &MaterialsList::itemClicked, [=]( QListWidgetItem * item ){
-        emit materialSelected( ( dynamic_cast< MaterialsListItem* >( item ) )->getMaterialID() );
-    });
-
-    QObject::connect( this, &MaterialsList::materialSelected, [=]( ResourceID materialID ){
-        materialsManager->selectMaterial( materialID ); // TODO: Retrieve material handler.
-    });
-}
+MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager ) :
+    materialsManager_( materialsManager )
+{}
 
 
 /***
- * 4. Slots
+ * 4. Popup
  ***/
 
-void MaterialsList::addMaterial( ResourceID id, std::string name )
+void MaterialsList::showPopup()
 {
-    MaterialsListItem* newListItem = new MaterialsListItem( id, name );
+    hidePopup();
+    clear();
 
-    insertItem( count(), newListItem );
+    MaterialsHeadersList materialsHeaders = materialsManager_->getLocalMaterialsHeaders();
+
+    for( const auto& materialHeader : materialsHeaders ){
+        addItem( materialHeader.name.c_str() ); // TODO: Add id.
+    }
+
+    QComboBox::showPopup();
 }
+
 
 } // namespace como
