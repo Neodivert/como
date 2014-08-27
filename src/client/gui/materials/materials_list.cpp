@@ -36,8 +36,7 @@ MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager )
     });
 
     QObject::connect( this, &MaterialsList::materialSelected, [=]( ResourceID materialID ){
-        materialsManager->selectMaterial( materialID );
-        materialsManager->highlightMaterial( materialID );
+        materialsManager->selectMaterial( materialID ); // TODO: Retrieve material handler.
     });
 }
 

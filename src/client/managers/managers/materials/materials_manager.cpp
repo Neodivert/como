@@ -17,7 +17,6 @@
 ***/
 
 #include "materials_manager.hpp"
-#include <boost/lexical_cast.hpp>
 
 namespace como {
 
@@ -26,9 +25,10 @@ namespace como {
  ***/
 
 MaterialsManager::MaterialsManager( ServerInterfacePtr server, LogPtr log ) :
-    ResourceCommandsExecuter( server ),
-    ResourcesManager( server, log )
-{}
+    ServerWriter( server )
+{
+    (void)( log ); // TODO: Remove this argument.
+}
 
 
 /***
@@ -85,9 +85,11 @@ void MaterialsManager::createRemoteMaterials( const std::vector< MaterialInfo >&
  * 4. Material selection
  ***/
 
-void MaterialsManager::selectMaterial( const ResourceID& id )
+MaterialHandlerPtr MaterialsManager::selectMaterial( const ResourceID& id )
 {
-    MaterialsManager::selectMaterial( localUserID(), id );
+    if( materialsOwners_.at( id ) != localUserID() ){
+        throw std::runtime_error( "You don't have permission for selecting this material!" );
+    }
 
     // TODO: Send command to server.
 
@@ -100,28 +102,15 @@ void MaterialsManager::selectMaterial( const ResourceID& id )
 
     materialHandler_->addObserver( this );
 
-    emit materialSelectionConfirmed( materialHandler_ );
-}
+    //emit materialSelectionConfirmed( materialHandler_ );
 
-
-void MaterialsManager::selectMaterial( UserID userID, const ResourceID& id )
-{
-    Q_UNUSED( userID );
-    Q_UNUSED( id );
-
-    // TODO: Complete this method.
+    return materialHandler_;
 }
 
 
 /***
  * 5. Getters
  ***/
-
-MaterialHandlerPtr MaterialsManager::getCurrentMaterial() const
-{
-    return materialHandler_;
-}
-
 
 string MaterialsManager::getResourceName( const ResourceID& resourceID ) const
 {
@@ -225,49 +214,6 @@ void MaterialsManager::update()
     //notifyElementModification( materialHandler_->getID() );
 
     notifyObservers();
-}
-
-
-/***
- * 9. Auxiliar methods
- ***/
-
-void MaterialsManager::highlightMaterial( ResourceID materialID )
-{
-    (void)( materialID );
-    //drawablesManager_->highlightProperty( getMaterial( materialID ).get() );
-}
-
-
-void MaterialsManager::removeHighlights()
-{
-    //drawablesManager_->highlightProperty( nullptr );
-}
-
-
-/***
- * 10. Resources management
- ***/
-
-void MaterialsManager::lockResource( const ResourceID& resourceID, UserID userID )
-{
-    (void)( resourceID );
-    (void)( userID );
-    // TODO: Complete.
-}
-
-
-void MaterialsManager::unlockResourcesSelection( UserID userID )
-{
-    (void)( userID );
-    // TODO: Complete.
-}
-
-
-void MaterialsManager::deleteResourcesSelection( UserID userID )
-{
-    (void)( userID );
-    // TODO: Complete.
 }
 
 } // namespace como

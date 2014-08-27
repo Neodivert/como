@@ -19,10 +19,8 @@
 #ifndef MATERIALS_MANAGER_HPP
 #define MATERIALS_MANAGER_HPP
 
-#include <list>
 #include <map>
 #include <client/managers/managers/materials/material_handler.hpp>
-#include <client/managers/server_interface/server_interface.hpp>
 #include <common/ids/resource_id.hpp>
 #include <string>
 #include <QObject>
@@ -38,7 +36,7 @@ namespace como {
 
 typedef std::map< ResourceID, UserID > MaterialsOwnershipMap;
 
-class MaterialsManager : public QObject, public ResourcesManager< Material, MaterialsSelection, LocalMaterialsSelection >
+class MaterialsManager : public QObject, public ServerWriter, public Observer, public Observable
 {
     Q_OBJECT
 
@@ -80,16 +78,13 @@ class MaterialsManager : public QObject, public ResourcesManager< Material, Mate
          * 4. Material selection
          ***/
     public:
-        void selectMaterial( const ResourceID& id );
-    private:
-        void selectMaterial( UserID userID, const ResourceID& id );
+        MaterialHandlerPtr selectMaterial( const ResourceID& id );
 
 
         /***
          * 5. Getters
          ***/
     public:
-        MaterialHandlerPtr getCurrentMaterial() const;
         virtual string getResourceName( const ResourceID& resourceID ) const;
         MaterialConstPtr getMaterial( const ResourceID& id ) const;
         std::vector< MaterialConstPtr > getMaterials( const ResourceID& firstMaterialID, unsigned int nMaterials ) const;
@@ -120,24 +115,6 @@ class MaterialsManager : public QObject, public ResourcesManager< Material, Mate
     signals:
         void materialSelectionConfirmed( MaterialHandlerPtr material );
         void materialSelectionDenied( ResourceID material );
-
-
-        /***
-         * 9. Auxiliar methods
-         ***/
-    public:
-        void highlightMaterial( ResourceID materialID );
-        void removeHighlights();
-
-        // ResourcesManager interface
-
-    protected:
-        /***
-         * 10. Resources management
-         ***/
-        virtual void lockResource( const ResourceID& resourceID, UserID userID );
-        virtual void unlockResourcesSelection( UserID userID );
-        virtual void deleteResourcesSelection( UserID userID );       
 };
 
 typedef std::shared_ptr< MaterialsManager > MaterialsManagerPtr;
