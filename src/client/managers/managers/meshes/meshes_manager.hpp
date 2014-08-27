@@ -22,6 +22,7 @@
 #include <client/managers/managers/entities/specialized_entities_manager.hpp>
 #include <client/managers/selections/meshes/meshes_selection.hpp>
 #include <client/managers/selections/meshes/local_meshes_selection.hpp>
+#include <client/managers/managers/materials/materials_manager.hpp>
 
 namespace como {
 
@@ -39,7 +40,7 @@ class MeshesManager : public SpecializedEntitiesManager< Mesh, MeshesSelection, 
         /***
          * 1. Construction
          ***/
-        MeshesManager( ServerInterfacePtr server, LogPtr log );
+        MeshesManager( ServerInterfacePtr server, LogPtr log, MaterialsManagerPtr materialsManager );
         MeshesManager() = delete;
         MeshesManager( const MeshesManager& ) = delete;
         MeshesManager( MeshesManager&& ) = delete;
@@ -87,8 +88,17 @@ class MeshesManager : public SpecializedEntitiesManager< Mesh, MeshesSelection, 
         virtual void registerUser( UserID userID );
         virtual void removeUser( UserID userID );
 
+    protected:
+        /***
+         * 5. Locking
+         ***/
+        virtual void lockResource(const ResourceID &resourceID, UserID newOwner);
+        virtual void unlockResourcesSelection(UserID currentOwner);
+        virtual void clearResourcesSelection(UserID currentOwner);
 
     private:
+        MaterialsManagerPtr materialsManager_;
+
         bool newMeshesDisplayVertexNormals_;
 };
 

@@ -57,14 +57,13 @@ void MaterialsManager::createMaterials( const std::vector< MaterialInfo >& mater
     }
 }
 
+
 void MaterialsManager::createMaterial( ResourceID id, const MaterialInfo& materialInfo )
 {
     materials_[id] = MaterialPtr( new Material( materialInfo ) );
 
     // Set the creator of the material as its current owner.
-    materialsOwners_[id] = id.getCreatorID();
-
-    //notifyElementInsertion( id );
+    lockMaterial( id, id.getCreatorID() );
 }
 
 
@@ -217,13 +216,27 @@ void MaterialsManager::update()
 }
 
 
+/***
+ * 8. Materials locking
+ ***/
+
+void MaterialsManager::lockMaterial( const ResourceID &materialID, UserID newOwner )
+{
+    materialsOwners_.at( materialID ) = newOwner;
+}
+
+
 void MaterialsManager::lockMaterials( const std::vector<ResourceID> &materialsIDs, UserID newOwner )
 {
     for( const auto& materialID : materialsIDs ){
-        materialsOwners_.at( materialID ) = newOwner;
+        lockMaterial( materialID, newOwner );
     }
 }
 
+
+/***
+ * 9. Materials destruction
+ ***/
 
 void MaterialsManager::removeMaterials( const std::vector<ResourceID> &materialsIDs )
 {

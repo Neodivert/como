@@ -114,6 +114,7 @@ class MaterialsManager : public QObject, public ServerWriter, public Observer, p
          * 8. Materials locking
          ***/
     private:
+        void lockMaterial( const ResourceID& materialID, UserID newOwner );
         void lockMaterials( const std::vector< ResourceID >& materialsIDs, UserID newOwner );
 
 

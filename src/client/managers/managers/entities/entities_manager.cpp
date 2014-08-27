@@ -30,7 +30,7 @@ EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log, UsersMa
     AbstractEntitiesManager( server ),
     server_( server ),
     usersManager_( usersManager ),
-    meshesManager_( new MeshesManager( server, log ) ),
+    meshesManager_( new MeshesManager( server, log, MaterialsManagerPtr( new MaterialsManager( server, log ) ) ) ),
     lightsManager_( new LightsManager( server, log ) )
 {
     managers_.push_back( lightsManager_ );

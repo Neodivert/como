@@ -24,9 +24,10 @@ namespace como {
  * 1. Construction
  ***/
 
-MeshesManager::MeshesManager( ServerInterfacePtr server, LogPtr log ) :
+MeshesManager::MeshesManager( ServerInterfacePtr server, LogPtr log, MaterialsManagerPtr materialsManager ) :
     ResourceCommandsExecuter( server ),
     SpecializedEntitiesManager( server, log ),
+    materialsManager_( materialsManager ),
     newMeshesDisplayVertexNormals_( false )
 {
     displayEdges( MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED );
@@ -143,6 +144,31 @@ void MeshesManager::removeUser( UserID userID )
 {
     unlockResourcesSelection( userID );
     resourcesSelections_.erase( userID );
+}
+
+
+/***
+ * 5. Locking
+ ***/
+
+void MeshesManager::lockResource( const ResourceID &resourceID, UserID newOwner )
+{
+    ResourcesManager::lockResource( resourceID, newOwner );
+    // TODO: Lock materials.
+}
+
+
+void MeshesManager::unlockResourcesSelection( UserID currentOwner )
+{
+    ResourcesManager::unlockResourcesSelection( currentOwner );
+    // TODO: Unlock materials.
+}
+
+
+void MeshesManager::clearResourcesSelection( UserID currentOwner )
+{
+    ResourcesManager::clearResourcesSelection( currentOwner );
+    // TODO: Remove materials.
 }
 
 
