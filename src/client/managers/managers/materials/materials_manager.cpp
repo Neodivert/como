@@ -222,7 +222,7 @@ void MaterialsManager::update()
 
 void MaterialsManager::lockMaterial( const ResourceID &materialID, UserID newOwner )
 {
-    materialsOwners_.at( materialID ) = newOwner;
+    materialsOwners_[materialID] = newOwner;
 }
 
 
