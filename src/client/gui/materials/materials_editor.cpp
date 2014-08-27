@@ -20,7 +20,7 @@
 
 namespace como {
 
-/*
+
 MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
     QFrame(),
     materialsManager_( materialsManager )
@@ -42,9 +42,9 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
 }
 
 
-***
+/***
  * 3. Updating (Observer pattern).
- ***
+ ***/
 
 void MaterialsEditor::update( ContainerAction lastContainerAction, ResourceID resourceID )
 {
@@ -65,30 +65,5 @@ void MaterialsEditor::update( ContainerAction lastContainerAction, ResourceID re
         break;
     }
 }
-
-
-***
- * 4. Events
- ***
-
-void MaterialsEditor::enterEvent( QEvent *event )
-{
-    (void)( event );
-
-    MaterialsListItem* materialItem = dynamic_cast< MaterialsListItem* >( materialsList_->currentItem() );
-
-    if( materialItem ){
-        materialsManager_->highlightMaterial( materialItem->getMaterialID() );
-    }
-}
-
-
-void MaterialsEditor::leaveEvent( QEvent * event )
-{
-    (void)( event );
-
-    materialsManager_->removeHighlights();
-}
-*/
 
 } // namespace como

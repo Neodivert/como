@@ -27,7 +27,6 @@
 
 namespace como {
 
-/*
 class MaterialsEditor : public QFrame, public ContainerObserver<ResourceID>
 {
     Q_OBJECT
@@ -39,40 +38,32 @@ class MaterialsEditor : public QFrame, public ContainerObserver<ResourceID>
         MaterialEditor* materialEditor_;
 
     public:
-        ***
+        /***
          * 1. Construction
-         ***
+         ***/
         MaterialsEditor( MaterialsManagerPtr materialsManager );
         MaterialsEditor( const MaterialsEditor& ) = delete;
         MaterialsEditor( MaterialsEditor&& ) = default;
 
 
-        ***
+        /***
          * 2. Destruction
-         ***
-        ~MaterialsEditor() = default;
+         ***/
+        virtual ~MaterialsEditor(){}
 
 
-        ***
+        /***
          * 3. Updating (Observer pattern).
-         ***
+         ***/
         virtual void update( ContainerAction lastContainerAction, ResourceID lastElementModified );
 
 
-        ***
-         * 4. Events
-         ***
-        virtual void enterEvent ( QEvent * event );
-        virtual void leaveEvent( QEvent * event );
-
-
-        ***
-         * 5. Operators
-         ***
+        /***
+         * 4. Operators
+         ***/
         MaterialsEditor& operator = ( const MaterialsEditor& ) = delete;
         MaterialsEditor& operator = ( MaterialsEditor&& ) = delete;
 };
-*/
 
 }
 

@@ -67,6 +67,8 @@ void MaterialsManager::createMaterial( ResourceID id, const MaterialInfo& materi
 
     // Set the creator of the material as its current owner.
     lockMaterial( id, id.getCreatorID() );
+
+    notifyElementInsertion( id );
 }
 
 
@@ -213,6 +215,7 @@ void MaterialsManager::update()
 void MaterialsManager::lockMaterial( const ResourceID &materialID, UserID newOwner )
 {
     materialsOwners_[materialID] = newOwner;
+    notifyElementUpdate( materialID );
 }
 
 
@@ -227,6 +230,7 @@ void MaterialsManager::lockMeshMaterials( const ResourceID& meshID, UserID newOw
 void MaterialsManager::unlockMaterial(const ResourceID &materialID)
 {
     materialsOwners_[materialID] = NO_USER;
+    notifyElementUpdate( materialID );
 }
 
 
@@ -267,6 +271,8 @@ void MaterialsManager::removeMaterial( const ResourceID &materialID )
 {
     materials_.erase( materialID );
     materialsOwners_.erase( materialID );
+
+    notifyElementDeletion( materialID );
 }
 
 
