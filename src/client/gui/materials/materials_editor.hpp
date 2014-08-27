@@ -23,7 +23,7 @@
 #include <client/managers/managers/materials/materials_manager.hpp>
 
 #include "materials_list.hpp"
-#include "material_panel.hpp"
+#include "material_editor.hpp"
 
 namespace como {
 
@@ -36,7 +36,7 @@ class MaterialsEditor : public QFrame, public ContainerObserver<ResourceID>
         MaterialsManagerPtr materialsManager_;
 
         MaterialsList* materialsList_;
-        MaterialPanel* materialPanel_;
+        MaterialEditor* materialEditor_;
 
     public:
         ***

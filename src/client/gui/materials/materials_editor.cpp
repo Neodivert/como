@@ -27,16 +27,16 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager ) :
 {
     QVBoxLayout* layout = new QVBoxLayout();
     materialsList_ = new MaterialsList( materialsManager );
-    materialPanel_ = new MaterialPanel();
+    materialEditor_ = new MaterialEditor();
 
     layout->addWidget( new QLabel( "Materials Editor" ) );
     layout->addWidget( materialsList_ );
-    layout->addWidget( materialPanel_ );
+    layout->addWidget( materialEditor_ );
 
     setLayout( layout );
 
     QObject::connect( materialsManager_.get(), &MaterialsManager::materialSelectionConfirmed,
-                      materialPanel_, &MaterialPanel::openMaterial );
+                      materialEditor_, &MaterialEditor::openMaterial );
 
     materialsManager_->ObservableContainer<ResourceID>::addObserver( this );
 }
@@ -57,8 +57,8 @@ void MaterialsEditor::update( ContainerAction lastContainerAction, ResourceID re
             // TODO: Complete.
         break;
         case ContainerAction::ELEMENT_UPDATE:
-            if( materialPanel_->isEnabled() && materialPanel_->getMaterialID() == resourceID ){
-                materialPanel_->refresh();
+            if( materialEditor_->isEnabled() && materialEditor_->getMaterialID() == resourceID ){
+                materialEditor_->refresh();
             }
         break;
         case ContainerAction::CONTAINER_UPDATE:

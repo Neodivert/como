@@ -67,7 +67,6 @@ HEADERS += \
     ../../src/client/managers/managers/materials/materials_manager.hpp \
     ../../src/client/gui/materials/materials_editor.hpp \
     ../../src/client/gui/materials/materials_list.hpp \
-    ../../src/client/gui/materials/material_panel.hpp \
     ../../src/client/gui/materials/materials_list_item.hpp \
     ../../src/client/managers/managers/materials/material_handler.hpp \
     ../../src/client/managers/managers/lights/lights_manager.hpp \
@@ -111,7 +110,8 @@ HEADERS += \
     ../../src/client/managers/managers/resources/resource_commands_executer.hpp \
     ../../src/client/models/3d/sets/drawables_set.hpp \
     ../../src/client/models/3d/sets/pickables_set.hpp \
-    ../../src/client/managers/managers/entities/abstract_entities_manager.hpp
+    ../../src/client/managers/managers/entities/abstract_entities_manager.hpp \
+    ../../src/client/gui/materials/material_editor.hpp
 
 
 # Client sources
@@ -144,7 +144,6 @@ SOURCES += \
     ../../src/client/managers/managers/materials/materials_manager.cpp \
     ../../src/client/gui/materials/materials_editor.cpp \
     ../../src/client/gui/materials/materials_list.cpp \
-    ../../src/client/gui/materials/material_panel.cpp \
     ../../src/client/gui/materials/materials_list_item.cpp \
     ../../src/client/managers/managers/materials/material_handler.cpp \
     ../../src/client/managers/managers/lights/lights_manager.cpp \
@@ -179,4 +178,5 @@ SOURCES += \
     ../../src/client/managers/managers/resources/resources_ownership_requester.cpp \
     ../../src/client/managers/managers/resources/resource_commands_executer.cpp \
     ../../src/client/models/3d/sets/drawables_set.cpp \
-    ../../src/client/managers/managers/entities/abstract_entities_manager.cpp
+    ../../src/client/managers/managers/entities/abstract_entities_manager.cpp \
+    ../../src/client/gui/materials/material_editor.cpp

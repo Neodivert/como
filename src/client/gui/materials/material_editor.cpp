@@ -16,12 +16,12 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "material_panel.hpp"
+#include "material_editor.hpp"
 #include <QFormLayout>
 
 namespace como {
 
-MaterialPanel::MaterialPanel() :
+MaterialEditor::MaterialEditor() :
     QFrame()
 {
     // Create the widgets for modifying material properties.
@@ -89,7 +89,7 @@ MaterialPanel::MaterialPanel() :
  * 3. Getters
  ***/
 
-ResourceID MaterialPanel::getMaterialID() const
+ResourceID MaterialEditor::getMaterialID() const
 {
     return currentMaterial_->getID();
 }
@@ -99,7 +99,7 @@ ResourceID MaterialPanel::getMaterialID() const
  * 4. Refreshing
  ***/
 
-void MaterialPanel::refresh()
+void MaterialEditor::refresh()
 {
     nameInput_->setText( currentMaterial_->getName().c_str() );
 
@@ -115,7 +115,7 @@ void MaterialPanel::refresh()
  * 5. Slots
  ***/
 
-void MaterialPanel::openMaterial( MaterialHandlerPtr material )
+void MaterialEditor::openMaterial( MaterialHandlerPtr material )
 {
     currentMaterial_ = material;
 

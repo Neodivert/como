@@ -16,8 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef MATERIAL_PANEL_HPP
-#define MATERIAL_PANEL_HPP
+#ifndef MATERIAL_EDITOR_HPP
+#define MATERIAL_EDITOR_HPP
 
 #include <QFrame>
 #include <QLineEdit>
@@ -26,7 +26,7 @@
 
 namespace como {
 
-class MaterialPanel : public QFrame
+class MaterialEditor : public QFrame
 {
     Q_OBJECT
 
@@ -44,15 +44,15 @@ class MaterialPanel : public QFrame
         /***
          * 1. Construction
          ***/
-        MaterialPanel();
-        MaterialPanel( const MaterialPanel& ) = delete;
-        MaterialPanel( MaterialPanel&& ) = delete;
+        MaterialEditor();
+        MaterialEditor( const MaterialEditor& ) = delete;
+        MaterialEditor( MaterialEditor&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~MaterialPanel() = default;
+        ~MaterialEditor() = default;
 
 
         /***
@@ -64,8 +64,8 @@ class MaterialPanel : public QFrame
         /***
          * 3. Operators
          ***/
-        MaterialPanel& operator = ( const MaterialPanel& ) = delete;
-        MaterialPanel& operator = ( MaterialPanel&& ) = delete;
+        MaterialEditor& operator = ( const MaterialEditor& ) = delete;
+        MaterialEditor& operator = ( MaterialEditor&& ) = delete;
 
 
         /***
@@ -83,4 +83,4 @@ class MaterialPanel : public QFrame
 
 } // namespace como
 
-#endif // MATERIAL_PANEL_HPP
+#endif // MATERIAL_EDITOR_HPP
