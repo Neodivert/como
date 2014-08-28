@@ -19,6 +19,7 @@
 #include "material.hpp"
 #include <client/models/3d/entity.hpp>
 #include <boost/tokenizer.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 namespace como {
@@ -250,19 +251,19 @@ void Material::sendToShader() const
 
     // Send material color to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.color" );
-    glUniform4fv( uniformLocation, 1, &color_[0] );
+    glUniform4fv( uniformLocation, 1, glm::value_ptr( color_ ) );
 
     // Send ambient reflectivity to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.ambientReflectivity" );
-    glUniform3fv( uniformLocation, 1, &ambientReflectivity_[0] );
+    glUniform3fv( uniformLocation, 1, glm::value_ptr( ambientReflectivity_ ) );
 
     // Send diffuse reflectivity to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.diffuseReflectivity" );
-    glUniform3fv( uniformLocation, 1, &diffuseReflectivity_[0] );
+    glUniform3fv( uniformLocation, 1, glm::value_ptr( diffuseReflectivity_ ) );
 
     // Send diffuse reflectivity to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.specularReflectivity" );
-    glUniform3fv( uniformLocation, 1, &specularReflectivity_[0] );
+    glUniform3fv( uniformLocation, 1, glm::value_ptr( specularReflectivity_ ) );
 
     // Send specular exponent to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.specularExponent" );

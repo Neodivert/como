@@ -67,7 +67,7 @@ void OpenGL::setShadingMode( ShadingMode shadingMode )
         case ShadingMode::SOLID_LIGHTING:
             setProgram( ShaderProgramType::DEFAULT );
             enableLighting();
-            enableTexturing();
+            disableTexturing();
         break;
         case ShadingMode::SOLID_PLAIN:
             setProgram( ShaderProgramType::DEFAULT );

@@ -17,6 +17,7 @@
 ***/
 
 #include "light.hpp"
+#include <glm/gtc/type_ptr.hpp>
 
 namespace como {
 
@@ -98,7 +99,7 @@ GLuint Light::getBaseLightIndex() const
 
 void Light::setLightColor( const PackableColor &color )
 {
-    glUniform3fv( colorLocation_, 1, &color.toVec3()[0] );
+    glUniform3fv( colorLocation_, 1, glm::value_ptr( color.toVec3() ) );
 }
 
 
