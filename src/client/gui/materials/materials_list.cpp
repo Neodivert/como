@@ -41,10 +41,8 @@ MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager ) :
  * 4. Popup
  ***/
 
-void MaterialsList::showPopup()
+void MaterialsList::populate()
 {
-    hidePopup();
-
     clear();
     indexToID_.clear();
 
@@ -55,7 +53,9 @@ void MaterialsList::showPopup()
         addItem( ( "Material: " + materialHeader.name ).c_str() ); // TODO: Add id.
     }
 
-    QComboBox::showPopup();
+    if( count() ){
+        setCurrentIndex( 0 );
+    }
 }
 
 

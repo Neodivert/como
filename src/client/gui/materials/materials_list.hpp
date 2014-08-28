@@ -56,9 +56,9 @@ class MaterialsList : public QComboBox
 
 
         /***
-         * 4. Popup
+         * 4. Populating
          ***/
-        virtual void showPopup();
+        void populate();
 
 
         /***

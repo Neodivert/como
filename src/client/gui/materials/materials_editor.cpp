@@ -54,6 +54,9 @@ void MaterialsEditor::update( ContainerAction lastContainerAction, ResourceID re
 
         (void)( lastContainerAction );
         (void)( resourceID );
+
+        materialsList_->populate();
+
         /*
         switch( lastContainerAction ){
             case ContainerAction::ELEMENT_INSERTION:
