@@ -27,7 +27,14 @@ namespace como {
 
 MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager ) :
     materialsManager_( materialsManager )
-{}
+{
+    void (QComboBox::*srcSignal)( int ) = &QComboBox::currentIndexChanged;
+    QObject::connect( this, srcSignal, [this]( int index ){
+        if( index != -1 ){
+            emit materialSelected( materialsManager_->selectMaterial( indexToID_.at( index ) ) );
+        }
+    });
+}
 
 
 /***
@@ -37,12 +44,15 @@ MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager ) :
 void MaterialsList::showPopup()
 {
     hidePopup();
+
     clear();
+    indexToID_.clear();
 
     MaterialsHeadersList materialsHeaders = materialsManager_->getLocalMaterialsHeaders();
 
     for( const auto& materialHeader : materialsHeaders ){
-        addItem( materialHeader.name.c_str() ); // TODO: Add id.
+        indexToID_[count()] = materialHeader.id;
+        addItem( ( "Material: " + materialHeader.name ).c_str() ); // TODO: Add id.
     }
 
     QComboBox::showPopup();

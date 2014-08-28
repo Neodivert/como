@@ -60,8 +60,18 @@ class MaterialsList : public QComboBox
          ***/
         virtual void showPopup();
 
+
+        /***
+         * 5. Signals
+         ***/
+    signals:
+        void materialSelected( MaterialHandlerPtr materialHandler );
+
+
     private:
         MaterialsManagerPtr materialsManager_;
+
+        std::map< int, ResourceID > indexToID_;
 };
 
 } // namespace como

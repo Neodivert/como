@@ -36,7 +36,7 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager, LocalMes
 
     setLayout( layout );
 
-    QObject::connect( materialsManager_.get(), &MaterialsManager::materialSelectionConfirmed,
+    QObject::connect( materialsList_, &MaterialsList::materialSelected,
                       materialEditor_, &MaterialEditor::openMaterial );
 
     materialsManager_->ObservableContainer<ResourceID>::addObserver( this );
