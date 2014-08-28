@@ -111,7 +111,7 @@ void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID pr
 
     PrimitiveFile::read( meshInfo, getPrimitiveFilePath( primitiveID ) );
 
-    materialsManager_->createMaterials( meshID, meshInfo.materialsData, materialID );
+    materialsManager_->createRemoteMaterials( meshID, meshInfo.materialsData, materialID );
     meshesManager_->createMesh( meshID, meshInfo.vertexData, meshInfo.oglData, meshInfo.polygonGroupsData, materialsManager_->getMaterials( materialID, meshInfo.materialsData.size() ) );
 }
 

@@ -61,6 +61,21 @@ void MaterialsManager::createMaterials( const ResourceID& meshID, const std::vec
 }
 
 
+void MaterialsManager::createRemoteMaterials( const ResourceID& meshID, const std::vector< MaterialInfo >& materialsInfo, const ResourceID& firstMaterialID )
+{
+    assert( materialsInfo.size() != 0 );
+    ResourceID materialID = firstMaterialID;
+
+    meshMaterials_[meshID] = std::vector<ResourceID>();
+
+    for( auto materialInfo : materialsInfo ){
+        createMaterial( materialID, materialInfo );
+        meshMaterials_.at( meshID ).push_back( materialID );
+        materialID++;
+    }
+}
+
+
 void MaterialsManager::createMaterial( ResourceID id, const MaterialInfo& materialInfo )
 {
     materials_[id] = MaterialPtr( new Material( materialInfo ) );
