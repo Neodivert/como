@@ -23,6 +23,24 @@
 #include "primitives_importer.hpp"
 #include <map>
 
+enum class FaceType
+{
+    TRIANGLE,
+    QUAD,
+    OTHER
+};
+
+enum class FaceComponents
+{
+    ONLY_VERTICES,
+    VERTICES_AND_NORMALS,
+    VERTICES_AND_UVS,
+    VERTICES_NORMALS_AND_UVS
+};
+
+typedef std::array< GLuint, 3 > FaceTriangle;
+typedef std::array< GLuint, 4 > FaceQuad;
+
 namespace como {
 
 class OBJPrimitivesImporter : PrimitivesImporter {
@@ -77,6 +95,14 @@ class OBJPrimitivesImporter : PrimitivesImporter {
          * 5. Auxiliar methods
          ***/
         void readLine( std::ifstream& file, std::string& fileLine );
+        FaceType getFaceType( const std::string& faceDefinition );
+        FaceComponents getFaceComponents( const std::string& faceDefinition );
+        void processTriangleFaceStr( const std::string& lineBody, MeshInfo& meshInfo );
+        void processQuadFaceStr( const std::string& lineBody, MeshInfo& meshInfo );
+        void triangulateQuad( const FaceQuad& quad,
+                              FaceTriangle& triangle1,
+                              FaceTriangle& triangle2 );
+        void insertQuad( std::vector< FaceTriangle >& triangles, FaceQuad& quad );
 };
 
 } // namespace como

@@ -87,8 +87,6 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
 
 void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::string line, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo )
 {
-    unsigned int i;
-    unsigned int componentsRead = 0;
     std::string lineHeader;
     std::string lineBody;
 
@@ -131,91 +129,16 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
         meshInfo.normalData.normals.push_back( glm::normalize( normal ) );
 
     }else if( lineHeader == "f" ){
-        // TODO: Process multiple types of "face lines".
-        std::array< GLuint, 3 > vertexTriangle;
-
-        std::string firstTriangleVertexStr = line.substr( 2, line.find( ' ', 2 ) );
-        size_t firstSlashPosition = std::string::npos;
-        size_t secondSlashPosition = std::string::npos;
-
-        firstSlashPosition = firstTriangleVertexStr.find( '/' );
-        if( firstSlashPosition == std::string::npos ){
-            // No slashes found. Face defines only vertex positions.
-
-            componentsRead = sscanf( lineBody.c_str(), "%u %u %u", &vertexTriangle[0], &vertexTriangle[1], &vertexTriangle[2] );
-
-            if( componentsRead != 3 ){
-                throw std::runtime_error( "Error reading mesh triangle (Is it a textured mesh?)" );
-            }
-
-            for( i=0; i<3; i++ ){
-                // Decrement every vertex index because they are 1-based in the .obj file.
-                vertexTriangle[i] -= 1;
-            }
-
-            meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
-
-        }else{
-            std::array< GLuint, 3 > uvTriangle;
-
-            secondSlashPosition = firstTriangleVertexStr.find( '/', firstSlashPosition + 1 );
-
-            if( secondSlashPosition == std::string::npos ){
-                // Only one slash found per face vertex. Face defines vertex
-                // position and UV coordinates.
-
-                // Extract the UV coordinates from the line and add it to the Mesh.
-                componentsRead =
-                        sscanf( lineBody.c_str(), "%u/%u %u/%u %u/%u",
-                        &vertexTriangle[0], &uvTriangle[0],
-                        &vertexTriangle[1], &uvTriangle[1],
-                        &vertexTriangle[2], &uvTriangle[2]);
-
-                if( componentsRead != 6 ){
-                    throw std::runtime_error( "ERROR reading OBJ face line (v/vt)" );
-                }
-
-                for( i=0; i<3; i++ ){
-                    // Decrement every vertex index because they are 1-based in the .obj file.
-                    vertexTriangle[i] -= 1;
-                    uvTriangle[i] -= 1;
-                }
-
-                meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
-                meshInfo.textureData.uvTriangles.push_back( uvTriangle );
-
-            }else{
-                std::array< GLuint, 3 > normalTriangle;
-
-                if( secondSlashPosition != (firstSlashPosition + 1) ){
-                    componentsRead =
-                            sscanf( lineBody.c_str(), "%u/%u/%u %u/%u/%u %u/%u/%u",
-                            &vertexTriangle[0], &uvTriangle[0], &normalTriangle[0],
-                            &vertexTriangle[1], &uvTriangle[1], &normalTriangle[1],
-                            &vertexTriangle[2], &uvTriangle[2], &normalTriangle[2] );
-
-                    if( componentsRead != 9 ){
-                        throw std::runtime_error( "ERROR reading OBJ face line (v/vt/vn)" );
-                    }
-
-                    meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
-                    meshInfo.textureData.uvTriangles.push_back( uvTriangle );
-                    meshInfo.normalData.normalTriangles.push_back( normalTriangle );
-                }else{
-                    componentsRead =
-                            sscanf( lineBody.c_str(), "%u//%u %u//%u %u//%u",
-                            &vertexTriangle[0], &normalTriangle[0],
-                            &vertexTriangle[1], &normalTriangle[1],
-                            &vertexTriangle[2], &normalTriangle[2] );
-
-                    if( componentsRead != 6 ){
-                        throw std::runtime_error( "ERROR reading OBJ face line (v//vn)" );
-                    }
-
-                    meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
-                    meshInfo.normalData.normalTriangles.push_back( normalTriangle );
-                }
-            }
+        switch( getFaceType( lineBody ) ){
+            case FaceType::TRIANGLE:
+                processTriangleFaceStr( lineBody, meshInfo );
+            break;
+            case FaceType::QUAD:
+                processQuadFaceStr( lineBody, meshInfo );
+            break;
+            case FaceType::OTHER:
+                throw std::runtime_error( "OBJ primitive importer can't process faces others than triangles and quads" );
+            break;
         }
     }else if( lineHeader == "mtllib" ){
         std::string fileDirectory = filePath.substr( 0, filePath.rfind( '/' ) );
@@ -447,6 +370,259 @@ void OBJPrimitivesImporter::readLine( std::ifstream &file, std::string &fileLine
         fileLine = fileLine.substr( 0, fileLine.size() - 1 );
     }
 }
+
+
+FaceType OBJPrimitivesImporter::getFaceType( const std::string &faceBody )
+{
+    int nSpaces = std::count( faceBody.begin(), faceBody.end(), ' ' );
+
+    if( nSpaces == 2 ){
+        return FaceType::TRIANGLE;
+    }else if( nSpaces == 3 ){
+        return FaceType::QUAD;
+    }else{
+        return FaceType::OTHER;
+    }
+}
+
+
+FaceComponents OBJPrimitivesImporter::getFaceComponents(const std::string &faceDefinition)
+{
+    std::string firstTriangleVertexStr = faceDefinition.substr( 0, faceDefinition.find( ' ' ) );
+    size_t firstSlashPosition = std::string::npos;
+    size_t secondSlashPosition = std::string::npos;
+
+    firstSlashPosition = faceDefinition.find( '/' );
+
+    if( firstSlashPosition == std::string::npos ){
+        // No slashes found. Face defines only vertex positions.
+        // Vertex: %u
+        return FaceComponents::ONLY_VERTICES;
+    }else{
+        secondSlashPosition = firstTriangleVertexStr.find( '/', firstSlashPosition + 1 );
+
+        if( secondSlashPosition == std::string::npos ){
+            // Only one slash found per face vertex. Face defines vertex
+            // position and UV coordinates.
+            // Vertex: %u/%u
+            return FaceComponents::VERTICES_AND_UVS;
+        }else{
+            if( secondSlashPosition != (firstSlashPosition + 1) ){
+                // Vertex: %u/%u/%u
+                return FaceComponents::VERTICES_NORMALS_AND_UVS;
+            }else{
+                // Vertex: %u//%u
+                return FaceComponents::VERTICES_AND_NORMALS;
+            }
+        }
+    }
+}
+
+
+void OBJPrimitivesImporter::processTriangleFaceStr( const std::string &lineBody, MeshInfo& meshInfo )
+{
+    std::array< GLuint, 3 > vertexTriangle;
+    std::array< GLuint, 3 > uvTriangle;
+    std::array< GLuint, 3 > normalTriangle;
+    int componentsRead;
+    int i;
+
+    switch( getFaceComponents( lineBody ) ){
+        case FaceComponents::ONLY_VERTICES:
+            componentsRead = sscanf( lineBody.c_str(), "%u %u %u", &vertexTriangle[0], &vertexTriangle[1], &vertexTriangle[2] );
+
+            if( componentsRead != 3 ){
+                std::string errorMessage =
+                        "Error reading mesh triangle - line definition [" +
+                        lineBody +
+                        "] - components read [" +
+                        std::to_string( componentsRead ) + "]";
+                throw std::runtime_error( errorMessage );
+            }
+
+            for( i=0; i<3; i++ ){
+                // Decrement every vertex index because they are 1-based in the .obj file.
+                vertexTriangle[i] -= 1;
+            }
+
+            meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
+        break;
+        case FaceComponents::VERTICES_AND_UVS:
+            // Extract the UV coordinates from the line and add it to the Mesh.
+            componentsRead =
+                    sscanf( lineBody.c_str(), "%u/%u %u/%u %u/%u",
+                    &vertexTriangle[0], &uvTriangle[0],
+                    &vertexTriangle[1], &uvTriangle[1],
+                    &vertexTriangle[2], &uvTriangle[2]);
+
+            if( componentsRead != 6 ){
+                throw std::runtime_error( "ERROR reading OBJ face line (v/vt)" );
+            }
+
+            for( i=0; i<3; i++ ){
+                // Decrement every vertex index because they are 1-based in the .obj file.
+                vertexTriangle[i] -= 1;
+                uvTriangle[i] -= 1;
+            }
+
+            meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
+            meshInfo.textureData.uvTriangles.push_back( uvTriangle );
+        break;
+        case FaceComponents::VERTICES_NORMALS_AND_UVS:
+            componentsRead =
+                    sscanf( lineBody.c_str(), "%u/%u/%u %u/%u/%u %u/%u/%u",
+                    &vertexTriangle[0], &uvTriangle[0], &normalTriangle[0],
+                    &vertexTriangle[1], &uvTriangle[1], &normalTriangle[1],
+                    &vertexTriangle[2], &uvTriangle[2], &normalTriangle[2] );
+
+            if( componentsRead != 9 ){
+                throw std::runtime_error( "ERROR reading OBJ face line (v/vt/vn)" );
+            }
+
+            meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
+            meshInfo.textureData.uvTriangles.push_back( uvTriangle );
+            meshInfo.normalData.normalTriangles.push_back( normalTriangle );
+        break;
+        case FaceComponents::VERTICES_AND_NORMALS:
+            componentsRead =
+                    sscanf( lineBody.c_str(), "%u//%u %u//%u %u//%u",
+                    &vertexTriangle[0], &normalTriangle[0],
+                    &vertexTriangle[1], &normalTriangle[1],
+                    &vertexTriangle[2], &normalTriangle[2] );
+
+            if( componentsRead != 6 ){
+                throw std::runtime_error( "ERROR reading OBJ face line (v//vn)" );
+            }
+
+            meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
+            meshInfo.normalData.normalTriangles.push_back( normalTriangle );
+        break;
+    }
+}
+
+
+void OBJPrimitivesImporter::processQuadFaceStr( const std::string &lineBody, MeshInfo& meshInfo )
+{
+    std::array< GLuint, 4 > vertexQuad;
+    std::array< GLuint, 4 > uvQuad;
+    std::array< GLuint, 4 > normalQuad;
+    int componentsRead;
+    int i;
+
+    switch( getFaceComponents( lineBody ) ){
+        case FaceComponents::ONLY_VERTICES:
+            componentsRead = sscanf( lineBody.c_str(),
+                                     "%u %u %u %u",
+                                     &vertexQuad[0],
+                                     &vertexQuad[1],
+                                     &vertexQuad[2],
+                                     &vertexQuad[3] );
+
+            if( componentsRead != 4 ){
+                throw std::runtime_error( "Error reading mesh quad (Is it a textured mesh?)" );
+            }
+
+            for( i=0; i<4; i++ ){
+                // Decrement every vertex index because they are 1-based in the .obj file.
+                vertexQuad[i] -= 1;
+            }
+
+            insertQuad( meshInfo.vertexData.vertexTriangles, vertexQuad );
+        break;
+        case FaceComponents::VERTICES_AND_UVS:
+            // Extract the UV coordinates from the line and add it to the Mesh.
+            componentsRead =
+                    sscanf( lineBody.c_str(), "%u/%u %u/%u %u/%u %u/%u",
+                    &vertexQuad[0], &uvQuad[0],
+                    &vertexQuad[1], &uvQuad[1],
+                    &vertexQuad[2], &uvQuad[2],
+                    &vertexQuad[3], &uvQuad[3] );
+
+            if( componentsRead != 8 ){
+                throw std::runtime_error( "ERROR reading OBJ face quad (v/vt)" );
+            }
+
+            for( i=0; i<4; i++ ){
+                // Decrement every vertex index because they are 1-based in the .obj file.
+                vertexQuad[i] -= 1;
+                uvQuad[i] -= 1;
+            }
+
+            insertQuad( meshInfo.vertexData.vertexTriangles, vertexQuad );
+            insertQuad( meshInfo.textureData.uvTriangles, uvQuad );
+        break;
+        case FaceComponents::VERTICES_NORMALS_AND_UVS:
+            componentsRead =
+                    sscanf( lineBody.c_str(), "%u/%u/%u %u/%u/%u %u/%u/%u %u/%u/%u",
+                    &vertexQuad[0], &uvQuad[0], &normalQuad[0],
+                    &vertexQuad[1], &uvQuad[1], &normalQuad[1],
+                    &vertexQuad[2], &uvQuad[2], &normalQuad[2],
+                    &vertexQuad[3], &uvQuad[3], &normalQuad[3] );
+
+            if( componentsRead != 12 ){
+                throw std::runtime_error( "ERROR reading OBJ face quad (v/vt/vn)" );
+            }
+
+            for( i=0; i<4; i++ ){
+                // Decrement every vertex index because they are 1-based in the .obj file.
+                vertexQuad[i] -= 1;
+                uvQuad[i] -= 1;
+                normalQuad[i] -= 1;
+            }
+
+            insertQuad( meshInfo.vertexData.vertexTriangles, vertexQuad );
+            insertQuad( meshInfo.textureData.uvTriangles, uvQuad );
+            insertQuad( meshInfo.normalData.normalTriangles, normalQuad );
+        break;
+        case FaceComponents::VERTICES_AND_NORMALS:
+            componentsRead =
+                    sscanf( lineBody.c_str(), "%u//%u %u//%u %u//%u %u//%u",
+                    &vertexQuad[0], &normalQuad[0],
+                    &vertexQuad[1], &normalQuad[1],
+                    &vertexQuad[2], &normalQuad[2],
+                    &vertexQuad[3], &normalQuad[3] );
+
+            if( componentsRead != 8 ){
+                throw std::runtime_error( "ERROR reading OBJ face quad (v//vn)" );
+            }
+
+            for( i=0; i<4; i++ ){
+                // Decrement every vertex index because they are 1-based in the .obj file.
+                vertexQuad[i] -= 1;
+                normalQuad[i] -= 1;
+            }
+
+            insertQuad( meshInfo.vertexData.vertexTriangles, vertexQuad );
+            insertQuad( meshInfo.normalData.normalTriangles, normalQuad );
+        break;
+    }
+}
+
+
+void OBJPrimitivesImporter::triangulateQuad(const FaceQuad &quad, FaceTriangle &triangle1, FaceTriangle &triangle2 )
+{
+    // First triangle
+    triangle1[0] = quad[0];
+    triangle1[1] = quad[1];
+    triangle1[2] = quad[3];
+
+    // Second triangle
+    triangle2[0] = quad[1];
+    triangle2[1] = quad[2];
+    triangle2[2] = quad[3];
+}
+
+void OBJPrimitivesImporter::insertQuad(std::vector<FaceTriangle> &triangles, FaceQuad &quad)
+{
+    FaceTriangle triangle1;
+    FaceTriangle triangle2;
+
+    triangulateQuad( quad, triangle1, triangle2 );
+
+    triangles.push_back( triangle1 );
+    triangles.push_back( triangle2 );
+}
+
 
 
 } // namespace como

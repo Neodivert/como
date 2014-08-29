@@ -125,14 +125,20 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
             log_->debug( "filePath: ", filePath, "\n" );
 
             if( boost::filesystem::extension( filePath ) == ".obj" ){
-                sprintf( nameSuffix, "__%i_%i", nextPrimitiveID_.getCreatorID(), nextPrimitiveID_.getResourceIndex() );
+                try {
+                    sprintf( nameSuffix, "__%i_%i", nextPrimitiveID_.getCreatorID(), nextPrimitiveID_.getResourceIndex() );
 
-                primitive = primitivesImporter.importPrimitive( filePath,
-                                                                getCategoryAbsoluteePath( categoryID ),
-                                                                nameSuffix );
-                primitive.category = categoryID;
+                    primitive = primitivesImporter.importPrimitive( filePath,
+                                                                    getCategoryAbsoluteePath( categoryID ),
+                                                                    nameSuffix );
+                    primitive.category = categoryID;
 
-                registerPrimitive( primitive );
+                    registerPrimitive( primitive );
+                }catch( std::exception& ex ){
+                    log_->error( "\n\nError importing primitive [",
+                                 filePath, "] - ",
+                                 ex.what(), "\n\n" );
+                }
             }
         }
     }
