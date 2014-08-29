@@ -44,12 +44,20 @@ void PrimitiveImportDialog::validate()
 {
     std::string filePath = fileInput_->text().toStdString();
     if( boost::filesystem::exists( filePath ) ){
-        std::string primitiveRelativePath =
-                primitivesManager_->createPrimitive( filePath, primitiveCategorySelector_->getCurrentResourceID() );
+        try {
+            std::string primitiveRelativePath =
+                    primitivesManager_->createPrimitive( filePath, primitiveCategorySelector_->getCurrentResourceID() );
 
-        QMessageBox::warning( nullptr, "Primitive saved", primitiveRelativePath.c_str() );
+            QMessageBox::warning( nullptr, "Primitive saved", primitiveRelativePath.c_str() );
 
-        accept();
+            accept();
+        }catch( std::exception& ex ){
+            std::string errorMessage =
+                    "Error importing file [" +
+                    filePath + "]: " +
+                    ex.what() + "\n";
+            QMessageBox::critical( nullptr, "Import error", errorMessage.c_str() );
+        }
     }else{
         std::string errorMessage = std::string( "File [" ) + filePath + "] NOT FOUND";
         QMessageBox::critical( nullptr, "Input error", errorMessage.c_str() );
