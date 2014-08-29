@@ -71,6 +71,12 @@ class OBJPrimitivesImporter : PrimitivesImporter {
          ***/
         OBJPrimitivesImporter& operator = ( const OBJPrimitivesImporter& ) = delete;
         OBJPrimitivesImporter& operator = ( OBJPrimitivesImporter&& ) = delete;
+
+
+        /***
+         * 5. Auxiliar methods
+         ***/
+        void readLine( std::ifstream& file, std::string& fileLine );
 };
 
 } // namespace como

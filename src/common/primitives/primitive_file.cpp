@@ -204,7 +204,7 @@ void PrimitiveFile::readVertices( VerticesVector& vertices, std::ifstream &file 
     glm::vec3 vertex;
 
     // Read the number of vertices in the mesh.
-    std::getline( file, fileLine );
+    std::getline( file, fileLine ); // TODO: Use OBJPrimitivesImporter::readLine() instead?
     nVertices = atoi( fileLine.c_str() );
 
     // Read all the vertices from the file (one vertex per line).

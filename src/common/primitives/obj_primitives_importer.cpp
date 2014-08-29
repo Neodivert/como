@@ -69,7 +69,7 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
     }
 
     while( !file.eof() ){
-        std::getline( file, fileLine );
+        readLine( file, fileLine );
 
         processMeshFileLine( filePath, fileLine, primitiveInfo, meshInfo );
     }
@@ -373,7 +373,7 @@ void OBJPrimitivesImporter::processMaterialFile( std::string filePath, std::vect
     }
 
     while( !file.eof() ){
-        std::getline( file, fileLine );
+        readLine( file, fileLine );
 
         processMaterialFileLine( filePath, fileLine, materials );
     }
@@ -432,6 +432,20 @@ void OBJPrimitivesImporter::processTextureFile( std::string filePath, std::uniqu
     file.read( &( textureInfo->imageFileData[0] ), imageFileSize );
 
     file.close();
+}
+
+
+/***
+ * 5. Auxiliar methods
+ ***/
+
+void OBJPrimitivesImporter::readLine( std::ifstream &file, std::string &fileLine )
+{
+    std::getline( file, fileLine );
+
+    if( fileLine[ fileLine.size() - 1 ] == '\r' ){
+        fileLine = fileLine.substr( 0, fileLine.size() - 1 );
+    }
 }
 
 
