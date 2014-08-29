@@ -68,13 +68,28 @@ QFrame* CreationTab::createMeshFromPrimitiveCreationMenu()
 
     // Signal / Slot connection: when one of the available primitives is
     // selected, create a mesh from it and add it to the scene.
-    void (ClientPrimitivesManager::*signal)( ResourceID ) = &ClientPrimitivesManager::instantiatePrimitive;
-    QObject::connect( primitiveSelector, &ResourceSelector::resourceSelected,
-                      scene_->getPrimitivesManager().get(), signal );
+    QObject::connect( primitiveSelector, &ResourceSelector::resourceSelected, [this]( ResourceID primitiveID ){
+        try {
+            scene_->getPrimitivesManager()->instantiatePrimitive( primitiveID );
+        }catch( std::exception& ex ){
+            std::string errorMessage =
+                    "Error instantiating primitive [" +
+                    scene_->getPrimitivesManager()->getPrimitiveInfo( primitiveID ).filePath +
+                    "]: " +
+                    ex.what();
+
+            // TODO: If a primitive isn't instantiable, shouldn't I prevent
+            // user for importing it at first?
+            QMessageBox::critical( nullptr,
+                                   "Error instantiating primitive",
+                                   errorMessage.c_str() );
+        }
+    });
+
 
     // Signal / Slot connection: when a new primitive is created in the scene,
     // add it to the primitives dropdown list.
-    connect( scene_->getPrimitivesManager().get(), &ClientPrimitivesManager::primitiveAdded, [=]( ResourceID primitiveID, std::string primitiveRelPath ){
+    QObject::connect( scene_->getPrimitivesManager().get(), &ClientPrimitivesManager::primitiveAdded, [=]( ResourceID primitiveID, std::string primitiveRelPath ){
         primitiveSelector->insertResource( primitiveID, primitiveRelPath );
     });
 
