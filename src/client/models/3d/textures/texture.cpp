@@ -53,7 +53,11 @@ Texture::Texture( const TextureInfo& textureInfo )
 
     textureImage = IMG_Load_RW( textureData, 0 );
     if( !textureImage ){
-        throw std::runtime_error( IMG_GetError() );
+        // TODO: Do I have to consider any other case?
+        textureImage = IMG_LoadTGA_RW( textureData );
+        if( !textureImage ){
+            throw std::runtime_error( IMG_GetError() );
+        }
     }
 
     // Set texture storage and data.

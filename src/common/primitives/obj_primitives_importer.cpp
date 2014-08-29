@@ -604,13 +604,14 @@ void OBJPrimitivesImporter::triangulateQuad(const FaceQuad &quad, FaceTriangle &
     // First triangle
     triangle1[0] = quad[0];
     triangle1[1] = quad[1];
-    triangle1[2] = quad[3];
+    triangle1[2] = quad[2];
 
     // Second triangle
-    triangle2[0] = quad[1];
+    triangle2[0] = quad[0];
     triangle2[1] = quad[2];
     triangle2[2] = quad[3];
 }
+
 
 void OBJPrimitivesImporter::insertQuad(std::vector<FaceTriangle> &triangles, FaceQuad &quad)
 {
