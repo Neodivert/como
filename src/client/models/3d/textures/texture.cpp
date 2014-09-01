@@ -31,6 +31,8 @@ Texture::Texture( const TextureInfo& textureInfo )
 {
     SDL_Surface* textureImage = nullptr;
     SDL_RWops* textureData = nullptr;
+    GLint textureInternalFormat = GL_RGBA8;
+    GLint textureFormat;
 
     // Generate a texture GL name.
     glGenTextures( 1, &oglName_ );
@@ -60,18 +62,46 @@ Texture::Texture( const TextureInfo& textureInfo )
         }
     }
 
+    // TODO: Take components order into account too (RGBA != ABGR).
+    if( textureImage->format->BytesPerPixel == 4 ){
+        //glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+        textureInternalFormat = GL_RGBA8;
+        textureFormat = GL_RGBA;
+    }else if( textureImage->format->BytesPerPixel == 3 ){
+        //glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+        textureInternalFormat = GL_RGB8; //8;
+        textureFormat = GL_RGB;
+    }else{
+        throw std::runtime_error( "Unexpected number of Bytes Per Pixel in texture (" +
+                                  std::to_string( textureImage->format->BytesPerPixel ) +
+                                  ")" );
+    }
+
+    OpenGL::checkStatus( "Before Texture::glTextImage2D()" );
+
+    unsigned char r = (static_cast< unsigned char* >( textureImage->pixels ))[0];
+    unsigned char g = (static_cast< unsigned char* >( textureImage->pixels ))[1];
+    unsigned char b = (static_cast< unsigned char* >( textureImage->pixels ))[2];
+    unsigned char a = (static_cast< unsigned char* >( textureImage->pixels ))[3];
+    (void)(r);
+    (void)(g);
+    (void)(b);
+    (void)(a);
+
     // Set texture storage and data.
     glTexImage2D(
                 GL_TEXTURE_2D,
                 0,
-                GL_RGBA8, // TODO: Retrieve this value from textureImage.
+                textureInternalFormat,
                 textureImage->w,
                 textureImage->h,
                 0,
-                GL_RGBA,
+                textureFormat,
                 GL_UNSIGNED_BYTE,
                 textureImage->pixels // TODO: Do I have to have the ->pitch into account?
                 );
+
+    OpenGL::checkStatus( "After Texture::glTextImage2D()" );
 
     // Free resources.
     SDL_FreeSurface( textureImage );
