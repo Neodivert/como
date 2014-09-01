@@ -68,6 +68,14 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
         throw FileNotOpenException( filePath );
     }
 
+    // Initialize the polygons group data.
+    /*
+    PolygonGroupData polygonGroup;
+    polygonGroup.firstTriangle = 0;
+    polygonGroup.materialIndex = 0;
+    meshInfo.polygonGroupsData.push_back( polygonGroup );
+    */
+
     while( !file.eof() ){
         readLine( file, fileLine );
 
@@ -129,6 +137,14 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
         meshInfo.normalData.normals.push_back( glm::normalize( normal ) );
 
     }else if( lineHeader == "f" ){
+        if( meshInfo.polygonGroupsData.size() == 0 ){
+            PolygonGroupData polygonGroup;
+            polygonGroup.firstTriangle = meshInfo.vertexData.vertexTriangles.size();
+            polygonGroup.materialIndex = 0;
+
+            meshInfo.polygonGroupsData.push_back( polygonGroup );
+        }
+
         switch( getFaceType( lineBody ) ){
             case FaceType::TRIANGLE:
                 processTriangleFaceStr( lineBody, meshInfo );
@@ -146,21 +162,10 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
         processMaterialFile( materialFilePath, meshInfo.materialsData );
     }else if( lineHeader == "usemtl" ){
         // We have to associate the given material to the current polygon
-        // group. If we don't have any polygon groups, we create one now.
-        if( meshInfo.polygonGroupsData.size() == 0 ){
-            PolygonGroupData polygonGroup;
-            polygonGroup.firstTriangle = meshInfo.vertexData.vertexTriangles.size();
-
-            meshInfo.polygonGroupsData.push_back( polygonGroup );
-        }
-        meshInfo.polygonGroupsData.back().materialIndex = getMaterialIndex( meshInfo, lineBody );
-    }
-
-    if( meshInfo.polygonGroupsData.size() == 0 ){
+        // group.
         PolygonGroupData polygonGroup;
-        polygonGroup.firstTriangle = 0;
-        polygonGroup.nTriangles = ( meshInfo.polygonGroupsData.size() - 1 ) * 3;
-        polygonGroup.materialIndex = 0;
+        polygonGroup.firstTriangle = meshInfo.vertexData.vertexTriangles.size();
+        polygonGroup.materialIndex = getMaterialIndex( meshInfo, lineBody );
 
         meshInfo.polygonGroupsData.push_back( polygonGroup );
     }

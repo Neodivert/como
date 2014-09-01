@@ -73,6 +73,7 @@ void main()
 	
 				if( texturingEnabled ){
 					meshColor = texture( textureSampler, uvCoordinates );
+					meshColor.a = 1.0f;
 				}else{
 					meshColor = vec4( material.color.rgb, 1.0f );
 				}
