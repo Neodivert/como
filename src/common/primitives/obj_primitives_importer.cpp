@@ -68,14 +68,6 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
         throw FileNotOpenException( filePath );
     }
 
-    // Initialize the polygons group data.
-    /*
-    PolygonGroupData polygonGroup;
-    polygonGroup.firstTriangle = 0;
-    polygonGroup.materialIndex = 0;
-    meshInfo.polygonGroupsData.push_back( polygonGroup );
-    */
-
     while( !file.eof() ){
         readLine( file, fileLine );
 
@@ -108,7 +100,7 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
         primitiveInfo.name = lineBody;
     }else if( lineHeader == "g" ){
         PolygonGroupData polygonGroup;
-        polygonGroup.firstTriangle = meshInfo.vertexData.vertexTriangles.size();
+        polygonGroup.firstTriangleIndex = meshInfo.vertexData.vertexTriangles.size();
         if( meshInfo.polygonGroupsData.size() ){
             polygonGroup.materialIndex = meshInfo.polygonGroupsData.back().materialIndex;
         }
@@ -139,7 +131,7 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
     }else if( lineHeader == "f" ){
         if( meshInfo.polygonGroupsData.size() == 0 ){
             PolygonGroupData polygonGroup;
-            polygonGroup.firstTriangle = meshInfo.vertexData.vertexTriangles.size();
+            polygonGroup.firstTriangleIndex = meshInfo.vertexData.vertexTriangles.size();
             polygonGroup.materialIndex = 0;
 
             meshInfo.polygonGroupsData.push_back( polygonGroup );
@@ -164,7 +156,7 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
         // We have to associate the given material to the current polygon
         // group.
         PolygonGroupData polygonGroup;
-        polygonGroup.firstTriangle = meshInfo.vertexData.vertexTriangles.size();
+        polygonGroup.firstTriangleIndex = meshInfo.vertexData.vertexTriangles.size();
         polygonGroup.materialIndex = getMaterialIndex( meshInfo, lineBody );
 
         meshInfo.polygonGroupsData.push_back( polygonGroup );
@@ -182,6 +174,9 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
     unsigned int triangleVertexIndex = 0;
     GLuint compoundVertexIndex = 0;
 
+    std::vector<PolygonGroupData>::iterator currentPolygonGroup =
+            meshInfo.polygonGroupsData.begin();
+
     if( meshInfo.textureData.uvCoordinates.size() ){
         meshInfo.oglData.includesTextures = true;
         meshInfo.oglData.componentsPerVertex = 8;
@@ -191,6 +186,15 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
     }
 
     for( currentTriangleIndex = 0; currentTriangleIndex < meshInfo.vertexData.vertexTriangles.size(); currentTriangleIndex++ ){
+        // The information about every polygon group holds the index of the
+        // first SIMPLE face. "Translate" such index to the index of
+        // COMPOUND triangle.
+        if( ( currentPolygonGroup != meshInfo.polygonGroupsData.end() ) &&
+                currentPolygonGroup->firstTriangleIndex == currentTriangleIndex ){
+            currentPolygonGroup->firstTriangleIndex = meshInfo.oglData.eboData.size() / 3;
+            currentPolygonGroup++;
+        }
+
         for( triangleVertexIndex = 0; triangleVertexIndex < 3; triangleVertexIndex++ ){
             compoundVertex[0] = meshInfo.vertexData.vertexTriangles[currentTriangleIndex][triangleVertexIndex];
             compoundVertex[1] = meshInfo.normalData.normalTriangles[currentTriangleIndex][triangleVertexIndex]; // TODO: Remove normal triangles?.
@@ -258,10 +262,10 @@ void OBJPrimitivesImporter::completePolygonGroups( MeshInfo& meshInfo )
     unsigned int i;
 
     for( i=0; i < meshInfo.polygonGroupsData.size() - 1; i++ ){
-        meshInfo.polygonGroupsData[i].nTriangles = meshInfo.polygonGroupsData[i+1].firstTriangle - meshInfo.polygonGroupsData[i].firstTriangle;
+        meshInfo.polygonGroupsData[i].nTriangles = meshInfo.polygonGroupsData[i+1].firstTriangleIndex - meshInfo.polygonGroupsData[i].firstTriangleIndex;
     }
     if( i < meshInfo.polygonGroupsData.size() ){
-        meshInfo.polygonGroupsData[i].nTriangles = meshInfo.vertexData.vertexTriangles.size() - meshInfo.polygonGroupsData[i].firstTriangle;
+        meshInfo.polygonGroupsData[i].nTriangles = meshInfo.vertexData.vertexTriangles.size() - meshInfo.polygonGroupsData[i].firstTriangleIndex;
     }
 
     // Remote polygon groups which don't have any triangles.

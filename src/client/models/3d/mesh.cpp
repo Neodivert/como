@@ -388,7 +388,7 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4&
         glDrawElements( GL_TRIANGLES,
                         polygonsGroup.nTriangles * 3,
                         GL_UNSIGNED_INT,
-                        ( std::intptr_t* )( polygonsGroup.firstTriangle * 3 * sizeof( GL_UNSIGNED_INT ) ) );
+                        ( std::intptr_t* )( polygonsGroup.firstTriangleIndex * 3 * sizeof( GL_UNSIGNED_INT ) ) );
     }
 
 
