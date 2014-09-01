@@ -479,6 +479,13 @@ void OBJPrimitivesImporter::processTriangleFaceStr( const std::string &lineBody,
                 throw std::runtime_error( "ERROR reading OBJ face line (v/vt/vn)" );
             }
 
+            for( i=0; i<3; i++ ){
+                // Decrement every vertex index because they are 1-based in the .obj file.
+                vertexTriangle[i] -= 1;
+                normalTriangle[i] -= 1;
+                uvTriangle[i] -= 1;
+            }
+
             meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
             meshInfo.textureData.uvTriangles.push_back( uvTriangle );
             meshInfo.normalData.normalTriangles.push_back( normalTriangle );
@@ -492,6 +499,12 @@ void OBJPrimitivesImporter::processTriangleFaceStr( const std::string &lineBody,
 
             if( componentsRead != 6 ){
                 throw std::runtime_error( "ERROR reading OBJ face line (v//vn)" );
+            }
+
+            for( i=0; i<3; i++ ){
+                // Decrement every vertex index because they are 1-based in the .obj file.
+                vertexTriangle[i] -= 1;
+                normalTriangle[i] -= 1;
             }
 
             meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
