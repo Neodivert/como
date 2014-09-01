@@ -64,12 +64,10 @@ Texture::Texture( const TextureInfo& textureInfo )
 
     // TODO: Take components order into account too (RGBA != ABGR).
     if( textureImage->format->BytesPerPixel == 4 ){
-        //glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
         textureInternalFormat = GL_RGBA8;
         textureFormat = GL_RGBA;
     }else if( textureImage->format->BytesPerPixel == 3 ){
-        //glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-        textureInternalFormat = GL_RGB8; //8;
+        textureInternalFormat = GL_RGB8;
         textureFormat = GL_RGB;
     }else{
         throw std::runtime_error( "Unexpected number of Bytes Per Pixel in texture (" +
@@ -78,15 +76,6 @@ Texture::Texture( const TextureInfo& textureInfo )
     }
 
     OpenGL::checkStatus( "Before Texture::glTextImage2D()" );
-
-    unsigned char r = (static_cast< unsigned char* >( textureImage->pixels ))[0];
-    unsigned char g = (static_cast< unsigned char* >( textureImage->pixels ))[1];
-    unsigned char b = (static_cast< unsigned char* >( textureImage->pixels ))[2];
-    unsigned char a = (static_cast< unsigned char* >( textureImage->pixels ))[3];
-    (void)(r);
-    (void)(g);
-    (void)(b);
-    (void)(a);
 
     // Set texture storage and data.
     glTexImage2D(

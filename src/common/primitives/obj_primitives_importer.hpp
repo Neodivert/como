@@ -103,6 +103,7 @@ class OBJPrimitivesImporter : PrimitivesImporter {
                               FaceTriangle& triangle1,
                               FaceTriangle& triangle2 );
         void insertQuad( std::vector< FaceTriangle >& triangles, FaceQuad& quad );
+        void splitFileLine( const std::string& line, std::string& lineHeader, std::string& lineBody );
 };
 
 } // namespace como

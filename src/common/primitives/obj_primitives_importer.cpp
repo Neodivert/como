@@ -94,8 +94,8 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
         return;
     }
 
-    lineHeader = line.substr( 0, line.find( ' ' ) );
-    lineBody = line.substr( line.find( ' ' ) + 1 );
+    splitFileLine( line, lineHeader, lineBody );
+
     if( lineHeader == "o" ){
         primitiveInfo.name = lineBody;
     }else if( lineHeader == "g" ){
@@ -316,8 +316,10 @@ void OBJPrimitivesImporter::processMaterialFile( std::string filePath, std::vect
 
 void OBJPrimitivesImporter::processMaterialFileLine( std::string filePath, std::string fileLine, std::vector<MaterialInfo>& materials )
 {
-    std::string lineHeader = fileLine.substr( 0, fileLine.find( ' ' ) );
-    std::string lineBody = fileLine.substr( fileLine.find( ' ' ) + 1 );
+    std::string lineHeader;
+    std::string lineBody;
+
+    splitFileLine( fileLine, lineHeader, lineBody );
 
     if( !fileLine.size() ){
         return;
@@ -644,6 +646,34 @@ void OBJPrimitivesImporter::insertQuad(std::vector<FaceTriangle> &triangles, Fac
 
     triangles.push_back( triangle1 );
     triangles.push_back( triangle2 );
+}
+
+
+void OBJPrimitivesImporter::splitFileLine( const std::string &line, std::string &lineHeader, std::string &lineBody )
+{
+    unsigned int i = 0;
+
+    while( ( i < line.size() ) && (line[i] != ' ') && (line[i] != '\t') ){
+        i++;
+    }
+
+    if( i < line.size() ){
+        lineHeader = line.substr( 0, i );
+
+        while( ( i < line.size() ) &&
+               ( (line[i] == ' ') || (line[i] == '\t') ) ){
+            i++;
+        }
+
+        if( i < line.size() ){
+            lineBody = line.substr( i, line.size() - i );
+        }else{
+            lineBody = "";
+        }
+    }else{
+        lineHeader = "";
+        lineBody = "";
+    }
 }
 
 

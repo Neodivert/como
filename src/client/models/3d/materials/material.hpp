@@ -61,13 +61,7 @@ class Material
 
 
         /***
-         * 3. Initialization
-         ***/
-        void loadFromFile( const std::string& filePath, const std::string& materialName );
-
-
-        /***
-         * 4. Getters
+         * 3. Getters
          ***/
         std::string getName() const;
         PackableColor getColor() const;
@@ -78,7 +72,7 @@ class Material
 
 
         /***
-         * 5. Setters
+         * 4. Setters
          ***/
         void setColor( const PackableColor& color );
         void setAmbientReflectivity( const PackableColor& ambientReflectivity );
@@ -88,20 +82,19 @@ class Material
 
 
         /***
-         * 6. Shader comunication
+         * 5. Shader comunication
          ***/
         void sendToShader() const;
 
 
         /***
-         * 7. Auxiliar methods
+         * 6. Auxiliar methods
          ***/
         void print() const;
-        glm::vec3 readVec3( std::string str ) const;
 
 
         /***
-         * 8. Operators
+         * 7. Operators
          ***/
         Material& operator = ( const Material& ) = default;
         Material& operator = ( Material&& ) = default;

@@ -170,7 +170,6 @@ SOURCES += \
     ../../src/client/models/3d/lights/light.cpp \
     ../../src/client/managers/managers/entities/entities_manager.cpp \
     ../../src/client/managers/selections/entities/entities_selection.cpp \
-    ../../src/client/models/3d/abstract_entities_set.cpp \
     ../../src/client/managers/selections/entities/local_entities_selection.cpp \
     ../../src/client/managers/utilities/server_writer.cpp \
     ../../src/client/managers/managers/users/users_manager.cpp \
