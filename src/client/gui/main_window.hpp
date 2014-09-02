@@ -28,8 +28,6 @@ Q_DECLARE_METATYPE( como::UserConnectionCommandConstPtr )
 
 namespace como {
 
-//Q_DECLARE_METATYPE( std::shared_ptr< const como::UserConnectionCommand > )
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

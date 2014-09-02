@@ -32,8 +32,8 @@ EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log, UsersMa
     meshesManager_( new MeshesManager( server, log, materialsManager ) ),
     lightsManager_( new LightsManager( server, log ) )
 {
-    managers_.push_back( lightsManager_ );
-    managers_.push_back( meshesManager_ );
+    managers_.push_back( lightsManager_.get() );
+    managers_.push_back( meshesManager_.get() );
 
     entitiesSelections_[NO_USER] =
             std::unique_ptr<EntitiesSelection>( new EntitiesSelection( lightsManager_->getResourcesSelection( NO_USER ), meshesManager_->getResourcesSelection( NO_USER ) ) );
