@@ -42,7 +42,7 @@ class LocalEntitiesSelection : public EntitiesSelection, public ServerWriter
         /***
          * 2. Destruction
          ***/
-        ~LocalEntitiesSelection() = default;
+        virtual ~LocalEntitiesSelection() = default;
 
 
         /***
@@ -78,9 +78,6 @@ class LocalEntitiesSelection : public EntitiesSelection, public ServerWriter
         LocalEntitiesSelection& operator = ( const LocalEntitiesSelection& ) = delete;
         LocalEntitiesSelection& operator = ( LocalEntitiesSelection&& ) = delete;
 };
-
-
-typedef std::shared_ptr< LocalEntitiesSelection > LocalEntitiesSelectionPtr;
 
 } // namespace como
 

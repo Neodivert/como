@@ -21,13 +21,14 @@
 
 #include <client/managers/selections/resources/resources_selection.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
+#include <client/managers/utilities/server_writer.hpp>
 #include <common/commands/command.hpp>
 
 namespace como {
 
 // TODO: Remove this class?
 template <class ResourceType>
-class LocalResourcesSelection : public virtual ResourcesSelection< ResourceType > {
+class LocalResourcesSelection : public virtual ResourcesSelection< ResourceType >, public ServerWriter {
     public:
         /***
          * 1. Construction
@@ -56,18 +57,6 @@ class LocalResourcesSelection : public virtual ResourcesSelection< ResourceType 
          * 4. Local resources insertion
          ***/
         ResourceID addResource( std::unique_ptr<ResourceType> resource );
-
-
-    protected:
-        /***
-         * 5. Server communication
-         ***/
-        void sendCommandToServer( CommandConstPtr command );
-        UserID localUserID();
-
-
-    private:
-        ServerInterfacePtr server_;
 };
 
 
@@ -77,7 +66,7 @@ class LocalResourcesSelection : public virtual ResourcesSelection< ResourceType 
 
 template <class ResourceType>
 LocalResourcesSelection<ResourceType>::LocalResourcesSelection( ServerInterfacePtr server ) :
-    server_( server )
+    ServerWriter( server )
 {}
 
 
@@ -88,29 +77,11 @@ LocalResourcesSelection<ResourceType>::LocalResourcesSelection( ServerInterfaceP
 template <class ResourceType>
 ResourceID LocalResourcesSelection<ResourceType>::addResource( std::unique_ptr<ResourceType> resource )
 {
-    ResourceID resourceID = server_->getNewResourceID();
+    ResourceID resourceID = this->newResourceID();
 
     this->ResourcesSelection<ResourceType>::addResource( resourceID, std::move( resource ) );
 
     return resourceID;
-}
-
-
-/***
- * 5. Server communication
- ***/
-
-template <class ResourceType>
-void LocalResourcesSelection<ResourceType>::sendCommandToServer( CommandConstPtr command )
-{
-    server_->sendCommand( std::move( command ) );
-}
-
-
-template <class ResourceType>
-UserID LocalResourcesSelection<ResourceType>::localUserID()
-{
-    return server_->getLocalUserID();
 }
 
 } // namespace como
