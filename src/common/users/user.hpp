@@ -58,8 +58,6 @@ class User : public std::enable_shared_from_this< User >
         User& operator = ( User&& ) = delete;
 };
 
-typedef std::shared_ptr< User > UserPtr;
-
 } // namespace como
 
 #endif // USER_HPP

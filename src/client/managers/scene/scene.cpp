@@ -224,48 +224,6 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
 
 
 /***
- * 4. Users administration
- ***/
-
-
-void Scene::addUser( std::shared_ptr< const UserConnectionCommand > userConnectedCommand )
-{
-    (void)( userConnectedCommand );
-    /*
-    // Create the new user from the given USER_CONNECTION command.
-    UserPtr newUser( new User( userConnectedCommand->getUserID(), userConnectedCommand->getName() ) );
-
-    // Insert the new user in the users vector.
-    users_.insert( std::pair< UserID, UserPtr >( userConnectedCommand->getUserID(), newUser ) );
-
-    if( userConnectedCommand->getUserID() != server_->getLocalUserID() ){
-        // Create an entities selection for the user.
-        entitiesManager_->createUserSelection( userConnectedCommand.get() );
-    }
-
-    // Emit a UserConnectionCommand signal.
-    emit userConnected( userConnectedCommand );
-    */
-}
-
-
-void Scene::removeUser( UserID userID )
-{
-    (void)( userID );
-    /*
-    // TODO: Call to entitiesManager_ instead.
-    entitiesManager_->getLightsManager()->requestSelectionUnlock();
-    entitiesManager_->removeUserSelection( userID );
-
-    // Remove user from scene.
-    if( users_.erase( userID ) ){
-        emit userDisconnected( userID );
-    }
-    */
-}
-
-
-/***
  * 5. Getters
  ***/
 

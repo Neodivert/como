@@ -47,7 +47,6 @@ enum LinesBufferOffset {
     N_LINES_BUFFER_OFFSETS
 };
 
-typedef std::map< UserID, UserPtr > UsersMap;
 
 class Scene : public QOffscreenSurface, public BasicScene, public Observer, public Observable
 {
@@ -102,13 +101,6 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
         void initOpenGL();
         void initLinesBuffer();
         void initManagers( const UserAcceptancePacket& userAcceptancePacket );
-
-
-        /***
-         * 4. Users administration
-         ***/
-        void addUser( std::shared_ptr< const UserConnectionCommand > userConnectedCommand );
-        void removeUser( UserID userID );
 
 
         /***
