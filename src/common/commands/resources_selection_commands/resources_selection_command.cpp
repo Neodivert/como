@@ -16,4 +16,5 @@ ResourcesSelectionCommand::ResourcesSelectionCommand( ResourcesSelectionCommandT
     TypeCommand( CommandTarget::RESOURCES_SELECTION, commandType, userID )
 {}
 
+
 } // namespace como

@@ -32,6 +32,7 @@ class UserDisconnectionCommand : public UserCommand
         UserDisconnectionCommand( UserID userID = 0 );
         UserDisconnectionCommand( const UserDisconnectionCommand& ) = default;
         UserDisconnectionCommand( UserDisconnectionCommand&& ) = delete;
+        COMMAND_CLONE_METHOD( UserDisconnectionCommand )
 
 
         /***

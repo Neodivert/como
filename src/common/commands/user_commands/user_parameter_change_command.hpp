@@ -57,6 +57,7 @@ class UserParameterChangeCommand : public UserCommand
         UserParameterChangeCommand( UserID userID, PivotPointMode pivotPointMode );
         UserParameterChangeCommand( const UserParameterChangeCommand& b );
         UserParameterChangeCommand( UserParameterChangeCommand&& ) = delete;
+        COMMAND_CLONE_METHOD( UserParameterChangeCommand )
 
 
         /***

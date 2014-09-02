@@ -39,6 +39,14 @@ LightColorChangeCommand::LightColorChangeCommand( UserID userID, ResourceID ligh
 }
 
 
+LightColorChangeCommand::LightColorChangeCommand( const LightColorChangeCommand& b ) :
+    LightCommand( b ),
+    lightColor_( b.lightColor_ )
+{
+    addPackable( &lightColor_ );
+}
+
+
 /***
  * 3. Getters
  ***/

@@ -45,6 +45,7 @@ class ResourceCommand : public TypeCommand< ResourceCommandType >
         ResourceCommand( ResourceCommandType commandType, UserID userID, const ResourceID resourceID );
         ResourceCommand( const ResourceCommand& b );
         ResourceCommand( ResourceCommand&& ) = delete;
+        COMMAND_CLONE_METHOD( ResourceCommand )
 
 
         /***

@@ -29,10 +29,6 @@
 
 int main( int argc, char *argv[] )
 {
-    // FIXME: Study why this is necessary.
-    //qRegisterMetaType< como::CommandConstPtr >();
-    qRegisterMetaType< como::CommandConstPtr >( "CommandConstPtr" );
-
     // TODO: Add checking code.
     IMG_Init( IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF );
     atexit( IMG_Quit );

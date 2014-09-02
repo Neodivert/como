@@ -140,37 +140,37 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Packab
  ***/
 
 // TODO: Change this and use a LightCommandConstPtr
-void LightsManager::executeRemoteCommand( LightCommandConstPtr command )
+void LightsManager::executeRemoteCommand( const LightCommand& command )
 {
-    switch( command->getType() ){
+    switch( command.getType() ){
         case LightCommandType::LIGHT_CREATION:{
-            const LightCreationCommand* lightCreationCommand =
-                    dynamic_cast< const LightCreationCommand* >( command.get() );
+            const LightCreationCommand& lightCreationCommand =
+                    dynamic_cast< const LightCreationCommand& >( command );
 
-            switch( lightCreationCommand->getLightType() ){
+            switch( lightCreationCommand.getLightType() ){
                 case LightType::DIRECTIONAL_LIGHT:{
-                    const DirectionalLightCreationCommand* directionalLightCreationCommand =
-                            dynamic_cast< const DirectionalLightCreationCommand* >( command.get() );
+                    const DirectionalLightCreationCommand& directionalLightCreationCommand =
+                            dynamic_cast< const DirectionalLightCreationCommand& >( command );
 
-                    addDirectionalLight( directionalLightCreationCommand->getResourceID(),
-                                         directionalLightCreationCommand->getLightColor()
+                    addDirectionalLight( directionalLightCreationCommand.getResourceID(),
+                                         directionalLightCreationCommand.getLightColor()
                                          );
                 }break;
             }
         }break;
         case LightCommandType::LIGHT_COLOR_CHANGE:{
-            const LightColorChangeCommand* lightCommand =
-                    dynamic_cast< const LightColorChangeCommand* >( command.get() );
+            const LightColorChangeCommand& lightCommand =
+                    dynamic_cast< const LightColorChangeCommand& >( command );
 
-            getResourcesSelection( lightCommand->getUserID() )->setLightColor( lightCommand->getLightColor() );
+            getResourcesSelection( lightCommand.getUserID() )->setLightColor( lightCommand.getLightColor() );
 
             notifyObservers();
         }break;
         case LightCommandType::LIGHT_AMBIENT_COEFFICIENT_CHANGE:{
-            const LightAmbientCoefficientChangeCommand* lightCommand =
-                    dynamic_cast< const LightAmbientCoefficientChangeCommand* >( command.get() );
+            const LightAmbientCoefficientChangeCommand& lightCommand =
+                    dynamic_cast< const LightAmbientCoefficientChangeCommand& >( command );
 
-            getResourcesSelection( lightCommand->getUserID() )->setAmbientCoefficient( lightCommand->getAmbientCoefficient() );
+            getResourcesSelection( lightCommand.getUserID() )->setAmbientCoefficient( lightCommand.getAmbientCoefficient() );
 
             notifyObservers();
         }break;

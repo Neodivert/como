@@ -42,6 +42,7 @@ class LightCreationCommand : public LightCommand
         LightCreationCommand( LightType lightType, UserID userID, ResourceID lightID, const PackableColor& lightColor );
         LightCreationCommand( const LightCreationCommand& b );
         LightCreationCommand( LightCreationCommand&& ) = delete;
+        COMMAND_CLONE_METHOD( LightCreationCommand )
 
 
         /***

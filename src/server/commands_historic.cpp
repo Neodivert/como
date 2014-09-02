@@ -57,7 +57,7 @@ void CommandsHistoric::addCommand( CommandConstPtr command )
     commandsMutex_.lock();
 
     // Push back the given command.
-    commands_.push_back( command );
+    commands_.push_back( std::move( command ) );
 
     commandsMutex_.unlock();
 
@@ -97,7 +97,7 @@ std::uint32_t CommandsHistoric::fillSceneUpdatePacketPacket( SceneUpdatePacket& 
         // Don't send to the user its own commands.
         // TODO: Substract these commands from unsyncCommands field.
         if( (*it)->getUserID() != userID ){
-            packet.addCommand( *it, firstCommand + i, commands_.size() );
+            packet.addCommand( CommandConstPtr( (*it)->clone() ), firstCommand + i, commands_.size() );
             i++;
         }
         nextCommand++;

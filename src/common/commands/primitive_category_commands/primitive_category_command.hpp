@@ -42,7 +42,7 @@ class PrimitiveCategoryCommand : public TypeCommand< PrimitiveCategoryCommandTyp
          ***/
         PrimitiveCategoryCommand() = delete;
         PrimitiveCategoryCommand( UserID userID, ResourceID categoryID, PrimitiveCategoryCommandType commandType );
-        PrimitiveCategoryCommand( const PrimitiveCategoryCommand& ) = delete;
+        PrimitiveCategoryCommand( const PrimitiveCategoryCommand& );
         PrimitiveCategoryCommand( PrimitiveCategoryCommand&& ) = delete;
 
 

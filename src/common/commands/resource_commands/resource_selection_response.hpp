@@ -37,6 +37,7 @@ class ResourceSelectionResponse : public ResourceCommand
         ResourceSelectionResponse( const ResourceID& resourceID, bool response );
         ResourceSelectionResponse( const ResourceSelectionResponse& );
         ResourceSelectionResponse( ResourceSelectionResponse&& ) = delete;
+        COMMAND_CLONE_METHOD( ResourceSelectionResponse )
 
 
         /***

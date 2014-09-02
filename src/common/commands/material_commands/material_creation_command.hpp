@@ -42,8 +42,9 @@ class MaterialCreationCommand : public MaterialCommand
     public:
         MaterialCreationCommand();
         MaterialCreationCommand( const ResourceID& materialID, const std::string& materialName  );
-        MaterialCreationCommand( MaterialCreationCommand& b );
+        MaterialCreationCommand( const MaterialCreationCommand& b );
         MaterialCreationCommand( MaterialCreationCommand&& ) = delete;
+        COMMAND_CLONE_METHOD( MaterialCreationCommand )
 
     /***
      * 2. Destruction

@@ -155,7 +155,6 @@ void ServerInterface::onSceneUpdatePacketReceived( const boost::system::error_co
     }
 
     const CommandsList* sceneCommands = nullptr;
-    CommandsList::const_iterator commandsInterator;
 
     SceneUpdatePacket* sceneUpdate = dynamic_cast< SceneUpdatePacket *>( packet.get() );
     //const UserConnectionCommand* userConnectedCommand = nullptr;
@@ -167,8 +166,8 @@ void ServerInterface::onSceneUpdatePacketReceived( const boost::system::error_co
     log_->debug( "Scene update received with nCommands: ", sceneUpdate->getCommands()->size(), "\n" );
 
     sceneCommands = sceneUpdate->getCommands();
-    for( commandsInterator = sceneCommands->begin(); commandsInterator != sceneCommands->end(); commandsInterator++ ){
-        emit commandReceived( *commandsInterator );
+    for( const auto& command : *sceneCommands ){
+        emit commandReceived( std::shared_ptr< const Command >( command->clone() ) );
     }
 
     listen();
@@ -195,7 +194,7 @@ void ServerInterface::onSceneUpdatePacketSended( const boost::system::error_code
 void ServerInterface::sendCommand( CommandConstPtr sceneCommand )
 {
     // Queue the new scene command.
-    sceneCommandsToServer_.push( sceneCommand );
+    sceneCommandsToServer_.push( std::move( sceneCommand ) );
 }
 
 
@@ -219,7 +218,7 @@ void ServerInterface::sendPendingCommands()
     while( ( nCommands < MAX_COMMANDS_PER_SCENE_UPDATE ) && !sceneCommandsToServer_.empty() ){
         // TODO: Delete the second argument is not necessary in a SCENE_UPDATE
         // packet sent from client to server.
-        sceneUpdatePacketToServer_.addCommand( sceneCommandsToServer_.front(), 0, 0 );
+        sceneUpdatePacketToServer_.addCommand( std::move( sceneCommandsToServer_.front() ), 0, 0 );
         sceneCommandsToServer_.pop();
 
         nCommands++;

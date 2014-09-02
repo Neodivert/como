@@ -40,6 +40,14 @@ PrimitiveCategoryCreationCommand::PrimitiveCategoryCreationCommand( UserID userI
 }
 
 
+PrimitiveCategoryCreationCommand::PrimitiveCategoryCreationCommand( const PrimitiveCategoryCreationCommand& b ) :
+    PrimitiveCategoryCommand( b ),
+    categoryName_( b.categoryName_ )
+{
+    addPackable( &categoryName_ );
+}
+
+
 /***
  * 3. Getters
  ***/

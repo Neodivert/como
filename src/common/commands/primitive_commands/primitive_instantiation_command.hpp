@@ -41,6 +41,7 @@ class PrimitiveInstantiationCommand : public PrimitiveCommand
         PrimitiveInstantiationCommand( UserID userID, ResourceID primitiveID, ResourceID drawableID, const ResourceID& materialID );
         PrimitiveInstantiationCommand( const PrimitiveInstantiationCommand& b );
         PrimitiveInstantiationCommand( PrimitiveInstantiationCommand&& ) = delete;
+        COMMAND_CLONE_METHOD( PrimitiveInstantiationCommand )
 
 
         /***

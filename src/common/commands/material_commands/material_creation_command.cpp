@@ -27,7 +27,7 @@ MaterialCreationCommand::MaterialCreationCommand( const ResourceID& materialID, 
     ADD_PACKABLES
 }
 
-MaterialCreationCommand::MaterialCreationCommand( MaterialCreationCommand &b ) :
+MaterialCreationCommand::MaterialCreationCommand( const MaterialCreationCommand &b ) :
     MaterialCommand( b ),
     materialName_( b.materialName_ )
 {

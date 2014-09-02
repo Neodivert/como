@@ -51,6 +51,7 @@ class SelectionTransformationCommand : public SelectionCommand
         SelectionTransformationCommand( UserID userID );
         SelectionTransformationCommand( const SelectionTransformationCommand& b );
         SelectionTransformationCommand( SelectionTransformationCommand&& ) = delete;
+        COMMAND_CLONE_METHOD( SelectionTransformationCommand )
 
 
         /***

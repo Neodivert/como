@@ -31,8 +31,8 @@ class AbstractResourcesOwnershipManager
         /***
          * 3. Command execution
          ***/
-        void executeResourceCommand( ResourceCommandConstPtr );
-        void executeResourcesSelectionCommand( ResourcesSelectionCommandConstPtr );
+        void executeResourceCommand( const ResourceCommand& );
+        void executeResourcesSelectionCommand( const ResourcesSelectionCommand& );
 
 
         /***

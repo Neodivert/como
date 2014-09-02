@@ -103,7 +103,7 @@ ResourceID LocalResourcesSelection<ResourceType>::addResource( std::unique_ptr<R
 template <class ResourceType>
 void LocalResourcesSelection<ResourceType>::sendCommandToServer( CommandConstPtr command )
 {
-    server_->sendCommand( command );
+    server_->sendCommand( std::move( command ) );
 }
 
 

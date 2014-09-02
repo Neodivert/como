@@ -164,7 +164,7 @@ class Server : public BasicScene
          * \param userID ID of the user who sent the command.
          * \param sceneCommand Scene command.
          */
-        void processSceneCommand( CommandConstPtr sceneCommand );
+        void processSceneCommand( const Command& sceneCommand );
 
 
         /***

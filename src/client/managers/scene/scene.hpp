@@ -35,8 +35,6 @@
 #include <client/managers/managers/entities/entities_manager.hpp>
 #include <client/managers/managers/users/users_manager.hpp>
 
-Q_DECLARE_METATYPE( como::CommandConstPtr )
-
 namespace como {
 
 enum LinesBufferOffset {
@@ -164,7 +162,10 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
          * 13. Slots
          ***/
     public slots:
-        void executeRemoteCommand( CommandConstPtr command );
+        // TODO: Pass command by reference. By now it must be passed using
+        // a std::shared_ptr because of Qt signal / slot mechanism.
+        void executeRemoteCommand( std::shared_ptr< const Command > command );
+
 
         /***
          * 14. Auxiliar methods

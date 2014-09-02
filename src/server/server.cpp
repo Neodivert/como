@@ -287,8 +287,6 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
                                  const SceneUpdatePacket& sceneUpdate )
 {
     const CommandsList* commands = nullptr;
-    CommandsList::const_iterator commandsIterator;
-
 
     mutex_.lock();
     if( errorCode ){
@@ -302,9 +300,9 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
 
         log_->debug( "SCENE_UPDATE received from [", users_.at( userID )->getName(), "] with (", commands->size(), ") commands\n" );
 
-        // Add the commands to the historic.
-        for( commandsIterator = commands->begin(); commandsIterator != commands->end(); commandsIterator++ ){
-            processSceneCommand( *commandsIterator );
+        // Process and add the commands to the historic.
+        for( const auto& command : *commands ){
+            processSceneCommand( *command );
         }
 
         mutex_.unlock();
@@ -314,35 +312,35 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
     }
 }
 
-void Server::processSceneCommand( CommandConstPtr sceneCommand )
+void Server::processSceneCommand( const Command& sceneCommand )
 {
-    const PrimitiveCreationCommand* primitiveCreationCommand = nullptr;
-
-    switch( sceneCommand->getTarget() ){
+    switch( sceneCommand.getTarget() ){
         case CommandTarget::USER:
         break;
         case CommandTarget::SELECTION:
         break;
         case CommandTarget::PRIMITIVE:{
-            const PrimitiveCommand* primitiveCommand = dynamic_cast< const PrimitiveCommand* >( sceneCommand.get() );
+            const PrimitiveCommand& primitiveCommand = dynamic_cast< const PrimitiveCommand& >( sceneCommand );
 
-            switch( primitiveCommand->getType() ){
-                case PrimitiveCommandType::PRIMITIVE_CREATION:
+            switch( primitiveCommand.getType() ){
+                case PrimitiveCommandType::PRIMITIVE_CREATION:{
                     // PRIMITIVE_CREATION command received, cast its pointer.
-                    primitiveCreationCommand = dynamic_cast< const PrimitiveCreationCommand* >( sceneCommand.get() );
+                    const PrimitiveCreationCommand& primitiveCreationCommand =
+                            dynamic_cast< const PrimitiveCreationCommand& >( sceneCommand );
 
                     // TODO: Complete, Save new primitive (Move it from temp to category directory).
-                    log_->debug( "Primitive received [", primitiveCreationCommand->getPrimitiveInfo().name, "]\n" );
-                break;
+                    log_->debug( "Primitive received [", primitiveCreationCommand.getPrimitiveInfo().name, "]\n" );
+                }break;
                 case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:{
-                    const PrimitiveInstantiationCommand* primitiveCommand = dynamic_cast< const PrimitiveInstantiationCommand* >( sceneCommand.get() );
+                    const PrimitiveInstantiationCommand& primitiveCommand =
+                            dynamic_cast< const PrimitiveInstantiationCommand& >( sceneCommand );
 
                     // Add a node to the Drawable Owners map for the recently added
                     // drawable. Mark it with a 0 (no owner).
-                    resourcesOwnershipManager_.registerResource( primitiveCommand->getMeshID(), NO_USER );
+                    resourcesOwnershipManager_.registerResource( primitiveCommand.getMeshID(), NO_USER );
 
-                    log_->debug( "Mesh added! (", (int)( primitiveCommand->getMeshID().getCreatorID() ),
-                                 ", ", (int)( primitiveCommand->getMeshID().getResourceIndex() ), "\n" );
+                    log_->debug( "Mesh added! (", (int)( primitiveCommand.getMeshID().getCreatorID() ),
+                                 ", ", (int)( primitiveCommand.getMeshID().getResourceIndex() ), "\n" );
                 }break;
             }
         }break;
@@ -354,26 +352,26 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
             // TODO: Complete.
         break;
         case CommandTarget::LIGHT:{
-            const LightCommand* lightCommand = dynamic_cast< const LightCommand* >( sceneCommand.get() );
+            const LightCommand& lightCommand = dynamic_cast< const LightCommand& >( sceneCommand );
 
-            if( lightCommand->getType() == LightCommandType::LIGHT_CREATION ){
+            if( lightCommand.getType() == LightCommandType::LIGHT_CREATION ){
                 // Add a node to the Drawable Owners map for the recently added
                 // drawable. Mark it with a 0 (no owner).
-                resourcesOwnershipManager_.registerResource( lightCommand->getResourceID(), NO_USER );
+                resourcesOwnershipManager_.registerResource( lightCommand.getResourceID(), NO_USER );
             }
         }break;
         case CommandTarget::RESOURCE:{
-            ResourceCommandConstPtr resourceCommand = std::dynamic_pointer_cast< const ResourceCommand >( sceneCommand );
+            const ResourceCommand& resourceCommand = dynamic_cast< const ResourceCommand& >( sceneCommand );
             resourcesOwnershipManager_.executeResourceCommand( resourceCommand );
         }break;
         case CommandTarget::RESOURCES_SELECTION:{
-            ResourcesSelectionCommandConstPtr resourcesSelectionCommand = std::dynamic_pointer_cast< const ResourcesSelectionCommand >( sceneCommand );
+            const ResourcesSelectionCommand& resourcesSelectionCommand =
+                    dynamic_cast< const ResourcesSelectionCommand& >( sceneCommand );
             resourcesOwnershipManager_.executeResourcesSelectionCommand( resourcesSelectionCommand );
         }break;
     }
 
-    // Add the command to the historic.
-    commandsHistoric_->addCommand( sceneCommand );
+    commandsHistoric_->addCommand( CommandConstPtr( sceneCommand.clone() ) );
 }
 
 
@@ -384,7 +382,7 @@ void Server::processSceneCommand( CommandConstPtr sceneCommand )
 void Server::addCommand( CommandConstPtr sceneCommand )
 {
     // Add the command to the historic.
-    commandsHistoric_->addCommand( sceneCommand );
+    commandsHistoric_->addCommand( std::move( sceneCommand ) );
 }
 
 

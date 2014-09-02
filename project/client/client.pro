@@ -83,7 +83,7 @@ HEADERS += \
     ../../src/client/managers/selections/meshes/meshes_selection.hpp \
     ../../src/client/gui/rendering/viewport_view_menu.hpp \
     ../../src/client/gui/rendering/viewport_projection_menu.hpp \
-    ../../src/client/managers/managers/managers/resources/resources_manager.hpp \
+    ../../src/client/managers/managers/resources/resources_manager.hpp \
     ../../src/client/managers/managers/meshes/meshes_manager.hpp \
     ../../src/client/managers/selections/lights/lights_selection.hpp \
     ../../src/client/managers/selections/resources/resources_selection.hpp \

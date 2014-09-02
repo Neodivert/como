@@ -29,8 +29,12 @@ PackableCommandsList::PackableCommandsList( const std::string& unpackingDirPath 
 
 PackableCommandsList::PackableCommandsList( const PackableCommandsList& b ) :
     Packable( b ),
-    commands_( b.commands_ )
+    unpackingDirPath_( b.unpackingDirPath_ )
 {
+    for( const auto& command : b.commands_ ){
+        commands_.push_back( CommandConstPtr( command->clone() ) );
+    }
+
     /*
      * We don't call CompositePackable::addPackable here because we can't
      * predict which types of commands we'll receive every time.
@@ -184,10 +188,17 @@ const void* PackableCommandsList::unpack( const void* buffer )
                     break;
                 }
             break;
+
+            default:
+                int commandTarget = static_cast< int >( Command::getTarget( buffer ) );
+                throw std::runtime_error( "Received an unrecognized command type" +
+                                          std::to_string( commandTarget ) +
+                                          ")" );
+            break;
         }
 
         buffer = command->unpack( buffer );
-        commands_.push_back( command );
+        commands_.push_back( std::move( command ) );
     }
 
     return buffer;
@@ -245,7 +256,7 @@ const CommandsList* PackableCommandsList::getCommands() const
 
 void PackableCommandsList::addCommand( CommandConstPtr command )
 {
-    commands_.push_back( command );
+    commands_.push_back( std::move( command ) );
 }
 
 

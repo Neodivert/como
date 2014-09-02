@@ -47,7 +47,7 @@ void ResourcesOwnershipRequester::requestSelectionUnlock()
 {
     CommandConstPtr selectionUnlockCommand =
             CommandConstPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_UNLOCK, localUserID() ) );
-    sendCommandToServer( selectionUnlockCommand );
+    sendCommandToServer( std::move( selectionUnlockCommand ) );
 
     unlockResourcesSelection( localUserID() );
 }
@@ -57,7 +57,7 @@ void ResourcesOwnershipRequester::requestSelectionDeletion()
 {
     CommandConstPtr selectionDeletionCommand =
             CommandConstPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_DELETION, localUserID() ) );
-    sendCommandToServer( selectionDeletionCommand );
+    sendCommandToServer( std::move( selectionDeletionCommand ) );
 
     clearResourcesSelection( localUserID() );
 }

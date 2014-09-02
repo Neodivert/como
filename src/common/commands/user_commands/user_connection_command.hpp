@@ -38,6 +38,7 @@ class UserConnectionCommand : public UserCommand
         UserConnectionCommand( const UserAcceptancePacket& userAcceptancePacket );
         UserConnectionCommand( const UserConnectionCommand& b );
         UserConnectionCommand( UserConnectionCommand&& ) = delete;
+        COMMAND_CLONE_METHOD( UserConnectionCommand )
 
 
         /***

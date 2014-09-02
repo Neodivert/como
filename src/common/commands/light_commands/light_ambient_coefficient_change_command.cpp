@@ -40,6 +40,14 @@ LightAmbientCoefficientChangeCommand::LightAmbientCoefficientChangeCommand( User
 }
 
 
+LightAmbientCoefficientChangeCommand::LightAmbientCoefficientChangeCommand( const LightAmbientCoefficientChangeCommand& b ) :
+    LightCommand( b ),
+    ambientCoefficient_( b.ambientCoefficient_ )
+{
+    addPackable( &ambientCoefficient_ );
+}
+
+
 /***
  * 3. Getters
  ***/

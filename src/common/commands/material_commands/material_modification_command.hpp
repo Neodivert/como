@@ -38,6 +38,7 @@ class MaterialModificationCommand : public AbstractMaterialModificationCommand
         MaterialModificationCommand( UserID userID, ResourceID materialID, ParameterPlainType parameterValue );
         MaterialModificationCommand( const MaterialModificationCommand& b );
         MaterialModificationCommand( MaterialModificationCommand& ) = delete;
+        virtual Command* clone() const;
 
 
         /***
@@ -102,6 +103,13 @@ MaterialModificationCommand<ParameterName, ParameterPackableType, ParameterPlain
     parameterValue_( b.parameterValue_ )
 {
     addPackable( &parameterValue_ );
+}
+
+
+template < MaterialParameterName ParameterName, class ParameterPackableType, class ParameterPlainType >
+Command* MaterialModificationCommand<ParameterName, ParameterPackableType, ParameterPlainType>::clone() const
+{
+    return new MaterialModificationCommand<ParameterName, ParameterPackableType, ParameterPlainType>( *this );
 }
 
 

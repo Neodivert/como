@@ -46,6 +46,7 @@ class MaterialCommand : public TypeCommand< MaterialCommandType >
     public:
         MaterialCommand( const MaterialCommand& b );
         MaterialCommand( MaterialCommand&& ) = delete;
+        COMMAND_CLONE_METHOD( MaterialCommand )
 
     /***
      * 2. Destruction

@@ -74,7 +74,7 @@ class LightsManager : public SpecializedEntitiesManager< Light, LightsSelection,
          * 5. Remote command execution
          ***/
     public:
-        void executeRemoteCommand( LightCommandConstPtr command );
+        void executeRemoteCommand( const LightCommand& command );
 
 
         /***

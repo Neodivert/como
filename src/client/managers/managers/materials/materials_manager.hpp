@@ -112,7 +112,7 @@ class MaterialsManager : public QObject, public ServerWriter, public Observer, p
         /***
          * 6. Remote command execution
          ***/
-        void executeRemoteCommand( MaterialCommandConstPtr command );
+        void executeRemoteCommand( const MaterialCommand& command );
 
 
         /***

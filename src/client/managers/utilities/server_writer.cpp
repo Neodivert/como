@@ -57,7 +57,7 @@ ServerInterfacePtr ServerWriter::server() const
 
 void ServerWriter::sendCommandToServer( CommandConstPtr command )
 {
-    server_->sendCommand( command );
+    server_->sendCommand( std::move( command ) );
 }
 
 } // namespace como

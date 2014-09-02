@@ -44,6 +44,7 @@ class LightCommand : public TypeCommand< LightCommandType >
         LightCommand( LightCommandType lightType, UserID userID, const ResourceID& lightID );
         LightCommand( const LightCommand& b );
         LightCommand( LightCommand&& ) = delete;
+        COMMAND_CLONE_METHOD( LightCommand )
 
 
         /***

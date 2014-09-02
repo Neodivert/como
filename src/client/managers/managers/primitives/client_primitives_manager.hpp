@@ -80,8 +80,8 @@ class ClientPrimitivesManager : public QOffscreenSurface, public AbstractPrimiti
         /***
          * 4. Remote command execution
          ***/
-        void executeRemoteCommand( PrimitiveCategoryCommandConstPtr command );
-        void executeRemoteCommand( PrimitiveCommandConstPtr command );
+        void executeRemoteCommand( const PrimitiveCategoryCommand& command );
+        void executeRemoteCommand( const PrimitiveCommand& command );
 
 
         /***

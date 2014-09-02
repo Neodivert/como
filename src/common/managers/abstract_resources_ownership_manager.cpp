@@ -34,28 +34,29 @@ AbstractResourcesOwnershipManager::AbstractResourcesOwnershipManager( LogPtr log
  * 3. Command execution
  ***/
 
-void AbstractResourcesOwnershipManager::executeResourceCommand( ResourceCommandConstPtr command )
+void AbstractResourcesOwnershipManager::executeResourceCommand( const ResourceCommand& command )
 {
-    switch( command->getType() ){
+    switch( command.getType() ){
         case ResourceCommandType::RESOURCE_LOCK:
-            lockResource( command->getResourceID(), command->getUserID() );
+            lockResource( command.getResourceID(), command.getUserID() );
         break;
         case ResourceCommandType::RESOURCE_SELECTION_RESPONSE:{
-            const ResourceSelectionResponse* responseCommand = dynamic_cast< const ResourceSelectionResponse* >( command.get() );
-            processLockResponse( responseCommand->getResourceID(), responseCommand->getResponse() );
+            const ResourceSelectionResponse& responseCommand =
+                    dynamic_cast< const ResourceSelectionResponse& >( command );
+            processLockResponse( responseCommand.getResourceID(), responseCommand.getResponse() );
         }break;
     }
 }
 
 
-void AbstractResourcesOwnershipManager::executeResourcesSelectionCommand( ResourcesSelectionCommandConstPtr command )
+void AbstractResourcesOwnershipManager::executeResourcesSelectionCommand( const ResourcesSelectionCommand& command )
 {
-    switch( command->getType() ){
+    switch( command.getType() ){
         case ResourcesSelectionCommandType::SELECTION_UNLOCK:
-            unlockResourcesSelection( command->getUserID() );
+            unlockResourcesSelection( command.getUserID() );
         break;
         case ResourcesSelectionCommandType::SELECTION_DELETION:
-            deleteResourcesSelection( command->getUserID() );
+            deleteResourcesSelection( command.getUserID() );
         break;
     }
 }

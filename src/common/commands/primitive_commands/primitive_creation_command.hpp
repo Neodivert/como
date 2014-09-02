@@ -65,6 +65,8 @@ class PrimitiveCreationCommand : public PrimitiveCommand
         /*! \brief Move assignment operator */
         PrimitiveCreationCommand( PrimitiveCreationCommand&& ) = delete;
 
+        COMMAND_CLONE_METHOD( PrimitiveCreationCommand )
+
 
         /***
          * 2. Destruction

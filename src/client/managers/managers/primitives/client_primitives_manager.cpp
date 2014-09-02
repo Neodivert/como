@@ -120,27 +120,27 @@ void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID pr
  * 4. Remote command execution
  ***/
 
-void ClientPrimitivesManager::executeRemoteCommand( PrimitiveCategoryCommandConstPtr command )
+void ClientPrimitivesManager::executeRemoteCommand( const PrimitiveCategoryCommand& command )
 {
-    switch( command->getType() ){
+    switch( command.getType() ){
         case PrimitiveCategoryCommandType::PRIMITIVE_CATEGORY_CREATION:{
-            const PrimitiveCategoryCreationCommand* categoryCreationCommand =
-                    dynamic_cast< const PrimitiveCategoryCreationCommand* >( command.get() );
+            const PrimitiveCategoryCreationCommand& categoryCreationCommand =
+                    dynamic_cast< const PrimitiveCategoryCreationCommand& >( command );
 
-            createCategory( categoryCreationCommand->getCategoryID(), categoryCreationCommand->getCategoryName() );
+            createCategory( categoryCreationCommand.getCategoryID(), categoryCreationCommand.getCategoryName() );
         }break;
     }
 }
 
 
-void ClientPrimitivesManager::executeRemoteCommand( PrimitiveCommandConstPtr command )
+void ClientPrimitivesManager::executeRemoteCommand( const PrimitiveCommand& command )
 {
-    switch( command->getType() ){
+    switch( command.getType() ){
         case PrimitiveCommandType::PRIMITIVE_CREATION:{
-            const PrimitiveCreationCommand* primitiveCreationCommand =
-                    dynamic_cast< const PrimitiveCreationCommand* >( command.get() );
+            const PrimitiveCreationCommand& primitiveCreationCommand =
+                    dynamic_cast< const PrimitiveCreationCommand& >( command );
 
-            PrimitiveInfo primitiveInfo = primitiveCreationCommand->getPrimitiveInfo();
+            PrimitiveInfo primitiveInfo = primitiveCreationCommand.getPrimitiveInfo();
             std::string dstFilePath =
                     getCategoryAbsoluteePath( primitiveInfo.category ) +
                     "/" +
@@ -150,23 +150,23 @@ void ClientPrimitivesManager::executeRemoteCommand( PrimitiveCommandConstPtr com
 
             log_->debug( "Primitive file received: [", primitiveInfo.filePath, "]\n" );
 
-            registerPrimitive( primitiveCreationCommand->getPrimitiveID(),
+            registerPrimitive( primitiveCreationCommand.getPrimitiveID(),
                                primitiveInfo );
 
             // Emit a signal indicating the primitive insertion. Include
             // primitive's name and ID in the signal.
             // TODO: Complete
-            emit primitiveAdded( primitiveCreationCommand->getPrimitiveID(),
-                                 getPrimitiveRelativePath( primitiveCreationCommand->getPrimitiveID() ) );
+            emit primitiveAdded( primitiveCreationCommand.getPrimitiveID(),
+                                 getPrimitiveRelativePath( primitiveCreationCommand.getPrimitiveID() ) );
         }break;
         case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:{
-            const PrimitiveInstantiationCommand* primitiveCommand =
-                    dynamic_cast< const PrimitiveInstantiationCommand* >( command.get() );
+            const PrimitiveInstantiationCommand& primitiveCommand =
+                    dynamic_cast< const PrimitiveInstantiationCommand& >( command );
 
-            instantiatePrimitive( primitiveCommand->getUserID(),
-                                  primitiveCommand->getPrimitiveID(),
-                                  primitiveCommand->getMeshID(),
-                                  primitiveCommand->getMaterialID() );
+            instantiatePrimitive( primitiveCommand.getUserID(),
+                                  primitiveCommand.getPrimitiveID(),
+                                  primitiveCommand.getMeshID(),
+                                  primitiveCommand.getMaterialID() );
         }break;
     }
 }

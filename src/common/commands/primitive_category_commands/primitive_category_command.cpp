@@ -32,6 +32,14 @@ PrimitiveCategoryCommand::PrimitiveCategoryCommand( UserID userID, ResourceID ca
 }
 
 
+PrimitiveCategoryCommand::PrimitiveCategoryCommand( const PrimitiveCategoryCommand& b) :
+    TypeCommand( b ),
+    categoryID_( b.categoryID_ )
+{
+    addPackable( &categoryID_ );
+}
+
+
 /***
  * 3. Getters
  ***/

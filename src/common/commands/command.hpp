@@ -72,6 +72,7 @@ const char commandTargetStrings[][32]
     "RESOURCES_SELECTION"
 };
 
+#define COMMAND_CLONE_METHOD(T) virtual Command* clone() const { return new T( *this ); }
 
 /*!
  * \class Command
@@ -110,6 +111,8 @@ class Command : public CompositePackable
 
         /*! \brief Move constructor */
         Command( Command&& ) = delete;
+
+        virtual Command* clone() const = 0;
 
 
         /***
@@ -172,8 +175,8 @@ class Command : public CompositePackable
 };
 
 /*! Convenient typedefs */
-typedef std::shared_ptr< Command > CommandPtr;
-typedef std::shared_ptr< const Command > CommandConstPtr;
+typedef std::unique_ptr< Command > CommandPtr;
+typedef std::unique_ptr< const Command > CommandConstPtr;
 
 } // namespace como
 

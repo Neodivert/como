@@ -80,7 +80,7 @@ bool SceneUpdatePacket::expectedType() const
 void SceneUpdatePacket::addCommand( CommandConstPtr command )
 {
     // Push back the given command.
-    commands_.addCommand( command );
+    commands_.addCommand( std::move( command ) );
 }
 
 
@@ -89,7 +89,7 @@ void SceneUpdatePacket::addCommand( CommandConstPtr command,
                               const std::uint32_t& historicSize )
 {
     // Push back the given command.
-    commands_.addCommand( command );
+    commands_.addCommand( std::move( command ) );
 
     nUnsyncCommands_ = historicSize - (commandIndex + 1);
 }

@@ -20,8 +20,9 @@ class ResourcesSelectionCommand : public TypeCommand< ResourcesSelectionCommandT
         ResourcesSelectionCommand( ResourcesSelectionCommandType commandType );
         ResourcesSelectionCommand( ResourcesSelectionCommandType commandType, UserID userID );
         ResourcesSelectionCommand() = delete;
-        ResourcesSelectionCommand( const ResourcesSelectionCommand& ) = delete;
+        ResourcesSelectionCommand( const ResourcesSelectionCommand& ) = default;
         ResourcesSelectionCommand( ResourcesSelectionCommand&& ) = delete;
+        COMMAND_CLONE_METHOD( ResourcesSelectionCommand )
 
 
         /***

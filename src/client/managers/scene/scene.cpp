@@ -39,6 +39,7 @@ Scene::Scene( const char* host, const char* port, const char* userName, LogPtr l
         // the local scene.
         // TODO: this randomly causes a command to be executed when Scene isn't
         // initialized yet.
+        qRegisterMetaType< std::shared_ptr< const Command > >( "std::shared_ptr< const Command >" );
         QObject::connect( server_.get(), &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
         log_->debug( "Remote command execution signal connected\n" );
 
@@ -394,7 +395,7 @@ void Scene::emitRenderNeeded()
  * 13. Slots
  ***/
 
-void Scene::executeRemoteCommand( CommandConstPtr command )
+void Scene::executeRemoteCommand( std::shared_ptr< const Command > command )
 {
     log_->debug( "Scene - Executing remote command(",
                  commandTargetStrings[static_cast<unsigned int>( command->getTarget() )],
@@ -405,19 +406,19 @@ void Scene::executeRemoteCommand( CommandConstPtr command )
             usersManager_->executeRemoteCommand( dynamic_cast< const UserCommand& >( *command ) );
         break;
         case CommandTarget::SELECTION:
-            entitiesManager_->executeRemoteSelectionCommand( dynamic_pointer_cast< const SelectionCommand>( command ) );
+            entitiesManager_->executeRemoteSelectionCommand( dynamic_cast< const SelectionCommand& >( *command ) );
         break;
         case CommandTarget::PRIMITIVE:
-            primitivesManager_->executeRemoteCommand( dynamic_pointer_cast< const PrimitiveCommand>( command ) );
+            primitivesManager_->executeRemoteCommand( dynamic_cast< const PrimitiveCommand& >( *command ) );
         break;
         case CommandTarget::PRIMITIVE_CATEGORY:
-            primitivesManager_->executeRemoteCommand( dynamic_pointer_cast< const PrimitiveCategoryCommand >( command ) );
+            primitivesManager_->executeRemoteCommand( dynamic_cast< const PrimitiveCategoryCommand& >( *command ) );
         break;
         case CommandTarget::MATERIAL:
-            materialsManager_->executeRemoteCommand( dynamic_pointer_cast< const MaterialCommand >( command ) );
+            materialsManager_->executeRemoteCommand( dynamic_cast< const MaterialCommand& >( *command ) );
         break;
         case CommandTarget::LIGHT:
-            entitiesManager_->getLightsManager()->executeRemoteCommand( dynamic_pointer_cast< const LightCommand >( command ) );
+            entitiesManager_->getLightsManager()->executeRemoteCommand( dynamic_cast< const LightCommand& >( *command ) );
         break;
         case CommandTarget::RESOURCE:{
             entitiesManager_->executeResourceCommand( dynamic_cast< const ResourceCommand& >( *command ) );

@@ -133,33 +133,33 @@ bool EntitiesManager::pick(const glm::vec3 &rayOrigin, glm::vec3 rayDirection, R
  * 6. Command execution
  ***/
 
-void EntitiesManager::executeRemoteSelectionCommand( SelectionCommandConstPtr command )
+void EntitiesManager::executeRemoteSelectionCommand( const SelectionCommand& command )
 {
-    const SelectionTransformationCommand* selectionTransformation = nullptr;
     std::array< float, 3 > transformationVector;
 
-    switch( command->getType() ){
-        case SelectionCommandType::SELECTION_TRANSFORMATION:
+    switch( command.getType() ){
+        case SelectionCommandType::SELECTION_TRANSFORMATION:{
             // Cast to a SELECTION_TRANSFORMATION command.
-            selectionTransformation = dynamic_cast< const SelectionTransformationCommand* >( command.get() );
+            const SelectionTransformationCommand& selectionTransformation =
+                    dynamic_cast< const SelectionTransformationCommand& >( command );
 
             // Transform the user's selection.
-            transformationVector = selectionTransformation->getTransformationVector();
+            transformationVector = selectionTransformation.getTransformationVector();
 
             // Execute one transformation or another according to the requested
             // type.
-            switch( selectionTransformation->getTransformationType() ){
+            switch( selectionTransformation.getTransformationType() ){
                 case SelectionTransformationCommandType::TRANSLATION:
-                    entitiesSelections_.at( selectionTransformation->getUserID() )->translate( glm::vec3( transformationVector[0], transformationVector[1], transformationVector[2] ) );
+                    entitiesSelections_.at( selectionTransformation.getUserID() )->translate( glm::vec3( transformationVector[0], transformationVector[1], transformationVector[2] ) );
                 break;
                 case SelectionTransformationCommandType::ROTATION:
-                    entitiesSelections_.at( selectionTransformation->getUserID() )->rotate( selectionTransformation->getTransformationAngle(), glm::vec3( transformationVector[0], transformationVector[1], transformationVector[2] ) );
+                    entitiesSelections_.at( selectionTransformation.getUserID() )->rotate( selectionTransformation.getTransformationAngle(), glm::vec3( transformationVector[0], transformationVector[1], transformationVector[2] ) );
                 break;
                 case SelectionTransformationCommandType::SCALE:
-                    entitiesSelections_.at( selectionTransformation->getUserID() )->scale( glm::vec3( transformationVector[0], transformationVector[1], transformationVector[2] ) );
+                    entitiesSelections_.at( selectionTransformation.getUserID() )->scale( glm::vec3( transformationVector[0], transformationVector[1], transformationVector[2] ) );
                 break;
             }
-        break;
+        }break;
     }
 }
 

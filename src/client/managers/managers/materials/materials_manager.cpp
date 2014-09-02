@@ -175,59 +175,59 @@ std::vector<MaterialConstPtr> MaterialsManager::getMaterials( const ResourceID& 
  * 6. Remote command execution
  ***/
 
-void MaterialsManager::executeRemoteCommand( MaterialCommandConstPtr command )
+void MaterialsManager::executeRemoteCommand( const MaterialCommand& command )
 {
     //log()->debug( "MaterialsManager - executing remote command - Material ID: ", command->getMaterialID(), "\n" );
 
-    switch( command->getType() ){
+    switch( command.getType() ){
         case MaterialCommandType::MATERIAL_CREATION:{
-            const MaterialCreationCommand* materialCreationCommand =
-                    dynamic_cast< const MaterialCreationCommand* >( command.get() );
+            const MaterialCreationCommand& materialCreationCommand =
+                    dynamic_cast< const MaterialCreationCommand& >( command );
 
             //log()->debug( "\tMaterial name: ", materialCreationCommand->getMaterialInfo().name, "\n" );
 
-            createMaterial( materialCreationCommand->getMaterialID(),
-                            materialCreationCommand->getMaterialInfo() );
+            createMaterial( materialCreationCommand.getMaterialID(),
+                            materialCreationCommand.getMaterialInfo() );
         }break;
 
         case MaterialCommandType::MATERIAL_MODIFICATION:{
-            const AbstractMaterialModificationCommand* materialModificationCommand =
-                    dynamic_cast< const AbstractMaterialModificationCommand* >( command.get() );
+            const AbstractMaterialModificationCommand& materialModificationCommand =
+                    dynamic_cast< const AbstractMaterialModificationCommand& >( command );
 
-            switch( materialModificationCommand->getParameterName() ){
+            switch( materialModificationCommand.getParameterName() ){
                 case MaterialParameterName::COLOR:{
-                    const MaterialColorChangeCommand* materialColorChange =
-                            dynamic_cast< const MaterialColorChangeCommand* >( materialModificationCommand );
+                    const MaterialColorChangeCommand& materialColorChange =
+                            dynamic_cast< const MaterialColorChangeCommand& >( materialModificationCommand );
 
-                    materials_.at( command->getMaterialID() )->setColor( materialColorChange->getParameterValue() );
+                    materials_.at( command.getMaterialID() )->setColor( materialColorChange.getParameterValue() );
                 }break;
 
                 case MaterialParameterName::AMBIENT_REFLECTIVITY:{
-                    const MaterialAmbientReflectivityChangeCommand* ambientReflexitivyChange =
-                            dynamic_cast< const MaterialAmbientReflectivityChangeCommand* >( materialModificationCommand );
+                    const MaterialAmbientReflectivityChangeCommand& ambientReflexitivyChange =
+                            dynamic_cast< const MaterialAmbientReflectivityChangeCommand& >( materialModificationCommand );
 
-                    materials_.at( command->getMaterialID() )->setAmbientReflectivity( ambientReflexitivyChange->getParameterValue() );
+                    materials_.at( command.getMaterialID() )->setAmbientReflectivity( ambientReflexitivyChange.getParameterValue() );
                 }break;
 
                 case MaterialParameterName::DIFFUSE_REFLECTIVITY:{
-                    const MaterialDiffuseReflectivityChangeCommand* diffuseReflexitivyChange =
-                            dynamic_cast< const MaterialDiffuseReflectivityChangeCommand* >( materialModificationCommand );
+                    const MaterialDiffuseReflectivityChangeCommand& diffuseReflexitivyChange =
+                            dynamic_cast< const MaterialDiffuseReflectivityChangeCommand& >( materialModificationCommand );
 
-                    materials_.at( command->getMaterialID() )->setDiffuseReflectivity( diffuseReflexitivyChange->getParameterValue() );
+                    materials_.at( command.getMaterialID() )->setDiffuseReflectivity( diffuseReflexitivyChange.getParameterValue() );
                 }break;
 
                 case MaterialParameterName::SPECULAR_REFLECTIVITY:{
-                    const MaterialSpecularReflectivityChangeCommand* specularReflexitivyChange =
-                            dynamic_cast< const MaterialSpecularReflectivityChangeCommand* >( materialModificationCommand );
+                    const MaterialSpecularReflectivityChangeCommand& specularReflexitivyChange =
+                            dynamic_cast< const MaterialSpecularReflectivityChangeCommand& >( materialModificationCommand );
 
-                    materials_.at( command->getMaterialID() )->setSpecularReflectivity( specularReflexitivyChange->getParameterValue() );
+                    materials_.at( command.getMaterialID() )->setSpecularReflectivity( specularReflexitivyChange.getParameterValue() );
                 }break;
 
                 case MaterialParameterName::SPECULAR_EXPONENT:{
-                    const MaterialSpecularExponentChangeCommand* specularExponentChange =
-                            dynamic_cast< const MaterialSpecularExponentChangeCommand* >( materialModificationCommand );
+                    const MaterialSpecularExponentChangeCommand& specularExponentChange =
+                            dynamic_cast< const MaterialSpecularExponentChangeCommand& >( materialModificationCommand );
 
-                    materials_.at( command->getMaterialID() )->setSpecularExponent( specularExponentChange->getParameterValue() );
+                    materials_.at( command.getMaterialID() )->setSpecularExponent( specularExponentChange.getParameterValue() );
                 }break;
             }
 

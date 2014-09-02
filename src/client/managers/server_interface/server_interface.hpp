@@ -31,6 +31,8 @@
 #include <QObject>
 #include <common/ids/resource_id.hpp>
 
+Q_DECLARE_METATYPE( std::shared_ptr< const como::Command > )
+
 namespace como {
 
 const unsigned int MAX_COMMANDS_PER_SCENE_UPDATE = 4;
@@ -131,7 +133,7 @@ class ServerInterface : public QObject
          * 7. Signals
          ***/
     signals:
-        void commandReceived( CommandConstPtr command );
+        void commandReceived( std::shared_ptr< const Command > command );
 };
 
 typedef std::shared_ptr<ServerInterface> ServerInterfacePtr;

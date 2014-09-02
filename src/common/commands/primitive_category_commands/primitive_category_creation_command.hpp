@@ -35,8 +35,9 @@ class PrimitiveCategoryCreationCommand : public PrimitiveCategoryCommand
          ***/
         PrimitiveCategoryCreationCommand(); // TODO: Remove this constructor in all base commands (but CommandsList needs it...).
         PrimitiveCategoryCreationCommand( UserID userID, ResourceID categoryID, std::string categoryName );
-        PrimitiveCategoryCreationCommand( const PrimitiveCategoryCreationCommand& ) = delete;
+        PrimitiveCategoryCreationCommand( const PrimitiveCategoryCreationCommand& );
         PrimitiveCategoryCreationCommand( PrimitiveCategoryCreationCommand&& ) = delete;
+        COMMAND_CLONE_METHOD( PrimitiveCategoryCreationCommand )
 
 
         /***
