@@ -36,7 +36,7 @@ PublicUser::PublicUser( UserID id, const char* name,
             const std::string& unpackingDirPath ) :
     User( id, name ),
     io_service_( io_service ),
-    socket_( SocketPtr( new Socket( std::move( socket ) ) ) ),
+    socket_( std::move( socket ) ),
     processSceneUpdatePacketCallback_( processSceneUpdatePacketCallback ),
     removeUserCallback_( removeUserCallback ),
     nextCommand_( 0 ),
@@ -100,7 +100,7 @@ void PublicUser::readSceneUpdatePacket()
 void PublicUser::onReadSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet )
 {
     // Call to the processing callback in the server.
-    processSceneUpdatePacketCallback_( errorCode, getID(), std::dynamic_pointer_cast<const SceneUpdatePacket>( packet ) );
+    processSceneUpdatePacketCallback_( errorCode, getID(), *( std::dynamic_pointer_cast<const SceneUpdatePacket>( packet ) ) );
 }
 
 

@@ -33,7 +33,6 @@ class Packet;
 
 // Convenient typedefs.
 typedef boost::asio::ip::tcp::socket Socket;
-typedef std::shared_ptr< Socket > SocketPtr;
 typedef std::shared_ptr< Packet > PacketPtr;
 typedef std::function<void( const boost::system::error_code& errorCode, PacketPtr)> PacketHandler;
 
@@ -129,7 +128,7 @@ class Packet : public CompositePackable
          * \param packetHandler handler to be invoked once the packet has been
          * sent. Such handler must accept the sent packet as an argument.
          */
-        void asyncSend( SocketPtr socket, PacketHandler packetHandler );
+        void asyncSend( Socket& socket, PacketHandler packetHandler );
     private:
 
         /*!
@@ -141,7 +140,7 @@ class Packet : public CompositePackable
          * has been sent. Such handler must accept the sent packet as an
          * argument.
          */
-        void asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
+        void asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, Socket& socket, PacketHandler packetHandler );
 
         /*!
          * \brief Auxiliar method invoked once the current packet has been sent
@@ -165,7 +164,7 @@ class Packet : public CompositePackable
          * received. Such handler must accept the received packet as an
          * argument.
          */
-        void asyncRecv( SocketPtr socket, PacketHandler packetHandler );
+        void asyncRecv( Socket& socket, PacketHandler packetHandler );
     private:
 
         /*!
@@ -177,7 +176,7 @@ class Packet : public CompositePackable
          * has been received. Such handler must accept the received packet as
          * an argument.
          */
-        void asyncRecvBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler );
+        void asyncRecvBody( const boost::system::error_code& headerErrorCode, std::size_t, Socket& socket, PacketHandler packetHandler );
 
         /*!
          * \brief Axuliar method invoked once the current packet has been

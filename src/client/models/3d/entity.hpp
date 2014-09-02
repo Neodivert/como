@@ -47,11 +47,6 @@ enum class DrawableType : std::uint8_t
  * Main file class
  ***/
 
-class Entity;
-typedef std::shared_ptr< Entity > DrawablePtr;
-typedef std::shared_ptr< const Entity > DrawableConstPtr;
-
-
 class Entity : public Drawable, public Transformable
 {
     private:

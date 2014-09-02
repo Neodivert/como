@@ -140,11 +140,6 @@ class SceneUpdatePacket : public Packet
         SceneUpdatePacket& operator = ( SceneUpdatePacket&& ) = delete;
 };
 
-
-/*! Convenient typedefs */
-typedef std::shared_ptr< SceneUpdatePacket > SceneUpdatePacketPtr;
-typedef std::shared_ptr< const SceneUpdatePacket > SceneUpdatePacketConstPtr;
-
 } // namespace como
 
 #endif // SCENE_UPDATE_PACKET_HPP

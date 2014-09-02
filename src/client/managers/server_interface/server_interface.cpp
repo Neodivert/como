@@ -29,7 +29,7 @@ const unsigned int TIME_BETWEEN_SHIPMENTS = 1000 / SHIPMENTS_PER_SECOND;
 
 ServerInterface::ServerInterface( const char *host, const char *port, const char *userName, const std::string& unpackingDirPath, LogPtr log, UserAcceptancePacket &userAcceptancePacket ) :
     work_( std::shared_ptr< boost::asio::io_service::work >( new boost::asio::io_service::work( io_service_ ) ) ),
-    socket_( SocketPtr( new boost::asio::ip::tcp::socket( io_service_ ) ) ),
+    socket_( io_service_ ),
     sceneUpdatePacketFromServer_( unpackingDirPath ),
     sceneUpdatePacketToServer_( unpackingDirPath ),
     timer_( io_service_ ),
@@ -82,7 +82,7 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
 
     // Connect to the server.
     log_->debug( "Connecting to the server...\n" );
-    socket_->connect( *endpoint_iterator, errorCode );
+    socket_.connect( *endpoint_iterator, errorCode );
 
     if( errorCode ){
         disconnect();
@@ -95,13 +95,13 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
     // Prepare a NEW_USER network package with the user name, and send it to
     // the server.
     newUserPacket.setName( userName );
-    newUserPacket.send( *socket_ );
+    newUserPacket.send( socket_ );
 
     log_->debug( "Sending NEW_USER packet ...OK\n" );
 
     log_->debug( "Receiving USER_ACCEPTANCE packet ...\n" );
     // Read from the server an USER_ACCEPTED network package and unpack it.
-    userAcceptancePacket.recv( *socket_ );
+    userAcceptancePacket.recv( socket_ );
     log_->debug( "Receiving USER_ACCEPTANCE packet ...OK\n" );
 
     selectionColor = userAcceptancePacket.getSelectionColor();
@@ -129,9 +129,9 @@ void ServerInterface::disconnect()
     log_->debug( "Disconnecting from server ...\n" );
 
     // Close the socket to the server if it's open.
-    if( socket_->is_open() ){
-        socket_->shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
-        socket_->close();
+    if( socket_.is_open() ){
+        socket_.shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
+        socket_.close();
     }
 
     // Stop the IO service and join the threads group.

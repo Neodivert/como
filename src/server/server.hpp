@@ -25,14 +25,12 @@
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 #include <boost/thread/mutex.hpp>
-#include <boost/lexical_cast.hpp>
 #include "public_user.hpp"
 #include <common/packets/packets.hpp>
 #include <common/utilities/log.hpp>
 #include "commands_historic.hpp"
 #include <map>
 #include <queue>
-#include <boost/filesystem.hpp>
 #include <common/utilities/paths.hpp>
 #include <server/server_primitives_manager.hpp>
 #include <common/scene/basic_scene.hpp>
@@ -160,7 +158,7 @@ class Server : public BasicScene
         */
         void processSceneUpdatePacket( const boost::system::error_code& errorCode,
                                  UserID userID,
-                                 SceneUpdatePacketConstPtr sceneUpdate );
+                                 const SceneUpdatePacket& sceneUpdate );
 
         /*! \brief Process a scene command.
          * \param userID ID of the user who sent the command.

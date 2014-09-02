@@ -44,7 +44,7 @@ class ServerInterface : public QObject
         boost::asio::io_service io_service_;
         std::shared_ptr< boost::asio::io_service::work > work_;
 
-        SocketPtr socket_;
+        Socket socket_;
 
         SceneUpdatePacket sceneUpdatePacketFromServer_;
         SceneUpdatePacket sceneUpdatePacketToServer_;

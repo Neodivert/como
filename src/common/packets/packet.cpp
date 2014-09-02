@@ -113,7 +113,7 @@ void Packet::recv( boost::asio::ip::tcp::socket& socket )
 }
 
 
-void Packet::asyncSend( SocketPtr socket, PacketHandler packetHandler )
+void Packet::asyncSend( Socket& socket, PacketHandler packetHandler )
 {
     // Update and pack the packet's header into the buffer.
     updateHeader();
@@ -121,14 +121,14 @@ void Packet::asyncSend( SocketPtr socket, PacketHandler packetHandler )
 
     // Write asynchronously the packet's header into the socket.
     boost::asio::async_write(
-                *socket,
+                socket,
                 boost::asio::buffer( headerBuffer_, (int)( header_.getPacketSize() ) ),
-                boost::bind( &Packet::asyncSendBody, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred, socket, packetHandler )
+                boost::bind( &Packet::asyncSendBody, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred, boost::ref( socket ), packetHandler )
                 );
 }
 
 
-void Packet::asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler )
+void Packet::asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, Socket& socket, PacketHandler packetHandler )
 {
     if( headerErrorCode ){
         packetHandler( headerErrorCode, PacketPtr( clone() ) );
@@ -141,7 +141,7 @@ void Packet::asyncSendBody( const boost::system::error_code& headerErrorCode, st
 
     // Write asynchronously the packet's body into the socket.
     boost::asio::async_write(
-                *socket,
+                socket,
                 boost::asio::buffer( &( bodyBuffer_[0] ), (int)( header_.getBodySize() ) ),
                 boost::bind( &Packet::onPacketSend, this, _1, _2, packetHandler )
                 );
@@ -157,18 +157,18 @@ void Packet::onPacketSend( const boost::system::error_code& errorCode, std::size
 }
 
 
-void Packet::asyncRecv( SocketPtr socket, PacketHandler packetHandler )
+void Packet::asyncRecv( Socket& socket, PacketHandler packetHandler )
 {
     // Read asynchronously the packet's header from the socket.
     boost::asio::async_read(
-                *socket,
+                socket,
                 boost::asio::buffer( headerBuffer_, (int)( header_.getPacketSize() ) ),
-                boost::bind( &Packet::asyncRecvBody, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred, socket, packetHandler )
+                boost::bind( &Packet::asyncRecvBody, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred, boost::ref( socket ), packetHandler )
                 );
 }
 
 
-void Packet::asyncRecvBody( const boost::system::error_code& headerErrorCode, std::size_t, SocketPtr socket, PacketHandler packetHandler )
+void Packet::asyncRecvBody( const boost::system::error_code& headerErrorCode, std::size_t, Socket& socket, PacketHandler packetHandler )
 {
     if( headerErrorCode ){
         packetHandler( headerErrorCode, PacketPtr( clone() ) );
@@ -187,7 +187,7 @@ void Packet::asyncRecvBody( const boost::system::error_code& headerErrorCode, st
     // Write asynchronously the packet's header to the socket.
     bodyBuffer_.resize( header_.getBodySize() );
     boost::asio::async_read(
-                *socket,
+                socket,
                 boost::asio::buffer( &( bodyBuffer_[0] ), (int)( header_.getBodySize() ) ),
                 boost::bind( &Packet::onPacketRecv, this, _1, _2, packetHandler ) );
 }

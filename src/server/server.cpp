@@ -284,7 +284,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
 
 void Server::processSceneUpdatePacket( const boost::system::error_code& errorCode,
                                  UserID userID,
-                                 SceneUpdatePacketConstPtr sceneUpdate )
+                                 const SceneUpdatePacket& sceneUpdate )
 {
     const CommandsList* commands = nullptr;
     CommandsList::const_iterator commandsIterator;
@@ -298,7 +298,7 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
         mutex_.unlock();
     }else{
         // Get the commands from the packet.
-        commands = sceneUpdate->getCommands();
+        commands = sceneUpdate.getCommands();
 
         log_->debug( "SCENE_UPDATE received from [", users_.at( userID )->getName(), "] with (", commands->size(), ") commands\n" );
 

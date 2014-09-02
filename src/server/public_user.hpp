@@ -29,6 +29,7 @@
 #include "commands_historic.hpp"
 #include <common/users/user.hpp>
 #include <queue>
+#include <common/packets/packet.hpp> // Socket type.
 
 namespace como {
 
@@ -36,12 +37,9 @@ const unsigned int MAX_COMMANDS_PER_PACKET = 4;
 
 const unsigned int BUFFER_SIZE = 1024;
 
-typedef boost::asio::ip::tcp::socket Socket;
-typedef std::shared_ptr< Socket > SocketPtr;
-
 typedef std::function< void (const boost::system::error_code& errorCode,
                              UserID userID,
-                             SceneUpdatePacketConstPtr sceneUpdate) > ProcessSceneUpdatePacketCallback;
+                             const SceneUpdatePacket& sceneUpdate) > ProcessSceneUpdatePacketCallback;
 
 class PublicUser : public User
 {
@@ -49,7 +47,7 @@ class PublicUser : public User
         // I/O service.
         std::shared_ptr< boost::asio::io_service > io_service_;
 
-        SocketPtr socket_;
+        Socket socket_;
 
         ProcessSceneUpdatePacketCallback processSceneUpdatePacketCallback_;
         std::function<void (UserID)> removeUserCallback_;
