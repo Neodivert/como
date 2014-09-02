@@ -104,8 +104,6 @@ class EntitiesManager : public AbstractEntitiesManager, public ContainerObserver
 
 
     private:
-        ServerInterfacePtr server_; // TODO: Remove.
-
         UsersManagerPtr usersManager_;
 
         std::map< UserID, std::unique_ptr<EntitiesSelection> > entitiesSelections_;
