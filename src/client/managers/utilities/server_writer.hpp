@@ -38,7 +38,7 @@ class ServerWriter
         /***
          * 2. Destruction
          ***/
-        ~ServerWriter() = default;
+        virtual ~ServerWriter() = default;
 
 
         /***

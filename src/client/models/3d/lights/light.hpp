@@ -58,7 +58,7 @@ class Light : public AbstractLight, public Mesh
         /***
          * 2. Destruction
          ***/
-        ~Light() = default;
+        virtual ~Light() = default;
 
 
         /***

@@ -41,7 +41,7 @@ class LightColorChangeCommand : public LightCommand
         /***
          * 2. Destruction
          ***/
-        ~LightColorChangeCommand() = default;
+        virtual ~LightColorChangeCommand() = default;
 
 
         /***

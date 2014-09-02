@@ -41,7 +41,7 @@ class LocalResourcesSelection : public virtual ResourcesSelection< ResourceType 
         /***
          * 2. Destruction
          ***/
-        ~LocalResourcesSelection() = default;
+        virtual ~LocalResourcesSelection() = default;
 
 
         /***

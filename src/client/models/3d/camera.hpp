@@ -75,7 +75,7 @@ class Camera : public Mesh
         Camera( View view = View::FRONT );
 
         // TODO: Is this problematic with Entity's virtual destructor?
-        ~Camera() = default;
+        virtual ~Camera() = default;
 
         /***
          * 2. Setters and getters

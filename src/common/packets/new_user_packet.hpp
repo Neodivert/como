@@ -62,7 +62,7 @@ class NewUserPacket : public Packet
          ***/
 
         /*! \brief Destructor. */
-        ~NewUserPacket() = default;
+        virtual ~NewUserPacket() = default;
 
 
         /***

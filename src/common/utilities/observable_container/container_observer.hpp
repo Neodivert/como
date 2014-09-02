@@ -44,7 +44,7 @@ class ContainerObserver
         /***
          * 2. Destruction
          ***/
-        ~ContainerObserver() = default;
+        virtual ~ContainerObserver() = default;
 
 
         /***

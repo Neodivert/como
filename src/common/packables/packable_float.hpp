@@ -51,7 +51,7 @@ class PackableFloat : public PackableWrapper< float >
          ***/
 
         /*! \brief Destructor */
-        ~PackableFloat() = default;
+        virtual ~PackableFloat() = default;
 
 
         /***

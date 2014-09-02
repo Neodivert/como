@@ -350,6 +350,12 @@ void OBJPrimitivesImporter::processTextureFile( std::string filePath, std::uniqu
     std::ifstream file;
     unsigned int imageFileSize = 0;
 
+    if( !supportedImageFile( filePath ) ){
+        throw std::runtime_error( "Texture image extension not supported (" +
+                                  filePath +
+                                  ")" );
+    }
+
     file.open( filePath, std::ios_base::binary );
     if( !file.is_open() ){
         throw FileNotOpenException( filePath );
@@ -674,6 +680,46 @@ void OBJPrimitivesImporter::splitFileLine( const std::string &line, std::string 
         lineHeader = "";
         lineBody = "";
     }
+}
+
+
+bool OBJPrimitivesImporter::supportedImageFile( const std::string& filePath )
+{
+    // List of supported image formats
+    // (http://jcatki.no-ip.org:8080/SDL_image/SDL_image.html)
+    // ".xcf" is not listed here although SDL_image supports it, because of the
+    // following advice on SDL_image website: "This format is always changing,
+    // and since there's no library supplied by the GIMP project to load XCF,
+    // the loader may frequently fail to load much of any image from an XCF
+    // file. It's better to load this in GIMP and convert to a better supported
+    // image format."
+    std::array< std::string, 15 > supportedExtensions =
+    {
+        ".tga",
+        ".bmp",
+        ".pnm",
+        ".pgm",
+        ".ppm",
+        ".xpm",
+        ".pcx",
+        ".gif",
+        ".jpg",
+        ".jpeg",
+        ".tif",
+        ".tiff",
+        ".lbm",
+        ".iff",
+        ".png"
+    };
+
+    std::string fileExtension = boost::filesystem::extension( filePath );
+
+    for( const auto& supportedExtension : supportedExtensions ){
+        if( fileExtension == supportedExtension ){
+            return true;
+        }
+    }
+    return false;
 }
 
 

@@ -46,7 +46,7 @@ class ConditionalPackableWrapper : public Packable {
         /***
          * 2. Destruction
          ***/
-        ~ConditionalPackableWrapper() = default;
+        virtual ~ConditionalPackableWrapper() = default;
 
 
         /***

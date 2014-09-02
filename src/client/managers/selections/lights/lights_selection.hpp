@@ -38,7 +38,7 @@ class LightsSelection : public virtual EntitiesSet<DirectionalLight>, public Abs
         /***
          * 2. Destruction
          ***/
-        ~LightsSelection() = default;
+        virtual ~LightsSelection() = default;
 
 
         /***

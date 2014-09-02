@@ -56,7 +56,7 @@ class SelectionTransformationCommand : public SelectionCommand
         /***
          * 2. Destruction
          ***/
-        ~SelectionTransformationCommand() = default;
+        virtual ~SelectionTransformationCommand() = default;
 
 
         /***

@@ -56,7 +56,7 @@ class OBJPrimitivesImporter : PrimitivesImporter {
         /***
          * 2. Destruction
          ***/
-        ~OBJPrimitivesImporter() = default;
+        virtual ~OBJPrimitivesImporter() = default;
 
 
         /***
@@ -104,6 +104,7 @@ class OBJPrimitivesImporter : PrimitivesImporter {
                               FaceTriangle& triangle2 );
         void insertQuad( std::vector< FaceTriangle >& triangles, FaceQuad& quad );
         void splitFileLine( const std::string& line, std::string& lineHeader, std::string& lineBody );
+        bool supportedImageFile( const std::string& filePath );
 };
 
 } // namespace como

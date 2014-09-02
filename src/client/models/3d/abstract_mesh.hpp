@@ -37,7 +37,7 @@ class AbstractMesh {
         /***
          * 2. Destruction
          ***/
-        ~AbstractMesh() = default;
+        virtual ~AbstractMesh() = default;
 
 
         /***

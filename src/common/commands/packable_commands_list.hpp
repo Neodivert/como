@@ -64,7 +64,7 @@ class PackableCommandsList : public Packable
          ***/
 
         /*! \brief Destructor */
-        virtual ~PackableCommandsList(){}
+        virtual ~PackableCommandsList() = default;
 
 
         /***

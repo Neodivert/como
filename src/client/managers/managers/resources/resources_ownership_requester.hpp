@@ -40,7 +40,7 @@ class ResourcesOwnershipRequester : public ResourcesOwnershipManager, public Ser
         /***
          * 2. Destruction
          ***/
-        ~ResourcesOwnershipRequester() = default;
+        virtual ~ResourcesOwnershipRequester() = default;
 
 
         /***

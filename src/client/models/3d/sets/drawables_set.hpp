@@ -37,7 +37,7 @@ class DrawablesSet
         /***
          * 2. Destruction
          ***/
-        ~DrawablesSet() = default;
+        virtual ~DrawablesSet() = default;
 
 
         /***

@@ -37,7 +37,7 @@ class AbstractLight
         /***
          * 2. Destruction
          ***/
-        ~AbstractLight() = default;
+        virtual ~AbstractLight() = default;
 
 
         /***

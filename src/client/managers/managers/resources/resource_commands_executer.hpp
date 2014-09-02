@@ -38,7 +38,7 @@ class ResourceCommandsExecuter : public ResourcesOwnershipRequester
         /***
          * 2. Destruction
          ***/
-        ~ResourceCommandsExecuter() = default;
+        virtual ~ResourceCommandsExecuter() = default;
 
 
         /***

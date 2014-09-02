@@ -38,7 +38,7 @@ class DirectionalLightCreationCommand : public LightCreationCommand
         /***
          * 2. Destruction
          ***/
-        ~DirectionalLightCreationCommand() = default;
+        virtual ~DirectionalLightCreationCommand() = default;
 
 
         /***

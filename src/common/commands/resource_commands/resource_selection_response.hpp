@@ -42,7 +42,7 @@ class ResourceSelectionResponse : public ResourceCommand
         /***
          * 2. Destruction
          ***/
-        ~ResourceSelectionResponse() = default;
+        virtual ~ResourceSelectionResponse() = default;
 
 
         /***

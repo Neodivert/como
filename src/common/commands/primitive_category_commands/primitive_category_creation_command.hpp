@@ -42,7 +42,7 @@ class PrimitiveCategoryCreationCommand : public PrimitiveCategoryCommand
         /***
          * 2. Destruction
          ***/
-        ~PrimitiveCategoryCreationCommand() = default;
+        virtual ~PrimitiveCategoryCreationCommand() = default;
 
 
         /***

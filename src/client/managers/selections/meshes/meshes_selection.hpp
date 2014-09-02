@@ -52,7 +52,7 @@ class MeshesSelection : public virtual EntitiesSet< Mesh >, public AbstractMesh
         /***
          * 2. Destruction
          ***/
-        ~MeshesSelection() = default;
+        virtual ~MeshesSelection() = default;
 
 
         /***

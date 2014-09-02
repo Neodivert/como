@@ -108,7 +108,7 @@ class CompositePackable : public Packable
          ***/
 
         /*! \brief Destructor. */
-        virtual ~CompositePackable(){}
+        virtual ~CompositePackable() = default;
 
 
         /***

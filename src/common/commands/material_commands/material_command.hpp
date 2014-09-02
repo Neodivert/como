@@ -50,7 +50,7 @@ class MaterialCommand : public TypeCommand< MaterialCommandType >
     /***
      * 2. Destruction
      ***/
-        ~MaterialCommand() = default;
+        virtual ~MaterialCommand() = default;
 
     /***
      * 3. Getters

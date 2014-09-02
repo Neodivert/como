@@ -71,7 +71,7 @@ class PrimitiveCreationCommand : public PrimitiveCommand
          ***/
 
         /*! \brief Destructor. */
-        ~PrimitiveCreationCommand() = default;
+        virtual ~PrimitiveCreationCommand() = default;
 
 
         /***

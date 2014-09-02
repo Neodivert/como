@@ -52,7 +52,7 @@ class PackableWrapper : public AbstractPackableWrapper< PlainType >
          ***/
 
         /*! \brief Destructor */
-        ~PackableWrapper() = default;
+        virtual ~PackableWrapper() = default;
 
 
         /***

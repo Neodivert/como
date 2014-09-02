@@ -110,7 +110,7 @@ class Mesh : public AbstractMesh, public Entity
         /***
          * 2. Destruction.
          ***/
-        ~Mesh();
+        virtual ~Mesh();
 
 
         /***

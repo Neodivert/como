@@ -49,7 +49,7 @@ class PackableArray3 : public PackableArray< ElementPackableType, ElementPlainTy
          ***/
 
         /*! \brief Destructor */
-        ~PackableArray3() = default;
+        virtual ~PackableArray3() = default;
 
 
 

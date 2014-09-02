@@ -79,7 +79,7 @@ class SceneUpdatePacket : public Packet
          ***/
 
         /*! \brief Destructor */
-        ~SceneUpdatePacket() = default;
+        virtual ~SceneUpdatePacket() = default;
 
 
         /***

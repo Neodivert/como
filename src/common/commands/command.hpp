@@ -117,7 +117,7 @@ class Command : public CompositePackable
          ***/
 
         /*! \brief Destructor */
-        ~Command() = default;
+        virtual ~Command() = default;
 
 
         /***

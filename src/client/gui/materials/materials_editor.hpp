@@ -51,8 +51,7 @@ class MaterialsEditor : public QFrame, public ContainerObserver<ResourceID>
         /***
          * 2. Destruction
          ***/
-        virtual ~MaterialsEditor(){}
-
+        virtual ~MaterialsEditor() = default;
 
         /***
          * 3. Updating (Observer pattern).

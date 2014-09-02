@@ -42,7 +42,7 @@ class LightAmbientCoefficientChangeCommand : public LightCommand
         /***
          * 2. Destruction
          ***/
-        ~LightAmbientCoefficientChangeCommand() = default;
+        virtual ~LightAmbientCoefficientChangeCommand() = default;
 
 
         /***

@@ -47,7 +47,7 @@ class LightCreationCommand : public LightCommand
         /***
          * 2. Destruction
          ***/
-        ~LightCreationCommand() = default;
+        virtual ~LightCreationCommand() = default;
 
     public:
         /***

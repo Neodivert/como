@@ -46,7 +46,7 @@ class PrimitiveInstantiationCommand : public PrimitiveCommand
         /***
          * 2. Destruction
          ***/
-        ~PrimitiveInstantiationCommand() = default;
+        virtual ~PrimitiveInstantiationCommand() = default;
 
 
         /***

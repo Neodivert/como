@@ -37,7 +37,7 @@ class UserDisconnectionCommand : public UserCommand
         /***
          * 2. Destruction
          ***/
-        ~UserDisconnectionCommand() = default;
+        virtual ~UserDisconnectionCommand() = default;
 
 
         /***

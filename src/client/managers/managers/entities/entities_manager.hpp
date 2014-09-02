@@ -42,7 +42,7 @@ class EntitiesManager : public AbstractEntitiesManager, public ContainerObserver
         /***
          * 2. Destruction
          ***/
-        ~EntitiesManager() = default;
+        virtual ~EntitiesManager() = default;
 
 
         /***

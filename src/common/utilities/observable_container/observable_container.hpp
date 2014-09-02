@@ -42,7 +42,7 @@ class ObservableContainer : public virtual Observable {
         /***
          * 2. Destruction
          ***/
-        ~ObservableContainer() = default;
+        virtual ~ObservableContainer() = default;
 
 
         /***

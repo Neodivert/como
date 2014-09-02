@@ -55,7 +55,7 @@ class Packable
          * 2. Destruction
          ***/
         /*! \brief Destructor. */
-        virtual ~Packable(){}
+        virtual ~Packable() = default;
 
 
         /***

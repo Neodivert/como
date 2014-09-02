@@ -48,7 +48,7 @@ class MainWindow : public QMainWindow
         MainWindow( MainWindow&& ) = delete;
         explicit MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp );
 
-        ~MainWindow();
+        virtual ~MainWindow();
 
 
         /***

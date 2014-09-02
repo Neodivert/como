@@ -42,7 +42,7 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer
         /***
          * 2. Destruction
          ***/
-        ~EntitiesSelection() = default;
+        virtual ~EntitiesSelection() = default;
 
 
         /***

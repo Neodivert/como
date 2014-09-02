@@ -38,7 +38,7 @@ class PrimitivesImporter {
         /***
          * 2. Destruction
          ***/
-        ~PrimitivesImporter() = default;
+        virtual ~PrimitivesImporter() = default;
 
 
         /***

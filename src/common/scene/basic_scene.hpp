@@ -49,7 +49,7 @@ class BasicScene
         /***
          * 2. Destruction
          ***/
-        ~BasicScene();
+        virtual ~BasicScene();
 
 
         /***

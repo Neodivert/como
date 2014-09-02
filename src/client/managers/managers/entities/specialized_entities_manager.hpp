@@ -42,7 +42,7 @@ class SpecializedEntitiesManager : public AbstractEntitiesManager, public Resour
         /***
          * 2. Destruction
          ***/
-        ~SpecializedEntitiesManager() = default;
+        virtual ~SpecializedEntitiesManager() = default;
 
 
         /***

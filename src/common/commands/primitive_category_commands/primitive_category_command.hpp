@@ -49,7 +49,7 @@ class PrimitiveCategoryCommand : public TypeCommand< PrimitiveCategoryCommandTyp
         /***
          * 2. Destruction
          ***/
-        ~PrimitiveCategoryCommand() = default;
+        virtual ~PrimitiveCategoryCommand() = default;
 
 
         /***

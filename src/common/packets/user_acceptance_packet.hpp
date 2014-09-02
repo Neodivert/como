@@ -71,7 +71,7 @@ class UserAcceptancePacket : public Packet
         /***
          * 2. Destruction
          ***/
-        ~UserAcceptancePacket() = default;
+        virtual ~UserAcceptancePacket() = default;
 
 
         /***

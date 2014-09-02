@@ -48,7 +48,7 @@ class MaterialCreationCommand : public MaterialCommand
     /***
      * 2. Destruction
      ***/
-        ~MaterialCreationCommand() = default;
+        virtual ~MaterialCreationCommand() = default;
 
 
     /***

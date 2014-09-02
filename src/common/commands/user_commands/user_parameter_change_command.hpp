@@ -62,7 +62,7 @@ class UserParameterChangeCommand : public UserCommand
         /***
          * 2. Destruction
          ***/
-        ~UserParameterChangeCommand() = default;
+        virtual ~UserParameterChangeCommand() = default;
 
 
         /***

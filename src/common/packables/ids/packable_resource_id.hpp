@@ -57,7 +57,7 @@ class PackableResourceID : public CompositePackable//, public virtual AbstractPa
          ***/
 
         /*! \brief Destructor */
-        ~PackableResourceID() = default;
+        virtual ~PackableResourceID() = default;
 
 
         /***

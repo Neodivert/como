@@ -62,7 +62,7 @@ class AbstractPrimitivesManager
         /***
          * 2. Destruction
          ***/
-        ~AbstractPrimitivesManager();
+        virtual ~AbstractPrimitivesManager();
 
 
         /***

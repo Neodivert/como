@@ -39,7 +39,7 @@ class FileNotOpenException : public std::runtime_error
         /***
          * 2. Destruction
          ***/
-        ~FileNotOpenException() = default;
+        virtual ~FileNotOpenException() = default;
 
 
         /***

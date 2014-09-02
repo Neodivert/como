@@ -51,7 +51,7 @@ class AbstractMaterialModificationCommand : public MaterialCommand
         /***
          * 2. Destruction
          ***/
-        ~AbstractMaterialModificationCommand() = default;
+        virtual ~AbstractMaterialModificationCommand() = default;
 
 
         /***

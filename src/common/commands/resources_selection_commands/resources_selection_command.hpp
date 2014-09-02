@@ -27,7 +27,7 @@ class ResourcesSelectionCommand : public TypeCommand< ResourcesSelectionCommandT
         /***
          * 2. Destruction
          ***/
-        ~ResourcesSelectionCommand() = default;
+        virtual ~ResourcesSelectionCommand() = default;
 
 
         /***

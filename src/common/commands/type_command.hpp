@@ -54,7 +54,7 @@ class TypeCommand : public Command {
          ***/
 
         /*! \brief Destructor */
-        ~TypeCommand() = default;
+        virtual ~TypeCommand() = default;
 
 
         /***

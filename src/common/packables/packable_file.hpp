@@ -79,7 +79,7 @@ class PackableFile : public CompositePackable {
          ***/
 
         /*! \brief Destructor. */
-        virtual ~PackableFile(){}
+        virtual ~PackableFile() = default;
 
 
         /***

@@ -41,7 +41,7 @@ class Observable
         /***
          * 2. Destruction
          ***/
-        ~Observable() = default;
+        virtual ~Observable() = default;
 
 
         /***

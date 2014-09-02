@@ -43,7 +43,7 @@ class SelectionCommand : public TypeCommand<SelectionCommandType>
         /***
          * 2. Destruction
          ***/
-        ~SelectionCommand() = default;
+        virtual ~SelectionCommand() = default;
 
 
         /***

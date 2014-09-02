@@ -37,7 +37,7 @@ class Observer
         /***
          * 2. Destruction
          ***/
-        ~Observer() = default;
+        virtual ~Observer() = default;
 
 
         /***

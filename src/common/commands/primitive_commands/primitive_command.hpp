@@ -73,7 +73,7 @@ class PrimitiveCommand : public TypeCommand< PrimitiveCommandType >
          ***/
 
         /*! \brief Destructor. */
-        ~PrimitiveCommand() = default;
+        virtual ~PrimitiveCommand() = default;
 
 
         /***

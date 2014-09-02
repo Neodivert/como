@@ -50,7 +50,7 @@ class ResourceCommand : public TypeCommand< ResourceCommandType >
         /***
          * 2. Destruction
          ***/
-        ~ResourceCommand() = default;
+        virtual ~ResourceCommand() = default;
 
 
         /***

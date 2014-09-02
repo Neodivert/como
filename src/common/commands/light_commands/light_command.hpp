@@ -49,7 +49,7 @@ class LightCommand : public TypeCommand< LightCommandType >
         /***
          * 2. Destruction
          ***/
-        ~LightCommand() = default;
+        virtual ~LightCommand() = default;
 
 
         /***

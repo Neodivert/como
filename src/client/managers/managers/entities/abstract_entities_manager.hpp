@@ -46,7 +46,7 @@ class AbstractEntitiesManager : public virtual ResourceCommandsExecuter, public 
         /***
          * 2. Destruction
          ***/
-        ~AbstractEntitiesManager() = default;
+        virtual ~AbstractEntitiesManager() = default;
 
 
         /***

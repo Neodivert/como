@@ -47,7 +47,7 @@ class UserCommand : public TypeCommand< UserCommandType >
         /***
          * 2. Destruction
          ***/
-        ~UserCommand() = default;
+        virtual ~UserCommand() = default;
 
 
         /***

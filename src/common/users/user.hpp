@@ -41,7 +41,7 @@ class User : public std::enable_shared_from_this< User >
         User( const User& ) = default;
         User( User&& ) = default;
 
-        ~User() = default;
+        virtual ~User() = default;
 
 
         /***

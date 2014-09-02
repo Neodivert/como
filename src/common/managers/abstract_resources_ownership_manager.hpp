@@ -25,7 +25,7 @@ class AbstractResourcesOwnershipManager
         /***
          * 2. Destruction
          ***/
-        ~AbstractResourcesOwnershipManager() = default;
+        virtual ~AbstractResourcesOwnershipManager() = default;
 
 
         /***

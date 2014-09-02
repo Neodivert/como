@@ -84,7 +84,7 @@ class Packet : public CompositePackable
         /***
          * 2. Destruction.
          ***/
-        ~Packet() = default;
+        virtual ~Packet() = default;
 
 
         /***

@@ -38,7 +38,7 @@ class PickablesSet
         /***
          * 2. Destruction
          ***/
-        ~PickablesSet() = default;
+        virtual ~PickablesSet() = default;
 
 
         /***

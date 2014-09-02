@@ -61,7 +61,7 @@ class PackableInteger : public PackableWrapper< UnpackedType > {
          ***/
 
         /*! \brief Destructor */
-        ~PackableInteger() = default;
+        virtual ~PackableInteger() = default;
 
 
         /***

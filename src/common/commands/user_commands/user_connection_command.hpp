@@ -43,7 +43,7 @@ class UserConnectionCommand : public UserCommand
         /***
          * 2. Destruction
          ***/
-        ~UserConnectionCommand() = default;
+        virtual ~UserConnectionCommand() = default;
 
 
         /***

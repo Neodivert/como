@@ -47,7 +47,7 @@ class PackableColor : public PackableArray< PackableUint8< std::uint8_t >, std::
         /***
          * 2. Destruction
          ***/
-        ~PackableColor() = default;
+        virtual ~PackableColor() = default;
 
 
         /***

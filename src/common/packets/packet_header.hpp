@@ -73,7 +73,7 @@ class PacketHeader : public CompositePackable
          ***/
 
         /*! \brief Destructor */
-        virtual ~PacketHeader(){}
+        virtual ~PacketHeader() = default;
 
 
         /***

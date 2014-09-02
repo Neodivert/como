@@ -64,7 +64,7 @@ class PackableArray : public AbstractPackableWrapper< std::array< ElementPlainTy
          ***/
 
         /*! \brief Destructor */
-        ~PackableArray() = default;
+        virtual ~PackableArray() = default;
 
 
         /***
