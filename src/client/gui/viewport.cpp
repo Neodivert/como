@@ -34,7 +34,13 @@ GLint Viewport::viewProjectionMatrixLocation = -1;
 
 Viewport::Viewport( View view, Projection projection, shared_ptr< ComoApp > comoApp ) :
     QWindow(),
+    comoApp( comoApp ),
     localEntitiesSelection_( comoApp->getScene()->getEntitiesManager()->getLocalSelection() ),
+    camera( nullptr ),
+    widthInverse( 0.0f ),
+    heightInverse( 0.0f ),
+    projectionMatrix( 1.0f ),
+    view_( View::FRONT ),
     projection_( projection ),
     forceRender_( true ),
     lastMouseWorldPos_( 0.0f )

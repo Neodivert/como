@@ -39,7 +39,7 @@ struct MaterialInfo
 
     std::unique_ptr< TextureInfo > textureInfo;
 
-    MaterialInfo() : textureInfo( nullptr ) {}
+    MaterialInfo() : specularExponent( 1.0f ), textureInfo( nullptr ) {}
     inline MaterialInfo( const MaterialInfo& b );
 };
 
