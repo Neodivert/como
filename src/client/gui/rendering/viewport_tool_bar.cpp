@@ -30,8 +30,8 @@ namespace como {
 ViewportToolBar::ViewportToolBar( Viewport* viewport ) :
     QMenuBar( nullptr )
 {
-    addMenu( new ViewportViewMenu( viewport ) );
-    addMenu( new ViewportProjectionMenu( viewport ) );
+    addMenu( new ViewportViewMenu( viewport, this ) );
+    addMenu( new ViewportProjectionMenu( viewport, this ) );
     addAction( createMaximizeAction() );
 }
 
@@ -40,11 +40,11 @@ ViewportToolBar::ViewportToolBar( Viewport* viewport ) :
  * 2. Initialization
  ***/
 
-QAction* ViewportToolBar::createMaximizeAction() const
+QAction* ViewportToolBar::createMaximizeAction()
 {
     QAction* maximizeAction = nullptr;
 
-    maximizeAction = new QAction( QString( "Maximize" ), nullptr );
+    maximizeAction = new QAction( QString( "Maximize" ), this );
     maximizeAction->setCheckable( true );
     QObject::connect( maximizeAction, &QAction::triggered, [this]( bool checked ){
         if( checked ){

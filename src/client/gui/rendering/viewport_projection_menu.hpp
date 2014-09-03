@@ -32,7 +32,7 @@ class ViewportProjectionMenu : public QMenu
         /***
          * 1. Construction
          ***/
-        ViewportProjectionMenu( Viewport* viewport );
+        ViewportProjectionMenu( Viewport* viewport, QWidget* parent );
         ViewportProjectionMenu() = delete;
         ViewportProjectionMenu( const ViewportProjectionMenu& ) = delete;
         ViewportProjectionMenu( ViewportProjectionMenu&& ) = delete;

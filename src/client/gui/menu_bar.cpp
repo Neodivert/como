@@ -40,7 +40,7 @@ MenuBar::MenuBar( EntitiesManagerPtr entitiesManager ) :
 
 QMenu* MenuBar::createViewMenu( EntitiesManager* entitiesManager )
 {
-    QMenu* viewMenu = new QMenu( "View" );
+    QMenu* viewMenu = new QMenu( "View", this );
 
     viewMenu->addMenu( createDisplayEdgesMenu( entitiesManager->getMeshesManager().get() ) );
     viewMenu->addMenu( createDisplayVertexNormalsMenu( entitiesManager->getMeshesManager().get() ) );
@@ -57,14 +57,14 @@ QMenu* MenuBar::createDisplayEdgesMenu( MeshesManager* meshesManager )
     QAction* displayEdgesOnlyWhenSelected = nullptr;
 
     // Create a menu action for displaying the edges always.
-    displayEdgesAlways = new QAction( QString( "Always" ), nullptr );
+    displayEdgesAlways = new QAction( QString( "Always" ), this );
     displayEdgesAlways->setCheckable( true );
     QObject::connect( displayEdgesAlways, &QAction::triggered, [=](){
         meshesManager->displayEdges( MeshEdgesDisplayFrequency::ALWAYS );
     });
 
     // Create a menu action for displaying the edges only when selected.
-    displayEdgesOnlyWhenSelected = new QAction( QString( "Only when selected" ), nullptr );
+    displayEdgesOnlyWhenSelected = new QAction( QString( "Only when selected" ), this );
     displayEdgesOnlyWhenSelected->setCheckable( true );
     QObject::connect( displayEdgesOnlyWhenSelected, &QAction::triggered, [=](){
         meshesManager->displayEdges( MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED );
@@ -78,7 +78,7 @@ QMenu* MenuBar::createDisplayEdgesMenu( MeshesManager* meshesManager )
     displayEdgesOnlyWhenSelected->setChecked( true );
 
     // Create a "Display edges" menu including previous actions.
-    displayEdgesMenu = new QMenu( "Display edges" );
+    displayEdgesMenu = new QMenu( "Display edges", this );
     displayEdgesMenu->addActions( displayEdgesActionGroup->actions() );
     return displayEdgesMenu;
 }
@@ -93,14 +93,14 @@ QMenu* MenuBar::createDisplayVertexNormalsMenu( MeshesManager* meshesManager )
     meshesManager->getLocalResourcesSelection()->Observable::addObserver( this );
 
     // Create a menu action for displaying the edges always.
-    displayVertexNormalsAlways_ = new QAction( QString( "Always" ), nullptr );
+    displayVertexNormalsAlways_ = new QAction( QString( "Always" ), this );
     displayVertexNormalsAlways_->setCheckable( true );
     QObject::connect( displayVertexNormalsAlways_, &QAction::triggered, [=](){
         meshesManager->displayVertexNormals( true );
     });
 
     // Create a menu action for displaying the edges only when selected.
-    displayVertexNormalsNever_ = new QAction( QString( "Never" ), nullptr );
+    displayVertexNormalsNever_ = new QAction( QString( "Never" ), this );
     displayVertexNormalsNever_->setCheckable( true );
     QObject::connect( displayVertexNormalsNever_, &QAction::triggered, [=](){
         meshesManager->displayVertexNormals( false );
@@ -114,7 +114,7 @@ QMenu* MenuBar::createDisplayVertexNormalsMenu( MeshesManager* meshesManager )
     displayVertexNormalsNever_->setChecked( true );
 
     // Create a "Display edges" menu including previous actions.
-    displayVertexNormalsMenu = new QMenu( "Display vertex normals" );
+    displayVertexNormalsMenu = new QMenu( "Display vertex normals", this );
     displayVertexNormalsMenu->addActions( displayVertexNormalsActionGroup->actions() );
     return displayVertexNormalsMenu;
 }

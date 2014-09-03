@@ -41,7 +41,7 @@ class ViewportToolBar : public QMenuBar
         /***
          * 2. Initialization
          ***/
-        QAction* createMaximizeAction() const;
+        QAction* createMaximizeAction();
 
 
         /***

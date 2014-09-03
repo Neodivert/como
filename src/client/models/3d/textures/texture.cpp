@@ -93,6 +93,7 @@ Texture::Texture( const TextureInfo& textureInfo )
     OpenGL::checkStatus( "After Texture::glTextImage2D()" );
 
     // Free resources.
+    SDL_FreeRW( textureData );
     SDL_FreeSurface( textureImage );
 
     // Retrieve the location in shader of the texture sampler for futher

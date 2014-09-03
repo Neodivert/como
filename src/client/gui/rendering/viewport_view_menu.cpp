@@ -24,8 +24,8 @@ namespace como {
  * 1. Construction
  ***/
 
-ViewportViewMenu::ViewportViewMenu( Viewport* viewport ) :
-    QMenu( "View" )
+ViewportViewMenu::ViewportViewMenu( Viewport* viewport, QWidget* parent ) :
+    QMenu( "View", parent )
 {
     unsigned int i = 0;
     QAction* currentAction = nullptr;

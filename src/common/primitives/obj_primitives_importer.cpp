@@ -383,7 +383,7 @@ void OBJPrimitivesImporter::readLine( std::ifstream &file, std::string &fileLine
 {
     std::getline( file, fileLine );
 
-    if( fileLine[ fileLine.size() - 1 ] == '\r' ){
+    if( fileLine.size() && ( fileLine[ fileLine.size() - 1 ] == '\r' ) ){
         fileLine = fileLine.substr( 0, fileLine.size() - 1 );
     }
 }

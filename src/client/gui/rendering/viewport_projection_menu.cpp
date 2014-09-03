@@ -6,8 +6,8 @@ namespace como {
  * 1. Construction
  ***/
 
-ViewportProjectionMenu::ViewportProjectionMenu( Viewport* viewport ) :
-    QMenu( "View" )
+ViewportProjectionMenu::ViewportProjectionMenu( Viewport* viewport, QWidget* parent ) :
+    QMenu( "View", parent )
 {
     unsigned int i = 0;
     QAction* currentAction = nullptr;
