@@ -111,7 +111,9 @@ HEADERS += \
     ../../src/client/models/3d/sets/drawables_set.hpp \
     ../../src/client/models/3d/sets/pickables_set.hpp \
     ../../src/client/managers/managers/entities/abstract_entities_manager.hpp \
-    ../../src/client/gui/materials/material_editor.hpp
+    ../../src/client/gui/materials/material_editor.hpp \
+    ../../src/client/models/3d/meshes/system_mesh.hpp \
+    ../../src/client/models/3d/meshes/cube.hpp
 
 
 # Client sources
@@ -178,4 +180,6 @@ SOURCES += \
     ../../src/client/managers/managers/resources/resource_commands_executer.cpp \
     ../../src/client/models/3d/sets/drawables_set.cpp \
     ../../src/client/managers/managers/entities/abstract_entities_manager.cpp \
-    ../../src/client/gui/materials/material_editor.cpp
+    ../../src/client/gui/materials/material_editor.cpp \
+    ../../src/client/models/3d/meshes/system_mesh.cpp \
+    ../../src/client/models/3d/meshes/cube.cpp
