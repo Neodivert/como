@@ -37,7 +37,8 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
     newSocket_( *io_service_ ),
     newId_( 1 ),
     port_( port_ ),
-    resourcesOwnershipManager_( users_, log_ )
+    resourcesOwnershipManager_( users_, log_ ),
+    lightsManager_( 4, &resourcesOwnershipManager_ )
 {
     unsigned int i;
 
@@ -121,10 +122,8 @@ void Server::run()
         // Create a directional light with with no owner and synchronise it in
         // the commands historic.
         const ResourceID DIRECTIONAL_LIGHT_ID( NO_USER, 1 );
-        drawableOwners_[DIRECTIONAL_LIGHT_ID] = 0;
         std::uint8_t lightColor[4] = { 255, 255, 255, 0 };
-
-        resourcesOwnershipManager_.registerResource( DIRECTIONAL_LIGHT_ID, NO_USER );
+        lightsManager_.requestDirectionalLightCreation( DIRECTIONAL_LIGHT_ID );
         addCommand( CommandConstPtr( new DirectionalLightCreationCommand( NO_USER, DIRECTIONAL_LIGHT_ID, lightColor ) ) );
 
         // Initialize the container of free user colors.
@@ -355,9 +354,24 @@ void Server::processSceneCommand( const Command& sceneCommand )
             const LightCommand& lightCommand = dynamic_cast< const LightCommand& >( sceneCommand );
 
             if( lightCommand.getType() == LightCommandType::LIGHT_CREATION ){
-                // Add a node to the Drawable Owners map for the recently added
-                // drawable. Mark it with a 0 (no owner).
-                resourcesOwnershipManager_.registerResource( lightCommand.getResourceID(), NO_USER );
+                // Request the creation of the light to the lights manager.
+                if( lightsManager_.requestDirectionalLightCreation( lightCommand.getResourceID() ) ){
+                    users_.at( lightCommand.getUserID() )->addResponseCommand(
+                                CommandConstPtr(
+                                    new LightCreationResponseCommand( lightCommand.getResourceID(),
+                                                                      true
+                                                                      ) ) );
+                }else{
+                    users_.at( lightCommand.getUserID() )->addResponseCommand(
+                                CommandConstPtr(
+                                    new LightCreationResponseCommand( lightCommand.getResourceID(),
+                                                                      false
+                                                                      ) ) );
+                    // If the request was denied, return from this method so
+                    // the creation command received from user isn't added to
+                    // the commands historic.
+                    return;
+                }
             }
         }break;
         case CommandTarget::RESOURCE:{

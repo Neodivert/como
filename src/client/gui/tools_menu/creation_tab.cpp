@@ -119,12 +119,7 @@ QFrame *CreationTab::createLightsCreationPanel() const
             new QPushButton( "Create directional light" );
 
     QObject::connect( createDirectionalLightButton, &QPushButton::pressed, [this](){
-        if( !( scene_->getEntitiesManager()->getLightsManager()->createDirectionalLight() ) ){
-            QMessageBox errorMsg( QMessageBox::Warning,
-                                  "Could't create a directional light",
-                                  "Reached the limit of allowed directional lights" );
-            errorMsg.exec();
-        }
+        scene_->getEntitiesManager()->getLightsManager()->requestDirectionalLightCreation();
     });
 
     QVBoxLayout* layout = new QVBoxLayout;

@@ -35,6 +35,10 @@ class DirectionalLight : public Light
         /*! Location of the light index in GLSL shader. */
         GLint lightIndexLocation_;
 
+        GLint isValidLocation_;
+
+        GLuint directionalLightIndex_;
+
         /*! Location of the light vector in GLSL shader. */
         GLint lightVectorLocation_;
 
@@ -47,7 +51,7 @@ class DirectionalLight : public Light
          * 1. Construction
          ***/
         DirectionalLight() = delete;
-        DirectionalLight( GLuint directionalLightIndex, GLint lightIndex, const PackableColor& lightColor, const glm::vec3& lightVector, MaterialConstPtr meshMaterial );
+        DirectionalLight( const PackableColor& lightColor, const glm::vec3& lightVector, MaterialConstPtr meshMaterial, OpenGL& openGL );
         DirectionalLight( const DirectionalLight& ) = default; // TODO: Implement (or remove clone()).
         DirectionalLight( DirectionalLight&& ) = delete;
 
@@ -106,8 +110,7 @@ class DirectionalLight : public Light
          * 8. Auxiliar methods
          ***/
         virtual bool containsProperty( const void* property ) const;
-
-
+        static GLuint lockShaderDirectionalLight( OpenGL& openGL );
 };
 
 typedef shared_ptr< DirectionalLight > DirectionalLightPtr;

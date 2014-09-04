@@ -43,9 +43,9 @@ Scene::Scene( const char* host, const char* port, const char* userName, LogPtr l
         QObject::connect( server_.get(), &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
         log_->debug( "Remote command execution signal connected\n" );
 
-        initManagers( userAcceptancePacket );
-
         initOpenGL();
+
+        initManagers( userAcceptancePacket );
 
         initLinesBuffer();
 
@@ -211,7 +211,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         materialsManager_->Observable::addObserver( this );
 
         // Initialize the entities manager.
-        entitiesManager_ = EntitiesManagerPtr( new EntitiesManager( server_, log_, usersManager_, materialsManager_ ) );
+        entitiesManager_ = EntitiesManagerPtr( new EntitiesManager( server_, log_, openGL_.get(), usersManager_, materialsManager_ ) );
 
         // Initialize the primitives manager.
         primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, entitiesManager_->getMeshesManager(), materialsManager_, log_ ) );

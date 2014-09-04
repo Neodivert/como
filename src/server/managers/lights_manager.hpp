@@ -13,31 +13,31 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
 #ifndef LIGHTS_MANAGER_HPP
 #define LIGHTS_MANAGER_HPP
 
-#include <client/models/3d/lights/lights.hpp>
-#include <common/commands/commands.hpp>
-#include <map>
-#include <common/utilities/observer_pattern/observer.hpp>
-#include <client/managers/managers/entities/specialized_entities_manager.hpp>
-#include <client/managers/selections/lights/local_lights_selection.hpp>
+#include <set>
+#include <common/ids/resource_id.hpp>
+#include <common/commands/light_commands/light_commands.hpp>
+#include <common/utilities/observable_container/container_observer.hpp>
+#include <server/commands_historic.hpp>
+#include <server/resources_ownership_manager.hpp>
 
 namespace como {
 
-typedef std::map< ResourceID, LightSharedPtr > LightsMap;
-
-class LightsManager : public SpecializedEntitiesManager< Light, LightsSelection, LocalLightsSelection >
+class LightsManager : public ContainerObserver<ResourceID>
 {
     public:
         /***
          * 1. Construction
          ***/
+        LightsManager( unsigned int maxDirectionalLights,
+                       ResourcesOwnershipManager* resourcesOwnershipManager );
+
         LightsManager() = delete;
-        LightsManager( ServerInterfacePtr server, LogPtr log, OpenGL* openGL );
         LightsManager( const LightsManager& ) = delete;
         LightsManager( LightsManager&& ) = delete;
 
@@ -49,45 +49,33 @@ class LightsManager : public SpecializedEntitiesManager< Light, LightsSelection,
 
 
         /***
-         * 3. Getters
+         * 3. Updating (Observer pattern)
          ***/
-        std::string getResourceName( const ResourceID& lightID ) const;
+        virtual void update( ContainerAction lastContainerAction, ResourceID lastElementModified );
 
 
         /***
          * 4. Lights management
          ***/
-        void requestDirectionalLightCreation();
-
-    private:
-        void addDirectionalLight( const ResourceID& lightID, const PackableColor& lightColor );
+        bool requestDirectionalLightCreation( const ResourceID& lightID );
 
 
         /***
-         * 5. Remote command execution
-         ***/
-    public:
-        void executeRemoteCommand( const LightCommand& command );
-
-
-        /***
-         * 6. Operators
+         * 5. Operators
          ***/
         LightsManager& operator = ( const LightsManager& ) = delete;
         LightsManager& operator = ( LightsManager&& ) = delete;
 
 
-        /***
-         * 8. Updating
-         ***/
     private:
-        virtual void update();
+        const unsigned int MAX_LIGHTS;
+        const unsigned int MAX_DIRECTIONAL_LIGHTS;
 
+        ResourcesOwnershipManager* resourcesOwnershipManager_;
+        CommandsHistoric* commandsHistoric_;
 
-        OpenGL* openGL_;
+        std::set< ResourceID > lights_;
 };
-
-typedef std::shared_ptr< LightsManager > LightsManagerPtr;
 
 } // namespace como
 

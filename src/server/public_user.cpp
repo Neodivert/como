@@ -114,7 +114,7 @@ bool PublicUser::needsSceneUpdatePacket() const
 
     mutex_.lock();
     res = ( nextCommand_ < commandsHistoric_->getSize() ) ||
-            ( pendingSelectionsResponses_.size() );
+            ( pendingResponseCommands_.size() );
     mutex_.unlock();
 
     return res;
@@ -130,12 +130,11 @@ void PublicUser::sendNextSceneUpdatePacket()
     // Create and prepare a SCENE_UPDATE packet.
     outSceneUpdatePacketPacket_.clear();
 
-    // If there is selection responses to be sent to the user, add it to the
+    // If there is any response command to be sent to the user, add it to the
     // scene update packet.
-    if( pendingSelectionsResponses_.size() ){
-        log_->debug( "\tSENDING selection response to user ResourceID(", pendingSelectionsResponses_.front().getResourceID(), ") response(", pendingSelectionsResponses_.front().getResponse(), ")\n" );
-        outSceneUpdatePacketPacket_.addCommand( CommandConstPtr( new ResourceSelectionResponse( pendingSelectionsResponses_.front() ) ) );
-        pendingSelectionsResponses_.pop();
+    if( pendingResponseCommands_.size() ){
+        outSceneUpdatePacketPacket_.addCommand( std::move( pendingResponseCommands_.front() ) );
+        pendingResponseCommands_.pop();
     }
 
     nextCommand_ = commandsHistoric_->fillSceneUpdatePacketPacket( outSceneUpdatePacketPacket_, nextCommand_, MAX_COMMANDS_PER_PACKET, getID() );
@@ -190,13 +189,12 @@ void PublicUser::onWriteSceneUpdatePacket( const boost::system::error_code& erro
  * 6. Selection responses
  ***/
 
-void PublicUser::addSelectionResponse( const ResourceID& resourceID, bool selectionResponse )
+
+void PublicUser::addResponseCommand( CommandConstPtr responseCommand)
 {
     mutex_.lock();
 
-    ResourceSelectionResponse selectionResponseCommand( resourceID, selectionResponse );
-    pendingSelectionsResponses_.push( selectionResponseCommand );
-
+    pendingResponseCommands_.push( std::move( responseCommand ) );
     requestUpdate();
 
     mutex_.unlock();

@@ -38,6 +38,8 @@ ResourcesOwnershipManager::ResourcesOwnershipManager( UsersMap& usersMap, LogPtr
 void ResourcesOwnershipManager::registerResource(const ResourceID& resourceID, UserID ownerID )
 {
     resourcesOwnershipMap_[ resourceID ] = ownerID;
+
+    notifyElementInsertion( resourceID );
 }
 
 
@@ -60,13 +62,15 @@ void ResourcesOwnershipManager::lockResource( const ResourceID& resourceID, User
     log()->debug( "User (", userID, ") tries to lock resource (", resourceID, "): " );
     if( resourcesOwnershipMap_.at( resourceID ) == NO_USER ){
         resourcesOwnershipMap_.at( resourceID ) = userID;
-        users_.at( userID )->addSelectionResponse( resourceID, true );
+        notifyElementUpdate( resourceID );
+        users_.at( userID )->addResponseCommand( CommandConstPtr( new ResourceSelectionResponse( resourceID, true ) ) );
         log()->debug( "Yes!\n" );
     }else{
-        users_.at( userID )->addSelectionResponse( resourceID, false );
+        users_.at( userID )->addResponseCommand( CommandConstPtr( new ResourceSelectionResponse( resourceID, false ) ) );
         log()->debug( "No, resource already locked! :'-(\n" );
     }
 }
+
 
 void ResourcesOwnershipManager::unlockResourcesSelection( UserID userID )
 {
@@ -88,6 +92,7 @@ void ResourcesOwnershipManager::deleteResourcesSelection( UserID userID )
         nextElement++;
 
         if( currentElement->second == userID ){
+            notifyElementDeletion( currentElement->first );
             resourcesOwnershipMap_.erase( currentElement );
         }
 

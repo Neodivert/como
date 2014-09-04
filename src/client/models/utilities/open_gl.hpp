@@ -39,6 +39,8 @@ enum class ShadingMode {
 };
 
 
+// TODO: Use this class as much as possible for OpenGL work.
+// TODO: Use locks (monitor).
 class OpenGL
 {
     private:
@@ -46,6 +48,8 @@ class OpenGL
         GLint currentProgramID_;
 
         std::map< ShaderProgramType, GLint > shaderProgramsIDs_;
+
+        ShadingMode currentShadingMode_;
 
     public:
         /***
@@ -63,7 +67,14 @@ class OpenGL
 
 
         /***
-         * 3. Setters
+         * 3. Getters
+         ***/
+        ShadingMode getShadingMode() const;
+        GLint getShaderInteger( ShaderProgramType shaderProgramType, std::string varName );
+
+
+        /***
+         * 4. Setters
          ***/
         void setShadingMode( ShadingMode shadingMode );
         void setMVPMatrix( const glm::mat4& modelMatrix, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix );
@@ -73,36 +84,35 @@ class OpenGL
         void setProgram( ShaderProgramType program );
 
         /***
-         * 4. Lighting
+         * 5. Lighting
          ***/
         void enableLighting() const;
         void disableLighting() const;
 
 
         /***
-         * 5. Texturing
+         * 6. Texturing
          ***/
         void enableTexturing() const;
         void disableTexturing() const;
-
-
-        /***
-         * 6. Utilities
-         ***/
-    private:
-        GLint getShaderVariableLocation( std::string varName ) const;
     public:
 
 
         /***
-         * 7. Checking
+         * 7. Utilities
+         ***/
+        GLint getShaderVariableLocation( std::string varName, GLint program = -1 ) const;
+
+
+        /***
+         * 8. Checking
          ***/
         static void checkStatus( std::string location );
         static std::string getOpenGLErrorString( GLenum errorCode );
 
 
         /***
-         * 8. Operators
+         * 9. Operators
          ***/
         OpenGL& operator = ( const OpenGL& ) = delete;
         OpenGL& operator = ( OpenGL&& ) = delete;

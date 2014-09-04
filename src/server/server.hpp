@@ -35,6 +35,7 @@
 #include <server/server_primitives_manager.hpp>
 #include <common/scene/basic_scene.hpp>
 #include <server/resources_ownership_manager.hpp>
+#include <server/managers/lights_manager.hpp>
 
 using boost::asio::ip::tcp;
 
@@ -94,6 +95,8 @@ class Server : public BasicScene
 
         // Resources ownership manager
         ResourcesOwnershipManager resourcesOwnershipManager_;
+
+        LightsManager lightsManager_;
 
 
     public:

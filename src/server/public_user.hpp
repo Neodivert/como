@@ -71,9 +71,7 @@ class PublicUser : public User
 
         bool updateRequested_;
 
-        std::queue< ResourceSelectionResponse > pendingSelectionsResponses_;
-
-        //SelectionResponseCommandPtr selectionResponse_;
+        std::queue< CommandConstPtr > pendingResponseCommands_; // TODO: Create and use a new ResponseCommand base class.
 
         std::uint32_t color_;
 
@@ -126,9 +124,9 @@ class PublicUser : public User
 
 
         /***
-         * 6. Selection responses
+         * 6. Response commands
          ***/
-        void addSelectionResponse( const ResourceID& resourceID, bool selectionResponse );
+        void addResponseCommand( CommandConstPtr responseCommand );
 
 
         /***

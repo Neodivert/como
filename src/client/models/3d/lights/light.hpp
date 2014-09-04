@@ -35,6 +35,8 @@ class Light : public AbstractLight, public Mesh
         /*! Light index in the GLSL shader */
         GLuint index_;
 
+        GLint isValidLocation_;
+
         GLint ambientCoefficientLocation_;
 
         /*!
@@ -49,7 +51,7 @@ class Light : public AbstractLight, public Mesh
          ***/
         Light() = delete;
     protected:
-        Light( LightType type, GLuint index, const PackableColor& color, std::string path, MaterialConstPtr meshMaterial );
+        Light( LightType type, const PackableColor& color, std::string path, MaterialConstPtr meshMaterial, OpenGL& openGL );
     public:
         Light( const Light& ) = default; // TODO: Implement using shader limit (MAX_LIGHTS) (or remove clone()).
         Light( Light&& ) = delete;
@@ -58,7 +60,7 @@ class Light : public AbstractLight, public Mesh
         /***
          * 2. Destruction
          ***/
-        virtual ~Light() = default;
+        virtual ~Light();
 
 
         /***
@@ -83,6 +85,13 @@ class Light : public AbstractLight, public Mesh
          ***/
         Light& operator = ( const Light& ) = delete;
         Light& operator = ( Light&& ) = delete;
+
+
+    private:
+        /***
+         * 6. Auxiliar methods
+         ***/
+        static GLuint lockShaderLight( OpenGL& openGL );
 };
 
 typedef std::shared_ptr< Light > LightSharedPtr;

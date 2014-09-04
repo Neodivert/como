@@ -27,8 +27,9 @@ const glm::vec4 DEFAULT_LIGHT_VECTOR = glm::vec4( 0.0f, 1.0f, 0.0f, 0.0f );
  * 1. Construction
  ***/
 
-DirectionalLight::DirectionalLight( GLuint directionalLightIndex, GLint lightIndex, const PackableColor& lightColor, const glm::vec3& lightVector, MaterialConstPtr meshMaterial ) :
-    Light( LightType::DIRECTIONAL_LIGHT, lightIndex, lightColor, "data/system/primitives/directional_light.prim", meshMaterial ) // TODO: Load material from file.
+DirectionalLight::DirectionalLight( const PackableColor& lightColor, const glm::vec3& lightVector, MaterialConstPtr meshMaterial, OpenGL& openGL ) :
+    Light( LightType::DIRECTIONAL_LIGHT, lightColor, "data/system/primitives/directional_light.prim", meshMaterial, openGL ), // TODO: Load material from file.
+    directionalLightIndex_( lockShaderDirectionalLight( openGL ) )
 {
     (void)( lightVector ); // TODO: Remove this argument.
 
@@ -38,25 +39,30 @@ DirectionalLight::DirectionalLight( GLuint directionalLightIndex, GLint lightInd
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
     assert( currentShaderProgram != 0 );
 
+    // Get the location of this light's isValid in the GLSL shader program.
+    sprintf( uniformName, "directionalLights[%u].isValid", directionalLightIndex_ );
+    isValidLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
+    assert( isValidLocation_ != -1 );
+
     // Get the location of the DirectionalLight::lightIndex variable in shader.
-    sprintf( uniformName, "directionalLights[%u].lightIndex", directionalLightIndex );
+    sprintf( uniformName, "directionalLights[%u].lightIndex", directionalLightIndex_ );
     lightIndexLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
     assert( lightIndexLocation_ != -1 );
 
     // Get the location of the DirectionalLight::lightVector variable in shader.
-    sprintf( uniformName, "directionalLights[%u].lightVector", directionalLightIndex );
+    sprintf( uniformName, "directionalLights[%u].lightVector", directionalLightIndex_ );
     lightVectorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
     assert( lightVectorLocation_ != -1 );
 
     // Get the location of the DirectionalLight::halfVector variable in shader.
-    sprintf( uniformName, "directionalLights[%u].halfVector", directionalLightIndex );
+    sprintf( uniformName, "directionalLights[%u].halfVector", directionalLightIndex_ );
     halfVectorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
 
     // TODO: Replace comparison by "!= 1" when halfVectorLocation_ be implemented in shader.
     assert( halfVectorLocation_ == -1 );
 
     // Set the light index in shader.
-    glUniform1i( lightIndexLocation_, lightIndex );
+    glUniform1i( lightIndexLocation_, getLightIndex() );
 
     // Initialize light vector in shader.
     setLightVector( glm::vec3( DEFAULT_LIGHT_VECTOR ) );
@@ -70,7 +76,7 @@ DirectionalLight::DirectionalLight( GLuint directionalLightIndex, GLint lightInd
 DirectionalLight::~DirectionalLight()
 {
     // Disable this light in shader.
-    glUniform1i( lightIndexLocation_, -1 );
+    glUniform1i( isValidLocation_, false );
 }
 
 
@@ -211,6 +217,36 @@ void DirectionalLight::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, cons
 bool DirectionalLight::containsProperty( const void *property ) const
 {
     return Mesh::containsProperty( property );
+}
+
+
+// FIXME: Duplicated code (Light::lockShaderLight()).
+GLuint DirectionalLight::lockShaderDirectionalLight( OpenGL& openGL )
+{
+    GLint currentShaderProgram = -1;
+    char uniformName[64] = {0};
+    GLint varLocation = -1;
+    unsigned int currentLightIndex;
+
+    // Get current shader program ID.
+    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+
+    for( currentLightIndex = 0; currentLightIndex < 4; currentLightIndex++ ){ // Retrieve MAX_DIRECTIONAL_LIGHTS from shader.
+        sprintf( uniformName, "directionalLights[%u].isValid", currentLightIndex );
+
+        varLocation = openGL.getShaderVariableLocation( uniformName, currentShaderProgram );
+        assert( varLocation != -1 );
+
+        if( !( openGL.getShaderInteger( ShaderProgramType::DEFAULT, uniformName ) ) ){
+            glUniform1i( varLocation, true );
+            return currentLightIndex;
+        }
+    }
+
+    OpenGL::checkStatus( "DirectionalLight::lockShaderDirectionalLight()" );
+
+    // TODO: Or return -1 (change return type to GLint)?
+    throw std::runtime_error( "DirectionalLight::lockShaderDirectionalLight() - No free light struct in shader" );
 }
 
 } // namespace como

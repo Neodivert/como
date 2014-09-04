@@ -20,6 +20,7 @@
 #define RESOURCES_OWNERSHIP_MANAGER_HPP
 
 #include <common/managers/abstract_resources_ownership_manager.hpp>
+#include <common/utilities/observable_container/observable_container.hpp>
 #include <server/public_user.hpp>
 #include <map>
 
@@ -27,7 +28,7 @@ namespace como {
 
 typedef std::map< ResourceID, UserID > ResourcesOwnershipMap;
 
-class ResourcesOwnershipManager : public AbstractResourcesOwnershipManager
+class ResourcesOwnershipManager : public AbstractResourcesOwnershipManager, public ObservableContainer<ResourceID>
 {
     private:
         UsersMap& users_;

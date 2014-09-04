@@ -25,12 +25,12 @@ namespace como {
  * 1. Construction
  ***/
 
-EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log, UsersManagerPtr usersManager, MaterialsManagerPtr materialsManager ) :
+EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log, OpenGL* openGL, UsersManagerPtr usersManager, MaterialsManagerPtr materialsManager ) :
     ResourceCommandsExecuter( server ), // TODO: Remove all this duplicity?
     AbstractEntitiesManager( server ),
     usersManager_( usersManager ),
     meshesManager_( new MeshesManager( server, log, materialsManager ) ),
-    lightsManager_( new LightsManager( server, log ) )
+    lightsManager_( new LightsManager( server, log, openGL ) )
 {
     managers_.push_back( lightsManager_.get() );
     managers_.push_back( meshesManager_.get() );

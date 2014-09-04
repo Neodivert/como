@@ -26,16 +26,21 @@ namespace como {
  * 1. Construction
  ***/
 
-Light::Light( LightType type, GLuint index, const PackableColor& color, std::string path, MaterialConstPtr meshMaterial ) :
+Light::Light( LightType type, const PackableColor& color, std::string path, MaterialConstPtr meshMaterial, OpenGL& openGL ) :
     Mesh( MeshType::LIGHT, path.c_str(), meshMaterial ),
     type_( type ),
-    index_( index )
+    index_( lockShaderLight( openGL ) )
 {
     GLint currentShaderProgram = -1;
     char uniformName[64];
 
     // Get current shader program ID.
     glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+
+    // Get the location of this light's isValid in the GLSL shader program.
+    sprintf( uniformName, "lights[%u].isValid", index_ );
+    isValidLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
+    assert( isValidLocation_ != -1 );
 
     // Get the location of this light's color in the GLSL shader program.
     sprintf( uniformName, "lights[%u].color", index_ );
@@ -51,6 +56,17 @@ Light::Light( LightType type, GLuint index, const PackableColor& color, std::str
     // Update light color in the shader.
     setLightColor( color );
     setAmbientCoefficient( 0.01f );
+}
+
+
+/***
+ * 2. Destruction
+ ***/
+
+Light::~Light()
+{
+    // Disable this light in shader.
+    glUniform1i( isValidLocation_, false );
 }
 
 
@@ -106,6 +122,40 @@ void Light::setLightColor( const PackableColor &color )
 void Light::setAmbientCoefficient( float coefficient )
 {
     glUniform1f( ambientCoefficientLocation_, coefficient );
+}
+
+
+/***
+ * 6. Auxiliar methods
+ ***/
+
+// FIXME: Duplicated code.
+GLuint Light::lockShaderLight( OpenGL& openGL )
+{
+    GLint currentShaderProgram = -1;
+    char uniformName[64] = {0};
+    GLint varLocation = -1;
+    unsigned int currentLightIndex;
+
+    // Get current shader program ID.
+    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
+
+    for( currentLightIndex = 0; currentLightIndex < 4; currentLightIndex++ ){ // Retrieve MAX_LIGHTS from shader.
+        sprintf( uniformName, "lights[%u].isValid", currentLightIndex );
+
+        varLocation = openGL.getShaderVariableLocation( uniformName, currentShaderProgram );
+        assert( varLocation != -1 );
+
+        if( !( openGL.getShaderInteger( ShaderProgramType::DEFAULT, uniformName ) ) ){
+            glUniform1i( varLocation, true );
+            return currentLightIndex;
+        }
+    }
+
+    OpenGL::checkStatus( "Light::lockShaderLight()" );
+
+    // TODO: Or return -1 (change return type to GLint)?
+    throw std::runtime_error( "Light::lockShaderLight() - No free light struct in shader" );
 }
 
 } // namespace como

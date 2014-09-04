@@ -24,24 +24,11 @@ namespace como {
  * 1. Construction
  ***/
 
-LightsManager::LightsManager( ServerInterfacePtr server, LogPtr log ) :
+LightsManager::LightsManager( ServerInterfacePtr server, LogPtr log, OpenGL* openGL ) :
     ResourceCommandsExecuter( server ),
-    SpecializedEntitiesManager( server, log )
-{
-    GLint i=0;
-
-    // TODO: Remove the "3" and retrieve it from shader
-    // (MAX_LIGHTS - 1).
-    for( i=3; i>=0; i-- ){
-        freeLightIndices_.push( i );
-    }
-
-    // TODO: Remove the "3" and retrieve it from shader
-    // (MAX_DIRECTIONAL_LIGHTS - 1).
-    for( i=3; i>=0; i-- ){
-        freeDirectionalLightIndices_.push( i );
-    }
-}
+    SpecializedEntitiesManager( server, log ),
+    openGL_( openGL )
+{}
 
 
 /***
@@ -59,73 +46,25 @@ std::string LightsManager::getResourceName( const ResourceID& lightID ) const
  * 4. Lights management
  ***/
 
-bool LightsManager::createDirectionalLight()
+void LightsManager::requestDirectionalLightCreation()
 {
-    // FIXME: Duplicated code (except for error message).
-    GLint lightIndex;
-    GLuint directionalLightIndex;
-
-    // TODO: What happens if two users create the last allowed directional
-    // light at the same time? I need confirmation from server...
-    if( !freeDirectionalLightIndices_.size() ){
-        return false;
-    }
-
-    // Reserve both directional and light indices for the new light.
-    lightIndex = freeLightIndices_.top();
-    directionalLightIndex = freeDirectionalLightIndices_.top();
-    freeLightIndices_.pop();
-    freeDirectionalLightIndices_.pop();
-
-    // Create a default material for the light.
-    MaterialConstPtr lightMaterial( new Material( PackableColor( 255, 0, 0, 255 ) ) );
-
     // Create a default light color.
     PackableColor lightColor( 255, 0, 0, 255 );
 
-    // Create a struct with the light's properties.
-    std::unique_ptr< DirectionalLight > light(
-                new DirectionalLight( directionalLightIndex, lightIndex, lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), lightMaterial ) );
-
-    // Add the created light to the Drawables Manager and retrieve the ID given
-    // to it.
-    ResourceID lightID =
-            getLocalResourcesSelection()->addResource( std::move( light ) );
-
-    sendCommandToServer( CommandConstPtr( new DirectionalLightCreationCommand( localUserID(), lightID, lightColor ) ) );
-
-    //log()->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
-
-    notifyObservers();
-
-    return true;
+    sendCommandToServer(
+                CommandConstPtr(
+                    new DirectionalLightCreationCommand( localUserID(),
+                                                         newResourceID(),
+                                                         lightColor ) ) );
 }
 
 
 void LightsManager::addDirectionalLight( const ResourceID& lightID, const PackableColor& lightColor )
 {
-    // FIXME: Duplicated code (except for error message).
-    GLint lightIndex;
-    GLuint directionalLightIndex;
-
-    if( !freeDirectionalLightIndices_.size() ){
-        QMessageBox errorMsg( QMessageBox::Critical,
-                              "Could't create a directional light",
-                              "Remote attempt to create a directional light with no room for it!" );
-        errorMsg.exec();
-        return;
-    }
-
-    // Reserve both directional and light indices for the new light.
-    lightIndex = freeLightIndices_.top();
-    directionalLightIndex = freeDirectionalLightIndices_.top();
-    freeLightIndices_.pop();
-    freeDirectionalLightIndices_.pop();
-
     MaterialConstPtr lightMaterial( new Material( PackableColor( 255, 0, 0, 255 ) ) );
 
     std::unique_ptr< DirectionalLight >
-            light( new DirectionalLight( directionalLightIndex, lightIndex, lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), lightMaterial ) );
+            light( new DirectionalLight( lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), lightMaterial, *openGL_ ) );
 
     getResourcesSelection( lightID.getCreatorID() )->addResource( lightID, std::move( light ) );
 
@@ -174,6 +113,21 @@ void LightsManager::executeRemoteCommand( const LightCommand& command )
 
             notifyObservers();
         }break;
+        case LightCommandType::LIGHT_CREATION_RESPONSE:{
+            const LightCreationResponseCommand& lightCommand =
+                    dynamic_cast< const LightCreationResponseCommand& >( command );
+
+            if( lightCommand.getResponse() ){
+                addDirectionalLight( lightCommand.getResourceID(),
+                                     PackableColor( 255, 255, 255, 255 ) ); // TODO: Use same color as in request or remove such color from request and use WHITE always.
+            }else{
+                // TODO: Move this to a GUI class.
+                QMessageBox errorMsg( QMessageBox::Critical,
+                                      "Could't create a directional light",
+                                      "Remote attempt to create a directional light with no room for it!" );
+                errorMsg.exec();
+            }
+        }break;
     }
 }
 
@@ -185,42 +139,6 @@ void LightsManager::executeRemoteCommand( const LightCommand& command )
 void LightsManager::update()
 {
     notifyObservers();
-}
-
-
-/***
- * 9. Auxiliar methods
- ***/
-
-unsigned int LightsManager::getNextFreeLightIndex( LightType lightType )
-{
-    switch( lightType ){
-        case LightType::DIRECTIONAL_LIGHT:
-        break;
-    }
-
-    Q_UNUSED( lightType )
-
-    /*
-    // TODO: Retrieve this value from shader depending on the value of
-    // lightType.
-    Q_UNUSED( lightType )
-    const unsigned int MAX_REQUESTED_LIGHTS = 4;
-    */
-
-    return 0;
-}
-
-void LightsManager::highlightLight( ResourceID lightID )
-{
-    (void)( lightID );
-    //drawablesManager_->highlightProperty( lights_.at( lightID ).get() );
-}
-
-
-void LightsManager::removeHighlights()
-{
-    //drawablesManager_->highlightProperty( nullptr );
 }
 
 } // namespace como

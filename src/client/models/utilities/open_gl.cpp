@@ -27,6 +27,10 @@ GLint normalsShaderProgram_;
 OpenGL::OpenGL() :
     currentProgramID_( -1 )
 {
+    unsigned int currentLightIndex;
+    GLint varLocation = -1;
+    char uniformName[64] = {0};
+
     OpenGL::checkStatus( "OpenGL::OpenGL() - begin" );
 
     // Load shaders
@@ -48,16 +52,58 @@ OpenGL::OpenGL() :
     // Start using the default shader program.
     setShadingMode( ShadingMode::SOLID_LIGHTING_AND_TEXTURING );
 
+    // Initialize all lights as "invalid".
+    for( currentLightIndex = 0; currentLightIndex < 4; currentLightIndex++ ){ // Retrieve MAX_LIGHTS from shader.
+        sprintf( uniformName, "lights[%u].isValid", currentLightIndex );
+        varLocation = glGetUniformLocation( shaderProgramsIDs_[ ShaderProgramType::DEFAULT ], uniformName );
+        glUniform1i( varLocation, false );
+    }
+
+
+    // Initialize all directional lights as "invalid".
+    for( currentLightIndex = 0; currentLightIndex < 4; currentLightIndex++ ){ // Retrieve MAX_LIGHTS from shader.
+        sprintf( uniformName, "directionalLights[%u].isValid", currentLightIndex );
+        varLocation = glGetUniformLocation( shaderProgramsIDs_[ ShaderProgramType::DEFAULT ], uniformName );
+        glUniform1i( varLocation, false );
+    }
+
+
     OpenGL::checkStatus( "OpenGL::OpenGL() - end" );
 }
 
 
 /***
- * 3. Setters
+ * 3. Getters
+ ***/
+
+ShadingMode OpenGL::getShadingMode() const
+{
+    return currentShadingMode_;
+}
+
+
+GLint OpenGL::getShaderInteger( ShaderProgramType shaderProgramType, string varName )
+{
+    GLint varLocation = -1;
+    GLint varValue = 0;
+
+    varLocation = getShaderVariableLocation( varName,
+                               shaderProgramsIDs_.at( shaderProgramType ) );
+
+    glGetUniformiv( shaderProgramsIDs_.at( shaderProgramType ), varLocation, &varValue );
+
+    return varValue;
+}
+
+
+/***
+ * 4. Setters
  ***/
 
 void OpenGL::setShadingMode( ShadingMode shadingMode )
 {
+    currentShadingMode_ = shadingMode;
+
     switch( shadingMode ){
         case ShadingMode::SOLID_LIGHTING_AND_TEXTURING:
             setProgram( ShaderProgramType::DEFAULT );
@@ -117,7 +163,7 @@ void OpenGL::setProgram( ShaderProgramType program )
 
 
 /***
- * 4. Lighting
+ * 5. Lighting
  ***/
 
 void OpenGL::enableLighting() const
@@ -135,7 +181,7 @@ void OpenGL::disableLighting() const
 
 
 /***
- * 5. Texturing
+ * 6. Texturing
  ***/
 
 void OpenGL::enableTexturing() const
@@ -153,16 +199,20 @@ void OpenGL::disableTexturing() const
 
 
 /***
- * 6. Utilities
+ * 7. Utilities
  ***/
 
-GLint OpenGL::getShaderVariableLocation( string varName ) const
+GLint OpenGL::getShaderVariableLocation( string varName, GLint program ) const
 {
+    if( program < 0 ){
+        program = currentProgramID_;
+    }
+
     GLint varLocation = -1;
 
-    assert( currentProgramID_ != -1 );
+    assert( program != -1 );
 
-    varLocation = glGetUniformLocation( currentProgramID_, varName.c_str() );
+    varLocation = glGetUniformLocation( program, varName.c_str() );
 
     if( varLocation < 0 ){
         throw std::runtime_error( std::string( "Shader variable [" ) +
@@ -175,7 +225,7 @@ GLint OpenGL::getShaderVariableLocation( string varName ) const
 
 
 /***
- * 7. Checking
+ * 8. Checking
  ***/
 
 void OpenGL::checkStatus( std::string location )
