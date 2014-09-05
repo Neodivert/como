@@ -22,6 +22,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include <array>
+#include <common/mesh_info/mesh_vertex_data.hpp>
 
 namespace como {
 
@@ -31,6 +32,19 @@ typedef std::vector< std::array< GLuint, 3 > > NormalTrianglesVector;
 struct MeshNormalData {
     NormalsVector normals;
     NormalTrianglesVector normalTriangles;
+
+
+    /***
+     * 1. Construction
+     ***/
+    MeshNormalData() = default;
+    MeshNormalData( const MeshVertexData& meshVertexData );
+
+
+    /***
+     * 2. Initialization
+     ***/
+    void initFromMeshVertexData( const MeshVertexData& meshVertexData );
 };
 
 } // namespace como

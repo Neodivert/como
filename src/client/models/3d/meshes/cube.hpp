@@ -46,6 +46,15 @@ class Cube
          ***/
         Cube& operator = ( const Cube& ) = delete;
         Cube& operator = ( Cube&& ) = delete;
+
+
+    private:
+        /***
+         * 4. Initialization
+         ***/
+        static MeshVertexData generateVertexData( float width, float height, float depth );
+        static MeshNormalData generateNormalData( const MeshVertexData& meshVertexData );
+        static MeshTextureData generateTextureData();
 };
 
 } // namespace como

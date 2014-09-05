@@ -182,4 +182,5 @@ SOURCES += \
     ../../src/client/managers/managers/entities/abstract_entities_manager.cpp \
     ../../src/client/gui/materials/material_editor.cpp \
     ../../src/client/models/3d/meshes/system_mesh.cpp \
-    ../../src/client/models/3d/meshes/cube.cpp
+    ../../src/client/models/3d/meshes/cube.cpp \
+    ../../src/common/mesh_info/mesh_normal_data.cpp

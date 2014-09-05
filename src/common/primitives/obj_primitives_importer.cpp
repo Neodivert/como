@@ -231,29 +231,7 @@ void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
 
 void OBJPrimitivesImporter::computeVertexNormals( const MeshVertexData &vertexData, MeshNormalData &normalData )
 {
-    glm::vec3 faceNormal;
-
-    // Set a zero normal for every vertex in the mesh.
-    normalData.normals.resize( vertexData.vertices.size(), glm::vec3( 0.0f ) );
-
-    // Compute each face normal and add it to the normal of every vertex in
-    // in the triangle.
-    for( auto triangle : vertexData.vertexTriangles ){
-        faceNormal = glm::cross(
-                    vertexData.vertices[ triangle[1] ] - vertexData.vertices[ triangle[0] ],
-                    vertexData.vertices[ triangle[2] ] - vertexData.vertices[ triangle[0] ] );
-
-        normalData.normals[ triangle[0] ] += faceNormal;
-        normalData.normals[ triangle[1] ] += faceNormal;
-        normalData.normals[ triangle[2] ] += faceNormal;
-    }
-
-    // Normalize all the normals.
-    for( auto& normal : normalData.normals ){
-        normal = glm::normalize( normal );
-    }
-
-    normalData.normalTriangles = vertexData.vertexTriangles;
+    normalData.initFromMeshVertexData( vertexData );
 }
 
 

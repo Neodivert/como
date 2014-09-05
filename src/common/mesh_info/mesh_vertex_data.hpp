@@ -27,7 +27,9 @@
 namespace como {
 
 typedef std::vector< glm::vec3 > VerticesVector;
-typedef std::vector< std::array< GLuint, 3 > > VertexTrianglesVector;
+
+typedef std::array< GLuint, 3 > IndicesTriangle;
+typedef std::vector< IndicesTriangle > VertexTrianglesVector;
 
 struct MeshVertexData {
     VerticesVector vertices;
