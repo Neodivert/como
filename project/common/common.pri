@@ -99,7 +99,9 @@ HEADERS += \
     ../../src/common/managers/abstract_resources_ownership_manager.hpp \
     ../../src/common/utilities/observable_container/container_observer.hpp \
     ../../src/common/managers/managers/resources/resources_ownership_manager.hpp \
-    ../../src/common/commands/light_commands/light_creation_response_command.hpp
+    ../../src/common/commands/light_commands/light_creation_response_command.hpp \
+    ../../src/common/mesh_info/triangles_range.hpp \
+    ../../src/common/mesh_info/triangles_group.hpp
 
 
 # Common sources (used by both client and server).
