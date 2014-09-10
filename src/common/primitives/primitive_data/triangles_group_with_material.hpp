@@ -16,26 +16,19 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef MESH_VERTEX_DATA_HPP
-#define MESH_VERTEX_DATA_HPP
+#ifndef TRIANGLES_GROUP_WITH_MATERIAL_HPP
+#define TRIANGLES_GROUP_WITH_MATERIAL_HPP
 
-#include <glm/glm.hpp>
-#include <vector>
-#include <array>
-#include <GL/gl.h>
+#include <common/primitives/primitive_data/triangles_group.hpp>
+
 
 namespace como {
 
-typedef std::vector< glm::vec3 > VerticesVector;
-
-typedef std::array< GLuint, 3 > IndicesTriangle;
-typedef std::vector< IndicesTriangle > VertexTrianglesVector;
-
-struct MeshVertexData {
-    VerticesVector vertices;
-    VertexTrianglesVector vertexTriangles;
+struct TrianglesGroupWithMaterial : public TrianglesGroup {
+    unsigned int materialIndex;
 };
 
 } // namespace como
 
-#endif // MESH_VERTEX_DATA_HPP
+#endif // TRIANGLES_GROUP_WITH_MATERIAL_HPP
+

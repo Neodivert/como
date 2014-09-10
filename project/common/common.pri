@@ -82,15 +82,13 @@ HEADERS += \
     ../../src/common/primitives/primitive_info.hpp \
     ../../src/common/packables/conditional_packable_wrapper.hpp \
     ../../src/common/primitives/primitive_file.hpp \
-    ../../src/common/mesh_info/mesh_vertex_data.hpp \
-    ../../src/common/mesh_info/mesh_normal_data.hpp \
-    ../../src/common/mesh_info/mesh_texture_data.hpp \
-    ../../src/common/mesh_info/mesh_info.hpp \
-    ../../src/common/mesh_info/mesh_opengl_data.hpp \
-    ../../src/common/mesh_info/material_info.hpp \
-    ../../src/common/mesh_info/texture_info.hpp \
+    ../../src/common/primitives/primitive_data/mesh_vertex_data.hpp \
+    ../../src/common/primitives/primitive_data/mesh_normal_data.hpp \
+    ../../src/common/primitives/primitive_data/mesh_texture_data.hpp \
+    ../../src/common/primitives/primitive_data/mesh_opengl_data.hpp \
+    ../../src/common/primitives/primitive_data/texture_info.hpp \
     ../../src/common/scene/basic_scene.hpp \
-    ../../src/common/mesh_info/polygon_group_data.hpp \
+    ../../src/common/primitives/primitive_data/polygon_group_data.hpp \
     ../../src/common/commands/light_commands/light_ambient_coefficient_change_command.hpp \
     ../../src/common/commands/resource_commands/resource_command.hpp \
     ../../src/common/commands/resources_selection_commands/resources_selection_command.hpp \
@@ -100,8 +98,12 @@ HEADERS += \
     ../../src/common/utilities/observable_container/container_observer.hpp \
     ../../src/common/managers/managers/resources/resources_ownership_manager.hpp \
     ../../src/common/commands/light_commands/light_creation_response_command.hpp \
-    ../../src/common/mesh_info/triangles_range.hpp \
-    ../../src/common/mesh_info/triangles_group.hpp
+    ../../src/common/primitives/primitive_data/triangles_range.hpp \
+    ../../src/common/primitives/primitive_data/triangles_group.hpp \
+    ../../src/common/primitives/primitive_data/imported_primitive_data.hpp \
+    ../../src/common/primitives/primitive_data/primitive_data.hpp \
+    ../../src/common/primitives/primitive_data/material_info.hpp \
+    ../../src/common/primitives/primitive_data/triangles_group_with_material.hpp
 
 
 # Common sources (used by both client and server).
@@ -151,4 +153,7 @@ SOURCES += \
     ../../src/common/commands/resources_selection_commands/resources_selection_command.cpp \
     ../../src/common/commands/resource_commands/resource_selection_response.cpp \
     ../../src/common/managers/abstract_resources_ownership_manager.cpp \
-    ../../src/common/commands/light_commands/light_creation_response_command.cpp
+    ../../src/common/commands/light_commands/light_creation_response_command.cpp \
+    ../../src/common/primitives/primitive_data/primitive_data.cpp \
+    ../../src/common/primitives/primitive_data/imported_primitive_data.cpp \
+    ../../src/common/primitives/primitive_data/mesh_normal_data.cpp \

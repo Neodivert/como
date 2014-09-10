@@ -24,8 +24,15 @@ namespace como {
  * 1. Construction
  ***/
 
-SystemMesh::SystemMesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials, bool displayVertexNormals ) :
-    Mesh( vertexData, oglData, polygonsGroups, materials, displayVertexNormals )
-{}
+SystemMesh::SystemMesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials, bool displayVertexNormals ) /*:
+    Mesh( vertexData, oglData, polygonsGroups, materials, displayVertexNormals )*/
+{
+    // TODO: Complete
+    (void)( vertexData );
+    (void)( oglData );
+    (void)( polygonsGroups );
+    (void)( materials );
+    (void)( displayVertexNormals );
+}
 
 } // namespace como

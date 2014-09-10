@@ -16,8 +16,9 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "render_panel.hpp"
 #include <QSplitter>
+#include "render_panel.hpp"
+
 
 namespace como {
 

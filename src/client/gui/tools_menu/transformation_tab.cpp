@@ -16,10 +16,11 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "transformation_tab.hpp"
 #include <QGroupBox>
 #include <QButtonGroup>
 #include <QLayout>
+#include "transformation_tab.hpp"
+
 
 namespace como {
 

@@ -21,8 +21,9 @@
 
 #include <client/models/dependencies.hpp>
 #include <common/packables/array/packable_color.hpp>
-#include <common/mesh_info/material_info.hpp>
+#include <common/primitives/primitive_data/material_info.hpp>
 #include <client/models/3d/textures/texture.hpp>
+#include <list>
 
 
 namespace como {
@@ -88,13 +89,7 @@ class Material
 
 
         /***
-         * 6. Auxiliar methods
-         ***/
-        void print() const;
-
-
-        /***
-         * 7. Operators
+         * 6. Operators
          ***/
         Material& operator = ( const Material& ) = default;
         Material& operator = ( Material&& ) = default;
@@ -102,6 +97,9 @@ class Material
 
 typedef std::shared_ptr< Material > MaterialPtr;
 typedef std::shared_ptr< const Material > MaterialConstPtr;
+typedef std::list< MaterialPtr > MaterialsList;
+typedef std::vector< MaterialPtr > MaterialsVector;
+typedef std::vector< MaterialConstPtr > ConstMaterialsVector;
 
 } // namespace como
 

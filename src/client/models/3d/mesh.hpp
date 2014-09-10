@@ -29,7 +29,7 @@
 #include <stdexcept>
 #include <client/models/3d/materials/material.hpp>
 #include <common/packables/array/packable_color.hpp>
-#include <common/mesh_info/mesh_info.hpp>
+#include <common/primitives/primitive_data/primitive_data.hpp>
 
 namespace como {
 
@@ -73,25 +73,24 @@ class Mesh : public AbstractMesh, public Entity
 
         // VBO for transformed vertex data.
         GLuint vbo;
-    private:
 
         // EBO : Elements-Buffer Array.
         GLuint ebo;
         GLsizei nEboElements_;
 
+        bool includesTexture_;
+
+        bool displayVertexNormals_;
+
+    private:
         // Mesh's centroid.
         glm::vec4 originalCentroid;
         glm::vec4 transformedCentroid;
 
-        bool includesTexture_;
         unsigned int componensPerVertex_;
 
-        std::vector< PolygonGroupData > polygonsGroups_;
-
         // Mesh's material.
-        std::vector< MaterialConstPtr > materials_;
-
-        bool displayVertexNormals_;
+        ConstMaterialsVector materials_;
 
         bool displayEdges_;
 
@@ -100,9 +99,9 @@ class Mesh : public AbstractMesh, public Entity
          * 1. Construction.
          ***/
     protected:
-        Mesh( MeshType type, const char* file, MaterialConstPtr material, bool displayVertexNormals = false );
+        Mesh( MeshType type, const char* file, bool displayVertexNormals = false );
     public:
-        Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials, bool displayVertexNormals = false );
+        Mesh( const PrimitiveData& primitiveData, ConstMaterialsVector materials, bool displayVertexNormals = false );
         Mesh( const Mesh& b ) = default;
         Mesh( Mesh&& ) = delete;
 
@@ -163,8 +162,7 @@ class Mesh : public AbstractMesh, public Entity
 
     public:
         // Send mesh to OpenGL server for rendering it.
-        virtual void draw( OpenGLPtr openGL, const glm::mat4& view, const glm::mat4& projection, const glm::vec4* contourColor = nullptr ) const;
-    private:
+        virtual void drawEdges( OpenGLPtr openGL, const glm::mat4& view, const glm::mat4& projection, const glm::vec4* contourColor = nullptr ) const;
         virtual void drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, glm::vec4 color ) const;
     public:
 
@@ -172,6 +170,7 @@ class Mesh : public AbstractMesh, public Entity
          * 9. Auxliar methods.
          ***/
         bool containsProperty( const void* property ) const;
+        void sendMaterialToShader( const unsigned int index ) const;
 
 
         /***

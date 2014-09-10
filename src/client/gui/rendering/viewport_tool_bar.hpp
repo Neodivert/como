@@ -19,8 +19,9 @@
 #ifndef VIEW_PORT_TOOLBAR_HPP
 #define VIEW_PORT_TOOLBAR_HPP
 
-#include <client/gui/viewport.hpp>
 #include <QMenuBar>
+#include <client/gui/viewport.hpp>
+
 
 namespace como {
 

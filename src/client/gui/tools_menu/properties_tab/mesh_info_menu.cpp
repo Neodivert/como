@@ -16,8 +16,9 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "mesh_info_menu.hpp"
 #include <QRadioButton>
+#include "mesh_info_menu.hpp"
+
 
 namespace como {
 

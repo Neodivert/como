@@ -16,7 +16,6 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "connection_wizard.hpp"
 #include <QLabel>
 #include <QRadioButton>
 #include <QVBoxLayout>
@@ -24,6 +23,7 @@
 #include <QFormLayout>
 #include <QRegExpValidator>
 
+#include "connection_wizard.hpp"
 #include "page_ids.hpp"
 #include "intro_page.hpp"
 #include "connect_server_page.hpp"

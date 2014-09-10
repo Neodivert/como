@@ -40,7 +40,7 @@ MaterialCreationCommand::MaterialCreationCommand( const MaterialCreationCommand 
  * 3. Getters
  ***/
 
-MaterialInfo MaterialCreationCommand::getMaterialInfo() const
+MaterialInfo MaterialCreationCommand::getMaterialData() const
 {
     MaterialInfo materialInfo;
 

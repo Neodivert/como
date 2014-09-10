@@ -19,9 +19,9 @@
 #ifndef USERS_LIST_HPP
 #define USERS_LIST_HPP
 
+#include <QListWidget>
 #include <common/commands/commands.hpp>
 #include <common/utilities/log.hpp>
-#include <QListWidget>
 #include <map>
 #include "users_list_item.hpp"
 #include <common/utilities/observable_container/container_observer.hpp>

@@ -19,6 +19,8 @@
 #ifndef CLIENT_PRIMITIVES_MANAGER_HPP
 #define CLIENT_PRIMITIVES_MANAGER_HPP
 
+#include <QObject>
+#include <QOffscreenSurface>
 #include <string>
 #include <client/managers/managers/meshes/meshes_manager.hpp>
 #include <common/utilities/log.hpp>
@@ -27,12 +29,11 @@
 #include <map>
 #include <common/managers/primitives/abstract_primitives_manager.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
-#include <QObject>
 #include <client/managers/managers/materials/materials_manager.hpp>
 #include <cstdio>
 #include <fstream>
 #include <common/primitives/obj_primitives_importer.hpp>
-#include <QOffscreenSurface>
+
 
 namespace como {
 

@@ -20,7 +20,7 @@
 #define MATERIAL_CREATION_COMMAND_HPP
 
 #include "material_command.hpp"
-#include <common/mesh_info/material_info.hpp>
+#include <common/primitives/primitive_data/material_info.hpp>
 #include <common/packables/packable_string.hpp>
 #include <common/packables/packable_float.hpp>
 
@@ -55,7 +55,7 @@ class MaterialCreationCommand : public MaterialCommand
     /***
      * 3. Getters
      ***/
-        MaterialInfo getMaterialInfo() const;
+        MaterialInfo getMaterialData() const;
 
 
     /***

@@ -16,23 +16,37 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef MESH_TEXTURE_DATA_HPP
-#define MESH_TEXTURE_DATA_HPP
+#ifndef MESH_NORMAL_DATA_HPP
+#define MESH_NORMAL_DATA_HPP
 
 #include <glm/glm.hpp>
 #include <vector>
 #include <array>
+#include <common/primitives/primitive_data/mesh_vertex_data.hpp>
 
 namespace como {
 
-typedef std::vector< glm::vec2 > UVCoordinatesVector;
-typedef std::vector< std::array< GLuint, 3 > > UVTrianglesVector;
+typedef std::vector< glm::vec3 > NormalsVector;
+typedef std::vector< std::array< GLuint, 3 > > NormalTrianglesVector;
 
-struct MeshTextureData {
-    UVCoordinatesVector uvCoordinates;
-    UVTrianglesVector uvTriangles;
+struct MeshNormalData {
+    NormalsVector normals;
+    NormalTrianglesVector normalTriangles;
+
+
+    /***
+     * 1. Construction
+     ***/
+    MeshNormalData() = default;
+    MeshNormalData( const MeshVertexData& meshVertexData );
+
+
+    /***
+     * 2. Initialization
+     ***/
+    void initFromMeshVertexData( const MeshVertexData& meshVertexData );
 };
 
 } // namespace como
 
-#endif // MESH_TEXTURE_DATA_HPP
+#endif // MESH_NORMAL_DATA_HPP

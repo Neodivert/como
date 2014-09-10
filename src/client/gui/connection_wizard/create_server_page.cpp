@@ -16,10 +16,11 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "create_server_page.hpp"
 #include <QFormLayout>
 #include <QIntValidator>
+
 #include "page_ids.hpp"
+#include "create_server_page.hpp"
 
 
 namespace como {

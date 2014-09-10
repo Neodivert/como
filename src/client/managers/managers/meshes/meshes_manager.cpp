@@ -17,6 +17,7 @@
 ***/
 
 #include "meshes_manager.hpp"
+#include <client/models/3d/meshes/imported_mesh.hpp>
 
 namespace como {
 
@@ -38,7 +39,7 @@ MeshesManager::MeshesManager( ServerInterfacePtr server, LogPtr log, MaterialsMa
  * 4. Getters
  ***/
 
-string MeshesManager::getResourceName( const ResourceID& resourceID) const
+string MeshesManager::getResourceName( const ResourceID& resourceID ) const
 {
     for( const auto& meshesSelection : resourcesSelections_ ){
         if( meshesSelection.second->containsResource( resourceID ) ){
@@ -112,9 +113,9 @@ void MeshesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
  * 6. Meshes management
  ***/
 
-ResourceID MeshesManager::createMesh( MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials )
-{
-    std::unique_ptr< Mesh > mesh( new Mesh( vertexData, oglData, polygonsGroups, materials, newMeshesDisplayVertexNormals_ ) );
+ResourceID MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData, ConstMaterialsVector materials )
+{    
+    std::unique_ptr< Mesh > mesh( new ImportedMesh( primitiveData, materials, newMeshesDisplayVertexNormals_ ) );
 
     ResourceID meshID = getLocalResourcesSelection()->addResource( std::move( mesh ) );
 
@@ -122,13 +123,12 @@ ResourceID MeshesManager::createMesh( MeshVertexData vertexData, MeshOpenGLData 
 }
 
 
-void MeshesManager::createMesh( ResourceID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials )
+void MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData, ConstMaterialsVector materials, const ResourceID& meshID )
 {
-    std::unique_ptr< Mesh > mesh( new Mesh( vertexData, oglData, polygonsGroups, materials, newMeshesDisplayVertexNormals_ ) );
+    std::unique_ptr< Mesh > mesh( new ImportedMesh( primitiveData, materials, newMeshesDisplayVertexNormals_ ) );
 
     getResourcesSelection( meshID.getCreatorID() )->addResource( meshID, std::move( mesh ) );
 }
-
 
 
 /***

@@ -51,7 +51,7 @@ class DirectionalLight : public Light
          * 1. Construction
          ***/
         DirectionalLight() = delete;
-        DirectionalLight( const PackableColor& lightColor, const glm::vec3& lightVector, MaterialConstPtr meshMaterial, OpenGL& openGL );
+        DirectionalLight( const PackableColor& lightColor, const glm::vec3& lightVector, OpenGL& openGL );
         DirectionalLight( const DirectionalLight& ) = default; // TODO: Implement (or remove clone()).
         DirectionalLight( DirectionalLight&& ) = delete;
 

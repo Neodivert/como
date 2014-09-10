@@ -19,12 +19,12 @@
 #ifndef PRIMITIVE_FILE_HPP
 #define PRIMITIVE_FILE_HPP
 
-#include <common/mesh_info/mesh_info.hpp>
-typedef std::vector< glm::vec3 > VerticesVector;
-typedef std::vector< std::array< GLuint, 3 > > TrianglesVector;
+#include <glm/glm.hpp>
+#include <string>
 
 namespace como {
 
+// TODO: Move readVec3() to another class and remove this class.
 class PrimitiveFile
 {
     public:
@@ -45,28 +45,23 @@ class PrimitiveFile
         /***
          * 3. File writting
          ***/
-        static void write( const MeshInfo meshInfo, std::string filePath );
+        /*
+        static void write( const PrimitiveData primitiveData, std::string filePath );
     private:
         static void writeVertices( const VerticesVector& vertices, std::ofstream& file );
-        static void writeTriangles( const VertexTrianglesVector& triangles, std::ofstream& file );
+        static void writeTriangles( const IndicesTrianglesVector& triangles, std::ofstream& file );
         static void writePolygonsGroups( const std::vector< PolygonGroupData >& polygonsGroupsData, std::ofstream& file );
         static void writeOpenGLData( const MeshOpenGLData& oglData, std::ofstream& file );
-        static void writeMaterials( const std::vector< MaterialInfo >& materials, std::ofstream& file );
-        static void writeMaterial( const MaterialInfo& material, std::ofstream& file );
+        static void writeMaterials( const std::vector< MaterialData >& materials, std::ofstream& file );
+        static void writeMaterial( const MaterialData& material, std::ofstream& file );
+        */
 
 
         /***
          * 4. File reading
          ***/
     public:
-        static void read( MeshInfo& meshInfo, std::string filePath );
-    private:
-        static void readVertices( VerticesVector& vertices, std::ifstream& file );
-        static void readTriangles( VertexTrianglesVector& triangles, std::ifstream& file );
-        static void readPolygonsGroups( std::vector< PolygonGroupData >& polygonsGroupsData, std::ifstream& file );
-        static void readOpenGLData( MeshOpenGLData& oglData, std::ifstream& file );
-        static void readMaterials( std::vector< MaterialInfo >& materials, std::ifstream& file );
-        static void readMaterial( MaterialInfo& material, std::ifstream& file );
+
 
 
         /***

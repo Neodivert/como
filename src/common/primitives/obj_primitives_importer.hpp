@@ -19,7 +19,7 @@
 #ifndef OBJ_PRIMITIVES_IMPORTER_HPP
 #define OBJ_PRIMITIVES_IMPORTER_HPP
 
-#include <common/mesh_info/mesh_info.hpp>
+#include <common/primitives/primitive_data/imported_primitive_data.hpp>
 #include "primitives_importer.hpp"
 #include <map>
 
@@ -40,6 +40,10 @@ enum class FaceComponents
 
 typedef std::array< GLuint, 3 > FaceTriangle;
 typedef std::array< GLuint, 4 > FaceQuad;
+
+typedef GLuint VertexIndice;
+typedef std::array< VertexIndice, 3 > CompoundVertex; // A vertex formed by a position vertex, a normal and an UV vertex.
+typedef std::map< CompoundVertex, VertexIndice > CompoundVerticesMap;
 
 namespace como {
 
@@ -70,16 +74,14 @@ class OBJPrimitivesImporter : PrimitivesImporter {
         virtual PrimitiveInfo importPrimitive( std::string srcFilePath, std::string dstDirectory, std::string nameSuffix );
 
     private:
-        virtual void processMeshFile( std::string filePath, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo );
-        void processMeshFileLine( std::string filePath, std::string line, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo );
-        void generateMeshVertexData( MeshInfo& meshInfo );
-        void computeVertexNormals( const MeshVertexData& vertexData, MeshNormalData& normalData );
-        void completePolygonGroups( MeshInfo& meshInfo );
-        unsigned int getMaterialIndex( const MeshInfo& meshInfo, std::string name );
+        virtual void processMeshFile( std::string filePath, PrimitiveInfo& primitiveInfo, ImportedPrimitiveData& primitiveData );
+        void processMeshFileLine( std::string filePath, std::string line, PrimitiveInfo& primitiveInfo, ImportedPrimitiveData& primitiveData );
+        void generateMeshVertexData( ImportedPrimitiveData& primitiveData );
+        void computeNormalData( const MeshVertexData& vertexData, MeshNormalData& normalData );
 
     private:
-        void processMaterialFile( std::string filePath, std::vector< MaterialInfo >& materials );
-        void processMaterialFileLine( std::string filePath, std::string fileLine, std::vector< MaterialInfo >& materials );
+        void processMaterialFile( std::string filePath, bool& includesTextures, MaterialsInfoVector& materials );
+        void processMaterialFileLine( std::string filePath, std::string fileLine, MaterialsInfoVector& materials, bool &includesTextures );
 
         void processTextureFile( std::string filePath, std::unique_ptr< TextureInfo >& textureInfo );
 
@@ -97,12 +99,13 @@ class OBJPrimitivesImporter : PrimitivesImporter {
         void readLine( std::ifstream& file, std::string& fileLine );
         FaceType getFaceType( const std::string& faceDefinition );
         FaceComponents getFaceComponents( const std::string& faceDefinition );
-        void processTriangleFaceStr( const std::string& lineBody, MeshInfo& meshInfo );
-        void processQuadFaceStr( const std::string& lineBody, MeshInfo& meshInfo );
+        void processTriangleFaceStr( const std::string& lineBody, ImportedPrimitiveData& primitiveData );
+        void processQuadFaceStr( const std::string& lineBody, ImportedPrimitiveData& primitiveData );
         void triangulateQuad( const FaceQuad& quad,
                               FaceTriangle& triangle1,
                               FaceTriangle& triangle2 );
         void insertQuad( std::vector< FaceTriangle >& triangles, FaceQuad& quad );
+        void generateOGLData( ImportedPrimitiveData& primitiveData );
         void splitFileLine( const std::string& line, std::string& lineHeader, std::string& lineBody );
         bool supportedImageFile( const std::string& filePath );
 };

@@ -16,19 +16,37 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef TRIANGLES_GROUP_HPP
-#define TRIANGLES_GROUP_HPP
-
-#include <common/mesh_info/triangles_range.hpp>
-#include <list>
+#ifndef MESH_OPENGL_DATA_HPP
+#define MESH_OPENGL_DATA_HPP
 
 namespace como {
 
-struct TrianglesGroup
-{
-    std::list< TrianglesRange > ranges;
+#include <vector>
+
+#define GL_GLEXT_PROTOTYPES
+extern "C" {
+    #define GL_GLEXT_PROTOTYPES
+    #include <GL/gl.h>
+}
+
+typedef std::vector< GLfloat > GLFloatBuffer;
+typedef std::vector< GLuint > GLUintBuffer;
+
+
+struct MeshOpenGLData {
+    bool includesTextures;
+
+    GLFloatBuffer vboData;
+    GLUintBuffer eboData;
+
+    MeshOpenGLData() : includesTextures( false ){}
+
+    GLuint componentsPerVertex() const
+    {
+        return ( includesTextures ? 8 : 6 );
+    }
 };
 
 } // namespace como
 
-#endif // TRIANGLES_GROUP_HPP
+#endif // MESH_OPENGL_DATA_HPP

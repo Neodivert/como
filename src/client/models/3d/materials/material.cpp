@@ -199,21 +199,4 @@ void Material::sendToShader() const
     }
 }
 
-
-/***
- * 6. Auxiliar methods
- ***/
-
-void Material::print() const
-{
-    std::cout << "Material" << std::endl
-              << "----------------------------------------------" << std::endl
-              << "Color: (" << color_[0] << ", " << color_[1] << ", " << color_[2] << ", " << color_[3] << ")" << std::endl
-              << "Ambient reflectivity: (" << ambientReflectivity_[0] << ", " << ambientReflectivity_[1] << ", " << ambientReflectivity_[2] << ")" << std::endl
-              << "Diffuse reflectivity: (" << diffuseReflectivity_[0] << ", " << diffuseReflectivity_[1] << ", " << diffuseReflectivity_[2] << ")" << std::endl
-              << "Specular reflectivity: (" << specularReflectivity_[0] << ", " << specularReflectivity_[1] << ", " << specularReflectivity_[2] << ")" << std::endl
-              << "Specular exponent: (" << specularExponent_ << ")" << std::endl
-              << "----------------------------------------------" << std::endl;
-}
-
 } // namespace como

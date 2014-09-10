@@ -18,7 +18,9 @@
 
 #include "texture.hpp"
 #include <cassert>
-#include <SDL2/SDL_image.h>
+extern "C" {
+    #include <SDL2/SDL_image.h>
+}
 #include <client/models/utilities/open_gl.hpp>
 
 namespace como {

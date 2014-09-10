@@ -1,3 +1,21 @@
+/***
+ * Copyright 2013, 2014 Moises J. Bonilla Caraballo (Neodivert)
+ *
+ * This file is part of COMO.
+ *
+ * COMO is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License v3 as published by
+ * the Free Software Foundation.
+ *
+ * COMO is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
+***/
+
 #include "cube.hpp"
 
 typedef std::array< GLuint, 4 > IndicesQuad;
@@ -79,16 +97,16 @@ MeshTextureData Cube::generateTextureData()
     MeshTextureData meshTextureData;
 
     // UV - Top right
-    meshTextureData.uvCoordinates.push_back( glm::vec2( 1.0f, 1.0f ) );
+    meshTextureData.uvVertices.push_back( glm::vec2( 1.0f, 1.0f ) );
 
     // UV - Top left
-    meshTextureData.uvCoordinates.push_back( glm::vec2( 0.0f, 1.0f ) );
+    meshTextureData.uvVertices.push_back( glm::vec2( 0.0f, 1.0f ) );
 
     // UV - Bottom left
-    meshTextureData.uvCoordinates.push_back( glm::vec2( 0.0f, 0.0f ) );
+    meshTextureData.uvVertices.push_back( glm::vec2( 0.0f, 0.0f ) );
 
     // UV - Botom right
-    meshTextureData.uvCoordinates.push_back( glm::vec2( 1.0f, 0.0f ) );
+    meshTextureData.uvVertices.push_back( glm::vec2( 1.0f, 0.0f ) );
 
     // UV triangle
     meshTextureData.uvTriangles.push_back( IndicesTriangle{ 0, 2, 3 } );

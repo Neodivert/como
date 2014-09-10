@@ -20,8 +20,8 @@
 #define MESH_INFO_MENU_HPP
 
 #include <QObject>
-#include <client/managers/managers/meshes/meshes_manager.hpp>
 #include <QGroupBox>
+#include <client/managers/managers/meshes/meshes_manager.hpp>
 
 namespace como {
 

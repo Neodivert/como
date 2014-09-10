@@ -20,9 +20,8 @@
 #define MAIN_WINDOW_HPP
 
 #include <QMainWindow>
-#include "../managers/como_app.hpp"
 #include <QTypeInfo>
-
+#include "../managers/como_app.hpp"
 
 Q_DECLARE_METATYPE( como::UserConnectionCommandConstPtr )
 

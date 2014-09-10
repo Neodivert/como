@@ -16,27 +16,23 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef MESH_OPENGL_DATA_HPP
-#define MESH_OPENGL_DATA_HPP
+#ifndef MESH_TEXTURE_DATA_HPP
+#define MESH_TEXTURE_DATA_HPP
+
+#include <glm/glm.hpp>
+#include <vector>
+#include <array>
 
 namespace como {
 
-#include <vector>
-#include <GL/gl.h>
+typedef std::vector< glm::vec2 > UVCoordinatesVector;
+typedef std::vector< std::array< GLuint, 3 > > UVTrianglesVector;
 
-typedef std::vector< GLfloat > GLFloatBuffer;
-typedef std::vector< GLuint > GLUintBuffer;
-
-
-struct MeshOpenGLData {
-    bool includesTextures;
-
-    GLFloatBuffer vboData;
-    GLUintBuffer eboData;
-
-    unsigned int componentsPerVertex;
+struct MeshTextureData {
+    UVCoordinatesVector uvVertices;
+    UVTrianglesVector uvTriangles;
 };
 
 } // namespace como
 
-#endif // MESH_OPENGL_DATA_HPP
+#endif // MESH_TEXTURE_DATA_HPP

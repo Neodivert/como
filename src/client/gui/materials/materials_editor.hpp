@@ -22,7 +22,7 @@
 #include <QFrame>
 #include <client/managers/managers/materials/materials_manager.hpp>
 
-#include "materials_list.hpp"
+#include "materials_list_widget.hpp"
 #include "material_editor.hpp"
 #include <client/managers/selections/meshes/local_meshes_selection.hpp>
 
@@ -36,7 +36,7 @@ class MaterialsEditor : public QFrame, public ContainerObserver<ResourceID>
         MaterialsManagerPtr materialsManager_;
         LocalMeshesSelection* localMeshesSelection_;
 
-        MaterialsList* materialsList_;
+        MaterialsListWidget* materialsList_;
         MaterialEditor* materialEditor_;
 
     public:

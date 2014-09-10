@@ -25,6 +25,7 @@
  ***/
 
 #include <QWindow>
+#include <QMouseEvent>
 #include <client/managers/como_app.hpp>
 #include <client/models/3d/camera.hpp>
 

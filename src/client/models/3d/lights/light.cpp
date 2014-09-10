@@ -26,8 +26,8 @@ namespace como {
  * 1. Construction
  ***/
 
-Light::Light( LightType type, const PackableColor& color, std::string path, MaterialConstPtr meshMaterial, OpenGL& openGL ) :
-    Mesh( MeshType::LIGHT, path.c_str(), meshMaterial ),
+Light::Light( LightType type, const PackableColor& color, std::string path, OpenGL& openGL ) :
+    ImportedMesh( path ),
     type_( type ),
     index_( lockShaderLight( openGL ) )
 {

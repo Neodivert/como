@@ -19,10 +19,10 @@
 #ifndef COMO_APP_HPP
 #define COMO_APP_HPP
 
-#include "scene/scene.hpp"
 #include <QOpenGLContext>
-#include <string>
 #include <QObject>
+#include "scene/scene.hpp"
+#include <string>
 #include <map>
 #include <array>
 #include <common/utilities/log.hpp>

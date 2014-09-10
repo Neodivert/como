@@ -19,6 +19,7 @@
 #ifndef SERVER_INTERFACE_HPP
 #define SERVER_INTERFACE_HPP
 
+#include <QObject>
 #include <common/packets/packets.hpp>
 #include <common/commands/commands.hpp>
 #include <common/utilities/log.hpp>
@@ -28,7 +29,6 @@
 #include <functional>
 #include <map>
 #include <queue>
-#include <QObject>
 #include <common/ids/resource_id.hpp>
 
 Q_DECLARE_METATYPE( std::shared_ptr< const como::Command > )

@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "materials_list_item.hpp"
+#include "materials_list_widget.hpp"
 
 namespace como {
 

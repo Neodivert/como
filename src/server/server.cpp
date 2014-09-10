@@ -122,7 +122,7 @@ void Server::run()
         // Create a directional light with with no owner and synchronise it in
         // the commands historic.
         const ResourceID DIRECTIONAL_LIGHT_ID( NO_USER, 1 );
-        std::uint8_t lightColor[4] = { 255, 255, 255, 0 };
+        std::uint8_t lightColor[4] = { 255, 255, 255, 255 };
         lightsManager_.requestDirectionalLightCreation( DIRECTIONAL_LIGHT_ID );
         addCommand( CommandConstPtr( new DirectionalLightCreationCommand( NO_USER, DIRECTIONAL_LIGHT_ID, lightColor ) ) );
 

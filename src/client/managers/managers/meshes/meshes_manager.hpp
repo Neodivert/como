@@ -23,6 +23,7 @@
 #include <client/managers/selections/meshes/meshes_selection.hpp>
 #include <client/managers/selections/meshes/local_meshes_selection.hpp>
 #include <client/managers/managers/materials/materials_manager.hpp>
+#include <common/primitives/primitive_data/imported_primitive_data.hpp>
 
 namespace como {
 
@@ -77,8 +78,8 @@ class MeshesManager : public SpecializedEntitiesManager< Mesh, MeshesSelection, 
         /***
          * 6. Meshes management
          ***/
-        ResourceID createMesh( MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials );
-        void createMesh( ResourceID meshID, MeshVertexData vertexData, MeshOpenGLData oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials );
+        ResourceID createMesh( const ImportedPrimitiveData& primitiveData, ConstMaterialsVector materials );
+        void createMesh( const ImportedPrimitiveData& primitiveData, ConstMaterialsVector materials, const ResourceID& meshID );
 
 
         /***

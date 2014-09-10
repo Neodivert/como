@@ -27,8 +27,8 @@ const glm::vec4 DEFAULT_LIGHT_VECTOR = glm::vec4( 0.0f, 1.0f, 0.0f, 0.0f );
  * 1. Construction
  ***/
 
-DirectionalLight::DirectionalLight( const PackableColor& lightColor, const glm::vec3& lightVector, MaterialConstPtr meshMaterial, OpenGL& openGL ) :
-    Light( LightType::DIRECTIONAL_LIGHT, lightColor, "data/system/primitives/directional_light.prim", meshMaterial, openGL ), // TODO: Load material from file.
+DirectionalLight::DirectionalLight( const PackableColor& lightColor, const glm::vec3& lightVector, OpenGL& openGL ) :
+    Light( LightType::DIRECTIONAL_LIGHT, lightColor, "data/system/primitives/directional_light.prim", openGL ), // TODO: Load material from file.
     directionalLightIndex_( lockShaderDirectionalLight( openGL ) )
 {
     (void)( lightVector ); // TODO: Remove this argument.
@@ -174,14 +174,14 @@ void DirectionalLight::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, cons
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
 
-    for( auto polygonsGroup : polygonsGroups_ ){
+    for( const auto& trianglesGroup : trianglesGroups_ ){
         // Send this mesh's material to shader.
-        materials_[polygonsGroup.materialIndex]->sendToShader();
+        //materials_[polygonsGroup.materialIndex]->sendToShader();
 
         glDrawElements( GL_TRIANGLES,
-                        polygonsGroup.nTriangles * 3,
+                        trianglesGroup.nTriangles * 3,
                         GL_UNSIGNED_INT,
-                        ( std::intptr_t* )( polygonsGroup.firstTriangleIndex * 3 * sizeof( GL_UNSIGNED_INT ) ) );
+                        ( std::intptr_t* )( trianglesGroup.firstTriangleIndex * 3 * sizeof( GL_UNSIGNED_INT ) ) );
     }
 
 

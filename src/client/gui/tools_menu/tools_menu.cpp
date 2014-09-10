@@ -16,11 +16,12 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
+#include <QVBoxLayout>
 #include "tools_menu.hpp"
 #include "creation_tab.hpp"
 #include "transformation_tab.hpp"
 #include "properties_tab/properties_tab.hpp"
-#include <QVBoxLayout>
+
 
 namespace como {
 

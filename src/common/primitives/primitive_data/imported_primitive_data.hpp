@@ -16,44 +16,42 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SYSTEM_MESH_HPP
-#define SYSTEM_MESH_HPP
+#ifndef IMPORTED_PRIMITIVE_DATA_HPP
+#define IMPORTED_PRIMITIVE_DATA_HPP
 
-#include <client/models/3d/mesh.hpp>
+#include <common/primitives/primitive_data/primitive_data.hpp>
+#include <common/primitives/primitive_data/triangles_group_with_material.hpp>
+#include <list>
+
 
 namespace como {
 
-class SystemMesh //: public Mesh
+struct ImportedPrimitiveData : public PrimitiveData
 {
     public:
-        /***
-         * 1. Construction
-         ***/
-        SystemMesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials, bool displayVertexNormals = false );
-        SystemMesh() = delete;
-        SystemMesh( const SystemMesh& ) = delete;
-        SystemMesh( SystemMesh&& ) = delete;
+        std::vector< TrianglesGroupWithMaterial > trianglesGroups_;
 
 
         /***
-         * 2. Destruction
+         * 1. File importing / exporting
          ***/
-        virtual ~SystemMesh() = default;
+        virtual void importFromFile( const std::string &filePath );
+        virtual void exportToFile( const std::string &filePath ) const;
+
+
+    private:
+        /***
+         * 2. File reading
+         ***/
+        void readTrianglesGroups( std::ifstream& file );
 
 
         /***
-         * 3. Wall
+         * 3. File writting
          ***/
-
-
-
-        /***
-         * 4. Operators
-         ***/
-        SystemMesh& operator = ( const SystemMesh& ) = delete;
-        SystemMesh& operator = ( SystemMesh&& ) = delete;
+        void writeTrianglesGroups( std::ofstream& file ) const;
 };
 
 } // namespace como
 
-#endif // SYSTEM_MESH_HPP
+#endif // IMPORTED_PRIMITIVE_DATA_HPP

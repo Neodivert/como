@@ -66,7 +66,6 @@ HEADERS += \
     ../../src/client/gui/utilities/color_button.hpp \
     ../../src/client/managers/managers/materials/materials_manager.hpp \
     ../../src/client/gui/materials/materials_editor.hpp \
-    ../../src/client/gui/materials/materials_list.hpp \
     ../../src/client/gui/materials/materials_list_item.hpp \
     ../../src/client/managers/managers/materials/material_handler.hpp \
     ../../src/client/managers/managers/lights/lights_manager.hpp \
@@ -113,7 +112,9 @@ HEADERS += \
     ../../src/client/managers/managers/entities/abstract_entities_manager.hpp \
     ../../src/client/gui/materials/material_editor.hpp \
     ../../src/client/models/3d/meshes/system_mesh.hpp \
-    ../../src/client/models/3d/meshes/cube.hpp
+    ../../src/client/models/3d/meshes/cube.hpp \
+    ../../src/client/models/3d/meshes/imported_mesh.hpp \
+    ../../src/client/gui/materials/materials_list_widget.hpp
 
 
 # Client sources
@@ -145,7 +146,6 @@ SOURCES += \
     ../../src/client/gui/utilities/color_button.cpp \
     ../../src/client/managers/managers/materials/materials_manager.cpp \
     ../../src/client/gui/materials/materials_editor.cpp \
-    ../../src/client/gui/materials/materials_list.cpp \
     ../../src/client/gui/materials/materials_list_item.cpp \
     ../../src/client/managers/managers/materials/material_handler.cpp \
     ../../src/client/managers/managers/lights/lights_manager.cpp \
@@ -183,4 +183,5 @@ SOURCES += \
     ../../src/client/gui/materials/material_editor.cpp \
     ../../src/client/models/3d/meshes/system_mesh.cpp \
     ../../src/client/models/3d/meshes/cube.cpp \
-    ../../src/common/mesh_info/mesh_normal_data.cpp
+    ../../src/client/models/3d/meshes/imported_mesh.cpp \
+    ../../src/client/gui/materials/materials_list_widget.cpp

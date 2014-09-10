@@ -21,11 +21,13 @@
 
 #include <string>
 
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
+extern "C" {
+    #define GL_GLEXT_PROTOTYPES
+    #include <GL/gl.h>
+}
 
 #include <memory>
-#include <common/mesh_info/texture_info.hpp>
+#include <common/primitives/primitive_data/texture_info.hpp>
 
 namespace como {
 

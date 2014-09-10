@@ -24,7 +24,10 @@
 
 #include <common/primitives/primitive_file.hpp>
 #include <client/managers/scene/scene.hpp>
-#include <SDL2/SDL_image.h>
+
+extern "C" {
+    #include <SDL2/SDL_image.h>
+}
 
 
 int main( int argc, char *argv[] )

@@ -19,16 +19,16 @@
 #ifndef MATERIALS_MANAGER_HPP
 #define MATERIALS_MANAGER_HPP
 
+#include <QObject>
 #include <map>
 #include <client/managers/managers/materials/material_handler.hpp>
 #include <common/ids/resource_id.hpp>
 #include <string>
-#include <QObject>
 #include <memory>
 #include <common/commands/material_commands/material_commands.hpp>
 #include <functional>
 #include <common/utilities/observable_container/observable_container.hpp>
-#include <common/mesh_info/material_info.hpp>
+#include <common/primitives/primitive_data/material_info.hpp>
 #include <client/managers/managers/resources/resources_manager.hpp>
 #include <client/managers/selections/materials/local_materials_selection.hpp>
 
@@ -83,12 +83,11 @@ class MaterialsManager : public QObject, public ServerWriter, public Observer, p
          * 3. Material creation
          ***/
     public:
-        ResourceID createMaterial( const MaterialInfo& materialInfo );
-        void createMaterials( const ResourceID& meshID, const std::vector<MaterialInfo>& materialsInfo, ResourceID& firstMaterialID );
-        void createRemoteMaterials( const ResourceID& meshID, const std::vector< MaterialInfo >& materialsInfo, const ResourceID& firstMaterialID );
-    //private:
-        void createMaterial( ResourceID id, const MaterialInfo &materialInfo );
+        ResourceID createMaterials( const std::vector< MaterialInfo >& materialsInfo, const ResourceID& meshID );
+        ResourceID createMaterial( const MaterialInfo& materialInfo, const ResourceID& meshID );
 
+        void createMaterials( const std::vector< MaterialInfo >& materialsInfo, const ResourceID& firstMaterialID, const ResourceID& meshID );
+        void createMaterial( const MaterialInfo& materialInfo, const ResourceID& materialID, const ResourceID& meshID );
 
 
         /***
@@ -106,7 +105,7 @@ class MaterialsManager : public QObject, public ServerWriter, public Observer, p
         bool materialOwnedByLocalUser( const ResourceID& resourceID ) const;
         virtual string getResourceName( const ResourceID& resourceID ) const;
         MaterialConstPtr getMaterial( const ResourceID& id ) const;
-        std::vector< MaterialConstPtr > getMaterials( const ResourceID& firstMaterialID, unsigned int nMaterials ) const;
+        ConstMaterialsVector getMaterials( const ResourceID& firstMaterialID, unsigned int nMaterials ) const;
 
 
         /***

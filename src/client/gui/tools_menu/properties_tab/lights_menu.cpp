@@ -16,8 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "lights_menu.hpp"
 #include <QFormLayout>
+#include "lights_menu.hpp"
 
 namespace como {
 

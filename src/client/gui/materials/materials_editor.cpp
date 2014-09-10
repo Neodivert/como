@@ -27,7 +27,7 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager, LocalMes
     localMeshesSelection_( localMeshesSelection )
 {
     QVBoxLayout* layout = new QVBoxLayout();
-    materialsList_ = new MaterialsList( materialsManager );
+    materialsList_ = new MaterialsListWidget( materialsManager );
     materialEditor_ = new MaterialEditor();
 
     layout->addWidget( new QLabel( "Materials Editor" ) );
@@ -36,7 +36,7 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager, LocalMes
 
     setLayout( layout );
 
-    QObject::connect( materialsList_, &MaterialsList::materialSelected,
+    QObject::connect( materialsList_, &MaterialsListWidget::materialSelected,
                       materialEditor_, &MaterialEditor::openMaterial );
 
     materialsManager_->ObservableContainer<ResourceID>::addObserver( this );

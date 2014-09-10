@@ -19,7 +19,7 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include "mesh.hpp"
+#include <client/models/3d/meshes/imported_mesh.hpp>
 
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/constants.hpp>
@@ -50,7 +50,7 @@ const char viewStrings [N_VIEWS][16] =
     "Camera"
 };
 
-class Camera : public Mesh
+class Camera : public ImportedMesh
 {
     protected:
         // Camera's original position and orientation.

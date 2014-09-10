@@ -49,7 +49,7 @@ std::string LightsManager::getResourceName( const ResourceID& lightID ) const
 void LightsManager::requestDirectionalLightCreation()
 {
     // Create a default light color.
-    PackableColor lightColor( 255, 0, 0, 255 );
+    PackableColor lightColor( 255, 255, 255, 255 );
 
     sendCommandToServer(
                 CommandConstPtr(
@@ -61,10 +61,8 @@ void LightsManager::requestDirectionalLightCreation()
 
 void LightsManager::addDirectionalLight( const ResourceID& lightID, const PackableColor& lightColor )
 {
-    MaterialConstPtr lightMaterial( new Material( PackableColor( 255, 0, 0, 255 ) ) );
-
     std::unique_ptr< DirectionalLight >
-            light( new DirectionalLight( lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), lightMaterial, *openGL_ ) );
+            light( new DirectionalLight( lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), *openGL_ ) );
 
     getResourcesSelection( lightID.getCreatorID() )->addResource( lightID, std::move( light ) );
 

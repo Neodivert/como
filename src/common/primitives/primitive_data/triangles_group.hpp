@@ -16,21 +16,21 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef TRIANGLES_RANGE_HPP
-#define TRIANGLES_RANGE_HPP
+#ifndef TRIANGLES_GROUP_HPP
+#define TRIANGLES_GROUP_HPP
 
 namespace como {
 
-struct TrianglesRange
+struct TrianglesGroup
 {
-    unsigned int firstTriangle;
+    unsigned int firstTriangleIndex;
     unsigned int nTriangles;
 
-    TrianglesRange() :
-        firstTriangle( 0 ),
+    TrianglesGroup() :
+        firstTriangleIndex( 0 ),
         nTriangles( 0 ){}
 };
 
 } // namespace como
 
-#endif // TRIANGLES_RANGE_HPP
+#endif // TRIANGLES_GROUP_HPP

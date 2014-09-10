@@ -22,6 +22,7 @@
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <common/primitives/primitive_file.hpp>
+#include <common/primitives/primitive_data/imported_primitive_data.hpp>
 
 #include <iostream>
 
@@ -44,33 +45,37 @@ const char DEFAULT_MESH_NAME[] = "Mesh #";
  * 1. Construction.
  ***/
 
-Mesh::Mesh( MeshType type, const char* filePath, MaterialConstPtr material, bool displayVertexNormals ) :
+// TODO: Remove this constructor.
+Mesh::Mesh( MeshType type, const char* filePath, bool displayVertexNormals ) :
     Entity( DrawableType::MESH, DEFAULT_MESH_NAME ),
     type_( type ),
     displayVertexNormals_( displayVertexNormals ),
     displayEdges_( true )
 {
-    MeshInfo meshInfo;
-    PrimitiveFile::read( meshInfo, filePath );
+    ImportedPrimitiveData primitiveData;
+    primitiveData.importFromFile( filePath );
 
-    vertexData_ = meshInfo.vertexData;
-    polygonsGroups_ = meshInfo.polygonGroupsData;
-    materials_.push_back( material );
+    vertexData_ = primitiveData.vertexData;
+    for( const auto& materialInfo : primitiveData.materialsInfo_ ){
+        materials_.push_back( MaterialPtr( new Material( materialInfo ) ) );
+    }
 
-    init( meshInfo.oglData );
+    init( primitiveData.oglData );
 }
 
 
-Mesh::Mesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials, bool displayVertexNormals ) :
+Mesh::Mesh( const PrimitiveData& primitiveData, ConstMaterialsVector materials, bool displayVertexNormals ) :
     Entity( DrawableType::MESH, DEFAULT_MESH_NAME ),
     type_( MeshType::MESH ),
-    vertexData_( vertexData ),
-    polygonsGroups_( polygonsGroups ),
-    materials_( materials ),
+    vertexData_( primitiveData.vertexData ),
     displayVertexNormals_( displayVertexNormals ),
+    materials_( materials ),
     displayEdges_( true )
 {
-    init( oglData );
+    init( primitiveData.oglData );
+    for( const auto& materialInfo : primitiveData.materialsInfo_ ){
+        materials_.push_back( MaterialPtr( new Material( materialInfo ) ) );
+    }
 }
 
 
@@ -117,7 +122,7 @@ void Mesh::init( const MeshOpenGLData& oglData )
     populateOpenGLBuffers( oglData );
 
     includesTexture_ = oglData.includesTextures;
-    componensPerVertex_ = oglData.componentsPerVertex;
+    componensPerVertex_ = oglData.componentsPerVertex();
 
     initVAO();
 
@@ -365,32 +370,11 @@ void Mesh::update()
 }
 
 
-void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec4* contourColor ) const
+void Mesh::drawEdges( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec4* contourColor ) const
 {
-    if( includesTexture_ ){
-        openGL->setShadingMode( ShadingMode::SOLID_LIGHTING_AND_TEXTURING );
-    }else{
-        openGL->setShadingMode( ShadingMode::SOLID_LIGHTING );
-    }
-
-    // Compute MVP matrix and pass it to the shader.
     openGL->setMVPMatrix( modelMatrix_, viewMatrix, projectionMatrix );
 
-    // Bind Mesh VAO and VBOs as the active ones.
-    glBindVertexArray( vao );
-    glBindBuffer( GL_ARRAY_BUFFER, vbo );
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
-
-    for( auto polygonsGroup : polygonsGroups_ ){
-        // Send this mesh's material to shader.
-        materials_[polygonsGroup.materialIndex]->sendToShader();
-
-        glDrawElements( GL_TRIANGLES,
-                        polygonsGroup.nTriangles * 3,
-                        GL_UNSIGNED_INT,
-                        ( std::intptr_t* )( polygonsGroup.firstTriangleIndex * 3 * sizeof( GL_UNSIGNED_INT ) ) );
-    }
-
+    // TODO: Bind VAO, VBO and EBO or make this method protected?
 
     // Set the color for the mesh's contour.
     // TODO: Use only one condition (force contourColor to be passed as a
@@ -411,11 +395,6 @@ void Mesh::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4&
 
         // Return polygon mode to previos GL_FILL.
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-    }
-
-
-    if( displayVertexNormals_ ){
-        drawVertexNormals( openGL, viewMatrix, projectionMatrix, glm::vec4( 1.0f, 0.0f, 0.0f, 0.0f ) );
     }
 }
 
@@ -449,12 +428,22 @@ void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, con
 
 bool Mesh::containsProperty( const void* property ) const
 {
+    (void)( property );
+
+    /*
     for( auto material : materials_ ){
         if( material.get() == property ){
             return true;
         }
     }
+    */
     return false;
+}
+
+
+void Mesh::sendMaterialToShader(const unsigned int index) const
+{
+    materials_.at( index )->sendToShader();
 }
 
 } // namespace como

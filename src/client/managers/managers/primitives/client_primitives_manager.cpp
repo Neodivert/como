@@ -81,20 +81,14 @@ ResourceID ClientPrimitivesManager::importMeshFile( std::string srcFilePath, Res
 
 void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 {
-    MeshInfo meshInfo;
+    ImportedPrimitiveData primitiveData;
     ResourceID firstMaterialID;
-    ResourceID meshID;
+    ResourceID meshID = server_->getNewResourceID();
 
-    PrimitiveFile::read( meshInfo, getPrimitiveFilePath( primitiveID ) );
+    primitiveData.importFromFile( getPrimitiveFilePath( primitiveID ) );
 
-    meshID = server_->getNewResourceID();
-
-    materialsManager_->createMaterials( meshID, meshInfo.materialsData, firstMaterialID );
-
-    meshesManager_->createMesh( meshID, meshInfo.vertexData, meshInfo.oglData, meshInfo.polygonGroupsData, materialsManager_->getMaterials( firstMaterialID, meshInfo.materialsData.size() ) );
-
-    log_->debug( "Creating local mesh - Entity ID (", meshID,
-                 ") First materialID ", firstMaterialID, ") nMaterials (", meshInfo.materialsData.size(), ")\n" );
+    firstMaterialID = materialsManager_->createMaterials( primitiveData.materialsInfo_, meshID );
+    meshesManager_->createMesh( primitiveData, materialsManager_->getMaterials( firstMaterialID, primitiveData.materialsInfo_.size() ), meshID );
 
     // Send the command to the server (the MaterialCreationCommand command was
     // already sent in previous call to materialsManager_->createMaterial() ).
@@ -107,12 +101,12 @@ void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID pr
 {
     (void)( userID );
 
-    MeshInfo meshInfo;
+    ImportedPrimitiveData primitiveData;
 
-    PrimitiveFile::read( meshInfo, getPrimitiveFilePath( primitiveID ) );
+    primitiveData.importFromFile( getPrimitiveFilePath( primitiveID ) );
 
-    materialsManager_->createRemoteMaterials( meshID, meshInfo.materialsData, materialID );
-    meshesManager_->createMesh( meshID, meshInfo.vertexData, meshInfo.oglData, meshInfo.polygonGroupsData, materialsManager_->getMaterials( materialID, meshInfo.materialsData.size() ) );
+    materialsManager_->createMaterials( primitiveData.materialsInfo_, materialID, meshID );
+    meshesManager_->createMesh( primitiveData, materialsManager_->getMaterials( materialID, primitiveData.materialsInfo_.size() ), meshID );
 }
 
 

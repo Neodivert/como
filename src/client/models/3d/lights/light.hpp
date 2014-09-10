@@ -20,13 +20,13 @@
 #define LIGHT_HPP
 
 #include "client/models/3d/entity.hpp" // GL types.
-#include "client/models/3d/mesh.hpp"
+#include <client/models/3d/meshes/imported_mesh.hpp>
 #include <common/commands/light_commands/light_creation_command.hpp> // "LightType" type.
 #include "abstract_light.hpp"
 
 namespace como {
 
-class Light : public AbstractLight, public Mesh
+class Light : public AbstractLight, public ImportedMesh
 {
     private:
         /*! MeshLight type */
@@ -51,7 +51,7 @@ class Light : public AbstractLight, public Mesh
          ***/
         Light() = delete;
     protected:
-        Light( LightType type, const PackableColor& color, std::string path, MaterialConstPtr meshMaterial, OpenGL& openGL );
+        Light( LightType type, const PackableColor& color, std::string path, OpenGL& openGL );
     public:
         Light( const Light& ) = default; // TODO: Implement using shader limit (MAX_LIGHTS) (or remove clone()).
         Light( Light&& ) = delete;

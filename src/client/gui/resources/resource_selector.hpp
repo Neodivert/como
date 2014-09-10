@@ -19,10 +19,10 @@
 #ifndef RESOURCE_SELECTOR_HPP
 #define RESOURCE_SELECTOR_HPP
 
+#include <QComboBox>
 #include <vector>
 #include <string>
 #include <common/ids/resource_id.hpp>
-#include <QComboBox>
 #include <common/managers/primitives/abstract_primitives_manager.hpp> // CategoriesList type
 
 namespace como {

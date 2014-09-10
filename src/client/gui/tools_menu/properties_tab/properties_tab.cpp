@@ -16,8 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "properties_tab.hpp"
 #include <QVBoxLayout>
+#include "properties_tab.hpp"
 #include <client/gui/tools_menu/properties_tab/general_info_menu.hpp>
 #include <client/gui/tools_menu/properties_tab/mesh_info_menu.hpp>
 #include <client/gui/tools_menu/properties_tab/lights_menu.hpp>

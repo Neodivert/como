@@ -16,7 +16,9 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
+#include <QVBoxLayout>
 #include "view_frame.hpp"
+
 
 namespace como {
 

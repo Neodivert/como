@@ -23,7 +23,7 @@ namespace como {
 const PackableColor DEFAULT_CAMERA_MESH_COLOR( 255, 255, 255, 0 );
 
 Camera::Camera( View view ) :
-    Mesh( MeshType::CAMERA, "data/system/primitives/camera.prim", MaterialConstPtr( new Material ) ), // TODO: Load material from file.
+    ImportedMesh( "data/system/primitives/camera.prim" ),
     originalEye     ( 0.0f, 0.0f, 0.0f, 0.0f ),
     originalUp      ( 0.0f, 1.0f, 0.0f, 0.0f ),
     originalCenter  ( 0.0f, 0.0f, -1.0f, 0.0f )
@@ -36,7 +36,6 @@ Camera::Camera( View view ) :
 /***
  * 2. Setters and getters
  ***/
-
 
 glm::mat4 Camera::getViewMatrix() const
 {

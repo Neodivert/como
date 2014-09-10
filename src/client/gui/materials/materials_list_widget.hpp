@@ -28,7 +28,7 @@ namespace como {
 
 // TODO: Can't use "private QListWidget", what interests me because I don't
 // want user to use QListWidget methods here.
-class MaterialsList : public QComboBox
+class MaterialsListWidget : public QComboBox
 {
     Q_OBJECT
 
@@ -36,23 +36,23 @@ class MaterialsList : public QComboBox
         /***
          * 1. Construction
          ***/
-        MaterialsList() = delete;
-        MaterialsList( MaterialsManagerPtr materialsManager );
-        MaterialsList( const MaterialsList& ) = delete;
-        MaterialsList( MaterialsList&& ) = delete;
+        MaterialsListWidget() = delete;
+        MaterialsListWidget( MaterialsManagerPtr materialsManager );
+        MaterialsListWidget( const MaterialsListWidget& ) = delete;
+        MaterialsListWidget( MaterialsListWidget&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~MaterialsList() = default;
+        ~MaterialsListWidget() = default;
 
 
         /***
          * 3. Operators
          ***/
-        MaterialsList& operator = ( const MaterialsList& ) = delete;
-        MaterialsList& operator = ( MaterialsList&& ) = delete;
+        MaterialsListWidget& operator = ( const MaterialsListWidget& ) = delete;
+        MaterialsListWidget& operator = ( MaterialsListWidget&& ) = delete;
 
 
         /***

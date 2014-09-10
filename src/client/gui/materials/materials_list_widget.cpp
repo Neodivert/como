@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "materials_list.hpp"
+#include "materials_list_widget.hpp"
 
 namespace como {
 
@@ -25,7 +25,7 @@ namespace como {
  * 1. Construction
  ***/
 
-MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager ) :
+MaterialsListWidget::MaterialsListWidget( MaterialsManagerPtr materialsManager ) :
     materialsManager_( materialsManager )
 {
     void (QComboBox::*srcSignal)( int ) = &QComboBox::currentIndexChanged;
@@ -41,7 +41,7 @@ MaterialsList::MaterialsList( MaterialsManagerPtr materialsManager ) :
  * 4. Popup
  ***/
 
-void MaterialsList::populate()
+void MaterialsListWidget::populate()
 {
     clear();
     indexToID_.clear();

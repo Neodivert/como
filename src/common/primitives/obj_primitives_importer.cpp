@@ -21,6 +21,7 @@
 #include <stdexcept>
 #include <common/exceptions/file_not_open_exception.hpp>
 #include <common/primitives/primitive_file.hpp>
+#include <common/primitives/primitive_data/imported_primitive_data.hpp>
 #include <map>
 #include <array>
 
@@ -32,10 +33,10 @@ namespace como {
 
 PrimitiveInfo OBJPrimitivesImporter::importPrimitive( std::string srcFilePath, std::string dstDirectory, std::string nameSuffix )
 {
-    MeshInfo meshInfo;
+    ImportedPrimitiveData primitiveData;
     PrimitiveInfo primitiveInfo;
 
-    processMeshFile( srcFilePath, primitiveInfo, meshInfo );
+    processMeshFile( srcFilePath, primitiveInfo, primitiveData );
 
     primitiveInfo.name += nameSuffix;
     primitiveInfo.filePath =
@@ -43,18 +44,14 @@ PrimitiveInfo OBJPrimitivesImporter::importPrimitive( std::string srcFilePath, s
             primitiveInfo.name +
             ".prim";
 
-    // All primitive must have at least one material.
-    if( !meshInfo.materialsData.size() ){
-        meshInfo.materialsData.push_back( MaterialInfo() );
-    }
-
-    PrimitiveFile::write( meshInfo, primitiveInfo.filePath );
+    // TODO: Remove this?
+    primitiveData.exportToFile( primitiveInfo.filePath );
 
     return primitiveInfo;
 }
 
 
-void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo )
+void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo& primitiveInfo, ImportedPrimitiveData& primitiveData )
 {
     std::ifstream file;
     std::string fileLine;
@@ -71,21 +68,20 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
     while( !file.eof() ){
         readLine( file, fileLine );
 
-        processMeshFileLine( filePath, fileLine, primitiveInfo, meshInfo );
+        processMeshFileLine( filePath, fileLine, primitiveInfo, primitiveData );
     }
 
     file.close();
 
-    completePolygonGroups( meshInfo );
-
-    if( meshInfo.normalData.normals.size() == 0 ){
-        computeVertexNormals( meshInfo.vertexData, meshInfo.normalData );
+    if( ( primitiveData.normalData.normals.size() == 0 ) ||
+            ( primitiveData.normalData.normalTriangles.size() == 0 )  ){
+        computeNormalData( primitiveData.vertexData, primitiveData.normalData );
     }
 
-    generateMeshVertexData( meshInfo );
+    generateOGLData( primitiveData );
 }
 
-void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::string line, PrimitiveInfo& primitiveInfo, MeshInfo& meshInfo )
+void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::string line, PrimitiveInfo& primitiveInfo, ImportedPrimitiveData& primitiveData )
 {
     std::string lineHeader;
     std::string lineBody;
@@ -99,19 +95,13 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
     if( lineHeader == "o" ){
         primitiveInfo.name = lineBody;
     }else if( lineHeader == "g" ){
-        PolygonGroupData polygonGroup;
-        polygonGroup.firstTriangleIndex = meshInfo.vertexData.vertexTriangles.size();
-        if( meshInfo.polygonGroupsData.size() ){
-            polygonGroup.materialIndex = meshInfo.polygonGroupsData.back().materialIndex;
-        }
-
-        meshInfo.polygonGroupsData.push_back( polygonGroup );
+        // TODO: Create a new triangles group?
     }else if( lineHeader == "v" ){
         glm::vec3 vertex;
 
         // Extract the vertex from the line and add it to the Mesh.
         sscanf( lineBody.c_str(), "%f %f %f", &vertex[0], &vertex[1], &vertex[2] );
-        meshInfo.vertexData.vertices.push_back( vertex );
+        primitiveData.vertexData.vertices.push_back( vertex );
     }else if( lineHeader == "vt" ){
         glm::vec2 textureCoordinates;
 
@@ -120,29 +110,33 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
 
         // Invert Y component. (TODO: Move this computation to another place?)
         textureCoordinates.y = 1.0f - textureCoordinates.y;
-        meshInfo.textureData.uvCoordinates.push_back( textureCoordinates );
+        primitiveData.uvData.uvVertices.push_back( textureCoordinates );
     }else if( lineHeader == "vn" ){
         glm::vec3 normal;
 
         // Extract the normal from the line and add it to the Mesh.
         sscanf( lineBody.c_str(), "%f %f %f", &normal[0], &normal[1], &normal[2] );
-        meshInfo.normalData.normals.push_back( glm::normalize( normal ) );
+        primitiveData.normalData.normals.push_back( glm::normalize( normal ) );
 
     }else if( lineHeader == "f" ){
-        if( meshInfo.polygonGroupsData.size() == 0 ){
-            PolygonGroupData polygonGroup;
-            polygonGroup.firstTriangleIndex = meshInfo.vertexData.vertexTriangles.size();
-            polygonGroup.materialIndex = 0;
+        if( primitiveData.trianglesGroups_.size() == 0 ){
+            // A face has been specified without defining its associated
+            // material, so create a default material and a default
+            // triangles group and join them.
+            primitiveData.materialsInfo_.push_back( MaterialInfo() );
 
-            meshInfo.polygonGroupsData.push_back( polygonGroup );
+            TrianglesGroupWithMaterial newTrianglesGroup;
+            newTrianglesGroup.materialIndex = 0;
+
+            primitiveData.trianglesGroups_.push_back( newTrianglesGroup );
         }
 
         switch( getFaceType( lineBody ) ){
             case FaceType::TRIANGLE:
-                processTriangleFaceStr( lineBody, meshInfo );
+                processTriangleFaceStr( lineBody, primitiveData );
             break;
             case FaceType::QUAD:
-                processQuadFaceStr( lineBody, meshInfo );
+                processQuadFaceStr( lineBody, primitiveData );
             break;
             case FaceType::OTHER:
                 throw std::runtime_error( "OBJ primitive importer can't process faces others than triangles and quads" );
@@ -151,131 +145,33 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
     }else if( lineHeader == "mtllib" ){
         std::string fileDirectory = filePath.substr( 0, filePath.rfind( '/' ) );
         std::string materialFilePath = fileDirectory + '/' + lineBody;
-        processMaterialFile( materialFilePath, meshInfo.materialsData );
+
+        processMaterialFile( materialFilePath, primitiveData.oglData.includesTextures, primitiveData.materialsInfo_ );
     }else if( lineHeader == "usemtl" ){
-        // We have to associate the given material to the current polygon
-        // group.
-        PolygonGroupData polygonGroup;
-        polygonGroup.firstTriangleIndex = meshInfo.vertexData.vertexTriangles.size();
-        polygonGroup.materialIndex = getMaterialIndex( meshInfo, lineBody );
-
-        meshInfo.polygonGroupsData.push_back( polygonGroup );
-    }
-}
-
-typedef std::array< GLuint, 3 > CompoundVertex;
-
-void OBJPrimitivesImporter::generateMeshVertexData( MeshInfo &meshInfo )
-{
-    std::map< CompoundVertex, GLuint > finalVertices;
-    std::map< CompoundVertex, GLuint >::const_iterator finalVerticesIt;
-    CompoundVertex compoundVertex;
-    unsigned int currentTriangleIndex = 0;
-    unsigned int triangleVertexIndex = 0;
-    GLuint compoundVertexIndex = 0;
-
-    std::vector<PolygonGroupData>::iterator currentPolygonGroup =
-            meshInfo.polygonGroupsData.begin();
-
-    if( meshInfo.textureData.uvCoordinates.size() ){
-        meshInfo.oglData.includesTextures = true;
-        meshInfo.oglData.componentsPerVertex = 8;
-    }else{
-        meshInfo.oglData.includesTextures = false;
-        meshInfo.oglData.componentsPerVertex = 6;
-    }
-
-    for( currentTriangleIndex = 0; currentTriangleIndex < meshInfo.vertexData.vertexTriangles.size(); currentTriangleIndex++ ){
-        // The information about every polygon group holds the index of the
-        // first SIMPLE face. "Translate" such index to the index of
-        // COMPOUND triangle.
-        if( ( currentPolygonGroup != meshInfo.polygonGroupsData.end() ) &&
-                currentPolygonGroup->firstTriangleIndex == currentTriangleIndex ){
-            currentPolygonGroup->firstTriangleIndex = meshInfo.oglData.eboData.size() / 3;
-            currentPolygonGroup++;
+        TrianglesGroupWithMaterial newTrianglesGroup;
+        if( primitiveData.trianglesGroups_.size() ){
+            newTrianglesGroup.firstTriangleIndex =
+                    primitiveData.trianglesGroups_.back().firstTriangleIndex +
+                    primitiveData.trianglesGroups_.back().nTriangles;
         }
+        newTrianglesGroup.materialIndex = primitiveData.getMaterialIndex( lineBody );
 
-        for( triangleVertexIndex = 0; triangleVertexIndex < 3; triangleVertexIndex++ ){
-            compoundVertex[0] = meshInfo.vertexData.vertexTriangles[currentTriangleIndex][triangleVertexIndex];
-            compoundVertex[1] = meshInfo.normalData.normalTriangles[currentTriangleIndex][triangleVertexIndex]; // TODO: Remove normal triangles?.
-            compoundVertex[2] = ( meshInfo.oglData.includesTextures ) ? meshInfo.textureData.uvTriangles[currentTriangleIndex][triangleVertexIndex] : 0;
-
-            finalVerticesIt = finalVertices.find( compoundVertex );
-            if( finalVerticesIt != finalVertices.end() ){
-                compoundVertexIndex = finalVerticesIt->second;
-            }else{
-                compoundVertexIndex = finalVertices.size();
-
-                meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ compoundVertex[0] ][0] );
-                meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ compoundVertex[0] ][1] );
-                meshInfo.oglData.vboData.push_back( meshInfo.vertexData.vertices[ compoundVertex[0] ][2] );
-
-                // Insert vertex normal.
-                meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][0] );
-                meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][1] );
-                meshInfo.oglData.vboData.push_back( meshInfo.normalData.normals[ compoundVertex[1] ][2] );
-
-                // Insert UV coordinates (if exist).
-                if( meshInfo.oglData.includesTextures ){
-                    meshInfo.oglData.vboData.push_back( meshInfo.textureData.uvCoordinates[ compoundVertex[2] ][0] );
-                    meshInfo.oglData.vboData.push_back( meshInfo.textureData.uvCoordinates[ compoundVertex[2] ][1] );
-                }
-
-                finalVertices.insert( std::pair< CompoundVertex, GLuint >( compoundVertex, compoundVertexIndex ) );
-            }
-            meshInfo.oglData.eboData.push_back( compoundVertexIndex );
-        }
+        primitiveData.trianglesGroups_.push_back( newTrianglesGroup );
     }
 }
 
 
-void OBJPrimitivesImporter::computeVertexNormals( const MeshVertexData &vertexData, MeshNormalData &normalData )
+void OBJPrimitivesImporter::computeNormalData( const MeshVertexData& meshVertexData, MeshNormalData& normalData )
 {
-    normalData.initFromMeshVertexData( vertexData );
+    normalData.initFromMeshVertexData( meshVertexData );
 }
 
 
-void OBJPrimitivesImporter::completePolygonGroups( MeshInfo& meshInfo )
-{
-    unsigned int i;
-
-    for( i=0; i < meshInfo.polygonGroupsData.size() - 1; i++ ){
-        meshInfo.polygonGroupsData[i].nTriangles = meshInfo.polygonGroupsData[i+1].firstTriangleIndex - meshInfo.polygonGroupsData[i].firstTriangleIndex;
-    }
-    if( i < meshInfo.polygonGroupsData.size() ){
-        meshInfo.polygonGroupsData[i].nTriangles = meshInfo.vertexData.vertexTriangles.size() - meshInfo.polygonGroupsData[i].firstTriangleIndex;
-    }
-
-    // Remote polygon groups which don't have any triangles.
-    std::remove_if( meshInfo.polygonGroupsData.begin(),
-                    meshInfo.polygonGroupsData.end(),
-                    []( const PolygonGroupData& p ){
-                        return ( p.nTriangles == 0 );
-                    } );
-}
-
-
-unsigned int OBJPrimitivesImporter::getMaterialIndex( const MeshInfo &meshInfo, std::string name )
-{
-    unsigned int i = 0;
-
-    while( i < meshInfo.materialsData.size() ){
-        if( meshInfo.materialsData[i].name == name ){
-            return i;
-        }
-        i++;
-    }
-
-    throw std::runtime_error( std::string( "OBJPrimitivesImporter - material [" ) +
-                              name +
-                              "] not found" );
-}
-
-
-void OBJPrimitivesImporter::processMaterialFile( std::string filePath, std::vector<MaterialInfo> &materials )
+void OBJPrimitivesImporter::processMaterialFile( std::string filePath, bool &includesTextures, MaterialsInfoVector &materials )
 {
     std::ifstream file;
     std::string fileLine;
+    includesTextures = false;
 
     file.open( filePath );
     if( !file.is_open() ){
@@ -285,14 +181,14 @@ void OBJPrimitivesImporter::processMaterialFile( std::string filePath, std::vect
     while( !file.eof() ){
         readLine( file, fileLine );
 
-        processMaterialFileLine( filePath, fileLine, materials );
+        processMaterialFileLine( filePath, fileLine, materials, includesTextures );
     }
 
     file.close();
 }
 
 
-void OBJPrimitivesImporter::processMaterialFileLine( std::string filePath, std::string fileLine, std::vector<MaterialInfo>& materials )
+void OBJPrimitivesImporter::processMaterialFileLine( std::string filePath, std::string fileLine, MaterialsInfoVector& materials, bool &includesTextures )
 {
     std::string lineHeader;
     std::string lineBody;
@@ -317,6 +213,7 @@ void OBJPrimitivesImporter::processMaterialFileLine( std::string filePath, std::
     }else if( lineHeader == "Ns" ){
         materials.back().specularExponent = std::atof( lineBody.c_str() );
     }else if( lineHeader == "map_Kd" ){
+        includesTextures = true;
         std::string textureFilePath = filePath.substr( 0, filePath.rfind( '/' ) ) + '/' + lineBody;
         processTextureFile( textureFilePath, materials.back().textureInfo );
     }
@@ -381,7 +278,7 @@ FaceType OBJPrimitivesImporter::getFaceType( const std::string &faceBody )
 }
 
 
-FaceComponents OBJPrimitivesImporter::getFaceComponents(const std::string &faceDefinition)
+FaceComponents OBJPrimitivesImporter::getFaceComponents( const std::string &faceDefinition )
 {
     std::string firstTriangleVertexStr = faceDefinition.substr( 0, faceDefinition.find( ' ' ) );
     size_t firstSlashPosition = std::string::npos;
@@ -414,11 +311,11 @@ FaceComponents OBJPrimitivesImporter::getFaceComponents(const std::string &faceD
 }
 
 
-void OBJPrimitivesImporter::processTriangleFaceStr( const std::string &lineBody, MeshInfo& meshInfo )
+void OBJPrimitivesImporter::processTriangleFaceStr( const std::string &lineBody, ImportedPrimitiveData& primitiveData )
 {
-    std::array< GLuint, 3 > vertexTriangle;
-    std::array< GLuint, 3 > uvTriangle;
-    std::array< GLuint, 3 > normalTriangle;
+    std::array< GLuint, 3 > vertexTriangle = { 0 };
+    std::array< GLuint, 3 > uvTriangle = { 0 };
+    std::array< GLuint, 3 > normalTriangle = { 0 };
     int componentsRead;
     int i;
 
@@ -439,8 +336,7 @@ void OBJPrimitivesImporter::processTriangleFaceStr( const std::string &lineBody,
                 // Decrement every vertex index because they are 1-based in the .obj file.
                 vertexTriangle[i] -= 1;
             }
-
-            meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
+            primitiveData.vertexData.vertexTriangles.push_back( vertexTriangle );
         break;
         case FaceComponents::VERTICES_AND_UVS:
             // Extract the UV coordinates from the line and add it to the Mesh.
@@ -460,8 +356,9 @@ void OBJPrimitivesImporter::processTriangleFaceStr( const std::string &lineBody,
                 uvTriangle[i] -= 1;
             }
 
-            meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
-            meshInfo.textureData.uvTriangles.push_back( uvTriangle );
+            primitiveData.vertexData.vertexTriangles.push_back( vertexTriangle );
+            primitiveData.uvData.uvTriangles.push_back( uvTriangle );
+
         break;
         case FaceComponents::VERTICES_NORMALS_AND_UVS:
             componentsRead =
@@ -481,9 +378,9 @@ void OBJPrimitivesImporter::processTriangleFaceStr( const std::string &lineBody,
                 uvTriangle[i] -= 1;
             }
 
-            meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
-            meshInfo.textureData.uvTriangles.push_back( uvTriangle );
-            meshInfo.normalData.normalTriangles.push_back( normalTriangle );
+            primitiveData.vertexData.vertexTriangles.push_back( vertexTriangle );
+            primitiveData.normalData.normalTriangles.push_back( normalTriangle );
+            primitiveData.uvData.uvTriangles.push_back( uvTriangle );
         break;
         case FaceComponents::VERTICES_AND_NORMALS:
             componentsRead =
@@ -501,19 +398,20 @@ void OBJPrimitivesImporter::processTriangleFaceStr( const std::string &lineBody,
                 vertexTriangle[i] -= 1;
                 normalTriangle[i] -= 1;
             }
-
-            meshInfo.vertexData.vertexTriangles.push_back( vertexTriangle );
-            meshInfo.normalData.normalTriangles.push_back( normalTriangle );
+            primitiveData.vertexData.vertexTriangles.push_back( vertexTriangle );
+            primitiveData.normalData.normalTriangles.push_back( normalTriangle );
         break;
     }
+
+    primitiveData.trianglesGroups_.back().nTriangles++;
 }
 
 
-void OBJPrimitivesImporter::processQuadFaceStr( const std::string &lineBody, MeshInfo& meshInfo )
+void OBJPrimitivesImporter::processQuadFaceStr( const std::string &lineBody, ImportedPrimitiveData& primitiveData )
 {
-    std::array< GLuint, 4 > vertexQuad;
-    std::array< GLuint, 4 > uvQuad;
-    std::array< GLuint, 4 > normalQuad;
+    std::array< GLuint, 4 > vertexQuad = { 0 };
+    std::array< GLuint, 4 > uvQuad = { 0 };
+    std::array< GLuint, 4 > normalQuad = { 0 };
     int componentsRead;
     int i;
 
@@ -534,8 +432,7 @@ void OBJPrimitivesImporter::processQuadFaceStr( const std::string &lineBody, Mes
                 // Decrement every vertex index because they are 1-based in the .obj file.
                 vertexQuad[i] -= 1;
             }
-
-            insertQuad( meshInfo.vertexData.vertexTriangles, vertexQuad );
+            insertQuad( primitiveData.vertexData.vertexTriangles, vertexQuad );
         break;
         case FaceComponents::VERTICES_AND_UVS:
             // Extract the UV coordinates from the line and add it to the Mesh.
@@ -555,9 +452,8 @@ void OBJPrimitivesImporter::processQuadFaceStr( const std::string &lineBody, Mes
                 vertexQuad[i] -= 1;
                 uvQuad[i] -= 1;
             }
-
-            insertQuad( meshInfo.vertexData.vertexTriangles, vertexQuad );
-            insertQuad( meshInfo.textureData.uvTriangles, uvQuad );
+            insertQuad( primitiveData.vertexData.vertexTriangles, vertexQuad );
+            insertQuad( primitiveData.uvData.uvTriangles, uvQuad );
         break;
         case FaceComponents::VERTICES_NORMALS_AND_UVS:
             componentsRead =
@@ -577,10 +473,9 @@ void OBJPrimitivesImporter::processQuadFaceStr( const std::string &lineBody, Mes
                 uvQuad[i] -= 1;
                 normalQuad[i] -= 1;
             }
-
-            insertQuad( meshInfo.vertexData.vertexTriangles, vertexQuad );
-            insertQuad( meshInfo.textureData.uvTriangles, uvQuad );
-            insertQuad( meshInfo.normalData.normalTriangles, normalQuad );
+            insertQuad( primitiveData.vertexData.vertexTriangles, vertexQuad );
+            insertQuad( primitiveData.normalData.normalTriangles, normalQuad );
+            insertQuad( primitiveData.uvData.uvTriangles, uvQuad );
         break;
         case FaceComponents::VERTICES_AND_NORMALS:
             componentsRead =
@@ -599,11 +494,12 @@ void OBJPrimitivesImporter::processQuadFaceStr( const std::string &lineBody, Mes
                 vertexQuad[i] -= 1;
                 normalQuad[i] -= 1;
             }
-
-            insertQuad( meshInfo.vertexData.vertexTriangles, vertexQuad );
-            insertQuad( meshInfo.normalData.normalTriangles, normalQuad );
+            insertQuad( primitiveData.vertexData.vertexTriangles, vertexQuad );
+            insertQuad( primitiveData.normalData.normalTriangles, normalQuad );
         break;
     }
+
+    primitiveData.trianglesGroups_.back().nTriangles += 2;
 }
 
 
@@ -630,6 +526,70 @@ void OBJPrimitivesImporter::insertQuad(std::vector<FaceTriangle> &triangles, Fac
 
     triangles.push_back( triangle1 );
     triangles.push_back( triangle2 );
+}
+
+void OBJPrimitivesImporter::generateOGLData(ImportedPrimitiveData& primitiveData)
+{
+    CompoundVerticesMap compoundVerticesMap;
+    unsigned int currentTriangleIndex = 0;
+    unsigned int currentTriangleElement = 0;
+
+    CompoundVertex compoundVertex;
+    CompoundVerticesMap::const_iterator finalVerticesIt;
+    VertexIndice compoundVertexIndex;
+
+    std::vector< TrianglesGroupWithMaterial >::iterator currentTriangleGroupIt = primitiveData.trianglesGroups_.begin();
+    std::vector< TrianglesGroupWithMaterial >::iterator nextTriangleGroupIt;
+
+    for( currentTriangleIndex = 0; currentTriangleIndex < primitiveData.vertexData.vertexTriangles.size(); currentTriangleIndex++ ){
+        for( currentTriangleElement = 0; currentTriangleElement < 3; currentTriangleElement++ ){
+            compoundVertex[0] = primitiveData.vertexData.vertexTriangles[currentTriangleIndex][currentTriangleElement];
+            compoundVertex[1] = primitiveData.normalData.normalTriangles[currentTriangleIndex][currentTriangleElement];
+            compoundVertex[2] = primitiveData.uvData.uvTriangles.size() ? primitiveData.uvData.uvTriangles[currentTriangleIndex][currentTriangleElement] : 0;
+
+            finalVerticesIt = compoundVerticesMap.find( compoundVertex );
+
+            if( finalVerticesIt != compoundVerticesMap.end() ){
+                compoundVertexIndex = finalVerticesIt->second;
+            }else{
+                compoundVertexIndex = compoundVerticesMap.size();
+
+                primitiveData.oglData.vboData.push_back( primitiveData.vertexData.vertices[ compoundVertex[0] ][0] );
+                primitiveData.oglData.vboData.push_back( primitiveData.vertexData.vertices[ compoundVertex[0] ][1] );
+                primitiveData.oglData.vboData.push_back( primitiveData.vertexData.vertices[ compoundVertex[0] ][2] );
+
+                // Insert vertex normal.
+                primitiveData.oglData.vboData.push_back( primitiveData.normalData.normals[ compoundVertex[1] ][0] );
+                primitiveData.oglData.vboData.push_back( primitiveData.normalData.normals[ compoundVertex[1] ][1] );
+                primitiveData.oglData.vboData.push_back( primitiveData.normalData.normals[ compoundVertex[1] ][2] );
+
+                // Insert UV coordinates (if exist).
+                if( primitiveData.oglData.includesTextures ){
+                    primitiveData.oglData.vboData.push_back( primitiveData.uvData.uvVertices[ compoundVertex[2] ][0] );
+                    primitiveData.oglData.vboData.push_back( primitiveData.uvData.uvVertices[ compoundVertex[2] ][1] );
+                }
+
+                compoundVerticesMap.insert( std::pair< CompoundVertex, VertexIndice >( compoundVertex, compoundVertexIndex ) );
+            }
+
+            if( currentTriangleGroupIt->firstTriangleIndex == currentTriangleIndex ){
+                currentTriangleGroupIt->firstTriangleIndex = compoundVertexIndex;
+                currentTriangleGroupIt->nTriangles = 1;
+            }else{
+                nextTriangleGroupIt = currentTriangleGroupIt + 1;
+                if( ( nextTriangleGroupIt != primitiveData.trianglesGroups_.end() ) &&
+                       ( nextTriangleGroupIt->firstTriangleIndex == currentTriangleIndex ) ){
+                    nextTriangleGroupIt->firstTriangleIndex = compoundVertexIndex;
+                    nextTriangleGroupIt->nTriangles = 1;
+                    currentTriangleGroupIt = nextTriangleGroupIt;
+                }else{
+                    currentTriangleGroupIt->nTriangles++;
+                }
+            }
+
+            primitiveData.oglData.eboData.push_back( compoundVertexIndex );
+        }
+    }
 }
 
 

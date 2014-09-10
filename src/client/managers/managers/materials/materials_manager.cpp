@@ -35,33 +35,55 @@ MaterialsManager::MaterialsManager( ServerInterfacePtr server, LogPtr log ) :
  * 3. Material creation
  ***/
 
-ResourceID MaterialsManager::createMaterial( const MaterialInfo &materialInfo )
+ResourceID MaterialsManager::createMaterials( const std::vector< MaterialInfo >& materialsInfo, const ResourceID &meshID )
+{
+    ResourceID firstMaterialID = newResourceID();
+
+    createMaterials( materialsInfo, firstMaterialID, meshID );
+
+    return firstMaterialID;
+}
+
+
+ResourceID MaterialsManager::createMaterial( const MaterialInfo& materialInfo, const ResourceID &meshID )
 {
     ResourceID materialID = newResourceID();
 
-    // Create the new material and insert it into the materials container.
-    createMaterial( materialID, materialInfo );
+    // Add the new material to the materials container.
+    createMaterial( materialInfo, materialID, meshID );
 
     return materialID;
 }
 
 
-void MaterialsManager::createMaterials( const ResourceID& meshID, const std::vector< MaterialInfo >& materialsInfo, ResourceID& firstMaterialID )
+void MaterialsManager::createMaterials( const std::vector< MaterialInfo >& materialsInfo, const ResourceID &firstMaterialID, const ResourceID& meshID)
 {
-    assert( materialsInfo.size() != 0 );
-    ResourceID materialID = firstMaterialID = newResourceID();
+    ResourceID materialID = firstMaterialID;
 
-    meshMaterials_[meshID] = std::vector<ResourceID>();
-
-    for( auto materialInfo : materialsInfo ){
-        createMaterial( materialID, materialInfo );
-        meshMaterials_.at( meshID ).push_back( materialID );
+    for( const auto& materialInfo : materialsInfo ){
+        createMaterial( materialInfo, materialID, meshID );
         materialID++;
     }
 }
 
 
-void MaterialsManager::createRemoteMaterials( const ResourceID& meshID, const std::vector< MaterialInfo >& materialsInfo, const ResourceID& firstMaterialID )
+void MaterialsManager::createMaterial( const MaterialInfo& materialInfo, const ResourceID &materialID, const ResourceID& meshID )
+{
+    materials_[materialID] = MaterialPtr( new Material( materialInfo ) );
+
+    if( meshMaterials_.count( meshID ) == 0 ){
+        meshMaterials_[meshID] = std::vector<ResourceID>();
+    }
+    meshMaterials_.at( meshID ).push_back( materialID );
+
+    // Set the creator of the material as its current owner.
+    lockMaterial( materialID, materialID.getCreatorID() );
+
+    notifyElementInsertion( materialID );
+}
+
+
+/*void MaterialsManager::createRemoteMaterials( const ResourceID& meshID, const std::vector< MaterialData >& materialsInfo, const ResourceID& firstMaterialID )
 {
     assert( materialsInfo.size() != 0 );
     ResourceID materialID = firstMaterialID;
@@ -73,18 +95,7 @@ void MaterialsManager::createRemoteMaterials( const ResourceID& meshID, const st
         meshMaterials_.at( meshID ).push_back( materialID );
         materialID++;
     }
-}
-
-
-void MaterialsManager::createMaterial( ResourceID id, const MaterialInfo& materialInfo )
-{
-    materials_[id] = MaterialPtr( new Material( materialInfo ) );
-
-    // Set the creator of the material as its current owner.
-    lockMaterial( id, id.getCreatorID() );
-
-    notifyElementInsertion( id );
-}
+}*/
 
 
 /***
@@ -154,9 +165,9 @@ MaterialConstPtr MaterialsManager::getMaterial( const ResourceID& id ) const
     return materials_.at( id );
 }
 
-std::vector<MaterialConstPtr> MaterialsManager::getMaterials( const ResourceID& firstMaterialID, unsigned int nMaterials ) const
+ConstMaterialsVector MaterialsManager::getMaterials( const ResourceID& firstMaterialID, unsigned int nMaterials ) const
 {
-    std::vector< MaterialConstPtr > materials;
+    ConstMaterialsVector materials;
     unsigned int i = 0;
     ResourceID materialID = firstMaterialID;
 
@@ -181,13 +192,16 @@ void MaterialsManager::executeRemoteCommand( const MaterialCommand& command )
 
     switch( command.getType() ){
         case MaterialCommandType::MATERIAL_CREATION:{
+        /*
             const MaterialCreationCommand& materialCreationCommand =
                     dynamic_cast< const MaterialCreationCommand& >( command );
 
-            //log()->debug( "\tMaterial name: ", materialCreationCommand->getMaterialInfo().name, "\n" );
+            //log()->debug( "\tMaterial name: ", materialCreationCommand->getMaterialData().name, "\n" );
 
             createMaterial( materialCreationCommand.getMaterialID(),
-                            materialCreationCommand.getMaterialInfo() );
+                            materialCreationCommand.getMaterialData() );
+                            */
+            throw std::runtime_error( "MATERIAL_CREATION command received" );
         }break;
 
         case MaterialCommandType::MATERIAL_MODIFICATION:{

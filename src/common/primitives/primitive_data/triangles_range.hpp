@@ -16,37 +16,22 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef MESH_NORMAL_DATA_HPP
-#define MESH_NORMAL_DATA_HPP
-
-#include <glm/glm.hpp>
-#include <vector>
-#include <array>
-#include <common/mesh_info/mesh_vertex_data.hpp>
+#ifndef TRIANGLES_RANGE_HPP
+#define TRIANGLES_RANGE_HPP
 
 namespace como {
 
-typedef std::vector< glm::vec3 > NormalsVector;
-typedef std::vector< std::array< GLuint, 3 > > NormalTrianglesVector;
+// TODO: Delete
+struct TrianglesRange
+{
+    unsigned int firstTriangleIndex;
+    unsigned int nTriangles;
 
-struct MeshNormalData {
-    NormalsVector normals;
-    NormalTrianglesVector normalTriangles;
-
-
-    /***
-     * 1. Construction
-     ***/
-    MeshNormalData() = default;
-    MeshNormalData( const MeshVertexData& meshVertexData );
-
-
-    /***
-     * 2. Initialization
-     ***/
-    void initFromMeshVertexData( const MeshVertexData& meshVertexData );
+    TrianglesRange() :
+        firstTriangleIndex( 0 ),
+        nTriangles( 0 ){}
 };
 
 } // namespace como
 
-#endif // MESH_NORMAL_DATA_HPP
+#endif // TRIANGLES_RANGE_HPP
