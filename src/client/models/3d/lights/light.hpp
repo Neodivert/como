@@ -33,8 +33,9 @@ class Light : public AbstractLight, public ImportedMesh
         const LightType type_;
 
         /*! Light index in the GLSL shader */
-        GLuint index_;
+        const GLuint index_;
 
+        // TODO: Make locations const.
         GLint isValidLocation_;
 
         GLint ambientCoefficientLocation_;
@@ -44,6 +45,11 @@ class Light : public AbstractLight, public ImportedMesh
          * color.
          */
         GLint colorLocation_;
+
+        // Light attributes.
+        glm::vec3 color_;
+        float ambientCoefficient_;
+
 
     public:
         /***
@@ -81,7 +87,13 @@ class Light : public AbstractLight, public ImportedMesh
 
 
         /***
-         * 5. Operators
+         * 5. Shader communication
+         ***/
+        virtual void sendToShader( OpenGL& openGL ) const;
+
+
+        /***
+         * 6. Operators
          ***/
         Light& operator = ( const Light& ) = delete;
         Light& operator = ( Light&& ) = delete;
@@ -89,7 +101,7 @@ class Light : public AbstractLight, public ImportedMesh
 
     private:
         /***
-         * 6. Auxiliar methods
+         * 7. Auxiliar methods
          ***/
         static GLuint lockShaderLight( OpenGL& openGL );
 };

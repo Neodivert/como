@@ -31,26 +31,23 @@ Light::Light( LightType type, const PackableColor& color, std::string path, Open
     type_( type ),
     index_( lockShaderLight( openGL ) )
 {
-    GLint currentShaderProgram = -1;
+    const GLint defaultShaderProgram = openGL.getShaderProgramID( ShaderProgramType::DEFAULT );
     char uniformName[64];
-
-    // Get current shader program ID.
-    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
 
     // Get the location of this light's isValid in the GLSL shader program.
     sprintf( uniformName, "lights[%u].isValid", index_ );
-    isValidLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
+    isValidLocation_ = glGetUniformLocation( defaultShaderProgram, uniformName );
     assert( isValidLocation_ != -1 );
 
     // Get the location of this light's color in the GLSL shader program.
     sprintf( uniformName, "lights[%u].color", index_ );
-    colorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
+    colorLocation_ = glGetUniformLocation( defaultShaderProgram, uniformName );
     assert( colorLocation_ != -1 );
 
     // Get the location of this light's ambient coefficient in the GLSL shader
     // program.
     sprintf( uniformName, "lights[%u].ambientCoefficient", index_ );
-    ambientCoefficientLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
+    ambientCoefficientLocation_ = glGetUniformLocation( defaultShaderProgram, uniformName );
     assert( ambientCoefficientLocation_ != -1 );
 
     // Update light color in the shader.
@@ -81,25 +78,13 @@ LightType Light::getLightType() const
 
 PackableColor Light::getLightColor() const
 {
-    GLint currentShaderProgram = -1;
-    glm::vec3 color( 0.0f );
-
-    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
-    glGetUniformfv( currentShaderProgram, colorLocation_, &color[0] );
-
-    return PackableColor( color );
+    return PackableColor( color_ );
 }
 
 
 float Light::getAmbientCoefficient() const
 {
-    GLint currentShaderProgram = -1;
-    float ambientCoefficient;
-
-    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
-    glGetUniformfv( currentShaderProgram, ambientCoefficientLocation_, &ambientCoefficient );
-
-    return ambientCoefficient;
+    return ambientCoefficient_;
 }
 
 
@@ -115,35 +100,45 @@ GLuint Light::getBaseLightIndex() const
 
 void Light::setLightColor( const PackableColor &color )
 {
-    glUniform3fv( colorLocation_, 1, glm::value_ptr( color.toVec3() ) );
+    color_ = color.toVec3();
 }
 
 
 void Light::setAmbientCoefficient( float coefficient )
 {
-    glUniform1f( ambientCoefficientLocation_, coefficient );
+    ambientCoefficient_ = coefficient;
 }
 
 
 /***
- * 6. Auxiliar methods
+ * 5. Shader communication
+ ***/
+
+void Light::sendToShader( OpenGL &openGL ) const
+{
+    (void)( openGL );
+    glUniform3fv( colorLocation_, 1, glm::value_ptr( color_ ) );
+    glUniform1f( ambientCoefficientLocation_, ambientCoefficient_ );
+}
+
+
+/***
+ * 7. Auxiliar methods
  ***/
 
 // FIXME: Duplicated code.
 GLuint Light::lockShaderLight( OpenGL& openGL )
 {
-    GLint currentShaderProgram = -1;
     char uniformName[64] = {0};
     GLint varLocation = -1;
     unsigned int currentLightIndex;
 
     // Get current shader program ID.
-    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
 
     for( currentLightIndex = 0; currentLightIndex < 4; currentLightIndex++ ){ // Retrieve MAX_LIGHTS from shader.
         sprintf( uniformName, "lights[%u].isValid", currentLightIndex );
 
-        varLocation = openGL.getShaderVariableLocation( uniformName, currentShaderProgram );
+        varLocation = openGL.getShaderVariableLocation( uniformName );
         assert( varLocation != -1 );
 
         if( !( openGL.getShaderInteger( ShaderProgramType::DEFAULT, uniformName ) ) ){

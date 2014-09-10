@@ -71,7 +71,13 @@ class LightsManager : public SpecializedEntitiesManager< Light, LightsSelection,
 
 
         /***
-         * 6. Operators
+         * 6. Shader communication
+         ***/
+        void sendLightsToShader( OpenGL& openGL ) const;
+
+
+        /***
+         * 7. Operators
          ***/
         LightsManager& operator = ( const LightsManager& ) = delete;
         LightsManager& operator = ( LightsManager&& ) = delete;

@@ -71,6 +71,7 @@ class OpenGL
          ***/
         ShadingMode getShadingMode() const;
         GLint getShaderInteger( ShaderProgramType shaderProgramType, std::string varName );
+        GLint getShaderProgramID( ShaderProgramType shaderProgramType ) const; // TODO: Remove this method.
 
 
         /***

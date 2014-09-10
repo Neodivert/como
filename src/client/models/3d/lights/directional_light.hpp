@@ -37,13 +37,17 @@ class DirectionalLight : public Light
 
         GLint isValidLocation_;
 
-        GLuint directionalLightIndex_;
+        const GLuint directionalLightIndex_;
 
         /*! Location of the light vector in GLSL shader. */
         GLint lightVectorLocation_;
 
         /*! Location of the half vector in GLSL shader. */
         GLint halfVectorLocation_;
+
+        // Directional light attributes
+        glm::vec3 lightVector_;
+        glm::vec3 halfVector_;
 
 
     public:
@@ -71,13 +75,8 @@ class DirectionalLight : public Light
 
 
         /***
-         * 4. Setters
+         * 4. Updating
          ***/
-        void setLightVector( const glm::vec3& lightVector );
-
-
-
-
     private:
         void update();
     public:
@@ -90,13 +89,19 @@ class DirectionalLight : public Light
 
 
         /***
-         * 6. Drawing
+         * 6. Shader communication
+         ***/
+        virtual void sendToShader(OpenGL &openGL) const;
+
+
+        /***
+         * 7. Drawing
          ***/
         virtual void draw(OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const glm::vec4 *contourColor) const;
 
 
         /***
-         * 7. Operators
+         * 8. Operators
          ***/
 
         /*! \brief Copy assignment operator */
@@ -107,7 +112,7 @@ class DirectionalLight : public Light
 
 
         /***
-         * 8. Auxiliar methods
+         * 9. Auxiliar methods
          ***/
         virtual bool containsProperty( const void* property ) const;
         static GLuint lockShaderDirectionalLight( OpenGL& openGL );

@@ -56,7 +56,13 @@ class LightsSelection : public virtual EntitiesSet<DirectionalLight>, public Abs
 
 
         /***
-         * 5. Operators
+         * 5. Shader communication
+         ***/
+        void sendToShader( OpenGL& openGL ) const;
+
+
+        /***
+         * 6. Operators
          ***/
         LightsSelection& operator = ( const LightsSelection& ) = delete;
         LightsSelection& operator = ( LightsSelection&& ) = delete;

@@ -65,7 +65,7 @@ DirectionalLight::DirectionalLight( const PackableColor& lightColor, const glm::
     glUniform1i( lightIndexLocation_, getLightIndex() );
 
     // Initialize light vector in shader.
-    setLightVector( glm::vec3( DEFAULT_LIGHT_VECTOR ) );
+    update();
 }
 
 
@@ -86,53 +86,23 @@ DirectionalLight::~DirectionalLight()
 
 glm::vec3 DirectionalLight::getLightVector() const
 {
-    GLint currentShaderProgram = -1;
-    glm::vec3 lightVector( 0.0f );
-
-    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
-    glGetUniformfv( currentShaderProgram, lightVectorLocation_, &lightVector[0] );
-
-    return lightVector;
+    return lightVector_;
 }
 
 glm::vec3 DirectionalLight::getHalfVector() const
 {
-    GLint currentShaderProgram = -1;
-    glm::vec3 halfVector( 0.0f );
-
-    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
-    glGetUniformfv( currentShaderProgram, halfVectorLocation_, &halfVector[0] );
-
-    return halfVector;
+    return halfVector_;
 }
 
 
 GLint DirectionalLight::getLightIndex() const
 {
-    GLint currentShaderProgram = -1;
-    GLint index = -1;
-
-    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
-    glGetUniformiv( currentShaderProgram, lightIndexLocation_, &index );
-
-    return index;
+    return directionalLightIndex_;
 }
 
 
 /***
- * 4. Setters
- ***/
-
-void DirectionalLight::setLightVector( const glm::vec3& lightVector )
-{
-    glUniform3fv( lightVectorLocation_, 1, &lightVector[0] );
-
-    // TODO: Update half vector.
-}
-
-
-/***
- * 3. Setters
+ * 4. Updating
  ***/
 
 void DirectionalLight::update()
@@ -141,7 +111,9 @@ void DirectionalLight::update()
     Light::update();
 
     // Compute transformed light vector.
-    setLightVector( glm::normalize( glm::vec3( modelMatrix_ * DEFAULT_LIGHT_VECTOR ) ) );
+    lightVector_ = glm::normalize( glm::vec3( modelMatrix_ * DEFAULT_LIGHT_VECTOR ) );
+
+    // TODO: Update half vector.
 }
 
 
@@ -157,7 +129,19 @@ unsigned int DirectionalLight::getMaxLights()
 
 
 /***
- * 6. Drawing
+ * 6. Shader communication
+ ***/
+
+void DirectionalLight::sendToShader( OpenGL &openGL ) const
+{
+    Light::sendToShader( openGL );
+
+    glUniform3fv( lightVectorLocation_, 1, glm::value_ptr( lightVector_ ) );
+}
+
+
+/***
+ * 7. Drawing
  ***/
 
 void DirectionalLight::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec4* contourColor ) const
@@ -211,7 +195,7 @@ void DirectionalLight::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, cons
 
 
 /***
- * 8. Auxiliar methods
+ * 9. Auxiliar methods
  ***/
 
 bool DirectionalLight::containsProperty( const void *property ) const
@@ -223,18 +207,14 @@ bool DirectionalLight::containsProperty( const void *property ) const
 // FIXME: Duplicated code (Light::lockShaderLight()).
 GLuint DirectionalLight::lockShaderDirectionalLight( OpenGL& openGL )
 {
-    GLint currentShaderProgram = -1;
     char uniformName[64] = {0};
     GLint varLocation = -1;
     unsigned int currentLightIndex;
 
-    // Get current shader program ID.
-    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
-
     for( currentLightIndex = 0; currentLightIndex < 4; currentLightIndex++ ){ // Retrieve MAX_DIRECTIONAL_LIGHTS from shader.
         sprintf( uniformName, "directionalLights[%u].isValid", currentLightIndex );
 
-        varLocation = openGL.getShaderVariableLocation( uniformName, currentShaderProgram );
+        varLocation = openGL.getShaderVariableLocation( uniformName );
         assert( varLocation != -1 );
 
         if( !( openGL.getShaderInteger( ShaderProgramType::DEFAULT, uniformName ) ) ){

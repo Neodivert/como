@@ -96,6 +96,12 @@ GLint OpenGL::getShaderInteger( ShaderProgramType shaderProgramType, string varN
 }
 
 
+GLint OpenGL::getShaderProgramID( ShaderProgramType shaderProgramType ) const
+{
+    return shaderProgramsIDs_.at( shaderProgramType );
+}
+
+
 /***
  * 4. Setters
  ***/
@@ -205,7 +211,7 @@ void OpenGL::disableTexturing() const
 GLint OpenGL::getShaderVariableLocation( string varName, GLint program ) const
 {
     if( program < 0 ){
-        program = currentProgramID_;
+        program = shaderProgramsIDs_.at( ShaderProgramType::DEFAULT );
     }
 
     GLint varLocation = -1;
