@@ -47,4 +47,37 @@ ResourceID LocalLightsSelection::addResource( std::unique_ptr<DirectionalLight> 
 }
 
 
+/***
+ * 4. Setters
+ ***/
+
+void LocalLightsSelection::setLightColor( const PackableColor &color )
+{
+    LightsSelection::setLightColor( color );
+
+    // TODO: Create and send a LightsSelectionColorChangeCommand?
+    for( const auto& light : this->resources_ ){
+        sendCommandToServer( CommandConstPtr(
+                                 new LightColorChangeCommand( localUserID(),
+                                                              light.first,
+                                                              color ) ) );
+    }
+}
+
+
+void LocalLightsSelection::setAmbientCoefficient( float coefficient )
+{
+    LightsSelection::setAmbientCoefficient( coefficient );
+
+    // TODO: Create and send a LightsSelectionAmbientCoefficientChangeCommand?
+    for( const auto& light : this->resources_ ){
+        sendCommandToServer( CommandConstPtr(
+                                 new LightAmbientCoefficientChangeCommand(
+                                     localUserID(),
+                                     light.first,
+                                     coefficient ) ) );
+    }
+}
+
+
 } // namespace como

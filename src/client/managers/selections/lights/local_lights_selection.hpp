@@ -50,7 +50,14 @@ class LocalLightsSelection : public LightsSelection, public ServerWriter
 
 
         /***
-         * 4. Operators
+         * 4. Setters
+         ***/
+        virtual void setLightColor( const PackableColor &color );
+        virtual void setAmbientCoefficient( float coefficient );
+
+
+        /***
+         * 5. Operators
          ***/
         LocalLightsSelection& operator = ( const LocalLightsSelection& ) = delete;
         LocalLightsSelection& operator = ( LocalLightsSelection&& ) = delete;
