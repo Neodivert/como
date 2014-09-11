@@ -213,6 +213,9 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         // Initialize the entities manager.
         entitiesManager_ = EntitiesManagerPtr( new EntitiesManager( server_, log_, openGL_.get(), usersManager_, materialsManager_ ) );
 
+        // Initialize the geometric primitives factory.
+        geometricPrimitivesFactory_ = GeometricPrimitivesFactoryPtr( new GeometricPrimitivesFactory( server_, entitiesManager_->getMeshesManager(), materialsManager_ ) );
+
         // Initialize the primitives manager.
         primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, entitiesManager_->getMeshesManager(), materialsManager_, log_ ) );
 
@@ -251,20 +254,30 @@ MaterialsManagerPtr Scene::getMaterialsManager() const
     return materialsManager_;
 }
 
+
 LightsManagerPtr Scene::getLightsManager() const
 {
     return entitiesManager_->getLightsManager();
 }
+
 
 ClientPrimitivesManagerPtr Scene::getPrimitivesManager() const
 {
     return primitivesManager_;
 }
 
+
 EntitiesManagerPtr Scene::getEntitiesManager() const
 {
     return entitiesManager_;
 }
+
+
+GeometricPrimitivesFactoryPtr Scene::getGeometricPrimitivesFactory() const
+{
+    return geometricPrimitivesFactory_  ;
+}
+
 
 OpenGLPtr Scene::getOpenGL() const
 {

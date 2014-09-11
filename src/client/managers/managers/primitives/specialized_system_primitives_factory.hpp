@@ -16,8 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef SYSTEM_PRIMITIVES_FACTORY_HPP
-#define SYSTEM_PRIMITIVES_FACTORY_HPP
+#ifndef SPECIALIZED_SYSTEM_PRIMITIVES_FACTORY_HPP
+#define SPECIALIZED_SYSTEM_PRIMITIVES_FACTORY_HPP
 
 #include <client/managers/managers/meshes/meshes_manager.hpp>
 #include <common/primitives/primitive_data/system_primitive_data.hpp>
@@ -66,4 +66,4 @@ class SpecializedSystemPrimitivesFactory : public ServerWriter
 
 } // namespace como
 
-#endif // SYSTEM_PRIMITIVES_FACTORY_HPP
+#endif // SPECIALIZED_SYSTEM_PRIMITIVES_FACTORY_HPP

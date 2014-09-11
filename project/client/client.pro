@@ -112,10 +112,12 @@ HEADERS += \
     ../../src/client/managers/managers/entities/abstract_entities_manager.hpp \
     ../../src/client/gui/materials/material_editor.hpp \
     ../../src/client/models/3d/meshes/system_mesh.hpp \
-    ../../src/client/models/3d/meshes/cube.hpp \
     ../../src/client/models/3d/meshes/imported_mesh.hpp \
     ../../src/client/gui/materials/materials_list_widget.hpp \
-    ../../src/client/managers/managers/primitives/specialized_system_primitives_factory.hpp
+    ../../src/client/managers/managers/primitives/specialized_system_primitives_factory.hpp \
+    ../../src/client/managers/managers/primitives/cubes_factory.hpp \
+    ../../src/client/managers/managers/primitives/geometry_primitives_factory.hpp \
+    ../../src/client/gui/tools_menu/geometric_primitives_creation_menu.hpp
 
 
 # Client sources
@@ -183,7 +185,9 @@ SOURCES += \
     ../../src/client/managers/managers/entities/abstract_entities_manager.cpp \
     ../../src/client/gui/materials/material_editor.cpp \
     ../../src/client/models/3d/meshes/system_mesh.cpp \
-    ../../src/client/models/3d/meshes/cube.cpp \
     ../../src/client/models/3d/meshes/imported_mesh.cpp \
     ../../src/client/gui/materials/materials_list_widget.cpp \
-    ../../src/client/managers/managers/primitives/specialized_system_primitives_factory.cpp
+    ../../src/client/managers/managers/primitives/specialized_system_primitives_factory.cpp \
+    ../../src/client/managers/managers/primitives/cubes_factory.cpp \
+    ../../src/client/managers/managers/primitives/geometry_primitives_factory.cpp \
+    ../../src/client/gui/tools_menu/geometric_primitives_creation_menu.cpp

@@ -20,16 +20,17 @@
 #define SYSTEM_MESH_HPP
 
 #include <client/models/3d/mesh.hpp>
+#include <common/primitives/primitive_data/system_primitive_data.hpp>
 
 namespace como {
 
-class SystemMesh //: public Mesh
+class SystemMesh : public Mesh
 {
     public:
         /***
          * 1. Construction
          ***/
-        SystemMesh( MeshVertexData vertexData, const MeshOpenGLData& oglData, const std::vector< PolygonGroupData >& polygonsGroups, const std::vector< MaterialConstPtr >& materials, bool displayVertexNormals = false );
+        SystemMesh( const SystemPrimitiveData& primitiveData, bool displayVertexNormals = false );
         SystemMesh() = delete;
         SystemMesh( const SystemMesh& ) = delete;
         SystemMesh( SystemMesh&& ) = delete;
@@ -42,9 +43,9 @@ class SystemMesh //: public Mesh
 
 
         /***
-         * 3. Wall
+         * 3. Drawing
          ***/
-
+        virtual void draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const glm::vec4 *contourColor ) const;
 
 
         /***

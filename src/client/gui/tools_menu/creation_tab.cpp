@@ -31,6 +31,7 @@ CreationTab::CreationTab( ScenePtr scene ) :
     QVBoxLayout* layout = new QVBoxLayout;
 
     // Add widgets to the previous layout.
+    layout->addWidget( new GeometricPrimitivesCreationMenu( scene->getGeometricPrimitivesFactory() ) );
     layout->addWidget( createMeshFromPrimitiveCreationMenu() );
     layout->addWidget( createPrimitiveImportButton() );
     layout->addWidget( createLightsCreationPanel() );

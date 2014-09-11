@@ -34,6 +34,7 @@
 #include <common/scene/basic_scene.hpp>
 #include <client/managers/managers/entities/entities_manager.hpp>
 #include <client/managers/managers/users/users_manager.hpp>
+#include <client/managers/managers/primitives/geometry_primitives_factory.hpp>
 
 namespace como {
 
@@ -59,6 +60,8 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
         MaterialsManagerPtr materialsManager_;
 
         EntitiesManagerPtr entitiesManager_;
+
+        GeometricPrimitivesFactoryPtr geometricPrimitivesFactory_;
 
         OpenGLPtr openGL_;
 
@@ -111,6 +114,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
         LightsManagerPtr getLightsManager() const;
         ClientPrimitivesManagerPtr getPrimitivesManager() const;
         EntitiesManagerPtr getEntitiesManager() const;
+        GeometricPrimitivesFactoryPtr getGeometricPrimitivesFactory() const;
         OpenGLPtr getOpenGL() const;
 
 

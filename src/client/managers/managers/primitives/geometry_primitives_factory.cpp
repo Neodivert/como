@@ -16,34 +16,28 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "system_mesh.hpp"
+#include "geometry_primitives_factory.hpp"
 
 namespace como {
+
 
 /***
  * 1. Construction
  ***/
 
-SystemMesh::SystemMesh( const SystemPrimitiveData& primitiveData, bool displayVertexNormals ) :
-    Mesh( primitiveData, ConstMaterialsVector(), displayVertexNormals ) // TODO: Pass a real second argument.
-{
-    // TODO: Complete
-    (void)( primitiveData );
-    (void)( displayVertexNormals );
-}
+GeometricPrimitivesFactory::GeometricPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager ) :
+    ServerWriter( server ),
+    cubesFactory_( server, meshesManager, materialsManager )
+{}
 
 
 /***
- * 3. Drawing
+ * 3. Geometry primitives creation
  ***/
 
-void SystemMesh::draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const glm::vec4 *contourColor ) const
+ResourceID GeometricPrimitivesFactory::createCube( float width, float height, float depth )
 {
-    // TODO: Implement.
-    (void)( openGL );
-    (void)( viewMatrix );
-    (void)( projectionMatrix );
-    (void)( contourColor );
+    return cubesFactory_.createCube( width, height, depth );
 }
 
 } // namespace como
