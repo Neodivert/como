@@ -65,7 +65,6 @@ void CubesFactory::createCube( const ResourceID& cubeID, const ResourceID& mater
 
     cube = std::unique_ptr< Mesh >( new SystemMesh( generatePrimitiveData(), materialsManager_->getMaterial( materialID ) ) );
 
-    // TODO: Register textures / materials.
     return meshesManager_->addMesh( std::move( cube ), cubeID );
 }
 
@@ -109,8 +108,8 @@ void CubesFactory::generateVertexData( MeshVertexData &vertexData )
     vertexData.vertexTriangles.push_back( IndicesTriangle{ 4, 5, 1 } );
 
     // Bottom face (triangles)
-    vertexData.vertexTriangles.push_back( IndicesTriangle{ 7, 6, 3 } );
-    vertexData.vertexTriangles.push_back( IndicesTriangle{ 6, 2, 3 } );
+    vertexData.vertexTriangles.push_back( IndicesTriangle{ 3, 6, 7 } );
+    vertexData.vertexTriangles.push_back( IndicesTriangle{ 3, 2, 6 } );
 }
 
 

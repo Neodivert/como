@@ -448,7 +448,7 @@ void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, con
     assert( colorUniformLocation != -1 );
     glUniform4fv( colorUniformLocation, 1, &( color[0] ) );
 
-    glDrawArrays( GL_POINTS, 0, vertexData_.vertices.size() );
+    glDrawArrays( GL_POINTS, 0, vertexData_.vertices.size() * componensPerVertex_ );
 
     if( includesTexture_ ){
         glEnableVertexAttribArray( SHADER_UV_ATTR_LOCATION );

@@ -46,7 +46,7 @@ void MeshNormalData::initFromMeshVertexData( const MeshVertexData& meshVertexDat
 
     // Compute each face normal and add it to the normal of every vertex in
     // in the triangle.
-    for( auto triangle : meshVertexData.vertexTriangles ){
+    for( const IndicesTriangle& triangle : meshVertexData.vertexTriangles ){
         faceNormal = glm::cross(
                     meshVertexData.vertices[ triangle[1] ] - meshVertexData.vertices[ triangle[0] ],
                     meshVertexData.vertices[ triangle[2] ] - meshVertexData.vertices[ triangle[0] ] );
@@ -57,7 +57,7 @@ void MeshNormalData::initFromMeshVertexData( const MeshVertexData& meshVertexDat
     }
 
     // Normalize all the normals.
-    for( auto& normal : normals ){
+    for( glm::vec3& normal : normals ){
         normal = glm::normalize( normal );
     }
 
