@@ -25,7 +25,7 @@ namespace como {
  ***/
 
 SystemMesh::SystemMesh( const SystemPrimitiveData& primitiveData, bool displayVertexNormals ) :
-    Mesh( primitiveData, ConstMaterialsVector(), displayVertexNormals ) // TODO: Pass a real second argument.
+    Mesh( primitiveData, { MaterialPtr( new Material() ) }, displayVertexNormals )
 {
     // TODO: Complete
     (void)( primitiveData );
@@ -44,6 +44,8 @@ void SystemMesh::draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm:
     (void)( viewMatrix );
     (void)( projectionMatrix );
     (void)( contourColor );
+
+
 }
 
 } // namespace como

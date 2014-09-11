@@ -68,7 +68,6 @@ class Mesh : public AbstractMesh, public Entity
         static GLint normalMatrixLocation_;
 
         // VAO : Vertex Attributes Array.
-    protected:
         GLuint vao;
 
         // VBO for transformed vertex data.
@@ -82,7 +81,6 @@ class Mesh : public AbstractMesh, public Entity
 
         bool displayVertexNormals_;
 
-    private:
         // Mesh's centroid.
         glm::vec4 originalCentroid;
         glm::vec4 transformedCentroid;
@@ -138,6 +136,7 @@ class Mesh : public AbstractMesh, public Entity
         MeshType getType() const ;
         bool displaysVertexNormals() const;
         virtual glm::vec3 centroid() const;
+        bool includesTextures() const;
 
 
         /***
@@ -154,14 +153,23 @@ class Mesh : public AbstractMesh, public Entity
 
 
         /***
+         * 8. Shader communication
+         ***/
+        virtual void sendToShader( OpenGL& openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix ) const;
+
+
+        /***
          * 8. Update and drawing.
          ***/
     protected:
         // Recompute transformed vertices based on original ones and transformation matrix.
         virtual void update();
 
+        virtual void drawTriangles( unsigned int firstTriangleIndex, unsigned int nTriangles ) const;
+
     public:
         // Send mesh to OpenGL server for rendering it.
+
         virtual void drawEdges( OpenGLPtr openGL, const glm::mat4& view, const glm::mat4& projection, const glm::vec4* contourColor = nullptr ) const;
         virtual void drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, glm::vec4 color ) const;
     public:

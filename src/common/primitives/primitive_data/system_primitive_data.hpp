@@ -23,6 +23,7 @@
 
 namespace como {
 
+// TODO: Rename?
 struct SystemPrimitiveData : public PrimitiveData
 {
     // TODO: Complete.

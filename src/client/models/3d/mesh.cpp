@@ -291,6 +291,12 @@ glm::vec3 Mesh::centroid() const
 }
 
 
+bool Mesh::includesTextures() const
+{
+    return includesTexture_;
+}
+
+
 /***
  * 6. Setters
  ***/
@@ -357,6 +363,22 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
 
 
 /***
+ * 8. Shader communication
+ ***/
+
+void Mesh::sendToShader( OpenGL& openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix ) const
+{
+    // Compute MVP matrix and pass it to the shader.
+    openGL.setMVPMatrix( modelMatrix_, viewMatrix, projectionMatrix );
+
+    // Bind Mesh VAO and VBOs as the active ones.
+    glBindVertexArray( vao );
+    glBindBuffer( GL_ARRAY_BUFFER, vbo );
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
+}
+
+
+/***
  * 8. Update and drawing.
  ***/
 
@@ -367,6 +389,14 @@ void Mesh::update()
 
     // Update mesh's centroid.
     transformedCentroid = modelMatrix_ * originalCentroid;
+}
+
+void Mesh::drawTriangles( unsigned int firstTriangleIndex, unsigned int nTriangles ) const
+{
+    glDrawElements( GL_TRIANGLES,
+                    nTriangles * 3,
+                    GL_UNSIGNED_INT,
+                    ( std::intptr_t* )( firstTriangleIndex * 3 * sizeof( GL_UNSIGNED_INT ) ) );
 }
 
 
