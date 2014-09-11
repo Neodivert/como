@@ -61,6 +61,10 @@ void SystemMesh::draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm:
     }
 
     drawEdges( openGL, viewMatrix, projectionMatrix, contourColor );
+
+    if( displaysVertexNormals() ){
+        drawVertexNormals( openGL, viewMatrix, projectionMatrix, glm::vec4( 1.0f, 0.0f, 0.0f, 0.0f )  );
+    }
 }
 
 } // namespace como
