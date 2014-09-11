@@ -27,8 +27,14 @@
 #include "polygon_group_data.hpp"
 #include <fstream>
 #include <common/exceptions/file_not_open_exception.hpp>
+#include <map>
 
 namespace como {
+
+typedef GLuint VertexIndice;
+typedef std::array< VertexIndice, 3 > CompoundVertex; // A vertex formed by a position vertex, a normal and an UV vertex (TODO: These are TRIANGLE INDICES, do I change the name?).
+typedef std::map< CompoundVertex, VertexIndice > CompoundVerticesMap;
+
 
 struct PrimitiveData
 {
@@ -48,9 +54,15 @@ struct PrimitiveData
         unsigned int getMaterialIndex( const std::string& name ) const;
 
 
+        /***
+         * 2. Data generation
+         ***/
+        void generateOGLData();
+
+
     protected:
         /***
-         * 2. File reading
+         * 3. File reading
          ***/
         void readVertices( std::ifstream& file );
         void readTriangles( std::ifstream& file );
@@ -59,7 +71,7 @@ struct PrimitiveData
 
 
         /***
-         * 3. File writting
+         * 4. File writting
          ***/
         void writeVertices( std::ofstream& file ) const;
         void writeTriangles( std::ofstream& file ) const;

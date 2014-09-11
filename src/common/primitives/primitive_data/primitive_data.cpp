@@ -17,9 +17,11 @@
 ***/
 
 #include <common/primitives/primitive_data/primitive_data.hpp>
+#include <array>
+#include <map>
+
 
 namespace como {
-
 
 /***
  * 1. Getters
@@ -43,7 +45,59 @@ unsigned int PrimitiveData::getMaterialIndex( const std::string& name ) const
 
 
 /***
- * 2. File reading
+ * 2. Data generation
+ ***/
+
+void PrimitiveData::generateOGLData()
+{
+    CompoundVerticesMap compoundVerticesMap;
+    unsigned int currentTriangleIndex = 0;
+    unsigned int currentTriangleElement = 0;
+
+    CompoundVertex compoundVertex;
+    CompoundVerticesMap::const_iterator finalVerticesIt;
+    VertexIndice compoundVertexIndex;
+
+    for( currentTriangleIndex = 0; currentTriangleIndex < vertexData.vertexTriangles.size(); currentTriangleIndex++ ){
+        for( currentTriangleElement = 0; currentTriangleElement < 3; currentTriangleElement++ ){
+            compoundVertex[0] = vertexData.vertexTriangles[currentTriangleIndex][currentTriangleElement];
+            compoundVertex[1] = normalData.normalTriangles[currentTriangleIndex][currentTriangleElement];
+            compoundVertex[2] = uvData.uvTriangles.size() ? uvData.uvTriangles[currentTriangleIndex][currentTriangleElement] : 0;
+
+            finalVerticesIt = compoundVerticesMap.find( compoundVertex );
+
+            if( finalVerticesIt != compoundVerticesMap.end() ){
+                compoundVertexIndex = finalVerticesIt->second;
+            }else{
+                compoundVertexIndex = compoundVerticesMap.size();
+
+                oglData.vboData.push_back( vertexData.vertices[ compoundVertex[0] ][0] );
+                oglData.vboData.push_back( vertexData.vertices[ compoundVertex[0] ][1] );
+                oglData.vboData.push_back( vertexData.vertices[ compoundVertex[0] ][2] );
+
+                // Insert vertex normal.
+                oglData.vboData.push_back( normalData.normals[ compoundVertex[1] ][0] );
+                oglData.vboData.push_back( normalData.normals[ compoundVertex[1] ][1] );
+                oglData.vboData.push_back( normalData.normals[ compoundVertex[1] ][2] );
+
+                // Insert UV coordinates (if exist).
+                if( oglData.includesTextures ){
+                    oglData.vboData.push_back( uvData.uvVertices[ compoundVertex[2] ][0] );
+                    oglData.vboData.push_back( uvData.uvVertices[ compoundVertex[2] ][1] );
+                }
+
+                compoundVerticesMap.insert( std::pair< CompoundVertex, VertexIndice >( compoundVertex, compoundVertexIndex ) );
+            }
+
+
+            oglData.eboData.push_back( compoundVertexIndex );
+        }
+    }
+}
+
+
+/***
+ * 3. File reading
  ***/
 
 void PrimitiveData::readVertices( std::ifstream &file )
@@ -160,7 +214,7 @@ void PrimitiveData::readMaterials(std::ifstream &file)
 
 
 /***
- * 3. File writting
+ * 4. File writting
  ***/
 
 void PrimitiveData::writeVertices( std::ofstream& file ) const

@@ -41,10 +41,6 @@ enum class FaceComponents
 typedef std::array< GLuint, 3 > FaceTriangle;
 typedef std::array< GLuint, 4 > FaceQuad;
 
-typedef GLuint VertexIndice;
-typedef std::array< VertexIndice, 3 > CompoundVertex; // A vertex formed by a position vertex, a normal and an UV vertex.
-typedef std::map< CompoundVertex, VertexIndice > CompoundVerticesMap;
-
 namespace como {
 
 class OBJPrimitivesImporter : PrimitivesImporter {
@@ -105,7 +101,6 @@ class OBJPrimitivesImporter : PrimitivesImporter {
                               FaceTriangle& triangle1,
                               FaceTriangle& triangle2 );
         void insertQuad( std::vector< FaceTriangle >& triangles, FaceQuad& quad );
-        void generateOGLData( ImportedPrimitiveData& primitiveData );
         void splitFileLine( const std::string& line, std::string& lineHeader, std::string& lineBody );
         bool supportedImageFile( const std::string& filePath );
 };

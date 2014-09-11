@@ -16,42 +16,18 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef MESH_OPENGL_DATA_HPP
-#define MESH_OPENGL_DATA_HPP
+#ifndef SYSTEM_PRIMITIVE_DATA_HPP
+#define SYSTEM_PRIMITIVE_DATA_HPP
 
-#include <vector>
-
-#define GL_GLEXT_PROTOTYPES
-extern "C" {
-    #define GL_GLEXT_PROTOTYPES
-    #include <GL/gl.h>
-}
+#include <common/primitives/primitive_data/primitive_data.hpp>
 
 namespace como {
 
-typedef std::vector< GLfloat > GLFloatBuffer;
-typedef std::vector< GLuint > GLUintBuffer;
-
-
-struct MeshOpenGLData {
-    bool includesTextures;
-
-    GLFloatBuffer vboData;
-    GLUintBuffer eboData;
-
-
-    /***
-     * 1. Construction
-     ***/
-    MeshOpenGLData();
-
-
-    /***
-     * 2. Getters
-     ***/
-    GLuint componentsPerVertex() const;
+struct SystemPrimitiveData : public PrimitiveData
+{
+    // TODO: Complete.
 };
 
 } // namespace como
 
-#endif // MESH_OPENGL_DATA_HPP
+#endif // SYSTEM_PRIMITIVE_DATA_HPP

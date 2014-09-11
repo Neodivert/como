@@ -78,7 +78,7 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
         computeNormalData( primitiveData.vertexData, primitiveData.normalData );
     }
 
-    generateOGLData( primitiveData );
+    primitiveData.generateOGLData();
 }
 
 void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::string line, PrimitiveInfo& primitiveInfo, ImportedPrimitiveData& primitiveData )
@@ -526,70 +526,6 @@ void OBJPrimitivesImporter::insertQuad(std::vector<FaceTriangle> &triangles, Fac
 
     triangles.push_back( triangle1 );
     triangles.push_back( triangle2 );
-}
-
-void OBJPrimitivesImporter::generateOGLData(ImportedPrimitiveData& primitiveData)
-{
-    CompoundVerticesMap compoundVerticesMap;
-    unsigned int currentTriangleIndex = 0;
-    unsigned int currentTriangleElement = 0;
-
-    CompoundVertex compoundVertex;
-    CompoundVerticesMap::const_iterator finalVerticesIt;
-    VertexIndice compoundVertexIndex;
-
-    std::vector< TrianglesGroupWithMaterial >::iterator currentTriangleGroupIt = primitiveData.trianglesGroups_.begin();
-    std::vector< TrianglesGroupWithMaterial >::iterator nextTriangleGroupIt;
-
-    for( currentTriangleIndex = 0; currentTriangleIndex < primitiveData.vertexData.vertexTriangles.size(); currentTriangleIndex++ ){
-        for( currentTriangleElement = 0; currentTriangleElement < 3; currentTriangleElement++ ){
-            compoundVertex[0] = primitiveData.vertexData.vertexTriangles[currentTriangleIndex][currentTriangleElement];
-            compoundVertex[1] = primitiveData.normalData.normalTriangles[currentTriangleIndex][currentTriangleElement];
-            compoundVertex[2] = primitiveData.uvData.uvTriangles.size() ? primitiveData.uvData.uvTriangles[currentTriangleIndex][currentTriangleElement] : 0;
-
-            finalVerticesIt = compoundVerticesMap.find( compoundVertex );
-
-            if( finalVerticesIt != compoundVerticesMap.end() ){
-                compoundVertexIndex = finalVerticesIt->second;
-            }else{
-                compoundVertexIndex = compoundVerticesMap.size();
-
-                primitiveData.oglData.vboData.push_back( primitiveData.vertexData.vertices[ compoundVertex[0] ][0] );
-                primitiveData.oglData.vboData.push_back( primitiveData.vertexData.vertices[ compoundVertex[0] ][1] );
-                primitiveData.oglData.vboData.push_back( primitiveData.vertexData.vertices[ compoundVertex[0] ][2] );
-
-                // Insert vertex normal.
-                primitiveData.oglData.vboData.push_back( primitiveData.normalData.normals[ compoundVertex[1] ][0] );
-                primitiveData.oglData.vboData.push_back( primitiveData.normalData.normals[ compoundVertex[1] ][1] );
-                primitiveData.oglData.vboData.push_back( primitiveData.normalData.normals[ compoundVertex[1] ][2] );
-
-                // Insert UV coordinates (if exist).
-                if( primitiveData.oglData.includesTextures ){
-                    primitiveData.oglData.vboData.push_back( primitiveData.uvData.uvVertices[ compoundVertex[2] ][0] );
-                    primitiveData.oglData.vboData.push_back( primitiveData.uvData.uvVertices[ compoundVertex[2] ][1] );
-                }
-
-                compoundVerticesMap.insert( std::pair< CompoundVertex, VertexIndice >( compoundVertex, compoundVertexIndex ) );
-            }
-
-            if( currentTriangleGroupIt->firstTriangleIndex == currentTriangleIndex ){
-                currentTriangleGroupIt->firstTriangleIndex = compoundVertexIndex;
-                currentTriangleGroupIt->nTriangles = 1;
-            }else{
-                nextTriangleGroupIt = currentTriangleGroupIt + 1;
-                if( ( nextTriangleGroupIt != primitiveData.trianglesGroups_.end() ) &&
-                       ( nextTriangleGroupIt->firstTriangleIndex == currentTriangleIndex ) ){
-                    nextTriangleGroupIt->firstTriangleIndex = compoundVertexIndex;
-                    nextTriangleGroupIt->nTriangles = 1;
-                    currentTriangleGroupIt = nextTriangleGroupIt;
-                }else{
-                    currentTriangleGroupIt->nTriangles++;
-                }
-            }
-
-            primitiveData.oglData.eboData.push_back( compoundVertexIndex );
-        }
-    }
 }
 
 

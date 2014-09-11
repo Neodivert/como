@@ -16,42 +16,26 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef MESH_OPENGL_DATA_HPP
-#define MESH_OPENGL_DATA_HPP
-
-#include <vector>
-
-#define GL_GLEXT_PROTOTYPES
-extern "C" {
-    #define GL_GLEXT_PROTOTYPES
-    #include <GL/gl.h>
-}
+#include "mesh_opengl_data.hpp"
 
 namespace como {
 
-typedef std::vector< GLfloat > GLFloatBuffer;
-typedef std::vector< GLuint > GLUintBuffer;
+/***
+ * 1. Construction
+ ***/
+
+MeshOpenGLData::MeshOpenGLData() :
+    includesTextures( false )
+{}
 
 
-struct MeshOpenGLData {
-    bool includesTextures;
+/***
+ * 2. Getters
+ ***/
 
-    GLFloatBuffer vboData;
-    GLUintBuffer eboData;
-
-
-    /***
-     * 1. Construction
-     ***/
-    MeshOpenGLData();
-
-
-    /***
-     * 2. Getters
-     ***/
-    GLuint componentsPerVertex() const;
-};
+GLuint MeshOpenGLData::componentsPerVertex() const
+{
+    return ( includesTextures ? 8 : 6 );
+}
 
 } // namespace como
-
-#endif // MESH_OPENGL_DATA_HPP

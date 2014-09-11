@@ -114,7 +114,8 @@ HEADERS += \
     ../../src/client/models/3d/meshes/system_mesh.hpp \
     ../../src/client/models/3d/meshes/cube.hpp \
     ../../src/client/models/3d/meshes/imported_mesh.hpp \
-    ../../src/client/gui/materials/materials_list_widget.hpp
+    ../../src/client/gui/materials/materials_list_widget.hpp \
+    ../../src/client/managers/managers/primitives/specialized_system_primitives_factory.hpp
 
 
 # Client sources
@@ -184,4 +185,5 @@ SOURCES += \
     ../../src/client/models/3d/meshes/system_mesh.cpp \
     ../../src/client/models/3d/meshes/cube.cpp \
     ../../src/client/models/3d/meshes/imported_mesh.cpp \
-    ../../src/client/gui/materials/materials_list_widget.cpp
+    ../../src/client/gui/materials/materials_list_widget.cpp \
+    ../../src/client/managers/managers/primitives/specialized_system_primitives_factory.cpp

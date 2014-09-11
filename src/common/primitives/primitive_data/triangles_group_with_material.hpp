@@ -21,7 +21,6 @@
 
 #include <common/primitives/primitive_data/triangles_group.hpp>
 
-
 namespace como {
 
 struct TrianglesGroupWithMaterial : public TrianglesGroup {
