@@ -188,7 +188,7 @@ class Mesh : public AbstractMesh, public Entity
         Mesh& operator=( Mesh&& ) = delete;
 };
 
-typedef std::shared_ptr< Mesh > MeshPtr;
+typedef std::unique_ptr< Mesh > MeshPtr;
 
 }
 

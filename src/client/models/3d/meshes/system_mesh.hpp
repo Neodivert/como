@@ -21,6 +21,7 @@
 
 #include <client/models/3d/mesh.hpp>
 #include <common/primitives/primitive_data/system_primitive_data.hpp>
+#include "triangles_group_with_texture.hpp"
 
 namespace como {
 
@@ -31,7 +32,7 @@ class SystemMesh : public Mesh
         /***
          * 1. Construction
          ***/
-        SystemMesh( const SystemPrimitiveData& primitiveData, bool displayVertexNormals = false );
+        SystemMesh( const SystemPrimitiveData& primitiveData, MaterialConstPtr material, bool displayVertexNormals = false );
         SystemMesh() = delete;
         SystemMesh( const SystemMesh& ) = delete;
         SystemMesh( SystemMesh&& ) = delete;
@@ -44,7 +45,13 @@ class SystemMesh : public Mesh
 
 
         /***
-         * 3. Drawing
+         * 3. Shader communication
+         ***/
+        void sendTextureToShader( unsigned int index ) const;
+
+
+        /***
+         * 4. Drawing
          ***/
         virtual void draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const glm::vec4 *contourColor ) const;
 
@@ -54,6 +61,11 @@ class SystemMesh : public Mesh
          ***/
         SystemMesh& operator = ( const SystemMesh& ) = delete;
         SystemMesh& operator = ( SystemMesh&& ) = delete;
+
+
+    private:
+        std::vector< Texture > textures_;
+        std::vector< TrianglesGroupWithTexture > trianglesGroups_;
 };
 
 } // namespace como

@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "light_command.hpp"
+#include "triangles_group_with_texture.hpp"
 
 namespace como {
 
@@ -24,37 +24,21 @@ namespace como {
  * 1. Construction
  ***/
 
-LightCommand::LightCommand() :
-    TypeCommand( CommandTarget::LIGHT, LightCommandType::LIGHT_CREATION, NO_USER ),
-    lightID_( NO_RESOURCE )
-{
-    addPackable( &lightID_ );
-}
-
-
-LightCommand::LightCommand( LightCommandType commandType, UserID userID, const ResourceID& lightID ) :
-    TypeCommand( CommandTarget::LIGHT, commandType, userID ),
-    lightID_( lightID )
-{
-    addPackable( &lightID_ );
-}
-
-
-LightCommand::LightCommand( const LightCommand &b ) :
-    TypeCommand( b ),
-    lightID_( b.lightID_ )
-{
-    addPackable( &lightID_ );
-}
+TrianglesGroupWithTexture::TrianglesGroupWithTexture( unsigned int firstTriangleIndex, unsigned int nTriangles ) :
+    TrianglesGroup( firstTriangleIndex, nTriangles ),
+    textureScale( 1.0f, 1.0f ),
+    textureOffset( 0.0f, 0.0f ),
+    textureIndex( -1 )
+{}
 
 
 /***
  * 3. Getters
  ***/
 
-ResourceID LightCommand::getResourceID() const
+bool TrianglesGroupWithTexture::includesTexture() const
 {
-    return lightID_.getValue();
+    return ( textureIndex >= 0 );
 }
 
 } // namespace como

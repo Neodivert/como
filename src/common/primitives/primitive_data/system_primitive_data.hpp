@@ -18,15 +18,18 @@
 
 #ifndef SYSTEM_PRIMITIVE_DATA_HPP
 #define SYSTEM_PRIMITIVE_DATA_HPP
+// TODO: Move this struct to client source code directory.
 
 #include <common/primitives/primitive_data/primitive_data.hpp>
+
+#include <client/models/3d/meshes/triangles_group_with_texture.hpp>
 
 namespace como {
 
 // TODO: Rename?
 struct SystemPrimitiveData : public PrimitiveData
 {
-    // TODO: Complete.
+    std::vector< TrianglesGroupWithTexture > trianglesGroups;
 };
 
 } // namespace como

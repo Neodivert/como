@@ -42,6 +42,7 @@ SystemPrimitiveData SpecializedSystemPrimitivesFactory::generatePrimitiveData()
     generateVertexData( primitiveData.vertexData );
     generateNormalData( primitiveData.vertexData, primitiveData.normalData );
     generateUVData( primitiveData.uvData );
+    generateTrianglesGroups( primitiveData.trianglesGroups );
     generateOGLData( primitiveData );
 
     return primitiveData;

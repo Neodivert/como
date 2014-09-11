@@ -81,6 +81,9 @@ class MeshesManager : public SpecializedEntitiesManager< Mesh, MeshesSelection, 
         ResourceID createMesh( const ImportedPrimitiveData& primitiveData, ConstMaterialsVector materials );
         void createMesh( const ImportedPrimitiveData& primitiveData, ConstMaterialsVector materials, const ResourceID& meshID );
 
+        ResourceID addMesh( MeshPtr mesh );
+        void addMesh( MeshPtr mesh, const ResourceID& meshID );
+
 
         /***
          * 4. Resources selections management // TODO: Make this protected and make AbstractOwnershipManager observe a UsersList interface.

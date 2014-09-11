@@ -26,9 +26,9 @@ struct TrianglesGroup
     unsigned int firstTriangleIndex;
     unsigned int nTriangles;
 
-    TrianglesGroup() :
-        firstTriangleIndex( 0 ),
-        nTriangles( 0 ){}
+    TrianglesGroup( unsigned int firstTriangleIndex = 0, unsigned int nTriangles = 0 ) :
+        firstTriangleIndex( firstTriangleIndex ),
+        nTriangles( nTriangles ){}
 };
 
 } // namespace como

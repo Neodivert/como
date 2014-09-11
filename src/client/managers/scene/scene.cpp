@@ -441,6 +441,9 @@ void Scene::executeRemoteCommand( std::shared_ptr< const Command > command )
             entitiesManager_->executeResourcesSelectionCommand( dynamic_cast< const ResourcesSelectionCommand& >( *command ) );
             // TODO: materialsManager_->executeResourcesSelectionCommand( selectionCommand );
         }break;
+        case CommandTarget::GEOMETRIC_PRIMITIVE:{
+            geometricPrimitivesFactory_->executeRemoteCommand( dynamic_cast< const GeometricPrimitiveCommand& >( *command ) );
+        }
     }
 
     log_->debug( "Scene - Executing remote command(",

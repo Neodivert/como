@@ -104,7 +104,10 @@ HEADERS += \
     ../../src/common/primitives/primitive_data/primitive_data.hpp \
     ../../src/common/primitives/primitive_data/material_info.hpp \
     ../../src/common/primitives/primitive_data/triangles_group_with_material.hpp \
-    ../../src/common/primitives/primitive_data/system_primitive_data.hpp
+    ../../src/common/primitives/primitive_data/system_primitive_data.hpp \
+    ../../src/common/commands/geometric_primitive_command/geometric_primitive_command.hpp \
+    ../../src/common/commands/geometric_primitive_command/geometric_primitive_commands.hpp \
+    ../../src/common/commands/geometric_primitive_command/cube_creation_command.hpp
 
 
 # Common sources (used by both client and server).
@@ -158,4 +161,7 @@ SOURCES += \
     ../../src/common/primitives/primitive_data/primitive_data.cpp \
     ../../src/common/primitives/primitive_data/imported_primitive_data.cpp \
     ../../src/common/primitives/primitive_data/mesh_normal_data.cpp \
-    ../../src/common/primitives/primitive_data/mesh_opengl_data.cpp
+    ../../src/common/primitives/primitive_data/mesh_opengl_data.cpp \
+    ../../src/common/commands/geometric_primitive_command/geometric_primitive_command.cpp \
+    ../../src/common/commands/geometric_primitive_command/cube_creation_command.cpp \
+    ../../src/common/primitives/primitive_data/material_info.cpp

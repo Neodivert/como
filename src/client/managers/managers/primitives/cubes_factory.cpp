@@ -18,22 +18,60 @@ CubesFactory::CubesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesMa
 
 ResourceID CubesFactory::createCube( float width, float height, float depth )
 {
+    ResourceID cubeID = newResourceID();
+    ResourceID materialID = newResourceID();
+
+    createCube( cubeID, materialID, width, height, depth );
+
+    sendCommandToServer(
+                CommandConstPtr(
+                    new CubeCreationCommand( cubeID,
+                                             materialID,
+                                             width,
+                                             height,
+                                             depth ) ) );
+
+    return cubeID;
+}
+
+
+/***
+ * 4. Command execution
+ ***/
+
+void CubesFactory::executeRemoteCommand( const CubeCreationCommand &command )
+{
+    createCube( command.getMeshID(),
+                command.getMaterialID(),
+                command.getCubeWidth(),
+                command.getCubeHeight(),
+                command.getCubeDepth() );
+}
+
+
+/***
+ * 6. Remote cubes creation
+ ***/
+
+void CubesFactory::createCube( const ResourceID& cubeID, const ResourceID& materialID, float width, float height, float depth )
+{
     std::unique_ptr< Mesh > cube;
 
     width_ = width;
     height_ = height;
     depth_ = depth;
 
-    cube = std::unique_ptr< Mesh >( new SystemMesh( generatePrimitiveData() ) );
+    materialsManager_->createMaterial( MaterialInfo(), materialID, cubeID );
 
-    // TODO: Complete.
-    (void)( cube );
-    return NO_RESOURCE;
+    cube = std::unique_ptr< Mesh >( new SystemMesh( generatePrimitiveData(), materialsManager_->getMaterial( materialID ) ) );
+
+    // TODO: Register textures / materials.
+    return meshesManager_->addMesh( std::move( cube ), cubeID );
 }
 
 
 /***
- * 5. SystemPrimitiveData generation
+ * 7. SystemPrimitiveData generation
  ***/
 
 void CubesFactory::generateVertexData( MeshVertexData &vertexData )
@@ -97,6 +135,17 @@ void CubesFactory::generateUVData( MeshTextureData &uvData )
     for( cubeFaceIndex = 0; cubeFaceIndex < N_CUBE_FACES; cubeFaceIndex++ ){
         uvData.uvTriangles.push_back( IndicesTriangle{ 0, 2, 3 } );
         uvData.uvTriangles.push_back( IndicesTriangle{ 0, 1, 2 } );
+    }
+}
+
+
+void CubesFactory::generateTrianglesGroups( std::vector<TrianglesGroupWithTexture> &trianglesGroups )
+{
+    unsigned int cubeFaceIndex;
+
+    trianglesGroups.clear();
+    for( cubeFaceIndex = 0; cubeFaceIndex < 6; cubeFaceIndex++ ){
+        trianglesGroups.push_back( TrianglesGroupWithTexture( cubeFaceIndex * 2, 2 ) );
     }
 }
 

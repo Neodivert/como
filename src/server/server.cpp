@@ -336,7 +336,7 @@ void Server::processSceneCommand( const Command& sceneCommand )
 
                     // Add a node to the Drawable Owners map for the recently added
                     // drawable. Mark it with a 0 (no owner).
-                    resourcesOwnershipManager_.registerResource( primitiveCommand.getMeshID(), NO_USER );
+                    resourcesOwnershipManager_.registerResource( primitiveCommand.getMeshID(), primitiveCommand.getUserID() );
 
                     log_->debug( "Mesh added! (", (int)( primitiveCommand.getMeshID().getCreatorID() ),
                                  ", ", (int)( primitiveCommand.getMeshID().getResourceIndex() ), "\n" );
@@ -382,6 +382,19 @@ void Server::processSceneCommand( const Command& sceneCommand )
             const ResourcesSelectionCommand& resourcesSelectionCommand =
                     dynamic_cast< const ResourcesSelectionCommand& >( sceneCommand );
             resourcesOwnershipManager_.executeResourcesSelectionCommand( resourcesSelectionCommand );
+        }break;
+        case CommandTarget::GEOMETRIC_PRIMITIVE:{
+            const GeometricPrimitiveCommand& geometricPrimitiveCommand =
+                    dynamic_cast< const GeometricPrimitiveCommand& >( sceneCommand );
+
+            if( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::CUBE_CREATION ){
+                // Add a node to the Drawable Owners map for the recently added
+                // drawable. Mark it with a 0 (no owner).
+                resourcesOwnershipManager_.registerResource( geometricPrimitiveCommand.getMeshID(),
+                                                             geometricPrimitiveCommand.getUserID() );
+
+                log_->debug( "Cube added! (", geometricPrimitiveCommand.getMeshID(), "\n" );
+            }
         }break;
     }
 

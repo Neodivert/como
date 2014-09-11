@@ -40,4 +40,22 @@ ResourceID GeometricPrimitivesFactory::createCube( float width, float height, fl
     return cubesFactory_.createCube( width, height, depth );
 }
 
+
+/***
+ * 4. Command execution
+ ***/
+
+void GeometricPrimitivesFactory::executeRemoteCommand( const GeometricPrimitiveCommand& command )
+{
+    switch( command.getType() ){
+        case GeometricPrimitiveCommandType::CUBE_CREATION:{
+            const CubeCreationCommand& creationCommand =
+                dynamic_cast< const CubeCreationCommand& >( command );
+
+            cubesFactory_.executeRemoteCommand( creationCommand );
+        }break;
+    }
+}
+
+
 } // namespace como

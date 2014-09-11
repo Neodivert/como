@@ -117,9 +117,7 @@ ResourceID MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData
 {    
     std::unique_ptr< Mesh > mesh( new ImportedMesh( primitiveData, materials, newMeshesDisplayVertexNormals_ ) );
 
-    ResourceID meshID = getLocalResourcesSelection()->addResource( std::move( mesh ) );
-
-    return meshID;
+    return addMesh( std::move( mesh ) );
 }
 
 
@@ -127,6 +125,22 @@ void MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData, Cons
 {
     std::unique_ptr< Mesh > mesh( new ImportedMesh( primitiveData, materials, newMeshesDisplayVertexNormals_ ) );
 
+    addMesh( std::move( mesh ), meshID );
+}
+
+
+ResourceID MeshesManager::addMesh( MeshPtr mesh )
+{
+    ResourceID meshID = newResourceID();
+
+    addMesh( std::move( mesh ), meshID );
+
+    return meshID;
+}
+
+
+void MeshesManager::addMesh( MeshPtr mesh, const ResourceID& meshID )
+{
     getResourcesSelection( meshID.getCreatorID() )->addResource( meshID, std::move( mesh ) );
 }
 
@@ -139,6 +153,7 @@ void MeshesManager::registerUser( UserID userID )
 {
     resourcesSelections_[ userID ];
 }
+
 
 void MeshesManager::removeUser( UserID userID )
 {

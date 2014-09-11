@@ -45,7 +45,8 @@ enum class CommandTarget : std::uint8_t
     MATERIAL,
     LIGHT,
     RESOURCE,
-    RESOURCES_SELECTION
+    RESOURCES_SELECTION,
+    GEOMETRIC_PRIMITIVE
 };
 
 

@@ -45,4 +45,7 @@
 // Resources selection commands
 #include "resources_selection_commands/resources_selection_command.hpp"
 
+// Geometric primitives commands
+#include "geometric_primitive_command/geometric_primitive_commands.hpp"
+
 #endif // COMMANDS_HPP

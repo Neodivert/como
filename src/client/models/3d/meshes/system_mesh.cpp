@@ -24,28 +24,43 @@ namespace como {
  * 1. Construction
  ***/
 
-SystemMesh::SystemMesh( const SystemPrimitiveData& primitiveData, bool displayVertexNormals ) :
-    Mesh( primitiveData, { MaterialPtr( new Material() ) }, displayVertexNormals )
+SystemMesh::SystemMesh( const SystemPrimitiveData& primitiveData, MaterialConstPtr material, bool displayVertexNormals ) :
+    Mesh( primitiveData, { material }, displayVertexNormals ),
+    trianglesGroups_( primitiveData.trianglesGroups )
+{}
+
+
+/***
+ * 3. Shader communication
+ ***/
+
+void SystemMesh::sendTextureToShader( unsigned int index ) const
 {
-    // TODO: Complete
-    (void)( primitiveData );
-    (void)( displayVertexNormals );
+    textures_.at( index ).sendToShader();
 }
 
 
 /***
- * 3. Drawing
+ * 4. Drawing
  ***/
 
 void SystemMesh::draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const glm::vec4 *contourColor ) const
 {
-    // TODO: Implement.
-    (void)( openGL );
-    (void)( viewMatrix );
-    (void)( projectionMatrix );
-    (void)( contourColor );
+    sendToShader( *openGL, viewMatrix, projectionMatrix );
+    sendMaterialToShader( 0 );
 
+    for( const TrianglesGroupWithTexture& trianglesGroup : trianglesGroups_ ){
+        if( trianglesGroup.includesTexture() ){
+            openGL->setShadingMode( ShadingMode::SOLID_LIGHTING_AND_TEXTURING );
+            sendTextureToShader( trianglesGroup.textureIndex );
+        }else{
+            openGL->setShadingMode( ShadingMode::SOLID_LIGHTING );
+        }
 
+        drawTriangles( trianglesGroup.firstTriangleIndex, trianglesGroup.nTriangles );
+    }
+
+    drawEdges( openGL, viewMatrix, projectionMatrix, contourColor );
 }
 
 } // namespace como

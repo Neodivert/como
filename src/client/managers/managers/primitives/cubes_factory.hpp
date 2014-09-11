@@ -43,13 +43,19 @@ class CubesFactory : public SpecializedSystemPrimitivesFactory
 
 
         /***
-         * 3. Cubes creation
+         * 3. Local cubes creation
          ***/
         ResourceID createCube( float width, float height, float depth );
 
 
         /***
-         * 4. Operators
+         * 4. Command execution
+         ***/
+        void executeRemoteCommand( const CubeCreationCommand& command );
+
+
+        /***
+         * 5. Operators
          ***/
         CubesFactory& operator = ( const CubesFactory& ) = delete;
         CubesFactory& operator = ( CubesFactory&& ) = delete;
@@ -57,10 +63,17 @@ class CubesFactory : public SpecializedSystemPrimitivesFactory
 
     protected:
         /***
-         * 5. SystemPrimitiveData generation
+         * 6. Remote cubes creation
+         ***/
+        void createCube( const ResourceID& cubeID, const ResourceID& materialID, float width, float height, float depth );
+
+
+        /***
+         * 7. SystemPrimitiveData generation
          ***/
         virtual void generateVertexData( MeshVertexData &vertexData );
         virtual void generateUVData(MeshTextureData &uvData);
+        virtual void generateTrianglesGroups( std::vector<TrianglesGroupWithTexture> &trianglesGroups );
 
 
     private:

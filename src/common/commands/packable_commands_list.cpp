@@ -192,6 +192,15 @@ const void* PackableCommandsList::unpack( const void* buffer )
                 }
             break;
 
+            case CommandTarget::GEOMETRIC_PRIMITIVE:
+                switch( GeometricPrimitiveCommand::getType( buffer ) ){
+                    case GeometricPrimitiveCommandType::CUBE_CREATION:
+                        command = CommandPtr( new CubeCreationCommand );
+                    break;
+                }
+
+            break;
+
             default:
                 int commandTarget = static_cast< int >( Command::getTarget( buffer ) );
                 throw std::runtime_error( "Received an unrecognized command type" +

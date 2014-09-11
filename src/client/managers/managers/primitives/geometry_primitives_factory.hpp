@@ -46,13 +46,19 @@ class GeometricPrimitivesFactory : public ServerWriter
 
 
         /***
-         * 3. Geometry primitives creation
+         * 3. Local geometric primitives creation
          ***/
         ResourceID createCube( float width = 1.0f, float height = 1.0f, float depth = 1.0f );
 
 
         /***
-         * 4. Operators
+         * 4. Command execution
+         ***/
+        void executeRemoteCommand( const GeometricPrimitiveCommand& command );
+
+
+        /***
+         * 5. Operators
          ***/
         GeometricPrimitivesFactory& operator = ( const GeometricPrimitivesFactory& ) = delete;
         GeometricPrimitivesFactory& operator = ( GeometricPrimitivesFactory&& ) = delete;
