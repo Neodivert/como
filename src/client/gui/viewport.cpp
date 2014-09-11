@@ -232,15 +232,6 @@ void Viewport::keyPressEvent( QKeyEvent *e )
         case Qt::Key_Delete:
             comoApp->getScene()->getEntitiesManager()->requestSelectionDeletion();
         break;
-        case Qt::Key_0:
-            setView( View::FRONT );
-        break;
-        case Qt::Key_1:
-            setView( View::LEFT );
-        break;
-        case Qt::Key_2:
-            setView( View::TOP );
-        break;
         default:
         break;
     }
