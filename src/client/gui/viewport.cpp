@@ -72,7 +72,7 @@ Viewport::Viewport( View view, Projection projection, shared_ptr< ComoApp > como
         assert( viewProjectionMatrixLocation != -1 );
 
         // Create the camera.
-        camera = new Camera( view );
+        camera = new Camera( *( comoApp->getScene()->getOpenGL() ), view );
 
         // Set the requested view.
         setView( view );
@@ -427,6 +427,8 @@ void Viewport::render()
 
     // Clear buffers.
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+    camera->sendToShader( *( comoApp->getScene()->getOpenGL() ) );
 
     // Draw scene.
     comoApp->getScene()->draw( viewMatrix, projectionMatrix, static_cast< int >( comoApp->getTransformationMode() ) - 1 );

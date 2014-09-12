@@ -136,7 +136,7 @@ void DirectionalLight::sendToShader( OpenGL &openGL ) const
 {
     Light::sendToShader( openGL );
 
-    glUniform3fv( lightVectorLocation_, 1, glm::value_ptr( lightVector_ ) );
+    glUniform3fv( lightVectorLocation_, 1, glm::value_ptr( glm::normalize( lightVector_ ) ) );
 }
 
 

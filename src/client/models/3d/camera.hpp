@@ -66,13 +66,16 @@ class Camera : public ImportedMesh
         // View matrix.
         glm::mat4 viewMatrix;
 
+        //
+        static GLint eyeVectorLocation_;
+
     public:
         /***
          * 1. Initializations
          ***/
         Camera( const Camera& ) = default;
         Camera( Camera&& ) = default;
-        Camera( View view = View::FRONT );
+        Camera( OpenGL& openGL, View view = View::FRONT );
 
         // TODO: Is this problematic with Entity's virtual destructor?
         virtual ~Camera() = default;
@@ -86,14 +89,20 @@ class Camera : public ImportedMesh
 
 
         /***
-         * 3. Operators
+         * 3. Shader communication
+         ***/
+        void sendToShader( OpenGL& openGL );
+
+
+        /***
+         * 4. Operators
          ***/
         Camera& operator=( const Camera& ) = delete ;
         Camera& operator=( Camera&& ) = delete;
 
     protected:
         /***
-         * 4. Updating and drawing
+         * 5. Updating and drawing
          ***/
         virtual void update();
 };

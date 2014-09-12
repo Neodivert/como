@@ -17,17 +17,22 @@
 ***/
 
 #include "camera.hpp"
+#include <glm/gtc/type_ptr.hpp>
 
 namespace como {
 
-const PackableColor DEFAULT_CAMERA_MESH_COLOR( 255, 255, 255, 0 );
+GLint Camera::eyeVectorLocation_ = -1;
 
-Camera::Camera( View view ) :
+Camera::Camera( OpenGL& openGL, View view ) :
     ImportedMesh( "data/system/primitives/camera.prim" ),
     originalEye     ( 0.0f, 0.0f, 0.0f, 0.0f ),
     originalUp      ( 0.0f, 1.0f, 0.0f, 0.0f ),
     originalCenter  ( 0.0f, 0.0f, -1.0f, 0.0f )
 {
+    if( eyeVectorLocation_ < 0 ){
+        eyeVectorLocation_ = openGL.getShaderVariableLocation( "eyeVector" );
+    }
+
     // Set given view.
     setView( view );
 }
@@ -89,7 +94,21 @@ glm::vec4 Camera::getCenterVector() const
 
 
 /***
- * 4. Updating and drawing
+ * 3. Shader communication
+ ***/
+
+void Camera::sendToShader( OpenGL &openGL )
+{
+    // TODO: Use OpenGL class.
+    (void)( openGL );
+
+    const glm::vec3 eyeVector = - glm::normalize( glm::vec3( transformedCenter ) );
+    glUniform3fv( eyeVectorLocation_, 1, glm::value_ptr( eyeVector ) );
+}
+
+
+/***
+ * 5. Updating and drawing
  ***/
 
 void Camera::update()
