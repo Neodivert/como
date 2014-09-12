@@ -42,11 +42,16 @@ void MeshNormalData::initFromMeshVertexData( const MeshVertexData& meshVertexDat
     glm::vec3 faceNormal;
 
     // Set a zero normal for every vertex in the mesh.
-    normals.resize( meshVertexData.vertices.size(), glm::vec3( 0.0f ) );
+    normals.resize( meshVertexData.vertices.size() );
+    for( glm::vec3& normal : normals ){
+        normal = glm::vec3( 0.0f );
+    }
 
     // Compute each face normal and add it to the normal of every vertex in
     // in the triangle.
     for( const IndicesTriangle& triangle : meshVertexData.vertexTriangles ){
+        // TODO: Add a a weighting for each face normal based on the triangle
+        // area?
         faceNormal = glm::cross(
                     meshVertexData.vertices[ triangle[1] ] - meshVertexData.vertices[ triangle[0] ],
                     meshVertexData.vertices[ triangle[2] ] - meshVertexData.vertices[ triangle[0] ] );
