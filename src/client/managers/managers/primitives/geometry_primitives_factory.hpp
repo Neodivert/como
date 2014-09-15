@@ -21,6 +21,7 @@
 
 #include <client/managers/utilities/server_writer.hpp>
 #include <client/managers/managers/primitives/cubes_factory.hpp>
+#include <client/managers/managers/textures/texture_walls_manager.hpp>
 
 namespace como {
 
@@ -66,6 +67,9 @@ class GeometricPrimitivesFactory : public ServerWriter
 
     private:
         CubesFactory cubesFactory_;
+
+
+        TextureWallsManagerPtr textureWallsManager_;
 };
 
 
