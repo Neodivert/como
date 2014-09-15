@@ -27,7 +27,7 @@ namespace como {
 
 GeometricPrimitivesFactory::GeometricPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager ) :
     ServerWriter( server ),
-    textureWallsManager_( new TextureWallsManager( server ) ),
+    textureWallsManager_( new TexturesManager( server ) ),
     cubesFactory_( server, meshesManager, materialsManager, textureWallsManager_.get() )
 {}
 

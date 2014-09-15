@@ -24,7 +24,7 @@ namespace como {
  * 1. Construction
  ***/
 
-SpecializedSystemPrimitivesFactory::SpecializedSystemPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager* textureWallsManager ) :
+SpecializedSystemPrimitivesFactory::SpecializedSystemPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TexturesManager* textureWallsManager ) :
     ServerWriter( server ),
     meshesManager_( meshesManager ),
     materialsManager_( materialsManager ),

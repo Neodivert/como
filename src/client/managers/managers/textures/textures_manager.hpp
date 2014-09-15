@@ -16,8 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef TEXTURE_WALLS_MANAGER_HPP
-#define TEXTURE_WALLS_MANAGER_HPP
+#ifndef TEXTURE_MANAGER_HPP
+#define TEXTURE_MANAGER_HPP
 
 #include <client/managers/utilities/server_writer.hpp>
 #include <common/ids/resource_id.hpp>
@@ -26,45 +26,40 @@
 
 namespace como {
 
-class TextureWallsManager;
-typedef std::unique_ptr< TextureWallsManager > TextureWallsManagerPtr;
+class TexturesManager;
+typedef std::unique_ptr< TexturesManager > TexturesManagerPtr;
 
-class TextureWallsManager : public ServerWriter
+class TexturesManager : public ServerWriter
 {
     public:
         /***
          * 1. Construction
          ***/
-        TextureWallsManager( ServerInterfacePtr server );
-        TextureWallsManager() = delete;
-        TextureWallsManager( const TextureWallsManager& ) = delete;
-        TextureWallsManager( TextureWallsManager&& ) = delete;
+        TexturesManager( ServerInterfacePtr server );
+        TexturesManager() = delete;
+        TexturesManager( const TexturesManager& ) = delete;
+        TexturesManager( TexturesManager&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~TextureWallsManager() = default;
+        ~TexturesManager() = default;
 
 
         /***
-         * 3. Texture walls management
+         * 3. Textures management
          ***/
-        ResourceID addTextureWall( TextureWall&& textureWall, const ResourceID& meshID );
+        ResourceID loadTexture( std::string imagePath );
 
 
         /***
          * 4. Operators
          ***/
-        TextureWallsManager& operator = ( const TextureWallsManager& ) = delete;
-        TextureWallsManager& operator = ( TextureWallsManager&& ) = delete;
-
-
-    private:
-        std::map< ResourceID, TextureWall > textureWalls_;
-        std::map< ResourceID, std::vector< ResourceID > > meshesTextureWalls_;
+        TexturesManager& operator = ( const TexturesManager& ) = delete;
+        TexturesManager& operator = ( TexturesManager&& ) = delete;
 };
 
 } // namespace como
 
-#endif // TEXTURE_WALLS_MANAGER_HPP
+#endif // TEXTURE_MANAGER_HPP

@@ -7,7 +7,7 @@ namespace como {
  * 1. Construction
  ***/
 
-CubesFactory::CubesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager* textureWallsManager ) :
+CubesFactory::CubesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TexturesManager* textureWallsManager ) :
     SpecializedSystemPrimitivesFactory( server, meshesManager, materialsManager, textureWallsManager )
 {}
 

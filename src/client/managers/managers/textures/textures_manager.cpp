@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "texture_walls_manager.hpp"
+#include "textures_manager.hpp"
 
 namespace como {
 
@@ -25,27 +25,21 @@ namespace como {
  * 1. Construction
  ***/
 
-TextureWallsManager::TextureWallsManager( ServerInterfacePtr server ) :
+TexturesManager::TexturesManager( ServerInterfacePtr server ) :
     ServerWriter( server )
 {}
 
 
 /***
- * 3. Texture walls management
+ * 3. Textures management
  ***/
 
-ResourceID TextureWallsManager::addTextureWall( TextureWall &&textureWall, const ResourceID &meshID )
+ResourceID TexturesManager::loadTexture( std::string imagePath )
 {
-    ResourceID textureWallID = reserveResourceIDs( 1 );
+    (void)( imagePath );
+    // TODO: Complete
 
-    textureWalls_[textureWallID] = std::move( textureWall );
-
-    if( meshesTextureWalls_.count( meshID ) == 0 ){
-        meshesTextureWalls_[meshID] = std::vector< ResourceID >();
-    }
-    meshesTextureWalls_.at( meshID ).push_back( textureWallID );
-
-    return textureWallID;
+    return NO_RESOURCE;
 }
 
 } // namespace como
