@@ -21,6 +21,7 @@
 
 #include <client/managers/managers/meshes/meshes_manager.hpp>
 #include <common/primitives/primitive_data/system_primitive_data.hpp>
+#include <client/managers/managers/textures/texture_walls_manager.hpp>
 
 namespace como {
 
@@ -30,7 +31,7 @@ class SpecializedSystemPrimitivesFactory : public ServerWriter
         /***
          * 1. Construction
          ***/
-        SpecializedSystemPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager );
+        SpecializedSystemPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager* textureWallsManager );
         SpecializedSystemPrimitivesFactory() = delete;
         SpecializedSystemPrimitivesFactory( const SpecializedSystemPrimitivesFactory& ) = delete;
         SpecializedSystemPrimitivesFactory( SpecializedSystemPrimitivesFactory&& ) = delete;
@@ -63,6 +64,7 @@ class SpecializedSystemPrimitivesFactory : public ServerWriter
 
         MeshesManagerPtr meshesManager_;
         MaterialsManagerPtr materialsManager_;
+        TextureWallsManager* textureWallsManager_;
 };
 
 } // namespace como
