@@ -116,7 +116,8 @@ class ServerInterface : public QObject
          * 5. Getters
          ***/
     public:
-        ResourceID getNewResourceID();
+        ResourceID reserveResourceIDs( unsigned int nIDs );
+
         UserID getLocalUserID() const;
         PackableColor getLocalUserColor() const;
 

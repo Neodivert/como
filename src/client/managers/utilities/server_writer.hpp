@@ -53,7 +53,7 @@ class ServerWriter
          * 4. Protected getters
          ***/
         UserID localUserID() const;
-        ResourceID newResourceID();
+        ResourceID reserveResourceIDs( unsigned int nIDs );
         ServerInterfacePtr server() const; // TODO: Make this unnecessary.
 
 

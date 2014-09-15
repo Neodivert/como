@@ -54,7 +54,7 @@ void LightsManager::requestDirectionalLightCreation()
     sendCommandToServer(
                 CommandConstPtr(
                     new DirectionalLightCreationCommand( localUserID(),
-                                                         newResourceID(),
+                                                         reserveResourceIDs( 1 ),
                                                          lightColor ) ) );
 }
 

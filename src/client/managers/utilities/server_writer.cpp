@@ -39,9 +39,9 @@ UserID ServerWriter::localUserID() const
 }
 
 
-ResourceID ServerWriter::newResourceID()
+ResourceID ServerWriter::reserveResourceIDs( unsigned int nIDs )
 {
-    return server_->getNewResourceID();
+    return server_->reserveResourceIDs( nIDs );
 }
 
 

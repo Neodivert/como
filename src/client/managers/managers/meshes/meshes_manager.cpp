@@ -131,7 +131,7 @@ void MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData, Cons
 
 ResourceID MeshesManager::addMesh( MeshPtr mesh )
 {
-    ResourceID meshID = newResourceID();
+    ResourceID meshID = reserveResourceIDs( 1 );
 
     addMesh( std::move( mesh ), meshID );
 

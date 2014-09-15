@@ -283,9 +283,16 @@ void ServerInterface::work()
  * 5. Getters
  ***/
 
-ResourceID ServerInterface::getNewResourceID()
+ResourceID ServerInterface::reserveResourceIDs(unsigned int nIDs)
 {
-    return nextResourceID_++;
+    unsigned int i;
+    ResourceID firstResourceID = nextResourceID_;
+
+    for( i = 0; i < nIDs; i++ ){
+        nextResourceID_++;
+    }
+
+    return firstResourceID;
 }
 
 

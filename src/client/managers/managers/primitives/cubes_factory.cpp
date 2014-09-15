@@ -18,8 +18,8 @@ CubesFactory::CubesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesMa
 
 ResourceID CubesFactory::createCube( float width, float height, float depth )
 {
-    ResourceID cubeID = newResourceID();
-    ResourceID materialID = newResourceID();
+    ResourceID cubeID = reserveResourceIDs( 1 );
+    ResourceID materialID = reserveResourceIDs( 1 );
 
     createCube( cubeID, materialID, width, height, depth );
 

@@ -66,7 +66,7 @@ ResourceID ClientPrimitivesManager::importMeshFile( std::string srcFilePath, Res
     char primitiveNameSuffix[64];
 
     // Generate the primitive name.
-    ResourceID primitiveID = server_->getNewResourceID();
+    ResourceID primitiveID = server_->reserveResourceIDs( 1 );
     sprintf( primitiveNameSuffix, "_%u_%u",
              primitiveID.getCreatorID(),
              primitiveID.getResourceIndex() );
@@ -83,7 +83,7 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 {
     ImportedPrimitiveData primitiveData;
     ResourceID firstMaterialID;
-    ResourceID meshID = server_->getNewResourceID();
+    ResourceID meshID = server_->reserveResourceIDs( 1 );
 
     primitiveData.importFromFile( getPrimitiveFilePath( primitiveID ) );
 

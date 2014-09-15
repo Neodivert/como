@@ -36,7 +36,7 @@ TextureWallsManager::TextureWallsManager( ServerInterfacePtr server ) :
 
 ResourceID TextureWallsManager::addTextureWall( TextureWall &&textureWall, const ResourceID &meshID )
 {
-    ResourceID textureWallID = newResourceID();
+    ResourceID textureWallID = reserveResourceIDs( 1 );
 
     textureWalls_[textureWallID] = std::move( textureWall );
 
