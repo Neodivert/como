@@ -43,4 +43,14 @@ ResourceID TexturesManager::loadTexture( std::string imagePath )
     return NO_RESOURCE;
 }
 
+
+/***
+ * 4. Shader communication
+ ***/
+
+void TexturesManager::sendTextureToShader( const ResourceID& resourceID ) const
+{
+    textures_.at( resourceID ).sendToShader();
+}
+
 } // namespace como

@@ -28,7 +28,7 @@ TrianglesGroupWithTexture::TrianglesGroupWithTexture( unsigned int firstTriangle
     TrianglesGroup( firstTriangleIndex, nTriangles ),
     textureScale( 1.0f, 1.0f ),
     textureOffset( 0.0f, 0.0f ),
-    textureIndex( -1 )
+    textureID( NO_RESOURCE )
 {}
 
 
@@ -38,7 +38,7 @@ TrianglesGroupWithTexture::TrianglesGroupWithTexture( unsigned int firstTriangle
 
 bool TrianglesGroupWithTexture::includesTexture() const
 {
-    return ( textureIndex >= 0 );
+    return ( textureID != NO_RESOURCE );
 }
 
 } // namespace como

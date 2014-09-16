@@ -22,6 +22,7 @@
 #include <common/primitives/primitive_data/triangles_group.hpp>
 #include <client/models/3d/textures/texture.hpp>
 #include <glm/glm.hpp>
+#include <common/ids/resource_id.hpp>
 
 namespace como {
 
@@ -30,7 +31,7 @@ struct TrianglesGroupWithTexture : TrianglesGroup
     public:
         glm::vec2 textureScale;
         glm::vec2 textureOffset;
-        int textureIndex;
+        ResourceID textureID;
 
 
         /***

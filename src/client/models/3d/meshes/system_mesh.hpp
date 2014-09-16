@@ -22,6 +22,7 @@
 #include <client/models/3d/mesh.hpp>
 #include <common/primitives/primitive_data/system_primitive_data.hpp>
 #include "triangles_group_with_texture.hpp"
+#include <client/managers/managers/textures/textures_manager.hpp>
 
 namespace como {
 
@@ -45,9 +46,9 @@ class SystemMesh : public Mesh
 
 
         /***
-         * 3. Shader communication
+         * 3. Setters
          ***/
-        void sendTextureToShader( unsigned int index ) const;
+        void setTexturesManager( TexturesManager& texturesManager );
 
 
         /***
@@ -57,11 +58,13 @@ class SystemMesh : public Mesh
 
 
         /***
-         * 4. Operators
+         * 5. Operators
          ***/
         SystemMesh& operator = ( const SystemMesh& ) = delete;
         SystemMesh& operator = ( SystemMesh&& ) = delete;
 
+
+        static TexturesManager* texturesManager_;
 
     private:
         std::vector< Texture > textures_;

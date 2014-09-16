@@ -24,6 +24,7 @@
 #include <common/ids/resource_id.hpp>
 #include <client/models/3d/textures/texture_wall.hpp>
 #include <map>
+#include <client/models/utilities/open_gl.hpp>
 
 namespace como {
 
@@ -55,10 +56,20 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter
 
 
         /***
-         * 4. Operators
+         * 4. Shader communication
+         ***/
+        void sendTextureToShader( const ResourceID& resourceID ) const;
+
+
+        /***
+         * 5. Operators
          ***/
         TexturesManager& operator = ( const TexturesManager& ) = delete;
         TexturesManager& operator = ( TexturesManager&& ) = delete;
+
+
+    private:
+        std::map< ResourceID, Texture > textures_;
 };
 
 } // namespace como
