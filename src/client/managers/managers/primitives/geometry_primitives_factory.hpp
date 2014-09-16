@@ -66,8 +66,6 @@ class GeometricPrimitivesFactory : public ServerWriter
 
 
     private:
-        TexturesManagerPtr textureWallsManager_;
-
         CubesFactory cubesFactory_;
 };
 

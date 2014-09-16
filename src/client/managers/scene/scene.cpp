@@ -210,6 +210,9 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         materialsManager_ = MaterialsManagerPtr( new MaterialsManager( server_, log_ ) );
         materialsManager_->Observable::addObserver( this );
 
+        // Initialize the textures manager.
+        texturesManager_ = TexturesManagerPtr( new TexturesManager( server_, getDirPath() ) );
+
         // Initialize the entities manager.
         entitiesManager_ = EntitiesManagerPtr( new EntitiesManager( server_, log_, openGL_.get(), usersManager_, materialsManager_ ) );
 

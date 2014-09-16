@@ -107,7 +107,8 @@ HEADERS += \
     ../../src/common/primitives/primitive_data/system_primitive_data.hpp \
     ../../src/common/commands/geometric_primitive_command/geometric_primitive_command.hpp \
     ../../src/common/commands/geometric_primitive_command/geometric_primitive_commands.hpp \
-    ../../src/common/commands/geometric_primitive_command/cube_creation_command.hpp
+    ../../src/common/commands/geometric_primitive_command/cube_creation_command.hpp \
+    ../../src/common/managers/textures/abstract_textures_manager.hpp
 
 
 # Common sources (used by both client and server).
@@ -164,4 +165,5 @@ SOURCES += \
     ../../src/common/primitives/primitive_data/mesh_opengl_data.cpp \
     ../../src/common/commands/geometric_primitive_command/geometric_primitive_command.cpp \
     ../../src/common/commands/geometric_primitive_command/cube_creation_command.cpp \
-    ../../src/common/primitives/primitive_data/material_info.cpp
+    ../../src/common/primitives/primitive_data/material_info.cpp \
+    ../../src/common/managers/textures/abstract_textures_manager.cpp

@@ -19,6 +19,7 @@
 #ifndef TEXTURE_MANAGER_HPP
 #define TEXTURE_MANAGER_HPP
 
+#include <common/managers/textures/abstract_textures_manager.hpp>
 #include <client/managers/utilities/server_writer.hpp>
 #include <common/ids/resource_id.hpp>
 #include <client/models/3d/textures/texture_wall.hpp>
@@ -29,13 +30,13 @@ namespace como {
 class TexturesManager;
 typedef std::unique_ptr< TexturesManager > TexturesManagerPtr;
 
-class TexturesManager : public ServerWriter
+class TexturesManager : public AbstractTexturesManager, public ServerWriter
 {
     public:
         /***
          * 1. Construction
          ***/
-        TexturesManager( ServerInterfacePtr server );
+        TexturesManager( ServerInterfacePtr server, const std::string& sceneDirPath );
         TexturesManager() = delete;
         TexturesManager( const TexturesManager& ) = delete;
         TexturesManager( TexturesManager&& ) = delete;

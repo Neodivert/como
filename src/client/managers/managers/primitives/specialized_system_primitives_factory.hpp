@@ -31,7 +31,7 @@ class SpecializedSystemPrimitivesFactory : public ServerWriter
         /***
          * 1. Construction
          ***/
-        SpecializedSystemPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TexturesManager* textureWallsManager );
+        SpecializedSystemPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager );
         SpecializedSystemPrimitivesFactory() = delete;
         SpecializedSystemPrimitivesFactory( const SpecializedSystemPrimitivesFactory& ) = delete;
         SpecializedSystemPrimitivesFactory( SpecializedSystemPrimitivesFactory&& ) = delete;
@@ -64,7 +64,6 @@ class SpecializedSystemPrimitivesFactory : public ServerWriter
 
         MeshesManagerPtr meshesManager_;
         MaterialsManagerPtr materialsManager_;
-        TexturesManager* textureWallsManager_;
 };
 
 } // namespace como

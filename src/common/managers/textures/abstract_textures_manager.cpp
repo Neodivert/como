@@ -16,7 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "textures_manager.hpp"
+#include "abstract_textures_manager.hpp"
+#include <boost/filesystem.hpp>
 
 namespace como {
 
@@ -25,22 +26,28 @@ namespace como {
  * 1. Construction
  ***/
 
-TexturesManager::TexturesManager( ServerInterfacePtr server, const std::string& sceneDirPath ) :
-    AbstractTexturesManager( sceneDirPath ),
-    ServerWriter( server )
-{}
+AbstractTexturesManager::AbstractTexturesManager( const std::string &scenesDirPath ) :
+    TEXTURES_DIR_PATH_( scenesDirPath + "/textures" )
+{
+    boost::system::error_code errorCode;
+    boost::filesystem::create_directory( TEXTURES_DIR_PATH_, errorCode );
+
+    if( errorCode ){
+        throw std::runtime_error( "Couldn't create textures dir path [" +
+                                  TEXTURES_DIR_PATH_ +
+                                  "] - " +
+                                  errorCode.message() );
+    }
+}
 
 
 /***
- * 3. Textures management
+ * 2. Destruction
  ***/
 
-ResourceID TexturesManager::loadTexture( std::string imagePath )
+AbstractTexturesManager::~AbstractTexturesManager()
 {
-    (void)( imagePath );
-    // TODO: Complete
-
-    return NO_RESOURCE;
+    boost::filesystem::remove_all( TEXTURES_DIR_PATH_ );
 }
 
 } // namespace como

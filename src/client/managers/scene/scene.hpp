@@ -59,6 +59,8 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
 
         MaterialsManagerPtr materialsManager_;
 
+        TexturesManagerPtr texturesManager_;
+
         EntitiesManagerPtr entitiesManager_;
 
         GeometricPrimitivesFactoryPtr geometricPrimitivesFactory_;
