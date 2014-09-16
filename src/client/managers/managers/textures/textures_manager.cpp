@@ -45,6 +45,20 @@ ResourceID TexturesManager::loadTexture( std::string imagePath )
 
 
 /***
+ * 4. Local texture walls management
+ ***/
+
+ResourceID TexturesManager::createTextureWall( string name )
+{
+    ResourceID textureWallID = reserveResourceIDs( 1 );
+
+    textureWalls_.emplace( textureWallID, name );
+
+    return textureWallID;
+}
+
+
+/***
  * 4. Shader communication
  ***/
 

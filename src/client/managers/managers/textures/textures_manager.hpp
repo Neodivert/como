@@ -50,19 +50,25 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter
 
 
         /***
-         * 3. Textures management
+         * 3. Local textures management
          ***/
         ResourceID loadTexture( std::string imagePath );
 
 
         /***
-         * 4. Shader communication
+         * 4. Local texture walls management
+         ***/
+        ResourceID createTextureWall( std::string name );
+
+
+        /***
+         * 5. Shader communication
          ***/
         void sendTextureToShader( const ResourceID& resourceID ) const;
 
 
         /***
-         * 5. Operators
+         * 6. Operators
          ***/
         TexturesManager& operator = ( const TexturesManager& ) = delete;
         TexturesManager& operator = ( TexturesManager&& ) = delete;
@@ -70,6 +76,7 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter
 
     private:
         std::map< ResourceID, Texture > textures_;
+        std::map< ResourceID, TextureWall > textureWalls_;
 };
 
 } // namespace como
