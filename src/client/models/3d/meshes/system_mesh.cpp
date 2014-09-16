@@ -51,10 +51,10 @@ void SystemMesh::draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm:
     sendToShader( *openGL, viewMatrix, projectionMatrix );
     sendMaterialToShader( 0 );
 
-    for( const TrianglesGroupWithTexture& trianglesGroup : trianglesGroups_ ){
+    for( const TrianglesGroupWithTextureWall& trianglesGroup : trianglesGroups_ ){
         if( trianglesGroup.includesTexture() ){
             openGL->setShadingMode( ShadingMode::SOLID_LIGHTING_AND_TEXTURING );
-            texturesManager_->sendTextureToShader( trianglesGroup.textureID );
+            texturesManager_->sendTextureToShader( trianglesGroup.textureWall.textureID );
         }else{
             openGL->setShadingMode( ShadingMode::SOLID_LIGHTING );
         }

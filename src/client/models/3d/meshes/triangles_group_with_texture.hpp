@@ -20,32 +20,31 @@
 #define TRIANGLES_GROUP_WITH_TEXTURE_HPP
 
 #include <common/primitives/primitive_data/triangles_group.hpp>
+#include <client/models/3d/textures/texture_wall.hpp>
 #include <client/models/3d/textures/texture.hpp>
 #include <glm/glm.hpp>
 #include <common/ids/resource_id.hpp>
 
 namespace como {
 
-struct TrianglesGroupWithTexture : TrianglesGroup
+struct TrianglesGroupWithTextureWall : TrianglesGroup
 {
     public:
-        glm::vec2 textureScale;
-        glm::vec2 textureOffset;
-        ResourceID textureID;
+        TextureWall textureWall;
 
 
         /***
          * 1. Construction
          ***/
-        TrianglesGroupWithTexture( unsigned int firstTriangleIndex = 0, unsigned int nTriangles = 0 );
-        TrianglesGroupWithTexture( const TrianglesGroupWithTexture& ) = default;
-        TrianglesGroupWithTexture( TrianglesGroupWithTexture&& ) = default;
+        TrianglesGroupWithTextureWall( unsigned int firstTriangleIndex = 0, unsigned int nTriangles = 0 );
+        TrianglesGroupWithTextureWall( const TrianglesGroupWithTextureWall& ) = default;
+        TrianglesGroupWithTextureWall( TrianglesGroupWithTextureWall&& ) = default;
 
 
         /***
          * 2. Destruction
          ***/
-        ~TrianglesGroupWithTexture() = default;
+        ~TrianglesGroupWithTextureWall() = default;
 
 
         /***
@@ -57,8 +56,8 @@ struct TrianglesGroupWithTexture : TrianglesGroup
         /***
          * 4. Operators
          ***/
-        TrianglesGroupWithTexture& operator = ( const TrianglesGroupWithTexture& ) = default;
-        TrianglesGroupWithTexture& operator = ( TrianglesGroupWithTexture&& ) = default;
+        TrianglesGroupWithTextureWall& operator = ( const TrianglesGroupWithTextureWall& ) = default;
+        TrianglesGroupWithTextureWall& operator = ( TrianglesGroupWithTextureWall&& ) = default;
 };
 
 } // namespace como

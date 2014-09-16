@@ -29,7 +29,7 @@ namespace como {
 // TODO: Rename?
 struct SystemPrimitiveData : public PrimitiveData
 {
-    std::vector< TrianglesGroupWithTexture > trianglesGroups;
+    std::vector< TrianglesGroupWithTextureWall > trianglesGroups;
 };
 
 } // namespace como

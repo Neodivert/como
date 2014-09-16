@@ -24,11 +24,8 @@ namespace como {
  * 1. Construction
  ***/
 
-TrianglesGroupWithTexture::TrianglesGroupWithTexture( unsigned int firstTriangleIndex, unsigned int nTriangles ) :
-    TrianglesGroup( firstTriangleIndex, nTriangles ),
-    textureScale( 1.0f, 1.0f ),
-    textureOffset( 0.0f, 0.0f ),
-    textureID( NO_RESOURCE )
+TrianglesGroupWithTextureWall::TrianglesGroupWithTextureWall( unsigned int firstTriangleIndex, unsigned int nTriangles ) :
+    TrianglesGroup( firstTriangleIndex, nTriangles )
 {}
 
 
@@ -36,9 +33,9 @@ TrianglesGroupWithTexture::TrianglesGroupWithTexture( unsigned int firstTriangle
  * 3. Getters
  ***/
 
-bool TrianglesGroupWithTexture::includesTexture() const
+bool TrianglesGroupWithTextureWall::includesTexture() const
 {
-    return ( textureID != NO_RESOURCE );
+    return ( textureWall.textureID != NO_RESOURCE );
 }
 
 } // namespace como

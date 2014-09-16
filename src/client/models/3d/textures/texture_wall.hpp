@@ -22,6 +22,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include "texture.hpp"
+#include <common/ids/resource_id.hpp>
 
 namespace como {
 
@@ -29,7 +30,7 @@ struct TextureWall {
     glm::vec2 textureOffset;
     glm::vec2 textureScale;
 
-    std::unique_ptr< Texture > texture;
+    ResourceID textureID;
 
 
     /***
@@ -38,7 +39,7 @@ struct TextureWall {
     TextureWall() :
         textureOffset( 0.0f, 0.0f ),
         textureScale( 1.0f, 1.0f ),
-        texture( nullptr ) {}
+        textureID( NO_RESOURCE ) {}
 };
 
 } // namespace como

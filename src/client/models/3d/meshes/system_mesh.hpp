@@ -68,7 +68,7 @@ class SystemMesh : public Mesh
 
     private:
         std::vector< Texture > textures_;
-        std::vector< TrianglesGroupWithTexture > trianglesGroups_;
+        std::vector< TrianglesGroupWithTextureWall > trianglesGroups_;
 };
 
 } // namespace como
