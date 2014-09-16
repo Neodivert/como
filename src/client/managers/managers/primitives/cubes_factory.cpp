@@ -141,10 +141,23 @@ void CubesFactory::generateUVData( MeshTextureData &uvData )
 void CubesFactory::generateTrianglesGroups( std::vector<TrianglesGroupWithTextureWall> &trianglesGroups )
 {
     unsigned int cubeFaceIndex;
+    const char textureWallsNames[][32] =
+    {
+        "Front face",
+        "Right face",
+        "Left face",
+        "Back face",
+        "Top face",
+        "Bottom face"
+    };
 
     trianglesGroups.clear();
     for( cubeFaceIndex = 0; cubeFaceIndex < 6; cubeFaceIndex++ ){
-        trianglesGroups.push_back( TrianglesGroupWithTextureWall( cubeFaceIndex * 2, 2 ) );
+        trianglesGroups.push_back(
+                    TrianglesGroupWithTextureWall(
+                        textureWallsNames[cubeFaceIndex],
+                        cubeFaceIndex * 2,
+                        2 ) );
     }
 }
 

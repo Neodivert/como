@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "triangles_group_with_texture.hpp"
+#include "triangles_group_with_texture_wall.hpp"
 
 namespace como {
 
@@ -24,8 +24,9 @@ namespace como {
  * 1. Construction
  ***/
 
-TrianglesGroupWithTextureWall::TrianglesGroupWithTextureWall( unsigned int firstTriangleIndex, unsigned int nTriangles ) :
-    TrianglesGroup( firstTriangleIndex, nTriangles )
+TrianglesGroupWithTextureWall::TrianglesGroupWithTextureWall( const std::string& textureWallName, unsigned int firstTriangleIndex, unsigned int nTriangles ) :
+    TrianglesGroup( firstTriangleIndex, nTriangles ),
+    textureWall( textureWallName )
 {}
 
 

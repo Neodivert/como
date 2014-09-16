@@ -22,7 +22,7 @@
 
 #include <common/primitives/primitive_data/primitive_data.hpp>
 
-#include <client/models/3d/meshes/triangles_group_with_texture.hpp>
+#include <client/models/3d/meshes/triangles_group_with_texture_wall.hpp>
 
 namespace como {
 

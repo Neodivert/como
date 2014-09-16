@@ -16,8 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef TRIANGLES_GROUP_WITH_TEXTURE_HPP
-#define TRIANGLES_GROUP_WITH_TEXTURE_HPP
+#ifndef TRIANGLES_GROUP_WITH_TEXTURE_WALL_HPP
+#define TRIANGLES_GROUP_WITH_TEXTURE_WALL_HPP
 
 #include <common/primitives/primitive_data/triangles_group.hpp>
 #include <client/models/3d/textures/texture_wall.hpp>
@@ -27,7 +27,7 @@
 
 namespace como {
 
-struct TrianglesGroupWithTextureWall : TrianglesGroup
+struct TrianglesGroupWithTextureWall : public TrianglesGroup
 {
     public:
         TextureWall textureWall;
@@ -36,7 +36,10 @@ struct TrianglesGroupWithTextureWall : TrianglesGroup
         /***
          * 1. Construction
          ***/
-        TrianglesGroupWithTextureWall( unsigned int firstTriangleIndex = 0, unsigned int nTriangles = 0 );
+        TrianglesGroupWithTextureWall( const std::string& textureWallName = "Unnamed texture wall",
+                                       unsigned int firstTriangleIndex = 0,
+                                       unsigned int nTriangles = 0 );
+
         TrianglesGroupWithTextureWall( const TrianglesGroupWithTextureWall& ) = default;
         TrianglesGroupWithTextureWall( TrianglesGroupWithTextureWall&& ) = default;
 
@@ -62,4 +65,4 @@ struct TrianglesGroupWithTextureWall : TrianglesGroup
 
 } // namespace como
 
-#endif // TRIANGLES_GROUP_WITH_TEXTURE_HPP
+#endif // TRIANGLES_GROUP_WITH_TEXTURE_WALL_HPP

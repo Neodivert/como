@@ -21,7 +21,7 @@
 
 #include <client/models/3d/mesh.hpp>
 #include <common/primitives/primitive_data/system_primitive_data.hpp>
-#include "triangles_group_with_texture.hpp"
+#include "triangles_group_with_texture_wall.hpp"
 #include <client/managers/managers/textures/textures_manager.hpp>
 
 namespace como {

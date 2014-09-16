@@ -27,6 +27,8 @@
 namespace como {
 
 struct TextureWall {
+    const std::string name;
+
     glm::vec2 textureOffset;
     glm::vec2 textureScale;
 
@@ -36,7 +38,8 @@ struct TextureWall {
     /***
      * 1. Construction
      ***/
-    TextureWall() :
+    TextureWall( const std::string& name ) :
+        name( name ),
         textureOffset( 0.0f, 0.0f ),
         textureScale( 1.0f, 1.0f ),
         textureID( NO_RESOURCE ) {}
