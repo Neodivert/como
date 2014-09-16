@@ -103,6 +103,10 @@ Texture::Texture( const TextureInfo& textureInfo )
     initSamplerShaderLocation();
 }
 
+Texture::Texture( const string& filePath ) :
+    Texture( TextureInfo( filePath ) )
+{}
+
 
 /***
  * 2. Destruction

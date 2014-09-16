@@ -20,12 +20,36 @@
 #define TEXTURE_INFO_HPP
 
 #include <string>
+#include <fstream>
+#include <boost/filesystem.hpp>
+#include <common/exceptions/file_not_open_exception.hpp>
 
 namespace como {
 
 struct TextureInfo {
     std::string imageFileData;
+
+
+    /***
+     * 1. Construction
+     ***/
+    TextureInfo( const std::string& filePath );
+    TextureInfo( std::ifstream& file, unsigned int nBytes );
+
+
+    /***
+     * 2. File loading
+     ***/
+    void loadFromFile( const std::string& filePath );
+    void loadFromFile( std::ifstream& file, unsigned int nBytes );
+
+
+    /***
+     * 3. Getters
+     ***/
+    static bool supportedImageFile( const std::string& filePath );
 };
+
 
 }
 

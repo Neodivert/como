@@ -166,4 +166,5 @@ SOURCES += \
     ../../src/common/commands/geometric_primitive_command/geometric_primitive_command.cpp \
     ../../src/common/commands/geometric_primitive_command/cube_creation_command.cpp \
     ../../src/common/primitives/primitive_data/material_info.cpp \
-    ../../src/common/managers/textures/abstract_textures_manager.cpp
+    ../../src/common/managers/textures/abstract_textures_manager.cpp \
+    ../../src/common/primitives/primitive_data/texture_info.cpp

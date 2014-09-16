@@ -48,7 +48,7 @@ class AbstractTexturesManager
         AbstractTexturesManager& operator = ( AbstractTexturesManager&& ) = delete;
 
 
-    private:
+    protected:
         const std::string TEXTURES_DIR_PATH_;
 };
 

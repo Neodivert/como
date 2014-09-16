@@ -43,6 +43,7 @@ class Texture
          ***/
         Texture() = delete;
         Texture( const TextureInfo& textureInfo );
+        Texture( const std::string& filePath );
         Texture( const Texture& ) = delete;
         Texture( Texture&& ) = default;
 

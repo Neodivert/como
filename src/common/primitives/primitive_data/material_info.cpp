@@ -81,16 +81,11 @@ void MaterialInfo::readFromFile( std::ifstream &file )
     // otherwise.
     std::getline( file, fileLine );
     if( fileLine == "1" ){
-        // Add an emtpy texture to the current
-        textureInfo = std::unique_ptr< TextureInfo >( new TextureInfo );
-
         // Read texture data size.
         std::getline( file, fileLine );
-        textureInfo->imageFileData.resize( atoi( fileLine.c_str() ) );
 
-        // Read texture data.
-        file.read( &( textureInfo->imageFileData[0] ),
-                textureInfo->imageFileData.size() );
+        // Read the texture data from the file.
+        textureInfo = std::unique_ptr< TextureInfo >( new TextureInfo( file, atoi( fileLine.c_str() ) ) );
 
         // Remove the new line separator right after texture data.
         std::getline( file, fileLine );

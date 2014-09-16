@@ -47,10 +47,27 @@ bool TexturesManager::textureWallIncludesTexture( const ResourceID& textureWallI
 
 ResourceID TexturesManager::loadTexture( std::string imagePath )
 {
-    (void)( imagePath );
-    // TODO: Complete
+    ResourceID textureID = reserveResourceIDs( 1 );
 
-    return NO_RESOURCE;
+    boost::system::error_code errorCode;
+    std::string dstPath =
+            TEXTURES_DIR_PATH_ +
+            boost::filesystem::basename( imagePath );
+
+    boost::filesystem::copy( imagePath, dstPath, errorCode );
+
+    if( errorCode ){
+        throw std::runtime_error( "ERROR copying file [" +
+                                  imagePath +
+                                  "] to [" +
+                                  dstPath +
+                                  "] - " +
+                                  errorCode.message() );
+    }
+
+    textures_.emplace( textureID, dstPath );
+
+    return textureID;
 }
 
 
