@@ -30,7 +30,7 @@ MeshesManager::MeshesManager( ServerInterfacePtr server, LogPtr log, MaterialsMa
     SpecializedEntitiesManager( server, log ),
     materialsManager_( materialsManager ),
     newMeshesDisplayVertexNormals_( false )
-{
+{    
     displayEdges( MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED );
 }
 

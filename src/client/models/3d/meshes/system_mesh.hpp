@@ -48,7 +48,7 @@ class SystemMesh : public Mesh
         /***
          * 3. Setters
          ***/
-        void setTexturesManager( TexturesManager& texturesManager );
+        static void setTexturesManager( TexturesManager& texturesManager );
 
 
         /***
@@ -63,12 +63,11 @@ class SystemMesh : public Mesh
         SystemMesh& operator = ( const SystemMesh& ) = delete;
         SystemMesh& operator = ( SystemMesh&& ) = delete;
 
-
-        static TexturesManager* texturesManager_;
-
     private:
         std::vector< Texture > textures_;
         std::vector< TrianglesGroupWithTextureWall > trianglesGroups_;
+
+        static TexturesManager* texturesManager_;
 };
 
 } // namespace como

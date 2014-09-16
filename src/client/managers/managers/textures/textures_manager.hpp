@@ -50,25 +50,32 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter
 
 
         /***
-         * 3. Local textures management
+         * 3. Getters
+         ***/
+        bool textureWallIncludesTexture( const ResourceID& textureWallID ) const;
+
+
+        /***
+         * 4. Local textures management
          ***/
         ResourceID loadTexture( std::string imagePath );
 
 
         /***
-         * 4. Local texture walls management
+         * 5. Local texture walls management
          ***/
         ResourceID createTextureWall( std::string name );
 
 
         /***
-         * 5. Shader communication
+         * 6. Shader communication
          ***/
+        void sendTextureWallToShader( const ResourceID& resourceID ) const;
         void sendTextureToShader( const ResourceID& resourceID ) const;
 
 
         /***
-         * 6. Operators
+         * 7. Operators
          ***/
         TexturesManager& operator = ( const TexturesManager& ) = delete;
         TexturesManager& operator = ( TexturesManager&& ) = delete;

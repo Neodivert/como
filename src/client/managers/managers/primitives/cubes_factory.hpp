@@ -30,7 +30,7 @@ class CubesFactory : public SpecializedSystemPrimitivesFactory
         /***
          * 1. Construction
          ***/
-        CubesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager );
+        CubesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TexturesManager* texturesManager );
         CubesFactory() = delete;
         CubesFactory( const CubesFactory& ) = delete;
         CubesFactory( CubesFactory&& ) = delete;

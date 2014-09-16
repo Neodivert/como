@@ -24,19 +24,20 @@
 #include <client/models/3d/textures/texture.hpp>
 #include <glm/glm.hpp>
 #include <common/ids/resource_id.hpp>
+#include <client/managers/managers/textures/textures_manager.hpp>
 
 namespace como {
 
 struct TrianglesGroupWithTextureWall : public TrianglesGroup
 {
     public:
-        TextureWall textureWall;
+        ResourceID textureWallID;
 
 
         /***
          * 1. Construction
          ***/
-        TrianglesGroupWithTextureWall( const std::string& textureWallName = "Unnamed texture wall",
+        TrianglesGroupWithTextureWall( const ResourceID& textureWallID,
                                        unsigned int firstTriangleIndex = 0,
                                        unsigned int nTriangles = 0 );
 
@@ -53,7 +54,7 @@ struct TrianglesGroupWithTextureWall : public TrianglesGroup
         /***
          * 3. Getters
          ***/
-        bool includesTexture() const;
+        bool textureWallIncludesTexture( TexturesManager* texturesManager ) const;
 
 
         /***

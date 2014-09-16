@@ -24,9 +24,9 @@ namespace como {
  * 1. Construction
  ***/
 
-TrianglesGroupWithTextureWall::TrianglesGroupWithTextureWall( const std::string& textureWallName, unsigned int firstTriangleIndex, unsigned int nTriangles ) :
+TrianglesGroupWithTextureWall::TrianglesGroupWithTextureWall( const ResourceID& textureWallID, unsigned int firstTriangleIndex, unsigned int nTriangles ) :
     TrianglesGroup( firstTriangleIndex, nTriangles ),
-    textureWall( textureWallName )
+    textureWallID( textureWallID )
 {}
 
 
@@ -34,9 +34,9 @@ TrianglesGroupWithTextureWall::TrianglesGroupWithTextureWall( const std::string&
  * 3. Getters
  ***/
 
-bool TrianglesGroupWithTextureWall::includesTexture() const
+bool TrianglesGroupWithTextureWall::textureWallIncludesTexture( TexturesManager* texturesManager ) const
 {
-    return ( textureWall.textureID != NO_RESOURCE );
+    return texturesManager->textureWallIncludesTexture( textureWallID );
 }
 
 } // namespace como

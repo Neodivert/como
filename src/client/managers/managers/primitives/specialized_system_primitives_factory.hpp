@@ -31,7 +31,7 @@ class SpecializedSystemPrimitivesFactory : public ServerWriter
         /***
          * 1. Construction
          ***/
-        SpecializedSystemPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager );
+        SpecializedSystemPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TexturesManager* texturesManager );
         SpecializedSystemPrimitivesFactory() = delete;
         SpecializedSystemPrimitivesFactory( const SpecializedSystemPrimitivesFactory& ) = delete;
         SpecializedSystemPrimitivesFactory( SpecializedSystemPrimitivesFactory&& ) = delete;
@@ -63,6 +63,7 @@ class SpecializedSystemPrimitivesFactory : public ServerWriter
 
 
         MeshesManagerPtr meshesManager_;
+        TexturesManager* texturesManager_;
         MaterialsManagerPtr materialsManager_;
 };
 

@@ -217,7 +217,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         entitiesManager_ = EntitiesManagerPtr( new EntitiesManager( server_, log_, openGL_.get(), usersManager_, materialsManager_ ) );
 
         // Initialize the geometric primitives factory.
-        geometricPrimitivesFactory_ = GeometricPrimitivesFactoryPtr( new GeometricPrimitivesFactory( server_, entitiesManager_->getMeshesManager(), materialsManager_ ) );
+        geometricPrimitivesFactory_ = GeometricPrimitivesFactoryPtr( new GeometricPrimitivesFactory( server_, entitiesManager_->getMeshesManager(), materialsManager_, texturesManager_.get() ) );
 
         // Initialize the primitives manager.
         primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, entitiesManager_->getMeshesManager(), materialsManager_, log_ ) );

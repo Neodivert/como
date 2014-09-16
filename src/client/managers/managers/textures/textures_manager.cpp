@@ -32,7 +32,17 @@ TexturesManager::TexturesManager( ServerInterfacePtr server, const std::string& 
 
 
 /***
- * 3. Textures management
+ * 3. Getters
+ ***/
+
+bool TexturesManager::textureWallIncludesTexture( const ResourceID& textureWallID ) const
+{
+    return ( textureWalls_.at( textureWallID ).textureID != NO_RESOURCE );
+}
+
+
+/***
+ * 4. Local textures management
  ***/
 
 ResourceID TexturesManager::loadTexture( std::string imagePath )
@@ -45,7 +55,7 @@ ResourceID TexturesManager::loadTexture( std::string imagePath )
 
 
 /***
- * 4. Local texture walls management
+ * 5. Local texture walls management
  ***/
 
 ResourceID TexturesManager::createTextureWall( string name )
@@ -59,8 +69,17 @@ ResourceID TexturesManager::createTextureWall( string name )
 
 
 /***
- * 4. Shader communication
+ * 6. Shader communication
  ***/
+
+void TexturesManager::sendTextureWallToShader( const ResourceID &resourceID ) const
+{
+    //textureWalls_.at( resourceID ).sendToShader( *this );
+    // TODO: Send texture offset and scale.
+
+    sendTextureToShader( textureWalls_.at( resourceID ).textureID );
+}
+
 
 void TexturesManager::sendTextureToShader( const ResourceID& resourceID ) const
 {

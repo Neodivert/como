@@ -34,7 +34,7 @@ class GeometricPrimitivesFactory : public ServerWriter
         /***
          * 1. Construction
          ***/
-        GeometricPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager );
+        GeometricPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TexturesManager* texturesManager );
         GeometricPrimitivesFactory() = delete;
         GeometricPrimitivesFactory( const GeometricPrimitivesFactory& ) = delete;
         GeometricPrimitivesFactory( GeometricPrimitivesFactory&& ) = delete;

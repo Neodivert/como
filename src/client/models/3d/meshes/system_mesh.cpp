@@ -22,6 +22,7 @@ namespace como {
 
 TexturesManager* SystemMesh::texturesManager_ = nullptr;
 
+
 /***
  * 1. Construction
  ***/
@@ -36,7 +37,7 @@ SystemMesh::SystemMesh( const SystemPrimitiveData& primitiveData, MaterialConstP
  * 3. Setters
  ***/
 
-void SystemMesh::setTexturesManager( TexturesManager& texturesManager)
+void SystemMesh::setTexturesManager( TexturesManager& texturesManager )
 {
     texturesManager_ = &texturesManager;
 }
@@ -52,9 +53,9 @@ void SystemMesh::draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm:
     sendMaterialToShader( 0 );
 
     for( const TrianglesGroupWithTextureWall& trianglesGroup : trianglesGroups_ ){
-        if( trianglesGroup.includesTexture() ){
+        if( texturesManager_->textureWallIncludesTexture( trianglesGroup.textureWallID ) ){
             openGL->setShadingMode( ShadingMode::SOLID_LIGHTING_AND_TEXTURING );
-            texturesManager_->sendTextureToShader( trianglesGroup.textureWall.textureID );
+            texturesManager_->sendTextureWallToShader( trianglesGroup.textureWallID );
         }else{
             openGL->setShadingMode( ShadingMode::SOLID_LIGHTING );
         }
