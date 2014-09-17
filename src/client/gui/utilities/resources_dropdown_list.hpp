@@ -48,7 +48,13 @@ class ResourcesDropdownList : public QComboBox, public ContainerObserver<Resourc
 
 
         /***
-         * 3. Operators
+         * 3. Updating (observer pattern)
+         ***/
+        virtual void update( ContainerAction lastContainerAction, ResourceID lastElementModified );
+
+
+        /***
+         * 4. Operators
          ***/
         ResourcesDropdownList& operator = ( const ResourcesDropdownList& ) = delete;
         ResourcesDropdownList& operator = ( ResourcesDropdownList&& ) = delete;
@@ -56,7 +62,7 @@ class ResourcesDropdownList : public QComboBox, public ContainerObserver<Resourc
 
     signals:
         /***
-         * 4. Signals
+         * 5. Signals
          ***/
         void resourceSelected( ResourceID id );
 

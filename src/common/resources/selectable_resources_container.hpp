@@ -45,6 +45,8 @@ class SelectableResourcesContainer : public ObservableContainer< ResourceID >
          * 3. Getters
          ***/
         virtual ResourceHeadersList getSelectableResourcesHeaders() const = 0;
+        virtual bool isResourceSelectable( const ResourceID& resourceID ) const = 0;
+
 
 
         /***

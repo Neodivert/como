@@ -56,6 +56,14 @@ ResourceHeadersList TextureWallsManager::getSelectableResourcesHeaders() const
 }
 
 
+bool TextureWallsManager::isResourceSelectable( const ResourceID& resourceID ) const
+{
+    return ( std::find( selectableTextureWalls_.begin(),
+                        selectableTextureWalls_.end(),
+                        resourceID ) != selectableTextureWalls_.end() );
+}
+
+
 /***
  * 4. Local texture walls management
  ***/
@@ -86,7 +94,7 @@ void TextureWallsManager::toggleTextureWallSeletable( const ResourceID& textureW
 
 void TextureWallsManager::requestResourceLock(const ResourceID &resourceID)
 {
-    if( std::find( selectableTextureWalls_.begin(), selectableTextureWalls_.end(), resourceID ) == selectableTextureWalls_.end() ){
+    if( !isResourceSelectable( resourceID ) ){
         throw std::runtime_error( "Texture wall not selectable" );
     }
 

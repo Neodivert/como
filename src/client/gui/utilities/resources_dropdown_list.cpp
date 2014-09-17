@@ -34,6 +34,35 @@ ResourcesDropdownList::ResourcesDropdownList( SelectableResourcesContainer& reso
             emit resourceSelected( indexToID_.at( index ) );
         }
     });
+
+    // Is it OK to return a "this" pointer from constructor?
+    resourcesContainer.addObserver( this );
+}
+
+
+/***
+ * 3. Updating (observer pattern)
+ ***/
+
+void ResourcesDropdownList::update(ContainerAction lastContainerAction, ResourceID lastElementModified)
+{
+    switch( lastContainerAction ){
+        case ContainerAction::ELEMENT_INSERTION:
+            if( resourcesContainer_->isResourceSelectable( lastElementModified ) ){
+                // TODO: Add elemenet.
+            }
+        break;
+        case ContainerAction::ELEMENT_DELETION:
+            // TODO: Remove element.
+        break;
+        default:
+            if( resourcesContainer_->isResourceSelectable( lastElementModified ) ){
+                // TODO: Add elemenet.
+            }else{
+                // TODO: Remove element.
+            }
+        break;
+    }
 }
 
 } // namespace como

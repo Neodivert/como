@@ -19,6 +19,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include "texture_walls_editor.hpp"
+#include <client/gui/utilities/resources_dropdown_list.hpp>
 
 
 namespace como {
@@ -37,6 +38,7 @@ TextureWallsEditor::TextureWallsEditor( TextureWallsManager &textureWallsManager
     // Set this widget's layout.
     layout = new QVBoxLayout();
     layout->addWidget( new QLabel( "Texture walls editor" ) );
+    layout->addWidget( new ResourcesDropdownList( textureWallsManager ) );
     setLayout( layout );
 }
 
