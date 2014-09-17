@@ -25,13 +25,14 @@
 #include <client/models/3d/textures/texture_wall.hpp>
 #include <client/managers/utilities/server_writer.hpp>
 #include <client/managers/managers/textures/textures_manager.hpp>
+#include <common/resources/selectable_resources_container.hpp>
 
 namespace como {
 
 class TextureWallsManager;
 typedef std::unique_ptr< TextureWallsManager > TextureWallsManagerPtr;
 
-class TextureWallsManager : public ResourcesOwnershipRequester
+class TextureWallsManager : public ResourcesOwnershipRequester, public SelectableResourcesContainer
 {
     public:
         /***
@@ -53,7 +54,7 @@ class TextureWallsManager : public ResourcesOwnershipRequester
          * 3. Getters
          ***/
         bool textureWallIncludesTexture( const ResourceID& textureWallID ) const;
-        ResourceHeadersList getSelectableTextureWallsHeaders() const;
+        virtual ResourceHeadersList getSelectableResourcesHeaders() const;
 
 
         /***

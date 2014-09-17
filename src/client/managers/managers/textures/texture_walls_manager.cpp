@@ -41,7 +41,7 @@ bool TextureWallsManager::textureWallIncludesTexture( const ResourceID& textureW
 }
 
 
-ResourceHeadersList TextureWallsManager::getSelectableTextureWallsHeaders() const
+ResourceHeadersList TextureWallsManager::getSelectableResourcesHeaders() const
 {
     ResourceHeadersList headersList;
     ResourceHeader currentHeader;

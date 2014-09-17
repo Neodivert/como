@@ -109,7 +109,8 @@ HEADERS += \
     ../../src/common/commands/geometric_primitive_command/geometric_primitive_commands.hpp \
     ../../src/common/commands/geometric_primitive_command/cube_creation_command.hpp \
     ../../src/common/managers/textures/abstract_textures_manager.hpp \
-    ../../src/common/resources/resource_header.hpp
+    ../../src/common/resources/resource_header.hpp \
+    ../../src/common/resources/selectable_resources_container.hpp
 
 
 # Common sources (used by both client and server).

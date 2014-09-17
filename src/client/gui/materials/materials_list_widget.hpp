@@ -26,6 +26,7 @@
 
 namespace como {
 
+// TODO: Inherit from ResourcesDropdownList class.
 // TODO: Can't use "private QListWidget", what interests me because I don't
 // want user to use QListWidget methods here.
 class MaterialsListWidget : public QComboBox

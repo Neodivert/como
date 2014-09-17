@@ -122,7 +122,8 @@ HEADERS += \
     ../../src/client/managers/managers/textures/textures_manager.hpp \
     ../../src/client/models/3d/meshes/triangles_group_with_texture_wall.hpp \
     ../../src/client/managers/managers/textures/texture_walls_manager.hpp \
-    ../../src/client/gui/texture_walls/texture_walls_editor.hpp
+    ../../src/client/gui/texture_walls/texture_walls_editor.hpp \
+    ../../src/client/gui/utilities/resources_dropdown_list.hpp
 
 
 # Client sources
@@ -199,4 +200,5 @@ SOURCES += \
     ../../src/client/managers/managers/textures/textures_manager.cpp \
     ../../src/client/models/3d/meshes/triangles_group_with_texture_wall.cpp \
     ../../src/client/managers/managers/textures/texture_walls_manager.cpp \
-    ../../src/client/gui/texture_walls/texture_walls_editor.cpp
+    ../../src/client/gui/texture_walls/texture_walls_editor.cpp \
+    ../../src/client/gui/utilities/resources_dropdown_list.cpp

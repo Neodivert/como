@@ -16,51 +16,44 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef MATERIALS_LIST_ITEM_HPP
-#define MATERIALS_LIST_ITEM_HPP
+#ifndef SELECTABLE_RESOURCES_CONTAINER_HPP
+#define SELECTABLE_RESOURCES_CONTAINER_HPP
 
-#include <QListWidgetItem>
-#include <common/ids/resource_id.hpp>
+#include <common/resources/resource_header.hpp>
+#include <common/utilities/observable_container/observable_container.hpp>
 
 namespace como {
 
-// TODO: Remove if not needed.
-class MaterialsListItem : public QObject, public QListWidgetItem
+class SelectableResourcesContainer : public ObservableContainer< ResourceID >
 {
-    Q_OBJECT
-
-    private:
-        ResourceID materialID_;
-
     public:
         /***
          * 1. Construction
          ***/
-        MaterialsListItem() = delete;
-        MaterialsListItem( const ResourceID& id, const std::string& name );
-        MaterialsListItem( const MaterialsListItem& ) = delete;
-        MaterialsListItem( MaterialsListItem&& ) = delete;
+        SelectableResourcesContainer() = default;
+        SelectableResourcesContainer( SelectableResourcesContainer& ) = delete;
+        SelectableResourcesContainer( SelectableResourcesContainer&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~MaterialsListItem() = default;
+        ~SelectableResourcesContainer() = default;
 
 
         /***
          * 3. Getters
          ***/
-        ResourceID getMaterialID() const;
+        virtual ResourceHeadersList getSelectableResourcesHeaders() const = 0;
 
 
         /***
          * 4. Operators
          ***/
-        MaterialsListItem& operator = ( const MaterialsListItem& ) = delete;
-        MaterialsListItem& operator = ( MaterialsListItem&& ) = delete;
+        SelectableResourcesContainer& operator = ( const SelectableResourcesContainer& ) = delete;
+        SelectableResourcesContainer& operator = ( SelectableResourcesContainer&& ) = delete;
 };
 
 } // namespace como
 
-#endif // MATERIALS_LIST_ITEM_HPP
+#endif // SELECTABLE_RESOURCES_CONTAINER_HPP
