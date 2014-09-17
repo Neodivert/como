@@ -285,6 +285,12 @@ GeometricPrimitivesFactoryPtr Scene::getGeometricPrimitivesFactory() const
 }
 
 
+TextureWallsManager *Scene::getTextureWallsManager() const
+{
+    return textureWallsManager_.get();
+}
+
+
 OpenGLPtr Scene::getOpenGL() const
 {
     return openGL_;

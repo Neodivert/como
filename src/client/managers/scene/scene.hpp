@@ -120,6 +120,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
         ClientPrimitivesManagerPtr getPrimitivesManager() const;
         EntitiesManagerPtr getEntitiesManager() const;
         GeometricPrimitivesFactoryPtr getGeometricPrimitivesFactory() const;
+        TextureWallsManager *getTextureWallsManager() const;
         OpenGLPtr getOpenGL() const;
 
 

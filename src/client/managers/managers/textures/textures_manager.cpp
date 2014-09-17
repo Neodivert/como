@@ -70,5 +70,4 @@ void TexturesManager::sendTextureToShader( const ResourceID& resourceID ) const
     textures_.at( resourceID ).sendToShader();
 }
 
-
 } // namespace como
