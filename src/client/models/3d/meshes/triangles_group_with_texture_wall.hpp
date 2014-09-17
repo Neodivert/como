@@ -24,7 +24,7 @@
 #include <client/models/3d/textures/texture.hpp>
 #include <glm/glm.hpp>
 #include <common/ids/resource_id.hpp>
-#include <client/managers/managers/textures/textures_manager.hpp>
+#include <client/managers/managers/textures/texture_walls_manager.hpp>
 
 namespace como {
 
@@ -52,13 +52,7 @@ struct TrianglesGroupWithTextureWall : public TrianglesGroup
 
 
         /***
-         * 3. Getters
-         ***/
-        bool textureWallIncludesTexture( TexturesManager* texturesManager ) const;
-
-
-        /***
-         * 4. Operators
+         * 3. Operators
          ***/
         TrianglesGroupWithTextureWall& operator = ( const TrianglesGroupWithTextureWall& ) = default;
         TrianglesGroupWithTextureWall& operator = ( TrianglesGroupWithTextureWall&& ) = default;

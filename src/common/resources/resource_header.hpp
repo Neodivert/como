@@ -16,17 +16,21 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "triangles_group_with_texture_wall.hpp"
+#ifndef RESOURCE_HEADER_HPP
+#define RESOURCE_HEADER_HPP
+
+#include <common/ids/resource_id.hpp>
+#include <string>
 
 namespace como {
 
-/***
- * 1. Construction
- ***/
+struct ResourceHeader {
+    ResourceID id;
+    std::string name;
+};
 
-TrianglesGroupWithTextureWall::TrianglesGroupWithTextureWall( const ResourceID& textureWallID, unsigned int firstTriangleIndex, unsigned int nTriangles ) :
-    TrianglesGroup( firstTriangleIndex, nTriangles ),
-    textureWallID( textureWallID )
-{}
+typedef std::list< ResourceHeader > ResourceHeadersList;
 
 } // namespace como
+
+#endif // RESOURCE_HEADER_HPP

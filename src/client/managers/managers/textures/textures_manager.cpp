@@ -32,16 +32,6 @@ TexturesManager::TexturesManager( ServerInterfacePtr server, const std::string& 
 
 
 /***
- * 3. Getters
- ***/
-
-bool TexturesManager::textureWallIncludesTexture( const ResourceID& textureWallID ) const
-{
-    return ( textureWalls_.at( textureWallID ).textureID != NO_RESOURCE );
-}
-
-
-/***
  * 4. Local textures management
  ***/
 
@@ -72,35 +62,13 @@ ResourceID TexturesManager::loadTexture( std::string imagePath )
 
 
 /***
- * 5. Local texture walls management
- ***/
-
-ResourceID TexturesManager::createTextureWall( string name )
-{
-    ResourceID textureWallID = reserveResourceIDs( 1 );
-
-    textureWalls_.emplace( textureWallID, name );
-
-    return textureWallID;
-}
-
-
-/***
  * 6. Shader communication
  ***/
-
-void TexturesManager::sendTextureWallToShader( const ResourceID &resourceID ) const
-{
-    //textureWalls_.at( resourceID ).sendToShader( *this );
-    // TODO: Send texture offset and scale.
-
-    sendTextureToShader( textureWalls_.at( resourceID ).textureID );
-}
-
 
 void TexturesManager::sendTextureToShader( const ResourceID& resourceID ) const
 {
     textures_.at( resourceID ).sendToShader();
 }
+
 
 } // namespace como

@@ -22,7 +22,7 @@
 #include <client/models/3d/mesh.hpp>
 #include <common/primitives/primitive_data/system_primitive_data.hpp>
 #include "triangles_group_with_texture_wall.hpp"
-#include <client/managers/managers/textures/textures_manager.hpp>
+#include <client/managers/managers/textures/texture_walls_manager.hpp>
 
 namespace como {
 
@@ -48,7 +48,7 @@ class SystemMesh : public Mesh
         /***
          * 3. Setters
          ***/
-        static void setTexturesManager( TexturesManager& texturesManager );
+        static void setTextureWallsManager( TextureWallsManager& textureWallsManager );
 
 
         /***
@@ -67,7 +67,7 @@ class SystemMesh : public Mesh
         std::vector< Texture > textures_;
         std::vector< TrianglesGroupWithTextureWall > trianglesGroups_;
 
-        static TexturesManager* texturesManager_;
+        static TextureWallsManager* textureWallsManager_;
 };
 
 } // namespace como

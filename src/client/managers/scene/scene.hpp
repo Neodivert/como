@@ -35,6 +35,7 @@
 #include <client/managers/managers/entities/entities_manager.hpp>
 #include <client/managers/managers/users/users_manager.hpp>
 #include <client/managers/managers/primitives/geometry_primitives_factory.hpp>
+#include <client/managers/managers/textures/texture_walls_manager.hpp>
 
 namespace como {
 
@@ -58,6 +59,8 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
         ClientPrimitivesManagerPtr primitivesManager_;
 
         MaterialsManagerPtr materialsManager_;
+
+        TextureWallsManagerPtr textureWallsManager_;
 
         TexturesManagerPtr texturesManager_;
 

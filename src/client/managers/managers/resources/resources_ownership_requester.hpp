@@ -53,9 +53,9 @@ class ResourcesOwnershipRequester : public ResourcesOwnershipManager, public Ser
         /***
          * 4. Ownership requests
          ***/
-        void requestResourceLock( const ResourceID& resourceID );
+        virtual void requestResourceLock( const ResourceID& resourceID );
         void requestSelectionUnlock();
-        void requestSelectionDeletion();
+        virtual void requestSelectionDeletion();
 
 
     protected:

@@ -7,8 +7,8 @@ namespace como {
  * 1. Construction
  ***/
 
-CubesFactory::CubesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TexturesManager* texturesManager ) :
-    SpecializedSystemPrimitivesFactory( server, meshesManager, materialsManager, texturesManager )
+CubesFactory::CubesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager* textureWallsManager ) :
+    SpecializedSystemPrimitivesFactory( server, meshesManager, materialsManager, textureWallsManager )
 {}
 
 
@@ -155,7 +155,7 @@ void CubesFactory::generateTrianglesGroups( std::vector<TrianglesGroupWithTextur
     for( cubeFaceIndex = 0; cubeFaceIndex < 6; cubeFaceIndex++ ){
         trianglesGroups.push_back(
                     TrianglesGroupWithTextureWall(
-                        texturesManager_->createTextureWall( textureWallsNames[cubeFaceIndex] ),
+                        textureWallsManager_->createTextureWall( textureWallsNames[cubeFaceIndex] ),
                         cubeFaceIndex * 2,
                         2 ) );
     }

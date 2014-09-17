@@ -25,6 +25,8 @@
 #include <client/models/3d/textures/texture_wall.hpp>
 #include <map>
 #include <client/models/utilities/open_gl.hpp>
+#include <client/managers/managers/resources/resources_ownership_requester.hpp>
+#include <common/resources/resource_header.hpp>
 
 namespace como {
 
@@ -50,27 +52,14 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter
 
 
         /***
-         * 3. Getters
-         ***/
-        bool textureWallIncludesTexture( const ResourceID& textureWallID ) const;
-
-
-        /***
          * 4. Local textures management
          ***/
         ResourceID loadTexture( std::string imagePath );
 
 
         /***
-         * 5. Local texture walls management
-         ***/
-        ResourceID createTextureWall( std::string name );
-
-
-        /***
          * 6. Shader communication
          ***/
-        void sendTextureWallToShader( const ResourceID& resourceID ) const;
         void sendTextureToShader( const ResourceID& resourceID ) const;
 
 
@@ -83,7 +72,6 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter
 
     private:
         std::map< ResourceID, Texture > textures_;
-        std::map< ResourceID, TextureWall > textureWalls_;
 };
 
 } // namespace como

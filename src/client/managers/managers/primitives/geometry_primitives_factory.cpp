@@ -25,11 +25,11 @@ namespace como {
  * 1. Construction
  ***/
 
-GeometricPrimitivesFactory::GeometricPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TexturesManager* texturesManager ) :
+GeometricPrimitivesFactory::GeometricPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager* textureWallsManager ) :
     ServerWriter( server ),
-    cubesFactory_( server, meshesManager, materialsManager, texturesManager )
+    cubesFactory_( server, meshesManager, materialsManager, textureWallsManager )
 {
-    SystemMesh::setTexturesManager( *texturesManager );
+    SystemMesh::setTextureWallsManager( *textureWallsManager );
 }
 
 
