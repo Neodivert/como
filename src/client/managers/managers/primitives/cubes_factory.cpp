@@ -63,7 +63,7 @@ void CubesFactory::createCube( const ResourceID& cubeID, const ResourceID& mater
 
     materialsManager_->createMaterial( MaterialInfo(), materialID, cubeID );
 
-    cube = std::unique_ptr< Mesh >( new SystemMesh( generatePrimitiveData(), materialsManager_->getMaterial( materialID ) ) );
+    cube = std::unique_ptr< Mesh >( new SystemMesh( cubeID, generatePrimitiveData(), materialsManager_->getMaterial( materialID ) ) );
 
     return meshesManager_->addMesh( std::move( cube ), cubeID );
 }

@@ -59,6 +59,9 @@ class MaterialsManager : public QObject, public ServerWriter, public Observer, p
     private:
         std::map< ResourceID, MaterialPtr > materials_;
         MaterialsOwnershipMap materialsOwners_;
+
+        // TODO: Rename this and related methods so they refer to Materials'
+        // "parent resources" instead of meshes.
         std::map< ResourceID, std::vector< ResourceID > > meshMaterials_;
 
         MaterialHandlerPtr materialHandler_;

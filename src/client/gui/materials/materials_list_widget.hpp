@@ -72,6 +72,8 @@ class MaterialsListWidget : public QComboBox
     private:
         MaterialsManagerPtr materialsManager_;
 
+        // FIXME: This is wrong because when removing materials from
+        // QComboBox, indices of the rest of materiales are updated.
         std::map< int, ResourceID > indexToID_;
 };
 

@@ -22,6 +22,7 @@
 namespace como {
 
 // TODO: Rename this and derived structs as TrianglesRange<X>?
+// TODO: Move this and derived structs to a directory "triangles".
 struct TrianglesGroup
 {
     unsigned int firstTriangleIndex;

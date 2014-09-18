@@ -173,8 +173,7 @@ void MeshesManager::lockResource( const ResourceID &resourceID, UserID newOwner 
 
     materialsManager_->lockMeshMaterials( resourceID, newOwner );
 
-    // TODO: Lock texture walls.
-
+    textureWallsManager_->toggleMeshTextureWallsSeletable( resourceID, true );
 }
 
 

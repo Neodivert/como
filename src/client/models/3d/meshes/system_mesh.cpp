@@ -27,12 +27,13 @@ TextureWallsManager* SystemMesh::textureWallsManager_ = nullptr;
  * 1. Construction
  ***/
 
-SystemMesh::SystemMesh( const SystemPrimitiveData& primitiveData, MaterialConstPtr material, bool displayVertexNormals ) :
+// TODO: Create a "Resource" class with a ResourceID and a name (std::string)?
+SystemMesh::SystemMesh( const ResourceID& meshID, const SystemPrimitiveData& primitiveData, MaterialConstPtr material, bool displayVertexNormals ) :
     Mesh( primitiveData, { material }, displayVertexNormals )
 {
     for( const NamedTrianglesGroup& namedTrianglesGroup : primitiveData.trianglesGroups ){
         trianglesGroups_.push_back( TrianglesGroupWithTextureWall(
-                                        textureWallsManager_->createTextureWall( namedTrianglesGroup.name ),
+                                        textureWallsManager_->createTextureWall( namedTrianglesGroup.name, meshID ),
                                         namedTrianglesGroup.firstTriangleIndex,
                                         namedTrianglesGroup.nTriangles ) );
     }

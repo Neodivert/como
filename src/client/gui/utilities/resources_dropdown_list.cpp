@@ -74,9 +74,20 @@ void ResourcesDropdownList::update(ContainerAction lastContainerAction, Resource
 
 void ResourcesDropdownList::addResource( const ResourceID &id, const std::string &name )
 {
-    // TODO: Don't insert if resource ID already exists.
-    indexToID_.push_back( id );
-    addItem( name.c_str() );
+    // First check if we are trying to insert a duplicated resource.
+    bool resourceFound = false;
+    std::list< ResourceID >::iterator it = indexToID_.begin();
+
+    while( !resourceFound && (it != indexToID_.end() ) ){
+        resourceFound = ( *it == id );
+        it++;
+    }
+
+    // If resource isn't duplicated, add it to the container.
+    if( !resourceFound ){
+        indexToID_.push_back( id );
+        addItem( name.c_str() );
+    }
 }
 
 

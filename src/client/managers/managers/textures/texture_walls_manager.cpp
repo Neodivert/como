@@ -74,11 +74,12 @@ string TextureWallsManager::getResourceName( const ResourceID &resourceID ) cons
  * 4. Local texture walls management
  ***/
 
-ResourceID TextureWallsManager::createTextureWall( string name )
+ResourceID TextureWallsManager::createTextureWall( string name, const ResourceID& meshID )
 {
     ResourceID textureWallID = reserveResourceIDs( 1 );
 
     textureWalls_.emplace( textureWallID, name );
+    meshesTextureWalls_[meshID].push_back( textureWallID );
 
     toggleTextureWallSeletable( textureWallID, true );
 
@@ -94,6 +95,29 @@ void TextureWallsManager::toggleTextureWallSeletable( const ResourceID& textureW
         selectableTextureWalls_.push_back( textureWallID );
     }else{
         selectableTextureWalls_.remove( textureWallID );
+    }
+    notifyElementUpdate( textureWallID );
+}
+
+
+void TextureWallsManager::toggleMeshTextureWallsSeletable( const ResourceID& meshID, bool selectable )
+{
+    if( meshesTextureWalls_.count( meshID ) == 0 ){
+        return;
+    }
+
+    if( selectable ){
+        for( const ResourceID& textureWallID : meshesTextureWalls_.at( meshID ) ){
+            selectableTextureWalls_.push_back( textureWallID );
+        }
+    }else{
+        for( const ResourceID& textureWallID : meshesTextureWalls_.at( meshID ) ){
+            selectableTextureWalls_.remove( textureWallID );
+        }
+    }
+
+    for( const ResourceID& textureWallID : meshesTextureWalls_.at( meshID ) ){
+        notifyElementUpdate( textureWallID );
     }
 }
 
