@@ -33,7 +33,7 @@ class EntitiesManager : public AbstractEntitiesManager, public ContainerObserver
         /***
          * 1. Construction
          ***/
-        EntitiesManager( ServerInterfacePtr server, LogPtr log, OpenGL* openGL, UsersManagerPtr usersManager, MaterialsManagerPtr materialsManager );
+        EntitiesManager( ServerInterfacePtr server, LogPtr log, OpenGL* openGL, UsersManagerPtr usersManager, MaterialsManagerPtr materialsManager, TextureWallsManager *textureWallsManager );
         EntitiesManager() = delete;
         EntitiesManager( const EntitiesManager& ) = delete;
         EntitiesManager( EntitiesManager&& ) = delete;

@@ -98,6 +98,33 @@ void TextureWallsManager::toggleTextureWallSeletable( const ResourceID& textureW
 }
 
 
+void TextureWallsManager::unlockSelectableTextureWalls()
+{
+    std::list< ResourceID > removedElementIDs;
+
+    for( const ResourceID& textureWallID : selectableTextureWalls_ ){
+        removedElementIDs.push_back( textureWallID );
+    }
+
+    selectableTextureWalls_.clear();
+
+    for( const ResourceID& textureWallID : removedElementIDs ){
+        notifyElementUpdate( textureWallID );
+    }
+}
+
+
+void TextureWallsManager::removeSelectableTextureWalls()
+{
+    for( const ResourceID& textureWallID : selectableTextureWalls_ ){
+        notifyElementDeletion( textureWallID );
+        textureWalls_.erase( textureWallID );
+    }
+
+    selectableTextureWalls_.clear();
+}
+
+
 /***
  * 5. Resources ownership requesting
  ***/

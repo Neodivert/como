@@ -23,6 +23,7 @@
 #include <client/managers/selections/meshes/meshes_selection.hpp>
 #include <client/managers/selections/meshes/local_meshes_selection.hpp>
 #include <client/managers/managers/materials/materials_manager.hpp>
+#include <client/managers/managers/textures/texture_walls_manager.hpp>
 #include <common/primitives/primitive_data/imported_primitive_data.hpp>
 
 namespace como {
@@ -41,7 +42,7 @@ class MeshesManager : public SpecializedEntitiesManager< Mesh, MeshesSelection, 
         /***
          * 1. Construction
          ***/
-        MeshesManager( ServerInterfacePtr server, LogPtr log, MaterialsManagerPtr materialsManager );
+        MeshesManager( ServerInterfacePtr server, LogPtr log, MaterialsManagerPtr materialsManager, TextureWallsManager *textureWallsManager );
         MeshesManager() = delete;
         MeshesManager( const MeshesManager& ) = delete;
         MeshesManager( MeshesManager&& ) = delete;
@@ -102,6 +103,8 @@ class MeshesManager : public SpecializedEntitiesManager< Mesh, MeshesSelection, 
 
     private:
         MaterialsManagerPtr materialsManager_;
+
+        TextureWallsManager *textureWallsManager_;
 
         bool newMeshesDisplayVertexNormals_;
 };

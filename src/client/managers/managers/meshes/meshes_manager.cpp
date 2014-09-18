@@ -25,10 +25,11 @@ namespace como {
  * 1. Construction
  ***/
 
-MeshesManager::MeshesManager( ServerInterfacePtr server, LogPtr log, MaterialsManagerPtr materialsManager ) :
+MeshesManager::MeshesManager( ServerInterfacePtr server, LogPtr log, MaterialsManagerPtr materialsManager, TextureWallsManager *textureWallsManager ) :
     ResourceCommandsExecuter( server ),
     SpecializedEntitiesManager( server, log ),
     materialsManager_( materialsManager ),
+    textureWallsManager_( textureWallsManager ),
     newMeshesDisplayVertexNormals_( false )
 {    
     displayEdges( MeshEdgesDisplayFrequency::ONLY_WHEN_SELECTED );
@@ -171,14 +172,18 @@ void MeshesManager::lockResource( const ResourceID &resourceID, UserID newOwner 
     ResourcesManager::lockResource( resourceID, newOwner );
 
     materialsManager_->lockMeshMaterials( resourceID, newOwner );
+
+    // TODO: Lock texture walls.
 }
 
 
 void MeshesManager::unlockResourcesSelection( UserID currentOwner )
-{
+{   
     ResourcesManager::unlockResourcesSelection( currentOwner );
 
     materialsManager_->unlockUserMaterials( currentOwner );
+
+    textureWallsManager_->unlockSelectableTextureWalls();
 }
 
 
@@ -187,6 +192,8 @@ void MeshesManager::clearResourcesSelection( UserID currentOwner )
     ResourcesManager::clearResourcesSelection( currentOwner );
 
     materialsManager_->removeUserMaterials( currentOwner );
+
+    textureWallsManager_->removeSelectableTextureWalls();
 }
 
 

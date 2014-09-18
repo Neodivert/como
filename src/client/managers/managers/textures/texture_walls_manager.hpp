@@ -64,6 +64,8 @@ class TextureWallsManager : public ResourcesOwnershipRequester, public Selectabl
          ***/
         ResourceID createTextureWall( std::string name );
         void toggleTextureWallSeletable( const ResourceID& textureWallID, bool selectable );
+        void unlockSelectableTextureWalls();
+        void removeSelectableTextureWalls();
 
 
         /***
@@ -98,6 +100,7 @@ class TextureWallsManager : public ResourcesOwnershipRequester, public Selectabl
         TexturesManager* texturesManager_;
 
         std::map< ResourceID, TextureWall > textureWalls_;
+
         std::list< ResourceID > selectableTextureWalls_;
 };
 

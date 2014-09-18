@@ -31,7 +31,9 @@ ResourcesDropdownList::ResourcesDropdownList( SelectableResourcesContainer& reso
     void (QComboBox::*srcSignal)( int ) = &QComboBox::currentIndexChanged;
     QObject::connect( this, srcSignal, [this]( int index ){
         if( index != -1 ){
-            emit resourceSelected( indexToID_.at( index ) );
+            std::list< ResourceID >::const_iterator it = indexToID_.begin();
+            std::advance( it, index );
+            emit resourceSelected( *it );
         }
     });
 
@@ -50,17 +52,16 @@ void ResourcesDropdownList::update(ContainerAction lastContainerAction, Resource
         case ContainerAction::ELEMENT_INSERTION:
             if( resourcesContainer_->isResourceSelectable( lastElementModifiedID ) ){
                 addResource( lastElementModifiedID, resourcesContainer_->getResourceName( lastElementModifiedID ) );
-                // TODO: Add elemenet.
             }
         break;
         case ContainerAction::ELEMENT_DELETION:
-            // TODO: Remove element.
+            removeResource( lastElementModifiedID );
         break;
         default:
             if( resourcesContainer_->isResourceSelectable( lastElementModifiedID ) ){
-                // TODO: Add elemenet (if not repeated).
+                addResource( lastElementModifiedID, resourcesContainer_->getResourceName( lastElementModifiedID ) );
             }else{
-                // TODO: Remove element (if not repeated).
+                removeResource( lastElementModifiedID );
             }
         break;
     }
@@ -73,15 +74,26 @@ void ResourcesDropdownList::update(ContainerAction lastContainerAction, Resource
 
 void ResourcesDropdownList::addResource( const ResourceID &id, const std::string &name )
 {
-    indexToID_[count()] = id;
+    // TODO: Don't insert if resource ID already exists.
+    indexToID_.push_back( id );
     addItem( name.c_str() );
 }
 
 
 void ResourcesDropdownList::removeResource( const ResourceID &id )
 {
-    // TODO: Complete
-    (void)( id );
+    std::list< ResourceID >::iterator it = indexToID_.begin();
+    unsigned int index = 0;
+
+    while( it != indexToID_.end() ){
+        if( *it == id  ){
+            removeItem( index );
+            indexToID_.erase( it );
+            return;
+        }
+        index++;
+        it++;
+    }
 }
 
 } // namespace como
