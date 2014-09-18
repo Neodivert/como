@@ -138,7 +138,7 @@ void CubesFactory::generateUVData( MeshTextureData &uvData )
 }
 
 
-void CubesFactory::generateTrianglesGroups( std::vector<TrianglesGroupWithTextureWall> &trianglesGroups )
+void CubesFactory::generateTrianglesGroups( std::vector<NamedTrianglesGroup> &trianglesGroups )
 {
     unsigned int cubeFaceIndex;
     const char textureWallsNames[][32] =
@@ -154,8 +154,8 @@ void CubesFactory::generateTrianglesGroups( std::vector<TrianglesGroupWithTextur
     trianglesGroups.clear();
     for( cubeFaceIndex = 0; cubeFaceIndex < 6; cubeFaceIndex++ ){
         trianglesGroups.push_back(
-                    TrianglesGroupWithTextureWall(
-                        textureWallsManager_->createTextureWall( textureWallsNames[cubeFaceIndex] ),
+                    NamedTrianglesGroup(
+                        textureWallsNames[cubeFaceIndex],
                         cubeFaceIndex * 2,
                         2 ) );
     }

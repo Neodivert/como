@@ -73,7 +73,7 @@ class CubesFactory : public SpecializedSystemPrimitivesFactory
          ***/
         virtual void generateVertexData( MeshVertexData &vertexData );
         virtual void generateUVData(MeshTextureData &uvData);
-        virtual void generateTrianglesGroups( std::vector<TrianglesGroupWithTextureWall> &trianglesGroups );
+        virtual void generateTrianglesGroups( std::vector<NamedTrianglesGroup> &trianglesGroups );
 
 
     private:

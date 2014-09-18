@@ -28,9 +28,15 @@ TextureWallsManager* SystemMesh::textureWallsManager_ = nullptr;
  ***/
 
 SystemMesh::SystemMesh( const SystemPrimitiveData& primitiveData, MaterialConstPtr material, bool displayVertexNormals ) :
-    Mesh( primitiveData, { material }, displayVertexNormals ),
-    trianglesGroups_( primitiveData.trianglesGroups )
-{}
+    Mesh( primitiveData, { material }, displayVertexNormals )
+{
+    for( const NamedTrianglesGroup& namedTrianglesGroup : primitiveData.trianglesGroups ){
+        trianglesGroups_.push_back( TrianglesGroupWithTextureWall(
+                                        textureWallsManager_->createTextureWall( namedTrianglesGroup.name ),
+                                        namedTrianglesGroup.firstTriangleIndex,
+                                        namedTrianglesGroup.nTriangles ) );
+    }
+}
 
 
 /***

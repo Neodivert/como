@@ -98,7 +98,6 @@ HEADERS += \
     ../../src/common/utilities/observable_container/container_observer.hpp \
     ../../src/common/managers/managers/resources/resources_ownership_manager.hpp \
     ../../src/common/commands/light_commands/light_creation_response_command.hpp \
-    ../../src/common/primitives/primitive_data/triangles_range.hpp \
     ../../src/common/primitives/primitive_data/triangles_group.hpp \
     ../../src/common/primitives/primitive_data/imported_primitive_data.hpp \
     ../../src/common/primitives/primitive_data/primitive_data.hpp \
@@ -110,7 +109,8 @@ HEADERS += \
     ../../src/common/commands/geometric_primitive_command/cube_creation_command.hpp \
     ../../src/common/managers/textures/abstract_textures_manager.hpp \
     ../../src/common/resources/resource_header.hpp \
-    ../../src/common/resources/selectable_resources_container.hpp
+    ../../src/common/resources/selectable_resources_container.hpp \
+    ../../src/common/primitives/primitive_data/named_triangles_group.hpp
 
 
 # Common sources (used by both client and server).

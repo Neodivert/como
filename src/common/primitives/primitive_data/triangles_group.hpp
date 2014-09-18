@@ -21,6 +21,7 @@
 
 namespace como {
 
+// TODO: Rename this and derived structs as TrianglesRange<X>?
 struct TrianglesGroup
 {
     unsigned int firstTriangleIndex;

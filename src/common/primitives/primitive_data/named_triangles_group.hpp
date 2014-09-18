@@ -16,22 +16,26 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef TRIANGLES_RANGE_HPP
-#define TRIANGLES_RANGE_HPP
+#ifndef NAMED_TRIANGLES_GROUP_HPP
+#define NAMED_TRIANGLES_GROUP_HPP
+
+#include "triangles_group.hpp"
+#include <string>
 
 namespace como {
 
-// TODO: Delete
-struct TrianglesRange
+struct NamedTrianglesGroup : TrianglesGroup
 {
-    unsigned int firstTriangleIndex;
-    unsigned int nTriangles;
+    std::string name;
 
-    TrianglesRange() :
-        firstTriangleIndex( 0 ),
-        nTriangles( 0 ){}
+    NamedTrianglesGroup( const std::string& name,
+                         unsigned int firstTriangleIndex = 0,
+                         unsigned int nTriangles = 0 ) :
+        TrianglesGroup( firstTriangleIndex, nTriangles ),
+        name( name ){}
 };
+
 
 } // namespace como
 
-#endif // TRIANGLES_RANGE_HPP
+#endif // NAMED_TRIANGLES_GROUP_HPP

@@ -58,7 +58,7 @@ class SpecializedSystemPrimitivesFactory : public ServerWriter
         virtual void generateVertexData( MeshVertexData& vertexData ) = 0;
         virtual void generateNormalData( const MeshVertexData& vertexData, MeshNormalData& normalData );
         virtual void generateUVData( MeshTextureData& uvData ) = 0;
-        virtual void generateTrianglesGroups( std::vector< TrianglesGroupWithTextureWall >& trianglesGroups ) = 0;
+        virtual void generateTrianglesGroups( std::vector< NamedTrianglesGroup >& trianglesGroups ) = 0;
         virtual void generateOGLData( SystemPrimitiveData& primitiveData );
 
 

@@ -22,14 +22,14 @@
 
 #include <common/primitives/primitive_data/primitive_data.hpp>
 
-#include <client/models/3d/meshes/triangles_group_with_texture_wall.hpp>
+#include <common/primitives/primitive_data/named_triangles_group.hpp>
 
 namespace como {
 
 // TODO: Rename?
 struct SystemPrimitiveData : public PrimitiveData
 {
-    std::vector< TrianglesGroupWithTextureWall > trianglesGroups;
+    std::vector< NamedTrianglesGroup > trianglesGroups;
 };
 
 } // namespace como
