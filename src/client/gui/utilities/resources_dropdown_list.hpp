@@ -68,6 +68,13 @@ class ResourcesDropdownList : public QComboBox, public ContainerObserver<Resourc
 
 
     private:
+        /***
+         * 6. Resources management
+         ***/
+        void addResource( const ResourceID& id, const std::string& name );
+        void removeResource( const ResourceID& id );
+
+
         // Base class QComboBox works with integer (int) indices, so we need
         // to map them to resource IDs.
         std::map< int, ResourceID > indexToID_;

@@ -44,11 +44,12 @@ ResourcesDropdownList::ResourcesDropdownList( SelectableResourcesContainer& reso
  * 3. Updating (observer pattern)
  ***/
 
-void ResourcesDropdownList::update(ContainerAction lastContainerAction, ResourceID lastElementModified)
+void ResourcesDropdownList::update(ContainerAction lastContainerAction, ResourceID lastElementModifiedID )
 {
     switch( lastContainerAction ){
         case ContainerAction::ELEMENT_INSERTION:
-            if( resourcesContainer_->isResourceSelectable( lastElementModified ) ){
+            if( resourcesContainer_->isResourceSelectable( lastElementModifiedID ) ){
+                addResource( lastElementModifiedID, resourcesContainer_->getResourceName( lastElementModifiedID ) );
                 // TODO: Add elemenet.
             }
         break;
@@ -56,13 +57,31 @@ void ResourcesDropdownList::update(ContainerAction lastContainerAction, Resource
             // TODO: Remove element.
         break;
         default:
-            if( resourcesContainer_->isResourceSelectable( lastElementModified ) ){
-                // TODO: Add elemenet.
+            if( resourcesContainer_->isResourceSelectable( lastElementModifiedID ) ){
+                // TODO: Add elemenet (if not repeated).
             }else{
-                // TODO: Remove element.
+                // TODO: Remove element (if not repeated).
             }
         break;
     }
+}
+
+
+/***
+ * 6. Resources management
+ ***/
+
+void ResourcesDropdownList::addResource( const ResourceID &id, const std::string &name )
+{
+    indexToID_[count()] = id;
+    addItem( name.c_str() );
+}
+
+
+void ResourcesDropdownList::removeResource( const ResourceID &id )
+{
+    // TODO: Complete
+    (void)( id );
 }
 
 } // namespace como

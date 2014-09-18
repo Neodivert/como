@@ -46,6 +46,7 @@ class SelectableResourcesContainer : public ObservableContainer< ResourceID >
          ***/
         virtual ResourceHeadersList getSelectableResourcesHeaders() const = 0;
         virtual bool isResourceSelectable( const ResourceID& resourceID ) const = 0;
+        virtual std::string getResourceName( const ResourceID& resourceID ) const = 0;
 
 
 

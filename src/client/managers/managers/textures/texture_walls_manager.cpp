@@ -64,6 +64,12 @@ bool TextureWallsManager::isResourceSelectable( const ResourceID& resourceID ) c
 }
 
 
+string TextureWallsManager::getResourceName( const ResourceID &resourceID ) const
+{
+    return textureWalls_.at( resourceID ).name;
+}
+
+
 /***
  * 4. Local texture walls management
  ***/
@@ -73,6 +79,10 @@ ResourceID TextureWallsManager::createTextureWall( string name )
     ResourceID textureWallID = reserveResourceIDs( 1 );
 
     textureWalls_.emplace( textureWallID, name );
+
+    toggleTextureWallSeletable( textureWallID, true );
+
+    notifyElementInsertion( textureWallID );
 
     return textureWallID;
 }
