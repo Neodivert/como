@@ -20,6 +20,7 @@
 #include <QLabel>
 #include "texture_walls_editor.hpp"
 #include <client/gui/utilities/resources_dropdown_list.hpp>
+#include "texture_wall_editor.hpp"
 
 
 namespace como {
@@ -36,6 +37,7 @@ TextureWallsEditor::TextureWallsEditor( TextureWallsManager &textureWallsManager
     layout = new QFormLayout();
     layout->addWidget( new QLabel( "Texture walls editor" ) );
     layout->addRow( "Texture wall: ", new ResourcesDropdownList( textureWallsManager ) );
+    layout->addWidget( new TextureWallEditor( nullptr ) );
     setLayout( layout );
 }
 
