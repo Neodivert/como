@@ -149,11 +149,19 @@ void TextureWallsManager::removeSelectableTextureWalls()
 }
 
 
+TextureWallHandler *TextureWallsManager::selectTextureWall( const ResourceID &textureWallID )
+{
+    currentTextureWallHandler_ = std::unique_ptr< TextureWallHandler >(
+                new TextureWallHandler( server(), textureWallID, textureWalls_.at( textureWallID ) ) );
+    return currentTextureWallHandler_.get();
+}
+
+
 /***
  * 5. Resources ownership requesting
  ***/
 
-void TextureWallsManager::requestResourceLock(const ResourceID &resourceID)
+void TextureWallsManager::requestResourceLock( const ResourceID &resourceID )
 {
     if( !isResourceSelectable( resourceID ) ){
         throw std::runtime_error( "Texture wall not selectable" );

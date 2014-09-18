@@ -26,6 +26,7 @@
 #include <client/managers/utilities/server_writer.hpp>
 #include <client/managers/managers/textures/textures_manager.hpp>
 #include <common/resources/selectable_resources_container.hpp>
+#include <client/managers/managers/textures/texture_wall_handler.hpp>
 
 namespace como {
 
@@ -67,6 +68,7 @@ class TextureWallsManager : public ResourcesOwnershipRequester, public Selectabl
         void toggleMeshTextureWallsSeletable( const ResourceID& meshID, bool selectable );
         void unlockSelectableTextureWalls();
         void removeSelectableTextureWalls();
+        TextureWallHandler* selectTextureWall( const ResourceID& textureWallID );
 
 
         /***
@@ -105,6 +107,8 @@ class TextureWallsManager : public ResourcesOwnershipRequester, public Selectabl
         // TODO: Rename this and related methods so they refer to TextureWalls'
         // "parent resources" instead of meshes.
         std::map< ResourceID, std::list< ResourceID > > meshesTextureWalls_;
+
+        std::unique_ptr< TextureWallHandler > currentTextureWallHandler_;
 
         std::list< ResourceID > selectableTextureWalls_;
 };
