@@ -64,6 +64,9 @@ Texture::Texture( const TextureInfo& textureInfo )
         }
     }
 
+    width_ = textureImage->w;
+    height_ = textureImage->h;
+
     // TODO: Take components order into account too (RGBA != ABGR).
     if( textureImage->format->BytesPerPixel == 4 ){
         textureInternalFormat = GL_RGBA8;

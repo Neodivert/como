@@ -35,6 +35,8 @@ class Texture
 {
     private:
         GLuint oglName_;
+        unsigned int width_;
+        unsigned int height_;
         GLint samplerShaderLocation_;
 
     public:
