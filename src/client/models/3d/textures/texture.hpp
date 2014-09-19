@@ -31,12 +31,21 @@ extern "C" {
 
 namespace como {
 
+struct TextureData {
+    unsigned int width;
+    unsigned int height;
+    GLint format;
+
+    std::unique_ptr< GLubyte[] > pixels;
+};
+
 class Texture
 {
     private:
         GLuint oglName_;
         unsigned int width_;
         unsigned int height_;
+        GLint format_;
         GLint samplerShaderLocation_;
 
     public:
@@ -65,13 +74,19 @@ class Texture
 
 
         /***
-         * 4. Shader communication
+         * 4. Getters
+         ***/
+        TextureData pixelData() const;
+
+
+        /***
+         * 5. Shader communication
          ***/
         void sendToShader() const;
 
 
         /***
-         * 5. Operators
+         * 6. Operators
          ***/
         Texture& operator = ( const Texture& ) = delete;
         Texture& operator = ( Texture&& ) = delete;

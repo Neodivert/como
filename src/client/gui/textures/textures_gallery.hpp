@@ -60,6 +60,9 @@ class TexturesGallery : public QListWidget, public Observer
 
     private:
         TexturesManager* texturesManager_;
+
+        std::list<TextureData> texturesDataList_;
+        std::list< std::unique_ptr< QImage > > textureImages_;
 };
 
 } // namespace como

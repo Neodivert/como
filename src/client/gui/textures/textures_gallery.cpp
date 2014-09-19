@@ -43,7 +43,29 @@ TexturesGallery::TexturesGallery( TexturesManager* texturesManager ) :
 
 void TexturesGallery::update()
 {
-    // TODO: Complete
+    texturesDataList_.clear();
+    clear();
+
+    texturesDataList_ = texturesManager_->getTexturesData();
+
+    std::list<TextureData>::const_iterator textureDataIterator =
+            texturesDataList_.begin();
+    QImage::Format imageFormat;
+
+    for( ; textureDataIterator != texturesDataList_.end(); textureDataIterator++ ){
+        imageFormat = ( textureDataIterator->format == GL_RGBA ) ?
+                    QImage::Format_RGBA8888 :
+                    QImage::Format_RGB888;
+
+        textureImages_.push_back(
+                    std::unique_ptr< QImage >(
+                        new QImage( textureDataIterator->pixels.get(),
+                                    textureDataIterator->width,
+                                    textureDataIterator->height,
+                                    imageFormat ) ) );
+
+        addItem( new QListWidgetItem( QIcon( QPixmap::fromImage( *( textureImages_.back() ) ) ), "Texture" ) );
+    }
 }
 
 } // namespace como

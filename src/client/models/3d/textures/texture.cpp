@@ -34,7 +34,6 @@ Texture::Texture( const TextureInfo& textureInfo )
     SDL_Surface* textureImage = nullptr;
     SDL_RWops* textureData = nullptr;
     GLint textureInternalFormat = GL_RGBA8;
-    GLint textureFormat;
 
     // Generate a texture GL name.
     glGenTextures( 1, &oglName_ );
@@ -70,10 +69,10 @@ Texture::Texture( const TextureInfo& textureInfo )
     // TODO: Take components order into account too (RGBA != ABGR).
     if( textureImage->format->BytesPerPixel == 4 ){
         textureInternalFormat = GL_RGBA8;
-        textureFormat = GL_RGBA;
+        format_ = GL_RGBA;
     }else if( textureImage->format->BytesPerPixel == 3 ){
         textureInternalFormat = GL_RGB8;
-        textureFormat = GL_RGB;
+        format_ = GL_RGB;
     }else{
         throw std::runtime_error( "Unexpected number of Bytes Per Pixel in texture (" +
                                   std::to_string( textureImage->format->BytesPerPixel ) +
@@ -90,7 +89,7 @@ Texture::Texture( const TextureInfo& textureInfo )
                 textureImage->w,
                 textureImage->h,
                 0,
-                textureFormat,
+                format_,
                 GL_UNSIGNED_BYTE,
                 textureImage->pixels // TODO: Do I have to have the ->pitch into account?
                 );
@@ -140,7 +139,33 @@ void Texture::initSamplerShaderLocation()
 
 
 /***
- * 4. Shader communication
+ * 4. Getters
+ ***/
+
+TextureData Texture::pixelData() const
+{
+    unsigned int componentsPerPixel = ( format_ == GL_RGBA ) ? 4 : 3;
+
+    TextureData textureData;
+    textureData.width = width_;
+    textureData.height = height_;
+    textureData.format = format_;
+    textureData.pixels =
+            std::unique_ptr< GLubyte[] >( new GLubyte[componentsPerPixel * width_ * height_] );
+
+    glBindTexture( GL_TEXTURE_2D, oglName_ );
+    glGetTexImage( GL_TEXTURE_2D,
+                   0,
+                   format_,
+                   GL_UNSIGNED_BYTE,
+                   textureData.pixels.get() );
+
+    return textureData;
+}
+
+
+/***
+ * 5. Shader communication
  ***/
 
 void Texture::sendToShader() const

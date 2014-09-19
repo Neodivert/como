@@ -59,6 +59,12 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter, pub
 
 
         /***
+         * 5. Getters
+         ***/
+        std::list< TextureData > getTexturesData() const;
+
+
+        /***
          * 6. Shader communication
          ***/
         void sendTextureToShader( const ResourceID& resourceID ) const;

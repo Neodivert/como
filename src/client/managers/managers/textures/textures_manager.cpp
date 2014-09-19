@@ -65,6 +65,24 @@ ResourceID TexturesManager::loadTexture( std::string imagePath )
 }
 
 
+
+
+/***
+ * 5. Getters
+ ***/
+
+std::list<TextureData> TexturesManager::getTexturesData() const
+{
+    std::list<TextureData> texturesDataList;
+
+    for( const auto& texturePair : textures_ ){
+        texturesDataList.push_back( texturePair.second.pixelData() );
+    }
+
+    return texturesDataList;
+}
+
+
 /***
  * 6. Shader communication
  ***/
