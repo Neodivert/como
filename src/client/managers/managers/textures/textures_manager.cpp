@@ -42,7 +42,9 @@ ResourceID TexturesManager::loadTexture( std::string imagePath )
     boost::system::error_code errorCode;
     std::string dstPath =
             TEXTURES_DIR_PATH_ +
-            boost::filesystem::basename( imagePath );
+            "/" +
+            boost::filesystem::basename( imagePath ) +
+            boost::filesystem::extension( imagePath );
 
     boost::filesystem::copy( imagePath, dstPath, errorCode );
 

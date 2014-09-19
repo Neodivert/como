@@ -29,15 +29,15 @@ namespace como {
  * 1. Construction
  ***/
 
-TextureWallsEditor::TextureWallsEditor( TextureWallsManager &textureWallsManager )
+TextureWallsEditor::TextureWallsEditor( TextureWallsManager* textureWallsManager, TexturesManager* texturesManager )
 {
     QFormLayout* layout = nullptr;
 
     // Set this widget's layout.
     layout = new QFormLayout();
     layout->addWidget( new QLabel( "Texture walls editor" ) );
-    layout->addRow( "Texture wall: ", new ResourcesDropdownList( textureWallsManager ) );
-    layout->addWidget( new TextureWallEditor( nullptr ) );
+    layout->addRow( "Texture wall: ", new ResourcesDropdownList( *textureWallsManager ) );
+    layout->addWidget( new TextureWallEditor( texturesManager ) );
     setLayout( layout );
 }
 

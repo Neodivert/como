@@ -291,6 +291,12 @@ TextureWallsManager *Scene::getTextureWallsManager() const
 }
 
 
+TexturesManager *Scene::getTexturesManager() const
+{
+    return texturesManager_.get();
+}
+
+
 OpenGLPtr Scene::getOpenGL() const
 {
     return openGL_;

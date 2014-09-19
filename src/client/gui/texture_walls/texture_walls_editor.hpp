@@ -32,7 +32,7 @@ class TextureWallsEditor : public QFrame
         /***
          * 1. Construction
          ***/
-        TextureWallsEditor( TextureWallsManager& textureWallsManager );
+        TextureWallsEditor( TextureWallsManager* textureWallsManager, TexturesManager* texturesManager );
         TextureWallsEditor() = delete;
         TextureWallsEditor( const TextureWallsEditor& ) = delete;
         TextureWallsEditor( TextureWallsEditor&& ) = delete;

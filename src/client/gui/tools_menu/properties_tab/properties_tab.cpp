@@ -42,7 +42,7 @@ PropertiesTab::PropertiesTab( ScenePtr scene )
     layout->addWidget( new MeshInfoMenu( scene->getMeshesManager()->getLocalResourcesSelection() ) );
     layout->addWidget( new LightsMenu( scene->getLightsManager()->getLocalResourcesSelection() ) );
     layout->addWidget( new MaterialsEditor( scene->getMaterialsManager(), scene->getMeshesManager()->getLocalResourcesSelection() ) );
-    layout->addWidget( new TextureWallsEditor( *( scene->getTextureWallsManager() ) ) );
+    layout->addWidget( new TextureWallsEditor( scene->getTextureWallsManager(), scene->getTexturesManager() ) );
     setLayout( layout );
 }
 

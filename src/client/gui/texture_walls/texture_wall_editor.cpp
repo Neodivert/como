@@ -17,7 +17,10 @@
 ***/
 
 #include <QDoubleSpinBox>
+#include <QPushButton>
 #include <QFormLayout>
+#include <QFileDialog>
+#include <QMessageBox>
 #include "texture_wall_editor.hpp"
 
 namespace como {
@@ -27,12 +30,13 @@ namespace como {
  * 1. Construction
  ***/
 
-TextureWallEditor::TextureWallEditor( TextureWallHandler *textureWallHandler ) :
-    textureWallHandler_( textureWallHandler )
+TextureWallEditor::TextureWallEditor( TexturesManager* texturesManager ) :
+    texturesManager_( texturesManager )
 {
     QFormLayout* layout = new QFormLayout;
     QDoubleSpinBox* textureOffsetXSpinBox = new QDoubleSpinBox;
     QDoubleSpinBox* textureOffsetYSpinBox = new QDoubleSpinBox;
+    QPushButton* textureFilePathInput = new QPushButton;
 
     // Set the parameters for the widget used for modifying
     // texture offset (X)
@@ -46,9 +50,33 @@ TextureWallEditor::TextureWallEditor( TextureWallHandler *textureWallHandler ) :
     textureOffsetYSpinBox->setSingleStep( 1.0 );
     textureOffsetYSpinBox->setRange( 0.0, 10.0 );
 
+    // When user click on file path input button, open a dialog for selecting
+    // a file.
+    QObject::connect( textureFilePathInput, &QPushButton::clicked, [=](){
+        try {
+            std::string filePath = QFileDialog::getOpenFileName( this,
+                                                                 tr("Open file"),
+                                                                 "~",
+                                                                 tr("All files (*)") ).toStdString();
+            if( filePath.size() > 0 ){
+                texturesManager_->loadTexture( filePath );
+                textureFilePathInput->setText( filePath.c_str() );
+            }
+        }catch( std::exception& ex ){
+            QMessageBox::warning( this,
+                                  "Couldn't load texture",
+                                  ex.what() );
+        }
+    });
+
+    // Set accept and reject buttons behaviour.
+    //QObject::connect( okButton_, &QPushButton::clicked, this, &PrimitiveImportDialog::validate );
+    //QObject::connect( cancelButton_, &QPushButton::clicked, this, &PrimitiveImportDialog::reject );
+
     // Set this widget's layout.
     layout->addRow( "Texture offset (X)", textureOffsetXSpinBox );
     layout->addRow( "Texture offset (Y)", textureOffsetYSpinBox );
+    layout->addRow( "Texture: ", textureFilePathInput );
     setLayout( layout );
 }
 
@@ -59,9 +87,13 @@ TextureWallEditor::TextureWallEditor( TextureWallHandler *textureWallHandler ) :
 
 void TextureWallEditor::update()
 {
+    // TODO: Complete
+
+    /*
     if( textureWallHandler_ != nullptr ){
         // TODO: Complete
     }
+    */
 }
 
 

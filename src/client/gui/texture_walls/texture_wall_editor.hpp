@@ -20,7 +20,7 @@
 #define TEXTURE_WALL_EDITOR_HPP
 
 #include <QFrame>
-#include <client/managers/managers/textures/texture_wall_handler.hpp>
+#include <client/managers/managers/textures/textures_manager.hpp>
 #include <common/utilities/observer_pattern/observer.hpp>
 
 namespace como {
@@ -31,7 +31,7 @@ class TextureWallEditor : public QFrame, public Observer
         /***
          * 1. Construction
          ***/
-        TextureWallEditor( TextureWallHandler* textureWallHandler );
+        TextureWallEditor( TexturesManager* texturesManager );
         TextureWallEditor() = delete;
         TextureWallEditor( const TextureWallEditor& ) = delete;
         TextureWallEditor( TextureWallEditor&& ) = delete;
@@ -57,7 +57,7 @@ class TextureWallEditor : public QFrame, public Observer
 
 
     private:
-        TextureWallHandler* textureWallHandler_;
+        TexturesManager* texturesManager_;
 };
 
 } // namespace como
