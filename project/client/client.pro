@@ -127,7 +127,8 @@ HEADERS += \
     ../../src/client/managers/managers/textures/texture_wall_handler.hpp \
     ../../src/client/gui/texture_walls/texture_wall_editor.hpp \
     ../../src/client/gui/textures/textures_viewer.hpp \
-    ../../src/client/gui/textures/textures_gallery.hpp
+    ../../src/client/gui/textures/textures_gallery.hpp \
+    ../../src/client/gui/textures/textures_gallery_item.hpp
 
 
 # Client sources
@@ -209,4 +210,5 @@ SOURCES += \
     ../../src/client/managers/managers/textures/texture_wall_handler.cpp \
     ../../src/client/gui/texture_walls/texture_wall_editor.cpp \
     ../../src/client/gui/textures/textures_viewer.cpp \
-    ../../src/client/gui/textures/textures_gallery.cpp
+    ../../src/client/gui/textures/textures_gallery.cpp \
+    ../../src/client/gui/textures/textures_gallery_item.cpp

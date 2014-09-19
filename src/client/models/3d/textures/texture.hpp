@@ -36,7 +36,7 @@ struct TextureData {
     unsigned int height;
     GLint format;
 
-    std::unique_ptr< GLubyte[] > pixels;
+    std::vector< GLubyte > pixels;
 };
 
 class Texture

@@ -150,15 +150,14 @@ TextureData Texture::pixelData() const
     textureData.width = width_;
     textureData.height = height_;
     textureData.format = format_;
-    textureData.pixels =
-            std::unique_ptr< GLubyte[] >( new GLubyte[componentsPerPixel * width_ * height_] );
+    textureData.pixels.resize( componentsPerPixel * width_ * height_ );
 
     glBindTexture( GL_TEXTURE_2D, oglName_ );
     glGetTexImage( GL_TEXTURE_2D,
                    0,
                    format_,
                    GL_UNSIGNED_BYTE,
-                   textureData.pixels.get() );
+                   textureData.pixels.data() );
 
     return textureData;
 }

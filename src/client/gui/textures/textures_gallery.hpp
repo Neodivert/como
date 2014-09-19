@@ -22,6 +22,7 @@
 #include <QListWidget>
 #include <client/managers/managers/textures/textures_manager.hpp>
 #include <common/utilities/observer_pattern/observer.hpp>
+#include "textures_gallery_item.hpp"
 
 namespace como {
 
@@ -60,9 +61,6 @@ class TexturesGallery : public QListWidget, public Observer
 
     private:
         TexturesManager* texturesManager_;
-
-        std::list<TextureData> texturesDataList_;
-        std::list< std::unique_ptr< QImage > > textureImages_;
 };
 
 } // namespace como
