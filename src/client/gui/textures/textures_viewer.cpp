@@ -17,6 +17,9 @@
 ***/
 
 #include <QVBoxLayout>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QPushButton>
 #include "textures_viewer.hpp"
 #include "textures_gallery.hpp"
 
@@ -30,11 +33,32 @@ namespace como {
 TexturesViewer::TexturesViewer( TexturesManager *texturesManager, QWidget* parent ) :
     QDialog( parent )
 {
-    setWindowTitle( "Textures viewer" );
-
+    QPushButton* loadTextureButton = new QPushButton( "Load new texture" );
     QVBoxLayout* layout = new QVBoxLayout;
 
+    setWindowTitle( "Textures viewer" );
+
+    // When fileInput button is clicked, open a QFileDialog.
+    QObject::connect( loadTextureButton, &QPushButton::clicked, [=](){
+        try {
+            std::string textureFilePath =
+                    QFileDialog::getOpenFileName( this,
+                                                  tr("Open file"),
+                                                  "",
+                                                  tr("All files (*)" /* TODO: Filter only supported image formats */ ) ).toStdString();
+
+            if( textureFilePath.size() > 0 ){
+                texturesManager->loadTexture( textureFilePath );
+            }
+        }catch( std::exception& ex ){
+            QMessageBox::warning( this,
+                                  "Couldn't load texture",
+                                  ex.what() );
+        }
+    });
+
     layout->addWidget( new TexturesGallery( texturesManager ) );
+    layout->addWidget( loadTextureButton );
     setLayout( layout );
 }
 
