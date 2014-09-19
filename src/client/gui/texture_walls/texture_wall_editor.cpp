@@ -31,12 +31,13 @@ namespace como {
  ***/
 
 TextureWallEditor::TextureWallEditor( TexturesManager* texturesManager ) :
-    texturesManager_( texturesManager )
+    texturesManager_( texturesManager ),
+    texturesViewer_( new TexturesViewer( texturesManager, this ) )
 {
     QFormLayout* layout = new QFormLayout;
     QDoubleSpinBox* textureOffsetXSpinBox = new QDoubleSpinBox;
     QDoubleSpinBox* textureOffsetYSpinBox = new QDoubleSpinBox;
-    QPushButton* textureFilePathInput = new QPushButton;
+    QPushButton* textureInput = new QPushButton;
 
     // Set the parameters for the widget used for modifying
     // texture offset (X)
@@ -52,31 +53,14 @@ TextureWallEditor::TextureWallEditor( TexturesManager* texturesManager ) :
 
     // When user click on file path input button, open a dialog for selecting
     // a file.
-    QObject::connect( textureFilePathInput, &QPushButton::clicked, [=](){
-        try {
-            std::string filePath = QFileDialog::getOpenFileName( this,
-                                                                 tr("Open file"),
-                                                                 "~",
-                                                                 tr("All files (*)") ).toStdString();
-            if( filePath.size() > 0 ){
-                texturesManager_->loadTexture( filePath );
-                textureFilePathInput->setText( filePath.c_str() );
-            }
-        }catch( std::exception& ex ){
-            QMessageBox::warning( this,
-                                  "Couldn't load texture",
-                                  ex.what() );
-        }
+    QObject::connect( textureInput, &QPushButton::clicked, [=](){
+        texturesViewer_->exec();
     });
-
-    // Set accept and reject buttons behaviour.
-    //QObject::connect( okButton_, &QPushButton::clicked, this, &PrimitiveImportDialog::validate );
-    //QObject::connect( cancelButton_, &QPushButton::clicked, this, &PrimitiveImportDialog::reject );
 
     // Set this widget's layout.
     layout->addRow( "Texture offset (X)", textureOffsetXSpinBox );
     layout->addRow( "Texture offset (Y)", textureOffsetYSpinBox );
-    layout->addRow( "Texture: ", textureFilePathInput );
+    layout->addRow( "Texture: ", textureInput );
     setLayout( layout );
 }
 

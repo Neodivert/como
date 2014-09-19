@@ -59,6 +59,8 @@ ResourceID TexturesManager::loadTexture( std::string imagePath )
 
     textures_.emplace( textureID, dstPath );
 
+    notifyElementInsertion( textureID );
+
     return textureID;
 }
 

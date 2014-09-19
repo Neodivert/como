@@ -16,52 +16,41 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef TEXTURE_WALL_EDITOR_HPP
-#define TEXTURE_WALL_EDITOR_HPP
+#ifndef TEXTURES_VIEWER_HPP
+#define TEXTURES_VIEWER_HPP
 
-#include <QFrame>
+#include <QDialog>
 #include <client/managers/managers/textures/textures_manager.hpp>
-#include <common/utilities/observer_pattern/observer.hpp>
-#include <client/gui/textures/textures_viewer.hpp>
 
 namespace como {
 
-class TextureWallEditor : public QFrame, public Observer
+class TexturesViewer : public QDialog
 {
+    Q_OBJECT
+
     public:
         /***
          * 1. Construction
          ***/
-        TextureWallEditor( TexturesManager* texturesManager );
-        TextureWallEditor() = delete;
-        TextureWallEditor( const TextureWallEditor& ) = delete;
-        TextureWallEditor( TextureWallEditor&& ) = delete;
+        TexturesViewer( TexturesManager* texturesManager, QWidget* parent = nullptr );
+        TexturesViewer() = delete;
+        TexturesViewer( const TexturesViewer& ) = delete;
+        TexturesViewer( TexturesViewer&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~TextureWallEditor() = default;
+        virtual ~TexturesViewer() = default;
 
 
         /***
-         * 3. Updating (observer pattern)
+         * 3. Operators
          ***/
-        virtual void update();
-
-
-        /***
-         * 4. Operators
-         ***/
-        TextureWallEditor& operator = ( const TextureWallEditor& ) = delete;
-        TextureWallEditor& operator = ( TextureWallEditor&& ) = delete;
-
-
-    private:
-        TexturesManager* texturesManager_;
-        TexturesViewer* texturesViewer_;
+        TexturesViewer& operator = ( const TexturesViewer& ) = delete;
+        TexturesViewer& operator = ( TexturesViewer&& ) = delete;
 };
 
 } // namespace como
 
-#endif // TEXTURE_WALL_EDITOR_HPP
+#endif // TEXTURES_VIEWER_HPP

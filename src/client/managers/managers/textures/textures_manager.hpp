@@ -27,13 +27,14 @@
 #include <client/models/utilities/open_gl.hpp>
 #include <client/managers/managers/resources/resources_ownership_requester.hpp>
 #include <common/resources/resource_header.hpp>
+#include <common/utilities/observable_container/observable_container.hpp>
 
 namespace como {
 
 class TexturesManager;
 typedef std::unique_ptr< TexturesManager > TexturesManagerPtr;
 
-class TexturesManager : public AbstractTexturesManager, public ServerWriter
+class TexturesManager : public AbstractTexturesManager, public ServerWriter, public ObservableContainer<ResourceID>
 {
     public:
         /***
