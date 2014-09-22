@@ -59,6 +59,13 @@ class TexturesGallery : public QListWidget, public Observer
         TexturesGallery& operator = ( TexturesGallery&& ) = delete;
 
 
+        /***
+         * 5. Signals
+         ***/
+    signals:
+        void textureSelected( ResourceID textureID );
+
+
     private:
         TexturesManager* texturesManager_;
 };

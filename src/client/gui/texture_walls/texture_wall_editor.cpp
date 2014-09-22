@@ -54,6 +54,26 @@ TextureWallEditor::TextureWallEditor( TexturesManager* texturesManager ) :
     // When user click on file path input button, open a dialog for selecting
     // a file.
     QObject::connect( textureInput, &QPushButton::clicked, [=](){
+        // Before executing the textures viewer, make a signal / slot
+        // connection so whenever a texture is selected, display a
+        // message to user.
+        QObject::connect( texturesViewer_,
+                          &TexturesViewer::textureSelected,
+                          [this]( ResourceID textureID ){
+
+            std::string infoMessage =
+                    "Texture selected (" +
+                    to_string( textureID.getCreatorID() ) +
+                    ", " +
+                    to_string( textureID.getResourceIndex() ) +
+                    ")";
+
+            QMessageBox::information( this,
+                                      "Texture selected",
+                                      infoMessage.c_str()
+                                      );
+        });
+
         texturesViewer_->exec();
     });
 

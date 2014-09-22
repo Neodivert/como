@@ -49,7 +49,13 @@ class TexturesGalleryItem : public QObject, public QListWidgetItem
 
 
         /***
-         * 3. Operators
+         * 3. Getters
+         ***/
+        ResourceID textureID() const;
+
+
+        /***
+         * 4. Operators
          ***/
         TexturesGalleryItem& operator = ( const TexturesGalleryItem& ) = delete;
         TexturesGalleryItem& operator = ( TexturesGalleryItem&& ) = delete;

@@ -47,4 +47,14 @@ TexturesGalleryItem::TexturesGalleryItem( const ResourceID &textureID,
 }
 
 
+/***
+ * 3. Getters
+ ***/
+
+ResourceID TexturesGalleryItem::textureID() const
+{
+    return textureID_;
+}
+
+
 } // namespace como

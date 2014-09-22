@@ -49,6 +49,13 @@ class TexturesViewer : public QDialog
          ***/
         TexturesViewer& operator = ( const TexturesViewer& ) = delete;
         TexturesViewer& operator = ( TexturesViewer&& ) = delete;
+
+
+        /***
+         * 4. Signals
+         ***/
+    signals:
+        void textureSelected( ResourceID textureID );
 };
 
 } // namespace como

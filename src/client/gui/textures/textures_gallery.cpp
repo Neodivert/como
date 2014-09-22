@@ -34,6 +34,16 @@ TexturesGallery::TexturesGallery( TexturesManager* texturesManager ) :
     setViewMode( QListWidget::IconMode );
     setIconSize( QSize( 200,200 ) );
     setResizeMode( QListWidget::Adjust );
+
+    // Whenever the user double-click over a texture, emit a "textureSelected"
+    // signal.
+    QObject::connect( this, &TexturesGallery::itemDoubleClicked,
+                      [this]( QListWidgetItem* listItem ){
+        TexturesGalleryItem* textureItem =
+                dynamic_cast< TexturesGalleryItem* >( listItem );
+
+        emit textureSelected( textureItem->textureID() );
+    });
 }
 
 

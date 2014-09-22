@@ -35,6 +35,7 @@ TexturesViewer::TexturesViewer( TexturesManager *texturesManager, QWidget* paren
 {
     QPushButton* loadTextureButton = new QPushButton( "Load new texture" );
     QVBoxLayout* layout = new QVBoxLayout;
+    TexturesGallery* texturesGallery = new TexturesGallery( texturesManager );
 
     setWindowTitle( "Textures viewer" );
 
@@ -57,7 +58,16 @@ TexturesViewer::TexturesViewer( TexturesManager *texturesManager, QWidget* paren
         }
     });
 
-    layout->addWidget( new TexturesGallery( texturesManager ) );
+    // Whenever a "textureSelected" signal is received from TexturesGallery,
+    // simply forward it to the outside.
+    QObject::connect( texturesGallery,
+                      &TexturesGallery::textureSelected,
+                      [this]( ResourceID textureID ){
+        emit textureSelected( textureID );
+    });
+
+    // Set this widget's layout.
+    layout->addWidget( texturesGallery );
     layout->addWidget( loadTextureButton );
     setLayout( layout );
 }
