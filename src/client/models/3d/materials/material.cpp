@@ -66,7 +66,7 @@ Material::Material( const MaterialInfo& materialInfo ) :
     specularExponent_( materialInfo.specularExponent )
 {
     if( materialInfo.textureInfo ){
-        texture_ = std::unique_ptr< Texture >( new Texture( *( materialInfo.textureInfo ) ) );
+        texture_ = std::unique_ptr< Texture >( new Texture( NO_RESOURCE, "<texture>", *( materialInfo.textureInfo ) ) );
     }else{
         texture_ = nullptr;
     }

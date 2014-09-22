@@ -24,11 +24,8 @@ namespace como {
  * 1. Construction
  ***/
 
-TexturesGalleryItem::TexturesGalleryItem( const ResourceID &textureID,
-                                          const std::string &textureName,
-                                          TextureData textureData ) :
-    QListWidgetItem( textureName.c_str() ),
-    textureID_( textureID ),
+TexturesGalleryItem::TexturesGalleryItem( TextureData textureData ) :
+    QListWidgetItem( textureData.name.c_str() ),
     textureData_( textureData )
 {
     const QImage::Format imageFormat =
@@ -53,7 +50,7 @@ TexturesGalleryItem::TexturesGalleryItem( const ResourceID &textureID,
 
 ResourceID TexturesGalleryItem::textureID() const
 {
-    return textureID_;
+    return textureData_.id;
 }
 
 

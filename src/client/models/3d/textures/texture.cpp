@@ -29,7 +29,7 @@ namespace como {
  * 1. Construction
  ***/
 
-Texture::Texture( const TextureInfo& textureInfo )
+Texture::Texture( const ResourceID& id, const std::string& name, const TextureInfo& textureInfo )
 {
     SDL_Surface* textureImage = nullptr;
     SDL_RWops* textureData = nullptr;
@@ -63,9 +63,6 @@ Texture::Texture( const TextureInfo& textureInfo )
         }
     }
 
-    width_ = textureImage->w;
-    height_ = textureImage->h;
-
     // TODO: Take components order into account too (RGBA != ABGR).
     if( textureImage->format->BytesPerPixel == 4 ){
         textureInternalFormat = GL_RGBA8;
@@ -96,6 +93,21 @@ Texture::Texture( const TextureInfo& textureInfo )
 
     OpenGL::checkStatus( "After Texture::glTextImage2D()" );
 
+    const unsigned int componentsPerPixel = ( format_ == GL_RGBA ) ? 4 : 3;
+    const unsigned int pixelDataSize =
+            componentsPerPixel *
+            textureImage->w *
+            textureImage->h;
+
+    // Fill texture data.
+    data_.id = id;
+    data_.name = name;
+    data_.width = textureImage->w;
+    data_.height = textureImage->h;
+    data_.format = format_;
+    data_.pixels.resize( pixelDataSize );
+    memcpy( data_.pixels.data(), textureImage->pixels, pixelDataSize );
+
     // Free resources.
     SDL_FreeRW( textureData );
     SDL_FreeSurface( textureImage );
@@ -105,8 +117,11 @@ Texture::Texture( const TextureInfo& textureInfo )
     initSamplerShaderLocation();
 }
 
-Texture::Texture( const string& filePath ) :
-    Texture( TextureInfo( filePath ) )
+Texture::Texture( const ResourceID& id, const string& filePath ) :
+    Texture( id,
+             boost::filesystem::basename( filePath ) +
+             boost::filesystem::extension( filePath ),
+             TextureInfo( filePath ) )
 {}
 
 
@@ -142,24 +157,9 @@ void Texture::initSamplerShaderLocation()
  * 4. Getters
  ***/
 
-TextureData Texture::pixelData() const
+TextureData Texture::data() const
 {
-    unsigned int componentsPerPixel = ( format_ == GL_RGBA ) ? 4 : 3;
-
-    TextureData textureData;
-    textureData.width = width_;
-    textureData.height = height_;
-    textureData.format = format_;
-    textureData.pixels.resize( componentsPerPixel * width_ * height_ );
-
-    glBindTexture( GL_TEXTURE_2D, oglName_ );
-    glGetTexImage( GL_TEXTURE_2D,
-                   0,
-                   format_,
-                   GL_UNSIGNED_BYTE,
-                   textureData.pixels.data() );
-
-    return textureData;
+    return data_;
 }
 
 

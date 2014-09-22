@@ -28,10 +28,14 @@ extern "C" {
 
 #include <memory>
 #include <common/primitives/primitive_data/texture_info.hpp>
+#include <common/ids/resource_id.hpp>
 
 namespace como {
 
 struct TextureData {
+    ResourceID id;
+    std::string name;
+
     unsigned int width;
     unsigned int height;
     GLint format;
@@ -43,18 +47,20 @@ class Texture
 {
     private:
         GLuint oglName_;
-        unsigned int width_;
-        unsigned int height_;
         GLint format_;
         GLint samplerShaderLocation_;
+
+        TextureData data_;
 
     public:
         /***
          * 1. Construction
          ***/
-        Texture() = delete;
-        Texture( const TextureInfo& textureInfo );
-        Texture( const std::string& filePath );
+        // FIXME: Delete this constructor.
+        // Made default so TexturesManager::loadTexture() can insert textures in map.
+        Texture() = default;
+        Texture( const ResourceID& id, const std::string& name, const TextureInfo& textureInfo );
+        Texture( const ResourceID& id, const std::string& filePath );
         Texture( const Texture& ) = delete;
         Texture( Texture&& ) = default;
 
@@ -76,7 +82,7 @@ class Texture
         /***
          * 4. Getters
          ***/
-        TextureData pixelData() const;
+        TextureData data() const;
 
 
         /***
@@ -89,7 +95,7 @@ class Texture
          * 6. Operators
          ***/
         Texture& operator = ( const Texture& ) = delete;
-        Texture& operator = ( Texture&& ) = delete;
+        Texture& operator = ( Texture&& ) = default;
 };
 
 typedef std::shared_ptr< Texture > TexturePtr;

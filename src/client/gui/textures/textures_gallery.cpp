@@ -59,11 +59,7 @@ void TexturesGallery::update()
     clear();
 
     for( const TextureData& textureData : texturesDataList ){
-        // TODO: Retrieve real ID and name.
-        addItem( new TexturesGalleryItem(
-                     NO_RESOURCE,
-                     "<texture-name>",
-                     textureData ) );
+        addItem( new TexturesGalleryItem( textureData ) );
     }
 }
 

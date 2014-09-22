@@ -34,9 +34,7 @@ class TexturesGalleryItem : public QObject, public QListWidgetItem
         /***
          * 1. Construction
          ***/
-        TexturesGalleryItem( const ResourceID& textureID,
-                             const std::string& textureName,
-                             TextureData textureData );
+        TexturesGalleryItem( TextureData textureData );
         TexturesGalleryItem() = delete;
         TexturesGalleryItem( const TexturesGalleryItem& ) = delete;
         TexturesGalleryItem( TexturesGalleryItem&& ) = delete;
@@ -62,7 +60,6 @@ class TexturesGalleryItem : public QObject, public QListWidgetItem
 
 
     private:
-        const ResourceID textureID_;
         const TextureData textureData_;
         std::unique_ptr< QImage > textureImage_;
 };
