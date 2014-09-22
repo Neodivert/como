@@ -23,6 +23,7 @@
 #include <client/managers/managers/textures/textures_manager.hpp>
 #include <common/utilities/observer_pattern/observer.hpp>
 #include <client/gui/textures/textures_viewer.hpp>
+#include <client/managers/managers/textures/texture_walls_manager.hpp>
 
 namespace como {
 
@@ -32,7 +33,7 @@ class TextureWallEditor : public QFrame, public Observer
         /***
          * 1. Construction
          ***/
-        TextureWallEditor( TexturesManager* texturesManager );
+        TextureWallEditor( TextureWallsManager* textureWallsManager, TexturesManager* texturesManager );
         TextureWallEditor() = delete;
         TextureWallEditor( const TextureWallEditor& ) = delete;
         TextureWallEditor( TextureWallEditor&& ) = delete;
@@ -45,20 +46,28 @@ class TextureWallEditor : public QFrame, public Observer
 
 
         /***
-         * 3. Updating (observer pattern)
+         * 3. Setters
+         ***/
+        void setTextureWall( TextureWallHandler* textureWall );
+
+
+        /***
+         * 4. Updating (observer pattern)
          ***/
         virtual void update();
 
 
         /***
-         * 4. Operators
+         * 5. Operators
          ***/
         TextureWallEditor& operator = ( const TextureWallEditor& ) = delete;
         TextureWallEditor& operator = ( TextureWallEditor&& ) = delete;
 
 
     private:
+        TextureWallHandler* currentTextureWall_;
         TexturesManager* texturesManager_;
+        TextureWallsManager* textureWallsManager_;
         TexturesViewer* texturesViewer_;
 };
 

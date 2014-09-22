@@ -58,6 +58,7 @@ class TextureWallsManager : public ResourcesOwnershipRequester, public Selectabl
         virtual ResourceHeadersList getSelectableResourcesHeaders() const;
         virtual bool isResourceSelectable( const ResourceID& resourceID ) const;
         virtual string getResourceName( const ResourceID &resourceID ) const;
+        TextureWallHandler* getCurrentTextureWall() const;
 
 
         /***

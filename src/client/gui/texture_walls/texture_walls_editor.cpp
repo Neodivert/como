@@ -32,12 +32,22 @@ namespace como {
 TextureWallsEditor::TextureWallsEditor( TextureWallsManager* textureWallsManager, TexturesManager* texturesManager )
 {
     QFormLayout* layout = nullptr;
+    ResourcesDropdownList* textureWallsSelector =
+            new ResourcesDropdownList( *textureWallsManager );
+    TextureWallEditor* textureWallEditor =
+            new TextureWallEditor( textureWallsManager, texturesManager );
+
+    QObject::connect( textureWallsSelector,
+                      &ResourcesDropdownList::resourceSelected,
+                      [=]( ResourceID textureWallID ){
+            textureWallEditor->setTextureWall( textureWallsManager->selectTextureWall( textureWallID ) );
+    });
 
     // Set this widget's layout.
     layout = new QFormLayout();
     layout->addWidget( new QLabel( "Texture walls editor" ) );
-    layout->addRow( "Texture wall: ", new ResourcesDropdownList( *textureWallsManager ) );
-    layout->addWidget( new TextureWallEditor( texturesManager ) );
+    layout->addRow( "Texture wall: ", textureWallsSelector );
+    layout->addWidget( textureWallEditor );
     setLayout( layout );
 }
 

@@ -70,6 +70,12 @@ string TextureWallsManager::getResourceName( const ResourceID &resourceID ) cons
 }
 
 
+TextureWallHandler *TextureWallsManager::getCurrentTextureWall() const
+{
+    return currentTextureWallHandler_.get();
+}
+
+
 /***
  * 4. Local texture walls management
  ***/
@@ -149,7 +155,7 @@ void TextureWallsManager::removeSelectableTextureWalls()
 }
 
 
-TextureWallHandler *TextureWallsManager::selectTextureWall( const ResourceID &textureWallID )
+TextureWallHandler* TextureWallsManager::selectTextureWall( const ResourceID &textureWallID )
 {
     currentTextureWallHandler_ = std::unique_ptr< TextureWallHandler >(
                 new TextureWallHandler( server(), textureWallID, textureWalls_.at( textureWallID ) ) );
@@ -180,7 +186,9 @@ void TextureWallsManager::sendTextureWallToShader( const ResourceID &resourceID 
     //textureWalls_.at( resourceID ).sendToShader( *this );
     // TODO: Send texture offset and scale.
 
+    OpenGL::checkStatus( "TextureWallsManager::sendTextureWallToShader - begin" );
     texturesManager_->sendTextureToShader( textureWalls_.at( resourceID ).textureID );
+    OpenGL::checkStatus( "TextureWallsManager::sendTextureWallToShader - end" );
 }
 
 

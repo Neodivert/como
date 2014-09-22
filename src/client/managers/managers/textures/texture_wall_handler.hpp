@@ -50,7 +50,13 @@ class TextureWallHandler : public ServerWriter
 
 
         /***
-         * 4. Operators
+         * 4. Setters
+         ***/
+        void setTextureID( const ResourceID& textureID );
+
+
+        /***
+         * 5. Operators
          ***/
         TextureWallHandler& operator = ( const TextureWallHandler& ) = delete;
         TextureWallHandler& operator = ( TextureWallHandler&& ) = delete;

@@ -30,8 +30,10 @@ namespace como {
  * 1. Construction
  ***/
 
-TextureWallEditor::TextureWallEditor( TexturesManager* texturesManager ) :
+TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, TexturesManager* texturesManager ) :
+    currentTextureWall_( nullptr ),
     texturesManager_( texturesManager ),
+    textureWallsManager_( textureWallsManager ),
     texturesViewer_( new TexturesViewer( texturesManager, this ) )
 {
     QFormLayout* layout = new QFormLayout;
@@ -61,6 +63,10 @@ TextureWallEditor::TextureWallEditor( TexturesManager* texturesManager ) :
                           &TexturesViewer::textureSelected,
                           [this]( ResourceID textureID ){
 
+            assert( currentTextureWall_ != nullptr );
+
+            currentTextureWall_->setTextureID( textureID );
+
             std::string infoMessage =
                     "Texture selected (" +
                     to_string( textureID.getCreatorID() ) +
@@ -86,7 +92,17 @@ TextureWallEditor::TextureWallEditor( TexturesManager* texturesManager ) :
 
 
 /***
- * 3. Updating (observer pattern)
+ * 3. Setters
+ ***/
+
+void TextureWallEditor::setTextureWall(TextureWallHandler *textureWall)
+{
+    currentTextureWall_ = textureWall;
+}
+
+
+/***
+ * 4. Updating (observer pattern)
  ***/
 
 void TextureWallEditor::update()

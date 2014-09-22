@@ -115,6 +115,8 @@ Texture::Texture( const ResourceID& id, const std::string& name, const TextureIn
     // Retrieve the location in shader of the texture sampler for futher
     // access.
     initSamplerShaderLocation();
+
+    OpenGL::checkStatus( "Texture constructor - end" );
 }
 
 Texture::Texture( const ResourceID& id, const string& filePath ) :
@@ -169,10 +171,14 @@ TextureData Texture::data() const
 
 void Texture::sendToShader() const
 {
+    OpenGL::checkStatus( "Texture::sendToShader() - 1" );
     // Connect sampler to texture unit 0.
     glActiveTexture( GL_TEXTURE0 );
+    OpenGL::checkStatus( "Texture::sendToShader() - 2" );
     glUniform1i( samplerShaderLocation_, 0 );
+    OpenGL::checkStatus( "Texture::sendToShader() - 3" );
     glBindTexture( GL_TEXTURE_2D, oglName_ );
+    OpenGL::checkStatus( "Texture::sendToShader() - 4" );
 }
 
 }
