@@ -26,8 +26,9 @@ namespace como {
 
 GLint Viewport::viewProjectionMatrixLocation = -1;
 
+const float ORTHO_CUBE_SIDE = 2.0f;
 const float Z_NEAR = 0.0f;
-const float Z_FAR = 1.0f;
+const float Z_FAR = ORTHO_CUBE_SIDE;
 
 
 /***
@@ -488,7 +489,14 @@ void Viewport::setProjection( Projection projection )
     // TODO: Make both projections share some connection.
     switch( projection_ ){
         case Projection::ORTHO:
-            projectionMatrix = glm::ortho( -1.0f, 1.0f, -1.0f, 1.0f, Z_NEAR, Z_FAR );
+            projectionMatrix =
+                    glm::ortho(
+                        - ORTHO_CUBE_SIDE / 2.0f,
+                        ORTHO_CUBE_SIDE / 2.0f,
+                        - ORTHO_CUBE_SIDE / 2.0f,
+                        ORTHO_CUBE_SIDE / 2.0f,
+                        Z_NEAR,
+                        Z_FAR );
         break;
         case Projection::PERSPECTIVE:
             projectionMatrix =
