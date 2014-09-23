@@ -73,14 +73,14 @@ void Camera::setView( View view )
             viewMatrix = glm::lookAt(
                         glm::vec3( 0.0f, 1.0f, 0.0f ),
                         center,
-                        glm::vec3( 0.0f, 0.0f, 1.0f )
+                        glm::vec3( 0.0f, 0.0f, -1.0f )
                         );
         break;
         case View::BOTTOM:
             viewMatrix = glm::lookAt(
                         glm::vec3( 0.0f, -1.0f, 0.0f ),
                         center,
-                        glm::vec3( 0.0f, 0.0f, -1.0f )
+                        glm::vec3( 0.0f, 0.0f, 1.0f )
                         );
         break;
         case View::FRONT:
