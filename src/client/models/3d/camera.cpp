@@ -25,9 +25,9 @@ GLint Camera::eyeVectorLocation_ = -1;
 
 Camera::Camera( OpenGL& openGL, View view ) :
     ImportedMesh( "data/system/primitives/camera.prim" ),
-    originalEye     ( 0.0f, 0.0f, 0.0f, 0.0f ),
+    originalEye     ( 0.0f, 0.0f, 1.0f, 1.0f ),
     originalUp      ( 0.0f, 1.0f, 0.0f, 0.0f ),
-    originalCenter  ( 0.0f, 0.0f, -1.0f, 0.0f )
+    originalCenter  ( 0.0f, 0.0f, 0.0f, 1.0f )
 {
     if( eyeVectorLocation_ < 0 ){
         eyeVectorLocation_ = openGL.getShaderVariableLocation( "eyeVector" );
@@ -50,38 +50,63 @@ glm::mat4 Camera::getViewMatrix() const
 
 void Camera::setView( View view )
 {
-    const glm::vec3 X_AXIS = glm::vec3( 1.0f, 0.0f, 0.0f );
-    const glm::vec3 Y_AXIS = glm::vec3( 0.0f, 1.0f, 0.0f );
-    const float PI = glm::pi<float>();
-    const float HALF_PI = glm::half_pi<float>();
+    glm::mat4 viewMatrix = glm::mat4( 1.0f );
+
+    const glm::vec3 center( 0.0f, 0.0f, 0.0f );
 
     switch( view ){
         case View::LEFT:
-            modelMatrix_ = glm::rotate( glm::mat4( 1.0f ), HALF_PI, Y_AXIS );
+            viewMatrix = glm::lookAt(
+                        glm::vec3( -1.0f, 0.0f, 0.0f ),
+                        center,
+                        glm::vec3( 0.0f, 1.0f, 0.0f )
+                        );
         break;
         case View::RIGHT:
-            modelMatrix_ = glm::rotate( glm::mat4( 1.0f ), -HALF_PI, Y_AXIS );
+            viewMatrix = glm::lookAt(
+                        glm::vec3( 1.0f, 0.0f, 0.0f ),
+                        center,
+                        glm::vec3( 0.0f, 1.0f, 0.0f )
+                        );
         break;
         case View::TOP:
-            modelMatrix_ = glm::rotate( glm::mat4( 1.0f ), HALF_PI, X_AXIS );
+            viewMatrix = glm::lookAt(
+                        glm::vec3( 0.0f, 1.0f, 0.0f ),
+                        center,
+                        glm::vec3( 0.0f, 0.0f, 1.0f )
+                        );
         break;
         case View::BOTTOM:
-            modelMatrix_ = glm::rotate( glm::mat4( 1.0f ), -HALF_PI, X_AXIS );
+            viewMatrix = glm::lookAt(
+                        glm::vec3( 0.0f, -1.0f, 0.0f ),
+                        center,
+                        glm::vec3( 0.0f, 0.0f, -1.0f )
+                        );
         break;
         case View::FRONT:
-            modelMatrix_ = glm::mat4( 1.0f );
+            viewMatrix = glm::lookAt(
+                        glm::vec3( 0.0f, 0.0f, 1.0f ),
+                        center,
+                        glm::vec3( 0.0f, 1.0f, 0.0f )
+                        );
         break;
         case View::BACK:
-            modelMatrix_ = glm::rotate( glm::mat4( 1.0f ), PI, Y_AXIS );
+            viewMatrix = glm::lookAt(
+                        glm::vec3( 0.0f, 0.0f, -1.0f ),
+                        center,
+                        glm::vec3( 0.0f, 1.0f, 0.0f )
+                        );
         break;
         case View::CAMERA:
-            modelMatrix_ =
-                    glm::rotate( glm::mat4( 1.0f ), -HALF_PI / 2.0f, Y_AXIS ) *
-                    glm::rotate( glm::mat4( 1.0f ), HALF_PI / 2.0f, X_AXIS ) *
-                    glm::translate( glm::mat4( 1.0f ), glm::vec3( 0.0f, 0.0f, -1.5f ) );
+            viewMatrix = glm::lookAt(
+                        glm::vec3( 1.0f, 1.0f, 1.0f ),
+                        center,
+                        glm::vec3( -1.0f, 1.0f, -1.0f )
+                        );
         break;
-
     }
+
+    modelMatrix_ = glm::inverse( viewMatrix );
 
     update();
 }
@@ -102,7 +127,7 @@ void Camera::sendToShader( OpenGL &openGL )
     // TODO: Use OpenGL class.
     (void)( openGL );
 
-    const glm::vec3 eyeVector = - glm::normalize( glm::vec3( transformedCenter ) );
+    const glm::vec3 eyeVector = glm::normalize( glm::vec3( transformedEye - transformedCenter ) );
     glUniform3fv( eyeVectorLocation_, 1, glm::value_ptr( eyeVector ) );
 }
 

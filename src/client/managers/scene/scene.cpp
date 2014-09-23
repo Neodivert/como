@@ -127,13 +127,13 @@ void Scene::initLinesBuffer()
     GLint currentShaderProgram;
     GLint vPosition;
 
-    const GLfloat x0 = -0.5f;
-    const GLfloat y0 = -0.5f;
-    const GLfloat z0 = 0.5f;
+    const GLfloat x0 = 0.0f;
+    const GLfloat y0 = 0.0f;
+    const GLfloat z0 = 0.0f;
 
     const GLfloat x1 = 0.5f;
     const GLfloat y1 = 0.5f;
-    const GLfloat z1 = -0.5f;
+    const GLfloat z1 = 0.5f;
 
     GLfloat linesData[] =
     {
@@ -369,6 +369,8 @@ void Scene::draw( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix
 
 void Scene::drawWorldAxis() const
 {
+    openGL_->setShadingMode( ShadingMode::SOLID_PLAIN );
+
     GLfloat worldAxisColors[3][4] =
     {
         { 1.0f, 0.0f, 0.0f, 1.0f },

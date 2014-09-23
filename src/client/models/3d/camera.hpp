@@ -52,7 +52,7 @@ const char viewStrings [N_VIEWS][16] =
 
 class Camera : public ImportedMesh
 {
-    protected:
+    protected: // TODO: Make private.
         // Camera's original position and orientation.
         const glm::vec4 originalEye;
         const glm::vec4 originalUp;
