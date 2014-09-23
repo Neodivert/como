@@ -103,6 +103,9 @@ Mesh::~Mesh()
 {
     // Tell OpenGL we are done with allocated buffer objects and
     // vertex attribute arrays.
+    // TODO: If sometime move semantics are implemented, make sure
+    // moved Mesh doesn't delete OpenGL resources on
+    // destruction.
     glDeleteBuffers( 1, &vbo );
     glDeleteBuffers( 1, &ebo );
     glDeleteVertexArrays( 1, &vao );

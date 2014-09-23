@@ -133,7 +133,9 @@ Texture::Texture( const ResourceID& id, const string& filePath ) :
 
 Texture::~Texture()
 {
-    // TODO: Release Texture name (OpenGL).
+    // TODO: If sometime move semantics are implemented, make sure
+    // moved Texture doesn't delete OpenGL resources on
+    // destruction.
     glDeleteTextures( 1, &oglName_ );
 }
 
@@ -171,14 +173,12 @@ TextureData Texture::data() const
 
 void Texture::sendToShader() const
 {
-    OpenGL::checkStatus( "Texture::sendToShader() - 1" );
+    OpenGL::checkStatus( "Texture::sendToShader() - begin" );
     // Connect sampler to texture unit 0.
     glActiveTexture( GL_TEXTURE0 );
-    OpenGL::checkStatus( "Texture::sendToShader() - 2" );
     glUniform1i( samplerShaderLocation_, 0 );
-    OpenGL::checkStatus( "Texture::sendToShader() - 3" );
     glBindTexture( GL_TEXTURE_2D, oglName_ );
-    OpenGL::checkStatus( "Texture::sendToShader() - 4" );
+    OpenGL::checkStatus( "Texture::sendToShader() - end" );
 }
 
 }

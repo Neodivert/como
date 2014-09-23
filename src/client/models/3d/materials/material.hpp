@@ -51,8 +51,8 @@ class Material
         Material( const std::string& name );
         Material( const MaterialInfo& materialInfo );
         Material( PackableColor color );
-        Material( const Material& );
-        Material( Material&& ) = default;
+        Material( const Material& ) = delete;
+        Material( Material&& ) = delete;
 
 
         /***
@@ -91,8 +91,8 @@ class Material
         /***
          * 6. Operators
          ***/
-        Material& operator = ( const Material& ) = default;
-        Material& operator = ( Material&& ) = default;
+        Material& operator = ( const Material& ) = delete;
+        Material& operator = ( Material&& ) = delete;
 };
 
 typedef std::shared_ptr< Material > MaterialPtr;

@@ -56,6 +56,7 @@ void SystemMesh::setTextureWallsManager( TextureWallsManager& textureWallsManage
 
 void SystemMesh::draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const glm::vec4 *contourColor ) const
 {
+    openGL->setShadingMode( ShadingMode::SOLID_LIGHTING );
     sendToShader( *openGL, viewMatrix, projectionMatrix );
     sendMaterialToShader( 0 );
 

@@ -56,13 +56,11 @@ class Texture
         /***
          * 1. Construction
          ***/
-        // FIXME: Delete this constructor.
-        // Made default so TexturesManager::loadTexture() can insert textures in map.
-        Texture() = default;
+        Texture() = delete;
         Texture( const ResourceID& id, const std::string& name, const TextureInfo& textureInfo );
         Texture( const ResourceID& id, const std::string& filePath );
         Texture( const Texture& ) = delete;
-        Texture( Texture&& ) = default;
+        Texture( Texture&& ) = delete;
 
 
         /***
@@ -95,11 +93,11 @@ class Texture
          * 6. Operators
          ***/
         Texture& operator = ( const Texture& ) = delete;
-        Texture& operator = ( Texture&& ) = default;
+        Texture& operator = ( Texture&& ) = delete;
 };
 
-typedef std::shared_ptr< Texture > TexturePtr;
-typedef std::shared_ptr< const Texture > TextureConstPtr;
+typedef std::unique_ptr< Texture > TexturePtr;
+typedef std::unique_ptr< const Texture > TextureConstPtr;
 
 } // namespace como
 

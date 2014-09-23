@@ -80,22 +80,6 @@ Material::Material( PackableColor color ) :
 }
 
 
-Material::Material( const Material& b ) :
-    name_( b.name_ ),
-    color_( b.color_ ),
-    ambientReflectivity_( b.ambientReflectivity_ ),
-    diffuseReflectivity_( b.diffuseReflectivity_ ),
-    specularReflectivity_( b.specularReflectivity_ ),
-    specularExponent_( b.specularExponent_ )
-{
-    if( b.texture_ ){
-        texture_ = std::unique_ptr< Texture >( new Texture( std::move( *( b.texture_ ) ) ) );
-    }else{
-        texture_ = nullptr;
-    }
-}
-
-
 /***
  * 3. Getters
  ***/

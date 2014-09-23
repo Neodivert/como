@@ -78,7 +78,7 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter, pub
 
 
     private:
-        std::map< ResourceID, Texture > textures_;
+        std::map< ResourceID, TexturePtr > textures_;
 };
 
 } // namespace como

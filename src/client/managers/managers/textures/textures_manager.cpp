@@ -57,7 +57,7 @@ ResourceID TexturesManager::loadTexture( std::string imagePath )
                                   errorCode.message() );
     }
 
-    textures_[textureID] = Texture( textureID, dstPath );
+    textures_[textureID] = std::move( TexturePtr( new Texture( textureID, dstPath ) ) );
 
     notifyElementInsertion( textureID );
 
@@ -76,7 +76,7 @@ std::list<TextureData> TexturesManager::getTexturesData() const
     std::list<TextureData> texturesDataList;
 
     for( const auto& texturePair : textures_ ){
-        texturesDataList.push_back( texturePair.second.data() );
+        texturesDataList.push_back( texturePair.second->data() );
     }
 
     return texturesDataList;
@@ -89,7 +89,7 @@ std::list<TextureData> TexturesManager::getTexturesData() const
 
 void TexturesManager::sendTextureToShader( const ResourceID& resourceID ) const
 {
-    textures_.at( resourceID ).sendToShader();
+    textures_.at( resourceID )->sendToShader();
 }
 
 } // namespace como
