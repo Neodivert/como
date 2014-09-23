@@ -58,6 +58,8 @@ void PrimitiveData::generateOGLData()
     CompoundVerticesMap::const_iterator finalVerticesIt;
     VertexIndice compoundVertexIndex;
 
+    oglData.includesTextures = (uvData.uvTriangles.size() > 0);
+
     for( currentTriangleIndex = 0; currentTriangleIndex < vertexData.vertexTriangles.size(); currentTriangleIndex++ ){
         for( currentTriangleElement = 0; currentTriangleElement < 3; currentTriangleElement++ ){
             compoundVertex[0] = vertexData.vertexTriangles[currentTriangleIndex][currentTriangleElement];

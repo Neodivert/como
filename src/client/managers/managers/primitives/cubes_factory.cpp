@@ -119,16 +119,16 @@ void CubesFactory::generateUVData( MeshTextureData &uvData )
     unsigned int cubeFaceIndex;
 
     // UV - Top right
-    uvData.uvVertices.push_back( glm::vec2( 1.0f, 1.0f ) );
+    uvData.uvVertices.push_back( glm::vec2( 1.0f, 0.0f ) );
 
     // UV - Top left
-    uvData.uvVertices.push_back( glm::vec2( 0.0f, 1.0f ) );
-
-    // UV - Bottom left
     uvData.uvVertices.push_back( glm::vec2( 0.0f, 0.0f ) );
 
+    // UV - Bottom left
+    uvData.uvVertices.push_back( glm::vec2( 0.0f, 1.0f ) );
+
     // UV - Botom right
-    uvData.uvVertices.push_back( glm::vec2( 1.0f, 0.0f ) );
+    uvData.uvVertices.push_back( glm::vec2( 1.0f, 1.0f ) );
 
     // UV triangles
     for( cubeFaceIndex = 0; cubeFaceIndex < N_CUBE_FACES; cubeFaceIndex++ ){
