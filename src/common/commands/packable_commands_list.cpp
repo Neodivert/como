@@ -206,7 +206,17 @@ const void* PackableCommandsList::unpack( const void* buffer )
                         command = CommandPtr( new TextureCreationCommand( unpackingDirPath_ ) );
                     break;
                 }
+            break;
 
+            case CommandTarget::TEXTURE_WALL:
+                switch( TextureWallCommand::getType( buffer ) ){
+                    case TextureWallCommandType::TEXTURE_CHANGE:
+                        command = CommandPtr( new TextureWallTextureChangeCommand );
+                    break;
+                    case TextureWallCommandType::TEXTURE_WALL_MODIFICATION:
+                        command = CommandPtr( new TextureWallModificationCommand );
+                    break;
+                }
             break;
 
             default:

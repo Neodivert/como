@@ -65,7 +65,7 @@ class CubesFactory : public SpecializedSystemPrimitivesFactory
         /***
          * 6. Remote cubes creation
          ***/
-        void createCube( const ResourceID& cubeID, const ResourceID& materialID, float width, float height, float depth );
+        void createCube( const ResourceID& cubeID, const ResourceID& materialID, const ResourceID& firstTextureWallID, float width, float height, float depth );
 
 
         /***

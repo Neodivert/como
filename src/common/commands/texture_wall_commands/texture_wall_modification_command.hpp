@@ -39,6 +39,7 @@ class TextureWallModificationCommand : public TextureWallCommand
          ***/
         TextureWallModificationCommand();
         TextureWallModificationCommand( const ResourceID& textureWallID,
+                                        UserID userID,
                                         TextureWallParameterName parameterName,
                                         float newValue );
         TextureWallModificationCommand( const TextureWallModificationCommand& );

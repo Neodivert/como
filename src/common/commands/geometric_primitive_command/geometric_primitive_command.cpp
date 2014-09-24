@@ -20,23 +20,27 @@
 
 namespace como {
 
-GeometricPrimitiveCommand::GeometricPrimitiveCommand( GeometricPrimitiveCommandType commandType, const ResourceID& meshID, const ResourceID& materialID ) :
+GeometricPrimitiveCommand::GeometricPrimitiveCommand( GeometricPrimitiveCommandType commandType, const ResourceID& meshID, const ResourceID& materialID, const ResourceID& firstTextureWallID ) :
     TypeCommand( CommandTarget::GEOMETRIC_PRIMITIVE, commandType, meshID.getCreatorID() ),
     meshID_( meshID ),
-    materialID_( materialID )
+    materialID_( materialID ),
+    firstTextureWallID_( firstTextureWallID )
 {
     addPackable( &meshID_ );
     addPackable( &materialID_ );
+    addPackable( &firstTextureWallID_ );
 }
 
 
 GeometricPrimitiveCommand::GeometricPrimitiveCommand( const GeometricPrimitiveCommand& b ) :
     TypeCommand( b ),
     meshID_( b.meshID_ ),
-    materialID_( b.materialID_ )
+    materialID_( b.materialID_ ),
+    firstTextureWallID_( b.firstTextureWallID_ )
 {
     addPackable( &meshID_ );
     addPackable( &materialID_ );
+    addPackable( &firstTextureWallID_ );
 }
 
 
@@ -53,6 +57,12 @@ ResourceID GeometricPrimitiveCommand::getMeshID() const
 ResourceID GeometricPrimitiveCommand::getMaterialID() const
 {
     return materialID_.getValue();
+}
+
+
+ResourceID GeometricPrimitiveCommand::getFirstTextureWallID() const
+{
+    return firstTextureWallID_.getValue();
 }
 
 

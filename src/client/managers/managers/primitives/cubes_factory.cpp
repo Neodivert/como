@@ -20,13 +20,15 @@ ResourceID CubesFactory::createCube( float width, float height, float depth )
 {
     ResourceID cubeID = reserveResourceIDs( 1 );
     ResourceID materialID = reserveResourceIDs( 1 );
+    ResourceID firstTextureWallID = reserveResourceIDs( 6 );
 
-    createCube( cubeID, materialID, width, height, depth );
+    createCube( cubeID, materialID, firstTextureWallID, width, height, depth );
 
     sendCommandToServer(
                 CommandConstPtr(
                     new CubeCreationCommand( cubeID,
                                              materialID,
+                                             firstTextureWallID,
                                              width,
                                              height,
                                              depth ) ) );
@@ -43,6 +45,7 @@ void CubesFactory::executeRemoteCommand( const CubeCreationCommand &command )
 {
     createCube( command.getMeshID(),
                 command.getMaterialID(),
+                command.getFirstTextureWallID(),
                 command.getCubeWidth(),
                 command.getCubeHeight(),
                 command.getCubeDepth() );
@@ -53,7 +56,7 @@ void CubesFactory::executeRemoteCommand( const CubeCreationCommand &command )
  * 6. Remote cubes creation
  ***/
 
-void CubesFactory::createCube( const ResourceID& cubeID, const ResourceID& materialID, float width, float height, float depth )
+void CubesFactory::createCube( const ResourceID& cubeID, const ResourceID& materialID, const ResourceID& firstTextureWallID, float width, float height, float depth )
 {
     std::unique_ptr< Mesh > cube;
 
@@ -63,7 +66,7 @@ void CubesFactory::createCube( const ResourceID& cubeID, const ResourceID& mater
 
     materialsManager_->createMaterial( MaterialInfo(), materialID, cubeID );
 
-    cube = std::unique_ptr< Mesh >( new SystemMesh( cubeID, generatePrimitiveData(), materialsManager_->getMaterial( materialID ) ) );
+    cube = std::unique_ptr< Mesh >( new SystemMesh( cubeID, firstTextureWallID, generatePrimitiveData(), materialsManager_->getMaterial( materialID ) ) );
 
     return meshesManager_->addMesh( std::move( cube ), cubeID );
 }

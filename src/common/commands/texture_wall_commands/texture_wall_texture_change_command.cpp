@@ -16,24 +16,36 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "texture_command.hpp"
+#include "texture_wall_texture_change_command.hpp"
 
 namespace como {
+
 
 /***
  * 1. Construction
  ***/
 
-TextureCommand::TextureCommand( const ResourceID& textureID, UserID userID, TextureCommandType commandType ) :
-    TypeCommand( CommandTarget::TEXTURE, commandType, userID ),
-    textureID_( textureID )
+TextureWallTextureChangeCommand::TextureWallTextureChangeCommand() :
+    TextureWallCommand( NO_RESOURCE, NO_USER, TextureWallCommandType::TEXTURE_CHANGE ),
+    textureID_( NO_RESOURCE )
 {
     addPackable( &textureID_ );
 }
 
 
-TextureCommand::TextureCommand( const TextureCommand &b ) :
-    TypeCommand( b ),
+TextureWallTextureChangeCommand::TextureWallTextureChangeCommand(
+        const ResourceID &textureWallID,
+        UserID userID,
+        const ResourceID &newTextureID ) :
+    TextureWallCommand( textureWallID, userID, TextureWallCommandType::TEXTURE_CHANGE ),
+    textureID_( newTextureID )
+{
+    addPackable( &textureID_ );
+}
+
+
+TextureWallTextureChangeCommand::TextureWallTextureChangeCommand( const TextureWallTextureChangeCommand &b ) :
+    TextureWallCommand( b ),
     textureID_( b.textureID_ )
 {
     addPackable( &textureID_ );
@@ -44,7 +56,7 @@ TextureCommand::TextureCommand( const TextureCommand &b ) :
  * 3. Getters
  ***/
 
-ResourceID TextureCommand::textureID() const
+ResourceID TextureWallTextureChangeCommand::textureID() const
 {
     return textureID_.getValue();
 }

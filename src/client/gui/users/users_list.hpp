@@ -20,7 +20,6 @@
 #define USERS_LIST_HPP
 
 #include <QListWidget>
-#include <common/commands/commands.hpp>
 #include <common/utilities/log.hpp>
 #include <map>
 #include "users_list_item.hpp"

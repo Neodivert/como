@@ -33,7 +33,7 @@ class SystemMesh : public Mesh
         /***
          * 1. Construction
          ***/
-        SystemMesh( const ResourceID& meshID, const SystemPrimitiveData& primitiveData, MaterialConstPtr material, bool displayVertexNormals = false );
+        SystemMesh( const ResourceID& meshID, const ResourceID& firstTextureWallID, const SystemPrimitiveData& primitiveData, MaterialConstPtr material, bool displayVertexNormals = false );
         SystemMesh() = delete;
         SystemMesh( const SystemMesh& ) = delete;
         SystemMesh( SystemMesh&& ) = delete;

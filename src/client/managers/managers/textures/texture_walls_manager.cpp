@@ -84,14 +84,20 @@ ResourceID TextureWallsManager::createTextureWall( string name, const ResourceID
 {
     ResourceID textureWallID = reserveResourceIDs( 1 );
 
+    createTextureWall( name, textureWallID, meshID );
+
+    return textureWallID;
+}
+
+
+void TextureWallsManager::createTextureWall(string name, const ResourceID &textureWallID, const ResourceID &meshID)
+{
     textureWalls_.emplace( textureWallID, name );
     meshesTextureWalls_[meshID].push_back( textureWallID );
 
     toggleTextureWallSeletable( textureWallID, true );
 
     notifyElementInsertion( textureWallID );
-
-    return textureWallID;
 }
 
 
@@ -183,8 +189,17 @@ void TextureWallsManager::requestResourceLock( const ResourceID &resourceID )
 
 void TextureWallsManager::executeRemoteCommand(const TextureWallCommand &command)
 {
-    // TODO: Complete
-    (void)( command );
+    switch( command.getType() ){
+        case TextureWallCommandType::TEXTURE_CHANGE:{
+            const TextureWallTextureChangeCommand &textureChangeCommand =
+                    dynamic_cast< const TextureWallTextureChangeCommand& >( command );
+            textureWalls_.at( textureChangeCommand.textureWallID() ).textureID =
+                    textureChangeCommand.textureID();
+        }break;
+        case TextureWallCommandType::TEXTURE_WALL_MODIFICATION:
+            // TODO: Complete.
+        break;
+    }
 }
 
 

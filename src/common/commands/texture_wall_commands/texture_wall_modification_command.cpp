@@ -25,7 +25,7 @@ namespace como {
  ***/
 
 TextureWallModificationCommand::TextureWallModificationCommand() :
-    TextureWallCommand( NO_RESOURCE, TextureWallCommandType::TEXTURE_WALL_MODIFICATION ),
+    TextureWallCommand( NO_RESOURCE, NO_USER, TextureWallCommandType::TEXTURE_WALL_MODIFICATION ),
     parameterName_( TextureWallParameterName::TEXTURE_OFFSET_X ),
     newValue_( 0.0f )
 {
@@ -35,9 +35,10 @@ TextureWallModificationCommand::TextureWallModificationCommand() :
 
 
 TextureWallModificationCommand::TextureWallModificationCommand( const ResourceID &textureWallID,
+                                                                UserID userID,
                                                                 TextureWallParameterName parameterName,
                                                                 float newValue ) :
-    TextureWallCommand( textureWallID, TextureWallCommandType::TEXTURE_WALL_MODIFICATION ),
+    TextureWallCommand( textureWallID, userID, TextureWallCommandType::TEXTURE_WALL_MODIFICATION ),
     parameterName_( parameterName ),
     newValue_( newValue )
 {

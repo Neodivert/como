@@ -20,5 +20,6 @@
 #define TEXTURE_WALL_COMMANDS_HPP
 
 #include "texture_wall_modification_command.hpp"
+#include "texture_wall_texture_change_command.hpp"
 
 #endif // TEXTURE_WALL_COMMANDS_HPP

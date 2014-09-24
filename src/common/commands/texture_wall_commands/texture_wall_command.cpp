@@ -14,8 +14,8 @@ TextureWallCommand::TextureWallCommand() :
 }
 
 
-TextureWallCommand::TextureWallCommand(const ResourceID &textureWallID, TextureWallCommandType commandType) :
-    TypeCommand( CommandTarget::TEXTURE_WALL, commandType, textureWallID.getCreatorID() ),
+TextureWallCommand::TextureWallCommand(const ResourceID &textureWallID, UserID userID, TextureWallCommandType commandType) :
+    TypeCommand( CommandTarget::TEXTURE_WALL, commandType, userID ),
     textureWallID_( textureWallID )
 {
     addPackable( &textureWallID_ );

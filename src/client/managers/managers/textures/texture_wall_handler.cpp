@@ -55,6 +55,13 @@ glm::vec2 TextureWallHandler::getTextureScale() const
 void TextureWallHandler::setTextureID( const ResourceID& textureID )
 {
     textureWall_->textureID = textureID;
+
+    sendCommandToServer(
+                CommandConstPtr(
+                    new TextureWallTextureChangeCommand(
+                        textureWallID_,
+                        localUserID(),
+                        textureID ) ) );
 }
 
 } // namespace como

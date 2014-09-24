@@ -25,7 +25,7 @@ namespace como {
  ***/
 
 TextureCreationCommand::TextureCreationCommand( const std::string &unpackingDirPath ) :
-    TextureCommand( NO_RESOURCE, TextureCommandType::TEXTURE_CREATION ),
+    TextureCommand( NO_RESOURCE, NO_USER, TextureCommandType::TEXTURE_CREATION ),
     textureFile_( unpackingDirPath )
 {
     addPackable( &textureFile_ );
@@ -33,7 +33,7 @@ TextureCreationCommand::TextureCreationCommand( const std::string &unpackingDirP
 
 
 TextureCreationCommand::TextureCreationCommand( const ResourceID &textureID, const std::string& unpackingDirPath, const std::string textureFilePath ) :
-    TextureCommand( textureID, TextureCommandType::TEXTURE_CREATION ),
+    TextureCommand( textureID, textureID.getCreatorID(), TextureCommandType::TEXTURE_CREATION ),
     textureFile_( unpackingDirPath, textureFilePath )
 {
     addPackable( &textureFile_ );

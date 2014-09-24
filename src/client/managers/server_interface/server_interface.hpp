@@ -21,7 +21,7 @@
 
 #include <QObject>
 #include <common/packets/packets.hpp>
-#include <common/commands/commands.hpp>
+#include <common/commands/command.hpp>
 #include <common/utilities/log.hpp>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>

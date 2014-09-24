@@ -24,7 +24,8 @@
 namespace como {
 
 enum class TextureWallCommandType : std::uint8_t {
-    TEXTURE_WALL_MODIFICATION = 0
+    TEXTURE_CHANGE = 0,
+    TEXTURE_WALL_MODIFICATION
 };
 
 class TextureWallCommand : public TypeCommand< TextureWallCommandType >
@@ -35,6 +36,7 @@ class TextureWallCommand : public TypeCommand< TextureWallCommandType >
          ***/
         TextureWallCommand();
         TextureWallCommand( const ResourceID& textureWallID,
+                            UserID userID,
                             TextureWallCommandType commandType );
         TextureWallCommand( const TextureWallCommand& );
         TextureWallCommand( TextureWallCommand&& ) = delete;

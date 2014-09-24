@@ -65,6 +65,7 @@ class TextureWallsManager : public ResourcesOwnershipRequester, public Selectabl
          * 4. Local texture walls management
          ***/
         ResourceID createTextureWall( std::string name, const ResourceID& meshID );
+        void createTextureWall( std::string name, const ResourceID& textureWallID, const ResourceID& meshID );
         void toggleTextureWallSeletable( const ResourceID& textureWallID, bool selectable );
         void toggleMeshTextureWallsSeletable( const ResourceID& meshID, bool selectable );
         void unlockSelectableTextureWalls();

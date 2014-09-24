@@ -20,7 +20,7 @@
 #define LIGHTS_MANAGER_HPP
 
 #include <client/models/3d/lights/lights.hpp>
-#include <common/commands/commands.hpp>
+#include <common/commands/light_commands/light_commands.hpp>
 #include <map>
 #include <common/utilities/observer_pattern/observer.hpp>
 #include <client/managers/managers/entities/specialized_entities_manager.hpp>

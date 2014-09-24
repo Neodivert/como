@@ -16,34 +16,32 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef TEXTURE_COMMAND_HPP
-#define TEXTURE_COMMAND_HPP
+#ifndef TEXTURE_WALL_TEXTURE_CHANGE_COMMAND_HPP
+#define TEXTURE_WALL_TEXTURE_CHANGE_COMMAND_HPP
 
-#include <common/commands/type_command.hpp>
+#include "texture_wall_command.hpp"
 
 namespace como {
 
-enum class TextureCommandType : std::uint8_t {
-    TEXTURE_CREATION = 0
-};
-
-class TextureCommand : public TypeCommand< TextureCommandType >
+class TextureWallTextureChangeCommand : public TextureWallCommand
 {
     public:
         /***
          * 1. Construction
          ***/
-        TextureCommand() = delete;
-        TextureCommand( const ResourceID& textureID, UserID userID, TextureCommandType commandType );
-        TextureCommand( const TextureCommand& );
-        TextureCommand( TextureCommand&& ) = delete;
-        COMMAND_CLONE_METHOD( TextureCommand )
+        TextureWallTextureChangeCommand();
+        TextureWallTextureChangeCommand( const ResourceID& textureWallID,
+                                         UserID userID,
+                                         const ResourceID& newTextureID );
+        TextureWallTextureChangeCommand( const TextureWallTextureChangeCommand& );
+        TextureWallTextureChangeCommand( TextureWallTextureChangeCommand&& ) = delete;
+        COMMAND_CLONE_METHOD( TextureWallTextureChangeCommand )
 
 
         /***
          * 2. Destruction
          ***/
-        virtual ~TextureCommand() = default;
+        virtual ~TextureWallTextureChangeCommand() = default;
 
 
         /***
@@ -55,8 +53,8 @@ class TextureCommand : public TypeCommand< TextureCommandType >
         /***
          * 4. Operators
          ***/
-        TextureCommand& operator = ( const TextureCommand& ) = delete;
-        TextureCommand& operator = ( TextureCommand&& ) = delete;
+        TextureWallTextureChangeCommand& operator = ( const TextureWallTextureChangeCommand& ) = delete;
+        TextureWallTextureChangeCommand& operator = ( TextureWallTextureChangeCommand&& ) = delete;
 
 
     private:
@@ -65,4 +63,4 @@ class TextureCommand : public TypeCommand< TextureCommandType >
 
 } // namespace como
 
-#endif // TEXTURE_COMMAND_HPP
+#endif // TEXTURE_WALL_TEXTURE_CHANGE_COMMAND_HPP

@@ -31,7 +31,7 @@ class CubeCreationCommand : public GeometricPrimitiveCommand
          * 1. Construction
          ***/
         CubeCreationCommand();
-        CubeCreationCommand( const ResourceID& cubeID, const ResourceID& materialID, float width, float height, float depth );
+        CubeCreationCommand( const ResourceID& cubeID, const ResourceID& materialID, const ResourceID& firstTextureWallID, float width, float height, float depth );
         CubeCreationCommand( const CubeCreationCommand& );
         CubeCreationCommand( CubeCreationCommand&& ) = delete;
         COMMAND_CLONE_METHOD( CubeCreationCommand )

@@ -34,7 +34,10 @@ class GeometricPrimitiveCommand : public TypeCommand< GeometricPrimitiveCommandT
         /***
          * 1. Construction
          ***/
-        GeometricPrimitiveCommand( GeometricPrimitiveCommandType type, const ResourceID& meshID, const ResourceID& materialID );
+        GeometricPrimitiveCommand( GeometricPrimitiveCommandType type,
+                                   const ResourceID& meshID,
+                                   const ResourceID& materialID,
+                                   const ResourceID& firstTextureWallID );
         GeometricPrimitiveCommand() = delete;
         GeometricPrimitiveCommand( const GeometricPrimitiveCommand& );
         GeometricPrimitiveCommand( GeometricPrimitiveCommand&& ) = delete;
@@ -51,7 +54,7 @@ class GeometricPrimitiveCommand : public TypeCommand< GeometricPrimitiveCommandT
          ***/
         ResourceID getMeshID() const;
         ResourceID getMaterialID() const;
-
+        ResourceID getFirstTextureWallID() const;
 
 
         /***
@@ -64,6 +67,7 @@ class GeometricPrimitiveCommand : public TypeCommand< GeometricPrimitiveCommandT
     private:
         PackableResourceID meshID_;
         PackableResourceID materialID_;
+        PackableResourceID firstTextureWallID_;
 };
 
 } // namespace como
