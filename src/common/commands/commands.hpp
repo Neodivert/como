@@ -48,4 +48,7 @@
 // Geometric primitives commands
 #include "geometric_primitive_command/geometric_primitive_commands.hpp"
 
+// Texture commands
+#include "texture_commands/texture_commands.hpp"
+
 #endif // COMMANDS_HPP

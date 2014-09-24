@@ -198,6 +198,14 @@ const void* PackableCommandsList::unpack( const void* buffer )
                         command = CommandPtr( new CubeCreationCommand );
                     break;
                 }
+            break;
+
+            case CommandTarget::TEXTURE:
+                switch( TextureCommand::getType( buffer ) ){
+                    case TextureCommandType::TEXTURE_CREATION:
+                        command = CommandPtr( new TextureCreationCommand( unpackingDirPath_ ) );
+                    break;
+                }
 
             break;
 

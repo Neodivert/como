@@ -29,6 +29,7 @@ int PackableFile::fileCounter = 0;
 
 PackableFile::PackableFile( const std::string& unpackingDirPath ) :
     unpackingDirPath_( unpackingDirPath ),
+    fileName_( "" ),
     filePath_( "" ),
     fileSize_( 0 )
 {
@@ -36,6 +37,7 @@ PackableFile::PackableFile( const std::string& unpackingDirPath ) :
     // packing / unpacking when calling CompositePackable packing / unpacking
     // methods).
     // The file content's are packed / unpacked explicitly in this class.
+    addPackable( &fileName_ );
     addPackable( &fileSize_ );
 }
 
@@ -43,6 +45,7 @@ PackableFile::PackableFile( const std::string& unpackingDirPath ) :
 PackableFile::PackableFile( const std::string& unpackingDirPath, const std::string& filePath, bool createFile ) :
     CompositePackable(),
     unpackingDirPath_( unpackingDirPath ),
+    fileName_( boost::filesystem::basename( filePath ) + boost::filesystem::extension( filePath ) ),
     filePath_( filePath ),
     fileSize_( 0 )
 {
@@ -73,12 +76,14 @@ PackableFile::PackableFile( const std::string& unpackingDirPath, const std::stri
     // CompositePackable (for automatic packing / unpacking when calling
     // CompositePackable packing / unpacking methods).
     // The file content's are packed / unpacked explicitly in this class.
+    addPackable( &fileName_ );
     addPackable( &fileSize_ );
 }
 
 
 PackableFile::PackableFile( const PackableFile& b ) :
     CompositePackable( b ),
+    fileName_( b.fileName_ ),
     filePath_( b.filePath_ ),
     fileSize_( b.fileSize_ )
 {
@@ -95,6 +100,7 @@ PackableFile::PackableFile( const PackableFile& b ) :
     // CompositePackable (for automatic packing / unpacking when calling
     // CompositePackable packing / unpacking methods).
     // The file content's are packed / unpacked explicitly in this class.
+    addPackable( &fileName_ );
     addPackable( &fileSize_ );
 }
 
@@ -236,8 +242,7 @@ std::uint32_t PackableFile::getFileSize() const
 
 std::string PackableFile::getFileName() const
 {
-    return boost::filesystem::basename( getFilePath() ) +
-            boost::filesystem::extension( getFilePath() );
+    return fileName_.getValue();
 }
 
 
@@ -273,7 +278,12 @@ void PackableFile::updateFileSize()
 
 std::string PackableFile::generateUnpackedFilePath() const
 {
-    return unpackingDirPath_ + "/packable_file_" + std::to_string( fileCounter++ ) + ".tmp";
+    return unpackingDirPath_ +
+            "/" +
+            boost::filesystem::basename( fileName_.getValue() ) +
+            "_" +
+            std::to_string( fileCounter++ ) +
+            boost::filesystem::extension( fileName_.getValue() );
 }
 
 } // namespace como

@@ -211,7 +211,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         materialsManager_->Observable::addObserver( this );
 
         // Initialize the textures manager.
-        texturesManager_ = TexturesManagerPtr( new TexturesManager( server_, getDirPath() ) );
+        texturesManager_ = TexturesManagerPtr( new TexturesManager( server_, getDirPath(), getTempDirPath() ) );
 
         // Initialize the texture walls manager.
         textureWallsManager_ = TextureWallsManagerPtr( new TextureWallsManager( server_, *texturesManager_ ) );
@@ -463,7 +463,10 @@ void Scene::executeRemoteCommand( std::shared_ptr< const Command > command )
         }break;
         case CommandTarget::GEOMETRIC_PRIMITIVE:{
             geometricPrimitivesFactory_->executeRemoteCommand( dynamic_cast< const GeometricPrimitiveCommand& >( *command ) );
-        }
+        }break;
+        case CommandTarget::TEXTURE:
+            texturesManager_->executeRemoteCommand( dynamic_cast< const TextureCommand& >( *command ) );
+        break;
     }
 
     log_->debug( "Scene - Executing remote command(",

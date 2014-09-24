@@ -110,7 +110,10 @@ HEADERS += \
     ../../src/common/managers/textures/abstract_textures_manager.hpp \
     ../../src/common/resources/resource_header.hpp \
     ../../src/common/resources/selectable_resources_container.hpp \
-    ../../src/common/primitives/primitive_data/named_triangles_group.hpp
+    ../../src/common/primitives/primitive_data/named_triangles_group.hpp \
+    ../../src/common/commands/texture_commands/texture_command.hpp \
+    ../../src/common/commands/texture_commands/texture_commands.hpp \
+    ../../src/common/commands/texture_commands/texture_creation_command.hpp
 
 
 # Common sources (used by both client and server).
@@ -169,4 +172,6 @@ SOURCES += \
     ../../src/common/commands/geometric_primitive_command/cube_creation_command.cpp \
     ../../src/common/primitives/primitive_data/material_info.cpp \
     ../../src/common/managers/textures/abstract_textures_manager.cpp \
-    ../../src/common/primitives/primitive_data/texture_info.cpp
+    ../../src/common/primitives/primitive_data/texture_info.cpp \
+    ../../src/common/commands/texture_commands/texture_command.cpp \
+    ../../src/common/commands/texture_commands/texture_creation_command.cpp

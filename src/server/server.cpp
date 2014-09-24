@@ -314,10 +314,6 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
 void Server::processSceneCommand( const Command& sceneCommand )
 {
     switch( sceneCommand.getTarget() ){
-        case CommandTarget::USER:
-        break;
-        case CommandTarget::SELECTION:
-        break;
         case CommandTarget::PRIMITIVE:{
             const PrimitiveCommand& primitiveCommand = dynamic_cast< const PrimitiveCommand& >( sceneCommand );
 
@@ -343,13 +339,6 @@ void Server::processSceneCommand( const Command& sceneCommand )
                 }break;
             }
         }break;
-        case CommandTarget::PRIMITIVE_CATEGORY:
-            // TODO: Complete
-
-        break;
-        case CommandTarget::MATERIAL:
-            // TODO: Complete.
-        break;
         case CommandTarget::LIGHT:{
             const LightCommand& lightCommand = dynamic_cast< const LightCommand& >( sceneCommand );
 
@@ -396,6 +385,8 @@ void Server::processSceneCommand( const Command& sceneCommand )
                 log_->debug( "Cube added! (", geometricPrimitiveCommand.getMeshID(), "\n" );
             }
         }break;
+        default:
+        break;
     }
 
     commandsHistoric_->addCommand( CommandConstPtr( sceneCommand.clone() ) );

@@ -25,9 +25,10 @@ namespace como {
  * 1. Construction
  ***/
 
-TexturesManager::TexturesManager( ServerInterfacePtr server, const std::string& sceneDirPath ) :
+TexturesManager::TexturesManager( ServerInterfacePtr server, const std::string& sceneDirPath, const std::string& tempDirPath ) :
     AbstractTexturesManager( sceneDirPath ),
-    ServerWriter( server )
+    ServerWriter( server ),
+    tempDirPath_( tempDirPath )
 {}
 
 
@@ -39,32 +40,17 @@ ResourceID TexturesManager::loadTexture( std::string imagePath )
 {
     ResourceID textureID = reserveResourceIDs( 1 );
 
-    boost::system::error_code errorCode;
-    std::string dstPath =
-            TEXTURES_DIR_PATH_ +
-            "/" +
-            boost::filesystem::basename( imagePath ) +
-            boost::filesystem::extension( imagePath );
+    loadTexture( textureID, imagePath );
 
-    boost::filesystem::copy( imagePath, dstPath, errorCode );
-
-    if( errorCode ){
-        throw std::runtime_error( "ERROR copying file [" +
-                                  imagePath +
-                                  "] to [" +
-                                  dstPath +
-                                  "] - " +
-                                  errorCode.message() );
-    }
-
-    textures_[textureID] = std::move( TexturePtr( new Texture( textureID, dstPath ) ) );
-
-    notifyElementInsertion( textureID );
+    sendCommandToServer(
+                CommandConstPtr(
+                    new TextureCreationCommand(
+                        textureID,
+                        tempDirPath_,
+                        imagePath ) ) );
 
     return textureID;
 }
-
-
 
 
 /***
@@ -84,12 +70,61 @@ std::list<TextureData> TexturesManager::getTexturesData() const
 
 
 /***
- * 6. Shader communication
+ * 6. Command execution
+ ***/
+
+void TexturesManager::executeRemoteCommand( const TextureCommand &command )
+{
+    switch( command.getType() ){
+        case TextureCommandType::TEXTURE_CREATION:{
+            const TextureCreationCommand& textureCreationCommand =
+                dynamic_cast< const TextureCreationCommand& >( command );
+            loadTexture( textureCreationCommand.textureID(),
+                         textureCreationCommand.textureFilePath() );
+        }break;
+    }
+}
+
+
+/***
+ * 7. Shader communication
  ***/
 
 void TexturesManager::sendTextureToShader( const ResourceID& resourceID ) const
 {
     textures_.at( resourceID )->sendToShader();
+}
+
+
+/***
+ * 8. Remote textures management
+ ***/
+
+void TexturesManager::loadTexture( const ResourceID &textureID, string imagePath )
+{
+    boost::system::error_code errorCode;
+    std::string dstPath =
+            TEXTURES_DIR_PATH_ +
+            "/" +
+            boost::filesystem::basename( imagePath ) +
+            boost::filesystem::extension( imagePath );
+
+    // TODO: If this is a remote command, file should be moved instead of being
+    // copied.
+    boost::filesystem::copy( imagePath, dstPath, errorCode );
+
+    if( errorCode ){
+        throw std::runtime_error( "ERROR copying file [" +
+                                  imagePath +
+                                  "] to [" +
+                                  dstPath +
+                                  "] - " +
+                                  errorCode.message() );
+    }
+
+    textures_[textureID] = std::move( TexturePtr( new Texture( textureID, dstPath ) ) );
+
+    notifyElementInsertion( textureID );
 }
 
 } // namespace como

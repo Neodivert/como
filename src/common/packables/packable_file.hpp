@@ -40,6 +40,8 @@ class PackableFile : public CompositePackable {
         /*! \brief Path of the directory where this file will be unpacked */
         std::string unpackingDirPath_;
 
+        PackableString fileName_;
+
         /*! \brief Path to the file to be packed / unpacked */
         std::string filePath_;
 

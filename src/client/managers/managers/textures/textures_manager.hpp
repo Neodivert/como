@@ -28,6 +28,7 @@
 #include <client/managers/managers/resources/resources_ownership_requester.hpp>
 #include <common/resources/resource_header.hpp>
 #include <common/utilities/observable_container/observable_container.hpp>
+#include <common/commands/texture_commands/texture_commands.hpp>
 
 namespace como {
 
@@ -40,7 +41,7 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter, pub
         /***
          * 1. Construction
          ***/
-        TexturesManager( ServerInterfacePtr server, const std::string& sceneDirPath );
+        TexturesManager( ServerInterfacePtr server, const std::string& sceneDirPath, const std::string& tempDirPath );
         TexturesManager() = delete;
         TexturesManager( const TexturesManager& ) = delete;
         TexturesManager( TexturesManager&& ) = delete;
@@ -65,7 +66,13 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter, pub
 
 
         /***
-         * 6. Shader communication
+         * 6. Command execution
+         ***/
+        void executeRemoteCommand( const TextureCommand& command );
+
+
+        /***
+         * 7. Shader communication
          ***/
         void sendTextureToShader( const ResourceID& resourceID ) const;
 
@@ -78,7 +85,14 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter, pub
 
 
     private:
+        /***
+         * 8. Remote textures management
+         ***/
+        void loadTexture( const ResourceID& textureID, std::string imagePath );
+
+
         std::map< ResourceID, TexturePtr > textures_;
+        std::string tempDirPath_;
 };
 
 } // namespace como
