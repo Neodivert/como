@@ -467,6 +467,9 @@ void Scene::executeRemoteCommand( std::shared_ptr< const Command > command )
         case CommandTarget::TEXTURE:
             texturesManager_->executeRemoteCommand( dynamic_cast< const TextureCommand& >( *command ) );
         break;
+        case CommandTarget::TEXTURE_WALL:
+            textureWallsManager_->executeRemoteCommand( dynamic_cast< const TextureWallCommand& >( *command ) );
+        break;
     }
 
     log_->debug( "Scene - Executing remote command(",

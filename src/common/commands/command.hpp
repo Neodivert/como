@@ -47,7 +47,8 @@ enum class CommandTarget : std::uint8_t
     RESOURCE,
     RESOURCES_SELECTION,
     GEOMETRIC_PRIMITIVE,
-    TEXTURE
+    TEXTURE,
+    TEXTURE_WALL
 };
 
 
@@ -71,7 +72,10 @@ const char commandTargetStrings[][32]
     "MATERIAL",
     "LIGHT",
     "RESOURCE",
-    "RESOURCES_SELECTION"
+    "RESOURCES_SELECTION",
+    "GEOMETRIC_PRIMITIVE",
+    "TEXTURE",
+    "TEXTURE_WALL"
 };
 
 #define COMMAND_CLONE_METHOD(T) virtual Command* clone() const { return new T( *this ); }

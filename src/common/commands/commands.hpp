@@ -51,4 +51,7 @@
 // Texture commands
 #include "texture_commands/texture_commands.hpp"
 
+// Texture wall commands
+#include "texture_wall_commands/texture_wall_commands.hpp"
+
 #endif // COMMANDS_HPP

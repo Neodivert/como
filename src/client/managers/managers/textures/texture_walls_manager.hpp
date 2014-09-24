@@ -79,13 +79,19 @@ class TextureWallsManager : public ResourcesOwnershipRequester, public Selectabl
 
 
         /***
-         * 6. Shader communication
+         * 6. Remote command execution
+         ***/
+        void executeRemoteCommand( const TextureWallCommand& command );
+
+
+        /***
+         * 7. Shader communication
          ***/
         void sendTextureWallToShader( const ResourceID& resourceID ) const;
 
 
         /***
-         * 7. Operators
+         * 8. Operators
          ***/
         TextureWallsManager& operator = ( const TextureWallsManager& ) = delete;
         TextureWallsManager& operator = ( TextureWallsManager&& ) = delete;

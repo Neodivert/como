@@ -178,7 +178,18 @@ void TextureWallsManager::requestResourceLock( const ResourceID &resourceID )
 
 
 /***
- * 6. Shader communication
+ * 6. Remote command execution
+ ***/
+
+void TextureWallsManager::executeRemoteCommand(const TextureWallCommand &command)
+{
+    // TODO: Complete
+    (void)( command );
+}
+
+
+/***
+ * 7. Shader communication
  ***/
 
 void TextureWallsManager::sendTextureWallToShader( const ResourceID &resourceID ) const

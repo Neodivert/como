@@ -113,7 +113,10 @@ HEADERS += \
     ../../src/common/primitives/primitive_data/named_triangles_group.hpp \
     ../../src/common/commands/texture_commands/texture_command.hpp \
     ../../src/common/commands/texture_commands/texture_commands.hpp \
-    ../../src/common/commands/texture_commands/texture_creation_command.hpp
+    ../../src/common/commands/texture_commands/texture_creation_command.hpp \
+    ../../src/common/commands/texture_wall_commands/texture_wall_command.hpp \
+    ../../src/common/commands/texture_wall_commands/texture_wall_commands.hpp \
+    ../../src/common/commands/texture_wall_commands/texture_wall_modification_command.hpp
 
 
 # Common sources (used by both client and server).
@@ -174,4 +177,6 @@ SOURCES += \
     ../../src/common/managers/textures/abstract_textures_manager.cpp \
     ../../src/common/primitives/primitive_data/texture_info.cpp \
     ../../src/common/commands/texture_commands/texture_command.cpp \
-    ../../src/common/commands/texture_commands/texture_creation_command.cpp
+    ../../src/common/commands/texture_commands/texture_creation_command.cpp \
+    ../../src/common/commands/texture_wall_commands/texture_wall_command.cpp \
+    ../../src/common/commands/texture_wall_commands/texture_wall_modification_command.cpp
