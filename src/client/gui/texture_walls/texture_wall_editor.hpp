@@ -20,6 +20,7 @@
 #define TEXTURE_WALL_EDITOR_HPP
 
 #include <QFrame>
+#include <QDoubleSpinBox>
 #include <client/managers/managers/textures/textures_manager.hpp>
 #include <common/utilities/observer_pattern/observer.hpp>
 #include <client/gui/textures/textures_viewer.hpp>
@@ -69,6 +70,10 @@ class TextureWallEditor : public QFrame, public Observer
         TexturesManager* texturesManager_;
         TextureWallsManager* textureWallsManager_;
         TexturesViewer* texturesViewer_;
+
+
+        QDoubleSpinBox* textureOffsetXSpinBox_;
+        QDoubleSpinBox* textureOffsetYSpinBox_;
 };
 
 } // namespace como

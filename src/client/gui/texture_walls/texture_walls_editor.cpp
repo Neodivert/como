@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include <QFormLayout>
+#include <QGridLayout>
 #include <QLabel>
 #include "texture_walls_editor.hpp"
 #include <client/gui/utilities/resources_dropdown_list.hpp>
@@ -31,7 +31,7 @@ namespace como {
 
 TextureWallsEditor::TextureWallsEditor( TextureWallsManager* textureWallsManager, TexturesManager* texturesManager )
 {
-    QFormLayout* layout = nullptr;
+    QGridLayout* layout = nullptr;
     ResourcesDropdownList* textureWallsSelector =
             new ResourcesDropdownList( *textureWallsManager );
     TextureWallEditor* textureWallEditor =
@@ -44,10 +44,13 @@ TextureWallsEditor::TextureWallsEditor( TextureWallsManager* textureWallsManager
     });
 
     // Set this widget's layout.
-    layout = new QFormLayout();
-    layout->addWidget( new QLabel( "Texture walls editor" ) );
-    layout->addRow( "Texture wall: ", textureWallsSelector );
-    layout->addWidget( textureWallEditor );
+    layout = new QGridLayout();
+    layout->addWidget( new QLabel( "Texture walls editor" ), 0, 0, 1, -1 );
+
+    layout->addWidget( new QLabel( "Texture wall: " ), 1, 0 );
+    layout->addWidget( textureWallsSelector, 1, 1 );
+
+    layout->addWidget( textureWallEditor, 2, 0, 1, -1 );
     setLayout( layout );
 }
 

@@ -16,7 +16,6 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include <QDoubleSpinBox>
 #include <QPushButton>
 #include <QFormLayout>
 #include <QFileDialog>
@@ -36,21 +35,21 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
     texturesViewer_( new TexturesViewer( texturesManager, this ) )
 {
     QFormLayout* layout = new QFormLayout;
-    QDoubleSpinBox* textureOffsetXSpinBox = new QDoubleSpinBox;
-    QDoubleSpinBox* textureOffsetYSpinBox = new QDoubleSpinBox;
+    textureOffsetXSpinBox_ = new QDoubleSpinBox;
+    textureOffsetYSpinBox_ = new QDoubleSpinBox;
     QPushButton* textureInput = new QPushButton;
 
     // Set the parameters for the widget used for modifying
     // texture offset (X)
-    textureOffsetXSpinBox->setDecimals( 2 );
-    textureOffsetXSpinBox->setSingleStep( 1.0 );
-    textureOffsetXSpinBox->setRange( 0.0, 10.0 );
+    textureOffsetXSpinBox_->setDecimals( 2 );
+    textureOffsetXSpinBox_->setSingleStep( 1.0 );
+    textureOffsetXSpinBox_->setRange( 0.0, 100.0 );
 
     // Set the parameters for the widget used for modifying
     // texture offset (Y)
-    textureOffsetYSpinBox->setDecimals( 2 );
-    textureOffsetYSpinBox->setSingleStep( 1.0 );
-    textureOffsetYSpinBox->setRange( 0.0, 10.0 );
+    textureOffsetYSpinBox_->setDecimals( 2 );
+    textureOffsetYSpinBox_->setSingleStep( 1.0 );
+    textureOffsetYSpinBox_->setRange( 0.0, 100.0 );
 
     // When user click on file path input button, open a dialog for selecting
     // a file.
@@ -64,6 +63,9 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
 
             assert( currentTextureWall_ != nullptr );
 
+            // TODO: Call to currentTextureWall_->addObserver( this ), but
+            // being careful to not repeat observers:
+
             currentTextureWall_->setTextureID( textureID );
         });
 
@@ -71,8 +73,8 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
     });
 
     // Set this widget's layout.
-    layout->addRow( "Texture offset (X)", textureOffsetXSpinBox );
-    layout->addRow( "Texture offset (Y)", textureOffsetYSpinBox );
+    layout->addRow( "Texture offset % (X)", textureOffsetXSpinBox_ );
+    layout->addRow( "Texture offset % (Y)", textureOffsetYSpinBox_ );
     layout->addRow( "Texture: ", textureInput );
     setLayout( layout );
 }
@@ -94,13 +96,16 @@ void TextureWallEditor::setTextureWall(TextureWallHandler *textureWall)
 
 void TextureWallEditor::update()
 {
-    // TODO: Complete
+    glm::vec2 textureOffset;
 
-    /*
-    if( textureWallHandler_ != nullptr ){
-        // TODO: Complete
+    if( currentTextureWall_ != nullptr ){
+        // Retrieve texture offset.
+        textureOffset = currentTextureWall_->getTextureOffset();
+        textureOffsetXSpinBox_->setValue( textureOffset.x );
+        textureOffsetYSpinBox_->setValue( textureOffset.y );
+
+        // TODO: Retrieve texture offset.
     }
-    */
 }
 
 
