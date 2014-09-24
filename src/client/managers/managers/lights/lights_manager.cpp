@@ -134,11 +134,11 @@ void LightsManager::executeRemoteCommand( const LightCommand& command )
  * 6. Shader communication
  ***/
 
-void LightsManager::sendLightsToShader( OpenGL &openGL ) const
+void LightsManager::sendLightsToShader( OpenGL &openGL, const glm::mat4& viewMatrix ) const
 {
     openGL.setShadingMode( ShadingMode::SOLID_LIGHTING );
     for( const auto& lightSelection : resourcesSelections_ ){
-        lightSelection.second->sendToShader( openGL );
+        lightSelection.second->sendToShader( openGL, viewMatrix );
     }
 }
 

@@ -89,7 +89,7 @@ class Light : public AbstractLight, public ImportedMesh
         /***
          * 5. Shader communication
          ***/
-        virtual void sendToShader( OpenGL& openGL ) const;
+        virtual void sendToShader( OpenGL& openGL, const glm::mat4& viewMatrix ) const;
 
 
         /***

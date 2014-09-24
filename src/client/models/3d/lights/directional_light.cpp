@@ -132,11 +132,11 @@ unsigned int DirectionalLight::getMaxLights()
  * 6. Shader communication
  ***/
 
-void DirectionalLight::sendToShader( OpenGL &openGL ) const
+void DirectionalLight::sendToShader( OpenGL &openGL, const glm::mat4& viewMatrix ) const
 {
-    Light::sendToShader( openGL );
+    Light::sendToShader( openGL, viewMatrix );
 
-    glUniform3fv( lightVectorLocation_, 1, glm::value_ptr( glm::normalize( lightVector_ ) ) );
+    glUniform3fv( lightVectorLocation_, 1, glm::value_ptr( glm::mat3( viewMatrix ) * lightVector_ ) );
 }
 
 

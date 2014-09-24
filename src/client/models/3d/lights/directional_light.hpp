@@ -91,7 +91,7 @@ class DirectionalLight : public Light
         /***
          * 6. Shader communication
          ***/
-        virtual void sendToShader(OpenGL &openGL) const;
+        virtual void sendToShader( OpenGL &openGL, const glm::mat4& viewMatrix ) const;
 
 
         /***

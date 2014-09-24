@@ -73,7 +73,7 @@ class LightsManager : public SpecializedEntitiesManager< Light, LightsSelection,
         /***
          * 6. Shader communication
          ***/
-        void sendLightsToShader( OpenGL& openGL ) const;
+        void sendLightsToShader( OpenGL& openGL, const glm::mat4& viewMatrix ) const;
 
 
         /***

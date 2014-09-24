@@ -58,7 +58,7 @@ void main()
 	if( lightingEnabled ){
 		for( i=0; i<MAX_DIRECTIONAL_LIGHTS; i++ ){
 			if( directionalLights[i].isValid && lights[directionalLights[i].lightIndex].isValid ){
-				vec3 halfVector = ( directionalLights[i].lightVector + eyeVector ); // / 2.0f;
+				vec3 halfVector = ( directionalLights[i].lightVector + eyeVector ) / 2.0f;
 
 				float diffuse = max( 0.0f, dot( normal, directionalLights[i].lightVector ) );
 				float specular = max( 0.0f, dot( normal, halfVector ) );

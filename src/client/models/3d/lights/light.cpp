@@ -114,9 +114,11 @@ void Light::setAmbientCoefficient( float coefficient )
  * 5. Shader communication
  ***/
 
-void Light::sendToShader( OpenGL &openGL ) const
+void Light::sendToShader( OpenGL &openGL, const glm::mat4& viewMatrix ) const
 {
     (void)( openGL );
+    (void)( viewMatrix );
+
     glUniform3fv( colorLocation_, 1, glm::value_ptr( color_ ) );
     glUniform1f( ambientCoefficientLocation_, ambientCoefficient_ );
 }

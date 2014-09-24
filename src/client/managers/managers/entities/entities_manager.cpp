@@ -181,7 +181,7 @@ void EntitiesManager::executeRemoteParameterChangeCommand( UserParameterChangeCo
 
 void EntitiesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
-    lightsManager_->sendLightsToShader( *openGL );
+    lightsManager_->sendLightsToShader( *openGL, viewMatrix );
 
     for( const auto& manager : managers_ ){
         manager->drawAll( openGL, viewMatrix, projectionMatrix );

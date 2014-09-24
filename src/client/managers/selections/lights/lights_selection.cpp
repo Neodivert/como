@@ -76,10 +76,10 @@ void LightsSelection::setAmbientCoefficient( float coefficient )
  * 5. Shader communication
  ***/
 
-void LightsSelection::sendToShader(OpenGL &openGL) const
+void LightsSelection::sendToShader( OpenGL &openGL, const glm::mat4& viewMatrix ) const
 {
     for( const auto& light : resources_ ){
-        light.second->sendToShader( openGL );
+        light.second->sendToShader( openGL, viewMatrix );
     }
 }
 

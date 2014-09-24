@@ -58,7 +58,7 @@ class LightsSelection : public virtual EntitiesSet<DirectionalLight>, public Abs
         /***
          * 5. Shader communication
          ***/
-        void sendToShader( OpenGL& openGL ) const;
+        void sendToShader( OpenGL& openGL, const glm::mat4& viewMatrix ) const;
 
 
         /***
