@@ -20,7 +20,6 @@
 #include <QPushButton>
 #include <QFormLayout>
 #include <QFileDialog>
-#include <QMessageBox>
 #include "texture_wall_editor.hpp"
 
 namespace como {
@@ -66,18 +65,6 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
             assert( currentTextureWall_ != nullptr );
 
             currentTextureWall_->setTextureID( textureID );
-
-            std::string infoMessage =
-                    "Texture selected (" +
-                    to_string( textureID.getCreatorID() ) +
-                    ", " +
-                    to_string( textureID.getResourceIndex() ) +
-                    ")";
-
-            QMessageBox::information( this,
-                                      "Texture selected",
-                                      infoMessage.c_str()
-                                      );
         });
 
         texturesViewer_->exec();
