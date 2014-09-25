@@ -40,6 +40,7 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager, LocalMes
                       materialEditor_, &MaterialEditor::openMaterial );
 
     materialsManager_->ObservableContainer<ResourceID>::addObserver( this );
+    setVisible( false );
 }
 
 

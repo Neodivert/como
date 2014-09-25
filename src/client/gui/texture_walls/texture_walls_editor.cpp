@@ -55,7 +55,7 @@ TextureWallsEditor::TextureWallsEditor( TextureWallsManager* textureWallsManager
     setLayout( layout );
 
     textureWallsManager_->Observable::addObserver( this );
-    update();
+    setVisible( false );
 }
 
 
