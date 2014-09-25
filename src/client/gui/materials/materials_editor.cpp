@@ -16,6 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
+#include <QGridLayout>
 #include "materials_editor.hpp"
 
 namespace como {
@@ -26,13 +27,13 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager, LocalMes
     materialsManager_( materialsManager ),
     localMeshesSelection_( localMeshesSelection )
 {
-    QVBoxLayout* layout = new QVBoxLayout();
+    QGridLayout* layout = new QGridLayout;
     materialsList_ = new MaterialsListWidget( materialsManager );
-    materialEditor_ = new MaterialEditor();
+    materialEditor_ = new MaterialEditor;
 
-    layout->addWidget( materialsList_ );
-    layout->addWidget( materialEditor_ );
-
+    layout->addWidget( new QLabel( "Select material: " ), 0, 0 );
+    layout->addWidget( materialsList_, 0, 1 );
+    layout->addWidget( materialEditor_, 1, 0, 1, 2 );
     setLayout( layout );
 
     QObject::connect( materialsList_, &MaterialsListWidget::materialSelected,
