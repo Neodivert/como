@@ -55,6 +55,8 @@ class TextureWallHandler : public ServerWriter
         void setTextureID( const ResourceID& textureID );
         void setTextureOffsetX( float newTextureOffsetX );
         void setTextureOffsetY( float newTextureOffsetY );
+        void setTextureScaleX( float newValue );
+        void setTextureScaleY( float newValue );
 
 
         /***

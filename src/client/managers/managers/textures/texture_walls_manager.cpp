@@ -210,14 +210,12 @@ void TextureWallsManager::executeRemoteCommand(const TextureWallCommand &command
                     textureWall.textureOffset.y = modificationCommand.parameterNewValue();
                 break;
                 case TextureWallParameterName::TEXTURE_SCALE_X:
-                    // TODO: Complete
+                    textureWall.textureScale.x = modificationCommand.parameterNewValue();
                 break;
                 case TextureWallParameterName::TEXTURE_SCALE_Y:
-                    // TODO: Complete
+                    textureWall.textureScale.y = modificationCommand.parameterNewValue();
                 break;
             }
-
-            // TODO: Complete.
         break;
     }
 }

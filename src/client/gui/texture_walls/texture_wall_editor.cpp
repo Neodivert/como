@@ -37,6 +37,8 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
     QFormLayout* layout = new QFormLayout;
     textureOffsetXSpinBox_ = new QDoubleSpinBox;
     textureOffsetYSpinBox_ = new QDoubleSpinBox;
+    textureScaleXSpinBox_ = new QDoubleSpinBox;
+    textureScaleYSpinBox_ = new QDoubleSpinBox;
     QPushButton* textureInput = new QPushButton;
 
     // Set the parameters for the widget used for modifying
@@ -50,6 +52,18 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
     textureOffsetYSpinBox_->setDecimals( 2 );
     textureOffsetYSpinBox_->setSingleStep( 1.0 );
     textureOffsetYSpinBox_->setRange( 0.0, 100.0 );
+
+    // Set the parameters for the widget used for modifying
+    // texture scale (X)
+    textureScaleXSpinBox_->setDecimals( 2 );
+    textureScaleXSpinBox_->setSingleStep( 1.0 );
+    textureScaleXSpinBox_->setRange( 0.0, 100.0 );
+
+    // Set the parameters for the widget used for modifying
+    // texture scale (Y)
+    textureScaleYSpinBox_->setDecimals( 2 );
+    textureScaleYSpinBox_->setSingleStep( 1.0 );
+    textureScaleYSpinBox_->setRange( 0.0, 100.0 );
 
     // When user click on file path input button, open a dialog for selecting
     // a file.
@@ -72,22 +86,27 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
         texturesViewer_->exec();
     });
 
-    // Whenever the current index changes, emit a signal with the associated
-    // ResourceID.
-    void (QDoubleSpinBox::*xSignal)( double ) = &QDoubleSpinBox::valueChanged;
-    QObject::connect( textureOffsetXSpinBox_, xSignal, [this]( double newOffsetX ){
-        currentTextureWall_->setTextureOffsetX( static_cast< float >( newOffsetX ) );
+    // Whenever a spin box's value is changed, update the associated value.
+    void (QDoubleSpinBox::*signal)( double ) = &QDoubleSpinBox::valueChanged;
+    QObject::connect( textureOffsetXSpinBox_, signal, [this]( double newValue ){
+        currentTextureWall_->setTextureOffsetX( static_cast< float >( newValue ) );
     });
-
-    void (QDoubleSpinBox::*ySignal)( double ) = &QDoubleSpinBox::valueChanged;
-    QObject::connect( textureOffsetYSpinBox_, ySignal, [this]( double newOffsetY ){
-        currentTextureWall_->setTextureOffsetY( static_cast< float >( newOffsetY ) );
+    QObject::connect( textureOffsetYSpinBox_, signal, [this]( double newValue ){
+        currentTextureWall_->setTextureOffsetY( static_cast< float >( newValue ) );
+    });
+    QObject::connect( textureScaleXSpinBox_, signal, [this]( double newValue ){
+        currentTextureWall_->setTextureScaleX( static_cast< float >( newValue ) );
+    });
+    QObject::connect( textureScaleYSpinBox_, signal, [this]( double newValue ){
+        currentTextureWall_->setTextureScaleY( static_cast< float >( newValue ) );
     });
 
     // Set this widget's layout.
+    layout->addRow( "Texture: ", textureInput );
     layout->addRow( "Texture offset % (X)", textureOffsetXSpinBox_ );
     layout->addRow( "Texture offset % (Y)", textureOffsetYSpinBox_ );
-    layout->addRow( "Texture: ", textureInput );
+    layout->addRow( "Texture scale (X)", textureScaleXSpinBox_ );
+    layout->addRow( "Texture scale (Y)", textureScaleYSpinBox_ );
     setLayout( layout );
 }
 
@@ -108,14 +127,17 @@ void TextureWallEditor::setTextureWall(TextureWallHandler *textureWall)
  ***/
 
 // TODO: Remove this method because another user won't change the same texture
-// wall we are changing?
+// wall we are changing? Or at least make TextureWallEditor to not be an
+// Observer anymore for avoiding confusion.
 void TextureWallEditor::update()
 {
     glm::vec2 textureOffset;
+    glm::vec2 textureScale;
 
     if( currentTextureWall_ != nullptr ){
         // Retrieve texture offset.
         textureOffset = currentTextureWall_->getTextureOffset();
+        textureScale = currentTextureWall_->getTextureScale();
 
         textureOffsetXSpinBox_->blockSignals( true );
         textureOffsetXSpinBox_->setValue( textureOffset.x );
@@ -125,7 +147,13 @@ void TextureWallEditor::update()
         textureOffsetYSpinBox_->setValue( textureOffset.y );
         textureOffsetYSpinBox_->blockSignals( false );
 
-        // TODO: Retrieve texture offset.
+        textureScaleXSpinBox_->blockSignals( true );
+        textureScaleXSpinBox_->setValue( textureScale.x );
+        textureScaleXSpinBox_->blockSignals( false );
+
+        textureScaleYSpinBox_->blockSignals( true );
+        textureScaleYSpinBox_->setValue( textureScale.y );
+        textureScaleYSpinBox_->blockSignals( false );
     }
 }
 

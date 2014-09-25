@@ -71,9 +71,10 @@ class TextureWallEditor : public QFrame, public Observer
         TextureWallsManager* textureWallsManager_;
         TexturesViewer* texturesViewer_;
 
-
         QDoubleSpinBox* textureOffsetXSpinBox_;
         QDoubleSpinBox* textureOffsetYSpinBox_;
+        QDoubleSpinBox* textureScaleXSpinBox_;
+        QDoubleSpinBox* textureScaleYSpinBox_;
 };
 
 } // namespace como

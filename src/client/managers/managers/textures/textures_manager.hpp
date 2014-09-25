@@ -96,6 +96,7 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter, pub
         std::string tempDirPath_;
 
         GLint textureOffsetShaderLocation_;
+        GLint textureScaleShaderLocation_;
 };
 
 } // namespace como

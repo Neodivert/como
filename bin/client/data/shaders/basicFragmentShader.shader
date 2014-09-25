@@ -45,6 +45,7 @@ uniform Material material;
 uniform vec3 eyeVector;
 
 uniform vec2 textureOffset;
+uniform vec2 textureScale;
 
 in vec3 normal;
 in vec2 uvCoordinates;
@@ -80,8 +81,8 @@ void main()
 				if( texturingEnabled ){
 					if( ( uvCoordinates.x >= textureOffset.x ) && ( uvCoordinates.y >= textureOffset.y ) ){
 						meshColor = texture( textureSampler, vec2(
-							min( 1.0f, uvCoordinates.x - textureOffset.x ),
-							min( 1.0f, uvCoordinates.y - textureOffset.y ) ) );
+							min( 1.0f, uvCoordinates.x - textureOffset.x ) * textureScale.x,
+							min( 1.0f, uvCoordinates.y - textureOffset.y ) * textureScale.y ) );
 						meshColor.a = 1.0f;
 					}else{
 						meshColor = vec4( material.color.rgb, 1.0f );
