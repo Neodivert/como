@@ -24,7 +24,7 @@
 
 namespace como {
 
-class TextureWallsEditor : public QFrame
+class TextureWallsEditor : public QFrame, public Observer
 {
     Q_OBJECT
 
@@ -45,10 +45,20 @@ class TextureWallsEditor : public QFrame
 
 
         /***
-         * 3. Operators
+         * 3. Updating (observer pattern)
+         ***/
+        virtual void update();
+
+
+        /***
+         * 4. Operators
          ***/
         TextureWallsEditor& operator = ( const TextureWallsEditor& ) = delete;
         TextureWallsEditor& operator = ( TextureWallsEditor&& ) = delete;
+
+
+    private:
+        TextureWallsManager* textureWallsManager_;
 };
 
 } // namespace como

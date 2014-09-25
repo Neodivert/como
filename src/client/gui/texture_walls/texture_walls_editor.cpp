@@ -29,7 +29,8 @@ namespace como {
  * 1. Construction
  ***/
 
-TextureWallsEditor::TextureWallsEditor( TextureWallsManager* textureWallsManager, TexturesManager* texturesManager )
+TextureWallsEditor::TextureWallsEditor( TextureWallsManager* textureWallsManager, TexturesManager* texturesManager ) :
+    textureWallsManager_( textureWallsManager )
 {
     QGridLayout* layout = nullptr;
     ResourcesDropdownList* textureWallsSelector =
@@ -52,6 +53,19 @@ TextureWallsEditor::TextureWallsEditor( TextureWallsManager* textureWallsManager
 
     layout->addWidget( textureWallEditor, 2, 0, 1, -1 );
     setLayout( layout );
+
+    textureWallsManager_->Observable::addObserver( this );
+    update();
+}
+
+
+/***
+ * 3. Updating (observer pattern)
+ ***/
+
+void TextureWallsEditor::update()
+{
+    setVisible( textureWallsManager_->thereIsSelectableTextureWalls() );
 }
 
 } // namespace como

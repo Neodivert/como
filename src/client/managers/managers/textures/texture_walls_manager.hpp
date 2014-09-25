@@ -71,6 +71,7 @@ class TextureWallsManager : public ResourcesOwnershipRequester, public Selectabl
         void unlockSelectableTextureWalls();
         void removeSelectableTextureWalls();
         TextureWallHandler* selectTextureWall( const ResourceID& textureWallID );
+        bool thereIsSelectableTextureWalls() const;
 
 
         /***

@@ -169,6 +169,12 @@ TextureWallHandler* TextureWallsManager::selectTextureWall( const ResourceID &te
 }
 
 
+bool TextureWallsManager::thereIsSelectableTextureWalls() const
+{
+    return ( selectableTextureWalls_.size() > 0 );
+}
+
+
 /***
  * 5. Resources ownership requesting
  ***/
@@ -197,6 +203,8 @@ void TextureWallsManager::executeRemoteCommand(const TextureWallCommand &command
                     dynamic_cast< const TextureWallTextureChangeCommand& >( command );
             textureWall.textureID =
                     textureChangeCommand.textureID();
+
+            notifyElementUpdate( textureChangeCommand.textureWallID() );
         }break;
         case TextureWallCommandType::TEXTURE_WALL_MODIFICATION:
             const TextureWallModificationCommand& modificationCommand =
@@ -216,6 +224,8 @@ void TextureWallsManager::executeRemoteCommand(const TextureWallCommand &command
                     textureWall.textureScale.y = modificationCommand.parameterNewValue();
                 break;
             }
+
+            notifyElementUpdate( modificationCommand.textureWallID() );
         break;
     }
 }
