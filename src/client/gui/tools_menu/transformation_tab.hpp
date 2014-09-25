@@ -32,50 +32,39 @@ namespace como {
  */
 class TransformationTab : public QFrame
 {
-    private:
-        ComoAppPtr comoApp_;
+    Q_OBJECT
 
     public:
         /***
          * 1. Construction
          ***/
-
-        /*! \brief Default constructor */
         TransformationTab( ComoAppPtr comoApp );
-
-        /*! \brief Copy constructor */
         TransformationTab( const TransformationTab& ) = delete;
-
-        /*! \brief Move constructor */
         TransformationTab( TransformationTab&& ) = delete;
 
 
         /***
-         * 2. Initialization
+         * 2. Destruction
          ***/
-    private:
-        QGroupBox* createTransformationLockMenu();
-        QGroupBox* createPivotPointModeSelector();
-    public:
+        virtual ~TransformationTab() = default;
 
 
         /***
-         * 3. Destruction
+         * 3. Operators
          ***/
-
-        /*! \brief Destructor */
-        ~TransformationTab() = default;
-
-
-        /***
-         * 4. Operators
-         ***/
-
-        /*! \brief Copy assignment operator */
         TransformationTab& operator = ( const TransformationTab& ) = delete;
-
-        /*! \brief Move assignment operator */
         TransformationTab& operator = ( TransformationTab&& ) = delete;
+
+
+    private:
+        /***
+         * 4. Initialization
+         ***/
+        static QComboBox* createPivotPointModeSelector( LocalEntitiesSelection* localEntitiesSelection );
+
+
+        /*** Attributes ***/
+        ComoAppPtr comoApp_;
 };
 
 } // namespace como
