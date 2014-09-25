@@ -20,7 +20,7 @@
 #define MESH_INFO_MENU_HPP
 
 #include <QCheckBox>
-#include <client/managers/managers/meshes/meshes_manager.hpp>
+#include <client/managers/selections/meshes/local_meshes_selection.hpp>
 
 namespace como {
 
