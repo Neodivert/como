@@ -41,7 +41,7 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter, pub
         /***
          * 1. Construction
          ***/
-        TexturesManager( ServerInterfacePtr server, const std::string& sceneDirPath, const std::string& tempDirPath );
+        TexturesManager( OpenGL& openGL, ServerInterfacePtr server, const std::string& sceneDirPath, const std::string& tempDirPath );
         TexturesManager() = delete;
         TexturesManager( const TexturesManager& ) = delete;
         TexturesManager( TexturesManager&& ) = delete;
@@ -74,7 +74,9 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter, pub
         /***
          * 7. Shader communication
          ***/
-        void sendTextureToShader( const ResourceID& resourceID ) const;
+        void sendTextureToShader( const ResourceID& resourceID,
+                                  glm::vec2 textureOffset = glm::vec2( 0.0f ),
+                                  glm::vec2 textureScale = glm::vec2( 0.0f ) ) const;
 
 
         /***
@@ -90,9 +92,10 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter, pub
          ***/
         void loadTexture( const ResourceID& textureID, std::string imagePath );
 
-
         std::map< ResourceID, TexturePtr > textures_;
         std::string tempDirPath_;
+
+        GLint textureOffsetShaderLocation_;
 };
 
 } // namespace como

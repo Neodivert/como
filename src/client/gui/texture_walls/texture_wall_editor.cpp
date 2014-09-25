@@ -72,6 +72,18 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
         texturesViewer_->exec();
     });
 
+    // Whenever the current index changes, emit a signal with the associated
+    // ResourceID.
+    void (QDoubleSpinBox::*xSignal)( double ) = &QDoubleSpinBox::valueChanged;
+    QObject::connect( textureOffsetXSpinBox_, xSignal, [this]( double newOffsetX ){
+        currentTextureWall_->setTextureOffsetX( static_cast< float >( newOffsetX ) );
+    });
+
+    void (QDoubleSpinBox::*ySignal)( double ) = &QDoubleSpinBox::valueChanged;
+    QObject::connect( textureOffsetYSpinBox_, ySignal, [this]( double newOffsetY ){
+        currentTextureWall_->setTextureOffsetY( static_cast< float >( newOffsetY ) );
+    });
+
     // Set this widget's layout.
     layout->addRow( "Texture offset % (X)", textureOffsetXSpinBox_ );
     layout->addRow( "Texture offset % (Y)", textureOffsetYSpinBox_ );
@@ -87,6 +99,7 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
 void TextureWallEditor::setTextureWall(TextureWallHandler *textureWall)
 {
     currentTextureWall_ = textureWall;
+    update();
 }
 
 
@@ -94,6 +107,8 @@ void TextureWallEditor::setTextureWall(TextureWallHandler *textureWall)
  * 4. Updating (observer pattern)
  ***/
 
+// TODO: Remove this method because another user won't change the same texture
+// wall we are changing?
 void TextureWallEditor::update()
 {
     glm::vec2 textureOffset;
@@ -101,8 +116,14 @@ void TextureWallEditor::update()
     if( currentTextureWall_ != nullptr ){
         // Retrieve texture offset.
         textureOffset = currentTextureWall_->getTextureOffset();
+
+        textureOffsetXSpinBox_->blockSignals( true );
         textureOffsetXSpinBox_->setValue( textureOffset.x );
+        textureOffsetXSpinBox_->blockSignals( false );
+
+        textureOffsetYSpinBox_->blockSignals( true );
         textureOffsetYSpinBox_->setValue( textureOffset.y );
+        textureOffsetYSpinBox_->blockSignals( false );
 
         // TODO: Retrieve texture offset.
     }

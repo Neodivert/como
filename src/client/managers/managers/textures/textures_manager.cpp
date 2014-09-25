@@ -17,6 +17,7 @@
 ***/
 
 #include "textures_manager.hpp"
+#include <glm/gtc/type_ptr.hpp>
 
 namespace como {
 
@@ -25,11 +26,15 @@ namespace como {
  * 1. Construction
  ***/
 
-TexturesManager::TexturesManager( ServerInterfacePtr server, const std::string& sceneDirPath, const std::string& tempDirPath ) :
+TexturesManager::TexturesManager( OpenGL& openGL, ServerInterfacePtr server, const std::string& sceneDirPath, const std::string& tempDirPath ) :
     AbstractTexturesManager( sceneDirPath ),
     ServerWriter( server ),
     tempDirPath_( tempDirPath )
-{}
+{
+    textureOffsetShaderLocation_ =
+            openGL.getShaderVariableLocation( "textureOffset" );
+    assert( textureOffsetShaderLocation_ != -1 );
+}
 
 
 /***
@@ -90,8 +95,19 @@ void TexturesManager::executeRemoteCommand( const TextureCommand &command )
  * 7. Shader communication
  ***/
 
-void TexturesManager::sendTextureToShader( const ResourceID& resourceID ) const
-{
+void TexturesManager::sendTextureToShader( const ResourceID& resourceID, glm::vec2 textureOffset, glm::vec2 textureScale ) const
+{   
+    // TODO: Send texture scale.
+    (void)( textureScale );
+
+    // Texture offset is expressed as a %, so we multiply it by 0.01 for
+    // transforming it to range [0.0f, 1.0f]
+    textureOffset *= 0.01f;
+
+    glUniform2fv( textureOffsetShaderLocation_,
+                  1,
+                  glm::value_ptr( textureOffset ) );
+
     textures_.at( resourceID )->sendToShader();
 }
 

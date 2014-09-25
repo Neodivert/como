@@ -64,4 +64,32 @@ void TextureWallHandler::setTextureID( const ResourceID& textureID )
                         textureID ) ) );
 }
 
+
+void TextureWallHandler::setTextureOffsetX( float newTextureOffsetX )
+{
+    textureWall_->textureOffset.x = newTextureOffsetX;
+
+    sendCommandToServer(
+                CommandConstPtr(
+                    new TextureWallModificationCommand(
+                        textureWallID_,
+                        localUserID(),
+                        TextureWallParameterName::TEXTURE_OFFSET_X,
+                        newTextureOffsetX ) ) );
+}
+
+
+void TextureWallHandler::setTextureOffsetY( float newTextureOffsetY )
+{
+    textureWall_->textureOffset.y = newTextureOffsetY;
+
+    sendCommandToServer(
+                CommandConstPtr(
+                    new TextureWallModificationCommand(
+                        textureWallID_,
+                        localUserID(),
+                        TextureWallParameterName::TEXTURE_OFFSET_Y,
+                        newTextureOffsetY ) ) );
+}
+
 } // namespace como

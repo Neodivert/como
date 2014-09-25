@@ -189,14 +189,34 @@ void TextureWallsManager::requestResourceLock( const ResourceID &resourceID )
 
 void TextureWallsManager::executeRemoteCommand(const TextureWallCommand &command)
 {
+    TextureWall& textureWall = textureWalls_.at( command.textureWallID() );
+
     switch( command.getType() ){
         case TextureWallCommandType::TEXTURE_CHANGE:{
             const TextureWallTextureChangeCommand &textureChangeCommand =
                     dynamic_cast< const TextureWallTextureChangeCommand& >( command );
-            textureWalls_.at( textureChangeCommand.textureWallID() ).textureID =
+            textureWall.textureID =
                     textureChangeCommand.textureID();
         }break;
         case TextureWallCommandType::TEXTURE_WALL_MODIFICATION:
+            const TextureWallModificationCommand& modificationCommand =
+                    dynamic_cast< const TextureWallModificationCommand& >( command );
+
+            switch( modificationCommand.parameterName() ){
+                case TextureWallParameterName::TEXTURE_OFFSET_X:
+                    textureWall.textureOffset.x = modificationCommand.parameterNewValue();
+                break;
+                case TextureWallParameterName::TEXTURE_OFFSET_Y:
+                    textureWall.textureOffset.y = modificationCommand.parameterNewValue();
+                break;
+                case TextureWallParameterName::TEXTURE_SCALE_X:
+                    // TODO: Complete
+                break;
+                case TextureWallParameterName::TEXTURE_SCALE_Y:
+                    // TODO: Complete
+                break;
+            }
+
             // TODO: Complete.
         break;
     }
@@ -209,11 +229,10 @@ void TextureWallsManager::executeRemoteCommand(const TextureWallCommand &command
 
 void TextureWallsManager::sendTextureWallToShader( const ResourceID &resourceID ) const
 {
-    //textureWalls_.at( resourceID ).sendToShader( *this );
-    // TODO: Send texture offset and scale.
-
     OpenGL::checkStatus( "TextureWallsManager::sendTextureWallToShader - begin" );
-    texturesManager_->sendTextureToShader( textureWalls_.at( resourceID ).textureID );
+    texturesManager_->sendTextureToShader( textureWalls_.at( resourceID ).textureID,
+                                           textureWalls_.at( resourceID ).textureOffset,
+                                           textureWalls_.at( resourceID ).textureScale );
     OpenGL::checkStatus( "TextureWallsManager::sendTextureWallToShader - end" );
 }
 

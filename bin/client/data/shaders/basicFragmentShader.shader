@@ -44,6 +44,8 @@ uniform Material material;
 
 uniform vec3 eyeVector;
 
+uniform vec2 textureOffset;
+
 in vec3 normal;
 in vec2 uvCoordinates;
 
@@ -76,8 +78,14 @@ void main()
 				vec3 reflectedLight = lights[ directionalLights[i].lightIndex ].color * specular * material.specularReflectivity;
 	
 				if( texturingEnabled ){
-					meshColor = texture( textureSampler, uvCoordinates );
-					meshColor.a = 1.0f;
+					if( ( uvCoordinates.x >= textureOffset.x ) && ( uvCoordinates.y >= textureOffset.y ) ){
+						meshColor = texture( textureSampler, vec2(
+							min( 1.0f, uvCoordinates.x - textureOffset.x ),
+							min( 1.0f, uvCoordinates.y - textureOffset.y ) ) );
+						meshColor.a = 1.0f;
+					}else{
+						meshColor = vec4( material.color.rgb, 1.0f );
+					}
 				}else{
 					meshColor = vec4( material.color.rgb, 1.0f );
 				}
