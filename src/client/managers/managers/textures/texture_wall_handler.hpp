@@ -45,6 +45,7 @@ class TextureWallHandler : public ServerWriter
         /***
          * 3. Getters
          ***/
+        ResourceID getTextureID() const;
         glm::vec2 getTextureOffset() const;
         glm::vec2 getTextureScale() const;
 

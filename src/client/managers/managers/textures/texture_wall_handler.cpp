@@ -36,6 +36,12 @@ TextureWallHandler::TextureWallHandler( ServerInterfacePtr server, const Resourc
  * 3. Getters
  ***/
 
+ResourceID TextureWallHandler::getTextureID() const
+{
+    return textureWall_->textureID;
+}
+
+
 glm::vec2 TextureWallHandler::getTextureOffset() const
 {
     return textureWall_->textureOffset;

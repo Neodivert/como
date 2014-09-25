@@ -71,6 +71,7 @@ class TextureWallEditor : public QFrame, public Observer
         TextureWallsManager* textureWallsManager_;
         TexturesViewer* texturesViewer_;
 
+        QPushButton* textureInput_;
         QDoubleSpinBox* textureOffsetXSpinBox_;
         QDoubleSpinBox* textureOffsetYSpinBox_;
         QDoubleSpinBox* textureScaleXSpinBox_;

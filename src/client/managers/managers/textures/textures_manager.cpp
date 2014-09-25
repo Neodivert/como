@@ -78,6 +78,12 @@ std::list<TextureData> TexturesManager::getTexturesData() const
 }
 
 
+TextureData TexturesManager::getTextureData( const ResourceID& textureID ) const
+{
+    return textures_.at( textureID )->data();
+}
+
+
 /***
  * 6. Command execution
  ***/

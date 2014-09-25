@@ -39,7 +39,7 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
     textureOffsetYSpinBox_ = new QDoubleSpinBox;
     textureScaleXSpinBox_ = new QDoubleSpinBox;
     textureScaleYSpinBox_ = new QDoubleSpinBox;
-    QPushButton* textureInput = new QPushButton;
+    textureInput_ = new QPushButton( "Select a texture" );
 
     // Set the parameters for the widget used for modifying
     // texture offset (X)
@@ -67,7 +67,7 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
 
     // When user click on file path input button, open a dialog for selecting
     // a file.
-    QObject::connect( textureInput, &QPushButton::clicked, [=](){
+    QObject::connect( textureInput_, &QPushButton::clicked, [=](){
         // Before executing the textures viewer, make a signal / slot
         // connection so whenever a texture is selected, display a
         // message to user.
@@ -102,12 +102,14 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
     });
 
     // Set this widget's layout.
-    layout->addRow( "Texture: ", textureInput );
+    layout->addRow( "Texture: ", textureInput_ );
     layout->addRow( "Texture offset % (X)", textureOffsetXSpinBox_ );
     layout->addRow( "Texture offset % (Y)", textureOffsetYSpinBox_ );
     layout->addRow( "Texture scale (X)", textureScaleXSpinBox_ );
     layout->addRow( "Texture scale (Y)", textureScaleYSpinBox_ );
     setLayout( layout );
+
+    update();
 }
 
 
@@ -131,6 +133,7 @@ void TextureWallEditor::setTextureWall(TextureWallHandler *textureWall)
 // Observer anymore for avoiding confusion.
 void TextureWallEditor::update()
 {
+    std::string textureLabelName;
     glm::vec2 textureOffset;
     glm::vec2 textureScale;
 
@@ -138,6 +141,14 @@ void TextureWallEditor::update()
         // Retrieve texture offset.
         textureOffset = currentTextureWall_->getTextureOffset();
         textureScale = currentTextureWall_->getTextureScale();
+
+        if( currentTextureWall_->getTextureID() != NO_RESOURCE ){
+            textureLabelName =
+                    texturesManager_->getTextureData( currentTextureWall_->getTextureID() ).name;
+        }else{
+            textureLabelName = "Select a texture";
+        }
+        textureInput_->setText( textureLabelName.c_str() );
 
         textureOffsetXSpinBox_->blockSignals( true );
         textureOffsetXSpinBox_->setValue( textureOffset.x );

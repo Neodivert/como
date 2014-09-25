@@ -63,6 +63,7 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter, pub
          * 5. Getters
          ***/
         std::list< TextureData > getTexturesData() const;
+        TextureData getTextureData( const ResourceID& textureID ) const;
 
 
         /***
