@@ -29,55 +29,20 @@ namespace como {
 MeshInfoMenu::MeshInfoMenu( LocalMeshesSelection* userSelection ) :
     userSelection_( userSelection )
 {
-    // Create the layout for this tab.
-    QFormLayout* layout = new QFormLayout;
+    displayVertexNormalsCheckBox_ = createVertexNormalsDisplayCheckBox( userSelection );
 
-    // Add widgets to the layout and set it as the current one.
-    layout->addWidget( createVertexNormalsDisplayGroupBox( userSelection ) );
+    // Set this widget's layout.
+    QFormLayout* layout = new QFormLayout;
+    layout->addWidget( displayVertexNormalsCheckBox_ );
     setLayout( layout );
 
     userSelection->Observable::addObserver( this );
-    update();
+    setVisible( false );
 }
 
 
 /***
- * 3. Initialization
- ***/
-
-QGroupBox* MeshInfoMenu::createVertexNormalsDisplayGroupBox( LocalMeshesSelection* meshesSelection )
-{
-    QGroupBox* displayVertexNormalsGroupBox = nullptr;
-    QVBoxLayout* layout = nullptr;
-
-    displayVertexNormalsAlways_ = new QRadioButton( "Always" );
-    QObject::connect( displayVertexNormalsAlways_, &QCheckBox::toggled, [=]( bool toggled ){
-        if( toggled ){
-            meshesSelection->displayVertexNormals( true );
-        }
-    });
-
-    displayVertexNormalsNever_ = new QRadioButton( "Never" );
-    QObject::connect( displayVertexNormalsNever_, &QCheckBox::toggled, [=]( bool toggled ){
-        if( toggled ){
-            meshesSelection->displayVertexNormals( false );
-        }
-    });
-
-    layout = new QVBoxLayout;
-    layout->addWidget( displayVertexNormalsAlways_ );
-    layout->addWidget( displayVertexNormalsNever_ );
-
-    meshesSelection->Observable::addObserver( this );
-
-    displayVertexNormalsGroupBox = new QGroupBox( "Display vertex normals" );
-    displayVertexNormalsGroupBox->setLayout( layout );
-    return displayVertexNormalsGroupBox;
-}
-
-
-/***
- * 4. Refreshing
+ * 3. Updating (observer pattern)
  ***/
 
 void MeshInfoMenu::update()
@@ -87,26 +52,28 @@ void MeshInfoMenu::update()
         return;
     }
 
-    switch( userSelection_->displaysVertexNormals() ){
-        case ElementsMeetingCondition::ALL:
-            displayVertexNormalsAlways_->setChecked( true );
-        break;
-        case ElementsMeetingCondition::NONE:
-            displayVertexNormalsNever_->setChecked( true );
-        break;
-        case ElementsMeetingCondition::SOME:
-            // The "setAutoExclusive() trick" is necessary for being able to
-            // uncheck both radio buttons.
-            displayVertexNormalsAlways_->setAutoExclusive( false );
-            displayVertexNormalsNever_->setAutoExclusive( false );
+    displayVertexNormalsCheckBox_->blockSignals( true );
+    displayVertexNormalsCheckBox_->setChecked(
+                userSelection_->displaysVertexNormals() == ElementsMeetingCondition::ALL );
+    displayVertexNormalsCheckBox_->blockSignals( false );
+}
 
-            displayVertexNormalsAlways_->setChecked( false );
-            displayVertexNormalsNever_->setChecked( false );
 
-            displayVertexNormalsAlways_->setAutoExclusive( true );
-            displayVertexNormalsNever_->setAutoExclusive( true );
-        break;
-    }
+/***
+ * 5. Initialization
+ ***/
+
+QCheckBox* MeshInfoMenu::createVertexNormalsDisplayCheckBox( LocalMeshesSelection* meshesSelection )
+{
+    QCheckBox* displayVertexNormalsCheckBox = new QCheckBox( "Display vertex normals" );
+
+    QObject::connect( displayVertexNormalsCheckBox,
+                      &QCheckBox::toggled,
+                      [=]( bool toggled ){
+        meshesSelection->displayVertexNormals( toggled );
+    });
+
+    return displayVertexNormalsCheckBox;
 }
 
 } // namespace como

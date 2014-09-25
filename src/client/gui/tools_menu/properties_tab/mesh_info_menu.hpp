@@ -19,8 +19,7 @@
 #ifndef MESH_INFO_MENU_HPP
 #define MESH_INFO_MENU_HPP
 
-#include <QObject>
-#include <QGroupBox>
+#include <QCheckBox>
 #include <client/managers/managers/meshes/meshes_manager.hpp>
 
 namespace como {
@@ -29,59 +28,46 @@ class MeshInfoMenu : public QWidget, public Observer
 {
     Q_OBJECT
 
-    private:
-        /*! Local user's (drawables) selection */
-        LocalMeshesSelection* userSelection_;
-
-        QGroupBox* displayVertexNormalsGroupBox_;
-        QRadioButton* displayVertexNormalsAlways_;
-        QRadioButton* displayVertexNormalsNever_;
-
     public:
         /***
          * 1. Construction
          ***/
-
-        /*! \brief Default constructor */
         MeshInfoMenu( LocalMeshesSelection* userSelection );
-
-        /*! \brief Copy constructor */
         MeshInfoMenu( const MeshInfoMenu& ) = delete;
-
-        /*! \brief Move constructor */
         MeshInfoMenu( MeshInfoMenu&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-
-        /*! \brief Destructor */
-        ~MeshInfoMenu() = default;
+        virtual ~MeshInfoMenu() = default;
 
 
         /***
-         * 3. Initialization
+         * 3. Updating (observer pattern)
          ***/
-        QGroupBox* createVertexNormalsDisplayGroupBox( LocalMeshesSelection* meshesSelection );
-
-
-        /***
-         * 4. Updating
-         ***/
-
         virtual void update();
 
 
         /***
-         * 5. Operators
+         * 4. Operators
          ***/
-
-        /*! \brief Copy assignment operator */
         MeshInfoMenu& operator = ( const MeshInfoMenu& ) = delete;
-
-        /*! \brief Move assignment operator */
         MeshInfoMenu& operator = ( MeshInfoMenu&& ) = delete;
+
+
+    private:
+        /***
+         * 5. Initialization
+         ***/
+        static QCheckBox* createVertexNormalsDisplayCheckBox( LocalMeshesSelection* meshesSelection );
+
+
+        /*** Attributes ***/
+        LocalMeshesSelection* userSelection_;
+
+        // Child widgets
+        QCheckBox* displayVertexNormalsCheckBox_;
 };
 
 } // namespace como

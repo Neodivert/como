@@ -36,7 +36,7 @@ MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     RenderPanel* renderPanel = nullptr;
     UsersList* usersList = nullptr;
 
-    // Set window's title and dimensions.
+    // Set window's title.
     setWindowTitle( tr( "Cooperative Modeller" ) );
 
     setMenuBar( new MenuBar( comoApp->getScene()->getEntitiesManager() ) );
