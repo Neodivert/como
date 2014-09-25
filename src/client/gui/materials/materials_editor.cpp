@@ -30,7 +30,6 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager, LocalMes
     materialsList_ = new MaterialsListWidget( materialsManager );
     materialEditor_ = new MaterialEditor();
 
-    layout->addWidget( new QLabel( "Materials Editor" ) );
     layout->addWidget( materialsList_ );
     layout->addWidget( materialEditor_ );
 
@@ -40,7 +39,7 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager, LocalMes
                       materialEditor_, &MaterialEditor::openMaterial );
 
     materialsManager_->ObservableContainer<ResourceID>::addObserver( this );
-    setVisible( false );
+    setEnabled( false );
 }
 
 
@@ -51,35 +50,15 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager, LocalMes
 void MaterialsEditor::update( ContainerAction lastContainerAction, ResourceID resourceID )
 {
     if( localMeshesSelection_->size() ){
-        setVisible( true );
+        setEnabled( true );
 
         (void)( lastContainerAction );
         (void)( resourceID );
 
         materialsList_->populate();
 
-        /*
-        switch( lastContainerAction ){
-            case ContainerAction::ELEMENT_INSERTION:
-                materialsList_->addMaterial( resourceID,
-                                             materialsManager_->getMaterial( resourceID )->getName() );
-            break;
-            case ContainerAction::ELEMENT_DELETION:
-                materialsList_->removeMaterial( resourceID );
-            break;
-            case ContainerAction::ELEMENT_UPDATE:
-                if( materialEditor_->isEnabled()
-                        && ( materialEditor_->getMaterialID() == resourceID )
-                        && materialsManager_->materialOwnedByLocalUser( resourceID ) ){
-                    materialEditor_->refresh();
-                }
-            break;
-            case ContainerAction::CONTAINER_UPDATE:
-            break;
-        }
-        */
     }else{
-        setVisible( false );
+        setEnabled( false );
     }
 }
 

@@ -21,7 +21,6 @@
 
 #include <QFrame>
 #include <client/managers/managers/materials/materials_manager.hpp>
-
 #include "materials_list_widget.hpp"
 #include "material_editor.hpp"
 #include <client/managers/selections/meshes/local_meshes_selection.hpp>
@@ -52,6 +51,7 @@ class MaterialsEditor : public QFrame, public ContainerObserver<ResourceID>
          * 2. Destruction
          ***/
         virtual ~MaterialsEditor() = default;
+
 
         /***
          * 3. Updating (Observer pattern).

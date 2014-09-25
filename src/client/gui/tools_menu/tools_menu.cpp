@@ -21,6 +21,8 @@
 #include "creation_tab.hpp"
 #include "transformation_tab.hpp"
 #include "properties_tab/properties_tab.hpp"
+#include <client/gui/materials/materials_editor.hpp> // TODO: Change directory?
+#include <client/gui/texture_walls/texture_walls_editor.hpp>
 
 
 namespace como {
@@ -37,7 +39,11 @@ ToolsMenu::ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
     addTab( new CreationTab( comoApp_->getScene() ), "Creation" );
     addTab( new TransformationTab( comoApp_ ), "Transformation" );
     addTab( new PropertiesTab( comoApp_->getScene() ), "Properties" );
-    //addTab( new MaterialsEditor( comoApp_->getScene()->getMaterialsManager() ), "Materials" );
+    addTab( new MaterialsEditor( comoApp_->getScene()->getMaterialsManager(),
+                                 comoApp_->getScene()->getMeshesManager()->getLocalResourcesSelection() ), "Materials" );
+    addTab( new TextureWallsEditor( comoApp_->getScene()->getTextureWallsManager(),
+                                    comoApp_->getScene()->getTexturesManager() ), "Texture walls" );
+
 }
 
 } // namespace como

@@ -21,8 +21,6 @@
 #include <client/gui/tools_menu/properties_tab/general_info_menu.hpp>
 #include <client/gui/tools_menu/properties_tab/mesh_info_menu.hpp>
 #include <client/gui/tools_menu/properties_tab/lights_menu.hpp>
-#include <client/gui/materials/materials_editor.hpp> // TODO: Change directory?
-#include <client/gui/texture_walls/texture_walls_editor.hpp>
 
 namespace como {
 
@@ -41,8 +39,6 @@ PropertiesTab::PropertiesTab( ScenePtr scene )
     layout->addWidget( new GeneralInfoMenu( scene->getEntitiesManager()->getLocalSelection() ) );
     layout->addWidget( new MeshInfoMenu( scene->getMeshesManager()->getLocalResourcesSelection() ) );
     layout->addWidget( new LightsMenu( scene->getLightsManager()->getLocalResourcesSelection() ) );
-    layout->addWidget( new MaterialsEditor( scene->getMaterialsManager(), scene->getMeshesManager()->getLocalResourcesSelection() ) );
-    layout->addWidget( new TextureWallsEditor( scene->getTextureWallsManager(), scene->getTexturesManager() ) );
     setLayout( layout );
 }
 

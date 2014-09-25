@@ -46,16 +46,13 @@ TextureWallsEditor::TextureWallsEditor( TextureWallsManager* textureWallsManager
 
     // Set this widget's layout.
     layout = new QGridLayout();
-    layout->addWidget( new QLabel( "Texture walls editor" ), 0, 0, 1, -1 );
-
     layout->addWidget( new QLabel( "Texture wall: " ), 1, 0 );
     layout->addWidget( textureWallsSelector, 1, 1 );
-
     layout->addWidget( textureWallEditor, 2, 0, 1, -1 );
     setLayout( layout );
 
     textureWallsManager_->Observable::addObserver( this );
-    setVisible( false );
+    setEnabled( false );
 }
 
 
@@ -65,7 +62,7 @@ TextureWallsEditor::TextureWallsEditor( TextureWallsManager* textureWallsManager
 
 void TextureWallsEditor::update()
 {
-    setVisible( textureWallsManager_->thereIsSelectableTextureWalls() );
+    setEnabled( textureWallsManager_->thereIsSelectableTextureWalls() );
 }
 
 } // namespace como
