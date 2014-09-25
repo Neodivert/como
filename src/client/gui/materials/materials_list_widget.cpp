@@ -38,7 +38,7 @@ MaterialsListWidget::MaterialsListWidget( MaterialsManagerPtr materialsManager )
 
 
 /***
- * 4. Popup
+ * 4. Populating
  ***/
 
 void MaterialsListWidget::populate()
@@ -50,7 +50,7 @@ void MaterialsListWidget::populate()
 
     for( const auto& materialHeader : materialsHeaders ){
         indexToID_[count()] = materialHeader.id;
-        addItem( ( "Material: " + materialHeader.name ).c_str() ); // TODO: Add id.
+        addItem( materialHeader.name.c_str() );
     }
 
     if( count() ){
