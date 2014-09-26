@@ -376,13 +376,14 @@ void Server::processSceneCommand( const Command& sceneCommand )
             const GeometricPrimitiveCommand& geometricPrimitiveCommand =
                     dynamic_cast< const GeometricPrimitiveCommand& >( sceneCommand );
 
-            if( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::CUBE_CREATION ){
+            if( ( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::CUBE_CREATION ) ||
+                ( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::CONE_CREATION ) ){
                 // Add a node to the Drawable Owners map for the recently added
                 // drawable. Mark it with a 0 (no owner).
                 resourcesOwnershipManager_.registerResource( geometricPrimitiveCommand.getMeshID(),
                                                              geometricPrimitiveCommand.getUserID() );
 
-                log_->debug( "Cube added! (", geometricPrimitiveCommand.getMeshID(), "\n" );
+                log_->debug( "Geometric primitive added! (", geometricPrimitiveCommand.getMeshID(), "\n" );
             }
         }break;
         default:

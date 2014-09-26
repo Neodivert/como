@@ -128,7 +128,8 @@ HEADERS += \
     ../../src/client/gui/texture_walls/texture_wall_editor.hpp \
     ../../src/client/gui/textures/textures_viewer.hpp \
     ../../src/client/gui/textures/textures_gallery.hpp \
-    ../../src/client/gui/textures/textures_gallery_item.hpp
+    ../../src/client/gui/textures/textures_gallery_item.hpp \
+    ../../src/client/managers/managers/primitives/cones_factory.hpp
 
 
 # Client sources
@@ -211,4 +212,5 @@ SOURCES += \
     ../../src/client/gui/texture_walls/texture_wall_editor.cpp \
     ../../src/client/gui/textures/textures_viewer.cpp \
     ../../src/client/gui/textures/textures_gallery.cpp \
-    ../../src/client/gui/textures/textures_gallery_item.cpp
+    ../../src/client/gui/textures/textures_gallery_item.cpp \
+    ../../src/client/managers/managers/primitives/cones_factory.cpp

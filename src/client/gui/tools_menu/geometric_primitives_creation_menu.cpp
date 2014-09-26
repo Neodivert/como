@@ -32,6 +32,7 @@ GeometricPrimitivesCreationMenu::GeometricPrimitivesCreationMenu( GeometricPrimi
 
     layout->addWidget( new QLabel( "Geometry creation" ) );
     layout->addWidget( createCubeCreationButton() );
+    layout->addWidget( createConeCreationButton() );
 
     setLayout( layout );
 }
@@ -50,6 +51,18 @@ QPushButton* GeometricPrimitivesCreationMenu::createCubeCreationButton() const
     });
 
     return cubeCreationButton;
+}
+
+
+QPushButton *GeometricPrimitivesCreationMenu::createConeCreationButton() const
+{
+    QPushButton* coneCreationButton = new QPushButton( "Create cone" );
+
+    QObject::connect( coneCreationButton, &QPushButton::pressed, [this](){
+        geometricPrimitivesFactory_->createCone();
+    });
+
+    return coneCreationButton;
 }
 
 } // namespace como

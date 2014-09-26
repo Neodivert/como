@@ -13,7 +13,7 @@ CubesFactory::CubesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesMa
 
 
 /***
- * 2. Destruction
+ * 3. Local cubes creation
  ***/
 
 ResourceID CubesFactory::createCube( float width, float height, float depth )
@@ -68,7 +68,7 @@ void CubesFactory::createCube( const ResourceID& cubeID, const ResourceID& mater
 
     cube = std::unique_ptr< Mesh >( new SystemMesh( cubeID, firstTextureWallID, generatePrimitiveData(), materialsManager_->getMaterial( materialID ) ) );
 
-    return meshesManager_->addMesh( std::move( cube ), cubeID );
+    meshesManager_->addMesh( std::move( cube ), cubeID );
 }
 
 

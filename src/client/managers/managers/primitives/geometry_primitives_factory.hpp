@@ -21,6 +21,7 @@
 
 #include <client/managers/utilities/server_writer.hpp>
 #include <client/managers/managers/primitives/cubes_factory.hpp>
+#include <client/managers/managers/primitives/cones_factory.hpp>
 #include <client/managers/managers/textures/textures_manager.hpp>
 
 namespace como {
@@ -50,6 +51,7 @@ class GeometricPrimitivesFactory : public ServerWriter
          * 3. Local geometric primitives creation
          ***/
         ResourceID createCube( float width = 1.0f, float height = 1.0f, float depth = 1.0f );
+        ResourceID createCone( float height = 1.0f, float radius = 0.5f, std::uint16_t nBaseVertices = 16 );
 
 
         /***
@@ -67,6 +69,7 @@ class GeometricPrimitivesFactory : public ServerWriter
 
     private:
         CubesFactory cubesFactory_;
+        ConesFactory conesFactory_;
 };
 
 
