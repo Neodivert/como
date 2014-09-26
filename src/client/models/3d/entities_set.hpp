@@ -251,6 +251,7 @@ void EntitiesSet<EntitySubtype>::applyTransformationMatrix( const glm::mat4& tra
     for( auto& entityPair : this->resources_ ){
         entityPair.second->applyTransformationMatrix( transformation );
     }
+    this->notifyObservers();
 }
 
 

@@ -188,10 +188,11 @@ void EntitiesSelection::update()
     centroid_ = glm::vec3( 0.0f );
     unsigned int nSelections = 0;
 
-    for( auto selection : specializedEntitiesSelections_ ){
-        centroid_ += selection->centroid();
-
-        nSelections += selection->size();
+    for( const AbstractEntitiesSet* selection : specializedEntitiesSelections_ ){
+        if( selection->size() ){
+            centroid_ += selection->centroid();
+            nSelections++;
+        }
     }
 
     if( nSelections ){
