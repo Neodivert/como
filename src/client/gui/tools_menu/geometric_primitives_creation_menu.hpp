@@ -57,6 +57,7 @@ class GeometricPrimitivesCreationMenu : public QFrame
          ***/
         QPushButton* createCubeCreationButton() const;
         QPushButton* createConeCreationButton() const;
+        QPushButton* createCylinderCreationButton() const;
 
 
         GeometricPrimitivesFactoryPtr geometricPrimitivesFactory_;

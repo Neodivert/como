@@ -200,6 +200,9 @@ const void* PackableCommandsList::unpack( const void* buffer )
                     case GeometricPrimitiveCommandType::CONE_CREATION:
                         command = CommandPtr( new ConeCreationCommand );
                     break;
+                    case GeometricPrimitiveCommandType::CYLINDER_CREATION:
+                        command = CommandPtr( new CylinderCreationCommand );
+                    break;
                 }
             break;
 

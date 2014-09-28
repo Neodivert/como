@@ -26,7 +26,8 @@ namespace como {
 enum class GeometricPrimitiveCommandType : std::uint8_t
 {
     CUBE_CREATION = 0,
-    CONE_CREATION
+    CONE_CREATION,
+    CYLINDER_CREATION
 };
 
 class GeometricPrimitiveCommand : public TypeCommand< GeometricPrimitiveCommandType >

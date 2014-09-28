@@ -33,6 +33,7 @@ GeometricPrimitivesCreationMenu::GeometricPrimitivesCreationMenu( GeometricPrimi
     layout->addWidget( new QLabel( "Geometry creation" ) );
     layout->addWidget( createCubeCreationButton() );
     layout->addWidget( createConeCreationButton() );
+    layout->addWidget( createCylinderCreationButton() );
 
     setLayout( layout );
 }
@@ -63,6 +64,18 @@ QPushButton *GeometricPrimitivesCreationMenu::createConeCreationButton() const
     });
 
     return coneCreationButton;
+}
+
+
+QPushButton *GeometricPrimitivesCreationMenu::createCylinderCreationButton() const
+{
+    QPushButton* cylinderCreationButton = new QPushButton( "Create cylinder" );
+
+    QObject::connect( cylinderCreationButton, &QPushButton::pressed, [this](){
+        geometricPrimitivesFactory_->createCylinder();
+    });
+
+    return cylinderCreationButton;
 }
 
 } // namespace como

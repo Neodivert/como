@@ -28,7 +28,8 @@ namespace como {
 GeometricPrimitivesFactory::GeometricPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager* textureWallsManager ) :
     ServerWriter( server ),
     cubesFactory_( server, meshesManager, materialsManager, textureWallsManager ),
-    conesFactory_( server, meshesManager, materialsManager, textureWallsManager )
+    conesFactory_( server, meshesManager, materialsManager, textureWallsManager ),
+    cylindersFactory_( server, meshesManager, materialsManager, textureWallsManager )
 {
     SystemMesh::setTextureWallsManager( *textureWallsManager );
 }
@@ -50,6 +51,12 @@ ResourceID GeometricPrimitivesFactory::createCone( float height, float radius, s
 }
 
 
+ResourceID GeometricPrimitivesFactory::createCylinder( float height, float radius, std::uint16_t nRadialVertices )
+{
+    return cylindersFactory_.createCylinder( height, radius, nRadialVertices );
+}
+
+
 /***
  * 4. Command execution
  ***/
@@ -68,6 +75,12 @@ void GeometricPrimitivesFactory::executeRemoteCommand( const GeometricPrimitiveC
                 dynamic_cast< const ConeCreationCommand& >( command );
 
             conesFactory_.executeRemoteCommand( creationCommand );
+        }break;
+        case GeometricPrimitiveCommandType::CYLINDER_CREATION:{
+            const CylinderCreationCommand& creationCommand =
+                dynamic_cast< const CylinderCreationCommand& >( command );
+
+            cylindersFactory_.executeRemoteCommand( creationCommand );
         }break;
     }
 }

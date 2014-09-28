@@ -118,7 +118,8 @@ HEADERS += \
     ../../src/common/commands/texture_wall_commands/texture_wall_commands.hpp \
     ../../src/common/commands/texture_wall_commands/texture_wall_modification_command.hpp \
     ../../src/common/commands/texture_wall_commands/texture_wall_texture_change_command.hpp \
-    ../../src/common/commands/geometric_primitive_command/cone_creation_command.hpp
+    ../../src/common/commands/geometric_primitive_command/cone_creation_command.hpp \
+    ../../src/common/commands/geometric_primitive_command/cylinder_creation_command.hpp
 
 
 # Common sources (used by both client and server).
@@ -183,4 +184,5 @@ SOURCES += \
     ../../src/common/commands/texture_wall_commands/texture_wall_command.cpp \
     ../../src/common/commands/texture_wall_commands/texture_wall_modification_command.cpp \
     ../../src/common/commands/texture_wall_commands/texture_wall_texture_change_command.cpp \
-    ../../src/common/commands/geometric_primitive_command/cone_creation_command.cpp
+    ../../src/common/commands/geometric_primitive_command/cone_creation_command.cpp \
+    ../../src/common/commands/geometric_primitive_command/cylinder_creation_command.cpp
