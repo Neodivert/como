@@ -91,7 +91,6 @@ void PrimitiveData::generateOGLData()
                 compoundVerticesMap.insert( std::pair< CompoundVertex, VertexIndice >( compoundVertex, compoundVertexIndex ) );
             }
 
-
             oglData.eboData.push_back( compoundVertexIndex );
         }
     }

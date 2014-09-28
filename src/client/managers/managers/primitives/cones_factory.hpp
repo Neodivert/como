@@ -78,12 +78,6 @@ class ConesFactory : public SpecializedSystemPrimitivesFactory
         void createCone( const ResourceID& coneID, const ResourceID& materialID, const ResourceID& firstTextureWallID, float height, float radius, std::uint16_t nBaseVertices );
 
 
-        /***
-         * 8. Auxiliar methods
-         ***/
-        void generateTriangles( std::vector< IndicesTriangle >& triangles );
-
-
     private:
         float coneHeight_;
         float coneRadius_;

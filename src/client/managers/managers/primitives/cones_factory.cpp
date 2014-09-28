@@ -44,7 +44,7 @@ ResourceID ConesFactory::createCone( float height, float radius, std::uint16_t n
 
     createCone( coneID, materialID, firstTextureWallID, height, radius, nBaseVertices );
 
-    // TODO: Send command to server
+    // Send command to server
     sendCommandToServer(
                 CommandConstPtr(
                     new ConeCreationCommand(
@@ -80,9 +80,10 @@ void ConesFactory::executeRemoteCommand( const ConeCreationCommand &command )
 
 void ConesFactory::generateVertexData( MeshVertexData &vertexData )
 {
-    unsigned int i;
+    int i;
     const float stepAngle = 2.0f * glm::pi<float>() / coneNBaseVertices_;
     float currentAngle = 0.0f;
+    unsigned int circumferenceVertexIndex;
 
     // Set cone vertices.
     vertexData.vertices.push_back( glm::vec3( 0.0f, coneHeight_ / 2.0f, 0.0f ) );
@@ -95,18 +96,30 @@ void ConesFactory::generateVertexData( MeshVertexData &vertexData )
         currentAngle += stepAngle;
     }
 
-    // Set cone triangles
-    generateTriangles( vertexData.vertexTriangles );
+    // Set cone triangles (around)
+    for( i = 0; i < coneNBaseVertices_ - 1; i++ ){
+        circumferenceVertexIndex = i + FIRST_CIRCUMFERENCE_VERTEX_INDEX;
+        vertexData.vertexTriangles.push_back( { 0, circumferenceVertexIndex + 1, circumferenceVertexIndex } );
+    }
+    circumferenceVertexIndex = i + FIRST_CIRCUMFERENCE_VERTEX_INDEX;
+    vertexData.vertexTriangles.push_back( { 0, FIRST_CIRCUMFERENCE_VERTEX_INDEX, circumferenceVertexIndex } );
 
-    // TODO: Include base's center and triangles.
+    // Set cone triangles (base)
+    for( i = 0; i < coneNBaseVertices_ - 1; i++ ){
+        circumferenceVertexIndex = i + FIRST_CIRCUMFERENCE_VERTEX_INDEX;
+        vertexData.vertexTriangles.push_back( { 1, circumferenceVertexIndex, circumferenceVertexIndex + 1 } );
+    }
+    circumferenceVertexIndex = i + FIRST_CIRCUMFERENCE_VERTEX_INDEX;
+    vertexData.vertexTriangles.push_back( { 1, circumferenceVertexIndex, FIRST_CIRCUMFERENCE_VERTEX_INDEX } );
 }
 
 
 void ConesFactory::generateUVData( MeshTextureData &uvData )
 {
-    unsigned int i;
+    int i;
     const float stepAngle = 2.0f * glm::pi<float>() / coneNBaseVertices_;
     float currentAngle = 0.0f;
+    unsigned int circumferenceVertexIndex;
 
     // Set UV coordinates.
     uvData.uvVertices.push_back( glm::vec2( 0.5f, 0.5f ) );
@@ -119,8 +132,21 @@ void ConesFactory::generateUVData( MeshTextureData &uvData )
         currentAngle += stepAngle;
     }
 
-    // Set UV triangles
-    generateTriangles( uvData.uvTriangles );
+    // Set cone UV triangles (around)
+    for( i = 0; i < coneNBaseVertices_ - 1; i++ ){
+        circumferenceVertexIndex = i + FIRST_CIRCUMFERENCE_VERTEX_INDEX;
+        uvData.uvTriangles.push_back( { 0, circumferenceVertexIndex + 1, circumferenceVertexIndex } );
+    }
+    circumferenceVertexIndex = i + FIRST_CIRCUMFERENCE_VERTEX_INDEX;
+    uvData.uvTriangles.push_back( { 0, FIRST_CIRCUMFERENCE_VERTEX_INDEX, circumferenceVertexIndex } );
+
+    // Set cone UV triangles (base)
+    for( i = 0; i < coneNBaseVertices_ - 1; i++ ){
+        circumferenceVertexIndex = i + FIRST_CIRCUMFERENCE_VERTEX_INDEX;
+        uvData.uvTriangles.push_back( { 1, circumferenceVertexIndex, circumferenceVertexIndex + 1 } );
+    }
+    circumferenceVertexIndex = i + FIRST_CIRCUMFERENCE_VERTEX_INDEX;
+    uvData.uvTriangles.push_back( { 1, FIRST_CIRCUMFERENCE_VERTEX_INDEX, circumferenceVertexIndex } );
 }
 
 
@@ -148,32 +174,6 @@ void ConesFactory::createCone( const ResourceID &coneID, const ResourceID &mater
     cone = std::unique_ptr< Mesh >( new SystemMesh( coneID, firstTextureWallID, generatePrimitiveData(), materialsManager_->getMaterial( materialID ) ) );
 
     meshesManager_->addMesh( std::move( cone ), coneID );
-}
-
-
-/***
- * 8. Auxiliar methods
- ***/
-
-void ConesFactory::generateTriangles( std::vector< IndicesTriangle > &triangles )
-{
-    int i;
-    unsigned int circumferenceVertexIndex;
-
-    for( i = 0; i < coneNBaseVertices_ - 1; i++ ){
-        circumferenceVertexIndex = i + FIRST_CIRCUMFERENCE_VERTEX_INDEX;
-        triangles.push_back( { 0, circumferenceVertexIndex + 1, circumferenceVertexIndex } );
-    }
-    circumferenceVertexIndex = i + FIRST_CIRCUMFERENCE_VERTEX_INDEX;
-    triangles.push_back( { 0, FIRST_CIRCUMFERENCE_VERTEX_INDEX, circumferenceVertexIndex } );
-
-    // Base triangles
-    for( i = 0; i < coneNBaseVertices_ - 1; i++ ){
-        circumferenceVertexIndex = i + FIRST_CIRCUMFERENCE_VERTEX_INDEX;
-        triangles.push_back( { 1, circumferenceVertexIndex, circumferenceVertexIndex + 1 } );
-    }
-    circumferenceVertexIndex = i + FIRST_CIRCUMFERENCE_VERTEX_INDEX;
-    triangles.push_back( { 1, circumferenceVertexIndex, FIRST_CIRCUMFERENCE_VERTEX_INDEX } );
 }
 
 
