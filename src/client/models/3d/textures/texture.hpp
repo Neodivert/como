@@ -23,9 +23,10 @@
 
 extern "C" {
     #define GL_GLEXT_PROTOTYPES
-    #include <GL/gl.h>
+    #include <GL/gl.h>  
 }
 
+#include <glm/glm.hpp>
 #include <memory>
 #include <common/primitives/primitive_data/texture_info.hpp>
 #include <common/ids/resource_id.hpp>
@@ -51,6 +52,9 @@ class Texture
         GLint samplerShaderLocation_;
 
         TextureData data_;
+
+        GLint textureOffsetShaderLocation_;
+        GLint textureScaleShaderLocation_;
 
     public:
         /***
@@ -86,7 +90,8 @@ class Texture
         /***
          * 5. Shader communication
          ***/
-        void sendToShader() const;
+        void sendToShader( glm::vec2 textureOffset = glm::vec2( 0.0f ),
+                           glm::vec2 textureScale = glm::vec2( 1.0f ) ) const;
 
 
         /***

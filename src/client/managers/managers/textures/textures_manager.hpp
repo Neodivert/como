@@ -77,7 +77,7 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter, pub
          ***/
         void sendTextureToShader( const ResourceID& resourceID,
                                   glm::vec2 textureOffset = glm::vec2( 0.0f ),
-                                  glm::vec2 textureScale = glm::vec2( 0.0f ) ) const;
+                                  glm::vec2 textureScale = glm::vec2( 1.0f ) ) const;
 
 
         /***
@@ -95,9 +95,6 @@ class TexturesManager : public AbstractTexturesManager, public ServerWriter, pub
 
         std::map< ResourceID, TexturePtr > textures_;
         std::string tempDirPath_;
-
-        GLint textureOffsetShaderLocation_;
-        GLint textureScaleShaderLocation_;
 };
 
 } // namespace como

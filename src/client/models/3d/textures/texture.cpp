@@ -22,6 +22,7 @@ extern "C" {
     #include <SDL2/SDL_image.h>
 }
 #include <client/models/utilities/open_gl.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace como {
 
@@ -148,6 +149,7 @@ Texture::~Texture()
 
 void Texture::initSamplerShaderLocation()
 {
+    // TODO: Use OpenGL class.
     GLint currentShaderProgram;
 
     // Get current shader program id.
@@ -156,6 +158,14 @@ void Texture::initSamplerShaderLocation()
     // Get location of sampler in shader.
     samplerShaderLocation_ = glGetUniformLocation( currentShaderProgram, "textureSampler" );
     assert( samplerShaderLocation_ != -1 );
+
+    textureOffsetShaderLocation_ =
+            glGetUniformLocation( currentShaderProgram, "textureOffset" );
+    assert( textureOffsetShaderLocation_ != -1 );
+
+    textureScaleShaderLocation_ =
+            glGetUniformLocation( currentShaderProgram, "textureScale" );
+    assert( textureScaleShaderLocation_ != -1 );
 }
 
 
@@ -173,9 +183,22 @@ TextureData Texture::data() const
  * 5. Shader communication
  ***/
 
-void Texture::sendToShader() const
+void Texture::sendToShader( glm::vec2 textureOffset, glm::vec2 textureScale ) const
 {
     OpenGL::checkStatus( "Texture::sendToShader() - begin" );
+
+    // Texture offset is expressed as a %, so we multiply it by 0.01 for
+    // transforming it to range [0.0f, 1.0f]
+    textureOffset *= 0.01f;
+
+    // Send texture's offset and scale to shader.
+    glUniform2fv( textureOffsetShaderLocation_,
+                  1,
+                  glm::value_ptr( textureOffset ) );
+    glUniform2fv( textureScaleShaderLocation_,
+                  1,
+                  glm::value_ptr( textureScale ) );
+
     // Connect sampler to texture unit 0.
     glActiveTexture( GL_TEXTURE0 );
     glUniform1i( samplerShaderLocation_, 0 );
