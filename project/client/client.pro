@@ -66,7 +66,6 @@ HEADERS += \
     ../../src/client/gui/utilities/color_button.hpp \
     ../../src/client/managers/managers/materials/materials_manager.hpp \
     ../../src/client/gui/materials/materials_editor.hpp \
-    ../../src/client/gui/materials/materials_list_item.hpp \
     ../../src/client/managers/managers/materials/material_handler.hpp \
     ../../src/client/managers/managers/lights/lights_manager.hpp \
     ../../src/client/models/3d/lights/abstract_light.hpp \
@@ -162,7 +161,6 @@ SOURCES += \
     ../../src/client/gui/utilities/color_button.cpp \
     ../../src/client/managers/managers/materials/materials_manager.cpp \
     ../../src/client/gui/materials/materials_editor.cpp \
-    ../../src/client/gui/materials/materials_list_item.cpp \
     ../../src/client/managers/managers/materials/material_handler.cpp \
     ../../src/client/managers/managers/lights/lights_manager.cpp \
     ../../src/client/models/utilities/open_gl.cpp \
