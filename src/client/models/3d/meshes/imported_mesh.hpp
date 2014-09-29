@@ -25,13 +25,12 @@
 namespace como {
 
 class ImportedMesh : public Mesh
-{
+{        
     public:
         /***
          * 1. Construction
          ***/
-        ImportedMesh( const ImportedPrimitiveData& primitiveData, ConstMaterialsVector materials, bool displayVertexNormals = false );
-        ImportedMesh( const std::string& filePath );
+        ImportedMesh( const ResourceID& id, const ResourceID& firstMaterialID, const ImportedPrimitiveData& primitiveData, MaterialsManager& materialsManager, bool displayVertexNormals = false );
         ImportedMesh() = delete;
         ImportedMesh( const ImportedMesh& ) = delete;
         ImportedMesh( ImportedMesh&& ) = delete;
@@ -56,7 +55,17 @@ class ImportedMesh : public Mesh
         ImportedMesh& operator = ( ImportedMesh&& ) = delete;
 
 
-    protected: // TODO: Make this private and remove direct access from DirectionalLight.
+    protected:
+        /***
+         * 5. Protected construction
+         ***/
+        // TODO: This constructor is needed by Light and Camera classes. Create
+        // a new base class XMesh for Light and Camera which doesn't use
+        // materials manager and / or ResourceIDs.
+        ImportedMesh( const std::string& filePath );
+
+
+        // TODO: Make this private and remove direct access from DirectionalLight.
         std::vector< TrianglesGroupWithMaterial > trianglesGroups_;
 };
 

@@ -74,7 +74,7 @@ class ClientPrimitivesManager : public QOffscreenSurface, public AbstractPrimiti
     public:
         void instantiatePrimitive( ResourceID primitiveID );
     private:
-        void instantiatePrimitive( UserID userID, ResourceID primitiveID, ResourceID meshID, ResourceID materialID );
+        void instantiatePrimitive( UserID userID, ResourceID primitiveID, ResourceID meshID, ResourceID firstMaterialID );
     public:
 
 

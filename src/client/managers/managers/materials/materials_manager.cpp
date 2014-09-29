@@ -358,4 +358,14 @@ void MaterialsManager::removeUserMaterials(UserID userID)
 }
 
 
+/***
+ * 10. Shader communication
+ ***/
+
+void MaterialsManager::sendMaterialToShader( const ResourceID &materialID )
+{
+    materials_.at( materialID )->sendToShader();
+}
+
+
 } // namespace como

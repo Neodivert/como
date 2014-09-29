@@ -301,9 +301,7 @@ void CylindersFactory::createCylinder( const ResourceID &cylinderID, const Resou
     cylinderRadius_ = radius;
     cylinderNRadialVertices_ = nRadialVertices;
 
-    materialsManager_->createMaterial( MaterialInfo(), materialID, cylinderID );
-
-    cylinder = std::unique_ptr< Mesh >( new SystemMesh( cylinderID, firstTextureWallID, generatePrimitiveData(), materialsManager_->getMaterial( materialID ) ) );
+    cylinder = std::unique_ptr< Mesh >( new SystemMesh( cylinderID, materialID, firstTextureWallID, generatePrimitiveData(), *materialsManager_ ) );
 
     meshesManager_->addMesh( std::move( cylinder ), cylinderID );
 }

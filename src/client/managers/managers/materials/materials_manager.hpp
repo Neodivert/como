@@ -145,14 +145,20 @@ class MaterialsManager : public QObject, public ServerWriter, public Observer, p
 
     public:
         /***
-         * 10. Operators
+         * 10. Shader communication
+         ***/
+        void sendMaterialToShader( const ResourceID& materialID );
+
+
+        /***
+         * 11. Operators
          ***/
         MaterialsManager& operator = ( const MaterialsManager& ) = delete;
         MaterialsManager& operator = ( MaterialsManager&& ) = delete;
 
 
         /***
-         * 11. Signals
+         * 12. Signals
          ***/
     signals:
         void materialSelectionConfirmed( MaterialHandlerPtr material );

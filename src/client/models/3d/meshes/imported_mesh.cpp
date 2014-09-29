@@ -24,14 +24,9 @@ namespace como {
  * 1. Construction
  ***/
 
-ImportedMesh::ImportedMesh( const ImportedPrimitiveData& primitiveData, ConstMaterialsVector materials, bool displayVertexNormals ) :
-    Mesh( primitiveData, materials, displayVertexNormals ),
+ImportedMesh::ImportedMesh( const ResourceID& id, const ResourceID& firstMaterialID, const ImportedPrimitiveData& primitiveData, MaterialsManager& materialsManager, bool displayVertexNormals ) :
+    Mesh( id, firstMaterialID, primitiveData, materialsManager, displayVertexNormals ),
     trianglesGroups_( primitiveData.trianglesGroups_ )
-{}
-
-
-ImportedMesh::ImportedMesh( const string &filePath ) :
-    Mesh( MeshType::MESH, filePath.c_str() )
 {}
 
 
@@ -62,5 +57,19 @@ void ImportedMesh::draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const gl
         drawVertexNormals( openGL, viewMatrix, projectionMatrix, glm::vec4( 1.0f, 0.0f, 0.0f, 0.0f ) );
     }
 }
+
+
+/***
+ * 5. Protected construction
+ ***/
+
+// TODO: This dangerous MaterialsManager is created so next constructor can be
+// called by derived classes which MUSN'T create materials or use materials
+// manager in any way. FIX THIS.
+MaterialsManager fooMaterialsManager( nullptr, nullptr );
+
+ImportedMesh::ImportedMesh( const string &filePath ) :
+    Mesh( NO_RESOURCE, NO_RESOURCE, MeshType::MESH,filePath.c_str(), fooMaterialsManager )
+{}
 
 } // namespace como

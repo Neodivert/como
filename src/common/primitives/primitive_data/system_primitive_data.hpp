@@ -30,6 +30,8 @@ namespace como {
 struct SystemPrimitiveData : public PrimitiveData
 {
     std::vector< NamedTrianglesGroup > trianglesGroups;
+
+    SystemPrimitiveData(){ materialsInfo_.push_back( MaterialInfo() ); }
 };
 
 } // namespace como

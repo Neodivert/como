@@ -20,8 +20,19 @@
 
 namespace como {
 
+
 /***
- * 1. File importing / exporting
+ * 1. Construction
+ ***/
+
+ImportedPrimitiveData::ImportedPrimitiveData(std::string filePath)
+{
+    importFromFile( filePath );
+}
+
+
+/***
+ * 2. File importing / exporting
  ***/
 
 void ImportedPrimitiveData::importFromFile( const std::string &filePath )
@@ -63,7 +74,7 @@ void ImportedPrimitiveData::exportToFile( const std::string& filePath ) const
 
 
 /***
- * 2. File reading
+ * 3. File reading
  ***/
 
 void ImportedPrimitiveData::readTrianglesGroups( std::ifstream& file )
@@ -88,7 +99,7 @@ void ImportedPrimitiveData::readTrianglesGroups( std::ifstream& file )
 
 
 /***
- * 3. File writting
+ * 4. File writting
  ***/
 
 void ImportedPrimitiveData::writeTrianglesGroups( std::ofstream &file ) const

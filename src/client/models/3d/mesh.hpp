@@ -30,6 +30,7 @@
 #include <client/models/3d/materials/material.hpp>
 #include <common/packables/array/packable_color.hpp>
 #include <common/primitives/primitive_data/primitive_data.hpp>
+#include <client/managers/managers/materials/materials_manager.hpp>
 
 namespace como {
 
@@ -52,6 +53,8 @@ class Mesh : public AbstractMesh, public Entity
     friend class DirectionalLight; // TODO: Remove
 
     private:
+        const ResourceID id_; // TODO: Move to a Resource class.
+
         // Mesh type
         MeshType type_;
 
@@ -88,18 +91,20 @@ class Mesh : public AbstractMesh, public Entity
         unsigned int componensPerVertex_;
 
         // Mesh's material.
-        ConstMaterialsVector materials_;
+        //ConstMaterialsVector materials_;
+        std::vector< ResourceID > materialIDs_;
 
         bool displayEdges_;
 
+        MaterialsManager* materialsManager_;
 
         /***
          * 1. Construction.
          ***/
     protected:
-        Mesh( MeshType type, const char* file, bool displayVertexNormals = false );
+        Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, MeshType type, const char* file, MaterialsManager& materialsManager, bool displayVertexNormals = false );
     public:
-        Mesh( const PrimitiveData& primitiveData, ConstMaterialsVector materials, bool displayVertexNormals = false );
+        Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, const PrimitiveData& primitiveData, MaterialsManager& materialsManager, bool displayVertexNormals = false );
         Mesh( const Mesh& b ) = default;
         Mesh( Mesh&& ) = delete;
 

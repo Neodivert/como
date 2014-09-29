@@ -28,8 +28,8 @@ TextureWallsManager* SystemMesh::textureWallsManager_ = nullptr;
  ***/
 
 // TODO: Create a "Resource" class with a ResourceID and a name (std::string)?
-SystemMesh::SystemMesh(const ResourceID &meshID, const ResourceID &firstTextureWallID, const SystemPrimitiveData &primitiveData, MaterialConstPtr material, bool displayVertexNormals) :
-    Mesh( primitiveData, { material }, displayVertexNormals )
+SystemMesh::SystemMesh(const ResourceID &meshID, const ResourceID& firstMaterialID, const ResourceID &firstTextureWallID, const SystemPrimitiveData &primitiveData, MaterialsManager& materialsManager, bool displayVertexNormals) :
+    Mesh( meshID, firstMaterialID, primitiveData, materialsManager, displayVertexNormals )
 {
     ResourceID currentTextureWallID = firstTextureWallID;
     for( const NamedTrianglesGroup& namedTrianglesGroup : primitiveData.trianglesGroups ){

@@ -33,7 +33,14 @@ struct ImportedPrimitiveData : public PrimitiveData
 
 
         /***
-         * 1. File importing / exporting
+         * 1. Construction
+         ***/
+        ImportedPrimitiveData() = default;
+        ImportedPrimitiveData( std::string filePath );
+
+
+        /***
+         * 2. File importing / exporting
          ***/
         virtual void importFromFile( const std::string &filePath );
         virtual void exportToFile( const std::string &filePath ) const;
@@ -41,13 +48,13 @@ struct ImportedPrimitiveData : public PrimitiveData
 
     private:
         /***
-         * 2. File reading
+         * 3. File reading
          ***/
         void readTrianglesGroups( std::ifstream& file );
 
 
         /***
-         * 3. File writting
+         * 4. File writting
          ***/
         void writeTrianglesGroups( std::ofstream& file ) const;
 };

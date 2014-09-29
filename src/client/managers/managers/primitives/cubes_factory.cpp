@@ -82,9 +82,7 @@ void CubesFactory::createCube( const ResourceID& cubeID, const ResourceID& mater
     height_ = height;
     depth_ = depth;
 
-    materialsManager_->createMaterial( MaterialInfo(), materialID, cubeID );
-
-    cube = std::unique_ptr< Mesh >( new SystemMesh( cubeID, firstTextureWallID, generatePrimitiveData(), materialsManager_->getMaterial( materialID ) ) );
+    cube = std::unique_ptr< Mesh >( new SystemMesh( cubeID, materialID, firstTextureWallID, generatePrimitiveData(), *materialsManager_ ) );
 
     meshesManager_->addMesh( std::move( cube ), cubeID );
 }

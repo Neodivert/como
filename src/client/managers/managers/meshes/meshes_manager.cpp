@@ -114,17 +114,20 @@ void MeshesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
  * 6. Meshes management
  ***/
 
-ResourceID MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData, ConstMaterialsVector materials )
+ResourceID MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData )
 {    
-    std::unique_ptr< Mesh > mesh( new ImportedMesh( primitiveData, materials, newMeshesDisplayVertexNormals_ ) );
+    const ResourceID& meshID = reserveResourceIDs( 1 );
+    const ResourceID& firstMaterialID = reserveResourceIDs( primitiveData.materialsInfo_.size() );
 
-    return addMesh( std::move( mesh ) );
+    createMesh( primitiveData, meshID, firstMaterialID );
+
+    return meshID;
 }
 
 
-void MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData, ConstMaterialsVector materials, const ResourceID& meshID )
+void MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData, const ResourceID& meshID, const ResourceID& firstMaterialID )
 {
-    std::unique_ptr< Mesh > mesh( new ImportedMesh( primitiveData, materials, newMeshesDisplayVertexNormals_ ) );
+    std::unique_ptr< Mesh > mesh( new ImportedMesh( meshID, firstMaterialID, primitiveData, *materialsManager_, newMeshesDisplayVertexNormals_ ) );
 
     addMesh( std::move( mesh ), meshID );
 }

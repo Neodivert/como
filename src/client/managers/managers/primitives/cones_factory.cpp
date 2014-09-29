@@ -169,9 +169,7 @@ void ConesFactory::createCone( const ResourceID &coneID, const ResourceID &mater
     coneRadius_ = radius;
     coneNBaseVertices_ = nBaseVertices;
 
-    materialsManager_->createMaterial( MaterialInfo(), materialID, coneID );
-
-    cone = std::unique_ptr< Mesh >( new SystemMesh( coneID, firstTextureWallID, generatePrimitiveData(), materialsManager_->getMaterial( materialID ) ) );
+    cone = std::unique_ptr< Mesh >( new SystemMesh( coneID, materialID, firstTextureWallID, generatePrimitiveData(), *materialsManager_ ) );
 
     meshesManager_->addMesh( std::move( cone ), coneID );
 }

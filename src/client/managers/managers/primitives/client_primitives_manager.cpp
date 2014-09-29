@@ -82,13 +82,12 @@ ResourceID ClientPrimitivesManager::importMeshFile( std::string srcFilePath, Res
 void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 {
     ImportedPrimitiveData primitiveData;
-    ResourceID firstMaterialID;
-    ResourceID meshID = server_->reserveResourceIDs( 1 );
-
     primitiveData.importFromFile( getPrimitiveFilePath( primitiveID ) );
 
-    firstMaterialID = materialsManager_->createMaterials( primitiveData.materialsInfo_, meshID );
-    meshesManager_->createMesh( primitiveData, materialsManager_->getMaterials( firstMaterialID, primitiveData.materialsInfo_.size() ), meshID );
+    const ResourceID meshID = server_->reserveResourceIDs( 1 );
+    const ResourceID firstMaterialID = server_->reserveResourceIDs( primitiveData.materialsInfo_.size() );
+
+    meshesManager_->createMesh( primitiveData, meshID, firstMaterialID );
 
     // Send the command to the server (the MaterialCreationCommand command was
     // already sent in previous call to materialsManager_->createMaterial() ).
@@ -97,7 +96,7 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 
 
 // FIXME: Duplicated code.
-void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID primitiveID, ResourceID meshID, ResourceID materialID )
+void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID primitiveID, ResourceID meshID, ResourceID firstMaterialID )
 {
     (void)( userID );
 
@@ -105,8 +104,8 @@ void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID pr
 
     primitiveData.importFromFile( getPrimitiveFilePath( primitiveID ) );
 
-    materialsManager_->createMaterials( primitiveData.materialsInfo_, materialID, meshID );
-    meshesManager_->createMesh( primitiveData, materialsManager_->getMaterials( materialID, primitiveData.materialsInfo_.size() ), meshID );
+    //materialsManager_->createMaterials( primitiveData.materialsInfo_, materialID, meshID );
+    meshesManager_->createMesh( primitiveData, meshID, firstMaterialID );
 }
 
 

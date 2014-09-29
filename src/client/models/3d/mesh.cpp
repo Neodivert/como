@@ -46,35 +46,45 @@ const char DEFAULT_MESH_NAME[] = "Mesh #";
  ***/
 
 // TODO: Remove this constructor.
-Mesh::Mesh( MeshType type, const char* filePath, bool displayVertexNormals ) :
+Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, MeshType type, const char* filePath, MaterialsManager& materialsManager, bool displayVertexNormals ) :
     Entity( DrawableType::MESH, DEFAULT_MESH_NAME ),
+    id_( meshID ),
     type_( type ),
     displayVertexNormals_( displayVertexNormals ),
-    displayEdges_( true )
+    displayEdges_( true ),
+    materialsManager_( &materialsManager )
 {
+    ResourceID currentMaterialID = firstMaterialID;
     ImportedPrimitiveData primitiveData;
     primitiveData.importFromFile( filePath );
 
     vertexData_ = primitiveData.vertexData;
     for( const auto& materialInfo : primitiveData.materialsInfo_ ){
-        materials_.push_back( MaterialPtr( new Material( materialInfo ) ) );
+        materialsManager_->createMaterial( materialInfo, currentMaterialID, id_ );
+        materialIDs_.push_back( currentMaterialID );
+        currentMaterialID++;
     }
 
     init( primitiveData.oglData );
 }
 
 
-Mesh::Mesh( const PrimitiveData& primitiveData, ConstMaterialsVector materials, bool displayVertexNormals ) :
+Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, const PrimitiveData& primitiveData, MaterialsManager& materialsManager, bool displayVertexNormals ) :
     Entity( DrawableType::MESH, DEFAULT_MESH_NAME ),
+    id_( meshID ),
     type_( MeshType::MESH ),
     vertexData_( primitiveData.vertexData ),
     displayVertexNormals_( displayVertexNormals ),
-    materials_( materials ),
-    displayEdges_( true )
+    displayEdges_( true ),
+    materialsManager_( &materialsManager )
 {
+    ResourceID currentMaterialID = firstMaterialID;
+
     init( primitiveData.oglData );
     for( const auto& materialInfo : primitiveData.materialsInfo_ ){
-        materials_.push_back( MaterialPtr( new Material( materialInfo ) ) );
+        materialsManager_->createMaterial( materialInfo, currentMaterialID, id_ );
+        materialIDs_.push_back( currentMaterialID );
+        currentMaterialID++;
     }
 }
 
@@ -474,9 +484,9 @@ bool Mesh::containsProperty( const void* property ) const
 }
 
 
-void Mesh::sendMaterialToShader(const unsigned int index) const
+void Mesh::sendMaterialToShader( const unsigned int index ) const
 {
-    materials_.at( index )->sendToShader();
+    materialsManager_->sendMaterialToShader( materialIDs_.at( index ) );
 }
 
 } // namespace como
