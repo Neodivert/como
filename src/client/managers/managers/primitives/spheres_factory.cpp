@@ -115,9 +115,39 @@ void SpheresFactory::generateVertexData( MeshVertexData &vertexData )
 
 void SpheresFactory::generateUVData( MeshTextureData &uvData )
 {
-    // TODO: Complete.
-    uvData.uvVertices.resize( 1, glm::vec2( 0.0f, 0.0f ) );
-    uvData.uvTriangles.resize( nExpectedTriangles() );
+    const float DELTA_ANGLE = glm::pi<float>() / sphereNDivisions_;
+    float currentVerticalAngle = 0.0f;
+    float currentHorizontalAngle = 0.0f;
+    int currentDivision;
+    int currentHorizontalDivision;
+    float currentY;
+    float currentX;
+    int firstCircleIndex, secondCircleIndex;
+    //const float DELTA_X = 1.0f / (sphereNDivisions_ + 1.0f);
+
+    // Generate the UV vertices of the sphere.
+    for( currentDivision = 0; currentDivision < sphereNDivisions_ + 1; currentDivision++ ){
+        currentVerticalAngle = currentDivision * DELTA_ANGLE;
+        currentY = 0.5f + 0.5f * -cos( currentVerticalAngle );
+
+        for( currentHorizontalDivision = 0; currentHorizontalDivision < sphereNDivisions_ + 1; currentHorizontalDivision++ ){
+            currentHorizontalAngle = currentHorizontalDivision * DELTA_ANGLE;
+            currentX = 0.5f + 0.5f * cos( currentHorizontalAngle );
+
+            uvData.uvVertices.push_back( glm::vec2( currentX, currentY ) );
+        }
+    }
+
+    // Generate the UV triangles of the sphere.
+    for( currentDivision = 0; currentDivision < sphereNDivisions_; currentDivision++ ){
+        firstCircleIndex = currentDivision * ( sphereNDivisions_ + 1 );
+        secondCircleIndex = firstCircleIndex + ( sphereNDivisions_ + 1 );
+
+        generateTriangles( uvData.uvTriangles,
+                           firstCircleIndex,
+                           secondCircleIndex,
+                           sphereNDivisions_ + 1 );
+    }
 }
 
 
