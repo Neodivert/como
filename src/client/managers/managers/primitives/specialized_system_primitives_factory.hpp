@@ -25,6 +25,8 @@
 
 namespace como {
 
+// TODO: Combine methods generateVertexData() and generateUVData() into
+// one method.
 class SpecializedSystemPrimitivesFactory : public ServerWriter
 {
     public:
