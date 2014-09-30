@@ -203,6 +203,9 @@ const void* PackableCommandsList::unpack( const void* buffer )
                     case GeometricPrimitiveCommandType::CYLINDER_CREATION:
                         command = CommandPtr( new CylinderCreationCommand );
                     break;
+                    case GeometricPrimitiveCommandType::SPHERE_CREATION:
+                        command = CommandPtr( new SphereCreationCommand );
+                    break;
                 }
             break;
 

@@ -27,7 +27,8 @@ enum class GeometricPrimitiveCommandType : std::uint8_t
 {
     CUBE_CREATION = 0,
     CONE_CREATION,
-    CYLINDER_CREATION
+    CYLINDER_CREATION,
+    SPHERE_CREATION
 };
 
 class GeometricPrimitiveCommand : public TypeCommand< GeometricPrimitiveCommandType >

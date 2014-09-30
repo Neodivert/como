@@ -22,7 +22,6 @@
 #include <QComboBox>
 #include <client/managers/managers/materials/materials_manager.hpp>
 #include <map>
-#include "materials_list_item.hpp"
 
 namespace como {
 

@@ -34,6 +34,7 @@ GeometricPrimitivesCreationMenu::GeometricPrimitivesCreationMenu( GeometricPrimi
     layout->addWidget( createCubeCreationButton() );
     layout->addWidget( createConeCreationButton() );
     layout->addWidget( createCylinderCreationButton() );
+    layout->addWidget( createSphereCreationButton() );
 
     setLayout( layout );
 }
@@ -77,5 +78,19 @@ QPushButton *GeometricPrimitivesCreationMenu::createCylinderCreationButton() con
 
     return cylinderCreationButton;
 }
+
+
+QPushButton *GeometricPrimitivesCreationMenu::createSphereCreationButton() const
+{
+    QPushButton* sphereCreationButton = new QPushButton( "Create sphere" );
+
+    QObject::connect( sphereCreationButton, &QPushButton::pressed, [this](){
+        geometricPrimitivesFactory_->createSphere();
+    });
+
+    return sphereCreationButton;
+}
+
+
 
 } // namespace como

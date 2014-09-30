@@ -29,7 +29,8 @@ GeometricPrimitivesFactory::GeometricPrimitivesFactory( ServerInterfacePtr serve
     ServerWriter( server ),
     cubesFactory_( server, meshesManager, materialsManager, textureWallsManager ),
     conesFactory_( server, meshesManager, materialsManager, textureWallsManager ),
-    cylindersFactory_( server, meshesManager, materialsManager, textureWallsManager )
+    cylindersFactory_( server, meshesManager, materialsManager, textureWallsManager ),
+    spheresFactory_( server, meshesManager, materialsManager, textureWallsManager )
 {
     SystemMesh::setTextureWallsManager( *textureWallsManager );
 }
@@ -57,6 +58,12 @@ ResourceID GeometricPrimitivesFactory::createCylinder( float height, float radiu
 }
 
 
+ResourceID GeometricPrimitivesFactory::createSphere( float radius, std::uint16_t nDivisions )
+{
+    return spheresFactory_.createSphere( radius, nDivisions );
+}
+
+
 /***
  * 4. Command execution
  ***/
@@ -81,6 +88,12 @@ void GeometricPrimitivesFactory::executeRemoteCommand( const GeometricPrimitiveC
                 dynamic_cast< const CylinderCreationCommand& >( command );
 
             cylindersFactory_.executeRemoteCommand( creationCommand );
+        }break;
+        case GeometricPrimitiveCommandType::SPHERE_CREATION:{
+            const SphereCreationCommand& creationCommand =
+                dynamic_cast< const SphereCreationCommand& >( command );
+
+            spheresFactory_.executeRemoteCommand( creationCommand );
         }break;
     }
 }

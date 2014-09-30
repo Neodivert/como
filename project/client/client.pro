@@ -129,7 +129,8 @@ HEADERS += \
     ../../src/client/gui/textures/textures_gallery.hpp \
     ../../src/client/gui/textures/textures_gallery_item.hpp \
     ../../src/client/managers/managers/primitives/cones_factory.hpp \
-    ../../src/client/managers/managers/primitives/cylinders_factory.hpp
+    ../../src/client/managers/managers/primitives/cylinders_factory.hpp \
+    ../../src/client/managers/managers/primitives/spheres_factory.hpp
 
 
 # Client sources
@@ -213,4 +214,5 @@ SOURCES += \
     ../../src/client/gui/textures/textures_gallery.cpp \
     ../../src/client/gui/textures/textures_gallery_item.cpp \
     ../../src/client/managers/managers/primitives/cones_factory.cpp \
-    ../../src/client/managers/managers/primitives/cylinders_factory.cpp
+    ../../src/client/managers/managers/primitives/cylinders_factory.cpp \
+    ../../src/client/managers/managers/primitives/spheres_factory.cpp

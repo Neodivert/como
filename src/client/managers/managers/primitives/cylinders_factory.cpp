@@ -306,5 +306,4 @@ void CylindersFactory::createCylinder( const ResourceID &cylinderID, const Resou
     meshesManager_->addMesh( std::move( cylinder ), cylinderID );
 }
 
-
 } // namespace como
