@@ -46,7 +46,8 @@ Viewport::Viewport( View view, Projection projection, shared_ptr< ComoApp > como
     view_( View::FRONT ),
     projection_( projection ),
     forceRender_( true ),
-    lastMouseWorldPos_( 0.0f )
+    lastMouseWorldPos_( 0.0f ),
+    camerasManager_( comoApp->getScene()->getEntitiesManager()->getCamerasManager() )
 {
     try {
         OpenGL::checkStatus( "Viewport constructor - begin" );
@@ -420,9 +421,6 @@ void Viewport::render()
         return;
     }
 
-    // Get camera's view matrix.
-    glm::mat4 viewMatrix = camera->getViewMatrix();
-
     // Make shared OpenGL context current for this surface.
     comoApp->getScene()->getOpenGLContext()->makeCurrent( this );
 
@@ -432,7 +430,15 @@ void Viewport::render()
     // Clear buffers.
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-    camera->sendToShader( *( comoApp->getScene()->getOpenGL() ) );
+    // Get camera's view matrix and send it to the shader.
+    glm::mat4 viewMatrix;
+    if( view_ == View::CAMERA ){
+        viewMatrix = camerasManager_->activeCameraViewMatrix();
+        camerasManager_->sendActiveCameraToShader();
+    }else{
+        viewMatrix = camera->getViewMatrix();
+        camera->sendToShader( *( comoApp->getScene()->getOpenGL() ) );
+    }
 
     // Draw scene.
     comoApp->getScene()->draw( viewMatrix, projectionMatrix, static_cast< int >( comoApp->getTransformationMode() ) - 1 );
@@ -507,6 +513,7 @@ void Viewport::setProjection( Projection projection )
 
     forceRender();
 }
+
 
 void Viewport::forceRender()
 {

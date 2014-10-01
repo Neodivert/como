@@ -42,7 +42,19 @@ class CamerasSelection : public virtual EntitiesSet< Camera >
 
 
         /***
-         * 3. Operators
+         * 3. Getters
+         ***/
+        glm::mat4 cameraViewMatrix( const ResourceID& cameraID ) const;
+
+
+        /***
+         * 4. Shader communication
+         ***/
+        void sendCameraToShader( OpenGL& openGL, const ResourceID& cameraID ) const;
+
+
+        /***
+         * 5. Operators
          ***/
         CamerasSelection& operator = ( const CamerasSelection& ) = delete;
         CamerasSelection& operator = ( CamerasSelection&& ) = delete;

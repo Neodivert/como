@@ -30,4 +30,24 @@ CamerasSelection::CamerasSelection( glm::vec4 borderColor ) :
 {}
 
 
+/***
+ * 3. Getters
+ ***/
+
+glm::mat4 CamerasSelection::cameraViewMatrix( const ResourceID& cameraID ) const
+{
+    return resources_.at( cameraID )->getViewMatrix();
+}
+
+
+/***
+ * 4. Shader communication
+ ***/
+
+void CamerasSelection::sendCameraToShader( OpenGL& openGL, const ResourceID &cameraID ) const
+{
+    resources_.at( cameraID )->sendToShader( openGL );
+}
+
+
 } // namespace como

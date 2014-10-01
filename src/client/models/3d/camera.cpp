@@ -48,6 +48,8 @@ Camera::Camera( OpenGL &openGL, const glm::vec3 &cameraCenter, const glm::vec3 &
         eyeVectorLocation_ = openGL.getShaderVariableLocation( "eyeVector" );
     }
 
+    Mesh::translate( glm::vec3( 0.0f, 0.0f, -1.0f ) );
+
     viewMatrix = glm::lookAt( cameraEye,
                               cameraCenter,
                               cameraUp );
@@ -116,7 +118,8 @@ void Camera::setView( View view )
                         glm::vec3( 0.0f, 1.0f, 0.0f )
                         );
         break;
-        case View::CAMERA:
+        case View::USER:
+        case View::CAMERA: // TODO: Remove this option (Camera)?
             viewMatrix = glm::lookAt(
                         glm::vec3( 1.0f, 1.0f, 1.0f ),
                         center,

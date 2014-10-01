@@ -25,15 +25,25 @@ namespace como {
  ***/
 
 CamerasManager::CamerasManager( OpenGL& openGL, ServerInterfacePtr server, LogPtr log) :
-
     ResourceCommandsExecuter( server ),
     SpecializedEntitiesManager( server, log ),
-    openGL_( &openGL )
+    openGL_( &openGL ),
+    activeCameraID_( NO_RESOURCE )
 {}
 
 
 /***
- * 3. Commands execution
+ * 3. Getters
+ ***/
+
+glm::mat4 CamerasManager::activeCameraViewMatrix() const
+{
+    return activeCameraSelection().cameraViewMatrix( activeCameraID_ );
+}
+
+
+/***
+ * 4. Commands execution
  ***/
 
 void CamerasManager::executeRemoteCommand( const CameraCommand &command )
@@ -53,7 +63,17 @@ void CamerasManager::executeRemoteCommand( const CameraCommand &command )
 
 
 /***
- * 5. Remote command creation
+ * 5. Shader communication
+ ***/
+
+void CamerasManager::sendActiveCameraToShader() const
+{
+    activeCameraSelection().sendCameraToShader( *openGL_, activeCameraID_ );
+}
+
+
+/***
+ * 7. Remote command creation
  ***/
 
 void CamerasManager::createCamera( const ResourceID &cameraID,
@@ -61,12 +81,35 @@ void CamerasManager::createCamera( const ResourceID &cameraID,
                                    const glm::vec3 &cameraEye,
                                    const glm::vec3 &cameraUp )
 {
+    if( activeCameraID_ == NO_RESOURCE ){
+        activeCameraID_ = cameraID;
+    }
+
     std::unique_ptr< Camera > camera( new Camera( *openGL_,
                                                   cameraCenter,
                                                   cameraEye,
                                                   cameraUp ) );
 
     resourcesSelections_.at( cameraID.getCreatorID() )->addResource( cameraID, std::move( camera ) );
+}
+
+
+
+
+/****
+ * 8. Private getters
+ ***/
+
+CamerasSelection &CamerasManager::activeCameraSelection() const
+{
+    // Search the selection containing the active camera and return it.
+    for( const auto& camerasSelection : resourcesSelections_ ){
+        if( camerasSelection.second->containsResource( activeCameraID_ ) ){
+            return *( camerasSelection.second );
+        }
+    }
+
+    throw std::runtime_error( "Active camera not found" );
 }
 
 } // namespace como

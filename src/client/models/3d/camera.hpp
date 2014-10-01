@@ -34,9 +34,10 @@ enum class View {
     RIGHT,
     TOP,
     BOTTOM,
+    USER,
     CAMERA
 };
-const unsigned int N_VIEWS = 7;
+const unsigned int N_VIEWS = 8;
 
 // Available views (strings for GUI output).
 const char viewStrings [N_VIEWS][16] =
@@ -47,6 +48,7 @@ const char viewStrings [N_VIEWS][16] =
     "Right",
     "Top",
     "Bottom",
+    "User",
     "Camera"
 };
 

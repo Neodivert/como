@@ -28,6 +28,7 @@
 #include <QMouseEvent>
 #include <client/managers/como_app.hpp>
 #include <client/models/3d/camera.hpp>
+#include <client/managers/managers/cameras/cameras_manager.hpp>
 
 namespace como {
 
@@ -82,6 +83,8 @@ class Viewport : public QWindow
         bool forceRender_;
 
         glm::vec3 lastMouseWorldPos_;
+
+        CamerasManager* camerasManager_;
 
     public:
         /***

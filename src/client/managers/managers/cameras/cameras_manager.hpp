@@ -46,13 +46,25 @@ class CamerasManager : public SpecializedEntitiesManager< Camera, CamerasSelecti
 
 
         /***
-         * 3. Commands execution
+         * 3. Getters
+         ***/
+        glm::mat4 activeCameraViewMatrix() const;
+
+
+        /***
+         * 4. Commands execution
          ***/
         void executeRemoteCommand( const CameraCommand& command );
 
 
         /***
-         * 4. Operators
+         * 5. Shader communication
+         ***/
+        void sendActiveCameraToShader() const;
+
+
+        /***
+         * 6. Operators
          ***/
         CamerasManager& operator = ( const CamerasManager& ) = delete;
         CamerasManager& operator = ( CamerasManager&& ) = delete;
@@ -60,7 +72,7 @@ class CamerasManager : public SpecializedEntitiesManager< Camera, CamerasSelecti
 
     private:
         /***
-         * 5. Remote command creation
+         * 7. Remote camera creation
          ***/
         void createCamera( const ResourceID& cameraID,
                            const glm::vec3& cameraCenter,
@@ -68,8 +80,16 @@ class CamerasManager : public SpecializedEntitiesManager< Camera, CamerasSelecti
                            const glm::vec3& cameraUp );
 
 
+        /****
+         * 8. Private getters
+         ***/
+        CamerasSelection& activeCameraSelection() const;
+
+
     private:
         OpenGL* openGL_;
+
+        ResourceID activeCameraID_;
 };
 
 } // namespace como
