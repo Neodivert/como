@@ -130,8 +130,8 @@ void Server::run()
         // historic.
         const ResourceID CAMERA_ID( NO_USER, 2 );
         const glm::vec3 cameraCenter( 0.0f, 0.0f, 0.0f );
-        const glm::vec3 cameraEye( 1.0f, 1.0f, 0.0f );
-        const glm::vec3 cameraUp( -1.0f, 1.0f, 0.0f );
+        const glm::vec3 cameraEye( 0.5f, 0.5f, 0.0f );
+        const glm::vec3 cameraUp( -0.5f, 0.5f, 0.0f );
         processSceneCommand(
                     CameraCreationCommand(
                         CAMERA_ID,
