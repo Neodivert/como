@@ -21,6 +21,7 @@
 
 #include <client/managers/managers/lights/lights_manager.hpp>
 #include <client/managers/managers/meshes/meshes_manager.hpp>
+#include <client/managers/managers/cameras/cameras_manager.hpp>
 #include <client/managers/selections/entities/local_entities_selection.hpp>
 #include <client/managers/managers/entities/abstract_entities_manager.hpp>
 #include <client/managers/managers/users/users_manager.hpp>
@@ -59,6 +60,7 @@ class EntitiesManager : public AbstractEntitiesManager, public ContainerObserver
         LocalEntitiesSelection* getLocalSelection() const; // TODO: Return a undeletable pointer.
         MeshesManagerPtr getMeshesManager();
         LightsManagerPtr getLightsManager();
+        CamerasManager* getCamerasManager();
         virtual bool containsResource(const ResourceID &resourceID) const;
 
 
@@ -110,6 +112,7 @@ class EntitiesManager : public AbstractEntitiesManager, public ContainerObserver
 
         MeshesManagerPtr meshesManager_;
         LightsManagerPtr lightsManager_;
+        CamerasManagerPtr camerasManager_;
 
         std::vector< AbstractEntitiesManager* > managers_;
 };

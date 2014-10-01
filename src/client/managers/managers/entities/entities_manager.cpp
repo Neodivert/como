@@ -30,10 +30,12 @@ EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log, OpenGL*
     AbstractEntitiesManager( server ),
     usersManager_( usersManager ),
     meshesManager_( new MeshesManager( server, log, materialsManager, textureWallsManager ) ),
-    lightsManager_( new LightsManager( server, log, openGL ) )
+    lightsManager_( new LightsManager( server, log, openGL ) ),
+    camerasManager_( new CamerasManager( server, log ) )
 {
     managers_.push_back( lightsManager_.get() );
     managers_.push_back( meshesManager_.get() );
+    managers_.push_back( camerasManager_.get() );
 
     entitiesSelections_[NO_USER] =
             std::unique_ptr<EntitiesSelection>( new EntitiesSelection( lightsManager_->getResourcesSelection( NO_USER ), meshesManager_->getResourcesSelection( NO_USER ) ) );
@@ -54,6 +56,7 @@ void EntitiesManager::createUserSelection( UserID userID, const glm::vec4& selec
     // TODO: Apply to all managers uniformly.
     lightsManager_->createResourcesSelection( userID, selectionColor );
     meshesManager_->createResourcesSelection( userID, selectionColor );
+    camerasManager_->createResourcesSelection( userID, selectionColor );
 
     entitiesSelections_[userID] =
             std::unique_ptr<EntitiesSelection>( new EntitiesSelection( lightsManager_->getResourcesSelection( userID ), meshesManager_->getResourcesSelection( userID ) ) );
@@ -70,6 +73,7 @@ void EntitiesManager::removeUserSelection( UserID userID )
 {
     lightsManager_->removeResourcesSelection( userID );
     meshesManager_->removeResourcesSelection( userID );
+    camerasManager_->removeResourcesSelection( userID );
 
     entitiesSelections_.erase( userID );
 }
@@ -94,6 +98,12 @@ MeshesManagerPtr EntitiesManager::getMeshesManager()
 LightsManagerPtr EntitiesManager::getLightsManager()
 {
     return lightsManager_;
+}
+
+
+CamerasManager* EntitiesManager::getCamerasManager()
+{
+    return camerasManager_.get();
 }
 
 

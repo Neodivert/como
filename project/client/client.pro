@@ -130,7 +130,10 @@ HEADERS += \
     ../../src/client/gui/textures/textures_gallery_item.hpp \
     ../../src/client/managers/managers/primitives/cones_factory.hpp \
     ../../src/client/managers/managers/primitives/cylinders_factory.hpp \
-    ../../src/client/managers/managers/primitives/spheres_factory.hpp
+    ../../src/client/managers/managers/primitives/spheres_factory.hpp \
+    ../../src/client/managers/managers/cameras/cameras_manager.hpp \
+    ../../src/client/managers/selections/cameras/cameras_selection.hpp \
+    ../../src/client/managers/selections/cameras/local_cameras_selection.hpp
 
 
 # Client sources
@@ -215,4 +218,7 @@ SOURCES += \
     ../../src/client/gui/textures/textures_gallery_item.cpp \
     ../../src/client/managers/managers/primitives/cones_factory.cpp \
     ../../src/client/managers/managers/primitives/cylinders_factory.cpp \
-    ../../src/client/managers/managers/primitives/spheres_factory.cpp
+    ../../src/client/managers/managers/primitives/spheres_factory.cpp \
+    ../../src/client/managers/managers/cameras/cameras_manager.cpp \
+    ../../src/client/managers/selections/cameras/cameras_selection.cpp \
+    ../../src/client/managers/selections/cameras/local_cameras_selection.cpp
