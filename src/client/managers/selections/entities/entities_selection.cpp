@@ -25,13 +25,15 @@ namespace como {
  * 1. Construction
  ***/
 
-EntitiesSelection::EntitiesSelection( LightsSelection* lightsSelection, MeshesSelection* meshesSelection, PivotPointMode pivotPointMode ) :
+EntitiesSelection::EntitiesSelection( LightsSelection* lightsSelection, MeshesSelection* meshesSelection, CamerasSelection* camerasSelection, PivotPointMode pivotPointMode ) :
     lightsSelection_( lightsSelection ),
     meshesSelection_( meshesSelection ),
+    camerasSelection_( camerasSelection ),
     centroid_( 0.0f )
 {
     specializedEntitiesSelections_.push_back( lightsSelection_ );
     specializedEntitiesSelections_.push_back( meshesSelection_ );
+    specializedEntitiesSelections_.push_back( camerasSelection_ );
 
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->Observable::addObserver( this );

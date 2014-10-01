@@ -33,7 +33,7 @@ class CamerasManager : public SpecializedEntitiesManager< Camera, CamerasSelecti
         /***
          * 1. Construction
          ***/
-        CamerasManager( ServerInterfacePtr server, LogPtr log );
+        CamerasManager( OpenGL& openGL, ServerInterfacePtr server, LogPtr log );
         CamerasManager() = delete;
         CamerasManager( const CamerasManager& ) = delete;
         CamerasManager( CamerasManager&& ) = delete;
@@ -46,10 +46,30 @@ class CamerasManager : public SpecializedEntitiesManager< Camera, CamerasSelecti
 
 
         /***
-         * 3. Operators
+         * 3. Commands execution
+         ***/
+        void executeRemoteCommand( const CameraCommand& command );
+
+
+        /***
+         * 4. Operators
          ***/
         CamerasManager& operator = ( const CamerasManager& ) = delete;
         CamerasManager& operator = ( CamerasManager&& ) = delete;
+
+
+    private:
+        /***
+         * 5. Remote command creation
+         ***/
+        void createCamera( const ResourceID& cameraID,
+                           const glm::vec3& cameraCenter,
+                           const glm::vec3& cameraEye,
+                           const glm::vec3& cameraUp );
+
+
+    private:
+        OpenGL* openGL_;
 };
 
 } // namespace como

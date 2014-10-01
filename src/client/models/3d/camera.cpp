@@ -38,6 +38,25 @@ Camera::Camera( OpenGL& openGL, View view ) :
 }
 
 
+Camera::Camera( OpenGL &openGL, const glm::vec3 &cameraCenter, const glm::vec3 &cameraEye, const glm::vec3 &cameraUp ) :
+    ImportedMesh( "data/system/primitives/camera.prim" ),
+    originalEye     ( 0.0f, 0.0f, 1.0f, 1.0f ),
+    originalUp      ( 0.0f, 1.0f, 0.0f, 0.0f ),
+    originalCenter  ( 0.0f, 0.0f, 0.0f, 1.0f )
+{
+    if( eyeVectorLocation_ < 0 ){
+        eyeVectorLocation_ = openGL.getShaderVariableLocation( "eyeVector" );
+    }
+
+    viewMatrix = glm::lookAt( cameraEye,
+                              cameraCenter,
+                              cameraUp );
+    modelMatrix_ = glm::inverse( viewMatrix );
+
+    update();
+}
+
+
 /***
  * 2. Setters and getters
  ***/

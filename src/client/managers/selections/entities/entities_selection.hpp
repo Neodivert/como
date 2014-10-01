@@ -23,6 +23,7 @@
 #include <client/managers/selections/meshes/meshes_selection.hpp>
 #include <client/models/3d/abstract_entities_set.hpp>
 #include <client/managers/selections/resources/resources_selection.hpp>
+#include <client/managers/selections/cameras/cameras_selection.hpp>
 
 namespace como {
 
@@ -33,7 +34,10 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer
          * 1. Construction
          ***/
         // TODO: Pass *selections in a vector?
-        EntitiesSelection( LightsSelection* lightsSelection, MeshesSelection* meshesSelection, PivotPointMode pivotPointMode = PivotPointMode::MEDIAN_POINT );
+        EntitiesSelection( LightsSelection* lightsSelection,
+                           MeshesSelection* meshesSelection,
+                           CamerasSelection* camerasSelection,
+                           PivotPointMode pivotPointMode = PivotPointMode::MEDIAN_POINT );
         EntitiesSelection() = delete;
         EntitiesSelection( const EntitiesSelection& ) = delete;
         EntitiesSelection( EntitiesSelection&& ) = delete;
@@ -100,6 +104,7 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer
 
         LightsSelection* lightsSelection_;
         MeshesSelection* meshesSelection_;
+        CamerasSelection* camerasSelection_;
 
         PivotPointMode pivotPointMode_;
         glm::vec3 centroid_;

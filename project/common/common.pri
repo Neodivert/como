@@ -120,7 +120,10 @@ HEADERS += \
     ../../src/common/commands/texture_wall_commands/texture_wall_texture_change_command.hpp \
     ../../src/common/commands/geometric_primitive_command/cone_creation_command.hpp \
     ../../src/common/commands/geometric_primitive_command/cylinder_creation_command.hpp \
-    ../../src/common/commands/geometric_primitive_command/sphere_creation_command.hpp
+    ../../src/common/commands/geometric_primitive_command/sphere_creation_command.hpp \
+    ../../src/common/commands/camera_commands/camera_command.hpp \
+    ../../src/common/commands/camera_commands/camera_creation_command.hpp \
+    ../../src/common/commands/camera_commands/camera_commands.hpp
 
 
 # Common sources (used by both client and server).
@@ -187,4 +190,6 @@ SOURCES += \
     ../../src/common/commands/texture_wall_commands/texture_wall_texture_change_command.cpp \
     ../../src/common/commands/geometric_primitive_command/cone_creation_command.cpp \
     ../../src/common/commands/geometric_primitive_command/cylinder_creation_command.cpp \
-    ../../src/common/commands/geometric_primitive_command/sphere_creation_command.cpp
+    ../../src/common/commands/geometric_primitive_command/sphere_creation_command.cpp \
+    ../../src/common/commands/camera_commands/camera_command.cpp \
+    ../../src/common/commands/camera_commands/camera_creation_command.cpp

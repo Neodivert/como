@@ -48,7 +48,8 @@ enum class CommandTarget : std::uint8_t
     RESOURCES_SELECTION,
     GEOMETRIC_PRIMITIVE,
     TEXTURE,
-    TEXTURE_WALL
+    TEXTURE_WALL,
+    CAMERA
 };
 
 

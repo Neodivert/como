@@ -119,12 +119,25 @@ void Server::run()
             primitivesManager_ = std::unique_ptr< ServerPrimitivesManager >( new ServerPrimitivesManager( getDirPath(), getTempDirPath(), commandsHistoric_, log_ ) );
         });
 
-        // Create a directional light with with no owner and synchronise it in
+        // Create a directional light with with no owner and synchronize it in
         // the commands historic.
         const ResourceID DIRECTIONAL_LIGHT_ID( NO_USER, 1 );
         std::uint8_t lightColor[4] = { 255, 255, 255, 255 };
         lightsManager_.requestDirectionalLightCreation( DIRECTIONAL_LIGHT_ID );
         addCommand( CommandConstPtr( new DirectionalLightCreationCommand( NO_USER, DIRECTIONAL_LIGHT_ID, lightColor ) ) );
+
+        // Create a camera with no owner and syncrhonize it in the commands
+        // historic.
+        const ResourceID CAMERA_ID( NO_USER, 2 );
+        const glm::vec3 cameraCenter( 0.0f, 0.0f, 0.0f );
+        const glm::vec3 cameraEye( 1.0f, 1.0f, 0.0f );
+        const glm::vec3 cameraUp( -1.0f, 1.0f, 0.0f );
+        processSceneCommand(
+                    CameraCreationCommand(
+                        CAMERA_ID,
+                        cameraCenter,
+                        cameraEye,
+                        cameraUp ) );
 
         // Initialize the container of free user colors.
         initUserColors();
@@ -386,6 +399,15 @@ void Server::processSceneCommand( const Command& sceneCommand )
                                                              geometricPrimitiveCommand.getUserID() );
 
                 log_->debug( "Geometric primitive added! (", geometricPrimitiveCommand.getMeshID(), "\n" );
+            }
+        }break;
+        case CommandTarget::CAMERA:{
+            const CameraCommand& cameraCommand =
+                    dynamic_cast< const CameraCommand& >( sceneCommand );
+
+            if( cameraCommand.getType() == CameraCommandType::CAMERA_CREATION ){
+                resourcesOwnershipManager_.registerResource( cameraCommand.cameraID(),
+                                                             cameraCommand.getUserID() );
             }
         }break;
         default:

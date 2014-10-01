@@ -76,6 +76,10 @@ class Camera : public ImportedMesh
         Camera( const Camera& ) = default;
         Camera( Camera&& ) = default;
         Camera( OpenGL& openGL, View view = View::FRONT );
+        Camera( OpenGL& openGL,
+                const glm::vec3& cameraCenter,
+                const glm::vec3& cameraEye,
+                const glm::vec3& cameraUp );
 
         // TODO: Is this problematic with Entity's virtual destructor?
         virtual ~Camera() = default;

@@ -22,6 +22,7 @@
 #include <client/managers/selections/entities/entities_selection.hpp>
 #include <client/managers/selections/lights/local_lights_selection.hpp>
 #include <client/managers/selections/meshes/local_meshes_selection.hpp>
+#include <client/managers/selections/cameras/local_cameras_selection.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
 #include <client/managers/utilities/server_writer.hpp>
 
@@ -33,7 +34,7 @@ class LocalEntitiesSelection : public EntitiesSelection, public ServerWriter
         /***
          * 1. Construction
          ***/
-        LocalEntitiesSelection( ServerInterfacePtr server, LocalLightsSelection* lightsSelection, LocalMeshesSelection* meshesSelection );
+        LocalEntitiesSelection( ServerInterfacePtr server, LocalLightsSelection* lightsSelection, LocalMeshesSelection* meshesSelection, LocalCamerasSelection* camerasSelection );
         LocalEntitiesSelection() = delete;
         LocalEntitiesSelection( const LocalEntitiesSelection& ) = delete;
         LocalEntitiesSelection( LocalEntitiesSelection&& ) = delete;

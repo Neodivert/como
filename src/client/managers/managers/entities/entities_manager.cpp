@@ -31,17 +31,24 @@ EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log, OpenGL*
     usersManager_( usersManager ),
     meshesManager_( new MeshesManager( server, log, materialsManager, textureWallsManager ) ),
     lightsManager_( new LightsManager( server, log, openGL ) ),
-    camerasManager_( new CamerasManager( server, log ) )
+    camerasManager_( new CamerasManager( *openGL, server, log ) )
 {
     managers_.push_back( lightsManager_.get() );
     managers_.push_back( meshesManager_.get() );
     managers_.push_back( camerasManager_.get() );
 
     entitiesSelections_[NO_USER] =
-            std::unique_ptr<EntitiesSelection>( new EntitiesSelection( lightsManager_->getResourcesSelection( NO_USER ), meshesManager_->getResourcesSelection( NO_USER ) ) );
+            std::unique_ptr<EntitiesSelection>( new EntitiesSelection(
+                                                    lightsManager_->getResourcesSelection( NO_USER ),
+                                                    meshesManager_->getResourcesSelection( NO_USER ),
+                                                    camerasManager_->getResourcesSelection( NO_USER ) ) );
 
     entitiesSelections_[server->getLocalUserID()] =
-            std::unique_ptr<EntitiesSelection>( new LocalEntitiesSelection( server, lightsManager_->getLocalResourcesSelection(), meshesManager_->getLocalResourcesSelection() ) );
+            std::unique_ptr<EntitiesSelection>(
+                new LocalEntitiesSelection( server,
+                                            lightsManager_->getLocalResourcesSelection(),
+                                            meshesManager_->getLocalResourcesSelection(),
+                                            camerasManager_->getLocalResourcesSelection() ) );
 
     usersManager_->addObserver( this );
 }
@@ -59,7 +66,11 @@ void EntitiesManager::createUserSelection( UserID userID, const glm::vec4& selec
     camerasManager_->createResourcesSelection( userID, selectionColor );
 
     entitiesSelections_[userID] =
-            std::unique_ptr<EntitiesSelection>( new EntitiesSelection( lightsManager_->getResourcesSelection( userID ), meshesManager_->getResourcesSelection( userID ) ) );
+            std::unique_ptr<EntitiesSelection>(
+                new EntitiesSelection(
+                    lightsManager_->getResourcesSelection( userID ),
+                    meshesManager_->getResourcesSelection( userID ),
+                    camerasManager_->getResourcesSelection( userID ) ) );
 }
 
 

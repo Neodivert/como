@@ -24,10 +24,49 @@ namespace como {
  * 1. Construction
  ***/
 
-CamerasManager::CamerasManager(ServerInterfacePtr server, LogPtr log) :
+CamerasManager::CamerasManager( OpenGL& openGL, ServerInterfacePtr server, LogPtr log) :
 
     ResourceCommandsExecuter( server ),
-    SpecializedEntitiesManager( server, log )
+    SpecializedEntitiesManager( server, log ),
+    openGL_( &openGL )
 {}
+
+
+/***
+ * 3. Commands execution
+ ***/
+
+void CamerasManager::executeRemoteCommand( const CameraCommand &command )
+{
+    switch( command.getType() ){
+        case CameraCommandType::CAMERA_CREATION:{
+            const CameraCreationCommand& creationCommand =
+                    dynamic_cast< const CameraCreationCommand& >( command );
+
+            createCamera( creationCommand.cameraID(),
+                          creationCommand.cameraCenter(),
+                          creationCommand.cameraEye(),
+                          creationCommand.cameraUp() );
+        }break;
+    }
+}
+
+
+/***
+ * 5. Remote command creation
+ ***/
+
+void CamerasManager::createCamera( const ResourceID &cameraID,
+                                   const glm::vec3 &cameraCenter,
+                                   const glm::vec3 &cameraEye,
+                                   const glm::vec3 &cameraUp )
+{
+    std::unique_ptr< Camera > camera( new Camera( *openGL_,
+                                                  cameraCenter,
+                                                  cameraEye,
+                                                  cameraUp ) );
+
+    resourcesSelections_.at( cameraID.getCreatorID() )->addResource( cameraID, std::move( camera ) );
+}
 
 } // namespace como

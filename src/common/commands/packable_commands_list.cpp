@@ -228,6 +228,14 @@ const void* PackableCommandsList::unpack( const void* buffer )
                 }
             break;
 
+            case CommandTarget::CAMERA:
+                switch( CameraCommand::getType( buffer ) ){
+                    case CameraCommandType::CAMERA_CREATION:
+                        command = CommandPtr( new CameraCreationCommand );
+                    break;
+                }
+            break;
+
             default:
                 int commandTarget = static_cast< int >( Command::getTarget( buffer ) );
                 throw std::runtime_error( "Received an unrecognized command type" +
