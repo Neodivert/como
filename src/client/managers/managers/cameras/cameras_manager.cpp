@@ -73,7 +73,17 @@ void CamerasManager::sendActiveCameraToShader() const
 
 
 /***
- * 7. Remote command creation
+ * 7. Resources management
+ ***/
+
+void CamerasManager::clearResourcesSelection( UserID currentOwner )
+{
+    unlockResourcesSelection( currentOwner );
+}
+
+
+/***
+ * 8. Remote command creation
  ***/
 
 void CamerasManager::createCamera( const ResourceID &cameraID,
@@ -97,7 +107,7 @@ void CamerasManager::createCamera( const ResourceID &cameraID,
 
 
 /****
- * 8. Private getters
+ * 9. Private getters
  ***/
 
 CamerasSelection &CamerasManager::activeCameraSelection() const

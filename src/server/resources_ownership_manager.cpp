@@ -35,9 +35,13 @@ ResourcesOwnershipManager::ResourcesOwnershipManager( UsersMap& usersMap, LogPtr
  * 3. Resources registation
  ***/
 
-void ResourcesOwnershipManager::registerResource(const ResourceID& resourceID, UserID ownerID )
+void ResourcesOwnershipManager::registerResource(const ResourceID& resourceID, UserID ownerID, bool deletable )
 {
     resourcesOwnershipMap_[ resourceID ] = ownerID;
+
+    if( !deletable ){
+        undeletableResources_.insert( resourceID );
+    }
 
     notifyElementInsertion( resourceID );
 }
@@ -92,8 +96,13 @@ void ResourcesOwnershipManager::deleteResourcesSelection( UserID userID )
         nextElement++;
 
         if( currentElement->second == userID ){
-            notifyElementDeletion( currentElement->first );
-            resourcesOwnershipMap_.erase( currentElement );
+            if( !undeletableResources_.count( currentElement->first ) ){
+                notifyElementDeletion( currentElement->first );
+                resourcesOwnershipMap_.erase( currentElement );
+            }else{
+                notifyElementUpdate( currentElement->first );
+                currentElement->second = NO_USER;
+            }
         }
 
         currentElement = nextElement;

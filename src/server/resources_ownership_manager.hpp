@@ -23,6 +23,7 @@
 #include <common/utilities/observable_container/observable_container.hpp>
 #include <server/public_user.hpp>
 #include <map>
+#include <set>
 
 namespace como {
 
@@ -33,6 +34,7 @@ class ResourcesOwnershipManager : public AbstractResourcesOwnershipManager, publ
     private:
         UsersMap& users_;
         ResourcesOwnershipMap resourcesOwnershipMap_;
+        std::set< ResourceID > undeletableResources_;
 
     public:
         /***
@@ -53,7 +55,7 @@ class ResourcesOwnershipManager : public AbstractResourcesOwnershipManager, publ
         /***
          * 3. Resources registation
          ***/
-        virtual void registerResource( const ResourceID& resourceID, UserID ownerID );
+        virtual void registerResource( const ResourceID& resourceID, UserID ownerID, bool deletable = true );
 
 
         /***

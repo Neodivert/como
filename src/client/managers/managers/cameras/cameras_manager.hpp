@@ -70,9 +70,16 @@ class CamerasManager : public SpecializedEntitiesManager< Camera, CamerasSelecti
         CamerasManager& operator = ( CamerasManager&& ) = delete;
 
 
+    protected:
+        /***
+         * 7. Resources management
+         ***/
+        virtual void clearResourcesSelection( UserID currentOwner );
+
+
     private:
         /***
-         * 7. Remote camera creation
+         * 8. Remote camera creation
          ***/
         void createCamera( const ResourceID& cameraID,
                            const glm::vec3& cameraCenter,
@@ -81,7 +88,7 @@ class CamerasManager : public SpecializedEntitiesManager< Camera, CamerasSelecti
 
 
         /****
-         * 8. Private getters
+         * 9. Private getters
          ***/
         CamerasSelection& activeCameraSelection() const;
 

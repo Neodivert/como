@@ -407,7 +407,8 @@ void Server::processSceneCommand( const Command& sceneCommand )
 
             if( cameraCommand.getType() == CameraCommandType::CAMERA_CREATION ){
                 resourcesOwnershipManager_.registerResource( cameraCommand.cameraID(),
-                                                             cameraCommand.getUserID() );
+                                                             cameraCommand.getUserID(),
+                                                             false );
             }
         }break;
         default:
