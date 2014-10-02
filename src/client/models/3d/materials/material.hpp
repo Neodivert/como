@@ -24,15 +24,14 @@
 #include <common/primitives/primitive_data/material_info.hpp>
 #include <client/models/3d/textures/texture.hpp>
 #include <list>
+#include <common/resources/resource.hpp>
 
 
 namespace como {
 
-class Material
+class Material : public Resource
 {
     private:
-        std::string name_;
-
         glm::vec4 color_;
 
         glm::vec3 ambientReflectivity_;  // ("Ka" in a *.mtl file).
@@ -47,10 +46,10 @@ class Material
          * 1. Construction
          ***/
     public:
-        Material();
-        Material( const std::string& name );
-        Material( const MaterialInfo& materialInfo );
-        Material( PackableColor color );
+        //Material();
+        //TODO: Delete? Material( const std::string& name );
+        Material( const ResourceID& materialID, const MaterialInfo& materialInfo );
+        //TODO: Delete? Material( PackableColor color );
         Material( const Material& ) = delete;
         Material( Material&& ) = delete;
 
@@ -64,7 +63,6 @@ class Material
         /***
          * 3. Getters
          ***/
-        std::string getName() const;
         PackableColor getColor() const;
         PackableColor getAmbientReflectivity() const;
         PackableColor getDiffuseReflectivity() const;

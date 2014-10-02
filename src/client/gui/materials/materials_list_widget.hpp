@@ -25,7 +25,7 @@
 
 namespace como {
 
-// TODO: Inherit from ResourcesDropdownList class.
+// TODO: Inherit from / replace by ResourcesDropdownList class.
 // TODO: Can't use "private QListWidget", what interests me because I don't
 // want user to use QListWidget methods here.
 class MaterialsListWidget : public QComboBox
@@ -72,7 +72,7 @@ class MaterialsListWidget : public QComboBox
         MaterialsManagerPtr materialsManager_;
 
         // FIXME: This is wrong because when removing materials from
-        // QComboBox, indices of the rest of materiales are updated.
+        // QComboBox, indices of the rest of materiales are updated (I think).
         std::map< int, ResourceID > indexToID_;
 };
 

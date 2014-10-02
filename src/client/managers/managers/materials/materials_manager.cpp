@@ -69,7 +69,7 @@ void MaterialsManager::createMaterials( const std::vector< MaterialInfo >& mater
 
 void MaterialsManager::createMaterial( const MaterialInfo& materialInfo, const ResourceID &materialID, const ResourceID& meshID )
 {
-    materials_[materialID] = MaterialPtr( new Material( materialInfo ) );
+    materials_[materialID] = MaterialPtr( new Material( materialID, materialInfo ) );
 
     if( meshMaterials_.count( meshID ) == 0 ){
         meshMaterials_[meshID] = std::vector<ResourceID>();
@@ -129,21 +129,17 @@ MaterialHandlerPtr MaterialsManager::selectMaterial( const ResourceID& id )
  * 5. Getters
  ***/
 
-MaterialsHeadersList MaterialsManager::getLocalMaterialsHeaders() const
+ResourceHeadersList MaterialsManager::getLocalMaterialsHeaders() const
 {
-    MaterialsHeadersList materialsHeadersList;
-    MaterialHeader materialHeader;
+    ResourceHeadersList headers;
 
     for( const auto& materialPair : materials_ ){
         if( materialsOwners_.at( materialPair.first ) == localUserID() ){
-            materialHeader.id = materialPair.first;
-            materialHeader.name = materialPair.second->getName();
-
-            materialsHeadersList.push_back( materialHeader );
+            headers.push_back( materialPair.second->header() );
         }
     }
 
-    return materialsHeadersList;
+    return headers;
 }
 
 

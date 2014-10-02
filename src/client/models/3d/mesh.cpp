@@ -47,8 +47,7 @@ const char DEFAULT_MESH_NAME[] = "Mesh #";
 
 // TODO: Remove this constructor.
 Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, MeshType type, const char* filePath, MaterialsManager& materialsManager, bool displayVertexNormals ) :
-    Entity( DrawableType::MESH, DEFAULT_MESH_NAME ),
-    id_( meshID ),
+    Entity( meshID, DEFAULT_MESH_NAME, DrawableType::MESH ),
     type_( type ),
     displayVertexNormals_( displayVertexNormals ),
     displayEdges_( true ),
@@ -60,7 +59,7 @@ Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, MeshTyp
 
     vertexData_ = primitiveData.vertexData;
     for( const auto& materialInfo : primitiveData.materialsInfo_ ){
-        materialsManager_->createMaterial( materialInfo, currentMaterialID, id_ );
+        materialsManager_->createMaterial( materialInfo, currentMaterialID, id() );
         materialIDs_.push_back( currentMaterialID );
         currentMaterialID++;
     }
@@ -70,8 +69,7 @@ Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, MeshTyp
 
 
 Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, const PrimitiveData& primitiveData, MaterialsManager& materialsManager, bool displayVertexNormals ) :
-    Entity( DrawableType::MESH, DEFAULT_MESH_NAME ),
-    id_( meshID ),
+    Entity( meshID, DEFAULT_MESH_NAME, DrawableType::MESH ),
     type_( MeshType::MESH ),
     vertexData_( primitiveData.vertexData ),
     displayVertexNormals_( displayVertexNormals ),
@@ -82,7 +80,7 @@ Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, const P
 
     init( primitiveData.oglData );
     for( const auto& materialInfo : primitiveData.materialsInfo_ ){
-        materialsManager_->createMaterial( materialInfo, currentMaterialID, id_ );
+        materialsManager_->createMaterial( materialInfo, currentMaterialID, id() );
         materialIDs_.push_back( currentMaterialID );
         currentMaterialID++;
     }

@@ -24,11 +24,16 @@
 #include <common/utilities/observable_container/observable_container.hpp>
 #include <memory>
 #include <queue>
+#include <common/resources/resource.hpp>
 
 namespace como {
 
 template <class ResourceType>
 class ResourcesSelection : public virtual Observable {
+
+    static_assert( std::is_base_of<Resource, ResourceType>::value,
+                   "ResourcesSelection - T must be a descendant of Resource" );
+
     public:
         /***
          * 1. Construction
@@ -76,6 +81,7 @@ class ResourcesSelection : public virtual Observable {
          ***/
         virtual unsigned int size() const;
         bool containsResource( const ResourceID& resourceID ) const;
+        ResourceHeadersList headers() const;
 
 
     protected:
@@ -162,6 +168,19 @@ template <class ResourceType>
 bool ResourcesSelection<ResourceType>::containsResource(const ResourceID &resourceID) const
 {
     return ( this->resources_.count( resourceID ) != 0 );
+}
+
+
+template <class ResourceType>
+ResourceHeadersList ResourcesSelection<ResourceType>::headers() const
+{
+    ResourceHeadersList headers;
+
+    for( const Resource& resource : resources_ ){
+        headers.push_back( resource.header() );
+    }
+
+    return headers;
 }
 
 }

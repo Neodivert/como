@@ -31,7 +31,7 @@ namespace como {
 class MaterialHandler : public Observable
 {
     private:
-        ResourceID materialID_;
+        ResourceID materialID_; // TODO: Remove this attribute and use material_->id() instead.
         MaterialPtr material_;
         ServerInterfacePtr server_;
 

@@ -53,8 +53,6 @@ class Mesh : public AbstractMesh, public Entity
     friend class DirectionalLight; // TODO: Remove
 
     private:
-        const ResourceID id_; // TODO: Move to a Resource class.
-
         // Mesh type
         MeshType type_;
 

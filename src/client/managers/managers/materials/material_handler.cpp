@@ -50,8 +50,9 @@ ResourceID MaterialHandler::getID() const
 
 std::string MaterialHandler::getName() const
 {
-    return material_->getName();
+    return material_->name();
 }
+
 
 PackableColor MaterialHandler::getColor() const
 {

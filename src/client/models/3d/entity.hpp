@@ -19,6 +19,7 @@
 #ifndef ENTITY_HPP
 #define ENTITY_HPP
 
+#include <common/resources/resource.hpp>
 #include <client/models/3d/drawable.hpp>
 #include <client/models/3d/transformable.hpp>
 #include <client/models/dependencies.hpp>
@@ -47,14 +48,11 @@ enum class DrawableType : std::uint8_t
  * Main file class
  ***/
 
-class Entity : public Drawable, public Transformable
+class Entity : public Resource, public Drawable, public Transformable
 {
     private:
         /*! Type of drawable */
         const DrawableType type_;
-
-        /*! Name given to the drawable */
-        std::string name_;
 
 
     protected:
@@ -70,8 +68,8 @@ class Entity : public Drawable, public Transformable
          * 1. Initialization and destruction
          ***/
         // Constructor. Initialize transformation matrix to identity matrix.
-        Entity( DrawableType type, std::string name );
-        Entity( const Entity& ) = default;
+        Entity( const ResourceID& id, const std::string& name, DrawableType type );
+        Entity( const Entity& ) = delete;
         Entity( Entity&& ) = delete;
 
         virtual ~Entity(){}
@@ -82,7 +80,6 @@ class Entity : public Drawable, public Transformable
          ***/
         glm::mat4 getModelMatrix() const;
         DrawableType getType() const;
-        std::string getName() const;
         virtual bool containsProperty( const void* property ) const = 0;
 
 

@@ -46,9 +46,9 @@ void MaterialsListWidget::populate()
     clear();
     indexToID_.clear();
 
-    MaterialsHeadersList materialsHeaders = materialsManager_->getLocalMaterialsHeaders();
+    ResourceHeadersList materialsHeaders = materialsManager_->getLocalMaterialsHeaders();
 
-    for( const auto& materialHeader : materialsHeaders ){
+    for( const ResourceHeader& materialHeader : materialsHeaders ){
         indexToID_[count()] = materialHeader.id;
         addItem( materialHeader.name.c_str() );
     }

@@ -16,22 +16,38 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef RESOURCE_HEADER_HPP
-#define RESOURCE_HEADER_HPP
-
-#include <common/ids/resource_id.hpp>
-#include <string>
-#include <list>
+#include "resource.hpp"
 
 namespace como {
 
-struct ResourceHeader {
-    ResourceID id;
-    std::string name;
-};
+/***
+ * 1. Construction
+ ***/
 
-typedef std::list< ResourceHeader > ResourceHeadersList;
+Resource::Resource( const ResourceID &id, const std::string &name ) :
+    header_({ id, name })
+{}
+
+
+/***
+ * 3. Getters
+ ***/
+
+ResourceHeader Resource::header() const
+{
+    return header_;
+}
+
+
+ResourceID Resource::id() const
+{
+    return header_.id;
+}
+
+
+std::string Resource::name() const
+{
+    return header_.name;
+}
 
 } // namespace como
-
-#endif // RESOURCE_HEADER_HPP

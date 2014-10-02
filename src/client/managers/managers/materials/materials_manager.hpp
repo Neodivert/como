@@ -36,14 +36,6 @@ namespace como {
 
 typedef std::map< ResourceID, UserID > MaterialsOwnershipMap;
 
-struct MaterialHeader {
-    ResourceID id;
-    std::string name;
-};
-
-typedef std::list< MaterialHeader > MaterialsHeadersList;
-
-
 class MaterialsManager : public QObject, public ServerWriter, public Observer, public ObservableContainer<ResourceID>
 {
     Q_OBJECT
@@ -104,7 +96,7 @@ class MaterialsManager : public QObject, public ServerWriter, public Observer, p
          * 5. Getters
          ***/
     public:
-        MaterialsHeadersList getLocalMaterialsHeaders() const;
+        ResourceHeadersList getLocalMaterialsHeaders() const; // TODO: Remove this method and use X::localHeaders().
         bool materialOwnedByLocalUser( const ResourceID& resourceID ) const;
         virtual string getResourceName( const ResourceID& resourceID ) const;
         MaterialConstPtr getMaterial( const ResourceID& id ) const;

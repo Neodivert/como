@@ -123,7 +123,8 @@ HEADERS += \
     ../../src/common/commands/geometric_primitive_command/sphere_creation_command.hpp \
     ../../src/common/commands/camera_commands/camera_command.hpp \
     ../../src/common/commands/camera_commands/camera_creation_command.hpp \
-    ../../src/common/commands/camera_commands/camera_commands.hpp
+    ../../src/common/commands/camera_commands/camera_commands.hpp \
+    ../../src/common/resources/resource.hpp
 
 
 # Common sources (used by both client and server).
@@ -192,4 +193,5 @@ SOURCES += \
     ../../src/common/commands/geometric_primitive_command/cylinder_creation_command.cpp \
     ../../src/common/commands/geometric_primitive_command/sphere_creation_command.cpp \
     ../../src/common/commands/camera_commands/camera_command.cpp \
-    ../../src/common/commands/camera_commands/camera_creation_command.cpp
+    ../../src/common/commands/camera_commands/camera_creation_command.cpp \
+    ../../src/common/resources/resource.cpp

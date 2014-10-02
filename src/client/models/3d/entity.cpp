@@ -27,9 +27,9 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-Entity::Entity( DrawableType type, std::string name ) :
+Entity::Entity( const ResourceID& id, const std::string& name, DrawableType type ) :
+    Resource( id, name ),
     type_( type ),
-    name_( name ),
     modelMatrix_( 1.0f )
 {
     // Initialize the drawable's original orientation.
@@ -52,12 +52,6 @@ glm::mat4 Entity::getModelMatrix() const
 DrawableType Entity::getType() const
 {
     return type_;
-}
-
-
-std::string Entity::getName() const
-{
-    return name_;
 }
 
 

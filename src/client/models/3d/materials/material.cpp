@@ -31,7 +31,7 @@ const glm::vec3 DEFAULT_MATERIAL_DIFFUSE_REFLECTIVITY = glm::vec3( 0.9f );
 const glm::vec3 DEFAULT_MATERIAL_SPECULAR_REFLECTIVITY = glm::vec3( 0.9f );
 const float DEFAULT_MATERIAL_SPECULAR_EXPONENT = 0.9f;
 
-
+/*
 #define MATERIAL_DEFAULT_INITIALIZATION \
     name_( DEFAULT_MATERIAL_NAME ), \
     color_( DEFAULT_MATERIAL_COLOR ), \
@@ -40,12 +40,13 @@ const float DEFAULT_MATERIAL_SPECULAR_EXPONENT = 0.9f;
     specularReflectivity_( DEFAULT_MATERIAL_SPECULAR_REFLECTIVITY ), \
     specularExponent_( DEFAULT_MATERIAL_SPECULAR_EXPONENT ), \
     texture_( nullptr )
-
+*/
 
 /***
  * 1. Construction
  ***/
 
+/*
 Material::Material() :
     MATERIAL_DEFAULT_INITIALIZATION
 {}
@@ -56,10 +57,11 @@ Material::Material( const std::string& name ) :
 {
     name_ = name;
 }
+*/
 
-Material::Material( const MaterialInfo& materialInfo ) :
-    name_( materialInfo.name ),
-    color_( DEFAULT_MATERIAL_COLOR ),
+Material::Material( const ResourceID& materialID, const MaterialInfo& materialInfo ) :
+    Resource( materialID, materialInfo.name ),
+    color_( materialInfo.color ),
     ambientReflectivity_( materialInfo.ambientReflectivity ),
     diffuseReflectivity_( materialInfo.diffuseReflectivity ),
     specularReflectivity_( materialInfo.specularReflectivity ),
@@ -72,22 +74,17 @@ Material::Material( const MaterialInfo& materialInfo ) :
     }
 }
 
-
+/*
 Material::Material( PackableColor color ) :
     MATERIAL_DEFAULT_INITIALIZATION
 {
         color_ = color.toVec4();
 }
-
+*/
 
 /***
  * 3. Getters
  ***/
-
-std::string Material::getName() const
-{
-    return name_;
-}
 
 PackableColor Material::getColor() const
 {
