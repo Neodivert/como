@@ -77,7 +77,7 @@ Viewport::Viewport( View view, Projection projection, shared_ptr< ComoApp > como
         assert( viewProjectionMatrixLocation != -1 );
 
         // Create the camera.
-        camera = new Camera( *( comoApp->getScene()->getOpenGL() ), view );
+        camera = new Camera( *( comoApp->getScene()->getOpenGL() ) );
 
         // Set the requested view.
         setView( view );
@@ -477,7 +477,48 @@ void Viewport::setView( View view )
     view_ = view;
 
     comoApp->getScene()->getOpenGLContext()->makeCurrent( this );
-    camera->setView( view );
+
+    /***/
+    const glm::vec3 center( 0.0f, 0.0f, 0.0f );
+    glm::vec3 eye;
+    glm::vec3 up;
+
+    switch( view ){
+        case View::LEFT:
+            eye = glm::vec3( -1.0f, 0.0f, 0.0f );
+            up = glm::vec3( 0.0f, 1.0f, 0.0f );
+        break;
+        case View::RIGHT:
+            eye = glm::vec3( 1.0f, 0.0f, 0.0f );
+            up = glm::vec3( 0.0f, 1.0f, 0.0f );
+        break;
+        case View::TOP:
+            eye = glm::vec3( 0.0f, 1.0f, 0.0f );
+            up = glm::vec3( 0.0f, 0.0f, -1.0f );
+        break;
+        case View::BOTTOM:
+            eye = glm::vec3( 0.0f, -1.0f, 0.0f );
+            up = glm::vec3( 0.0f, 0.0f, 1.0f );
+        break;
+        case View::FRONT:
+            eye = glm::vec3( 0.0f, 0.0f, 1.0f );
+            up = glm::vec3( 0.0f, 1.0f, 0.0f );
+        break;
+        case View::BACK:
+            eye = glm::vec3( 0.0f, 0.0f, -1.0f );
+            up = glm::vec3( 0.0f, 1.0f, 0.0f );
+        break;
+        case View::USER:
+        case View::CAMERA: // TODO: Complete.
+            eye = glm::vec3( 1.0f, 1.0f, 1.0f );
+            up = glm::vec3( -1.0f, 1.0f, -1.0f );
+        break;
+    }
+    /***/
+
+    camera->setOrientation( eye,
+                            center,
+                            up );
 
     // Get the integer index of the current View and return it
     // in a signal.

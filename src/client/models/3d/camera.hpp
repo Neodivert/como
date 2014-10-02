@@ -26,32 +26,6 @@
 
 namespace como {
 
-// Available views.
-enum class View {
-    FRONT,
-    BACK,
-    LEFT,
-    RIGHT,
-    TOP,
-    BOTTOM,
-    USER,
-    CAMERA
-};
-const unsigned int N_VIEWS = 8;
-
-// Available views (strings for GUI output).
-const char viewStrings [N_VIEWS][16] =
-{
-    "Front",
-    "Back",
-    "Left",
-    "Right",
-    "Top",
-    "Bottom",
-    "User",
-    "Camera"
-};
-
 class Camera : public ImportedMesh
 {
     private:
@@ -77,38 +51,44 @@ class Camera : public ImportedMesh
          ***/
         Camera( const Camera& ) = default;
         Camera( Camera&& ) = default;
-        Camera( OpenGL& openGL, View view = View::FRONT );
         Camera( OpenGL& openGL,
-                const glm::vec3& cameraCenter,
-                const glm::vec3& cameraEye,
-                const glm::vec3& cameraUp );
+                const glm::vec3& cameraCenter = glm::vec3( 0.0f, 0.0f, 0.0f ),
+                const glm::vec3& cameraEye = glm::vec3( 0.0f, 0.0f, 1.0f ),
+                const glm::vec3& cameraUp = glm::vec3( 0.0f, 1.0f, 0.0f ) );
 
         // TODO: Is this problematic with Entity's virtual destructor?
         virtual ~Camera() = default;
 
         /***
-         * 2. Setters and getters
+         * 2. Getters
          ***/
         glm::mat4 getViewMatrix() const ;
-        void setView( View view );
         glm::vec4 getCenterVector() const ;
 
 
         /***
-         * 3. Shader communication
+         * 3. Setters
+         ***/
+        void setOrientation( const glm::vec3& eye,
+                             const glm::vec3& center,
+                             const glm::vec3& up );
+
+
+        /***
+         * 4. Shader communication
          ***/
         void sendToShader( OpenGL& openGL );
 
 
         /***
-         * 4. Operators
+         * 5. Operators
          ***/
         Camera& operator=( const Camera& ) = delete ;
         Camera& operator=( Camera&& ) = delete;
 
     protected:
         /***
-         * 5. Updating and drawing
+         * 6. Updating and drawing
          ***/
         virtual void update();
 };

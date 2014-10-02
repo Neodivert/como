@@ -32,6 +32,32 @@
 
 namespace como {
 
+// Available views.
+enum class View {
+    FRONT,
+    BACK,
+    LEFT,
+    RIGHT,
+    TOP,
+    BOTTOM,
+    USER,
+    CAMERA
+};
+const unsigned int N_VIEWS = 8;
+
+// Available views (strings for GUI output).
+const char viewStrings [N_VIEWS][16] =
+{
+    "Front",
+    "Back",
+    "Left",
+    "Right",
+    "Top",
+    "Bottom",
+    "User",
+    "Camera"
+};
+
 // Available projections.
 enum class Projection {
    ORTHO,

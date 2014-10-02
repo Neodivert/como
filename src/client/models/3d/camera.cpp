@@ -23,21 +23,6 @@ namespace como {
 
 GLint Camera::eyeVectorLocation_ = -1;
 
-Camera::Camera( OpenGL& openGL, View view ) :
-    ImportedMesh( "data/system/primitives/camera.prim" ),
-    originalEye     ( 0.0f, 0.0f, 1.0f, 1.0f ),
-    originalUp      ( 0.0f, 1.0f, 0.0f, 0.0f ),
-    originalCenter  ( 0.0f, 0.0f, 0.0f, 1.0f )
-{
-    if( eyeVectorLocation_ < 0 ){
-        eyeVectorLocation_ = openGL.getShaderVariableLocation( "eyeVector" );
-    }
-
-    // Set given view.
-    setView( view );
-}
-
-
 Camera::Camera( OpenGL &openGL, const glm::vec3 &cameraCenter, const glm::vec3 &cameraEye, const glm::vec3 &cameraUp ) :
     ImportedMesh( "data/system/primitives/camera.prim" ),
     originalEye     ( 0.0f, 0.0f, 1.0f, 1.0f ),
@@ -50,12 +35,7 @@ Camera::Camera( OpenGL &openGL, const glm::vec3 &cameraCenter, const glm::vec3 &
 
     Mesh::translate( glm::vec3( 0.0f, 0.0f, -1.0f ) );
 
-    viewMatrix = glm::lookAt( cameraEye,
-                              cameraCenter,
-                              cameraUp );
-    modelMatrix_ = glm::inverse( viewMatrix );
-
-    update();
+    setOrientation( cameraEye, cameraCenter, cameraUp );
 }
 
 
@@ -69,71 +49,6 @@ glm::mat4 Camera::getViewMatrix() const
 }
 
 
-void Camera::setView( View view )
-{
-    glm::mat4 viewMatrix = glm::mat4( 1.0f );
-
-    const glm::vec3 center( 0.0f, 0.0f, 0.0f );
-
-    switch( view ){
-        case View::LEFT:
-            viewMatrix = glm::lookAt(
-                        glm::vec3( -1.0f, 0.0f, 0.0f ),
-                        center,
-                        glm::vec3( 0.0f, 1.0f, 0.0f )
-                        );
-        break;
-        case View::RIGHT:
-            viewMatrix = glm::lookAt(
-                        glm::vec3( 1.0f, 0.0f, 0.0f ),
-                        center,
-                        glm::vec3( 0.0f, 1.0f, 0.0f )
-                        );
-        break;
-        case View::TOP:
-            viewMatrix = glm::lookAt(
-                        glm::vec3( 0.0f, 1.0f, 0.0f ),
-                        center,
-                        glm::vec3( 0.0f, 0.0f, -1.0f )
-                        );
-        break;
-        case View::BOTTOM:
-            viewMatrix = glm::lookAt(
-                        glm::vec3( 0.0f, -1.0f, 0.0f ),
-                        center,
-                        glm::vec3( 0.0f, 0.0f, 1.0f )
-                        );
-        break;
-        case View::FRONT:
-            viewMatrix = glm::lookAt(
-                        glm::vec3( 0.0f, 0.0f, 1.0f ),
-                        center,
-                        glm::vec3( 0.0f, 1.0f, 0.0f )
-                        );
-        break;
-        case View::BACK:
-            viewMatrix = glm::lookAt(
-                        glm::vec3( 0.0f, 0.0f, -1.0f ),
-                        center,
-                        glm::vec3( 0.0f, 1.0f, 0.0f )
-                        );
-        break;
-        case View::USER:
-        case View::CAMERA: // TODO: Remove this option (Camera)?
-            viewMatrix = glm::lookAt(
-                        glm::vec3( 1.0f, 1.0f, 1.0f ),
-                        center,
-                        glm::vec3( -1.0f, 1.0f, -1.0f )
-                        );
-        break;
-    }
-
-    modelMatrix_ = glm::inverse( viewMatrix );
-
-    update();
-}
-
-
 glm::vec4 Camera::getCenterVector() const
 {
     return transformedCenter;
@@ -141,7 +56,20 @@ glm::vec4 Camera::getCenterVector() const
 
 
 /***
- * 3. Shader communication
+ * 3. Setters
+ ***/
+
+void Camera::setOrientation( const glm::vec3 &eye, const glm::vec3 &center, const glm::vec3 &up )
+{
+    viewMatrix = glm::lookAt( eye, center, up );
+    modelMatrix_ = glm::inverse( viewMatrix );
+
+    update();
+}
+
+
+/***
+ * 4. Shader communication
  ***/
 
 void Camera::sendToShader( OpenGL &openGL )
@@ -155,7 +83,7 @@ void Camera::sendToShader( OpenGL &openGL )
 
 
 /***
- * 5. Updating and drawing
+ * 6. Updating and drawing
  ***/
 
 void Camera::update()
