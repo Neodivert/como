@@ -547,8 +547,10 @@ void Viewport::setProjection( Projection projection )
         break;
         case Projection::PERSPECTIVE:
             projectionMatrix =
-                    glm::perspective( 45.0f, (float)(width())/(float)(height()), 0.1f, 100.0f ) *
-                    glm::scale( glm::mat4( 1.0f ), glm::vec3( 1.0f, 1.0f, -1.0f ) );
+                    glm::perspective( glm::pi<float>() / 2.0f,
+                                      (float)(width())/(float)(height()),
+                                      0.1f,
+                                      100.0f );
         break;
     }
 
