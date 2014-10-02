@@ -58,6 +58,7 @@ class ResourcesManager : public virtual ResourceCommandsExecuter, public Observa
         virtual bool containsResource( const ResourceID& resourceID ) const;
         LocalResourcesSelectionType* getLocalResourcesSelection() const; // TODO: Return a undeletable pointer.
         virtual std::string getResourceName( const ResourceID& resourceID ) const = 0;
+        ResourceHeadersList headers() const;
         ResourceHeadersList localHeaders() const;
 
 
@@ -160,6 +161,22 @@ template <class ResourceType, class ResourcesSelectionType, class LocalResources
 LocalResourcesSelectionType* ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getLocalResourcesSelection() const
 {
     return static_cast< LocalResourcesSelectionType* >( resourcesSelections_.at( localUserID() ).get() );
+}
+
+
+template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
+ResourceHeadersList ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::headers() const
+{
+    ResourceHeadersList headers;
+    ResourceHeadersList selectionHeaders;
+
+    for( const auto& selectionPair : resourcesSelections_ ){
+        selectionHeaders = selectionPair.second->headers();
+
+        headers.splice( headers.end(), selectionHeaders );
+    }
+
+    return headers;
 }
 
 
