@@ -25,8 +25,7 @@ namespace como {
  ***/
 
 Scene::Scene( const char* host, const char* port, const char* userName, LogPtr log ) :
-    BasicScene( log ),
-    uniformColorLocation( -1 )
+    BasicScene( log )
 {
     try {
         UserAcceptancePacket userAcceptancePacket;
@@ -45,9 +44,9 @@ Scene::Scene( const char* host, const char* port, const char* userName, LogPtr l
 
         initOpenGL();
 
-        initManagers( userAcceptancePacket );
+        linesRenderer_ = std::unique_ptr<AuxiliarLinesRenderer>( new AuxiliarLinesRenderer( *openGL_ ) );
 
-        initLinesBuffer();
+        initManagers( userAcceptancePacket );
 
         // Set the background color.
         setBackgroundColor( 0.9f, 0.9f, 0.9f, 0.9f );
@@ -66,11 +65,6 @@ Scene::Scene( const char* host, const char* port, const char* userName, LogPtr l
 
 Scene::~Scene()
 {
-    // Tell OpenGL we are done with allocated buffer objects and
-    // vertex attribute arrays.
-    glDeleteBuffers( 1, &linesVBO );
-    glDeleteVertexArrays( 1, &linesVAO );
-
     // Primitives manager must be destroyed before Server.
     primitivesManager_.reset();
 }
@@ -119,82 +113,6 @@ void Scene::initOpenGL()
     // Set OpenGL depth test.
     glEnable( GL_DEPTH_TEST );
     glDepthFunc( GL_LEQUAL );
-}
-
-
-void Scene::initLinesBuffer()
-{
-    GLint currentShaderProgram;
-    GLint vPosition;
-
-    const GLfloat x0 = 0.0f;
-    const GLfloat y0 = 0.0f;
-    const GLfloat z0 = 0.0f;
-
-    const GLfloat x1 = 0.5f;
-    const GLfloat y1 = 0.5f;
-    const GLfloat z1 = 0.5f;
-
-    GLfloat linesData[] =
-    {
-        // World X axis
-        x0, y0, z0,
-        x1, y0, z0,
-
-        // World Y axis
-        x0, y0, z0,
-        x0, y1, z0,
-
-        // World Z axis
-        x0, y0, z0,
-        x0, y0, z1,
-
-        // X guide axis
-        -100.0f, 0.0f, 0.0f,
-        100.0f, 0.0f, 0.0f,
-
-        // Y guide axis
-        0.0f, -100.0f, 0.0f,
-        0.0f, 100.0f, 0.0f,
-
-        // Z guide axis
-        0.0f, 0.0f, -100.0f,
-        0.0f, 0.0f, 100.0f,
-
-        // Auxiliar line for rotations and scales
-        0.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.0f
-    };
-
-    const int LINES_BUFFER_SIZE = 42 * sizeof( GLfloat );
-
-    linesBufferOffsets[WORLD_AXIS] = 0;
-    linesBufferOffsets[GUIDE_AXIS] = 6;
-    linesBufferOffsets[TRANSFORM_GUIDE_LINE] = 12;
-
-    // Get the position of the vertex shader variable "vPosition"
-    // for the current shader program.
-    glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
-    vPosition = glGetAttribLocation( currentShaderProgram, "vPosition" );
-    if( vPosition == GL_INVALID_OPERATION ){
-        log_->error( "Error getting layout of \"position\"\n" );
-    }
-    // Get location of uniform shader variables.
-    uniformColorLocation = glGetUniformLocation( currentShaderProgram, "material.color" );
-
-    // Set a VBO for the world axis rects.
-    glGenBuffers( 1, &linesVBO );
-    glBindBuffer( GL_ARRAY_BUFFER, linesVBO );
-    glBufferData( GL_ARRAY_BUFFER, LINES_BUFFER_SIZE, linesData, GL_DYNAMIC_DRAW );
-
-    // Set a VAO for the world axis rects.
-    glGenVertexArrays( 1, &linesVAO );
-    glBindVertexArray( linesVAO );
-
-    // By using the previous "vPosition" position, specify the location and data format of
-    // the array of vertex positions.
-    glVertexAttribPointer( vPosition, 3, GL_FLOAT, GL_FALSE, 0, 0 );
-    glEnableVertexAttribArray( vPosition );
 }
 
 
@@ -303,6 +221,12 @@ OpenGLPtr Scene::getOpenGL() const
 }
 
 
+AuxiliarLinesRenderer *Scene::linesRenderer() const
+{
+    return linesRenderer_.get();
+}
+
+
 /***
  * 6. Setters
  ***/
@@ -310,25 +234,6 @@ OpenGLPtr Scene::getOpenGL() const
 void Scene::setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a )
 {
     glClearColor( r, g, b, a );
-}
-
-
-void Scene::setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny )
-{
-    GLfloat* guideRectsBuffer = nullptr;
-    unsigned int i = 0;
-
-    glBindBuffer( GL_ARRAY_BUFFER, linesVBO );
-    guideRectsBuffer = (GLfloat *)glMapBufferRange( GL_ARRAY_BUFFER, linesBufferOffsets[TRANSFORM_GUIDE_LINE]*3*sizeof( GLfloat ), 6*sizeof( GLfloat ), GL_MAP_WRITE_BIT );
-
-    for( ; i<3; i++ ){
-        guideRectsBuffer[i] = origin[i];
-    }
-    for( ; i<6; i++ ){
-        guideRectsBuffer[i] = destiny[i-3];
-    }
-
-    glUnmapBuffer( GL_ARRAY_BUFFER );
 }
 
 
@@ -342,79 +247,10 @@ void Scene::takeOpenGLContext()
  * 10. Drawing
  ***/
 
-void Scene::draw( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const int& drawGuideRect ) const
+void Scene::draw( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
-    GLfloat WHITE_COLOR[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
     // Draw all the entities.
     entitiesManager_->drawAll( openGL_, viewMatrix, projectionMatrix );
-
-    // Draw a guide rect if asked.
-    if( drawGuideRect != -1 ){
-        openGL_->setShadingMode( ShadingMode::SOLID_PLAIN );
-        openGL_->setMVPMatrix( glm::mat4( 1.0f ), viewMatrix, projectionMatrix );
-
-        // Change painting color to white.
-        glUniform4fv( uniformColorLocation, 1, WHITE_COLOR );
-
-        // Bind guide rects' VAO and VBO as the active ones.
-        glBindVertexArray( linesVAO );
-        glBindBuffer( GL_ARRAY_BUFFER, linesVBO );
-
-        // Draw the guide rect.
-        glDrawArrays( GL_LINES, linesBufferOffsets[GUIDE_AXIS] + (drawGuideRect << 1), 2 );
-    }
-}
-
-
-void Scene::drawWorldAxis() const
-{
-    openGL_->setShadingMode( ShadingMode::SOLID_PLAIN );
-
-    GLfloat worldAxisColors[3][4] =
-    {
-        { 1.0f, 0.0f, 0.0f, 1.0f },
-        { 0.0f, 1.0f, 0.0f, 1.0f },
-        { 0.0f, 0.0f, 1.0f, 1.0f }
-    };
-
-    // Bind world axis rects' VAO and VBO as the active ones.
-    glBindVertexArray( linesVAO );
-    glBindBuffer( GL_ARRAY_BUFFER, linesVBO );
-
-    // Draw each world axis with its corresponding color.
-    for( unsigned int i=0; i<3; i++ ){
-        glUniform4fv( uniformColorLocation, 1, worldAxisColors[i] );
-        glDrawArrays( GL_LINES, linesBufferOffsets[WORLD_AXIS] + (i << 1), 2 );
-    }
-}
-
-
-void Scene::drawTransformGuideLine() const
-{
-    openGL_->setShadingMode( ShadingMode::SOLID_PLAIN );
-
-    const GLfloat lineColor[4] =
-    {
-        0.0f, 1.0f, 0.0f, 1.0f
-    };
-
-    // Bind selection centroid VAO and VBO as the active ones.
-    glBindVertexArray( linesVAO );
-    glBindBuffer( GL_ARRAY_BUFFER, linesVBO );
-
-    // Set selection centroid color.
-    glUniform4fv( uniformColorLocation, 1, lineColor );
-
-    // Draw selection centroid point.
-    // TODO: The range of point sizes are implementation-dependent. Also I have to
-    // check wheter point size mode is enabled or not.
-    glDisable( GL_DEPTH_TEST );
-    glPointSize( 3.0f );
-    glDrawArrays( GL_POINTS, linesBufferOffsets[TRANSFORM_GUIDE_LINE], 1 );
-    glPointSize( 1.0f );
-    glDrawArrays( GL_LINES, linesBufferOffsets[TRANSFORM_GUIDE_LINE], 2 );
-    glEnable( GL_DEPTH_TEST );
 }
 
 

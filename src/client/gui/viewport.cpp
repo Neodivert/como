@@ -441,25 +441,29 @@ void Viewport::render()
     }
 
     // Draw scene.
-    comoApp->getScene()->draw( viewMatrix, projectionMatrix, static_cast< int >( comoApp->getTransformationMode() ) - 1 );
+    comoApp->getScene()->draw( viewMatrix, projectionMatrix );
+
+    // Draw the transformation axis (if requested).
+    if( comoApp->getTransformationMode() != TransformationMode::FREE ){
+        comoApp->getScene()->linesRenderer()->drawGuideAxis(
+                    static_cast< Axis >( static_cast< int >( comoApp->getTransformationMode() ) - 1 ),
+                    glm::vec4( 1.0f, 1.0f, 1.0f, 1.0f ),
+                    viewMatrix,
+                    projectionMatrix );
+    }
 
     // Draw guide rect
     if( ( comoApp->getTransformationType() == TransformationType::ROTATION ) ||
         ( comoApp->getTransformationType() == TransformationType::SCALE ) ){
-        comoApp->getScene()->getOpenGL()->setShadingMode( ShadingMode::SOLID_PLAIN );
-        comoApp->getScene()->getOpenGL()->setMVPMatrix( glm::mat4( 1.0f ), viewMatrix, projectionMatrix );
-        comoApp->getScene()->drawTransformGuideLine();
+        comoApp->getScene()->linesRenderer()->drawTransformGuideLine( viewMatrix,
+                                                                      projectionMatrix );
     }
 
     // Make viewport occupy the bottom left corner.
     glViewport( width()-50, 0, 50, 50 );
 
     // Draw scene's world axis.
-    glDisable( GL_DEPTH_TEST );
-    comoApp->getScene()->getOpenGL()->setShadingMode( ShadingMode::SOLID_PLAIN );
-    comoApp->getScene()->getOpenGL()->setMVPMatrix( glm::mat4( 1.0f ), viewMatrix, projectionMatrix );
-    comoApp->getScene()->drawWorldAxis();
-    glEnable( GL_DEPTH_TEST );
+    comoApp->getScene()->linesRenderer()->drawWorldAxes( viewMatrix );
 
     // Swap buffers.
     comoApp->getScene()->getOpenGLContext()->swapBuffers( this );
@@ -622,7 +626,7 @@ void Viewport::updateTransformGuideLine( const GLfloat& x, const GLfloat& y )
     destination = rayOrigin + rayDestination * t;
 
     // Update the transform guide line with the new origin and destination.
-    comoApp->getScene()->setTransformGuideLine( origin, destination );
+    comoApp->getScene()->linesRenderer()->setTransformGuideLine( origin, destination );
 }
 
 

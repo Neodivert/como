@@ -133,7 +133,8 @@ HEADERS += \
     ../../src/client/managers/managers/primitives/spheres_factory.hpp \
     ../../src/client/managers/managers/cameras/cameras_manager.hpp \
     ../../src/client/managers/selections/cameras/cameras_selection.hpp \
-    ../../src/client/managers/selections/cameras/local_cameras_selection.hpp
+    ../../src/client/managers/selections/cameras/local_cameras_selection.hpp \
+    ../../src/client/models/3d/auxiliar_lines_renderer.hpp
 
 
 # Client sources
@@ -221,4 +222,5 @@ SOURCES += \
     ../../src/client/managers/managers/primitives/spheres_factory.cpp \
     ../../src/client/managers/managers/cameras/cameras_manager.cpp \
     ../../src/client/managers/selections/cameras/cameras_selection.cpp \
-    ../../src/client/managers/selections/cameras/local_cameras_selection.cpp
+    ../../src/client/managers/selections/cameras/local_cameras_selection.cpp \
+    ../../src/client/models/3d/auxiliar_lines_renderer.cpp

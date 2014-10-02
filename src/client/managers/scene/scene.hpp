@@ -36,16 +36,9 @@
 #include <client/managers/managers/users/users_manager.hpp>
 #include <client/managers/managers/primitives/geometry_primitives_factory.hpp>
 #include <client/managers/managers/textures/texture_walls_manager.hpp>
+#include <client/models/3d/auxiliar_lines_renderer.hpp>
 
 namespace como {
-
-enum LinesBufferOffset {
-    WORLD_AXIS = 0,
-    GUIDE_AXIS,
-    TRANSFORM_GUIDE_LINE,
-
-    N_LINES_BUFFER_OFFSETS
-};
 
 
 class Scene : public QOffscreenSurface, public BasicScene, public Observer, public Observable
@@ -68,19 +61,16 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
 
         GeometricPrimitivesFactoryPtr geometricPrimitivesFactory_;
 
-        OpenGLPtr openGL_;
+        OpenGLPtr openGL_; // TODO: Initialize this class outside and pass it to the constructor.
 
-        shared_ptr< QOpenGLContext > oglContext_;
+        shared_ptr< QOpenGLContext > oglContext_; // TODO: Initialize this inside of OpenGL constructor?
 
         // Interface with the server.
         ServerInterfacePtr server_;
 
-        // Lines VAO, VBO and offsets. // TODO: Move to Viewport (x4) / RenderPanel class?
-        GLuint linesVAO;
-        GLuint linesVBO;
-        GLuint linesBufferOffsets[N_LINES_BUFFER_OFFSETS];
-
-        GLint uniformColorLocation;
+        // Lines VAO, VBO and offsets. // TODO: Move to Viewport (x4) / RenderPanel class
+        // // TODO: Move to Viewport (x4) / RenderPanel class
+        std::unique_ptr< AuxiliarLinesRenderer > linesRenderer_;
 
         UserConnectionCommandConstPtr localUserConnectionCommand_;
 
@@ -103,9 +93,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
         /***
          * 3. Initialization
          ***/
-
-        void initOpenGL();
-        void initLinesBuffer();
+        void initOpenGL(); // TODO: Make this private.
         void initManagers( const UserAcceptancePacket& userAcceptancePacket );
 
 
@@ -123,6 +111,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
         TextureWallsManager *getTextureWallsManager() const;
         TexturesManager* getTexturesManager() const;
         OpenGLPtr getOpenGL() const;
+        AuxiliarLinesRenderer* linesRenderer() const;
 
 
         /***
@@ -130,7 +119,6 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
          ***/
     public:
         void setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a );
-        void setTransformGuideLine( glm::vec3 origin, glm::vec3 destiny );
 
     protected:
         void createSceneDirectory();
@@ -146,9 +134,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
         /***
          * 10. Drawing
          ***/
-        void draw( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const int& drawGuideRect = -1 ) const ;
-        void drawWorldAxis() const ;
-        void drawTransformGuideLine() const ;
+        void draw( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const ;
 
 
         /***
