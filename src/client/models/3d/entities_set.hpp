@@ -20,6 +20,8 @@
 #define ENTITIES_SET_HPP
 
 #include <client/models/3d/abstract_entities_set.hpp>
+
+#define GLM_FORCE_RADIANS
 #include <glm/gtc/type_ptr.hpp>
 
 namespace como {

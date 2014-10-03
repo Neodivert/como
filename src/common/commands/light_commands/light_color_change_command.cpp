@@ -31,7 +31,7 @@ LightColorChangeCommand::LightColorChangeCommand() :
 }
 
 
-LightColorChangeCommand::LightColorChangeCommand( UserID userID, ResourceID lightID, PackableColor lightColor ) :
+LightColorChangeCommand::LightColorChangeCommand( UserID userID, ResourceID lightID, Color lightColor ) :
     LightCommand( LightCommandType::LIGHT_COLOR_CHANGE, userID, lightID ),
     lightColor_( lightColor )
 {
@@ -51,9 +51,9 @@ LightColorChangeCommand::LightColorChangeCommand( const LightColorChangeCommand&
  * 3. Getters
  ***/
 
-PackableColor LightColorChangeCommand::getLightColor() const
+Color LightColorChangeCommand::getLightColor() const
 {
-    return lightColor_;
+    return lightColor_.getValue();
 }
 
 } // namespace como

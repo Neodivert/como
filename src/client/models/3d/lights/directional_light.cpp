@@ -17,6 +17,8 @@
 ***/
 
 #include "directional_light.hpp"
+
+#define GLM_FORCE_RADIANS
 #include <glm/gtc/type_ptr.hpp>
 
 namespace como {
@@ -27,7 +29,7 @@ const glm::vec4 DEFAULT_LIGHT_VECTOR = glm::vec4( 0.0f, 1.0f, 0.0f, 0.0f );
  * 1. Construction
  ***/
 
-DirectionalLight::DirectionalLight( const PackableColor& lightColor, const glm::vec3& lightVector, OpenGL& openGL ) :
+DirectionalLight::DirectionalLight( const Color& lightColor, const glm::vec3& lightVector, OpenGL& openGL ) :
     Light( LightType::DIRECTIONAL_LIGHT, lightColor, "data/system/primitives/directional_light.prim", openGL ), // TODO: Load material from file.
     directionalLightIndex_( lockShaderDirectionalLight( openGL ) )
 {

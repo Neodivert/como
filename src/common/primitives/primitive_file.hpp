@@ -19,12 +19,12 @@
 #ifndef PRIMITIVE_FILE_HPP
 #define PRIMITIVE_FILE_HPP
 
-#include <glm/glm.hpp>
+// TODO: Move readVec3() to another class and remove this class.
+#include <glm/vec3.hpp>
 #include <string>
 
 namespace como {
 
-// TODO: Move readVec3() to another class and remove this class.
 class PrimitiveFile
 {
     public:

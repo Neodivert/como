@@ -19,7 +19,7 @@
 #ifndef MESH_VERTEX_DATA_HPP
 #define MESH_VERTEX_DATA_HPP
 
-#include <glm/glm.hpp>
+#include <glm/vec3.hpp>
 #include <vector>
 #include <array>
 

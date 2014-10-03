@@ -71,7 +71,7 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
 {
     boost::system::error_code errorCode;
     como::NewUserPacket newUserPacket;
-    PackableColor selectionColor;
+    Color selectionColor;
 
     // Create the TCP resolver and query needed for connecting to the server.
     boost::asio::ip::tcp::resolver resolver( io_service_ );
@@ -108,10 +108,10 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
     log_->debug( "User accepted: \n",
                  "\tID: [", userAcceptancePacket.getId(), "]\n",
                  "\tName: [", userAcceptancePacket.getName(), "]\n",
-                 "\tSelection color: [", (int)( selectionColor[0].getValue() ), ", ",
-                 (int)( selectionColor[1].getValue() ), ", ",
-                 (int)( selectionColor[2].getValue() ), ", ",
-                 (int)( selectionColor[3].getValue() ), ")\n\n" );
+                 "\tSelection color: [", (int)( selectionColor[0] ), ", ",
+                 (int)( selectionColor[1] ), ", ",
+                 (int)( selectionColor[2] ), ", ",
+                 (int)( selectionColor[3] ), ")\n\n" );
 
     if( errorCode ){
         throw std::runtime_error( std::string( "ERROR when receiving USER_ACCEPTED package from server (" ) + errorCode.message() + ")" );
@@ -302,7 +302,7 @@ UserID ServerInterface::getLocalUserID() const
 }
 
 
-PackableColor ServerInterface::getLocalUserColor() const
+Color ServerInterface::getLocalUserColor() const
 {
     return localUserColor_;
 }

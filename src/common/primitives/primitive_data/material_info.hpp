@@ -20,7 +20,10 @@
 #define MATERIAL_INFO_HPP
 
 #include <string>
-#include <glm/glm.hpp>
+
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+
 #include "texture_info.hpp"
 #include <memory>
 #include <vector>

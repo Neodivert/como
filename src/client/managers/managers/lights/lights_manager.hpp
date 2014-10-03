@@ -60,7 +60,7 @@ class LightsManager : public SpecializedEntitiesManager< Light, LightsSelection,
         void requestDirectionalLightCreation();
 
     private:
-        void addDirectionalLight( const ResourceID& lightID, const PackableColor& lightColor );
+        void addDirectionalLight( const ResourceID& lightID, const Color& lightColor );
 
 
         /***

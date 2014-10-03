@@ -56,20 +56,20 @@ class MaterialHandler : public Observable
          ***/
         ResourceID getID() const;
         std::string getName() const;
-        PackableColor getColor() const;
-        PackableColor getAmbientReflectivity() const;
-        PackableColor getDiffuseReflectivity() const;
-        PackableColor getSpecularReflectivity() const;
+        Color getColor() const;
+        Color getAmbientReflectivity() const;
+        Color getDiffuseReflectivity() const;
+        Color getSpecularReflectivity() const;
         float getSpecularExponent() const;
 
 
         /***
          * 4. Setters
          ***/
-        void setColor( const PackableColor& color );
-        void setAmbientReflectivity( const PackableColor& ambientReflectivity );
-        void setDiffuseReflectivity( const PackableColor& diffuseReflectivity );
-        void setSpecularReflectivity( const PackableColor& specularReflectivity );
+        void setColor( const Color& color );
+        void setAmbientReflectivity( const Color& ambientReflectivity );
+        void setDiffuseReflectivity( const Color& diffuseReflectivity );
+        void setSpecularReflectivity( const Color& specularReflectivity );
         void setSpecularExponent( float specularExponent );
 
 

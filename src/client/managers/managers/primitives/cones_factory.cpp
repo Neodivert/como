@@ -17,7 +17,9 @@
 ***/
 
 #include "cones_factory.hpp"
-#include <glm/gtc/constants.hpp>
+
+#define GLM_FORCE_RADIANS
+#include <glm/gtc/constants.hpp> // glm::pi
 
 namespace como {
 

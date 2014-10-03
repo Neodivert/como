@@ -44,7 +44,7 @@ void ColorButton::setColor( const QColor& color )
 
     // Emit a signal indicating that the current color has changed.
     // TODO: Complete.
-    PackableColor packableColor(
+    Color packableColor(
                 static_cast< std::uint8_t >( color.red() ),
                 static_cast< std::uint8_t >( color.green() ),
                 static_cast< std::uint8_t >( color.blue() ),
@@ -55,13 +55,13 @@ void ColorButton::setColor( const QColor& color )
 }
 
 
-void ColorButton::setColor(const PackableColor &color)
+void ColorButton::setColor(const Color &color)
 {
     color_.setRgb(
-                color[0].getValue(),
-                color[1].getValue(),
-                color[2].getValue(),
-                color[3].getValue() );
+                color[0],
+                color[1],
+                color[2],
+                color[3] );
 
     // Set the button's background to the color given as an argument.
     QString qss = QString( "background-color: %1" ).arg( color_.name() );

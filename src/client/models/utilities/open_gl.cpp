@@ -18,6 +18,7 @@
 
 #include "open_gl.hpp"
 #include <cassert>
+#include <glm/mat3x3.hpp>
 
 namespace como {
 

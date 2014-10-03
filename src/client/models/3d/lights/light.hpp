@@ -57,7 +57,7 @@ class Light : public AbstractLight, public ImportedMesh
          ***/
         Light() = delete;
     protected:
-        Light( LightType type, const PackableColor& color, std::string path, OpenGL& openGL );
+        Light( LightType type, const Color& color, std::string path, OpenGL& openGL );
     public:
         Light( const Light& ) = default; // TODO: Implement using shader limit (MAX_LIGHTS) (or remove clone()).
         Light( Light&& ) = delete;
@@ -73,7 +73,7 @@ class Light : public AbstractLight, public ImportedMesh
          * 3. Getters
          ***/
         virtual LightType getLightType() const;
-        virtual PackableColor getLightColor() const;
+        virtual Color getLightColor() const;
         virtual float getAmbientCoefficient() const;
         virtual GLint getLightIndex() const = 0;
         virtual GLuint getBaseLightIndex() const;
@@ -82,7 +82,7 @@ class Light : public AbstractLight, public ImportedMesh
         /***
          * 4. Setters
          ***/
-        virtual void setLightColor(const PackableColor &color);
+        virtual void setLightColor(const Color &color);
         virtual void setAmbientCoefficient( float coefficient );
 
 

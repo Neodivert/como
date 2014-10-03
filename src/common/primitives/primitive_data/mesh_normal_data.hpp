@@ -19,7 +19,7 @@
 #ifndef MESH_NORMAL_DATA_HPP
 #define MESH_NORMAL_DATA_HPP
 
-#include <glm/glm.hpp>
+#include <glm/vec3.hpp>
 #include <vector>
 #include <array>
 #include <common/primitives/primitive_data/mesh_vertex_data.hpp>

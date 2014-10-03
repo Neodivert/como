@@ -25,7 +25,7 @@ namespace como {
  * 1. Construction
  ***/
 
-LightCreationCommand::LightCreationCommand( LightType lightType, UserID userID, ResourceID lightID, const PackableColor& lightColor ) :
+LightCreationCommand::LightCreationCommand( LightType lightType, UserID userID, ResourceID lightID, const Color& lightColor ) :
     LightCommand( LightCommandType::LIGHT_CREATION, userID, lightID ),
     lightType_( lightType ),
     lightColor_( lightColor )
@@ -55,9 +55,9 @@ LightType LightCreationCommand::getLightType() const
 }
 
 
-const PackableColor& LightCreationCommand::getLightColor() const
+Color LightCreationCommand::getLightColor() const
 {
-    return lightColor_;
+    return lightColor_.getValue();
 }
 
 

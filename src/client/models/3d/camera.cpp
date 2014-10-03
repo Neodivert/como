@@ -17,7 +17,10 @@
 ***/
 
 #include "camera.hpp"
-#include <glm/gtc/type_ptr.hpp>
+
+#define GLM_FORCE_RADIANS
+#include <glm/gtc/matrix_transform.hpp>     // glm::lookAt
+#include <glm/gtc/type_ptr.hpp>             // glm::value_ptr
 
 namespace como {
 

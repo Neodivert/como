@@ -19,27 +19,19 @@
 #ifndef PACKABLE_COLOR_HPP
 #define PACKABLE_COLOR_HPP
 
-#include <common/packables/array/packable_array.hpp>
-#include <common/packables/packable_integer.hpp>
-#include <common/packables/array/packable_color.hpp>
-
-#define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
+#include <common/packables/abstract_packable_wrapper.hpp>
+#include <common/utilities/color.hpp>
 
 namespace como {
 
-class PackableColor : public PackableArray< PackableUint8< std::uint8_t >, std::uint8_t, 4 >
+class PackableColor : public AbstractPackableWrapper< Color >
 {
     public:
         /***
          * 1. Construction
          ***/
         PackableColor();
-        PackableColor( const glm::vec3& channels );
-        PackableColor( const glm::vec4& channels );
-        PackableColor( const std::uint8_t* channels );
-        PackableColor( const std::array< std::uint8_t, 4>& channels );
-        PackableColor( std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a = 255 );
+        PackableColor( const Color& color );
         PackableColor( const PackableColor& ) = default;
         PackableColor( PackableColor&& ) = default;
 
@@ -51,18 +43,35 @@ class PackableColor : public PackableArray< PackableUint8< std::uint8_t >, std::
 
 
         /***
-         * 3. Conversions
+         * 3. Getters
          ***/
-        glm::vec3 toVec3() const ;
-        glm::vec4 toVec4() const ;
+        virtual Color getValue() const;
+        virtual PacketSize getPacketSize() const;
 
 
         /***
-         * 4. Operators
+         * 4. Setters
+         ***/
+        virtual void setValue( Color color );
+
+
+        /***
+         * 5. Packing / unpacking
+         ***/
+        virtual void *pack(void *buffer) const;
+        virtual const void* unpack( const void* buffer );
+        virtual const void* unpack( const void* buffer ) const;
+
+
+        /***
+         * 6. Operators
          ***/
         PackableColor& operator = ( const PackableColor& ) = default;
         PackableColor& operator = ( PackableColor&& ) = default;
-} const DEFAULT_PACKABLE_COLOR;
+
+    private:
+        Color plainColor_;
+};
 
 } // namespace como
 

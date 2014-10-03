@@ -25,6 +25,9 @@
 #include <map>
 #include <array>
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+
 namespace como {
 
 /***

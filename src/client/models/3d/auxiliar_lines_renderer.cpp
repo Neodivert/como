@@ -28,10 +28,12 @@ namespace como {
  * 1. Construction
  ***/
 
-AuxiliarLinesRenderer::AuxiliarLinesRenderer( OpenGL &openGL ) :
+AuxiliarLinesRenderer::AuxiliarLinesRenderer( OpenGL &openGL, const Color& userColor ) :
     openGL_( &openGL ),
     colorShaderLocation_( openGL.getShaderVariableLocation( "material.color" ) )
 {
+    initGuideRectsColor( userColor );
+
     // Set a VAO and a VBO for every line rendered by this renderer.
     initWorldAxesData();
     initGuideAxesData();
@@ -89,7 +91,6 @@ void AuxiliarLinesRenderer::setTransformGuideLine( const glm::vec3& origin, cons
 ***/
 
 void AuxiliarLinesRenderer::drawGuideAxis( Axis axis,
-                                           const glm::vec4 &color,
                                            const glm::mat4& viewMatrix,
                                            const glm::mat4& projectionMatrix )
 {
@@ -97,7 +98,7 @@ void AuxiliarLinesRenderer::drawGuideAxis( Axis axis,
     openGL_->setMVPMatrix( glm::mat4( 1.0f ), viewMatrix, projectionMatrix );
 
     // Set the draw color
-    glUniform4fv( colorShaderLocation_, 1, glm::value_ptr( color ) );
+    glUniform4fv( colorShaderLocation_, 1, glm::value_ptr( guideRectsColor_ ) );
 
     // Bind guide axes' VAO and VBO as the active ones.
     glBindVertexArray( guideAxesVAO_ );
@@ -111,7 +112,6 @@ void AuxiliarLinesRenderer::drawGuideAxis( Axis axis,
 
 void AuxiliarLinesRenderer::drawWorldAxes( const glm::mat4& viewMatrix ) const
 {
-    (void)( projectionMatrix );
     openGL_->setShadingMode( ShadingMode::SOLID_PLAIN );
     openGL_->setMVPMatrix( glm::mat4( 1.0f ),
                            glm::mat4( glm::mat3( viewMatrix ) ),
@@ -145,17 +145,12 @@ void AuxiliarLinesRenderer::drawTransformGuideLine( const glm::mat4& viewMatrix,
     openGL_->setShadingMode( ShadingMode::SOLID_PLAIN );
     openGL_->setMVPMatrix( glm::mat4( 1.0f ), viewMatrix, projectionMatrix );
 
-    const GLfloat lineColor[4] =
-    {
-        0.0f, 1.0f, 0.0f, 1.0f
-    };
-
     // Bind selection centroid VAO and VBO as the active ones.
     glBindVertexArray( transformGuideLineVAO_ );
     glBindBuffer( GL_ARRAY_BUFFER, transformGuideLineVBO_ );
 
     // Set selection centroid color.
-    glUniform4fv( colorShaderLocation_, 1, lineColor );
+    glUniform4fv( colorShaderLocation_, 1, glm::value_ptr( guideRectsColor_ ) );
 
     // Draw selection centroid point.
     // TODO: The range of point sizes are implementation-dependent. Also I have to
@@ -172,6 +167,22 @@ void AuxiliarLinesRenderer::drawTransformGuideLine( const glm::mat4& viewMatrix,
 /***
  * 6. Initialization
  ***/
+
+
+void AuxiliarLinesRenderer::initGuideRectsColor( const Color &userColor )
+{
+    const Color RED_COLOR( 255, 0, 0 );
+    const Color BLUE_COLOR( 0, 0, 255 );
+
+    // Make sure that the color used for drawing guide rects isn't the same
+    // as user's selection color.
+    if( userColor == RED_COLOR ){
+        guideRectsColor_ = BLUE_COLOR.toVec4();
+    }else{
+        guideRectsColor_ = RED_COLOR.toVec4();
+    }
+}
+
 
 void AuxiliarLinesRenderer::initWorldAxesData()
 {

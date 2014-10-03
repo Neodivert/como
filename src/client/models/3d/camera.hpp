@@ -21,7 +21,6 @@
 
 #include <client/models/3d/meshes/imported_mesh.hpp>
 
-#define GLM_FORCE_RADIANS
 #include <glm/gtc/constants.hpp>
 
 namespace como {

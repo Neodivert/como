@@ -21,7 +21,7 @@
 
 #include <QPushButton>
 #include <QColorDialog>
-#include <common/packables/array/packable_color.hpp>
+#include <common/packables/packable_color.hpp>
 
 namespace como {
 
@@ -51,7 +51,7 @@ class ColorButton : public QPushButton
          * 3. Setters
          ***/
         void setColor( const QColor& color );
-        void setColor( const PackableColor& color );
+        void setColor( const Color& color );
 
 
         /***
@@ -65,7 +65,7 @@ class ColorButton : public QPushButton
          * 5. Signals
          ***/
     signals:
-        void colorChanged( PackableColor color );
+        void colorChanged( Color color );
 
 
         /***

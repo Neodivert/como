@@ -62,7 +62,7 @@ void UsersList::update( ContainerAction lastContainerAction, UserID lastElementM
 
 void UsersList::addUser( const ColouredUser& user )
 {
-    PackableColor userSelectionColor;
+    Color userSelectionColor;
     QPixmap pixmap( 50, 50 );
 
     // Retrieve user's selection color.
@@ -70,10 +70,10 @@ void UsersList::addUser( const ColouredUser& user )
 
     // Generate a "icon" colored in user's color.
     pixmap.fill( QColor(
-                     userSelectionColor[0].getValue(),
-                 userSelectionColor[1].getValue(),
-                userSelectionColor[2].getValue(),
-                userSelectionColor[3].getValue()
+                        userSelectionColor[0],
+                        userSelectionColor[1],
+                        userSelectionColor[2],
+                        userSelectionColor[3]
             ));
     QIcon userIcon ( pixmap );
 

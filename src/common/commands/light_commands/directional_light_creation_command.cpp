@@ -25,11 +25,11 @@ namespace como {
  ***/
 
 DirectionalLightCreationCommand::DirectionalLightCreationCommand() :
-    LightCreationCommand( LightType::DIRECTIONAL_LIGHT, NO_USER, NO_RESOURCE, PackableColor() ) // TODO: Remove ResourceID() and PackableColor()
+    LightCreationCommand( LightType::DIRECTIONAL_LIGHT, NO_USER, NO_RESOURCE, Color() ) // TODO: Remove ResourceID() and PackableColor()
 {}
 
 
-DirectionalLightCreationCommand::DirectionalLightCreationCommand( UserID userID, ResourceID lightID, const PackableColor& lightColor ) :
+DirectionalLightCreationCommand::DirectionalLightCreationCommand( UserID userID, ResourceID lightID, const Color& lightColor ) :
     LightCreationCommand( LightType::DIRECTIONAL_LIGHT, userID, lightID, lightColor )
 {}
 

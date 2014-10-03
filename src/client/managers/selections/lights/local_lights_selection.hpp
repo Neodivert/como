@@ -52,7 +52,7 @@ class LocalLightsSelection : public LightsSelection, public ServerWriter
         /***
          * 4. Setters
          ***/
-        virtual void setLightColor( const PackableColor &color );
+        virtual void setLightColor( const Color &color );
         virtual void setAmbientCoefficient( float coefficient );
 
 

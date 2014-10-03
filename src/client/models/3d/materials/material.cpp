@@ -19,45 +19,11 @@
 #include "material.hpp"
 #include <client/models/3d/entity.hpp>
 #include <boost/tokenizer.hpp>
+
+#define GLM_FORCE_RADIANS
 #include <glm/gtc/type_ptr.hpp>
 
-
 namespace como {
-
-const char DEFAULT_MATERIAL_NAME[] = "Unnamed material";
-const glm::vec4 DEFAULT_MATERIAL_COLOR = glm::vec4( 1.0f );
-const glm::vec3 DEFAULT_MATERIAL_AMBIENT_REFLECTIVITY = glm::vec3( 0.9f );
-const glm::vec3 DEFAULT_MATERIAL_DIFFUSE_REFLECTIVITY = glm::vec3( 0.9f );
-const glm::vec3 DEFAULT_MATERIAL_SPECULAR_REFLECTIVITY = glm::vec3( 0.9f );
-const float DEFAULT_MATERIAL_SPECULAR_EXPONENT = 0.9f;
-
-/*
-#define MATERIAL_DEFAULT_INITIALIZATION \
-    name_( DEFAULT_MATERIAL_NAME ), \
-    color_( DEFAULT_MATERIAL_COLOR ), \
-    ambientReflectivity_( DEFAULT_MATERIAL_AMBIENT_REFLECTIVITY ), \
-    diffuseReflectivity_( DEFAULT_MATERIAL_DIFFUSE_REFLECTIVITY ), \
-    specularReflectivity_( DEFAULT_MATERIAL_SPECULAR_REFLECTIVITY ), \
-    specularExponent_( DEFAULT_MATERIAL_SPECULAR_EXPONENT ), \
-    texture_( nullptr )
-*/
-
-/***
- * 1. Construction
- ***/
-
-/*
-Material::Material() :
-    MATERIAL_DEFAULT_INITIALIZATION
-{}
-
-
-Material::Material( const std::string& name ) :
-    MATERIAL_DEFAULT_INITIALIZATION
-{
-    name_ = name;
-}
-*/
 
 Material::Material( const ResourceID& materialID, const MaterialInfo& materialInfo ) :
     Resource( materialID, materialInfo.name ),
@@ -74,36 +40,28 @@ Material::Material( const ResourceID& materialID, const MaterialInfo& materialIn
     }
 }
 
-/*
-Material::Material( PackableColor color ) :
-    MATERIAL_DEFAULT_INITIALIZATION
-{
-        color_ = color.toVec4();
-}
-*/
-
 /***
  * 3. Getters
  ***/
 
-PackableColor Material::getColor() const
+Color Material::getColor() const
 {
-    return PackableColor( color_ );
+    return Color( color_ );
 }
 
-PackableColor Material::getAmbientReflectivity() const
+Color Material::getAmbientReflectivity() const
 {
-    return PackableColor( ambientReflectivity_ );
+    return Color( ambientReflectivity_ );
 }
 
-PackableColor Material::getDiffuseReflectivity() const
+Color Material::getDiffuseReflectivity() const
 {
-    return PackableColor( diffuseReflectivity_ );
+    return Color( diffuseReflectivity_ );
 }
 
-PackableColor Material::getSpecularReflectivity() const
+Color Material::getSpecularReflectivity() const
 {
-    return PackableColor( specularReflectivity_ );
+    return Color( specularReflectivity_ );
 }
 
 float Material::getSpecularExponent() const
@@ -116,22 +74,22 @@ float Material::getSpecularExponent() const
  * 4. Setters
  ***/
 
-void Material::setColor( const PackableColor& color )
+void Material::setColor( const Color& color )
 {
     color_ = color.toVec4();
 }
 
-void Material::setAmbientReflectivity( const PackableColor& ambientReflectivity )
+void Material::setAmbientReflectivity( const Color& ambientReflectivity )
 {
     ambientReflectivity_ = ambientReflectivity.toVec3();
 }
 
-void Material::setDiffuseReflectivity( const PackableColor& diffuseReflectivity )
+void Material::setDiffuseReflectivity( const Color& diffuseReflectivity )
 {
     diffuseReflectivity_ = diffuseReflectivity.toVec3();
 }
 
-void Material::setSpecularReflectivity( const PackableColor& specularReflectivity )
+void Material::setSpecularReflectivity( const Color& specularReflectivity )
 {
     specularReflectivity_ = specularReflectivity.toVec3();
 }

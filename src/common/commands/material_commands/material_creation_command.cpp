@@ -45,9 +45,9 @@ MaterialInfo MaterialCreationCommand::getMaterialData() const
     MaterialInfo materialInfo;
 
     materialInfo.name = materialName_.getValue();
-    materialInfo.ambientReflectivity = materialAmbientReflectivity_.toVec3();
-    materialInfo.diffuseReflectivity = materialDiffuseReflectivity_.toVec3();
-    materialInfo.specularReflectivity = materialSpecularReflectivity_.toVec3();
+    materialInfo.ambientReflectivity = materialAmbientReflectivity_.getValue().toVec3();
+    materialInfo.diffuseReflectivity = materialDiffuseReflectivity_.getValue().toVec3();
+    materialInfo.specularReflectivity = materialSpecularReflectivity_.getValue().toVec3();
     materialInfo.specularExponent = materialSpecularExponent_.getValue();
 
     return materialInfo;

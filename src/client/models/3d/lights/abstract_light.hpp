@@ -19,7 +19,7 @@
 #ifndef ABSTRACT_LIGHT_HPP
 #define ABSTRACT_LIGHT_HPP
 
-#include <common/packables/array/packable_color.hpp>
+#include <common/packables/packable_color.hpp>
 
 namespace como {
 
@@ -43,14 +43,14 @@ class AbstractLight
         /***
          * 3. Getters
          ***/
-        virtual PackableColor getLightColor() const = 0;
+        virtual Color getLightColor() const = 0;
         virtual float getAmbientCoefficient() const = 0;
 
 
         /***
          * 4. Setters
          ***/
-        virtual void setLightColor( const PackableColor& color ) = 0;
+        virtual void setLightColor( const Color& color ) = 0;
         virtual void setAmbientCoefficient( float coefficient ) = 0;
 
 

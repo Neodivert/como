@@ -51,7 +51,7 @@ class UserConnectionCommand : public UserCommand
          * 3. Getters
          ***/
         const char* getName() const ;
-        const PackableColor& getSelectionColor() const ;
+        Color getSelectionColor() const ;
 
 
         /***

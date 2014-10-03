@@ -38,7 +38,7 @@ UserAcceptancePacket::UserAcceptancePacket() :
 }
 
 
-UserAcceptancePacket::UserAcceptancePacket( const std::uint32_t& id, const char* name, const char*sceneName, const PackableColor& selectionColor ) :
+UserAcceptancePacket::UserAcceptancePacket( const std::uint32_t& id, const char* name, const char*sceneName, const Color& selectionColor ) :
     Packet( PacketType::USER_ACCEPTED ),
     id_( id ),
     name_( name ),
@@ -95,9 +95,9 @@ const char* UserAcceptancePacket::getSceneName() const
 }
 
 
-const PackableColor& UserAcceptancePacket::getSelectionColor() const
+Color UserAcceptancePacket::getSelectionColor() const
 {
-    return selectionColor_;
+    return selectionColor_.getValue();
 }
 
 
@@ -111,7 +111,7 @@ bool UserAcceptancePacket::expectedType() const
  * 4. Setters
  ***/
 
-void UserAcceptancePacket::setData( const std::uint32_t& id, const char* name, const PackableColor& selectionColor )
+void UserAcceptancePacket::setData( const std::uint32_t& id, const char* name, const Color& selectionColor )
 {
     id_ = id;
     name_ = name;
@@ -139,10 +139,7 @@ void UserAcceptancePacket::setSceneName( const char* name )
 
 void UserAcceptancePacket::setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a )
 {
-    selectionColor_[0] = r;
-    selectionColor_[1] = g;
-    selectionColor_[2] = b;
-    selectionColor_[3] = a;
+    selectionColor_ = Color( r, g, b, a );
 }
 
 

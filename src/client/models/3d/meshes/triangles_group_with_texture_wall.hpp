@@ -22,7 +22,7 @@
 #include <common/primitives/primitive_data/triangles_group.hpp>
 #include <client/models/3d/textures/texture_wall.hpp>
 #include <client/models/3d/textures/texture.hpp>
-#include <glm/glm.hpp>
+
 #include <common/ids/resource_id.hpp>
 #include <client/managers/managers/textures/texture_walls_manager.hpp>
 

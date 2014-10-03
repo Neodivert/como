@@ -33,7 +33,7 @@ class LightColorChangeCommand : public LightCommand
          * 1. Construction
          ***/
         LightColorChangeCommand();
-        LightColorChangeCommand( UserID userID, ResourceID lightID, PackableColor lightColor );
+        LightColorChangeCommand( UserID userID, ResourceID lightID, Color lightColor );
         LightColorChangeCommand( const LightColorChangeCommand& );
         LightColorChangeCommand( LightColorChangeCommand&& ) = delete;
         COMMAND_CLONE_METHOD( LightColorChangeCommand )
@@ -48,7 +48,7 @@ class LightColorChangeCommand : public LightCommand
         /***
          * 3. Getters
          ***/
-        PackableColor getLightColor() const;
+        Color getLightColor() const;
 
 
         /***

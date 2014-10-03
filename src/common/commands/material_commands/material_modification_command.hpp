@@ -60,10 +60,10 @@ class MaterialModificationCommand : public AbstractMaterialModificationCommand
         MaterialModificationCommand& operator = ( MaterialModificationCommand&& ) = delete;
 };
 
-typedef MaterialModificationCommand< MaterialParameterName::COLOR, PackableColor, std::array< std::uint8_t, 4 > > MaterialColorChangeCommand;
-typedef MaterialModificationCommand< MaterialParameterName::AMBIENT_REFLECTIVITY, PackableColor, std::array< std::uint8_t, 4 > > MaterialAmbientReflectivityChangeCommand;
-typedef MaterialModificationCommand< MaterialParameterName::DIFFUSE_REFLECTIVITY, PackableColor, std::array< std::uint8_t, 4 > > MaterialDiffuseReflectivityChangeCommand;
-typedef MaterialModificationCommand< MaterialParameterName::SPECULAR_REFLECTIVITY, PackableColor, std::array< std::uint8_t, 4 > > MaterialSpecularReflectivityChangeCommand;
+typedef MaterialModificationCommand< MaterialParameterName::COLOR, PackableColor, Color > MaterialColorChangeCommand;
+typedef MaterialModificationCommand< MaterialParameterName::AMBIENT_REFLECTIVITY, PackableColor, Color > MaterialAmbientReflectivityChangeCommand;
+typedef MaterialModificationCommand< MaterialParameterName::DIFFUSE_REFLECTIVITY, PackableColor, Color > MaterialDiffuseReflectivityChangeCommand;
+typedef MaterialModificationCommand< MaterialParameterName::SPECULAR_REFLECTIVITY, PackableColor, Color > MaterialSpecularReflectivityChangeCommand;
 typedef MaterialModificationCommand< MaterialParameterName::SPECULAR_EXPONENT, PackableFloat, float > MaterialSpecularExponentChangeCommand;
 
 

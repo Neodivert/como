@@ -447,7 +447,6 @@ void Viewport::render()
     if( comoApp->getTransformationMode() != TransformationMode::FREE ){
         comoApp->getScene()->linesRenderer()->drawGuideAxis(
                     static_cast< Axis >( static_cast< int >( comoApp->getTransformationMode() ) - 1 ),
-                    glm::vec4( 1.0f, 1.0f, 1.0f, 1.0f ),
                     viewMatrix,
                     projectionMatrix );
     }

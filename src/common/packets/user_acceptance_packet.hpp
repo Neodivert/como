@@ -23,12 +23,9 @@
 #include <cstring>
 
 #include <common/packables/packable_integer.hpp>
-#include <common/packables/array/packable_color.hpp>
+#include <common/packables/packable_color.hpp>
 #include <common/packables/packable_string.hpp>
 #include <common/packables/ids/packable_resource_id.hpp>
-
-#define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
 
 namespace como {
 
@@ -62,7 +59,7 @@ class UserAcceptancePacket : public Packet
          * 1. Construction
          ***/
         UserAcceptancePacket();
-        UserAcceptancePacket( const std::uint32_t& id, const char* name, const char*sceneName, const PackableColor& selectionColor );
+        UserAcceptancePacket( const std::uint32_t& id, const char* name, const char*sceneName, const Color& selectionColor );
         UserAcceptancePacket( const UserAcceptancePacket& b );
         UserAcceptancePacket( UserAcceptancePacket&& ) = delete;
         virtual Packet* clone() const ;
@@ -80,14 +77,14 @@ class UserAcceptancePacket : public Packet
         std::uint32_t getId() const ;
         const char* getName() const ;
         const char* getSceneName() const ;
-        const PackableColor& getSelectionColor() const ;
+        Color getSelectionColor() const ;
         virtual bool expectedType() const ;
 
 
         /***
          * 4. Setters
          ***/
-        void setData( const std::uint32_t& id, const char* name, const PackableColor& selectionColor );
+        void setData( const std::uint32_t& id, const char* name, const Color& selectionColor );
         void setId( const std::uint32_t& id );
         void setName( const char* name );
         void setSceneName( const char* name );

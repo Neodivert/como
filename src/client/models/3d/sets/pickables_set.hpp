@@ -19,8 +19,9 @@
 #ifndef PICKABLES_SET_HPP
 #define PICKABLES_SET_HPP
 
-#include "glm/glm.hpp"
 #include <common/ids/resource_id.hpp>
+#include <glm/vec3.hpp>
+#include <cfloat>   // FLT_MAX
 
 namespace como {
 

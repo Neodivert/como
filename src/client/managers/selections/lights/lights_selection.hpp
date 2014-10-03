@@ -44,14 +44,14 @@ class LightsSelection : public virtual EntitiesSet<DirectionalLight>, public Abs
         /***
          * 3. Getters
          ***/
-        virtual PackableColor getLightColor() const;
+        virtual Color getLightColor() const;
         virtual float getAmbientCoefficient() const;
 
 
         /***
          * 4. Setters
          ***/
-        virtual void setLightColor( const PackableColor& color );
+        virtual void setLightColor( const Color& color );
         virtual void setAmbientCoefficient( float coefficient );
 
 

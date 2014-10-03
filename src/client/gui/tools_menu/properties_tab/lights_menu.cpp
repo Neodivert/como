@@ -41,7 +41,7 @@ LightsMenu::LightsMenu( LocalLightsSelection* lights ) :
 
     // Connect the signals emitted when user changes a material parameter to
     // the corresponding methods which change those parameters.
-    QObject::connect( lightColorButton_, &ColorButton::colorChanged, [=]( PackableColor color )
+    QObject::connect( lightColorButton_, &ColorButton::colorChanged, [=]( Color color )
     {
         lights_->setLightColor( color );
     });

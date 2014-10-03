@@ -22,6 +22,8 @@
 #include <map>
 #include <memory>
 #include <client/models/utilities/msl/src/shader_loader.hpp>
+
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 namespace como {

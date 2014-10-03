@@ -31,6 +31,7 @@
 #include <common/primitives/primitive_data/material_info.hpp>
 #include <client/managers/managers/resources/resources_manager.hpp>
 #include <client/managers/selections/materials/local_materials_selection.hpp>
+#include <string>
 
 namespace como {
 
@@ -98,7 +99,7 @@ class MaterialsManager : public QObject, public ServerWriter, public Observer, p
     public:
         ResourceHeadersList getLocalMaterialsHeaders() const; // TODO: Remove this method and use X::localHeaders().
         bool materialOwnedByLocalUser( const ResourceID& resourceID ) const;
-        virtual string getResourceName( const ResourceID& resourceID ) const;
+        virtual std::string getResourceName( const ResourceID& resourceID ) const; // TODO: Move to ResourcesManager or any other class.
         MaterialConstPtr getMaterial( const ResourceID& id ) const;
         ConstMaterialsVector getMaterials( const ResourceID& firstMaterialID, unsigned int nMaterials ) const;
 

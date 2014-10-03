@@ -49,7 +49,7 @@ std::string LightsManager::getResourceName( const ResourceID& lightID ) const
 void LightsManager::requestDirectionalLightCreation()
 {
     // Create a default light color.
-    PackableColor lightColor( 255, 255, 255, 255 );
+    Color lightColor( 255, 255, 255, 255 );
 
     sendCommandToServer(
                 CommandConstPtr(
@@ -59,7 +59,7 @@ void LightsManager::requestDirectionalLightCreation()
 }
 
 
-void LightsManager::addDirectionalLight( const ResourceID& lightID, const PackableColor& lightColor )
+void LightsManager::addDirectionalLight( const ResourceID& lightID, const Color& lightColor )
 {
     std::unique_ptr< DirectionalLight >
             light( new DirectionalLight( lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), *openGL_ ) );
@@ -117,7 +117,7 @@ void LightsManager::executeRemoteCommand( const LightCommand& command )
 
             if( lightCommand.getResponse() ){
                 addDirectionalLight( lightCommand.getResourceID(),
-                                     PackableColor( 255, 255, 255, 255 ) ); // TODO: Use same color as in request or remove such color from request and use WHITE always.
+                                     Color( 255, 255, 255, 255 ) ); // TODO: Use same color as in request or remove such color from request and use WHITE always.
             }else{
                 // TODO: Move this to a GUI class.
                 QMessageBox errorMsg( QMessageBox::Critical,

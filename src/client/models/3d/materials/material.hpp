@@ -20,7 +20,7 @@
 #define MATERIAL_HPP
 
 #include <client/models/dependencies.hpp>
-#include <common/packables/array/packable_color.hpp>
+#include <common/packables/packable_color.hpp>
 #include <common/primitives/primitive_data/material_info.hpp>
 #include <client/models/3d/textures/texture.hpp>
 #include <list>
@@ -46,10 +46,8 @@ class Material : public Resource
          * 1. Construction
          ***/
     public:
-        //Material();
-        //TODO: Delete? Material( const std::string& name );
         Material( const ResourceID& materialID, const MaterialInfo& materialInfo );
-        //TODO: Delete? Material( PackableColor color );
+        Material() = delete;
         Material( const Material& ) = delete;
         Material( Material&& ) = delete;
 
@@ -63,20 +61,20 @@ class Material : public Resource
         /***
          * 3. Getters
          ***/
-        PackableColor getColor() const;
-        PackableColor getAmbientReflectivity() const;
-        PackableColor getDiffuseReflectivity() const;
-        PackableColor getSpecularReflectivity() const;
+        Color getColor() const;
+        Color getAmbientReflectivity() const;
+        Color getDiffuseReflectivity() const;
+        Color getSpecularReflectivity() const;
         float getSpecularExponent() const;
 
 
         /***
          * 4. Setters
          ***/
-        void setColor( const PackableColor& color );
-        void setAmbientReflectivity( const PackableColor& ambientReflectivity );
-        void setDiffuseReflectivity( const PackableColor& diffuseReflectivity );
-        void setSpecularReflectivity( const PackableColor& specularReflectivity );
+        void setColor( const Color& color );
+        void setAmbientReflectivity( const Color& ambientReflectivity );
+        void setDiffuseReflectivity( const Color& diffuseReflectivity );
+        void setSpecularReflectivity( const Color& specularReflectivity );
         void setSpecularExponent( float specularExponent );
 
 

@@ -66,9 +66,9 @@ const char* UserConnectionCommand::getName() const
 }
 
 
-const PackableColor& UserConnectionCommand::getSelectionColor() const
+Color UserConnectionCommand::getSelectionColor() const
 {
-    return selectionColor_;
+    return selectionColor_.getValue();
 }
 
 
@@ -84,10 +84,7 @@ void UserConnectionCommand::setName( const char* name )
 
 void UserConnectionCommand::setSelectionColor( const std::uint8_t& r, const std::uint8_t& g, const std::uint8_t& b, const std::uint8_t& a )
 {
-    selectionColor_[0] = r;
-    selectionColor_[1] = g;
-    selectionColor_[2] = b;
-    selectionColor_[3] = a;
+    selectionColor_ = Color( r, g, b, a );
 }
 
 } // namespace como

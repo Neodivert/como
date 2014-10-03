@@ -19,7 +19,7 @@
 #ifndef MESH_TEXTURE_DATA_HPP
 #define MESH_TEXTURE_DATA_HPP
 
-#include <glm/glm.hpp>
+#include <glm/vec2.hpp>
 #include <vector>
 #include <array>
 

@@ -51,7 +51,7 @@ ResourceID LocalLightsSelection::addResource( std::unique_ptr<DirectionalLight> 
  * 4. Setters
  ***/
 
-void LocalLightsSelection::setLightColor( const PackableColor &color )
+void LocalLightsSelection::setLightColor( const Color &color )
 {
     LightsSelection::setLightColor( color );
 

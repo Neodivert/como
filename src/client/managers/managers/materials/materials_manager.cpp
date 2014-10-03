@@ -149,7 +149,7 @@ bool MaterialsManager::materialOwnedByLocalUser( const ResourceID& resourceID ) 
 }
 
 
-string MaterialsManager::getResourceName( const ResourceID& resourceID ) const
+std::string MaterialsManager::getResourceName( const ResourceID& resourceID ) const
 {
     (void)( resourceID );
     return "Material";

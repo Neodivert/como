@@ -51,7 +51,7 @@ HEADERS += \
     ../../src/common/packables/packable_wrapper.hpp \
     ../../src/common/packables/packable_float.hpp \
     ../../src/common/packables/array/packable_array_3.hpp \
-    ../../src/common/packables/array/packable_color.hpp \
+    ../../src/common/packables/packable_color.hpp \
     ../../src/common/packables/abstract_packable_wrapper.hpp \
     ../../src/common/commands/material_commands/material_command.hpp \
     ../../src/common/commands/material_commands/material_creation_command.hpp \
@@ -124,7 +124,8 @@ HEADERS += \
     ../../src/common/commands/camera_commands/camera_command.hpp \
     ../../src/common/commands/camera_commands/camera_creation_command.hpp \
     ../../src/common/commands/camera_commands/camera_commands.hpp \
-    ../../src/common/resources/resource.hpp
+    ../../src/common/resources/resource.hpp \
+    ../../src/common/utilities/color.hpp
 
 
 # Common sources (used by both client and server).
@@ -149,7 +150,7 @@ SOURCES += \
     ../../src/common/commands/light_commands/light_creation_command.cpp \
     ../../src/common/commands/light_commands/directional_light_creation_command.cpp \
     ../../src/common/packables/packable_float.cpp \
-    ../../src/common/packables/array/packable_color.cpp \
+    ../../src/common/packables/packable_color.cpp \
     ../../src/common/commands/material_commands/material_command.cpp \
     ../../src/common/commands/material_commands/material_creation_command.cpp \
     ../../src/common/commands/material_commands/abstract_material_modification_command.cpp \
@@ -194,4 +195,5 @@ SOURCES += \
     ../../src/common/commands/geometric_primitive_command/sphere_creation_command.cpp \
     ../../src/common/commands/camera_commands/camera_command.cpp \
     ../../src/common/commands/camera_commands/camera_creation_command.cpp \
-    ../../src/common/resources/resource.cpp
+    ../../src/common/resources/resource.cpp \
+    ../../src/common/utilities/color.cpp

@@ -54,22 +54,22 @@ std::string MaterialHandler::getName() const
 }
 
 
-PackableColor MaterialHandler::getColor() const
+Color MaterialHandler::getColor() const
 {
     return material_->getColor();
 }
 
-PackableColor MaterialHandler::getAmbientReflectivity() const
+Color MaterialHandler::getAmbientReflectivity() const
 {
     return material_->getAmbientReflectivity();
 }
 
-PackableColor MaterialHandler::getDiffuseReflectivity() const
+Color MaterialHandler::getDiffuseReflectivity() const
 {
     return material_->getDiffuseReflectivity();
 }
 
-PackableColor MaterialHandler::getSpecularReflectivity() const
+Color MaterialHandler::getSpecularReflectivity() const
 {
     return material_->getSpecularReflectivity();
 }
@@ -84,7 +84,7 @@ float MaterialHandler::getSpecularExponent() const
  * 4. Setters
  ***/
 
-void MaterialHandler::setColor( const PackableColor& color )
+void MaterialHandler::setColor( const Color& color )
 {
     material_->setColor( color );
 
@@ -93,7 +93,7 @@ void MaterialHandler::setColor( const PackableColor& color )
     notifyObservers();
 }
 
-void MaterialHandler::setAmbientReflectivity( const PackableColor& ambientReflectivity )
+void MaterialHandler::setAmbientReflectivity( const Color& ambientReflectivity )
 {
     material_->setAmbientReflectivity( ambientReflectivity );
 
@@ -102,7 +102,7 @@ void MaterialHandler::setAmbientReflectivity( const PackableColor& ambientReflec
     notifyObservers();
 }
 
-void MaterialHandler::setDiffuseReflectivity( const PackableColor& diffuseReflectivity )
+void MaterialHandler::setDiffuseReflectivity( const Color& diffuseReflectivity )
 {
     material_->setDiffuseReflectivity( diffuseReflectivity );
 
@@ -111,7 +111,7 @@ void MaterialHandler::setDiffuseReflectivity( const PackableColor& diffuseReflec
     notifyObservers();
 }
 
-void MaterialHandler::setSpecularReflectivity( const PackableColor& specularReflectivity )
+void MaterialHandler::setSpecularReflectivity( const Color& specularReflectivity )
 {
     material_->setSpecularReflectivity( specularReflectivity );
 

@@ -34,7 +34,7 @@ LightsSelection::LightsSelection( glm::vec4 borderColor ) :
  * 3. Getters
  ***/
 
-PackableColor LightsSelection::getLightColor() const
+Color LightsSelection::getLightColor() const
 {
     if( resources_.size() == 0 ){
         throw std::runtime_error( "LightsSelection::getLightColor() called on empty LightsSelection" );
@@ -56,7 +56,7 @@ float LightsSelection::getAmbientCoefficient() const
  * 4. Setters
  ***/
 
-void LightsSelection::setLightColor( const PackableColor& color )
+void LightsSelection::setLightColor( const Color& color )
 {
     for( auto& lightPair : resources_ ){
         lightPair.second->setLightColor( color );

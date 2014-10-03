@@ -21,6 +21,7 @@
 
 #include <client/models/utilities/open_gl.hpp>
 #include <vector>
+#include <common/packables/packable_color.hpp>
 
 namespace como {
 
@@ -36,7 +37,7 @@ class AuxiliarLinesRenderer
         /***
          * 1. Construction
          ***/
-        AuxiliarLinesRenderer( OpenGL& openGL );
+        AuxiliarLinesRenderer( OpenGL& openGL, const Color& userColor );
         AuxiliarLinesRenderer() = delete;
         AuxiliarLinesRenderer( const AuxiliarLinesRenderer& ) = delete;
         AuxiliarLinesRenderer( AuxiliarLinesRenderer&& ) = delete;
@@ -65,7 +66,6 @@ class AuxiliarLinesRenderer
          * 5. Drawing
         ***/
         void drawGuideAxis( Axis axis,
-                            const glm::vec4& color,
                             const glm::mat4& viewMatrix,
                             const glm::mat4& projectionMatrix );
 
@@ -78,6 +78,7 @@ class AuxiliarLinesRenderer
         /***
          * 6. Initialization
          ***/
+        void initGuideRectsColor( const Color& userColor );
         void initWorldAxesData();
         void initGuideAxesData();
         void initTransformGuideLineData();
@@ -99,6 +100,7 @@ class AuxiliarLinesRenderer
         GLuint transformGuideLineVBO_;
 
         GLint colorShaderLocation_;
+        glm::vec4 guideRectsColor_;
 };
 
 

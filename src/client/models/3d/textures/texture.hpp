@@ -26,7 +26,7 @@ extern "C" {
     #include <GL/gl.h>  
 }
 
-#include <glm/glm.hpp>
+#include <glm/vec2.hpp>
 #include <memory>
 #include <common/primitives/primitive_data/texture_info.hpp>
 #include <common/ids/resource_id.hpp>

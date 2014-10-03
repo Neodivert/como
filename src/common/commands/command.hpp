@@ -19,7 +19,7 @@
 #ifndef COMMAND_HPP
 #define COMMAND_HPP
 
-#include <common/packables/array/packable_color.hpp>
+#include <common/packables/packable_color.hpp>
 #include <memory>
 #include <stdexcept>
 #include <common/packables/packable_integer.hpp>

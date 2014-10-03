@@ -17,6 +17,8 @@
 ***/
 
 #include "mesh_normal_data.hpp"
+#define GLM_FORCE_RADIANS
+#include <glm/gtx/vector_angle.hpp>
 
 namespace como {
 

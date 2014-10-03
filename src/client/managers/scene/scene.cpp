@@ -44,7 +44,11 @@ Scene::Scene( const char* host, const char* port, const char* userName, LogPtr l
 
         initOpenGL();
 
-        linesRenderer_ = std::unique_ptr<AuxiliarLinesRenderer>( new AuxiliarLinesRenderer( *openGL_ ) );
+
+        linesRenderer_ =
+                std::unique_ptr<AuxiliarLinesRenderer>(
+                    new AuxiliarLinesRenderer( *openGL_,
+                                               userAcceptancePacket.getSelectionColor() ) );
 
         initManagers( userAcceptancePacket );
 

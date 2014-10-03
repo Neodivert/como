@@ -39,7 +39,7 @@ class LightCreationCommand : public LightCommand
         /***
          * 1. Construction
          ***/
-        LightCreationCommand( LightType lightType, UserID userID, ResourceID lightID, const PackableColor& lightColor );
+        LightCreationCommand( LightType lightType, UserID userID, ResourceID lightID, const Color& lightColor );
         LightCreationCommand( const LightCreationCommand& b );
         LightCreationCommand( LightCreationCommand&& ) = delete;
         COMMAND_CLONE_METHOD( LightCreationCommand )
@@ -55,7 +55,7 @@ class LightCreationCommand : public LightCommand
          * 3. Getters
          ***/
         LightType getLightType() const;
-        const PackableColor& getLightColor() const;
+        Color getLightColor() const;
 
 
         /***

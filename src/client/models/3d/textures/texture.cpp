@@ -22,6 +22,8 @@ extern "C" {
     #include <SDL2/SDL_image.h>
 }
 #include <client/models/utilities/open_gl.hpp>
+
+#define GLM_FORCE_RADIANS
 #include <glm/gtc/type_ptr.hpp>
 
 namespace como {

@@ -17,6 +17,8 @@
 ***/
 
 #include "light.hpp"
+
+#define GLM_FORCE_RADIANS
 #include <glm/gtc/type_ptr.hpp>
 
 namespace como {
@@ -26,7 +28,7 @@ namespace como {
  * 1. Construction
  ***/
 
-Light::Light( LightType type, const PackableColor& color, std::string path, OpenGL& openGL ) :
+Light::Light( LightType type, const Color& color, std::string path, OpenGL& openGL ) :
     ImportedMesh( path ),
     type_( type ),
     index_( lockShaderLight( openGL ) )
@@ -76,9 +78,9 @@ LightType Light::getLightType() const
     return type_;
 }
 
-PackableColor Light::getLightColor() const
+Color Light::getLightColor() const
 {
-    return PackableColor( color_ );
+    return Color( color_ );
 }
 
 
@@ -98,7 +100,7 @@ GLuint Light::getBaseLightIndex() const
  * 4. Setters
  ***/
 
-void Light::setLightColor( const PackableColor &color )
+void Light::setLightColor( const Color &color )
 {
     color_ = color.toVec3();
 }
