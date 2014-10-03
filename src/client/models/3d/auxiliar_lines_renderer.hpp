@@ -53,6 +53,7 @@ class AuxiliarLinesRenderer
          * 3. Setters
          ***/
         void setTransformGuideLine( const glm::vec3& origin, const glm::vec3& destiny );
+        void setGuideAxis( Axis axis, const glm::vec3& center );
 
 
         /***
@@ -66,6 +67,7 @@ class AuxiliarLinesRenderer
          * 5. Drawing
         ***/
         void drawGuideAxis( Axis axis,
+                            const glm::vec3& centroid,
                             const glm::mat4& viewMatrix,
                             const glm::mat4& projectionMatrix );
 
@@ -80,7 +82,7 @@ class AuxiliarLinesRenderer
          ***/
         void initGuideRectsColor( const Color& userColor );
         void initWorldAxesData();
-        void initGuideAxesData();
+        void initGuideAxisData();
         void initTransformGuideLineData();
 
         GLuint generateVBO( const std::vector<GLfloat>& vboData, GLenum usage );
@@ -93,8 +95,8 @@ class AuxiliarLinesRenderer
         GLuint worldAxesVAO_;
         GLuint worldAxesVBO_;
 
-        GLuint guideAxesVAO_;
-        GLuint guideAxesVBO_;
+        GLuint guideAxisVAO_;
+        GLuint guideAxisVBO_;
 
         GLuint transformGuideLineVAO_;
         GLuint transformGuideLineVBO_;

@@ -36,7 +36,7 @@ AuxiliarLinesRenderer::AuxiliarLinesRenderer( OpenGL &openGL, const Color& userC
 
     // Set a VAO and a VBO for every line rendered by this renderer.
     initWorldAxesData();
-    initGuideAxesData();
+    initGuideAxisData();
     initTransformGuideLineData();
 }
 
@@ -52,8 +52,8 @@ AuxiliarLinesRenderer::~AuxiliarLinesRenderer()
     glDeleteVertexArrays( 1, &worldAxesVAO_ );
     glDeleteBuffers( 1, &worldAxesVBO_ );
 
-    glDeleteBuffers( 1, &guideAxesVAO_ );
-    glDeleteBuffers( 1, &guideAxesVBO_ );
+    glDeleteBuffers( 1, &guideAxisVAO_ );
+    glDeleteBuffers( 1, &guideAxisVBO_ );
 
     glDeleteBuffers( 1, &transformGuideLineVAO_ );
     glDeleteBuffers( 1, &transformGuideLineVBO_ );
@@ -86,14 +86,70 @@ void AuxiliarLinesRenderer::setTransformGuideLine( const glm::vec3& origin, cons
 }
 
 
+void AuxiliarLinesRenderer::setGuideAxis( Axis axis, const glm::vec3 &center )
+{
+    const float AXIS_HALF_SIZE = 50.0f;
+    GLfloat* vboData = nullptr;
+
+    glBindVertexArray( guideAxisVAO_ );
+    glBindBuffer( GL_ARRAY_BUFFER, guideAxisVBO_ ); // TODO: Is this needed?
+    vboData = (GLfloat *)glMapBuffer( GL_ARRAY_BUFFER,
+                                      GL_WRITE_ONLY );
+
+    switch( axis ){
+        case Axis::X:
+            // X guide axis origin
+            vboData[0] = center.x - AXIS_HALF_SIZE;
+            vboData[1] = center.y;
+            vboData[2] = center.z;
+
+            // X guide axis end
+            vboData[3] = center.x + AXIS_HALF_SIZE;
+            vboData[4] = center.y;
+            vboData[5] = center.z;
+        break;
+        case Axis::Y:
+            // Y guide axis origin
+            vboData[0] = center.x;
+            vboData[1] = center.y - AXIS_HALF_SIZE;
+            vboData[2] = center.z;
+
+            // Y guide axis end
+            vboData[3] = center.x;
+            vboData[4] = center.y + AXIS_HALF_SIZE;
+            vboData[5] = center.z;
+        break;
+        case Axis::Z:
+            // Z guide axis origin
+            vboData[0] = center.x;
+            vboData[1] = center.y;
+            vboData[2] = center.z - AXIS_HALF_SIZE;
+
+            // Z guide axis end
+            vboData[3] = center.x;
+            vboData[4] = center.y;
+            vboData[5] = center.z + AXIS_HALF_SIZE;
+        break;
+    }
+
+    glUnmapBuffer( GL_ARRAY_BUFFER );
+
+    OpenGL::checkStatus( "AuxiliarLinesRenderer::setGuideAxisCenter" );
+}
+
+
 /***
  * 5. Drawing
 ***/
 
 void AuxiliarLinesRenderer::drawGuideAxis( Axis axis,
+                                           const glm::vec3& centroid,
                                            const glm::mat4& viewMatrix,
                                            const glm::mat4& projectionMatrix )
 {
+    // TODO: Don't update everytime if not required!
+    setGuideAxis( axis, centroid );
+
     openGL_->setShadingMode( ShadingMode::SOLID_PLAIN );
     openGL_->setMVPMatrix( glm::mat4( 1.0f ), viewMatrix, projectionMatrix );
 
@@ -101,12 +157,11 @@ void AuxiliarLinesRenderer::drawGuideAxis( Axis axis,
     glUniform4fv( colorShaderLocation_, 1, glm::value_ptr( guideRectsColor_ ) );
 
     // Bind guide axes' VAO and VBO as the active ones.
-    glBindVertexArray( guideAxesVAO_ );
-    glBindBuffer( GL_ARRAY_BUFFER, guideAxesVBO_ ); // TODO: Is this needed?
+    glBindVertexArray( guideAxisVAO_ );
+    glBindBuffer( GL_ARRAY_BUFFER, guideAxisVBO_ ); // TODO: Is this needed?
 
     // Draw the guide axis.
-    const unsigned int axisOffset = static_cast< unsigned int >( axis ) << 1;
-    glDrawArrays( GL_LINES, axisOffset, 2 );
+    glDrawArrays( GL_LINES, 0, 2 );
 }
 
 
@@ -206,25 +261,16 @@ void AuxiliarLinesRenderer::initWorldAxesData()
 }
 
 
-void AuxiliarLinesRenderer::initGuideAxesData()
+void AuxiliarLinesRenderer::initGuideAxisData()
 {
     std::vector<GLfloat> vboData =
     {
-        // X guide axis
         -100.0f, 0.0f, 0.0f,
         100.0f, 0.0f, 0.0f,
-
-        // Y guide axis
-        0.0f, -100.0f, 0.0f,
-        0.0f, 100.0f, 0.0f,
-
-        // Z guide axis
-        0.0f, 0.0f, -100.0f,
-        0.0f, 0.0f, 100.0f,
     };
 
-    guideAxesVBO_ = generateVBO( vboData, GL_DYNAMIC_DRAW );
-    guideAxesVAO_ = generateVAO();
+    guideAxisVBO_ = generateVBO( vboData, GL_DYNAMIC_DRAW );
+    guideAxisVAO_ = generateVAO();
 }
 
 
