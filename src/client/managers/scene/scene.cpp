@@ -94,7 +94,7 @@ void Scene::initOpenGL()
     create();
 
     // Create an empty OpenGL context and make it use this surface's format.
-    oglContext_ = shared_ptr< QOpenGLContext >( new QOpenGLContext );
+    oglContext_ = std::shared_ptr< QOpenGLContext >( new QOpenGLContext );
     oglContext_->setFormat( format );
 
     // Initialize the OpenGL context and make it the current one.
@@ -159,7 +159,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
  * 5. Getters
  ***/
 
-shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
+std::shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
 {
     return oglContext_;
 }

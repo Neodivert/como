@@ -64,7 +64,7 @@ class MeshesManager : public SpecializedEntitiesManager< Mesh, MeshesSelection, 
         /***
          * 4. Getters
          ***/
-        virtual string getResourceName( const ResourceID& resourceID ) const;
+        virtual std::string getResourceName( const ResourceID& resourceID ) const;
         ElementsMeetingCondition displaysVertexNormals() const;
         unsigned int getTotalMeshes() const;
 

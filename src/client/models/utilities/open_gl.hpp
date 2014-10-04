@@ -47,9 +47,9 @@ class OpenGL
 {
     private:
         // Index of the current shader program.
-        GLint currentProgramID_;
+        GLuint currentProgramID_;
 
-        std::map< ShaderProgramType, GLint > shaderProgramsIDs_;
+        std::map< ShaderProgramType, GLuint > shaderProgramsIDs_;
 
         ShadingMode currentShadingMode_;
 
@@ -65,7 +65,7 @@ class OpenGL
         /***
          * 2. Destruction
          ***/
-        ~OpenGL() = default;
+        ~OpenGL();
 
 
         /***
@@ -73,7 +73,7 @@ class OpenGL
          ***/
         ShadingMode getShadingMode() const;
         GLint getShaderInteger( ShaderProgramType shaderProgramType, std::string varName );
-        GLint getShaderProgramID( ShaderProgramType shaderProgramType ) const; // TODO: Remove this method.
+        GLuint getShaderProgramID( ShaderProgramType shaderProgramType ) const; // TODO: Remove this method.
 
 
         /***

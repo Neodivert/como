@@ -124,7 +124,7 @@ Texture::Texture( const ResourceID& id, const std::string& name, const TextureIn
     OpenGL::checkStatus( "Texture constructor - end" );
 }
 
-Texture::Texture( const ResourceID& id, const string& filePath ) :
+Texture::Texture( const ResourceID& id, const std::string& filePath ) :
     Texture( id,
              boost::filesystem::basename( filePath ) +
              boost::filesystem::extension( filePath ),

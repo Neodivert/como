@@ -57,12 +57,12 @@ GeneralInfoMenu::GeneralInfoMenu( LocalEntitiesSelection* userSelection ) :
 
 void GeneralInfoMenu::update()
 {
-    // Convert the requested centroid into a string.
+    // Convert the requested centroid into a std::string.
     char centroidStr[50] = {0};
     glm::vec3 centroid = userSelection_->centroid();
     sprintf( centroidStr, "(%.3f, %.3f, %.3f)", centroid.x, centroid.y, centroid.z );
 
-    // Write the previous "centroid string" to its corresponding label.
+    // Write the previous "centroid std::string" to its corresponding label.
     centroidPosition_->setText( centroidStr );
 
     /*

@@ -34,7 +34,7 @@ class RenderPanel : public QFrame, public Observer
 
     private:
         // Pointer to app's current state.
-        shared_ptr< ComoApp > comoApp;
+        std::shared_ptr< ComoApp > comoApp;
 
         //
         ViewFrame* viewFrames_[4];
@@ -48,7 +48,7 @@ class RenderPanel : public QFrame, public Observer
         RenderPanel() = delete;
         RenderPanel( const RenderPanel& ) = delete;
         RenderPanel( RenderPanel&& ) = delete;
-        explicit RenderPanel( QWidget *parent, shared_ptr< ComoApp > comoApp );
+        explicit RenderPanel( QWidget *parent, std::shared_ptr< ComoApp > comoApp );
 
         ~RenderPanel();
 

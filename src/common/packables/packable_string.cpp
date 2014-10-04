@@ -50,13 +50,13 @@ void* PackableString::pack( void* buffer ) const
 {
     const PackableUint16< size_t > strSize( str_.size() );
 
-    // Pack the string size into the buffer.
+    // Pack the std::string size into the buffer.
     buffer = strSize.pack( buffer );
 
-    // Cast the buffer so we can pack this string.
+    // Cast the buffer so we can pack this std::string.
     char* castedBuffer = static_cast< char* >( buffer );
 
-    // Pack the string into the buffer.
+    // Pack the std::string into the buffer.
     strncpy( castedBuffer, str_.substr( 0, strSize.getValue() ).c_str(), strSize.getValue() );
 
     // Return a pointer to the next position in the buffer.
@@ -70,10 +70,10 @@ const void* PackableString::unpack( const void* buffer )
 
     buffer = strSize.unpack( buffer );
 
-    // Cast the buffer so we can unpack the string.
+    // Cast the buffer so we can unpack the std::string.
     const char* castedBuffer = static_cast< const char* >( buffer );
 
-    // Unpack the string from the buffer.
+    // Unpack the std::string from the buffer.
     str_ = std::string( castedBuffer, castedBuffer + strSize.getValue() );
 
     // Return a pointer to the next position in the buffer.
@@ -88,13 +88,13 @@ const void* PackableString::unpack( const void* buffer ) const
 
     buffer = strSize.unpack( buffer );
 
-    // Cast the buffer so we can unpack the string.
+    // Cast the buffer so we can unpack the std::string.
     const char* castedBuffer = static_cast< const char* >( buffer );
 
-    // Unpack a string from the given buffer.
+    // Unpack a std::string from the given buffer.
     unpackedStr = std::string( castedBuffer, castedBuffer + strSize.getValue() );
 
-    // Throw an exception if the unpacked string doesn't match str_.
+    // Throw an exception if the unpacked std::string doesn't match str_.
     if( str_ != unpackedStr ){
         throw std::runtime_error( "ERROR: Unpacked an unexpected PackableString" );
     }

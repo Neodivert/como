@@ -26,7 +26,7 @@ GLint defaultShaderProgram_;
 GLint normalsShaderProgram_;
 
 OpenGL::OpenGL() :
-    currentProgramID_( -1 )
+    currentProgramID_( 0 )
 {
     unsigned int currentLightIndex;
     GLint varLocation = -1;
@@ -35,20 +35,15 @@ OpenGL::OpenGL() :
     OpenGL::checkStatus( "OpenGL::OpenGL() - begin" );
 
     // Load shaders
-    msl::ShaderLoader* shaderLoader = msl::ShaderLoader::getInstance();
+    msl::ShaderLoader shaderLoader;
 
     shaderProgramsIDs_[ ShaderProgramType::DEFAULT ] =
-            shaderLoader->loadShaderProgram( "data/shaders/basicVertexShader.shader",
-                                             "data/shaders/basicFragmentShader.shader" );
-    assert( shaderProgramsIDs_.at( ShaderProgramType::DEFAULT ) != -1 );
-
+            shaderLoader.loadShaderProgram( "data/shaders/basicVertexShader.shader",
+                                            "data/shaders/basicFragmentShader.shader" );
     shaderProgramsIDs_[ ShaderProgramType::NORMALS ] =
-            shaderLoader->loadShaderProgram( "data/shaders/normals/vertex.shader",
-                                             "data/shaders/normals/geometry.shader",
-                                             "data/shaders/normals/fragment.shader" );
-    assert( shaderProgramsIDs_.at( ShaderProgramType::NORMALS ) != -1 );
-
-    shaderLoader->destroy();
+            shaderLoader.loadShaderProgram( "data/shaders/normals/vertex.shader",
+                                            "data/shaders/normals/geometry.shader",
+                                            "data/shaders/normals/fragment.shader" );
 
     // Start using the default shader program.
     setShadingMode( ShadingMode::SOLID_LIGHTING_AND_TEXTURING );
@@ -60,7 +55,6 @@ OpenGL::OpenGL() :
         glUniform1i( varLocation, false );
     }
 
-
     // Initialize all directional lights as "invalid".
     for( currentLightIndex = 0; currentLightIndex < 4; currentLightIndex++ ){ // Retrieve MAX_LIGHTS from shader.
         sprintf( uniformName, "directionalLights[%u].isValid", currentLightIndex );
@@ -68,8 +62,20 @@ OpenGL::OpenGL() :
         glUniform1i( varLocation, false );
     }
 
-
     OpenGL::checkStatus( "OpenGL::OpenGL() - end" );
+}
+
+
+/***
+ * 2. Destruction
+ ***/
+
+OpenGL::~OpenGL()
+{
+    // Free shader programs.
+    for( const std::pair< ShaderProgramType, GLuint >& shaderProgramPair : shaderProgramsIDs_ ){
+        glDeleteProgram( shaderProgramPair.second );
+    }
 }
 
 
@@ -83,7 +89,7 @@ ShadingMode OpenGL::getShadingMode() const
 }
 
 
-GLint OpenGL::getShaderInteger( ShaderProgramType shaderProgramType, string varName )
+GLint OpenGL::getShaderInteger( ShaderProgramType shaderProgramType, std::string varName )
 {
     GLint varLocation = -1;
     GLint varValue = 0;
@@ -97,7 +103,7 @@ GLint OpenGL::getShaderInteger( ShaderProgramType shaderProgramType, string varN
 }
 
 
-GLint OpenGL::getShaderProgramID( ShaderProgramType shaderProgramType ) const
+GLuint OpenGL::getShaderProgramID( ShaderProgramType shaderProgramType ) const
 {
     return shaderProgramsIDs_.at( shaderProgramType );
 }
@@ -209,7 +215,7 @@ void OpenGL::disableTexturing() const
  * 7. Utilities
  ***/
 
-GLint OpenGL::getShaderVariableLocation( string varName, GLint program ) const
+GLint OpenGL::getShaderVariableLocation( std::string varName, GLint program ) const
 {
     if( program < 0 ){
         program = shaderProgramsIDs_.at( ShaderProgramType::DEFAULT );

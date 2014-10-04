@@ -26,6 +26,7 @@
 #include <map>
 #include <array>
 #include <common/utilities/log.hpp>
+#include <memory> // std::shared_ptr
 
 namespace como {
 
@@ -166,7 +167,7 @@ class ComoApp : public QObject {
 };
 
 
-typedef shared_ptr< ComoApp > ComoAppPtr;
+typedef std::shared_ptr< ComoApp > ComoAppPtr;
 
 } // namespace como
 

@@ -26,7 +26,7 @@ namespace como {
  * 1. Initialization
  ***/
 
-ViewFrame::ViewFrame( View view, Projection projection, shared_ptr< ComoApp > comoApp ) :
+ViewFrame::ViewFrame( View view, Projection projection, std::shared_ptr< ComoApp > comoApp ) :
     QFrame()
 {
     // Create a OpenGL viewport and check OpenGL state.

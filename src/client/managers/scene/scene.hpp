@@ -37,6 +37,7 @@
 #include <client/managers/managers/primitives/geometry_primitives_factory.hpp>
 #include <client/managers/managers/textures/texture_walls_manager.hpp>
 #include <client/models/3d/auxiliar_lines_renderer.hpp>
+#include <memory> // std::shared_ptr
 
 namespace como {
 
@@ -63,7 +64,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
 
         OpenGLPtr openGL_; // TODO: Initialize this class outside and pass it to the constructor.
 
-        shared_ptr< QOpenGLContext > oglContext_; // TODO: Initialize this inside of OpenGL constructor?
+        std::shared_ptr< QOpenGLContext > oglContext_; // TODO: Initialize this inside of OpenGL constructor?
 
         // Interface with the server.
         ServerInterfacePtr server_;
@@ -100,7 +101,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
         /***
          * 5. Getters
          ***/
-        shared_ptr< QOpenGLContext > getOpenGLContext() const ;
+        std::shared_ptr< QOpenGLContext > getOpenGLContext() const ;
         UsersManagerPtr getUsersManager() const;
         MeshesManagerPtr getMeshesManager() const;
         MaterialsManagerPtr getMaterialsManager() const;

@@ -29,7 +29,6 @@ extern "C" {
     #include <SDL2/SDL_image.h>
 }
 
-
 int main( int argc, char *argv[] )
 {
     // TODO: Add checking code.
@@ -43,8 +42,8 @@ int main( int argc, char *argv[] )
     // Create a Qt application.
     QApplication app( argc, argv );
 
-    // Variable argv[0] contains the string used for invoking this program
-    // We now retrieve the basename of that string for getting a
+    // Variable argv[0] contains the std::string used for invoking this program
+    // We now retrieve the basename of that std::string for getting a
     // relative path to the same directory where the client resides.
     // FIXME: This won't work if argv[0] points to a symlink, because we'd go
     // to the same directory where the symlink resides, not to the same

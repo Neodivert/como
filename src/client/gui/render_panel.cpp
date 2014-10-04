@@ -26,7 +26,7 @@ namespace como {
  * 1. Initialization
  ***/
 
-RenderPanel::RenderPanel( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
+RenderPanel::RenderPanel( QWidget* parent, std::shared_ptr< ComoApp > comoApp ) :
     QFrame( parent ),
     viewFrames_{ nullptr },
     forceRender_( true )

@@ -40,7 +40,7 @@ class ToolsMenu : public QTabWidget
         ToolsMenu() = delete;
         ToolsMenu( const ToolsMenu& ) = delete;
         ToolsMenu( ToolsMenu&& ) = delete;
-        ToolsMenu( QWidget* parent, shared_ptr< ComoApp > comoApp );
+        ToolsMenu( QWidget* parent, std::shared_ptr< ComoApp > comoApp );
 
 
         /***
@@ -57,7 +57,7 @@ class ToolsMenu : public QTabWidget
 
 
     private:
-        shared_ptr< ComoApp > comoApp_;
+        std::shared_ptr< ComoApp > comoApp_;
 };
 
 } // namespace como

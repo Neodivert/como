@@ -48,7 +48,7 @@ class SpecializedEntitiesManager : public AbstractEntitiesManager, public Resour
         /***
          * 3. Getters
          ***/
-        virtual string getResourceName(const ResourceID &resourceID) const;
+        virtual std::string getResourceName(const ResourceID &resourceID) const;
         virtual bool containsResource( const ResourceID& resourceID ) const;
 
 
@@ -89,7 +89,7 @@ SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesS
  ***/
 
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
-string SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getResourceName(const ResourceID &resourceID) const
+std::string SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getResourceName(const ResourceID &resourceID) const
 {
     (void)( resourceID );
     return "light";

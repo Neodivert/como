@@ -52,7 +52,7 @@ bool MeshesSelection::containsResource( const ResourceID& resourceID ) const
 }
 
 
-string MeshesSelection::getResourceName( const ResourceID& resourceID ) const
+std::string MeshesSelection::getResourceName( const ResourceID& resourceID ) const
 {
     return resources_.at( resourceID )->name();
 }

@@ -35,7 +35,7 @@ const float Z_FAR = ORTHO_CUBE_SIDE;
  * 1. Construction
  ***/
 
-Viewport::Viewport( View view, Projection projection, shared_ptr< ComoApp > comoApp ) :
+Viewport::Viewport( View view, Projection projection, std::shared_ptr< ComoApp > comoApp ) :
     QWindow(),
     comoApp( comoApp ),
     localEntitiesSelection_( comoApp->getScene()->getEntitiesManager()->getLocalSelection() ),

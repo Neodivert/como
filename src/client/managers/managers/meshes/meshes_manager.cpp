@@ -40,7 +40,7 @@ MeshesManager::MeshesManager( ServerInterfacePtr server, LogPtr log, MaterialsMa
  * 4. Getters
  ***/
 
-string MeshesManager::getResourceName( const ResourceID& resourceID ) const
+std::string MeshesManager::getResourceName( const ResourceID& resourceID ) const
 {
     for( const auto& meshesSelection : resourcesSelections_ ){
         if( meshesSelection.second->containsResource( resourceID ) ){

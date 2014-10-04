@@ -57,7 +57,7 @@ class TextureWallsManager : public ResourcesOwnershipRequester, public Selectabl
         bool textureWallIncludesTexture( const ResourceID& textureWallID ) const;
         virtual ResourceHeadersList getSelectableResourcesHeaders() const;
         virtual bool isResourceSelectable( const ResourceID& resourceID ) const;
-        virtual string getResourceName( const ResourceID &resourceID ) const;
+        virtual std::string getResourceName( const ResourceID &resourceID ) const;
         TextureWallHandler* getCurrentTextureWall() const;
 
 

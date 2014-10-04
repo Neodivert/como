@@ -64,7 +64,7 @@ bool TextureWallsManager::isResourceSelectable( const ResourceID& resourceID ) c
 }
 
 
-string TextureWallsManager::getResourceName( const ResourceID &resourceID ) const
+std::string TextureWallsManager::getResourceName( const ResourceID &resourceID ) const
 {
     return textureWalls_.at( resourceID ).name;
 }
@@ -80,7 +80,7 @@ TextureWallHandler *TextureWallsManager::getCurrentTextureWall() const
  * 4. Local texture walls management
  ***/
 
-ResourceID TextureWallsManager::createTextureWall( string name, const ResourceID& meshID )
+ResourceID TextureWallsManager::createTextureWall( std::string name, const ResourceID& meshID )
 {
     ResourceID textureWallID = reserveResourceIDs( 1 );
 
@@ -90,7 +90,7 @@ ResourceID TextureWallsManager::createTextureWall( string name, const ResourceID
 }
 
 
-void TextureWallsManager::createTextureWall(string name, const ResourceID &textureWallID, const ResourceID &meshID)
+void TextureWallsManager::createTextureWall(std::string name, const ResourceID &textureWallID, const ResourceID &meshID)
 {
     textureWalls_.emplace( textureWallID, name );
     meshesTextureWalls_[meshID].push_back( textureWallID );

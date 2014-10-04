@@ -32,7 +32,7 @@ namespace como {
 class PackableString : public Packable
 {
     private:
-        /*! Plain inner string */
+        /*! Plain inner std::string */
         std::string str_;
 
     public:
@@ -43,7 +43,7 @@ class PackableString : public Packable
         /*! Default constructor */
         PackableString() = default;
 
-        /*! Constructs a packable string by copying a plain one. */
+        /*! Constructs a packable std::string by copying a plain one. */
         PackableString( const char* str );
 
         PackableString( const std::string& str );
@@ -82,8 +82,8 @@ class PackableString : public Packable
          ***/
 
         /*!
-         * \brief returns a pointer to inner plain string.
-         * \return a pointer to inner plain string.
+         * \brief returns a pointer to inner plain std::string.
+         * \return a pointer to inner plain std::string.
          */
         const char* getValue() const { return str_.c_str(); }
 
@@ -101,9 +101,9 @@ class PackableString : public Packable
          ***/
 
         /*!
-         * \brief assign the given plain string to this instance's inner
-         * string.
-         * \param str plain string we are assigning.
+         * \brief assign the given plain std::string to this instance's inner
+         * std::string.
+         * \param str plain std::string we are assigning.
          */
         void setValue( const char* str ){ str_ = str; }
 
@@ -112,7 +112,7 @@ class PackableString : public Packable
          * 6. Operators
          ***/
 
-        /*! Assigns the given plain string to this instance's inner one */
+        /*! Assigns the given plain std::string to this instance's inner one */
         PackableString& operator = ( const char* str );
 
         PackableString& operator = ( const std::string& str );

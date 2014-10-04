@@ -68,7 +68,7 @@ void ImportedMesh::draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const gl
 // manager in any way. FIX THIS.
 MaterialsManager fooMaterialsManager( nullptr, nullptr );
 
-ImportedMesh::ImportedMesh( const string &filePath ) :
+ImportedMesh::ImportedMesh( const std::string &filePath ) :
     Mesh( NO_RESOURCE, NO_RESOURCE, MeshType::MESH,filePath.c_str(), fooMaterialsManager )
 {}
 

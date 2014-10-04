@@ -112,7 +112,7 @@ void TexturesManager::sendTextureToShader( const ResourceID& resourceID, glm::ve
  * 8. Remote textures management
  ***/
 
-void TexturesManager::loadTexture( const ResourceID &textureID, string imagePath )
+void TexturesManager::loadTexture( const ResourceID &textureID, std::string imagePath )
 {
     boost::system::error_code errorCode;
     std::string dstPath =

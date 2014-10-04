@@ -84,7 +84,7 @@ class Viewport : public QWindow
 
     private:
         // Pointer to app's current state.
-        shared_ptr< ComoApp > comoApp;
+        std::shared_ptr< ComoApp > comoApp;
 
         LocalEntitiesSelection* localEntitiesSelection_;
 
@@ -119,7 +119,7 @@ class Viewport : public QWindow
         Viewport() = delete;
         Viewport( const Viewport& ) = delete;
         Viewport( Viewport&& ) = delete;
-        Viewport( View view, Projection projection, shared_ptr< ComoApp > comoApp );
+        Viewport( View view, Projection projection, std::shared_ptr< ComoApp > comoApp );
 
 
         /***

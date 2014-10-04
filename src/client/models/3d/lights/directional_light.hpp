@@ -118,8 +118,6 @@ class DirectionalLight : public Light
         static GLuint lockShaderDirectionalLight( OpenGL& openGL );
 };
 
-typedef shared_ptr< DirectionalLight > DirectionalLightPtr;
-
 } // namespace como
 
 #endif // DIRECTIONAL_LIGHT_HPP

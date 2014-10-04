@@ -75,7 +75,7 @@ class NewUserPacket : public Packet
 
         /*!
          * \brief Returns the user name field inside this packet.
-         * \return a string with the user name written in this packet.
+         * \return a std::string with the user name written in this packet.
          */
         const char* getName() const ;
 

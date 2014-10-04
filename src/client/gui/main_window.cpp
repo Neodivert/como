@@ -29,7 +29,7 @@ namespace como {
  * 1. Initialization and destruction
  ***/
 
-MainWindow::MainWindow( QWidget* parent, shared_ptr< ComoApp > comoApp ) :
+MainWindow::MainWindow( QWidget* parent, std::shared_ptr< ComoApp > comoApp ) :
     QMainWindow( parent )
 {
     ToolsMenu* toolsMenu = nullptr;
