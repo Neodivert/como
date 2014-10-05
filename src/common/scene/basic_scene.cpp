@@ -69,7 +69,7 @@ void BasicScene::createSceneDirectory()
     }
     sceneTempDirPath_ = sceneDirPath_ + "/.temp";
 
-    boost::filesystem::create_directory( sceneDirPath_ );
+    boost::filesystem::create_directories( sceneDirPath_ );
     log_->debug( "Scene directory created [", sceneDirPath_, "]\n" );
 
     boost::filesystem::create_directory( sceneTempDirPath_ );
