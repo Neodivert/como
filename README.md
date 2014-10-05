@@ -61,8 +61,7 @@ COMO makes use of the following APIs and libraries:
 3. Initialize and update the repository's submodules:
 
    ```
-   git submodule init
-   git submodule update
+   git submodule update --init --recursive
   ```
 
 4. Open "project/client/como_project.pro" file with Qt Creator and set the build directory to "../../bin/client".
