@@ -309,7 +309,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
         break;
         case TransformationType::ROTATION:{
             if( ( currentMouseWorldRelPos.length() == 0.0f ) ||
-                ( currentMouseWorldRelPos.length() == 0.0f ) ){
+                ( lastMouseWorldRelPos.length() == 0.0f ) ){
                 break;
             }
 
