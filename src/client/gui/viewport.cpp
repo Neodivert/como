@@ -181,7 +181,7 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
                                                          addToSelection,
                                                          t );
 
-        lastMouseWorldPos_ = rayOrigin + glm::normalize( rayDirection ) * t;
+        lastMouseWorldPos_ = rayOrigin + rayDirection * t;
     }else{
         // We were in transformation mode. This mouse press is for droping
         // the current selection.
