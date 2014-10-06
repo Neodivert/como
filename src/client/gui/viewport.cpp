@@ -435,20 +435,23 @@ void Viewport::render()
     // Draw scene.
     comoApp->getScene()->draw( viewMatrix, projectionMatrix );
 
-    // Draw the transformation axis (if requested).
-    if( comoApp->getTransformationMode() != TransformationMode::FREE ){
-        comoApp->getScene()->linesRenderer()->drawGuideAxis(
-                    static_cast< Axis >( static_cast< int >( comoApp->getTransformationMode() ) - 1 ),
-                    comoApp->getScene()->getEntitiesManager()->getLocalSelection()->centroid(),
-                    viewMatrix,
-                    projectionMatrix );
-    }
+    // If use has selected objects, check if any guide rect must be drawn.
+    if( comoApp->getScene()->getEntitiesManager()->getLocalSelection()->size() ){
+        // Draw the transformation axis (if requested).
+        if( comoApp->getTransformationMode() != TransformationMode::FREE ){
+            comoApp->getScene()->linesRenderer()->drawGuideAxis(
+                        static_cast< Axis >( static_cast< int >( comoApp->getTransformationMode() ) - 1 ),
+                        comoApp->getScene()->getEntitiesManager()->getLocalSelection()->centroid(),
+                        viewMatrix,
+                        projectionMatrix );
+        }
 
-    // Draw guide rect
-    if( ( comoApp->getTransformationType() == TransformationType::ROTATION ) ||
-        ( comoApp->getTransformationType() == TransformationType::SCALE ) ){
-        comoApp->getScene()->linesRenderer()->drawTransformGuideLine( viewMatrix,
-                                                                      projectionMatrix );
+        // Draw guide rect
+        if( ( comoApp->getTransformationType() == TransformationType::ROTATION ) ||
+            ( comoApp->getTransformationType() == TransformationType::SCALE ) ){
+            comoApp->getScene()->linesRenderer()->drawTransformGuideLine( viewMatrix,
+                                                                          projectionMatrix );
+        }
     }
 
     // Make viewport occupy the bottom left corner.
