@@ -30,22 +30,6 @@
 
 namespace como {
 
-// Available edition scopes.
-enum class EditionScope
-{
-    GLOBAL = 0,
-    LOCAL
-};
-const unsigned int N_EDITION_SCOPES = 2;
-
-// Available edition scopes (strings for GUI output).
-const char editionScopeStrings[N_EDITION_SCOPES][16] =
-{
-    "Local",
-    "Global"
-};
-
-
 // Available transformation types.
 enum class TransformationType
 {
@@ -53,16 +37,6 @@ enum class TransformationType
     TRANSLATION,
     ROTATION,
     SCALE
-};
-const unsigned int N_TRANSFORMATION_TYPES = 4;
-
-// Available transformation types (strings for GUI output).
-const char transformationTypeStrings[N_TRANSFORMATION_TYPES][16] =
-{
-    "None",
-    "Translation",
-    "Rotation",
-    "Scale"
 };
 
 // Available transformation modes.
@@ -72,16 +46,6 @@ enum class TransformationMode
     FIXED_X,
     FIXED_Y,
     FIXED_Z
-};
-const unsigned int N_TRANSFORMATION_MODES = 4;
-
-// Available transformation modes (strings for GUI output).
-const char transformationModeStrings[N_TRANSFORMATION_MODES][32] =
-{
-    "None (Free transformation)",
-    "X axis",
-    "Y axis",
-    "Z axis"
 };
 
 class ComoApp : public QObject {
@@ -93,10 +57,6 @@ class ComoApp : public QObject {
 
         // This sets if the current user transformation is free or fixed to a axis.
         TransformationMode transformationMode;
-
-        // When in edition mode, this sets whether editions are applied to drawables
-        // in local (object) or global (world) coordinates.
-        EditionScope editionScope;
 
         // Current transformation type.
         TransformationType transformationType;
@@ -119,7 +79,6 @@ class ComoApp : public QObject {
         /***
          * 2. Getters
          ***/
-        EditionScope getEditionScope() const ;
         TransformationType getTransformationType() const ;
         TransformationMode getTransformationMode() const ;
         LogPtr getLog() const ;
@@ -138,8 +97,6 @@ class ComoApp : public QObject {
          ***/
     public slots:
         void setTransformationMode( TransformationMode transformationMode );
-
-        void setEditionScope( EditionScope editionScope );
         void setTransformationType( TransformationType transformationType );
 
     signals:

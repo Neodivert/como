@@ -27,7 +27,6 @@ namespace como {
 ComoApp::ComoApp( ScenePtr scene, LogPtr log ) :
     scene_( scene ),
     transformationMode( TransformationMode::FREE ),
-    editionScope( EditionScope::GLOBAL ),
     transformationType( TransformationType::NONE ),
     log_( log )
 {}
@@ -42,12 +41,6 @@ ComoApp::~ComoApp()
 /***
  * 2. Getters
  ***/
-
-EditionScope ComoApp::getEditionScope() const
-{
-    return editionScope;
-}
-
 
 TransformationMode ComoApp::getTransformationMode() const
 {
@@ -86,12 +79,6 @@ void ComoApp::setTransformationMode( TransformationMode transformationMode )
 
     // TODO: Reimplement this.
     //scene->renderNeeded();
-}
-
-
-void ComoApp::setEditionScope( EditionScope editionScope )
-{
-    this->editionScope = editionScope;
 }
 
 
