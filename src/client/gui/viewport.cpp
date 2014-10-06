@@ -27,8 +27,8 @@ namespace como {
 GLint Viewport::viewProjectionMatrixLocation = -1;
 
 const float ORTHO_CUBE_SIDE = 2.0f;
-const float Z_NEAR = 0.0f;
-const float Z_FAR = ORTHO_CUBE_SIDE;
+const float Z_NEAR = 0.00001f;
+const float Z_FAR = 100.0f;
 
 
 /***
@@ -553,8 +553,8 @@ void Viewport::setProjection( Projection projection )
             projectionMatrix =
                     glm::perspective( glm::pi<float>() / 2.0f,
                                       (float)(width())/(float)(height()),
-                                      0.1f,
-                                      100.0f );
+                                      Z_NEAR,
+                                      Z_FAR );
         break;
     }
 
@@ -587,14 +587,14 @@ void Viewport::traceRay( const GLfloat& x, const GLfloat& y, glm::vec3& rayOrigi
     viewport = glm::vec4( 0, 0, width(), height() );
 
     // Get window coordinates. Set z to near plane's z.
-    windowCoordinates = glm::vec3( x, y, Z_NEAR );
+    windowCoordinates = glm::vec3( x, y, 0.0f );
 
     // Get ray origin coordinates at clipping near plane by unproyecting the window's ones.
     rayOrigin = glm::unProject( windowCoordinates, camera->getViewMatrix(), projectionMatrix, viewport );
 
     // Get ray direction coordinates by unproyecting the window's ones to far plane and
     // then substracting the ray origin.
-    windowCoordinates.z = Z_FAR;
+    windowCoordinates.z = 1.0f;
     rayDirection = glm::unProject( windowCoordinates, camera->getViewMatrix(), projectionMatrix, viewport ) - rayOrigin;
 }
 

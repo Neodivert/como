@@ -63,6 +63,7 @@ class Camera : public ImportedMesh
          ***/
         glm::mat4 getViewMatrix() const ;
         glm::vec4 getCenterVector() const ;
+        glm::vec3 getEye() const;
 
 
         /***
