@@ -229,14 +229,6 @@ void Viewport::keyPressEvent( QKeyEvent *e )
         case Qt::Key_Z:
             comoApp->setTransformationMode( TransformationMode::FIXED_Z );
         break;
-        case Qt::Key_Tab:
-            // Swap between Object and Edition modes.
-            if( comoApp->getAppMode() == AppMode::OBJECT ){
-                comoApp->setAppMode( AppMode::EDITION );
-            }else{
-                comoApp->setAppMode( AppMode::OBJECT );
-            }
-        break;
         case Qt::Key_Delete:
             comoApp->getScene()->getEntitiesManager()->requestSelectionDeletion();
         break;
@@ -284,110 +276,105 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     TransformationType transformationType = comoApp->getTransformationType();
     TransformationMode transformationMode = comoApp->getTransformationMode();
 
-    // Only transform the scene when user is in Object mode and we have
-    // one or more entities selected.
-    if( ( comoApp->getAppMode() == AppMode::OBJECT ) &&
-        ( localEntitiesSelection_->size() > 0 ) ){
-        // Make the transformation requested by user.
-        switch( transformationType ){
-            case TransformationType::TRANSLATION:
-                // Compute the transformation vector.
-                transformVector = currentMouseWorldPos - lastMouseWorldPos_;
+    // Make the transformation requested by user.
+    switch( transformationType ){
+        case TransformationType::TRANSLATION:
+            // Compute the transformation vector.
+            transformVector = currentMouseWorldPos - lastMouseWorldPos_;
 
-                // If requested, attach the translation vector to an axis.
+            // If requested, attach the translation vector to an axis.
+            switch( transformationMode ){
+                case TransformationMode::FIXED_X:
+                    transformVector.y = 0.0f;
+                    transformVector.z = 0.0f;
+                break;
+                case TransformationMode::FIXED_Y:
+                    transformVector.x = 0.0f;
+                    transformVector.z = 0.0f;
+                break;
+                case TransformationMode::FIXED_Z:
+                    transformVector.x = 0.0f;
+                    transformVector.y = 0.0f;
+                break;
+                default:
+                break;
+            }
+
+            // Do the translation.
+            localEntitiesSelection_->translate( glm::vec3( transformVector ) );
+        break;
+        case TransformationType::ROTATION:{
+            angle = glm::orientedAngle(
+                        glm::normalize( currentMouseWorldRelPos ),
+                        glm::normalize( lastMouseWorldRelPos ),
+                        glm::normalize( glm::vec3( currentCamera().getCenterVector() ) ) );
+
+            // Make the rotation about an axis or another depending on the current
+            // transformationMode.
+            switch( transformationMode ){
+                case TransformationMode::FIXED_X:
+                    localEntitiesSelection_->rotate( angle, xAxis );
+                break;
+                case TransformationMode::FIXED_Y:
+                    localEntitiesSelection_->rotate( angle, yAxis );
+                break;
+                case TransformationMode::FIXED_Z:
+                    localEntitiesSelection_->rotate( angle, zAxis );
+                break;
+                case TransformationMode::FREE:
+                    localEntitiesSelection_->rotate( angle, glm::vec3( -currentCamera().getCenterVector() ) );
+                break;
+            }
+        }break;
+        case TransformationType::SCALE:{
+            // Error checking : if lastMouseWorldRelPos's
+            // components would be zero, we would have a NaN when
+            // dividing by it.
+            if( lastMouseWorldRelPos.x != 0.0f &&
+                lastMouseWorldRelPos.y != 0.0f &&
+                lastMouseWorldRelPos.z != 0.0f ){
+                transformVector = glm::vec3( currentMouseWorldRelPos.x / lastMouseWorldRelPos.x,
+                                             currentMouseWorldRelPos.y / lastMouseWorldRelPos.y,
+                                             currentMouseWorldRelPos.z / lastMouseWorldRelPos.z );
+
+                // TODO: Make this check unuseful.
+                if( isnan( transformVector.x ) ||
+                    isnan( transformVector.y ) ||
+                    isnan( transformVector.z )){
+                    std::cerr << "Is NaN!" << std::endl;
+                    break;
+                }
+
+                // If requested, attach the tranformation vector to an axis.
                 switch( transformationMode ){
                     case TransformationMode::FIXED_X:
-                        transformVector.y = 0.0f;
-                        transformVector.z = 0.0f;
+                        transformVector.y = 1.0f;
+                        transformVector.z = 1.0f;
                     break;
                     case TransformationMode::FIXED_Y:
-                        transformVector.x = 0.0f;
-                        transformVector.z = 0.0f;
+                        transformVector.x = 1.0f;
+                        transformVector.z = 1.0f;
                     break;
                     case TransformationMode::FIXED_Z:
-                        transformVector.x = 0.0f;
-                        transformVector.y = 0.0f;
+                        transformVector.x = 1.0f;
+                        transformVector.y = 1.0f;
                     break;
                     default:
                     break;
                 }
 
-                // Do the translation.
-                localEntitiesSelection_->translate( glm::vec3( transformVector ) );
-            break;
-            case TransformationType::ROTATION:{
-                angle = glm::orientedAngle(
-                            glm::normalize( currentMouseWorldRelPos ),
-                            glm::normalize( lastMouseWorldRelPos ),
-                            glm::normalize( glm::vec3( currentCamera().getCenterVector() ) ) );
-
-                // Make the rotation about an axis or another depending on the current
-                // transformationMode.
-                switch( transformationMode ){
-                    case TransformationMode::FIXED_X:
-                        localEntitiesSelection_->rotate( angle, xAxis );
-                    break;
-                    case TransformationMode::FIXED_Y:
-                        localEntitiesSelection_->rotate( angle, yAxis );
-                    break;
-                    case TransformationMode::FIXED_Z:
-                        localEntitiesSelection_->rotate( angle, zAxis );
-                    break;
-                    case TransformationMode::FREE:
-                        localEntitiesSelection_->rotate( angle, glm::vec3( -currentCamera().getCenterVector() ) );
-                    break;
+                // Do the scale only if none of the scaling factors is
+                // zero.
+                if( transformVector.x != 0.0f &&
+                    transformVector.y != 0.0f &&
+                    transformVector.z != 0.0f ){
+                    // Do the scale.
+                    localEntitiesSelection_->scale( glm::vec3( transformVector ) );
                 }
-            }break;
-            case TransformationType::SCALE:{
-                // Error checking : if lastMouseWorldRelPos's
-                // components would be zero, we would have a NaN when
-                // dividing by it.
-                if( lastMouseWorldRelPos.x != 0.0f &&
-                    lastMouseWorldRelPos.y != 0.0f &&
-                    lastMouseWorldRelPos.z != 0.0f ){
-                    transformVector = glm::vec3( currentMouseWorldRelPos.x / lastMouseWorldRelPos.x,
-                                                 currentMouseWorldRelPos.y / lastMouseWorldRelPos.y,
-                                                 currentMouseWorldRelPos.z / lastMouseWorldRelPos.z );
-
-                    // TODO: Make this check unuseful.
-                    if( isnan( transformVector.x ) ||
-                        isnan( transformVector.y ) ||
-                        isnan( transformVector.z )){
-                        std::cerr << "Is NaN!" << std::endl;
-                        break;
-                    }
-
-                    // If requested, attach the tranformation vector to an axis.
-                    switch( transformationMode ){
-                        case TransformationMode::FIXED_X:
-                            transformVector.y = 1.0f;
-                            transformVector.z = 1.0f;
-                        break;
-                        case TransformationMode::FIXED_Y:
-                            transformVector.x = 1.0f;
-                            transformVector.z = 1.0f;
-                        break;
-                        case TransformationMode::FIXED_Z:
-                            transformVector.x = 1.0f;
-                            transformVector.y = 1.0f;
-                        break;
-                        default:
-                        break;
-                    }
-
-                    // Do the scale only if none of the scaling factors is
-                    // zero.
-                    if( transformVector.x != 0.0f &&
-                        transformVector.y != 0.0f &&
-                        transformVector.z != 0.0f ){
-                        // Do the scale.
-                        localEntitiesSelection_->scale( glm::vec3( transformVector ) );
-                    }
-                }
-            }break;
-            default:
-            break;
-        }
+            }
+        }break;
+        default:
+        break;
     }
 
     // Update the transform guide line.

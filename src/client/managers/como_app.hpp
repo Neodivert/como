@@ -30,20 +30,6 @@
 
 namespace como {
 
-// Available app modes.
-enum class AppMode {
-    OBJECT = 0,
-    EDITION
-};
-const unsigned int N_APP_MODES = 2;
-
-// Available app modes (strings for GUI output).
-const char appModeStrings[N_APP_MODES][32] =
-{
-    "Object mode",
-    "Edition mode"
-};
-
 // Available edition scopes.
 enum class EditionScope
 {
@@ -105,9 +91,6 @@ class ComoApp : public QObject {
         //
         ScenePtr scene_;
 
-        // Current app mode.
-        AppMode appMode;
-
         // This sets if the current user transformation is free or fixed to a axis.
         TransformationMode transformationMode;
 
@@ -136,7 +119,6 @@ class ComoApp : public QObject {
         /***
          * 2. Getters
          ***/
-        AppMode getAppMode() const ;
         EditionScope getEditionScope() const ;
         TransformationType getTransformationType() const ;
         TransformationMode getTransformationMode() const ;
@@ -155,14 +137,12 @@ class ComoApp : public QObject {
          * 4. Setters (slots)
          ***/
     public slots:
-        void setAppMode( AppMode appMode );
         void setTransformationMode( TransformationMode transformationMode );
 
         void setEditionScope( EditionScope editionScope );
         void setTransformationType( TransformationType transformationType );
 
     signals:
-        void appModeIndexChanged( int index );
         void transformationModeIndexChanged( int index );
 };
 

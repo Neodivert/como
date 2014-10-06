@@ -26,7 +26,6 @@ namespace como {
 
 ComoApp::ComoApp( ScenePtr scene, LogPtr log ) :
     scene_( scene ),
-    appMode( AppMode::OBJECT ),
     transformationMode( TransformationMode::FREE ),
     editionScope( EditionScope::GLOBAL ),
     transformationType( TransformationType::NONE ),
@@ -39,30 +38,10 @@ ComoApp::~ComoApp()
     log_->debug( "ComoApp destroyed\n" );
 }
 
-/*
-ComoApp* ComoApp::getInstance()
-{
-    if( singlentonInstance == nullptr ){
-        singlentonInstance = new ComoApp;
-    }
-    return singlentonInstance;
-}
-
-void ComoApp::destroy()
-{
-    delete singlentonInstance;
-}
-*/
 
 /***
  * 2. Getters
  ***/
-
-AppMode ComoApp::getAppMode() const
-{
-    return appMode;
-}
-
 
 EditionScope ComoApp::getEditionScope() const
 {
@@ -96,18 +75,6 @@ ScenePtr ComoApp::getScene() const
 /***
  * 4. Setters (slots)
  ***/
-
-void ComoApp::setAppMode( AppMode appMode )
-{
-    // Change the app mode.
-    this->appMode = appMode;
-
-    transformationType = TransformationType::NONE;
-
-    // Emit a signal with the index of the new app mode.
-    emit appModeIndexChanged( static_cast< int >( appMode ) );
-}
-
 
 void ComoApp::setTransformationMode( TransformationMode transformationMode )
 {
