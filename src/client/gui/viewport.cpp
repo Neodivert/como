@@ -247,7 +247,12 @@ void Viewport::keyPressEvent( QKeyEvent *e )
 
 
 void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
-{
+{   
+    // Don't handle this event if no entity is selected.
+    if( localEntitiesSelection_->size() == 0 ){
+        return;
+    }
+
     // Reference axis used in rotations.
     const glm::vec3 xAxis( 1.0f, 0.0f, 0.0f );
     const glm::vec3 yAxis( 0.0f, 1.0f, 0.0f );
@@ -270,6 +275,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     // Get the intersection between the previous ray and plane.
     const float t = -( ( A * rayOrigin.x + B * rayOrigin.y + C * rayOrigin.z + D ) / ( A * rayDirection.x + B * rayDirection.y + C * rayDirection.z ) );
     const glm::vec3 currentMouseWorldPos = rayOrigin + rayDirection * t;
+    assert( !isnan( t ) );
 
     const glm::vec3 lastMouseWorldRelPos = lastMouseWorldPos_ - scenePivotPoint;
     const glm::vec3 currentMouseWorldRelPos = currentMouseWorldPos - scenePivotPoint;
@@ -278,8 +284,10 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     TransformationType transformationType = comoApp->getTransformationType();
     TransformationMode transformationMode = comoApp->getTransformationMode();
 
-    // Only transform the scene when user is in Object mode.
-    if( comoApp->getAppMode() == AppMode::OBJECT ){
+    // Only transform the scene when user is in Object mode and we have
+    // one or more entities selected.
+    if( ( comoApp->getAppMode() == AppMode::OBJECT ) &&
+        ( localEntitiesSelection_->size() > 0 ) ){
         // Make the transformation requested by user.
         switch( transformationType ){
             case TransformationType::TRANSLATION:
