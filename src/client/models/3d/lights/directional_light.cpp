@@ -113,7 +113,10 @@ void DirectionalLight::update()
     Light::update();
 
     // Compute transformed light vector.
-    lightVector_ = glm::normalize( glm::vec3( modelMatrix_ * DEFAULT_LIGHT_VECTOR ) );
+    lightVector_ = glm::vec3( modelMatrix_ * DEFAULT_LIGHT_VECTOR );
+    if( lightVector_.length() != 0.0f ){
+        lightVector_ =  glm::normalize( lightVector_ );
+    }
 
     // TODO: Update half vector.
 }

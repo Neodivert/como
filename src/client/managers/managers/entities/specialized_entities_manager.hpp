@@ -111,7 +111,6 @@ template <class ResourceType, class ResourcesSelectionType, class LocalResources
 bool SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::pick(const glm::vec3 &rayOrigin, glm::vec3 rayDirection, ResourceID& closestObject, float &t, const float &MAX_T) const
 {
     t = MAX_T;
-    rayDirection = glm::normalize( rayDirection );
 
     // Check if the given ray intersect any of the non selected drawables.
     return this->getResourcesSelection( NO_USER )->intersectsRay( rayOrigin, rayDirection, closestObject, t );

@@ -342,7 +342,7 @@ void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT,
     rayDirection = glm::vec3( glm::inverse( modelMatrix_ ) * glm::vec4( rayDirection, 0.0f ) );
 
     // Normalize the direction of the ray.
-    rayDirection = glm::normalize( rayDirection );
+    rayDirection = rayDirection;
 
     // Compute intersections with all triangles in this Mesh.
     for( unsigned int i = 0; i < vertexData_.vertexTriangles.size(); i++ ){

@@ -86,7 +86,10 @@ void Camera::sendToShader( OpenGL &openGL ) const
     // TODO: Use OpenGL class.
     (void)( openGL );
 
-    const glm::vec3 eyeVector = glm::normalize( glm::vec3( transformedEye - transformedCenter ) );
+    glm::vec3 eyeVector = glm::vec3( transformedEye - transformedCenter );
+    if( eyeVector.length() != 0.0f ){
+        eyeVector = glm::normalize( eyeVector );
+    }
     glUniform3fv( eyeVectorLocation_, 1, glm::value_ptr( eyeVector ) );
 }
 

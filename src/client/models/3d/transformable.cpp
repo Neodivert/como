@@ -35,9 +35,6 @@ void Transformable::translate( glm::vec3 direction )
 
 void Transformable::rotateAroundOrigin( GLfloat angle, glm::vec3 axis )
 {
-    // Normalize the vector "axis".
-    axis = glm::normalize( axis );
-
     // Compute the rotation matrix for the given angle and the axis converted to
     // object space.
     const glm::mat4 newRotation = glm::rotate( glm::mat4( 1.0f ), angle, axis );

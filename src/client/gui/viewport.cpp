@@ -267,7 +267,11 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     // Get the intersection between the previous ray and plane.
     const float t = -( ( A * rayOrigin.x + B * rayOrigin.y + C * rayOrigin.z + D ) / ( A * rayDirection.x + B * rayDirection.y + C * rayDirection.z ) );
     const glm::vec3 currentMouseWorldPos = rayOrigin + rayDirection * t;
-    assert( !isnan( t ) );
+
+    // TODO: Make this check unuseful.
+    if( isnan( D ) || isnan( t ) ){
+        return;
+    }
 
     const glm::vec3 lastMouseWorldRelPos = lastMouseWorldPos_ - scenePivotPoint;
     const glm::vec3 currentMouseWorldRelPos = currentMouseWorldPos - scenePivotPoint;
@@ -304,10 +308,15 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
             localEntitiesSelection_->translate( glm::vec3( transformVector ) );
         break;
         case TransformationType::ROTATION:{
+            if( ( currentMouseWorldRelPos.length() == 0.0f ) ||
+                ( currentMouseWorldRelPos.length() == 0.0f ) ){
+                break;
+            }
+
             angle = glm::orientedAngle(
                         glm::normalize( currentMouseWorldRelPos ),
                         glm::normalize( lastMouseWorldRelPos ),
-                        glm::normalize( glm::vec3( currentCamera().getCenterVector() ) ) );
+                        glm::vec3( currentCamera().getCenterVector() ) );
 
             // Make the rotation about an axis or another depending on the current
             // transformationMode.
@@ -338,12 +347,12 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                                              currentMouseWorldRelPos.z / lastMouseWorldRelPos.z );
 
                 // TODO: Make this check unuseful.
-                if( isnan( transformVector.x ) ||
-                    isnan( transformVector.y ) ||
-                    isnan( transformVector.z )){
-                    std::cerr << "Is NaN!" << std::endl;
+                if(     isnan( transformVector.x ) ||
+                        isnan( transformVector.y ) ||
+                        isnan( transformVector.z ) ){
                     break;
                 }
+
 
                 // If requested, attach the tranformation vector to an axis.
                 switch( transformationMode ){
@@ -590,7 +599,7 @@ void Viewport::traceRay( const GLfloat& x, const GLfloat& y, glm::vec3& rayOrigi
     // Get ray direction coordinates by unproyecting the window's ones to far plane and
     // then substracting the ray origin.
     windowCoordinates.z = 1.0f;
-    rayDirection = glm::normalize( glm::unProject( windowCoordinates, currentCamera().getViewMatrix(), projectionMatrix, viewport ) - rayOrigin );
+    rayDirection = glm::unProject( windowCoordinates, currentCamera().getViewMatrix(), projectionMatrix, viewport ) - rayOrigin;
 }
 
 
