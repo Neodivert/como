@@ -192,12 +192,15 @@ void Viewport::mousePressEvent( QMouseEvent* mousePressEvent )
 
 void Viewport::wheelEvent( QWheelEvent *ev )
 {
-    const float step = ( ev->delta() > 0 ) ? 0.1f : -0.1f;
-    const glm::vec3 direction = step * glm::vec3( camera->getCenterVector() );
+    // TODO: If we are in View::CAMERA, change to View::USER and apply zoom.
+    if( view_ != View::CAMERA ){
+        const float step = ( ev->delta() > 0 ) ? 0.1f : -0.1f;
+        const glm::vec3 direction = step * glm::vec3( camera->getCenterVector() );
 
-    camera->translate( direction );
+        camera->translate( direction );
 
-    forceRender();
+        forceRender();
+    }
 }
 
 
@@ -259,9 +262,9 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
 
     // Compute the coefficients of the plane which contains the point
     // "lastMouseWorldPos_" and whose normal is "-camera->getCenterVector()".
-    const float A = -camera->getCenterVector().x;
-    const float B = -camera->getCenterVector().y;
-    const float C = -camera->getCenterVector().z;
+    const float A = -currentCamera().getCenterVector().x;
+    const float B = -currentCamera().getCenterVector().y;
+    const float C = -currentCamera().getCenterVector().z;
     const float D = -( A * lastMouseWorldPos_.x + B * lastMouseWorldPos_.y + C * lastMouseWorldPos_.z );
 
     // Get the intersection between the previous ray and plane.
@@ -308,7 +311,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                 angle = glm::orientedAngle(
                             glm::normalize( currentMouseWorldRelPos ),
                             glm::normalize( lastMouseWorldRelPos ),
-                            glm::normalize( glm::vec3( camera->getCenterVector() ) ) );
+                            glm::normalize( glm::vec3( currentCamera().getCenterVector() ) ) );
 
                 // Make the rotation about an axis or another depending on the current
                 // transformationMode.
@@ -323,7 +326,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                         localEntitiesSelection_->rotate( angle, zAxis );
                     break;
                     case TransformationMode::FREE:
-                        localEntitiesSelection_->rotate( angle, glm::vec3( -camera->getCenterVector() ) );
+                        localEntitiesSelection_->rotate( angle, glm::vec3( -currentCamera().getCenterVector() ) );
                     break;
                 }
             }break;
@@ -431,14 +434,8 @@ void Viewport::render()
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     // Get camera's view matrix and send it to the shader.
-    glm::mat4 viewMatrix;
-    if( view_ == View::CAMERA ){
-        viewMatrix = camerasManager_->activeCameraViewMatrix();
-        camerasManager_->sendActiveCameraToShader();
-    }else{
-        viewMatrix = camera->getViewMatrix();
-        camera->sendToShader( *( comoApp->getScene()->getOpenGL() ) );
-    }
+    glm::mat4 viewMatrix = currentCamera().getViewMatrix();
+    currentCamera().sendToShader( *( comoApp->getScene()->getOpenGL() ) );
 
     // Draw scene.
     comoApp->getScene()->draw( viewMatrix, projectionMatrix );
@@ -590,12 +587,12 @@ void Viewport::traceRay( const GLfloat& x, const GLfloat& y, glm::vec3& rayOrigi
     windowCoordinates = glm::vec3( x, y, 0.0f );
 
     // Get ray origin coordinates at clipping near plane by unproyecting the window's ones.
-    rayOrigin = glm::unProject( windowCoordinates, camera->getViewMatrix(), projectionMatrix, viewport );
+    rayOrigin = glm::unProject( windowCoordinates, currentCamera().getViewMatrix(), projectionMatrix, viewport );
 
     // Get ray direction coordinates by unproyecting the window's ones to far plane and
     // then substracting the ray origin.
     windowCoordinates.z = 1.0f;
-    rayDirection = glm::unProject( windowCoordinates, camera->getViewMatrix(), projectionMatrix, viewport ) - rayOrigin;
+    rayDirection = glm::normalize( glm::unProject( windowCoordinates, currentCamera().getViewMatrix(), projectionMatrix, viewport ) - rayOrigin );
 }
 
 
@@ -610,9 +607,9 @@ void Viewport::updateTransformGuideLine( const GLfloat& x, const GLfloat& y )
 
     // Get the equation of a plane which contains the origin point and whose normal
     // is the opposite of the camera's center vector.
-    const GLfloat A = ( -camera->getCenterVector() ).x;
-    const GLfloat B = ( -camera->getCenterVector() ).y;
-    const GLfloat C = ( -camera->getCenterVector() ).z;
+    const GLfloat A = ( -currentCamera().getCenterVector() ).x;
+    const GLfloat B = ( -currentCamera().getCenterVector() ).y;
+    const GLfloat C = ( -currentCamera().getCenterVector() ).z;
     const GLfloat D = -A * origin.x - B * origin.y - C * origin.z;
 
     // Trace a ray from pixel (x, y) towards camera center vector. Get the the ray's
@@ -629,5 +626,14 @@ void Viewport::updateTransformGuideLine( const GLfloat& x, const GLfloat& y )
     comoApp->getScene()->linesRenderer()->setTransformGuideLine( origin, destination );
 }
 
+
+const Camera& Viewport::currentCamera() const
+{
+    if( view_ == View::CAMERA ){
+        return camerasManager_->activeCamera();
+    }else{
+        return *camera;
+    }
+}
 
 } // namespace como

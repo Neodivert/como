@@ -77,7 +77,7 @@ class Camera : public ImportedMesh
         /***
          * 4. Shader communication
          ***/
-        void sendToShader( OpenGL& openGL );
+        void sendToShader( OpenGL& openGL ) const;
 
 
         /***

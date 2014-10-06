@@ -28,7 +28,7 @@ CamerasManager::CamerasManager( OpenGL& openGL, ServerInterfacePtr server, LogPt
     ResourceCommandsExecuter( server ),
     SpecializedEntitiesManager( server, log ),
     openGL_( &openGL ),
-    activeCameraID_( NO_RESOURCE )
+    activeCamera_( nullptr )
 {}
 
 
@@ -36,9 +36,9 @@ CamerasManager::CamerasManager( OpenGL& openGL, ServerInterfacePtr server, LogPt
  * 3. Getters
  ***/
 
-glm::mat4 CamerasManager::activeCameraViewMatrix() const
+const Camera &CamerasManager::activeCamera() const
 {
-    return activeCameraSelection().cameraViewMatrix( activeCameraID_ );
+    return *activeCamera_;
 }
 
 
@@ -63,17 +63,7 @@ void CamerasManager::executeRemoteCommand( const CameraCommand &command )
 
 
 /***
- * 5. Shader communication
- ***/
-
-void CamerasManager::sendActiveCameraToShader() const
-{
-    activeCameraSelection().sendCameraToShader( *openGL_, activeCameraID_ );
-}
-
-
-/***
- * 7. Resources management
+ * 6. Resources management
  ***/
 
 void CamerasManager::clearResourcesSelection( UserID currentOwner )
@@ -83,7 +73,7 @@ void CamerasManager::clearResourcesSelection( UserID currentOwner )
 
 
 /***
- * 8. Remote command creation
+ * 7. Remote command creation
  ***/
 
 void CamerasManager::createCamera( const ResourceID &cameraID,
@@ -91,35 +81,18 @@ void CamerasManager::createCamera( const ResourceID &cameraID,
                                    const glm::vec3 &cameraEye,
                                    const glm::vec3 &cameraUp )
 {
-    if( activeCameraID_ == NO_RESOURCE ){
-        activeCameraID_ = cameraID;
-    }
+
 
     std::unique_ptr< Camera > camera( new Camera( *openGL_,
                                                   cameraCenter,
                                                   cameraEye,
                                                   cameraUp ) );
 
-    resourcesSelections_.at( cameraID.getCreatorID() )->addResource( cameraID, std::move( camera ) );
-}
-
-
-
-
-/****
- * 9. Private getters
- ***/
-
-CamerasSelection &CamerasManager::activeCameraSelection() const
-{
-    // Search the selection containing the active camera and return it.
-    for( const auto& camerasSelection : resourcesSelections_ ){
-        if( camerasSelection.second->containsResource( activeCameraID_ ) ){
-            return *( camerasSelection.second );
-        }
+    if( activeCamera_ == nullptr ){
+        activeCamera_ = camera.get();
     }
 
-    throw std::runtime_error( "Active camera not found" );
+    resourcesSelections_.at( cameraID.getCreatorID() )->addResource( cameraID, std::move( camera ) );
 }
 
 } // namespace como

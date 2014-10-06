@@ -48,6 +48,7 @@ class CamerasManager : public SpecializedEntitiesManager< Camera, CamerasSelecti
         /***
          * 3. Getters
          ***/
+        const Camera& activeCamera() const;
         glm::mat4 activeCameraViewMatrix() const;
 
 
@@ -58,13 +59,7 @@ class CamerasManager : public SpecializedEntitiesManager< Camera, CamerasSelecti
 
 
         /***
-         * 5. Shader communication
-         ***/
-        void sendActiveCameraToShader() const;
-
-
-        /***
-         * 6. Operators
+         * 5. Operators
          ***/
         CamerasManager& operator = ( const CamerasManager& ) = delete;
         CamerasManager& operator = ( CamerasManager&& ) = delete;
@@ -72,14 +67,14 @@ class CamerasManager : public SpecializedEntitiesManager< Camera, CamerasSelecti
 
     protected:
         /***
-         * 7. Resources management
+         * 6. Resources management
          ***/
         virtual void clearResourcesSelection( UserID currentOwner );
 
 
     private:
         /***
-         * 8. Remote camera creation
+         * 7. Remote camera creation
          ***/
         void createCamera( const ResourceID& cameraID,
                            const glm::vec3& cameraCenter,
@@ -87,16 +82,10 @@ class CamerasManager : public SpecializedEntitiesManager< Camera, CamerasSelecti
                            const glm::vec3& cameraUp );
 
 
-        /****
-         * 9. Private getters
-         ***/
-        CamerasSelection& activeCameraSelection() const;
-
-
     private:
         OpenGL* openGL_;
 
-        ResourceID activeCameraID_;
+        const Camera* activeCamera_;
 };
 
 } // namespace como

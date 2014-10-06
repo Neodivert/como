@@ -178,6 +178,7 @@ class Viewport : public QWindow
         glm::vec2 getNormalizedMousePos( const int& x, const int& y ) const ;
         void traceRay( const GLfloat& x, const GLfloat& y, glm::vec3& rayOrigin, glm::vec3& rayDirection ) const ;
         void updateTransformGuideLine( const GLfloat& x, const GLfloat& y );
+        const Camera& currentCamera() const;
 
 
         /***

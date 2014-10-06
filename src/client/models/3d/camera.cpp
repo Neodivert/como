@@ -81,7 +81,7 @@ void Camera::setOrientation( const glm::vec3 &eye, const glm::vec3 &center, cons
  * 4. Shader communication
  ***/
 
-void Camera::sendToShader( OpenGL &openGL )
+void Camera::sendToShader( OpenGL &openGL ) const
 {
     // TODO: Use OpenGL class.
     (void)( openGL );
