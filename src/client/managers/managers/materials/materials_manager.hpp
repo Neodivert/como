@@ -19,7 +19,6 @@
 #ifndef MATERIALS_MANAGER_HPP
 #define MATERIALS_MANAGER_HPP
 
-#include <QObject>
 #include <map>
 #include <client/managers/managers/materials/material_handler.hpp>
 #include <common/ids/resource_id.hpp>
@@ -37,10 +36,8 @@ namespace como {
 
 typedef std::map< ResourceID, UserID > MaterialsOwnershipMap;
 
-class MaterialsManager : public QObject, public ServerWriter, public Observer, public ObservableContainer<ResourceID>
+class MaterialsManager : public ServerWriter, public Observer, public ObservableContainer<ResourceID>
 {
-    Q_OBJECT
-
     // TODO: Use a better alternative for only allowing MeshesManager to
     // lock and remove materials and anyone to retrieve current material
     // handler.
@@ -148,14 +145,6 @@ class MaterialsManager : public QObject, public ServerWriter, public Observer, p
          ***/
         MaterialsManager& operator = ( const MaterialsManager& ) = delete;
         MaterialsManager& operator = ( MaterialsManager&& ) = delete;
-
-
-        /***
-         * 12. Signals
-         ***/
-    signals:
-        void materialSelectionConfirmed( MaterialHandlerPtr material );
-        void materialSelectionDenied( ResourceID material );
 };
 
 typedef std::shared_ptr< MaterialsManager > MaterialsManagerPtr;

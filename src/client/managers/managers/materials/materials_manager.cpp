@@ -108,7 +108,8 @@ MaterialHandlerPtr MaterialsManager::selectMaterial( const ResourceID& id )
         throw std::runtime_error( "You don't have permission for selecting this material!" );
     }
 
-    // TODO: Send command to server.
+    // TODO: Ask for permission to server once we can share materials among
+    // meshes.
 
     // TODO: Remove this when interaction with server is completed.
     if( materialHandler_ ){
@@ -118,8 +119,6 @@ MaterialHandlerPtr MaterialsManager::selectMaterial( const ResourceID& id )
     materialHandler_ = MaterialHandlerPtr( new MaterialHandler( id, materials_.at( id ), server() ) );
 
     materialHandler_->addObserver( this );
-
-    //emit materialSelectionConfirmed( materialHandler_ );
 
     return materialHandler_;
 }
