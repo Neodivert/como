@@ -80,57 +80,82 @@ void ConesFactory::executeRemoteCommand( const ConeCreationCommand &command )
 
 void ConesFactory::generateVertexData( MeshVertexData &vertexData )
 {
-    // Set cone vertices.
-    const unsigned int TOP_CENTER_INDEX = vertexData.vertices.size();
-    vertexData.vertices.push_back( glm::vec3( 0.0f, coneHeight_ / 2.0f, 0.0f ) );
+    int i;
+    unsigned int currentTopVertexIndex;
+    unsigned int currentBottomVertexIndex;
+
+    // Create top vertices
+    const unsigned int TOP_CENTER_INDEX =
+            generateHorizontalVerticesCircle( vertexData.vertices,
+                                              coneRadius_,
+                                              coneNBaseVertices_,
+                                              -coneHeight_ / 2.0f );
+    vertexData.vertices[TOP_CENTER_INDEX].y = coneHeight_ / 2.0f;
+
+    // Create bottom vertices
     const unsigned int BOTTOM_CENTER_INDEX =
             generateHorizontalVerticesCircle( vertexData.vertices,
                                               coneRadius_,
                                               coneNBaseVertices_,
                                               -coneHeight_ / 2.0f );
 
-    const unsigned int FIRST_CIRCUMFERENCE_VERTEX_INDEX = BOTTOM_CENTER_INDEX + 1;
-
-    // Set cone triangles (around)
+    // Create top face triangles
     generateTrianglesCircle( vertexData.vertexTriangles,
                              coneNBaseVertices_,
                              TOP_CENTER_INDEX,
-                             FIRST_CIRCUMFERENCE_VERTEX_INDEX,
+                             TOP_CENTER_INDEX + 1,
                              false );
 
-    // Set cone triangles (base)
+    // Create bottom face triangles
     generateTrianglesCircle( vertexData.vertexTriangles,
                              coneNBaseVertices_,
                              BOTTOM_CENTER_INDEX,
-                             FIRST_CIRCUMFERENCE_VERTEX_INDEX,
+                             BOTTOM_CENTER_INDEX + 1,
                              true );
+
+    /*** TODO: Remove this fragment (begin) ***/
+    // Create radial face
+    const unsigned int TOP_FIRST_RADIAL_VERTEX_INDEX = TOP_CENTER_INDEX + 1;
+    const unsigned int BOTTOM_FIRST_RADIAL_VERTEX_INDEX = BOTTOM_CENTER_INDEX + 1;
+
+    for( i = 0; i < coneNBaseVertices_ - 1; i++ ){
+        currentTopVertexIndex = TOP_FIRST_RADIAL_VERTEX_INDEX + i;
+        currentBottomVertexIndex = BOTTOM_FIRST_RADIAL_VERTEX_INDEX + i;
+
+        vertexData.vertexTriangles.push_back({
+                                                 currentTopVertexIndex,
+                                                 currentBottomVertexIndex + 1,
+                                                 currentBottomVertexIndex });
+
+        vertexData.vertexTriangles.push_back({
+                                                 currentTopVertexIndex,
+                                                 currentTopVertexIndex + 1,
+                                                 currentBottomVertexIndex + 1 });
+    }
+    /*** TODO: Remove this fragment (end) ***/
 }
 
 
 void ConesFactory::generateUVData( MeshTextureData &uvData )
 {
-    // Set UV coordinates.
-    const unsigned int TOP_CENTER_INDEX = uvData.uvVertices.size();
-    uvData.uvVertices.push_back( glm::vec2( 0.5f, 0.5f ) );
-
-    const unsigned int BOTTOM_CENTER_INDEX =
+    // Create top and bottom UV vertices
+    const unsigned int TOP_CENTER_INDEX =
             generateHorizontalUVCircle( uvData.uvVertices,
                                         coneNBaseVertices_ );
+    const unsigned int BOTTOM_CENTER_INDEX = TOP_CENTER_INDEX;
 
-    const unsigned int FIRST_CIRCUMFERENCE_VERTEX_INDEX = BOTTOM_CENTER_INDEX + 1;
-
-    // Set cone UV triangles (around)
+    // Create top UV triangles
     generateTrianglesCircle( uvData.uvTriangles,
                              coneNBaseVertices_,
                              TOP_CENTER_INDEX,
-                             FIRST_CIRCUMFERENCE_VERTEX_INDEX,
+                             TOP_CENTER_INDEX + 1,
                              false );
 
-    // Set cone UV triangles (base)
+    // Create bottom UV triangles
     generateTrianglesCircle( uvData.uvTriangles,
                              coneNBaseVertices_,
                              BOTTOM_CENTER_INDEX,
-                             FIRST_CIRCUMFERENCE_VERTEX_INDEX,
+                             BOTTOM_CENTER_INDEX + 1,
                              true );
 }
 
