@@ -61,4 +61,80 @@ void SpecializedSystemPrimitivesFactory::generateOGLData( SystemPrimitiveData &p
     primitiveData.generateOGLData();
 }
 
+
+/***
+ * 5. Auxiliar methods
+ ***/
+
+void SpecializedSystemPrimitivesFactory::generateHorizontalVerticesCircle(std::vector<glm::vec3> &vertices, float radius, unsigned int nDivisions, float height)
+{
+    const float angleStep = 2.0f * glm::pi<float>() / nDivisions;
+    float currentAngle = 0.0f;
+    unsigned int i;
+
+    // Create center vertex
+    vertices.push_back( glm::vec3( 0.0f,
+                                   height,
+                                   0.0f ) );
+
+    // Create radial vertices.
+    for( i = 0; i < nDivisions; i++ ){
+        vertices.push_back(
+                    glm::vec3( radius * cos( currentAngle ),
+                               height,
+                               radius * sin( currentAngle ) ) );
+        currentAngle += angleStep;
+    }
+}
+
+
+void SpecializedSystemPrimitivesFactory::generateHorizontalUVCircle(std::vector<glm::vec2> &vertices, unsigned int nDivisions)
+{
+    const float angleStep = 2.0f * glm::pi<float>() / (float)( nDivisions );
+    float currentAngle = 0.0f;
+    unsigned int i;
+
+    // Create center vertex
+    vertices.push_back( glm::vec2( 0.5f, 0.5f ) );
+
+    // Create radial vertices.
+    for( i = 0; i < nDivisions; i++ ){
+        vertices.push_back(
+                    glm::vec2( 0.5f + 0.5f * cos( currentAngle ),
+                               0.5f + 0.5f * sin( currentAngle ) ) );
+        currentAngle += angleStep;
+    }
+}
+
+
+void SpecializedSystemPrimitivesFactory::generateTrianglesCircle( std::vector< IndicesTriangle >& triangles, unsigned int nDivisions, unsigned int centerVertexIndex, unsigned int firstRadialVertexIndex, bool increaseIndices )
+{
+    unsigned int i;
+    unsigned int currentVertexIndex;
+
+    if( increaseIndices ){
+        for( i = 0; i < nDivisions - 1; i++ ){
+            currentVertexIndex = firstRadialVertexIndex + i;
+            triangles.push_back({ centerVertexIndex,
+                                  currentVertexIndex,
+                                  currentVertexIndex + 1 });
+        }
+        currentVertexIndex = firstRadialVertexIndex + i;
+        triangles.push_back({ centerVertexIndex,
+                              currentVertexIndex,
+                              firstRadialVertexIndex });
+    }else{
+        for( i = 0; i < nDivisions - 1; i++ ){
+            currentVertexIndex = firstRadialVertexIndex + i;
+            triangles.push_back({ centerVertexIndex,
+                                  currentVertexIndex + 1,
+                                  currentVertexIndex });
+        }
+        currentVertexIndex = firstRadialVertexIndex + i;
+        triangles.push_back({ centerVertexIndex,
+                              firstRadialVertexIndex,
+                              currentVertexIndex });
+    }
+}
+
 } // namespace como

@@ -75,42 +75,22 @@ void CylindersFactory::executeRemoteCommand( const CylinderCreationCommand &comm
 
 void CylindersFactory::generateVertexData( MeshVertexData &vertexData )
 {
-    const float angleStep = 2.0f * glm::pi<float>() / cylinderNRadialVertices_;
-    float currentAngle = 0.0f;
     int i;
     unsigned int currentVertexIndex;
     unsigned int currentTopVertexIndex;
     unsigned int currentBottomVertexIndex;
 
     // Create top vertices
-    vertexData.vertices.push_back(
-                glm::vec3( 0.0f,
-                           cylinderHeight_ / 2.0f,
-                           0.0f ) );
-
-    for( i = 0; i < cylinderNRadialVertices_; i++ ){
-        vertexData.vertices.push_back(
-                    glm::vec3( cylinderRadius_ * cos( currentAngle ),
-                               cylinderHeight_ / 2.0f,
-                               cylinderRadius_ * sin( currentAngle ) ) );
-        currentAngle += angleStep;
-    }
+    generateHorizontalVerticesCircle( vertexData.vertices,
+                                      cylinderRadius_,
+                                      cylinderNRadialVertices_,
+                                      cylinderHeight_ / 2.0f );
 
     // Create bottom vertices
-    vertexData.vertices.push_back(
-                glm::vec3( 0.0f,
-                           -cylinderHeight_ / 2.0f,
-                           0.0f ) );
-
-    currentAngle = 0.0f;
-    for( i = 0; i < cylinderNRadialVertices_; i++ ){
-        vertexData.vertices.push_back(
-                    glm::vec3( cylinderRadius_ * cos( currentAngle ),
-                               -cylinderHeight_ / 2.0f,
-                               cylinderRadius_ * sin( currentAngle ) ) );
-        currentAngle += angleStep;
-    }
-
+    generateHorizontalVerticesCircle( vertexData.vertices,
+                                      cylinderRadius_,
+                                      cylinderNRadialVertices_,
+                                      -cylinderHeight_ / 2.0f );
 
     // Create top face triangles
     const unsigned int TOP_CENTER_INDEX = 0;
@@ -175,22 +155,14 @@ void CylindersFactory::generateVertexData( MeshVertexData &vertexData )
 
 void CylindersFactory::generateUVData(MeshTextureData &uvData)
 {
-    const float angleStep = 2.0f * glm::pi<float>() / cylinderNRadialVertices_;
-    float currentAngle = 0.0f;
     int i;
     unsigned int currentVertexIndex;
     unsigned int currentTopVertexIndex;
     unsigned int currentBottomVertexIndex;
 
     // Create top and bottom UV vertices
-    uvData.uvVertices.push_back( glm::vec2( 0.5f, 0.5f ) );
-
-    for( i = 0; i < cylinderNRadialVertices_; i++ ){
-        uvData.uvVertices.push_back(
-                    glm::vec2( 0.5f + 0.5f * cos( currentAngle ),
-                               0.5f + 0.5f * sin( currentAngle ) ) );
-        currentAngle += angleStep;
-    }
+    generateHorizontalUVCircle( uvData.uvVertices,
+                                cylinderNRadialVertices_ );
 
     // Create radial top UV vertices.
     for( i = 0; i < cylinderNRadialVertices_; i++ ){

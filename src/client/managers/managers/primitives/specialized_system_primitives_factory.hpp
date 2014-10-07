@@ -64,9 +64,18 @@ class SpecializedSystemPrimitivesFactory : public ServerWriter
         virtual void generateOGLData( SystemPrimitiveData& primitiveData );
 
 
+        /***
+         * 5. Auxiliar methods
+         ***/
+        void generateHorizontalVerticesCircle(std::vector<glm::vec3> &vertices, float radius, unsigned int nDivisions, float height);
+        void generateHorizontalUVCircle(std::vector<glm::vec2> &vertices, unsigned int nDivisions);
+        void generateTrianglesCircle(std::vector<IndicesTriangle> &triangles, unsigned int nDivisions, unsigned int centerVertexIndex, unsigned int firstRadialVertexIndex, bool increaseIndices);
+
+
         MeshesManagerPtr meshesManager_;
         TextureWallsManager* textureWallsManager_;
         MaterialsManagerPtr materialsManager_;
+
 };
 
 } // namespace como
