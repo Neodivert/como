@@ -81,19 +81,20 @@ void CylindersFactory::generateVertexData( MeshVertexData &vertexData )
     unsigned int currentBottomVertexIndex;
 
     // Create top vertices
-    generateHorizontalVerticesCircle( vertexData.vertices,
-                                      cylinderRadius_,
-                                      cylinderNRadialVertices_,
-                                      cylinderHeight_ / 2.0f );
+    const unsigned int TOP_CENTER_INDEX =
+            generateHorizontalVerticesCircle( vertexData.vertices,
+                                              cylinderRadius_,
+                                              cylinderNRadialVertices_,
+                                              cylinderHeight_ / 2.0f );
 
     // Create bottom vertices
-    generateHorizontalVerticesCircle( vertexData.vertices,
-                                      cylinderRadius_,
-                                      cylinderNRadialVertices_,
-                                      -cylinderHeight_ / 2.0f );
+    const unsigned int BOTTOM_CENTER_INDEX =
+            generateHorizontalVerticesCircle( vertexData.vertices,
+                                              cylinderRadius_,
+                                              cylinderNRadialVertices_,
+                                              -cylinderHeight_ / 2.0f );
 
     // Create top face triangles
-    const unsigned int TOP_CENTER_INDEX = 0;
     const unsigned int TOP_FIRST_RADIAL_VERTEX_INDEX = TOP_CENTER_INDEX + 1;
     for( i = 0; i < cylinderNRadialVertices_ - 1; i++ ){
         currentVertexIndex = TOP_FIRST_RADIAL_VERTEX_INDEX + i;
@@ -109,7 +110,6 @@ void CylindersFactory::generateVertexData( MeshVertexData &vertexData )
                                              currentVertexIndex });
 
     // Create bottom face triangles
-    const unsigned int BOTTOM_CENTER_INDEX = cylinderNRadialVertices_ + 1;
     const unsigned int BOTTOM_FIRST_RADIAL_VERTEX_INDEX = BOTTOM_CENTER_INDEX + 1;
     for( i = 0; i < cylinderNRadialVertices_ - 1; i++ ){
         currentVertexIndex = BOTTOM_FIRST_RADIAL_VERTEX_INDEX + i;
@@ -161,8 +161,10 @@ void CylindersFactory::generateUVData(MeshTextureData &uvData)
     unsigned int currentBottomVertexIndex;
 
     // Create top and bottom UV vertices
-    generateHorizontalUVCircle( uvData.uvVertices,
-                                cylinderNRadialVertices_ );
+    const unsigned int TOP_CENTER_INDEX =
+            generateHorizontalUVCircle( uvData.uvVertices,
+                                        cylinderNRadialVertices_ );
+    const unsigned int BOTTOM_CENTER_INDEX = TOP_CENTER_INDEX;
 
     // Create radial top UV vertices.
     for( i = 0; i < cylinderNRadialVertices_; i++ ){
@@ -181,7 +183,6 @@ void CylindersFactory::generateUVData(MeshTextureData &uvData)
     }
 
     // Create top UV triangles
-    const unsigned int TOP_CENTER_INDEX = 0;
     const unsigned int TOP_FIRST_RADIAL_VERTEX_INDEX = TOP_CENTER_INDEX + 1;
     for( i = 0; i < cylinderNRadialVertices_ - 1; i++ ){
         currentVertexIndex = TOP_FIRST_RADIAL_VERTEX_INDEX + i;
@@ -197,7 +198,6 @@ void CylindersFactory::generateUVData(MeshTextureData &uvData)
                                      currentVertexIndex });
 
     // Create bottom UV triangles
-    const unsigned int BOTTOM_CENTER_INDEX = 0;
     const unsigned int BOTTOM_FIRST_RADIAL_VERTEX_INDEX = BOTTOM_CENTER_INDEX + 1;
     for( i = 0; i < cylinderNRadialVertices_ - 1; i++ ){
         currentVertexIndex = BOTTOM_FIRST_RADIAL_VERTEX_INDEX + i;

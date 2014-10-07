@@ -66,11 +66,12 @@ void SpecializedSystemPrimitivesFactory::generateOGLData( SystemPrimitiveData &p
  * 5. Auxiliar methods
  ***/
 
-void SpecializedSystemPrimitivesFactory::generateHorizontalVerticesCircle(std::vector<glm::vec3> &vertices, float radius, unsigned int nDivisions, float height)
+unsigned int SpecializedSystemPrimitivesFactory::generateHorizontalVerticesCircle(std::vector<glm::vec3> &vertices, float radius, unsigned int nDivisions, float height)
 {
     const float angleStep = 2.0f * glm::pi<float>() / nDivisions;
     float currentAngle = 0.0f;
     unsigned int i;
+    const unsigned int CENTER_VERTEX_INDEX = vertices.size();
 
     // Create center vertex
     vertices.push_back( glm::vec3( 0.0f,
@@ -85,14 +86,17 @@ void SpecializedSystemPrimitivesFactory::generateHorizontalVerticesCircle(std::v
                                radius * sin( currentAngle ) ) );
         currentAngle += angleStep;
     }
+
+    return CENTER_VERTEX_INDEX;
 }
 
 
-void SpecializedSystemPrimitivesFactory::generateHorizontalUVCircle(std::vector<glm::vec2> &vertices, unsigned int nDivisions)
+unsigned int SpecializedSystemPrimitivesFactory::generateHorizontalUVCircle(std::vector<glm::vec2> &vertices, unsigned int nDivisions)
 {
     const float angleStep = 2.0f * glm::pi<float>() / (float)( nDivisions );
     float currentAngle = 0.0f;
     unsigned int i;
+    const unsigned int CENTER_VERTEX_INDEX = vertices.size();
 
     // Create center vertex
     vertices.push_back( glm::vec2( 0.5f, 0.5f ) );
@@ -104,6 +108,8 @@ void SpecializedSystemPrimitivesFactory::generateHorizontalUVCircle(std::vector<
                                0.5f + 0.5f * sin( currentAngle ) ) );
         currentAngle += angleStep;
     }
+
+    return CENTER_VERTEX_INDEX;
 }
 
 
