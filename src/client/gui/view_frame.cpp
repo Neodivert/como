@@ -68,7 +68,7 @@ ViewFrame::ViewFrame( View view, Projection projection, std::shared_ptr< ComoApp
 
 void ViewFrame::renderIfNeeded()
 {
-    render();
+    viewport->renderIfNeeded();
 }
 
 void ViewFrame::render()

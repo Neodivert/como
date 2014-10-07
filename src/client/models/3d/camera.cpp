@@ -36,8 +36,6 @@ Camera::Camera( OpenGL &openGL, const glm::vec3 &cameraCenter, const glm::vec3 &
         eyeVectorLocation_ = openGL.getShaderVariableLocation( "eyeVector" );
     }
 
-    Mesh::translate( glm::vec3( 0.0f, 0.0f, -1.0f ) );
-
     setOrientation( cameraEye, cameraCenter, cameraUp );
 }
 

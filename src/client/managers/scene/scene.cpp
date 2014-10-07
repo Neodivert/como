@@ -149,7 +149,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
 
         localUserConnectionCommand_ = UserConnectionCommandConstPtr( new UserConnectionCommand( userAcceptancePacket ) );
     }catch( std::exception& ex ){
-        std::cerr << ex.what() << std::endl;
+        log_->error( ex.what(), "\n" );
         throw;
     }
 }

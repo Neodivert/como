@@ -56,7 +56,7 @@ MainWindow::MainWindow( QWidget* parent, std::shared_ptr< ComoApp > comoApp ) :
     renderPanel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
     // Create the user's list.
-    usersList = new UsersList( this, log_, comoApp->getScene()->getUsersManager() );
+    usersList = new UsersList( nullptr, log_, comoApp->getScene()->getUsersManager() );
 
     // FIXME: Study why this is necessary.
     qRegisterMetaType< UserConnectionCommandConstPtr >();

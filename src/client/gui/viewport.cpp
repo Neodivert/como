@@ -82,6 +82,9 @@ Viewport::Viewport( View view, Projection projection, std::shared_ptr< ComoApp >
         // Set the requested view.
         setView( view );
 
+        // Set the request projection
+        setProjection( projection );
+
         OpenGL::checkStatus( "Viewport constructor - end" );
     }catch( std::exception& ex ){
         comoApp->getLog()->error( ex.what(), "\n" );
@@ -143,16 +146,14 @@ void Viewport::resizeEvent(QResizeEvent *event)
     Q_UNUSED(event);
 
     // Recompute the inverses of canvas' dimensions.
-    if( width() ){
+    if( width() && height() ){
         widthInverse = 1.0f / width();
-    }
-    if( height() ){
         heightInverse = 1.0f / height();
-    }
 
-    // Projection matrix depends on viewport dimensions, so update it.
-    // TODO: remove this dependency and call setProjection() in constructor.
-    setProjection( projection_ );
+        // Projection matrix depends on viewport dimensions, so update it.
+        // TODO: remove this dependency and call setProjection() in constructor.
+        setProjection( projection_ );
+    }
 }
 
 
@@ -464,7 +465,7 @@ void Viewport::render()
     }
 
     // Make viewport occupy the bottom left corner.
-    glViewport( width()-50, 0, 50, 50 );
+    glViewport( width()-50, 0, 50, 50 ); // FIXME: What if width() < 50?
 
     // Draw scene's world axis.
     comoApp->getScene()->linesRenderer()->drawWorldAxes( viewMatrix );

@@ -40,14 +40,9 @@ RenderPanel::RenderPanel( QWidget* parent, std::shared_ptr< ComoApp > comoApp ) 
     this->comoApp = comoApp;
 
     // Create splitters for arranging the four ViewFrame instances we are about to create.
-    vSplitter = new QSplitter;
-    h1Splitter = new QSplitter;
-    h2Splitter = new QSplitter;
-
-    // Create the splitters hierarchy.
-    vSplitter->setOrientation( Qt::Vertical );
-    vSplitter->addWidget( h1Splitter );
-    vSplitter->addWidget( h2Splitter );
+    vSplitter = new QSplitter( Qt::Vertical );
+    h1Splitter = new QSplitter( Qt::Horizontal );
+    h2Splitter = new QSplitter( Qt::Horizontal );
 
     // Create the top left ViewFrame.
     viewFrames_[0] = new ViewFrame( View::FRONT, Projection::ORTHO, comoApp );
@@ -64,6 +59,10 @@ RenderPanel::RenderPanel( QWidget* parent, std::shared_ptr< ComoApp > comoApp ) 
     // Create the Bottom right ViewFrame.
     viewFrames_[3] = new ViewFrame( View::CAMERA, Projection::PERSPECTIVE, comoApp );
     h2Splitter->addWidget( viewFrames_[3] );
+
+    // Create the splitters hierarchy.
+    vSplitter->addWidget( h1Splitter );
+    vSplitter->addWidget( h2Splitter );
 
     // Maximize a viewport or another if requested.
     for( i = 0; i < 4; i++ ){
@@ -113,6 +112,10 @@ void RenderPanel::renderIfNeeded()
     if( forceRender_ ){
         for( i = 0; i < 4; i++ ){
             viewFrames_[i]->render();
+        }
+    }else{
+        for( i = 0; i < 4; i++ ){
+            viewFrames_[i]->renderIfNeeded();
         }
     }
 }
