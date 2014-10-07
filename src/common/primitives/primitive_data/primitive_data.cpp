@@ -64,7 +64,7 @@ void PrimitiveData::generateOGLData()
         for( currentTriangleElement = 0; currentTriangleElement < 3; currentTriangleElement++ ){
             compoundVertex[0] = vertexData.vertexTriangles[currentTriangleIndex][currentTriangleElement];
             compoundVertex[1] = normalData.normalTriangles[currentTriangleIndex][currentTriangleElement];
-            compoundVertex[2] = uvData.uvTriangles.size() ? uvData.uvTriangles[currentTriangleIndex][currentTriangleElement] : 0;
+            compoundVertex[2] = ( currentTriangleIndex < uvData.uvTriangles.size() ) ? uvData.uvTriangles[currentTriangleIndex][currentTriangleElement] : 0;
 
             finalVerticesIt = compoundVerticesMap.find( compoundVertex );
 
