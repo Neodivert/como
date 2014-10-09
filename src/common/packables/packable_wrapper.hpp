@@ -71,7 +71,7 @@ class PackableWrapper : public AbstractPackableWrapper< PlainType >
          ***/
 
         /*! \brief Set this PackableWrapper's inner value */
-        void setValue( PlainType value ){ this->value_ = value; }
+        void setValue( const PlainType& value ){ this->value_ = value; }
 
 
         /***

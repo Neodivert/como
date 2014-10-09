@@ -156,28 +156,35 @@ bool EntitiesManager::pick(const glm::vec3 &rayOrigin, glm::vec3 rayDirection, R
 
 void EntitiesManager::executeRemoteSelectionCommand( const SelectionCommand& command )
 {
-    std::array< float, 3 > transformationVector;
-
     switch( command.getType() ){
         case SelectionCommandType::SELECTION_TRANSFORMATION:{
             // Cast to a SELECTION_TRANSFORMATION command.
             const SelectionTransformationCommand& selectionTransformation =
                     dynamic_cast< const SelectionTransformationCommand& >( command );
 
-            // Transform the user's selection.
-            transformationVector = selectionTransformation.getTransformationVector();
+            EntitiesSelection& selection = *( entitiesSelections_.at( selectionTransformation.getUserID() ) );
 
             // Execute one transformation or another according to the requested
             // type.
             switch( selectionTransformation.getTransformationType() ){
                 case SelectionTransformationCommandType::TRANSLATION:
-                    entitiesSelections_.at( selectionTransformation.getUserID() )->translate( glm::vec3( transformationVector[0], transformationVector[1], transformationVector[2] ) );
+                    selection.translate( selectionTransformation.getTransformationVector() );
                 break;
-                case SelectionTransformationCommandType::ROTATION:
-                    entitiesSelections_.at( selectionTransformation.getUserID() )->rotate( selectionTransformation.getTransformationAngle(), glm::vec3( transformationVector[0], transformationVector[1], transformationVector[2] ) );
+                case SelectionTransformationCommandType::ROTATION_AROUND_INDIVIDUAL_CENTROIDS:
+                    selection.rotateAroundIndividualCentroids( selectionTransformation.getTransformationAngle(),
+                                                               selectionTransformation.getTransformationVector() );
                 break;
-                case SelectionTransformationCommandType::SCALE:
-                    entitiesSelections_.at( selectionTransformation.getUserID() )->scale( glm::vec3( transformationVector[0], transformationVector[1], transformationVector[2] ) );
+                case SelectionTransformationCommandType::ROTATION_AROUND_PIVOT:
+                    selection.rotateAroundPivot( selectionTransformation.getTransformationAngle(),
+                                                 selectionTransformation.getTransformationVector(),
+                                                 *( selectionTransformation.getPivotPoint() ) );
+                break;
+                case SelectionTransformationCommandType::SCALE_AROUND_INDIVIDUAL_CENTROIDS:
+                    selection.scaleAroundIndividualCentroids( selectionTransformation.getTransformationVector() );
+                break;
+                case SelectionTransformationCommandType::SCALE_AROUND_PIVOT:
+                    selection.scaleAroundPivot( selectionTransformation.getTransformationVector(),
+                                                *( selectionTransformation.getPivotPoint() ) );
                 break;
             }
         }break;

@@ -62,8 +62,10 @@ class AbstractEntitiesSet : public Transformable, public virtual Observable // T
          * 5. Transformations
          ***/
         virtual void translate( glm::vec3 direction ) = 0;
-        virtual void rotate( const GLfloat& angle, const glm::vec3& axis ) = 0;
-        virtual void scale( const glm::vec3& scaleFactors ) = 0;
+        virtual void rotateAroundPivot( GLfloat angle, glm::vec3 axis, glm::vec3 pivot ) = 0;
+        virtual void rotateAroundIndividualCentroids( GLfloat angle, glm::vec3 axis ) = 0;
+        virtual void scaleAroundPivot( glm::vec3 scaleFactors, glm::vec3 pivot ) = 0;
+        virtual void scaleAroundIndividualCentroids( glm::vec3 scaleFactors ) = 0;
         virtual void applyTransformationMatrix( const glm::mat4& transformation ) = 0;
 
 

@@ -29,8 +29,10 @@ namespace como {
 enum class SelectionTransformationCommandType : std::uint8_t
 {
     TRANSLATION = 0,
-    ROTATION,
-    SCALE
+    ROTATION_AROUND_PIVOT,
+    ROTATION_AROUND_INDIVIDUAL_CENTROIDS,
+    SCALE_AROUND_PIVOT,
+    SCALE_AROUND_INDIVIDUAL_CENTROIDS
 };
 typedef PackableUint8< SelectionTransformationCommandType > PackableSelectionTransformationCommandType;
 
@@ -41,7 +43,7 @@ class SelectionTransformationCommand : public SelectionCommand
         PackableSelectionTransformationCommandType transformationType_;
         PackableFloat transformationAngle_;
         PackableArray3< PackableFloat, float > transformationVector_;
-
+        PackableArray3< PackableFloat, float > pivotPoint_;
 
     public:
         /***
@@ -64,7 +66,9 @@ class SelectionTransformationCommand : public SelectionCommand
          * 3. Getters
          ***/
         SelectionTransformationCommandType getTransformationType() const ;
-        const std::array< float, 3 > getTransformationVector() const ;
+        glm::vec3 getTransformationVector() const ;
+        std::unique_ptr< glm::vec3 > getPivotPoint() const;
+
         float getTransformationAngle() const ;
 
 
@@ -73,14 +77,14 @@ class SelectionTransformationCommand : public SelectionCommand
          ***/
         void setTransformationType( SelectionTransformationCommandType transformationType );
 
-        void setTranslation( float tx, float ty, float tz );
-        void setTranslation( const float* direction );
+        void setTranslation( const glm::vec3& direction );
 
-        void setRotation( float angle, float vx, float vy, float vz );
-        void setRotation( float angle, const float* axis );
+        void setRotationAroundPivot( float angle, const glm::vec3& axis, const glm::vec3& pivot );
+        void setRotationAroundIndividualCentroids( float angle, const glm::vec3& axis );
 
-        void setScale( float sx, float sy, float sz );
-        void setScale( const float* magnitude );
+        void setScaleAroundPivot( const glm::vec3& scaleFactors, const glm::vec3& pivot );
+        void setScaleAroundIndividualCentroids( const glm::vec3& scaleFactors );
+
 
     public:
         /***

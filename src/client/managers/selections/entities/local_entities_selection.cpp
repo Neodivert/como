@@ -79,15 +79,15 @@ void LocalEntitiesSelection::translate( glm::vec3 direction )
         EntitiesSelection::translate( direction );
 
         // Send the translation command to server.
-        translationCommand.setTranslation( &direction[0] );
+        translationCommand.setTranslation( direction );
         sendCommandToServer( CommandConstPtr( new SelectionTransformationCommand( translationCommand ) ) );
     }
 }
 
 
-void LocalEntitiesSelection::rotate( GLfloat angle, glm::vec3 axis )
+void LocalEntitiesSelection::rotateAroundPivot( GLfloat angle, glm::vec3 axis, glm::vec3 pivot )
 {
-    // Only aplly the transformation if there are drawables selected.
+    // Only aplly the transformation if there are entities selected.
     if( size() ){
         SelectionTransformationCommand rotationCommand( localUserID() );
 
@@ -95,18 +95,37 @@ void LocalEntitiesSelection::rotate( GLfloat angle, glm::vec3 axis )
         roundTransformationMagnitude( angle, axis );
 
         // Rotate the selection.
-        EntitiesSelection::rotate( angle, axis );
+        EntitiesSelection::rotateAroundPivot( angle, axis, pivot );
 
         // Send the rotation command to server.
-        rotationCommand.setRotation( angle, &axis[0] );
+        rotationCommand.setRotationAroundPivot( angle, axis, pivot );
         sendCommandToServer( CommandConstPtr( new SelectionTransformationCommand( rotationCommand ) ) );
     }
 }
 
 
-void LocalEntitiesSelection::scale( glm::vec3 scaleFactors )
+void LocalEntitiesSelection::rotateAroundIndividualCentroids(GLfloat angle, glm::vec3 axis)
 {
-    // Only aplly the transformation if there are drawables selected.
+    // Only aplly the transformation if there are entities selected.
+    if( size() ){
+        SelectionTransformationCommand rotationCommand( localUserID() );
+
+        // Round the transformation magnitude.
+        roundTransformationMagnitude( angle, axis );
+
+        // Rotate the selection.
+        EntitiesSelection::rotateAroundIndividualCentroids( angle, axis );
+
+        // Send the rotation command to server.
+        rotationCommand.setRotationAroundIndividualCentroids( angle, axis );
+        sendCommandToServer( CommandConstPtr( new SelectionTransformationCommand( rotationCommand ) ) );
+    }
+}
+
+
+void LocalEntitiesSelection::scaleAroundPivot(glm::vec3 scaleFactors, glm::vec3 pivot)
+{
+    // Only aplly the transformation if there are entities selected.
     if( size() ){
         SelectionTransformationCommand scaleCommand( localUserID() );
 
@@ -114,11 +133,62 @@ void LocalEntitiesSelection::scale( glm::vec3 scaleFactors )
         roundTransformationMagnitude( scaleFactors );
 
         // Scale the selection.
-        EntitiesSelection::scale( scaleFactors );
+        EntitiesSelection::scaleAroundPivot( scaleFactors, pivot );
 
         // Send the scale command to server.
-        scaleCommand.setScale( &scaleFactors[0] );
+        scaleCommand.setScaleAroundPivot( scaleFactors, pivot );
         sendCommandToServer( CommandConstPtr( new SelectionTransformationCommand( scaleCommand ) ) );
+    }
+}
+
+
+void LocalEntitiesSelection::scaleAroundIndividualCentroids(glm::vec3 scaleFactors)
+{
+    // Only aplly the transformation if there are entities selected.
+    if( size() ){
+        SelectionTransformationCommand scaleCommand( localUserID() );
+
+        // Round the transformation magnitude.
+        roundTransformationMagnitude( scaleFactors );
+
+        // Scale the selection.
+        EntitiesSelection::scaleAroundIndividualCentroids( scaleFactors );
+
+        // Send the scale command to server.
+        scaleCommand.setScaleAroundIndividualCentroids( scaleFactors );
+        sendCommandToServer( CommandConstPtr( new SelectionTransformationCommand( scaleCommand ) ) );
+    }
+}
+
+
+void LocalEntitiesSelection::rotate( GLfloat angle, glm::vec3 axis )
+{
+    switch( pivotPointMode() ){
+        case PivotPointMode::INDIVIDUAL_CENTROIDS:
+            rotateAroundIndividualCentroids( angle, axis );
+        break;
+        case PivotPointMode::MEDIAN_POINT:
+            rotateAroundPivot( angle, axis, centroid() );
+        break;
+        case PivotPointMode::WORLD_ORIGIN:
+            rotateAroundPivot( angle, axis, glm::vec3( 0.0f, 0.0f, 0.0f ) );
+        break;
+    }
+}
+
+
+void LocalEntitiesSelection::scale( glm::vec3 scaleFactors )
+{
+    switch( pivotPointMode() ){
+        case PivotPointMode::INDIVIDUAL_CENTROIDS:
+            scaleAroundIndividualCentroids( scaleFactors );
+        break;
+        case PivotPointMode::MEDIAN_POINT:
+            scaleAroundPivot( scaleFactors, centroid() );
+        break;
+        case PivotPointMode::WORLD_ORIGIN:
+            scaleAroundPivot( scaleFactors, glm::vec3( 0.0f, 0.0f, 0.0f ) );
+        break;
     }
 }
 

@@ -20,6 +20,9 @@
 #include <cstdio>
 #include <stdexcept>
 
+#define GLM_FORCE_RADIANS
+#include <glm/gtc/type_ptr.hpp>
+
 namespace como {
 
 //const char FLOAT_TO_STRING_FORMAT[32] = "%.3f#%.3f#%.3f";
@@ -48,10 +51,12 @@ SelectionTransformationCommand::SelectionTransformationCommand() :
 {
     transformationAngle_.setValue( 0.0f );
     transformationVector_.setValues( 0.0f, 0.0f, 0.0f );
+    pivotPoint_.setValues( 0.0f, 0.0f, 0.0f );
 
     addPackable( &transformationType_ );
     addPackable( &transformationAngle_ );
     addPackable( &transformationVector_ );
+    addPackable( &pivotPoint_ );
 }
 
 
@@ -61,10 +66,12 @@ SelectionTransformationCommand::SelectionTransformationCommand( UserID userID ) 
 {
     transformationAngle_.setValue( 0.0f );
     transformationVector_.setValues( 0.0f, 0.0f, 0.0f );
+    pivotPoint_.setValues( 0.0f, 0.0f, 0.0f );
 
     addPackable( &transformationType_ );
     addPackable( &transformationAngle_ );
     addPackable( &transformationVector_ );
+    addPackable( &pivotPoint_ );
 }
 
 
@@ -72,11 +79,13 @@ SelectionTransformationCommand::SelectionTransformationCommand( const SelectionT
     SelectionCommand( b ),
     transformationType_( b.transformationType_ ),
     transformationAngle_( b.transformationAngle_ ),
-    transformationVector_( b.transformationVector_ )
+    transformationVector_( b.transformationVector_ ),
+    pivotPoint_( b.pivotPoint_ )
 {
     addPackable( &transformationType_ );
     addPackable( &transformationAngle_ );
     addPackable( &transformationVector_ );
+    addPackable( &pivotPoint_ );
 }
 
 
@@ -90,9 +99,26 @@ SelectionTransformationCommandType SelectionTransformationCommand::getTransforma
 }
 
 
-const std::array< float, 3 > SelectionTransformationCommand::getTransformationVector() const
+glm::vec3 SelectionTransformationCommand::getTransformationVector() const
 {
-    return transformationVector_.getValues();
+    return glm::vec3( transformationVector_.getValues()[0],
+            transformationVector_.getValues()[1],
+            transformationVector_.getValues()[2] );
+}
+
+
+std::unique_ptr<glm::vec3> SelectionTransformationCommand::getPivotPoint() const
+{
+    if( ( transformationType_.getValue() == SelectionTransformationCommandType::ROTATION_AROUND_PIVOT ) ||
+        ( transformationType_.getValue() == SelectionTransformationCommandType::SCALE_AROUND_PIVOT ) ){
+        return std::unique_ptr< glm::vec3 >(
+                    new glm::vec3(
+                        pivotPoint_.getValues()[0],
+                        pivotPoint_.getValues()[1],
+                        pivotPoint_.getValues()[2] ) );
+    }else{
+        return nullptr;
+    }
 }
 
 
@@ -113,71 +139,53 @@ void SelectionTransformationCommand::setTransformationType( SelectionTransformat
 }
 
 
-void SelectionTransformationCommand::setTranslation( float tx, float ty, float tz )
+void SelectionTransformationCommand::setTranslation( const glm::vec3& direction )
 {
     // We are doing a translation.
     transformationType_ = SelectionTransformationCommandType::TRANSLATION;
 
     // Set the transformation magnitude.
-    transformationAngle_.setValue( 0.0f );
-    transformationVector_.setValues( tx, ty, tz );
+    transformationVector_.setValues( direction.x, direction.y, direction.z );
 }
 
 
-void SelectionTransformationCommand::setTranslation( const float* direction )
+void SelectionTransformationCommand::setRotationAroundPivot( float angle, const glm::vec3 &axis, const glm::vec3 &pivot )
 {
-    // We are doing a translation.
-    transformationType_ = SelectionTransformationCommandType::TRANSLATION;
-
-    // Set the transformation magnitude.
-    transformationAngle_.setValue( 0.0f );
-    transformationVector_.setValues( direction[0],
-                                        direction[1],
-                                        direction[2] );
-}
-
-
-void SelectionTransformationCommand::setRotation( float angle, float vx, float vy, float vz )
-{
-    // We are doing a rotation.
-    transformationType_ = SelectionTransformationCommandType::ROTATION;
+    transformationType_ = SelectionTransformationCommandType::ROTATION_AROUND_PIVOT;
 
     // Set the transformation magnitude.
     transformationAngle_.setValue( angle );
-    transformationVector_.setValues( vx, vy, vz );
+    transformationVector_.setValues( axis.x, axis.y, axis.z );
+    pivotPoint_.setValues( pivot.x, pivot.y, pivot.z );
 }
 
 
-void SelectionTransformationCommand::setRotation( float angle, const float* axis )
+void SelectionTransformationCommand::setRotationAroundIndividualCentroids( float angle, const glm::vec3 &axis )
 {
-    // We are doing a rotation.
-    transformationType_ = SelectionTransformationCommandType::ROTATION;
+    transformationType_ = SelectionTransformationCommandType::ROTATION_AROUND_INDIVIDUAL_CENTROIDS;
 
     // Set the transformation magnitude.
     transformationAngle_.setValue( angle );
-    transformationVector_.setValues( axis[0], axis[1], axis[2] );
+    transformationVector_.setValues( axis.x, axis.y, axis.z );
 }
 
 
-void SelectionTransformationCommand::setScale( float sx, float sy, float sz )
+void SelectionTransformationCommand::setScaleAroundPivot(const glm::vec3 &scaleFactors, const glm::vec3 &pivot)
 {
-    // We are doing a scale.
-    transformationType_ = SelectionTransformationCommandType::SCALE;
+    transformationType_ = SelectionTransformationCommandType::SCALE_AROUND_PIVOT;
 
     // Set the transformation magnitude.
-    transformationAngle_.setValue( 0.0f );
-    transformationVector_.setValues( sx, sy, sz );
+    transformationVector_.setValues( scaleFactors.x, scaleFactors.y, scaleFactors.z );
+    pivotPoint_.setValues( pivot.x, pivot.y, pivot.z );
 }
 
 
-void SelectionTransformationCommand::setScale( const float* magnitude )
+void SelectionTransformationCommand::setScaleAroundIndividualCentroids(const glm::vec3 &scaleFactors )
 {
-    // We are doing a scale.
-    transformationType_ = SelectionTransformationCommandType::SCALE;
+    transformationType_ = SelectionTransformationCommandType::SCALE_AROUND_INDIVIDUAL_CENTROIDS;
 
     // Set the transformation magnitude.
-    transformationAngle_.setValue( 0.0f );
-    transformationVector_.setValues( magnitude[0], magnitude[1], magnitude[2] );
+    transformationVector_.setValues( scaleFactors.x, scaleFactors.y, scaleFactors.z );
 }
 
 } // namespace como

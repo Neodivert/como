@@ -65,7 +65,7 @@ class AbstractPackableWrapper : public Packable
          ***/
 
         /*! \brief Set this AbstractPackableWrapper's inner value */
-        virtual void setValue( PlainType value ) = 0;
+        virtual void setValue( const PlainType& value ) = 0;
 
 
         /***

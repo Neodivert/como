@@ -61,7 +61,12 @@ class LocalEntitiesSelection : public EntitiesSelection, public ServerWriter
         /***
          * 5. Transformations
          ***/
-        void translate( glm::vec3 direction );
+        virtual void translate( glm::vec3 direction );
+        virtual void rotateAroundPivot( GLfloat angle, glm::vec3 axis, glm::vec3 pivot);
+        virtual void rotateAroundIndividualCentroids( GLfloat angle, glm::vec3 axis);
+        virtual void scaleAroundPivot( glm::vec3 scaleFactors, glm::vec3 pivot);
+        virtual void scaleAroundIndividualCentroids( glm::vec3 scaleFactors );
+
         void rotate( GLfloat angle, glm::vec3 axis );
         void scale( glm::vec3 scaleFactors );
 

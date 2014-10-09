@@ -69,9 +69,11 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer
          * 5. Transformations
          ***/
         virtual void translate( glm::vec3 direction );
-        virtual void rotate(const GLfloat &angle, const glm::vec3 &axis);
-        virtual void scale(const glm::vec3 &scaleFactors);
-        virtual void applyTransformationMatrix( const glm::mat4& transformation );
+        virtual void rotateAroundPivot(GLfloat angle, glm::vec3 axis, glm::vec3 pivot);
+        virtual void rotateAroundIndividualCentroids(GLfloat angle, glm::vec3 axis);
+        virtual void scaleAroundPivot(glm::vec3 scaleFactors, glm::vec3 pivot);
+        virtual void scaleAroundIndividualCentroids(glm::vec3 scaleFactors);
+        virtual void applyTransformationMatrix( const glm::mat4 &transformation );
 
 
         /***
@@ -107,7 +109,7 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer
         CamerasSelection* camerasSelection_;
 
         PivotPointMode pivotPointMode_;
-        glm::vec3 centroid_;
+        glm::vec3 centroid_;    
 };
 
 

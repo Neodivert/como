@@ -56,7 +56,7 @@ PacketSize PackableColor::getPacketSize() const
  * 4. Setters
  ***/
 
-void PackableColor::setValue( Color color )
+void PackableColor::setValue( const Color& color )
 {
     plainColor_ = color;
 }

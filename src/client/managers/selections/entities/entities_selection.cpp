@@ -110,38 +110,34 @@ void EntitiesSelection::translate( glm::vec3 direction )
 }
 
 
-void EntitiesSelection::rotate(const GLfloat &angle, const glm::vec3 &axis)
+void EntitiesSelection::rotateAroundPivot( GLfloat angle, glm::vec3 axis, glm::vec3 pivot)
 {
-    if( pivotPointMode_ == PivotPointMode::MEDIAN_POINT ){
-        // The selection's centroid updates every time we transform a
-        // subselection, so we retrieve the centroid now for transforming
-        // all selections relative to it.
-        const glm::vec3 selectionCentroid = centroid();
-        for( auto& selection : specializedEntitiesSelections_ ){
-            selection->rotateAroundPivot( angle, axis, selectionCentroid );
-        }
-    }else{
-        for( auto& selection : specializedEntitiesSelections_ ){
-            selection->rotate( angle, axis );
-        }
+    for( auto& selection : specializedEntitiesSelections_ ){
+        selection->rotateAroundPivot( angle, axis, pivot );
     }
 }
 
 
-void EntitiesSelection::scale(const glm::vec3 &scaleFactors)
+void EntitiesSelection::rotateAroundIndividualCentroids( GLfloat angle, glm::vec3 axis)
 {
-    if( pivotPointMode_ == PivotPointMode::MEDIAN_POINT ){
-        // The selection's centroid updates every time we transform a
-        // subselection, so we retrieve the centroid now for transforming
-        // all selections relative to it.
-        const glm::vec3 selectionCentroid = centroid();
-        for( auto& selection : specializedEntitiesSelections_ ){
-            selection->scaleAroundPivot( scaleFactors, selectionCentroid );
-        }
-    }else{
-        for( auto& selection : specializedEntitiesSelections_ ){
-            selection->scale( scaleFactors );
-        }
+    for( auto& selection : specializedEntitiesSelections_ ){
+        selection->rotateAroundIndividualCentroids( angle, axis );
+    }
+}
+
+
+void EntitiesSelection::scaleAroundPivot( glm::vec3 scaleFactors, glm::vec3 pivot)
+{
+    for( auto& selection : specializedEntitiesSelections_ ){
+        selection->scaleAroundPivot( scaleFactors, pivot );
+    }
+}
+
+
+void EntitiesSelection::scaleAroundIndividualCentroids( glm::vec3 scaleFactors )
+{
+    for( auto& selection : specializedEntitiesSelections_ ){
+        selection->scaleAroundIndividualCentroids( scaleFactors );
     }
 }
 

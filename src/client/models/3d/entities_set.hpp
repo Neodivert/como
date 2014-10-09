@@ -66,9 +66,11 @@ class EntitiesSet : public AbstractEntitiesSet, public ResourcesSelection< Entit
          * 5. Transformations
          ***/
         virtual void translate( glm::vec3 direction );
-        virtual void rotate( const GLfloat& angle, const glm::vec3& axis );
-        virtual void scale( const glm::vec3& scaleFactors );
-        virtual void applyTransformationMatrix( const glm::mat4& transformation );
+        virtual void rotateAroundPivot(GLfloat angle, glm::vec3 axis, glm::vec3 pivot);
+        virtual void rotateAroundIndividualCentroids(GLfloat angle, glm::vec3 axis);
+        virtual void scaleAroundPivot(glm::vec3 scaleFactors, glm::vec3 pivot);
+        virtual void scaleAroundIndividualCentroids(glm::vec3 scaleFactors);
+        virtual void applyTransformationMatrix( const glm::mat4 &transformationMatrix );
 
 
         /***
@@ -183,75 +185,50 @@ void EntitiesSet<EntitySubtype>::translate( glm::vec3 direction )
 
 
 template <class EntitySubtype>
-void EntitiesSet<EntitySubtype>::rotate( const GLfloat& angle, const glm::vec3& axis )
-{
-    //mutex_.lock();
-
-    // Rotate every drawable in the selection according to the selected
-    // pivot point mode.
-    switch( pivotPointMode_ ){
-        case PivotPointMode::INDIVIDUAL_CENTROIDS:
-            for( auto& entityPair : this->resources_ ){
-                entityPair.second->rotateAroundCentroid( angle, axis );
-            }
-        break;
-        case PivotPointMode::MEDIAN_POINT:
-            for( auto& entityPair : this->resources_ ){
-                entityPair.second->rotateAroundPivot( angle, axis, centroid() );
-            }
-        break;
-        case PivotPointMode::WORLD_ORIGIN:
-            for( auto& entityPair : this->resources_ ){
-                entityPair.second->rotateAroundOrigin( angle, axis );
-            }
-        break;
-    }
-
-    this->notifyObservers();
-    //updateSelectionCentroid();
-
-
-    //mutex_.unlock();
-}
-
-
-template <class EntitySubtype>
-void EntitiesSet<EntitySubtype>::scale( const glm::vec3& scaleFactors )
-{
-    // mutex_.lock();
-
-    // Scale every drawable in the selection according to the selected
-    // pivot point mode.
-    switch( pivotPointMode_ ){
-        case PivotPointMode::INDIVIDUAL_CENTROIDS:
-            for( auto& entityPair : this->resources_ ){
-                entityPair.second->scaleAroundCentroid( scaleFactors );
-            }
-        break;
-        case PivotPointMode::MEDIAN_POINT:
-            for( auto& entityPair : this->resources_ ){
-                entityPair.second->scaleAroundPivot( scaleFactors, centroid() );
-            }
-        break;
-        case PivotPointMode::WORLD_ORIGIN:
-            for( auto& entityPair : this->resources_ ){
-                entityPair.second->scaleAroundOrigin( scaleFactors );
-            }
-        break;
-    }
-
-    this->notifyObservers();
-    //updateSelectionCentroid();
-
-    //mutex_.unlock();
-}
-
-
-template <class EntitySubtype>
-void EntitiesSet<EntitySubtype>::applyTransformationMatrix( const glm::mat4& transformation )
+void EntitiesSet<EntitySubtype>::rotateAroundPivot( GLfloat angle, glm::vec3 axis, glm::vec3 pivot )
 {
     for( auto& entityPair : this->resources_ ){
-        entityPair.second->applyTransformationMatrix( transformation );
+        entityPair.second->rotateAroundPivot( angle, axis, pivot );
+    }
+    this->notifyObservers();
+}
+
+
+template <class EntitySubtype>
+void EntitiesSet<EntitySubtype>::rotateAroundIndividualCentroids( GLfloat angle, glm::vec3 axis)
+{
+    for( auto& entityPair : this->resources_ ){
+        entityPair.second->rotateAroundCentroid( angle, axis );
+    }
+    this->notifyObservers();
+}
+
+
+template <class EntitySubtype>
+void EntitiesSet<EntitySubtype>::scaleAroundPivot( glm::vec3 scaleFactors, glm::vec3 pivot)
+{
+    for( auto& entityPair : this->resources_ ){
+        entityPair.second->scaleAroundPivot( scaleFactors, pivot );
+    }
+    this->notifyObservers();
+}
+
+
+template <class EntitySubtype>
+void EntitiesSet<EntitySubtype>::scaleAroundIndividualCentroids( glm::vec3 scaleFactors)
+{
+    for( auto& entityPair : this->resources_ ){
+        entityPair.second->scaleAroundCentroid( scaleFactors );
+    }
+    this->notifyObservers();
+}
+
+
+template <class EntitySubtype>
+void EntitiesSet<EntitySubtype>::applyTransformationMatrix(const glm::mat4 &transformationMatrix)
+{
+    for( auto& entityPair : this->resources_ ){
+        entityPair.second->applyTransformationMatrix( transformationMatrix );
     }
     this->notifyObservers();
 }

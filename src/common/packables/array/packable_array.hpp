@@ -109,12 +109,12 @@ class PackableArray : public AbstractPackableWrapper< std::array< ElementPlainTy
          * \brief sets the values of the inner array.
          * \param values - a plain array of values to copy from.
          */
-        void setValues( ElementPlainType* values );
+        void setValues( const ElementPlainType* values );
 
 
-        void setValue( std::array< ElementPlainType, ARRAY_SIZE > values );
+        void setValue( const std::array< ElementPlainType, ARRAY_SIZE >& values );
 
-        void setValues( std::array< ElementPlainType, ARRAY_SIZE > values );
+        void setValues( const std::array< ElementPlainType, ARRAY_SIZE >& values );
 
 
 
@@ -214,7 +214,7 @@ const ElementPackableType& PackableArray<ElementPackableType, ElementPlainType, 
  ***/
 
 template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
-void PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::setValues( ElementPlainType* values )
+void PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::setValues( const ElementPlainType* values )
 {
     unsigned int i;
 
@@ -225,14 +225,14 @@ void PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::setValues
 
 
 template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
-void PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::setValue( std::array< ElementPlainType, ARRAY_SIZE > values )
+void PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::setValue( const std::array< ElementPlainType, ARRAY_SIZE >& values )
 {
     setValues( values );
 }
 
 
 template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
-void PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::setValues( std::array< ElementPlainType, ARRAY_SIZE > values )
+void PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::setValues( const std::array< ElementPlainType, ARRAY_SIZE >& values )
 {
     unsigned int i;
 

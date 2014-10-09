@@ -52,7 +52,7 @@ class PackableColor : public AbstractPackableWrapper< Color >
         /***
          * 4. Setters
          ***/
-        virtual void setValue( Color color );
+        virtual void setValue( const Color& color );
 
 
         /***
