@@ -70,6 +70,8 @@ class PackableInteger : public PackableWrapper< UnpackedType > {
 
         virtual PacketSize getPacketSize() const;
 
+        static PacketSize packetSize();
+
 
         /***
          * 4. Packing and unpacking
@@ -134,6 +136,13 @@ inline std::uint32_t flipByteOrder( const std::uint32_t& value ){
 
 template <class PackedType, class UnpackedType>
 PacketSize PackableInteger<PackedType, UnpackedType>::getPacketSize() const
+{
+    return sizeof( PackedType );
+}
+
+
+template <class PackedType, class UnpackedType>
+PacketSize PackableInteger<PackedType, UnpackedType>::packetSize()
 {
     return sizeof( PackedType );
 }

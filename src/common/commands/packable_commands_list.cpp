@@ -67,7 +67,6 @@ void* PackableCommandsList::pack( void* buffer ) const
 const void* PackableCommandsList::unpack( const void* buffer )
 {
     PackableUint8< std::uint8_t > nCommands;
-    CommandPtr command;
     unsigned int i;
 
     // Unpack the number of commands.
@@ -78,174 +77,7 @@ const void* PackableCommandsList::unpack( const void* buffer )
     // TODO: Use a better approach?
     // (http://stackoverflow.com/questions/1732643/choosing-the-right-subclass-to-instantiate-programatically).
     for( i = 0; i < nCommands.getValue(); i++ ){
-        switch( Command::getTarget( buffer ) ){
-            // User commands
-            case CommandTarget::USER:
-                switch( UserCommand::getType( buffer ) ){
-                    case UserCommandType::USER_CONNECTION:
-                        command = CommandPtr( new UserConnectionCommand );
-                    break;
-                    case UserCommandType::USER_DISCONNECTION:
-                        command =  CommandPtr( new UserDisconnectionCommand );
-                    break;
-                    case UserCommandType::PARAMETER_CHANGE:
-                        command = CommandPtr( new UserParameterChangeCommand );
-                    break;
-                }
-            break;
-
-            // Selection commands
-            case CommandTarget::SELECTION:
-                switch( SelectionCommand::getType( buffer ) ){
-                    case SelectionCommandType::SELECTION_TRANSFORMATION:
-                        command = CommandPtr( new SelectionTransformationCommand );
-                    break;
-                }
-            break;
-
-            // Primitive commands.
-            case CommandTarget::PRIMITIVE:
-                switch( PrimitiveCommand::getType( buffer ) ){
-                    case PrimitiveCommandType::PRIMITIVE_CREATION:
-                        command = CommandPtr( new PrimitiveCreationCommand( unpackingDirPath_ ) );
-                    break;
-                    case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:
-                        command = CommandPtr( new PrimitiveInstantiationCommand );
-                    break;
-                }
-            break;
-
-            // Primitive category commands.
-            case CommandTarget::PRIMITIVE_CATEGORY:
-                switch( PrimitiveCategoryCommand::getType( buffer ) ){
-                    case PrimitiveCategoryCommandType::PRIMITIVE_CATEGORY_CREATION:
-                        command = CommandPtr( new PrimitiveCategoryCreationCommand );
-                    break;
-                }
-            break;
-
-            case CommandTarget::MATERIAL:
-                switch( MaterialCommand::getType( buffer ) ){
-                    case MaterialCommandType::MATERIAL_CREATION:
-                        command = CommandPtr( new MaterialCreationCommand );
-                    break;
-                    case MaterialCommandType::MATERIAL_MODIFICATION:
-                        switch( AbstractMaterialModificationCommand::getParameterName( buffer ) ){
-                            case MaterialParameterName::COLOR:
-                                command = CommandPtr( new MaterialColorChangeCommand );
-                            break;
-                            case MaterialParameterName::AMBIENT_REFLECTIVITY:
-                                command = CommandPtr( new MaterialAmbientReflectivityChangeCommand );
-                            break;
-                            case MaterialParameterName::DIFFUSE_REFLECTIVITY:
-                                command = CommandPtr( new MaterialDiffuseReflectivityChangeCommand );
-                            break;
-                            case MaterialParameterName::SPECULAR_REFLECTIVITY:
-                                command = CommandPtr( new MaterialSpecularReflectivityChangeCommand );
-                            break;
-                            case MaterialParameterName::SPECULAR_EXPONENT:
-                                command = CommandPtr( new MaterialSpecularExponentChangeCommand );
-                            break;
-                        }
-                    break;
-                }
-            break;
-
-            case CommandTarget::LIGHT:
-                switch( LightCommand::getType( buffer ) ){
-                    case LightCommandType::LIGHT_CREATION:
-                        switch( LightCreationCommand::getLightType( buffer ) ){
-                            case LightType::DIRECTIONAL_LIGHT:
-                                command = CommandPtr( new DirectionalLightCreationCommand );
-                            break;
-                        }
-                    break;
-                    case LightCommandType::LIGHT_COLOR_CHANGE:
-                        command = CommandPtr( new LightColorChangeCommand );
-                    break;
-                    case LightCommandType::LIGHT_AMBIENT_COEFFICIENT_CHANGE:
-                        command = CommandPtr( new LightAmbientCoefficientChangeCommand );
-                    break;
-                    case LightCommandType::LIGHT_CREATION_RESPONSE:
-                        command = CommandPtr( new LightCreationResponseCommand );
-                    break;
-                }
-            break;
-
-            case CommandTarget::RESOURCE:
-                switch( ResourceCommand::getType( buffer ) ){
-                    case ResourceCommandType::RESOURCE_LOCK:
-                        command = CommandPtr( new ResourceCommand( ResourceCommandType::RESOURCE_LOCK ) );
-                    break;
-                    case ResourceCommandType::RESOURCE_SELECTION_RESPONSE:
-                        command = CommandPtr( new ResourceSelectionResponse );
-                    break;
-                }
-            break;
-
-            case CommandTarget::RESOURCES_SELECTION:
-                switch( ResourcesSelectionCommand::getType( buffer ) ){
-                    case ResourcesSelectionCommandType::SELECTION_UNLOCK:
-                        command = CommandPtr( new ResourcesSelectionCommand( ResourcesSelectionCommand::getType( buffer ) ) );
-                    break;
-                    case ResourcesSelectionCommandType::SELECTION_DELETION:
-                        command = CommandPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_DELETION ) );
-                    break;
-                }
-            break;
-
-            case CommandTarget::GEOMETRIC_PRIMITIVE:
-                switch( GeometricPrimitiveCommand::getType( buffer ) ){
-                    case GeometricPrimitiveCommandType::CUBE_CREATION:
-                        command = CommandPtr( new CubeCreationCommand );
-                    break;
-                    case GeometricPrimitiveCommandType::CONE_CREATION:
-                        command = CommandPtr( new ConeCreationCommand );
-                    break;
-                    case GeometricPrimitiveCommandType::CYLINDER_CREATION:
-                        command = CommandPtr( new CylinderCreationCommand );
-                    break;
-                    case GeometricPrimitiveCommandType::SPHERE_CREATION:
-                        command = CommandPtr( new SphereCreationCommand );
-                    break;
-                }
-            break;
-
-            case CommandTarget::TEXTURE:
-                switch( TextureCommand::getType( buffer ) ){
-                    case TextureCommandType::TEXTURE_CREATION:
-                        command = CommandPtr( new TextureCreationCommand( unpackingDirPath_ ) );
-                    break;
-                }
-            break;
-
-            case CommandTarget::TEXTURE_WALL:
-                switch( TextureWallCommand::getType( buffer ) ){
-                    case TextureWallCommandType::TEXTURE_CHANGE:
-                        command = CommandPtr( new TextureWallTextureChangeCommand );
-                    break;
-                    case TextureWallCommandType::TEXTURE_WALL_MODIFICATION:
-                        command = CommandPtr( new TextureWallModificationCommand );
-                    break;
-                }
-            break;
-
-            case CommandTarget::CAMERA:
-                switch( CameraCommand::getType( buffer ) ){
-                    case CameraCommandType::CAMERA_CREATION:
-                        command = CommandPtr( new CameraCreationCommand );
-                    break;
-                }
-            break;
-
-            default:
-                int commandTarget = static_cast< int >( Command::getTarget( buffer ) );
-                throw std::runtime_error( "Received an unrecognized command type" +
-                                          std::to_string( commandTarget ) +
-                                          ")" );
-            break;
-        }
-
+        CommandPtr command = createEmtpyCommandFromBuffer( buffer, unpackingDirPath_ );
         buffer = command->unpack( buffer );
         commands_.push_back( std::move( command ) );
     }
@@ -312,6 +144,186 @@ void PackableCommandsList::addCommand( CommandConstPtr command )
 void PackableCommandsList::clear()
 {
     commands_.clear();
+}
+
+
+/***
+ * 6. Auxiliar methods
+ ***/
+
+CommandPtr PackableCommandsList::createEmtpyCommandFromBuffer(const void *buffer , const std::string &unpackingDirPath)
+{
+    CommandPtr command = nullptr;
+
+    switch( Command::getTarget( buffer ) ){
+        // User commands
+        case CommandTarget::USER:
+            switch( UserCommand::getType( buffer ) ){
+                case UserCommandType::USER_CONNECTION:
+                    command = CommandPtr( new UserConnectionCommand );
+                break;
+                case UserCommandType::USER_DISCONNECTION:
+                    command =  CommandPtr( new UserDisconnectionCommand );
+                break;
+                case UserCommandType::PARAMETER_CHANGE:
+                    command = CommandPtr( new UserParameterChangeCommand );
+                break;
+            }
+        break;
+
+        // Selection commands
+        case CommandTarget::SELECTION:
+            switch( SelectionCommand::getType( buffer ) ){
+                case SelectionCommandType::SELECTION_TRANSFORMATION:
+                    command = CommandPtr( new SelectionTransformationCommand );
+                break;
+            }
+        break;
+
+        // Primitive commands.
+        case CommandTarget::PRIMITIVE:
+            switch( PrimitiveCommand::getType( buffer ) ){
+                case PrimitiveCommandType::PRIMITIVE_CREATION:
+                    command = CommandPtr( new PrimitiveCreationCommand( unpackingDirPath ) );
+                break;
+                case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:
+                    command = CommandPtr( new PrimitiveInstantiationCommand );
+                break;
+            }
+        break;
+
+        // Primitive category commands.
+        case CommandTarget::PRIMITIVE_CATEGORY:
+            switch( PrimitiveCategoryCommand::getType( buffer ) ){
+                case PrimitiveCategoryCommandType::PRIMITIVE_CATEGORY_CREATION:
+                    command = CommandPtr( new PrimitiveCategoryCreationCommand );
+                break;
+            }
+        break;
+
+        case CommandTarget::MATERIAL:
+            switch( MaterialCommand::getType( buffer ) ){
+                case MaterialCommandType::MATERIAL_CREATION:
+                    command = CommandPtr( new MaterialCreationCommand );
+                break;
+                case MaterialCommandType::MATERIAL_MODIFICATION:
+                    switch( AbstractMaterialModificationCommand::getParameterName( buffer ) ){
+                        case MaterialParameterName::COLOR:
+                            command = CommandPtr( new MaterialColorChangeCommand );
+                        break;
+                        case MaterialParameterName::AMBIENT_REFLECTIVITY:
+                            command = CommandPtr( new MaterialAmbientReflectivityChangeCommand );
+                        break;
+                        case MaterialParameterName::DIFFUSE_REFLECTIVITY:
+                            command = CommandPtr( new MaterialDiffuseReflectivityChangeCommand );
+                        break;
+                        case MaterialParameterName::SPECULAR_REFLECTIVITY:
+                            command = CommandPtr( new MaterialSpecularReflectivityChangeCommand );
+                        break;
+                        case MaterialParameterName::SPECULAR_EXPONENT:
+                            command = CommandPtr( new MaterialSpecularExponentChangeCommand );
+                        break;
+                    }
+                break;
+            }
+        break;
+
+        case CommandTarget::LIGHT:
+            switch( LightCommand::getType( buffer ) ){
+                case LightCommandType::LIGHT_CREATION:
+                    switch( LightCreationCommand::getLightType( buffer ) ){
+                        case LightType::DIRECTIONAL_LIGHT:
+                            command = CommandPtr( new DirectionalLightCreationCommand );
+                        break;
+                    }
+                break;
+                case LightCommandType::LIGHT_COLOR_CHANGE:
+                    command = CommandPtr( new LightColorChangeCommand );
+                break;
+                case LightCommandType::LIGHT_AMBIENT_COEFFICIENT_CHANGE:
+                    command = CommandPtr( new LightAmbientCoefficientChangeCommand );
+                break;
+                case LightCommandType::LIGHT_CREATION_RESPONSE:
+                    command = CommandPtr( new LightCreationResponseCommand );
+                break;
+            }
+        break;
+
+        case CommandTarget::RESOURCE:
+            switch( ResourceCommand::getType( buffer ) ){
+                case ResourceCommandType::RESOURCE_LOCK:
+                    command = CommandPtr( new ResourceCommand( ResourceCommandType::RESOURCE_LOCK ) );
+                break;
+                case ResourceCommandType::RESOURCE_SELECTION_RESPONSE:
+                    command = CommandPtr( new ResourceSelectionResponse );
+                break;
+            }
+        break;
+
+        case CommandTarget::RESOURCES_SELECTION:
+            switch( ResourcesSelectionCommand::getType( buffer ) ){
+                case ResourcesSelectionCommandType::SELECTION_UNLOCK:
+                    command = CommandPtr( new ResourcesSelectionCommand( ResourcesSelectionCommand::getType( buffer ) ) );
+                break;
+                case ResourcesSelectionCommandType::SELECTION_DELETION:
+                    command = CommandPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_DELETION ) );
+                break;
+            }
+        break;
+
+        case CommandTarget::GEOMETRIC_PRIMITIVE:
+            switch( GeometricPrimitiveCommand::getType( buffer ) ){
+                case GeometricPrimitiveCommandType::CUBE_CREATION:
+                    command = CommandPtr( new CubeCreationCommand );
+                break;
+                case GeometricPrimitiveCommandType::CONE_CREATION:
+                    command = CommandPtr( new ConeCreationCommand );
+                break;
+                case GeometricPrimitiveCommandType::CYLINDER_CREATION:
+                    command = CommandPtr( new CylinderCreationCommand );
+                break;
+                case GeometricPrimitiveCommandType::SPHERE_CREATION:
+                    command = CommandPtr( new SphereCreationCommand );
+                break;
+            }
+        break;
+
+        case CommandTarget::TEXTURE:
+            switch( TextureCommand::getType( buffer ) ){
+                case TextureCommandType::TEXTURE_CREATION:
+                    command = CommandPtr( new TextureCreationCommand( unpackingDirPath ) );
+                break;
+            }
+        break;
+
+        case CommandTarget::TEXTURE_WALL:
+            switch( TextureWallCommand::getType( buffer ) ){
+                case TextureWallCommandType::TEXTURE_CHANGE:
+                    command = CommandPtr( new TextureWallTextureChangeCommand );
+                break;
+                case TextureWallCommandType::TEXTURE_WALL_MODIFICATION:
+                    command = CommandPtr( new TextureWallModificationCommand );
+                break;
+            }
+        break;
+
+        case CommandTarget::CAMERA:
+            switch( CameraCommand::getType( buffer ) ){
+                case CameraCommandType::CAMERA_CREATION:
+                    command = CommandPtr( new CameraCreationCommand );
+                break;
+            }
+        break;
+
+        default:
+            int commandTarget = static_cast< int >( Command::getTarget( buffer ) );
+            throw std::runtime_error( "Received an unrecognized command type" +
+                                      std::to_string( commandTarget ) +
+                                      ")" );
+        break;
+    }
+
+    return command;
 }
 
 

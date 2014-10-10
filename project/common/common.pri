@@ -125,7 +125,9 @@ HEADERS += \
     ../../src/common/commands/camera_commands/camera_creation_command.hpp \
     ../../src/common/commands/camera_commands/camera_commands.hpp \
     ../../src/common/resources/resource.hpp \
-    ../../src/common/utilities/color.hpp
+    ../../src/common/utilities/color.hpp \
+    ../../src/common/commands/commands_file_parser.hpp \
+    ../../src/common/packables/packable_packet_size.hpp
 
 
 # Common sources (used by both client and server).
@@ -196,4 +198,5 @@ SOURCES += \
     ../../src/common/commands/camera_commands/camera_command.cpp \
     ../../src/common/commands/camera_commands/camera_creation_command.cpp \
     ../../src/common/resources/resource.cpp \
-    ../../src/common/utilities/color.cpp
+    ../../src/common/utilities/color.cpp \
+    ../../src/common/commands/commands_file_parser.cpp

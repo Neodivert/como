@@ -16,17 +16,18 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PACKABLES_HPP
-#define PACKABLES_HPP
+#ifndef PACKABLE_PACKET_SIZE_HPP
+#define PACKABLE_PACKET_SIZE_HPP
 
-#include "packable_string.hpp"
-#include "packable_integer.hpp"
-#include "array/packable_array.hpp"
-#include "array/packable_array_3.hpp"
-#include "packable_file.hpp"
-#include "packable_float.hpp"
-#include "composite_packable.hpp"
-#include "ids/packable_resource_id.hpp"
-#include "conditional_packable_wrapper.hpp"
+#include "packable.hpp" // PacketSize type
+#include <common/packables/packable_integer.hpp>
 
-#endif // PACKABLES_HPP
+namespace como {
+
+typedef PackableUint32< PacketSize > PackablePacketSize;
+
+//static_assert( PackablePacketSize::packetSize() == sizeof( PacketSize ), "PackablePacketSize and PackablePacketSize" );
+
+} // namespace como
+
+#endif // PACKABLE_PACKET_SIZE_HPP

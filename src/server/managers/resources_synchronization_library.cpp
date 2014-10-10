@@ -23,6 +23,23 @@
 namespace como {
 
 /***
+ * 1. Construction
+ ***/
+
+ResourcesSynchronizationLibrary::ResourcesSynchronizationLibrary( CommandsHistoricPtr commandsHistoric,
+                                                                  const std::string &unpackingDirPath,
+                                                                  const std::string &sceneFilePath) :
+    commandsHistoric_( commandsHistoric ),
+    unpackingDirPath_( unpackingDirPath )
+{
+    // TODO: Load scene.
+    if( sceneFilePath != "" ){
+
+    }
+}
+
+
+/***
  * 3. Command execution
  ***/
 

@@ -99,7 +99,7 @@ class Server : public BasicScene
 
         LightsManager lightsManager_;
 
-        ResourcesSynchronizationLibrary resourcesSyncLibrary_;
+        ResourcesSynchronizationLibraryPtr resourcesSyncLibrary_;
 
 
     public:
@@ -116,7 +116,7 @@ class Server : public BasicScene
          * \param sceneName name of the scene to be created.
          * \param nThreads number of threads used during server execution.
          */
-        Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, unsigned int nThreads = 3 );
+        Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, const char* sceneFileName, unsigned int nThreads = 3 );
 
     private:
         /*!

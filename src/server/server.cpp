@@ -26,7 +26,7 @@ namespace como {
  * 1. Construction
  ***/
 
-Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, unsigned int nThreads ) :
+Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, const char* sceneFileName, unsigned int nThreads ) :
     // Initialize the server parameters.
     BasicScene( sceneName ),
     io_service_( std::shared_ptr< boost::asio::io_service >( new boost::asio::io_service ) ),
@@ -49,6 +49,10 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
 
     // Initialize the commands historic.
     commandsHistoric_ = CommandsHistoricPtr( new CommandsHistoric( std::bind( &Server::broadcast, this ) ) );
+
+    resourcesSyncLibrary_ = ResourcesSynchronizationLibraryPtr( new ResourcesSynchronizationLibrary( commandsHistoric_,
+                                                                                                     getTempDirPath(),
+                                                                                                     sceneFileName ) );
 }
 
 
@@ -326,7 +330,7 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
 
 void Server::processSceneCommand( const Command& sceneCommand )
 {
-    resourcesSyncLibrary_.processCommand( sceneCommand );
+    resourcesSyncLibrary_->processCommand( sceneCommand );
 
     switch( sceneCommand.getTarget() ){
         case CommandTarget::PRIMITIVE:{

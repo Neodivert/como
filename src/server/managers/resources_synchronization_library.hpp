@@ -21,6 +21,7 @@
 
 #include <map>
 #include <server/sync_data/resource_sync_data.hpp>
+#include <server/commands_historic.hpp>
 
 namespace como {
 
@@ -30,7 +31,10 @@ class ResourcesSynchronizationLibrary
         /***
          * 1. Construction
          ***/
-        ResourcesSynchronizationLibrary() = default;
+        ResourcesSynchronizationLibrary( CommandsHistoricPtr commandsHistoric,
+                                         const std::string& unpackingDirPath,
+                                         const std::string &sceneFilePath = "" );
+        ResourcesSynchronizationLibrary() = delete;
         ResourcesSynchronizationLibrary( const ResourcesSynchronizationLibrary& ) = delete;
         ResourcesSynchronizationLibrary( ResourcesSynchronizationLibrary&& ) = delete;
 
@@ -56,7 +60,12 @@ class ResourcesSynchronizationLibrary
 
     private:
         std::map< ResourceID, ResourceSyncDataPtr > resourcesSyncData_;
+
+        CommandsHistoricPtr commandsHistoric_;
+        const std::string unpackingDirPath_;
 };
+
+typedef std::unique_ptr< ResourcesSynchronizationLibrary > ResourcesSynchronizationLibraryPtr;
 
 } // namespace como
 
