@@ -29,7 +29,7 @@ class ResourceSyncData : public SyncData
         /***
          * 1. Construction
          ***/
-        ResourceSyncData( CommandConstPtr creationCommand );
+        ResourceSyncData( const Command* creationCommand );
         ResourceSyncData() = delete;
         ResourceSyncData( const ResourceSyncData& ) = default;
         ResourceSyncData( ResourceSyncData&& ) = default;
@@ -50,7 +50,7 @@ class ResourceSyncData : public SyncData
         /***
          * 4. Updating
          ***/
-        virtual void processCommand( const Command& command ) = 0;
+        virtual void processCommand( const Command& command );
 
 
         /***
@@ -64,6 +64,8 @@ class ResourceSyncData : public SyncData
         //const ResourceID resourceID_;
         std::string resourceName_;
 };
+
+typedef std::unique_ptr< ResourceSyncData > ResourceSyncDataPtr;
 
 } // namespace como
 

@@ -36,6 +36,7 @@
 #include <common/scene/basic_scene.hpp>
 #include <server/resources_ownership_manager.hpp>
 #include <server/managers/lights_manager.hpp>
+#include <server/managers/resources_synchronization_library.hpp>
 
 using boost::asio::ip::tcp;
 
@@ -97,6 +98,8 @@ class Server : public BasicScene
         ResourcesOwnershipManager resourcesOwnershipManager_;
 
         LightsManager lightsManager_;
+
+        ResourcesSynchronizationLibrary resourcesSyncLibrary_;
 
 
     public:

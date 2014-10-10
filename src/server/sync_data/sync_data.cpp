@@ -24,9 +24,11 @@ namespace como {
  * 1. Construction
  ***/
 
-SyncData::SyncData( CommandConstPtr creationCommand ) :
-    creationCommand_( creationCommand->clone() )
-{}
+SyncData::SyncData( const Command* creationCommand ) :
+    creationCommand_( ( creationCommand != nullptr ) ? creationCommand->clone() : nullptr )
+{
+
+}
 
 
 /***

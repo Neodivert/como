@@ -30,7 +30,7 @@ class SyncData
         /***
          * 1. Construction
          ***/
-        SyncData( CommandConstPtr creationCommand );
+        SyncData( const Command* creationCommand );
         SyncData() = delete;
         SyncData( const SyncData& ) = default;
         SyncData( SyncData&& ) = default;

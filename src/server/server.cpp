@@ -326,6 +326,8 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
 
 void Server::processSceneCommand( const Command& sceneCommand )
 {
+    resourcesSyncLibrary_.processCommand( sceneCommand );
+
     switch( sceneCommand.getTarget() ){
         case CommandTarget::PRIMITIVE:{
             const PrimitiveCommand& primitiveCommand = dynamic_cast< const PrimitiveCommand& >( sceneCommand );

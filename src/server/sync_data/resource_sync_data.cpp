@@ -24,8 +24,8 @@ namespace como {
  * 1. Construction
  ***/
 
-ResourceSyncData::ResourceSyncData( CommandConstPtr creationCommand ) :
-    SyncData( std::move( creationCommand ) )
+ResourceSyncData::ResourceSyncData( const Command* creationCommand ) :
+    SyncData( creationCommand )
   // TODO: Initialize ID and name
 {}
 
@@ -39,6 +39,17 @@ std::list<CommandConstPtr> ResourceSyncData::generateUpdateCommands() const
     // TODO: Generate real commands when we allow user to be capable of
     // changing a resource's name.
     return std::list<CommandConstPtr>();
+}
+
+
+/***
+ * 4. Updating
+ ***/
+
+void ResourceSyncData::processCommand(const Command &command)
+{
+    (void)( command );
+    // TODO: Complete.
 }
 
 

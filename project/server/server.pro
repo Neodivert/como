@@ -31,7 +31,8 @@ HEADERS += \
     ../../src/server/managers/lights_manager.hpp \
     ../../src/server/sync_data/resource_sync_data.hpp \
     ../../src/server/sync_data/sync_data.hpp \
-    ../../src/server/sync_data/texture_sync_data.hpp
+    ../../src/server/sync_data/texture_sync_data.hpp \
+    ../../src/server/managers/resources_synchronization_library.hpp
 
 # Server sources
 SOURCES += \
@@ -43,4 +44,5 @@ SOURCES += \
     ../../src/server/resources_ownership_manager.cpp \
     ../../src/server/managers/lights_manager.cpp \
     ../../src/server/sync_data/sync_data.cpp \
-    ../../src/server/sync_data/resource_sync_data.cpp
+    ../../src/server/sync_data/resource_sync_data.cpp \
+    ../../src/server/managers/resources_synchronization_library.cpp
