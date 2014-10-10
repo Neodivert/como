@@ -19,6 +19,8 @@
 #include "resources_synchronization_library.hpp"
 #include <common/commands/commands.hpp>
 #include <server/sync_data/texture_sync_data.hpp>
+#include <common/commands/commands_file_parser.hpp>
+#include <common/commands/commands_file_writer.hpp>
 
 namespace como {
 
@@ -60,6 +62,43 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
             // TODO: Complete
         break;
     }
+}
+
+
+/***
+ * 4. File management
+ ***/
+
+void ResourcesSynchronizationLibrary::saveToFile( const std::string &filePath ) const
+{
+    CommandsFileWriter commandsFile( filePath );
+
+    // First pass: write creation commands to file.
+    for( const auto& resourceSyncDataPair : resourcesSyncData_ ){
+        if( resourceSyncDataPair.second->getCreationCommand() != nullptr ){
+            commandsFile.writeCommand( *( resourceSyncDataPair.second->getCreationCommand() ) );
+        }
+    }
+
+    // Second pass: write update commands to file.
+    for( const auto& resourceSyncDataPair : resourcesSyncData_ ){
+        CommandsList updateCommands = resourceSyncDataPair.second->generateUpdateCommands();
+        for( const auto& command : updateCommands ){
+            commandsFile.writeCommand( *command );
+        }
+    }
+}
+
+
+void ResourcesSynchronizationLibrary::readFromFile( const std::string &filePath )
+{
+    CommandsFileParser commandsFile( filePath, unpackingDirPath_ );
+    CommandPtr command;
+
+    while( ( command = commandsFile.readNextCommand() ) != nullptr ){
+        processCommand( *command );
+    }
+
 }
 
 

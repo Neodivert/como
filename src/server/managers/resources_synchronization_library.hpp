@@ -52,6 +52,13 @@ class ResourcesSynchronizationLibrary
 
 
         /***
+         * 4. File management
+         ***/
+        void saveToFile( const std::string& filePath ) const;
+        void readFromFile( const std::string& filePath );
+
+
+        /***
          * 4. Operators
          ***/
         ResourcesSynchronizationLibrary& operator = ( const ResourcesSynchronizationLibrary& ) = delete;
