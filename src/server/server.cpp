@@ -475,34 +475,6 @@ void Server::deleteUser( UserID id )
 }
 
 
-void Server::unselectAll( UserID userID )
-{
-    DrawableOwners::iterator drawableOwner;
-
-    // Iterate over the map of drawable owners and change those entries
-    // associated with the current user to zero (no user).
-    for( drawableOwner = drawableOwners_.begin(); drawableOwner != drawableOwners_.end(); drawableOwner++ ){
-        if( drawableOwner->second == userID ){
-            drawableOwner->second = 0;
-        }
-    }
-}
-
-
-void Server::deleteSelection( UserID userID )
-{
-    DrawableOwners::iterator drawable;
-
-    // Iterate over the map of drawable owners and remove those entries
-    // associated with the current user to zero (no user).
-    for( drawable = drawableOwners_.begin(); drawable != drawableOwners_.end(); drawable++ ){
-        if( drawable->second == userID ){
-            drawableOwners_.erase( drawable );
-        }
-    }
-}
-
-
 std::string Server::getCurrentDayTime() const
 {
     std::time_t now = std::time( 0 );

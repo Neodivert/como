@@ -74,9 +74,6 @@ class Server
         // Threads pool
         boost::thread_group threads_;
 
-        // Mutex for console output (cout).
-        boost::mutex coutMutex_;
-
         // New socket
         Socket newSocket_;
 
@@ -190,8 +187,6 @@ class Server
          ***/
     public:
         void deleteUser( UserID id );
-        void unselectAll( UserID userID );
-        void deleteSelection( UserID userID );
     private:
         std::string getCurrentDayTime() const ;
         void workerThread();
