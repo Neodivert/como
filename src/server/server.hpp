@@ -48,11 +48,6 @@ typedef std::map< ResourceID, UserID > DrawableOwners;
 class Server
 {
     private:
-        // Historic of commands performed on the scene.
-        CommandsHistoricPtr commandsHistoric_;
-
-        Scene scene_;
-
         LogPtr log_;
 
         // I/O service.
@@ -99,6 +94,11 @@ class Server
         ResourcesOwnershipManager resourcesOwnershipManager_;
 
         LightsManager lightsManager_;
+
+        // Historic of commands performed on the scene.
+        CommandsHistoricPtr commandsHistoric_;
+
+        Scene scene_;
 
     public:
         /***

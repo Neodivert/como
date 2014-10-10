@@ -20,7 +20,6 @@
 #include <common/commands/commands.hpp>
 #include <server/sync_data/texture_sync_data.hpp>
 #include <common/commands/commands_file_parser.hpp>
-#include <common/commands/commands_file_writer.hpp>
 
 namespace como {
 
@@ -29,16 +28,10 @@ namespace como {
  ***/
 
 ResourcesSynchronizationLibrary::ResourcesSynchronizationLibrary( CommandsHistoricPtr commandsHistoric,
-                                                                  const std::string &unpackingDirPath,
-                                                                  const std::string &sceneFilePath) :
+                                                                  const std::string &unpackingDirPath ) :
     commandsHistoric_( commandsHistoric ),
     unpackingDirPath_( unpackingDirPath )
-{
-    // TODO: Load scene.
-    if( sceneFilePath != "" ){
-
-    }
-}
+{}
 
 
 /***
@@ -62,6 +55,8 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
             // TODO: Complete
         break;
     }
+
+    commandsHistoric_->addCommand( CommandConstPtr( command.clone() ) );
 }
 
 
@@ -69,14 +64,15 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
  * 4. File management
  ***/
 
-void ResourcesSynchronizationLibrary::saveToFile( const std::string &filePath ) const
+void ResourcesSynchronizationLibrary::saveToFile( std::ofstream& file ) const
 {
-    CommandsFileWriter commandsFile( filePath );
+    CommandsFileParser fileParser( unpackingDirPath_ );
 
     // First pass: write creation commands to file.
     for( const auto& resourceSyncDataPair : resourcesSyncData_ ){
         if( resourceSyncDataPair.second->getCreationCommand() != nullptr ){
-            commandsFile.writeCommand( *( resourceSyncDataPair.second->getCreationCommand() ) );
+            fileParser.writeCommand( *( resourceSyncDataPair.second->getCreationCommand() ),
+                                     file );
         }
     }
 
@@ -84,21 +80,20 @@ void ResourcesSynchronizationLibrary::saveToFile( const std::string &filePath ) 
     for( const auto& resourceSyncDataPair : resourcesSyncData_ ){
         CommandsList updateCommands = resourceSyncDataPair.second->generateUpdateCommands();
         for( const auto& command : updateCommands ){
-            commandsFile.writeCommand( *command );
+            fileParser.writeCommand( *command, file );
         }
     }
 }
 
 
-void ResourcesSynchronizationLibrary::readFromFile( const std::string &filePath )
+void ResourcesSynchronizationLibrary::readFromFile( std::ifstream& file )
 {
-    CommandsFileParser commandsFile( filePath, unpackingDirPath_ );
+    CommandsFileParser fileParser( unpackingDirPath_ );
     CommandPtr command;
 
-    while( ( command = commandsFile.readNextCommand() ) != nullptr ){
+    while( ( command = fileParser.readNextCommand( file ) ) != nullptr ){
         processCommand( *command );
     }
-
 }
 
 

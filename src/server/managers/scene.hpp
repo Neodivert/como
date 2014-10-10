@@ -34,7 +34,7 @@ class Scene : public BasicScene
         /***
          * 1. Construction
          ***/
-        Scene( const std::string& sceneName, CommandsHistoricPtr commandsHistoric, const std::string& sceneFilePath = "" );
+        Scene( const std::string& sceneName, CommandsHistoricPtr commandsHistoric, LogPtr log, const std::string& sceneFilePath = "" );
         Scene() = delete;
         Scene( const Scene& ) = delete;
         Scene( Scene&& ) = delete;
@@ -43,7 +43,7 @@ class Scene : public BasicScene
         /***
          * 2. Destruction
          ***/
-        virtual ~Scene() = default;
+        virtual ~Scene();
 
 
         /***
@@ -53,7 +53,14 @@ class Scene : public BasicScene
 
 
         /***
-         * 4. Operators
+         * 4. Scene saving / loading
+         ***/
+        void saveToFile( const std::string& fileName, bool replace = false );
+        void loadFromFile( const std::string& filePath );
+
+
+        /***
+         * 5. Operators
          ***/
         Scene& operator = ( const Scene& ) = delete;
         Scene& operator = ( Scene&& ) = delete;

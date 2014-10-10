@@ -30,7 +30,7 @@ class CommandsFileParser
         /***
          * 1. Construction
          ***/
-        CommandsFileParser( const std::string& filePath, const std::string unpackingDirPath );
+        CommandsFileParser( const std::string unpackingDirPath );
         CommandsFileParser() = delete;
         CommandsFileParser( const CommandsFileParser& ) = delete;
         CommandsFileParser( CommandsFileParser&& ) = delete;
@@ -39,13 +39,14 @@ class CommandsFileParser
         /***
          * 2. Destruction
          ***/
-        ~CommandsFileParser();
+        ~CommandsFileParser() = default;
 
 
         /***
          * 3. File parsing
          ***/
-        CommandPtr readNextCommand();
+        CommandPtr readNextCommand( std::ifstream& file );
+        void writeCommand( const Command& command, std::ofstream& file );
 
 
         /***
@@ -56,7 +57,6 @@ class CommandsFileParser
 
 
     private:
-        std::fstream file_;
         std::string unpackingDirPath_;
 };
 

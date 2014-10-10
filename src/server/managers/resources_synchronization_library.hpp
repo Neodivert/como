@@ -32,8 +32,7 @@ class ResourcesSynchronizationLibrary
          * 1. Construction
          ***/
         ResourcesSynchronizationLibrary( CommandsHistoricPtr commandsHistoric,
-                                         const std::string& unpackingDirPath,
-                                         const std::string &sceneFilePath = "" );
+                                         const std::string& unpackingDirPath );
         ResourcesSynchronizationLibrary() = delete;
         ResourcesSynchronizationLibrary( const ResourcesSynchronizationLibrary& ) = delete;
         ResourcesSynchronizationLibrary( ResourcesSynchronizationLibrary&& ) = delete;
@@ -54,8 +53,8 @@ class ResourcesSynchronizationLibrary
         /***
          * 4. File management
          ***/
-        void saveToFile( const std::string& filePath ) const;
-        void readFromFile( const std::string& filePath );
+        void saveToFile( std::ofstream& file ) const;
+        void readFromFile( std::ifstream& file );
 
 
         /***
@@ -63,6 +62,13 @@ class ResourcesSynchronizationLibrary
          ***/
         ResourcesSynchronizationLibrary& operator = ( const ResourcesSynchronizationLibrary& ) = delete;
         ResourcesSynchronizationLibrary& operator = ( ResourcesSynchronizationLibrary&& ) = delete;
+
+
+        /***
+         * 5. Auxiliar methods
+         ***/
+    protected:
+        void saveCommandToFile();
 
 
     private:

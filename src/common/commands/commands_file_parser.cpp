@@ -26,65 +26,67 @@ namespace como {
  * 1. Construction
  ***/
 
-CommandsFileParser::CommandsFileParser( const std::string &filePath, const std::string unpackingDirPath ) :
-    file_( filePath.c_str() ),
+CommandsFileParser::CommandsFileParser( const std::string unpackingDirPath ) :
     unpackingDirPath_( unpackingDirPath )
-{
-    if( !file_.is_open() ){
-        throw FileNotOpenException( filePath );
-    }
-}
-
-
-/***
- * 2. Destruction
- ***/
-
-CommandsFileParser::~CommandsFileParser()
-{
-    file_.close();
-}
+{}
 
 
 /***
  * 3. File parsing
  ***/
 
-CommandPtr CommandsFileParser::readNextCommand()
+CommandPtr CommandsFileParser::readNextCommand( std::ifstream& file )
 {
     PackablePacketSize commandSize;
     CommandPtr command = nullptr;
     char commandSizeBuffer[8] = {0}; // TODO: use [PackablePacketSize::packetSize()]
-    char* commandBuffer;
+    std::vector<char> commandBuffer;
 
-    if( file_.eof() ){
+    if( file.eof() ){
+        throw std::runtime_error( "FILE.EOF" );
         return nullptr;
     }
 
     // Read the command's size from the file.
-    file_.read( commandSizeBuffer, PackablePacketSize::packetSize() );
-    if( !file_ ){
+    file.read( commandSizeBuffer, PackablePacketSize::packetSize() );
+    if( !file ){
         return nullptr;
     }
     commandSize.unpack( commandSizeBuffer );
 
     // Read the command's packed data from file.
-    commandBuffer = new char[commandSize.getPacketSize()];
-    command = PackableCommandsList::createEmtpyCommandFromBuffer( commandBuffer, unpackingDirPath_ );
-    file_.read( commandBuffer, commandSize.getPacketSize() );
-    if( !file_ ){
+    commandBuffer.resize( commandSize.getValue() );
+    file.read( commandBuffer.data(), commandSize.getValue() );
+    command = PackableCommandsList::createEmtpyCommandFromBuffer( commandBuffer.data(), unpackingDirPath_ );
+    if( !file ){
         throw std::runtime_error(
                     std::string( "Command couldn't be read from file " ) +
                     std::string( "(only " ) +
-                    std::to_string( file_.gcount() ) +
+                    std::to_string( file.gcount() ) +
                     std::string( " from " ) +
                     std::to_string( commandSize.getValue() ) +
                     std::string( " bytes could be read" ) );
     }
-    delete [] commandBuffer;
+    command->unpack( commandBuffer.data() );
 
     return command;
 }
 
+
+void CommandsFileParser::writeCommand( const Command &command, std::ofstream &file )
+{
+    char commandSizeBuffer[8];
+    const PackablePacketSize commandSize( command.getPacketSize() );
+    std::vector< char > commandBuffer;
+
+    // Write command's size to file.
+    commandSize.pack( commandSizeBuffer );
+    file.write( commandSizeBuffer, commandSize.getPacketSize() );
+
+    // Write command to file.
+    commandBuffer.resize( commandSize.getValue() );
+    command.pack( commandBuffer.data() );
+    file.write( commandBuffer.data(), commandSize.getValue() );
+}
 
 } // namespace como

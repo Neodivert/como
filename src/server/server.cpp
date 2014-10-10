@@ -28,9 +28,7 @@ namespace como {
 
 Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, const char* sceneFilePath, unsigned int nThreads ) :
     // Initialize the server parameters.
-    commandsHistoric_( new CommandsHistoric( std::bind( &Server::broadcast, this ) ) ),
-    scene_( sceneName, commandsHistoric_, sceneFilePath ),
-    log_( scene_.log() ),
+    log_( new Log ),
     io_service_( std::shared_ptr< boost::asio::io_service >( new boost::asio::io_service ) ),
     acceptor_( *io_service_ ),
     work_( *io_service_ ),
@@ -40,7 +38,9 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
     newId_( 1 ),
     port_( port_ ),
     resourcesOwnershipManager_( users_, log_ ),
-    lightsManager_( 4, &resourcesOwnershipManager_ )
+    lightsManager_( 4, &resourcesOwnershipManager_ ),
+    commandsHistoric_( new CommandsHistoric( std::bind( &Server::broadcast, this ) ) ),
+    scene_( sceneName, commandsHistoric_, log_, sceneFilePath )
 {
     unsigned int i;
 
@@ -325,8 +325,7 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
 
 void Server::processSceneCommand( const Command& sceneCommand )
 {
-    scene_.processCommand( sceneCommand );
-
+    // TODO: Move this code to Scene class.
     switch( sceneCommand.getTarget() ){
         case CommandTarget::PRIMITIVE:{
             const PrimitiveCommand& primitiveCommand = dynamic_cast< const PrimitiveCommand& >( sceneCommand );
@@ -416,7 +415,8 @@ void Server::processSceneCommand( const Command& sceneCommand )
         break;
     }
 
-    commandsHistoric_->addCommand( CommandConstPtr( sceneCommand.clone() ) );
+    // This includes inserting the command into the historic.
+    scene_.processCommand( sceneCommand );
 }
 
 

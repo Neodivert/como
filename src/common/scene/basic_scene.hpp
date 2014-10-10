@@ -22,6 +22,7 @@
 #include <string>
 #include <common/utilities/log.hpp>
 #include <boost/filesystem.hpp>
+#include <common/utilities/paths.hpp> // TODO: Move SCENES_DIR constant here.
 
 namespace como {
 
@@ -41,7 +42,7 @@ class BasicScene
          ***/
         BasicScene() = delete;
         BasicScene( LogPtr log  );
-        BasicScene( const std::string& sceneName );
+        BasicScene( const std::string& sceneName, LogPtr log = nullptr );
         BasicScene( const BasicScene& ) = delete;
         BasicScene( BasicScene&& ) = delete;
 

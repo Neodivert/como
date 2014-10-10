@@ -17,7 +17,6 @@
 ***/
 
 #include "basic_scene.hpp"
-#include <common/utilities/paths.hpp> // TODO: Move SCENES_DIR constant here.
 
 namespace como {
 
@@ -33,11 +32,11 @@ BasicScene::BasicScene( LogPtr log ) :
     log_( log )
 {}
 
-BasicScene::BasicScene( const std::string& sceneName ) :
+BasicScene::BasicScene( const std::string& sceneName, LogPtr log ) :
     sceneName_( sceneName ),
     sceneDirPath_( "" ),
     sceneTempDirPath_( "" ),
-    log_( new Log )
+    log_( ( log != nullptr ) ? log : nullptr )
 {
     createSceneDirectory();
 }
