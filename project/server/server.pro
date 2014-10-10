@@ -30,7 +30,8 @@ HEADERS += \
     ../../src/server/resources_ownership_manager.hpp \
     ../../src/server/managers/lights_manager.hpp \
     ../../src/server/sync_data/resource_sync_data.hpp \
-    ../../src/server/sync_data/sync_data.hpp
+    ../../src/server/sync_data/sync_data.hpp \
+    ../../src/server/sync_data/texture_sync_data.hpp
 
 # Server sources
 SOURCES += \

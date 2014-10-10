@@ -48,13 +48,13 @@ class ResourceSyncData : public SyncData
 
 
         /***
-         * 3. Updating
+         * 4. Updating
          ***/
         virtual void processCommand( const Command& command ) = 0;
 
 
         /***
-         * 4. Operators
+         * 5. Operators
          ***/
         ResourceSyncData& operator = ( const ResourceSyncData& ) = default;
         ResourceSyncData& operator = ( ResourceSyncData&& ) = default;
