@@ -107,4 +107,10 @@ std::string BasicScene::getTempDirPath() const
 }
 
 
+LogPtr BasicScene::log() const
+{
+    return log_;
+}
+
+
 } // namespace como

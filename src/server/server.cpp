@@ -28,7 +28,8 @@ namespace como {
 
 Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, const char* sceneFileName, unsigned int nThreads ) :
     // Initialize the server parameters.
-    BasicScene( sceneName ),
+    scene_( sceneName ),
+    log_( scene_.log() ),
     io_service_( std::shared_ptr< boost::asio::io_service >( new boost::asio::io_service ) ),
     acceptor_( *io_service_ ),
     work_( *io_service_ ),
@@ -51,7 +52,7 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
     commandsHistoric_ = CommandsHistoricPtr( new CommandsHistoric( std::bind( &Server::broadcast, this ) ) );
 
     resourcesSyncLibrary_ = ResourcesSynchronizationLibraryPtr( new ResourcesSynchronizationLibrary( commandsHistoric_,
-                                                                                                     getTempDirPath(),
+                                                                                                     scene_.getTempDirPath(),
                                                                                                      sceneFileName ) );
 }
 
@@ -120,7 +121,7 @@ void Server::run()
         // Create and initialize the primitives directory for the current
         // scene.
         io_service_->post( [this](){
-            primitivesManager_ = std::unique_ptr< ServerPrimitivesManager >( new ServerPrimitivesManager( getDirPath(), getTempDirPath(), commandsHistoric_, log_ ) );
+            primitivesManager_ = std::unique_ptr< ServerPrimitivesManager >( new ServerPrimitivesManager( scene_.getDirPath(), scene_.getTempDirPath(), commandsHistoric_, log_ ) );
         });
 
         // Create a directional light with with no owner and synchronize it in
@@ -248,7 +249,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         }
 
         // Send the scene name within the UserAcceptancePacket.
-        userAcceptedPacket.setSceneName( getName().c_str() );
+        userAcceptedPacket.setSceneName( scene_.getName().c_str() );
 
         // Get a color from the queue of free colors and assign it to the new
         // user.
@@ -275,7 +276,7 @@ void Server::onAccept( const boost::system::error_code& errorCode )
                         commandsHistoric_,
                         log_,
                         userColor,
-                        getTempDirPath()
+                        scene_.getTempDirPath()
                     );
 
         // Add an USER_CONNECTION scene command to the server historic.

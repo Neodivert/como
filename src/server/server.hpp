@@ -37,6 +37,7 @@
 #include <server/resources_ownership_manager.hpp>
 #include <server/managers/lights_manager.hpp>
 #include <server/managers/resources_synchronization_library.hpp>
+#include <server/managers/scene.hpp>
 
 using boost::asio::ip::tcp;
 
@@ -45,9 +46,13 @@ namespace como {
 typedef std::map< ResourceID, UserID > DrawableOwners;
 
 /*! Main server manager */
-class Server : public BasicScene
+class Server
 {
     private:
+        Scene scene_;
+
+        LogPtr log_;
+
         // I/O service.
         std::shared_ptr< boost::asio::io_service > io_service_;
 

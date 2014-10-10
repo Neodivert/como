@@ -67,6 +67,7 @@ class BasicScene
         std::string getName() const;
         std::string getDirPath() const;
         std::string getTempDirPath() const;
+        LogPtr log() const;
 
 
         /***
