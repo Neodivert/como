@@ -26,9 +26,10 @@ namespace como {
  * 1. Construction
  ***/
 
-Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, const char* sceneFileName, unsigned int nThreads ) :
+Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, const char* sceneFilePath, unsigned int nThreads ) :
     // Initialize the server parameters.
-    scene_( sceneName ),
+    commandsHistoric_( new CommandsHistoric( std::bind( &Server::broadcast, this ) ) ),
+    scene_( sceneName, commandsHistoric_, sceneFilePath ),
     log_( scene_.log() ),
     io_service_( std::shared_ptr< boost::asio::io_service >( new boost::asio::io_service ) ),
     acceptor_( *io_service_ ),
@@ -47,13 +48,6 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
     for( i=0; i<N_THREADS; i++ ){
         threads_.create_thread( boost::bind( &Server::workerThread, this ) );
     }
-
-    // Initialize the commands historic.
-    commandsHistoric_ = CommandsHistoricPtr( new CommandsHistoric( std::bind( &Server::broadcast, this ) ) );
-
-    resourcesSyncLibrary_ = ResourcesSynchronizationLibraryPtr( new ResourcesSynchronizationLibrary( commandsHistoric_,
-                                                                                                     scene_.getTempDirPath(),
-                                                                                                     sceneFileName ) );
 }
 
 
@@ -331,7 +325,7 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
 
 void Server::processSceneCommand( const Command& sceneCommand )
 {
-    resourcesSyncLibrary_->processCommand( sceneCommand );
+    scene_.processCommand( sceneCommand );
 
     switch( sceneCommand.getTarget() ){
         case CommandTarget::PRIMITIVE:{

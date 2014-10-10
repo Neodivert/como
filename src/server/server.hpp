@@ -36,7 +36,6 @@
 #include <common/scene/basic_scene.hpp>
 #include <server/resources_ownership_manager.hpp>
 #include <server/managers/lights_manager.hpp>
-#include <server/managers/resources_synchronization_library.hpp>
 #include <server/managers/scene.hpp>
 
 using boost::asio::ip::tcp;
@@ -49,6 +48,9 @@ typedef std::map< ResourceID, UserID > DrawableOwners;
 class Server
 {
     private:
+        // Historic of commands performed on the scene.
+        CommandsHistoricPtr commandsHistoric_;
+
         Scene scene_;
 
         LogPtr log_;
@@ -83,9 +85,6 @@ class Server
         // Server's port.
         unsigned int port_;
 
-        // Historic of commands performed on the scene.
-        CommandsHistoricPtr commandsHistoric_;
-
         // A map that relates each drawable in the scene with its owner.
         DrawableOwners drawableOwners_;
 
@@ -101,9 +100,6 @@ class Server
 
         LightsManager lightsManager_;
 
-        ResourcesSynchronizationLibraryPtr resourcesSyncLibrary_;
-
-
     public:
         /***
          * 1. Construction
@@ -118,7 +114,7 @@ class Server
          * \param sceneName name of the scene to be created.
          * \param nThreads number of threads used during server execution.
          */
-        Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, const char* sceneFileName, unsigned int nThreads = 3 );
+        Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, const char* sceneFilePath, unsigned int nThreads = 3 );
 
     private:
         /*!

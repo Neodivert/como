@@ -20,8 +20,13 @@
 #define SCENE_HPP
 
 #include <common/scene/basic_scene.hpp>
+#include <server/commands_historic.hpp>
+#include <server/managers/resources_synchronization_library.hpp>
 
 namespace como {
+
+class Scene;
+typedef std::unique_ptr< Scene > ScenePtr;
 
 class Scene : public BasicScene
 {
@@ -29,7 +34,7 @@ class Scene : public BasicScene
         /***
          * 1. Construction
          ***/
-        Scene( const std::string& sceneName );
+        Scene( const std::string& sceneName, CommandsHistoricPtr commandsHistoric, const std::string& sceneFilePath = "" );
         Scene() = delete;
         Scene( const Scene& ) = delete;
         Scene( Scene&& ) = delete;
@@ -42,10 +47,23 @@ class Scene : public BasicScene
 
 
         /***
-         * 3. Operators
+         * 3. Command processing
+         ***/
+        void processCommand( const Command& command );
+
+
+        /***
+         * 4. Operators
          ***/
         Scene& operator = ( const Scene& ) = delete;
         Scene& operator = ( Scene&& ) = delete;
+
+
+    private:
+        /***
+         * Attributes
+         ***/
+        ResourcesSynchronizationLibrary resourcesSyncLibrary_;
 };
 
 } // namespace como
