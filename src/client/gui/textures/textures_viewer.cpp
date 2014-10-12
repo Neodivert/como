@@ -34,6 +34,7 @@ TexturesViewer::TexturesViewer( TexturesManager *texturesManager, QWidget* paren
     QDialog( parent )
 {
     QPushButton* loadTextureButton = new QPushButton( "Load new texture" );
+    QPushButton* clearTextureButton = new QPushButton( "Clear texture" );
     QVBoxLayout* layout = new QVBoxLayout;
     TexturesGallery* texturesGallery = new TexturesGallery( texturesManager );
 
@@ -66,8 +67,17 @@ TexturesViewer::TexturesViewer( TexturesManager *texturesManager, QWidget* paren
         emit textureSelected( textureID );
     });
 
+    // Allow user to remove current texture from wall.
+    QObject::connect( clearTextureButton,
+                      &QPushButton::pressed,
+                      [=]{
+        texturesGallery->setCurrentRow( -1 );
+        emit textureSelected( NO_RESOURCE );
+    });
+
     // Set this widget's layout.
     layout->addWidget( texturesGallery );
+    layout->addWidget( clearTextureButton );
     layout->addWidget( loadTextureButton );
     setLayout( layout );
 }
