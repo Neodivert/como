@@ -47,6 +47,7 @@ class ResourceIDsGenerator
          * 3. Getters
          ***/
         ResourceID generateResourceIDs( unsigned int nIDs );
+        UserID userID() const;
 
 
         /***

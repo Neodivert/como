@@ -40,8 +40,8 @@ ServerInterface::ServerInterface( const char *host, const char *port, const char
         // runtime_error exception.
         connect( host, port, userName, userAcceptancePacket );
 
-        nextResourceID_ = ResourceID( userAcceptancePacket.getId(), 0 );
         localUserColor_ = userAcceptancePacket.getSelectionColor();
+        resourceIDsGenerator_ = ResourceIDsGeneratorPtr( new ResourceIDsGenerator( userAcceptancePacket.getId() ) );
 
         // Create the "worker threads" which will be communicating with the server.
         for( unsigned int i=0; i<2; i++ ){
@@ -285,20 +285,13 @@ void ServerInterface::work()
 
 ResourceID ServerInterface::reserveResourceIDs(unsigned int nIDs)
 {
-    unsigned int i;
-    ResourceID firstResourceID = nextResourceID_;
-
-    for( i = 0; i < nIDs; i++ ){
-        nextResourceID_++;
-    }
-
-    return firstResourceID;
+    return resourceIDsGenerator_->generateResourceIDs( nIDs );
 }
 
 
 UserID ServerInterface::getLocalUserID() const
 {
-    return nextResourceID_.getCreatorID();
+    return resourceIDsGenerator_->userID();
 }
 
 

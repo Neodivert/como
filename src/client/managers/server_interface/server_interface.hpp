@@ -30,6 +30,7 @@
 #include <map>
 #include <queue>
 #include <common/ids/resource_id.hpp>
+#include <common/ids/resource_ids_generator.hpp>
 
 Q_DECLARE_METATYPE( std::shared_ptr< const como::Command > )
 
@@ -56,7 +57,7 @@ class ServerInterface : public QObject
 
         boost::asio::deadline_timer timer_;
 
-        ResourceID nextResourceID_;
+        ResourceIDsGeneratorPtr resourceIDsGenerator_;
         Color localUserColor_;
 
         // Log

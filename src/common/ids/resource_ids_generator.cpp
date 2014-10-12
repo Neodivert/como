@@ -46,4 +46,10 @@ ResourceID ResourceIDsGenerator::generateResourceIDs( unsigned int nIDs )
     return firstResourceID;
 }
 
+
+UserID ResourceIDsGenerator::userID() const
+{
+    return nextResourceID_.getCreatorID();
+}
+
 } // namespace como
