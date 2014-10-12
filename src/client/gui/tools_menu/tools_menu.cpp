@@ -21,7 +21,7 @@
 #include "creation_tab.hpp"
 #include "transformation_tab.hpp"
 #include "properties_tab/properties_tab.hpp"
-#include <client/gui/materials/materials_editor.hpp> // TODO: Change directory?
+#include <client/gui/materials/materials_editor.hpp>
 #include <client/gui/texture_walls/texture_walls_editor.hpp>
 
 

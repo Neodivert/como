@@ -151,7 +151,6 @@ void Viewport::resizeEvent(QResizeEvent *event)
         heightInverse = 1.0f / height();
 
         // Projection matrix depends on viewport dimensions, so update it.
-        // TODO: remove this dependency and call setProjection() in constructor.
         setProjection( projection_ );
     }
 }
@@ -518,7 +517,7 @@ void Viewport::setView( View view )
             up = glm::vec3( 0.0f, 1.0f, 0.0f );
         break;
         case View::USER:
-        case View::CAMERA: // TODO: Complete.
+        case View::CAMERA:
             eye = glm::vec3( 1.0f, 1.0f, 1.0f );
             up = glm::vec3( -1.0f, 1.0f, -1.0f );
         break;

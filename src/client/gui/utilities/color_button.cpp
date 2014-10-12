@@ -43,7 +43,6 @@ void ColorButton::setColor( const QColor& color )
     setStyleSheet( qss );
 
     // Emit a signal indicating that the current color has changed.
-    // TODO: Complete.
     Color packableColor(
                 static_cast< std::uint8_t >( color.red() ),
                 static_cast< std::uint8_t >( color.green() ),

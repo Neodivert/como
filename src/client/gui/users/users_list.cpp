@@ -50,7 +50,6 @@ void UsersList::update( ContainerAction lastContainerAction, UserID lastElementM
             removeUser( lastElementModified );
         break;
         default:
-            // TODO: Complete.
         break;
     }
 }
