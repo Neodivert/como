@@ -25,11 +25,14 @@ namespace como {
  * 1. Construction
  ***/
 
-ServerPrimitivesManager::ServerPrimitivesManager( const std::string& sceneDirPath, const std::string& tempDirPath, CommandsHistoricPtr commandsHistoric, LogPtr log ) :
+ServerPrimitivesManager::ServerPrimitivesManager(const std::string& sceneDirPath,
+                                                  const std::string& tempDirPath,
+                                                  CommandsHistoricPtr commandsHistoric,
+                                                  LogPtr log,
+                                                  ResourceIDsGeneratorPtr resourceIDsGenerator ) :
     AbstractPrimitivesManager( sceneDirPath, tempDirPath, log ),
-    nextPrimitiveCategoryID_( 0, 0 ),
-    nextPrimitiveID_( 0, 0 ),
-    commandsHistoric_( commandsHistoric )
+    commandsHistoric_( commandsHistoric ),
+    resourceIDsGenerator_( resourceIDsGenerator )
 {
     // Sync server's local primitives directory.
     syncPrimitivesDir();
@@ -91,14 +94,16 @@ void ServerPrimitivesManager::syncPrimitivesDir()
 
 ResourceID ServerPrimitivesManager::createCategory( std::string name )
 {
-    AbstractPrimitivesManager::createCategory( nextPrimitiveCategoryID_, name );
+    const ResourceID categoryID = resourceIDsGenerator_->generateResourceIDs( 1 );
+
+    AbstractPrimitivesManager::createCategory( categoryID, name );
 
     commandsHistoric_->addCommand( CommandConstPtr(
                                        new PrimitiveCategoryCreationCommand( 0,
-                                                                             nextPrimitiveCategoryID_,
+                                                                             categoryID,
                                                                              name ) ) );
 
-    return nextPrimitiveCategoryID_++;
+    return categoryID;
 }
 
 
@@ -110,13 +115,13 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
     OBJPrimitivesImporter primitivesImporter;
     ResourceID categoryID;
     PrimitiveInfo primitive;
-    char nameSuffix[30];
+    char nameSuffix[30] = {0};
 
     log_->debug( "Synchronizing category dir [", dirPath, "]\n" );
 
     categoryID = createCategory( boost::filesystem::basename( dirPath ) );
 
-    boost::filesystem::create_directory( getCategoryAbsoluteePath( primitive.category ) );
+    boost::filesystem::create_directory( getCategoryAbsoluteePath( categoryID /*primitive.category*/ ) );
 
     for( ; fileIterator != endIterator; fileIterator++ ){
         if( boost::filesystem::is_regular_file( *fileIterator ) ){
@@ -126,14 +131,16 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
 
             if( boost::filesystem::extension( filePath ) == ".obj" ){
                 try {
-                    sprintf( nameSuffix, "__%i_%i", nextPrimitiveID_.getCreatorID(), nextPrimitiveID_.getResourceIndex() );
+                    ResourceID primitiveID = resourceIDsGenerator_->generateResourceIDs( 1 );
+
+                    sprintf( nameSuffix, "__%i_%i", primitiveID.getCreatorID(), primitiveID.getResourceIndex() );
 
                     primitive = primitivesImporter.importPrimitive( filePath,
                                                                     getCategoryAbsoluteePath( categoryID ),
                                                                     nameSuffix );
                     primitive.category = categoryID;
 
-                    registerPrimitive( primitive );
+                    registerPrimitive( primitive, primitiveID );
                 }catch( std::exception& ex ){
                     log_->error( "\n\nError importing primitive [",
                                  filePath, "] - ",
@@ -151,15 +158,17 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
 
 ResourceID ServerPrimitivesManager::registerCategory( std::string categoryName )
 {
+    const ResourceID categoryID = resourceIDsGenerator_->generateResourceIDs( 1 );
+
     // Register the the given category.
-    AbstractPrimitivesManager::registerCategory( nextPrimitiveCategoryID_, categoryName );
+    AbstractPrimitivesManager::registerCategory( categoryID, categoryName );
 
     // Add the appropriate category creation command to the commands historic.
     log_->debug( "\tAdding primitive category [", categoryName, "] to scene ...\n" );
-    commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCategoryCreationCommand( 0, nextPrimitiveCategoryID_, categoryName  ) ) );
+    commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCategoryCreationCommand( 0, categoryID, categoryName  ) ) );
     log_->debug( "\tAdding primitive category [", categoryName, "] to scene ...OK\n" );
 
-    return nextPrimitiveCategoryID_++;
+    return categoryID;
 }
 
 
@@ -168,6 +177,12 @@ ResourceID ServerPrimitivesManager::registerCategory( std::string categoryName )
  ***/
 
 void ServerPrimitivesManager::registerPrimitive( PrimitiveInfo primitive )
+{
+    const ResourceID primitiveID = resourceIDsGenerator_->generateResourceIDs( 1 );
+    registerPrimitive( primitive, primitiveID );
+}
+
+void ServerPrimitivesManager::registerPrimitive(PrimitiveInfo primitive, const ResourceID &primitiveID)
 {
     // We are about to create a command which needs to keep a copy of the
     // current primitive, so we create such copy in the tmp directory.
@@ -179,14 +194,12 @@ void ServerPrimitivesManager::registerPrimitive( PrimitiveInfo primitive )
     log_->debug( "Primitive creation command created for primitive (",
                  primitiveCopy.filePath, ")\n" );
 
-    AbstractPrimitivesManager::registerPrimitive( nextPrimitiveID_, primitive );
+    AbstractPrimitivesManager::registerPrimitive( primitiveID, primitive );
 
     commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCreationCommand( 0,
-                                                                                  nextPrimitiveID_,
+                                                                                  primitiveID,
                                                                                   primitiveCopy,
                                                                                   tempDirPath_ ) ) );
-
-    nextPrimitiveID_++;
 }
 
 } // namespace como

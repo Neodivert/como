@@ -37,6 +37,7 @@
 #include <server/resources_ownership_manager.hpp>
 #include <server/managers/lights_manager.hpp>
 #include <server/managers/scene.hpp>
+#include <common/ids/resource_ids_generator.hpp>
 
 using boost::asio::ip::tcp;
 
@@ -48,6 +49,8 @@ typedef std::map< ResourceID, UserID > DrawableOwners;
 class Server
 {
     private:
+        ResourceIDsGeneratorPtr resourceIDsGenerator_;
+
         LogPtr log_;
 
         // I/O service.

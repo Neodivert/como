@@ -24,6 +24,7 @@
 #include <string>
 #include <server/commands_historic.hpp>
 #include <common/utilities/paths.hpp>
+#include <common/ids/resource_ids_generator.hpp>
 
 
 namespace como {
@@ -31,17 +32,20 @@ namespace como {
 class ServerPrimitivesManager : public AbstractPrimitivesManager
 {
     private:
-        ResourceID nextPrimitiveCategoryID_;
-        ResourceID nextPrimitiveID_;
-
         CommandsHistoricPtr commandsHistoric_;
+
+        ResourceIDsGeneratorPtr resourceIDsGenerator_;
 
     public:
         /***
          * 1. Construction
          ***/
         ServerPrimitivesManager() = delete;
-        ServerPrimitivesManager( const std::string& sceneDirPath, const std::string& tempDirPath, CommandsHistoricPtr commandsHistoric, LogPtr log );
+        ServerPrimitivesManager( const std::string& sceneDirPath,
+                                 const std::string& tempDirPath,
+                                 CommandsHistoricPtr commandsHistoric,
+                                 LogPtr log,
+                                 ResourceIDsGeneratorPtr resourceIDsGenerator );
         ServerPrimitivesManager( const ServerPrimitivesManager& ) = delete;
         ServerPrimitivesManager( ServerPrimitivesManager&& ) = delete;
 
@@ -74,6 +78,7 @@ class ServerPrimitivesManager : public AbstractPrimitivesManager
          * 5. Primitives management
          ***/
         void registerPrimitive( PrimitiveInfo primitive );
+        void registerPrimitive( PrimitiveInfo primitive, const ResourceID& primitiveID );
 
 
         /***

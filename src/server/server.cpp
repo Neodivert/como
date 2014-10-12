@@ -21,13 +21,13 @@
 
 namespace como {
 
-
 /***
  * 1. Construction
  ***/
 
 Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, const char* sceneFilePath, unsigned int nThreads ) :
     // Initialize the server parameters.
+    resourceIDsGenerator_( new ResourceIDsGenerator( NO_USER ) ),
     log_( new Log ),
     io_service_( std::shared_ptr< boost::asio::io_service >( new boost::asio::io_service ) ),
     acceptor_( *io_service_ ),
@@ -106,6 +106,9 @@ Server::~Server()
 
 void Server::run()
 {
+    const ResourceID DIRECTIONAL_LIGHT_ID = resourceIDsGenerator_->generateResourceIDs( 1 );
+    const ResourceID CAMERA_ID = resourceIDsGenerator_->generateResourceIDs( 1 );
+
     // Create a TCP resolver and a query for getting the endpoint the server
     // must listen to.
 
@@ -115,19 +118,21 @@ void Server::run()
         // Create and initialize the primitives directory for the current
         // scene.
         io_service_->post( [this](){
-            primitivesManager_ = std::unique_ptr< ServerPrimitivesManager >( new ServerPrimitivesManager( scene_.getDirPath(), scene_.getTempDirPath(), commandsHistoric_, log_ ) );
+            primitivesManager_ = std::unique_ptr< ServerPrimitivesManager >( new ServerPrimitivesManager( scene_.getDirPath(),
+                                                                                                          scene_.getTempDirPath(),
+                                                                                                          commandsHistoric_,
+                                                                                                          log_,
+                                                                                                          resourceIDsGenerator_ ) );
         });
 
         // Create a directional light with with no owner and synchronize it in
         // the commands historic.
-        const ResourceID DIRECTIONAL_LIGHT_ID( NO_USER, 1 );
         std::uint8_t lightColor[4] = { 255, 255, 255, 255 };
         lightsManager_.requestDirectionalLightCreation( DIRECTIONAL_LIGHT_ID );
         addCommand( CommandConstPtr( new DirectionalLightCreationCommand( NO_USER, DIRECTIONAL_LIGHT_ID, lightColor ) ) );
 
         // Create a camera with no owner and syncrhonize it in the commands
         // historic.
-        const ResourceID CAMERA_ID( NO_USER, 2 );
         const glm::vec3 cameraCenter( 0.0f, 0.0f, 0.0f );
         const glm::vec3 cameraEye( 0.5f, 0.5f, 0.0f );
         const glm::vec3 cameraUp( -0.5f, 0.5f, 0.0f );
