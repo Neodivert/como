@@ -36,6 +36,8 @@ ServerPrimitivesManager::ServerPrimitivesManager(const std::string& sceneDirPath
 {
     // Sync server's local primitives directory.
     syncPrimitivesDir();
+
+    createCategory( "Uncategorized" );
 }
 
 
