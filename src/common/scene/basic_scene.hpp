@@ -23,10 +23,11 @@
 #include <common/utilities/log.hpp>
 #include <boost/filesystem.hpp>
 #include <common/utilities/paths.hpp> // TODO: Move SCENES_DIR constant here.
+#include <common/utilities/lockable.hpp>
 
 namespace como {
 
-class BasicScene
+class BasicScene : public Lockable
 {
     private:
         std::string sceneName_;
