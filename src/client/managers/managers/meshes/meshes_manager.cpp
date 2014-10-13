@@ -40,8 +40,10 @@ MeshesManager::MeshesManager( ServerInterfacePtr server, LogPtr log, MaterialsMa
  * 4. Getters
  ***/
 
+// TODO: Remove and use ResourcesManager::resourceName() instead.
 std::string MeshesManager::getResourceName( const ResourceID& resourceID ) const
 {
+    lock();
     for( const auto& meshesSelection : resourcesSelections_ ){
         if( meshesSelection.second->containsResource( resourceID ) ){
             return meshesSelection.second->getResourceName( resourceID );
@@ -54,6 +56,7 @@ std::string MeshesManager::getResourceName( const ResourceID& resourceID ) const
 
 ElementsMeetingCondition MeshesManager::displaysVertexNormals() const
 {
+    lock();
     const ElementsMeetingCondition firstSelectionValue =
             resourcesSelections_.begin()->second->displaysVertexNormals();
 
@@ -73,6 +76,7 @@ ElementsMeetingCondition MeshesManager::displaysVertexNormals() const
 
 unsigned int MeshesManager::getTotalMeshes() const
 {
+    lock();
     unsigned int totalMeshes = 0;
 
     for( const auto& meshesSelection : resourcesSelections_ ){
@@ -89,6 +93,7 @@ unsigned int MeshesManager::getTotalMeshes() const
 
 void MeshesManager::displayVertexNormals( bool display )
 {
+    lock();
     newMeshesDisplayVertexNormals_ = display;
 
     for( auto& meshesSelection : resourcesSelections_ ){
@@ -99,6 +104,7 @@ void MeshesManager::displayVertexNormals( bool display )
 
 void MeshesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
 {
+    lock();
     switch( frequency ){
         case MeshEdgesDisplayFrequency::ALWAYS:
             getResourcesSelection( NO_USER )->displayEdges( true );
@@ -116,6 +122,7 @@ void MeshesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
 
 ResourceID MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData )
 {    
+    lock();
     const ResourceID& meshID = reserveResourceIDs( 1 );
     const ResourceID& firstMaterialID = reserveResourceIDs( primitiveData.materialsInfo_.size() );
 
@@ -127,6 +134,7 @@ ResourceID MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData
 
 void MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData, const ResourceID& meshID, const ResourceID& firstMaterialID )
 {
+    lock();
     std::unique_ptr< Mesh > mesh( new ImportedMesh( meshID, firstMaterialID, primitiveData, *materialsManager_, newMeshesDisplayVertexNormals_ ) );
 
     addMesh( std::move( mesh ), meshID );
@@ -135,6 +143,7 @@ void MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData, cons
 
 ResourceID MeshesManager::addMesh( MeshPtr mesh )
 {
+    lock();
     ResourceID meshID = reserveResourceIDs( 1 );
 
     addMesh( std::move( mesh ), meshID );
@@ -145,6 +154,7 @@ ResourceID MeshesManager::addMesh( MeshPtr mesh )
 
 void MeshesManager::addMesh( MeshPtr mesh, const ResourceID& meshID )
 {
+    lock();
     getResourcesSelection( meshID.getCreatorID() )->addResource( meshID, std::move( mesh ) );
 }
 
@@ -155,12 +165,14 @@ void MeshesManager::addMesh( MeshPtr mesh, const ResourceID& meshID )
 
 void MeshesManager::registerUser( UserID userID )
 {
+    lock();
     resourcesSelections_[ userID ];
 }
 
 
 void MeshesManager::removeUser( UserID userID )
 {
+    lock();
     unlockResourcesSelection( userID );
     resourcesSelections_.erase( userID );
 }
@@ -172,6 +184,7 @@ void MeshesManager::removeUser( UserID userID )
 
 void MeshesManager::lockResource( const ResourceID &resourceID, UserID newOwner )
 {
+    lock();
     ResourcesManager::lockResource( resourceID, newOwner );
 
     materialsManager_->lockMeshMaterials( resourceID, newOwner );
@@ -182,6 +195,7 @@ void MeshesManager::lockResource( const ResourceID &resourceID, UserID newOwner 
 
 void MeshesManager::unlockResourcesSelection( UserID currentOwner )
 {   
+    lock();
     ResourcesManager::unlockResourcesSelection( currentOwner );
 
     materialsManager_->unlockUserMaterials( currentOwner );
@@ -192,6 +206,7 @@ void MeshesManager::unlockResourcesSelection( UserID currentOwner )
 
 void MeshesManager::clearResourcesSelection( UserID currentOwner )
 {
+    lock();
     ResourcesManager::clearResourcesSelection( currentOwner );
 
     materialsManager_->removeUserMaterials( currentOwner );

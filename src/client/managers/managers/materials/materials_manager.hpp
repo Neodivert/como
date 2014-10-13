@@ -36,7 +36,7 @@ namespace como {
 
 typedef std::map< ResourceID, UserID > MaterialsOwnershipMap;
 
-class MaterialsManager : public ServerWriter, public Observer, public ObservableContainer<ResourceID>
+class MaterialsManager : public ServerWriter, public Observer, public ObservableContainer<ResourceID>, public Lockable
 {
     // TODO: Use a better alternative for only allowing MeshesManager to
     // lock and remove materials and anyone to retrieve current material

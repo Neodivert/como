@@ -26,13 +26,12 @@
 #include <client/managers/managers/primitives/spheres_factory.hpp>
 #include <client/managers/managers/textures/textures_manager.hpp>
 
-
 namespace como {
 
 class GeometricPrimitivesFactory;
 typedef std::shared_ptr< GeometricPrimitivesFactory > GeometricPrimitivesFactoryPtr;
 
-class GeometricPrimitivesFactory : public ServerWriter
+class GeometricPrimitivesFactory : public ServerWriter, public Lockable
 {
     public:
         /***

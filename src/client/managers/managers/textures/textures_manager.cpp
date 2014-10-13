@@ -43,6 +43,7 @@ TexturesManager::TexturesManager( OpenGL& openGL, ServerInterfacePtr server, con
 
 ResourceID TexturesManager::loadTexture( std::string imagePath )
 {
+    lock();
     ResourceID textureID = reserveResourceIDs( 1 );
 
     loadTexture( textureID, imagePath );
@@ -64,6 +65,7 @@ ResourceID TexturesManager::loadTexture( std::string imagePath )
 
 std::list<TextureData> TexturesManager::getTexturesData() const
 {
+    lock();
     std::list<TextureData> texturesDataList;
 
     for( const auto& texturePair : textures_ ){
@@ -76,6 +78,7 @@ std::list<TextureData> TexturesManager::getTexturesData() const
 
 TextureData TexturesManager::getTextureData( const ResourceID& textureID ) const
 {
+    lock();
     return textures_.at( textureID )->data();
 }
 
@@ -86,6 +89,7 @@ TextureData TexturesManager::getTextureData( const ResourceID& textureID ) const
 
 void TexturesManager::executeRemoteCommand( const TextureCommand &command )
 {
+    lock();
     switch( command.getType() ){
         case TextureCommandType::TEXTURE_CREATION:{
             const TextureCreationCommand& textureCreationCommand =
@@ -103,6 +107,7 @@ void TexturesManager::executeRemoteCommand( const TextureCommand &command )
 
 void TexturesManager::sendTextureToShader( const ResourceID& resourceID, glm::vec2 textureOffset, glm::vec2 textureScale ) const
 {   
+    lock();
     // Send texture's pixels to shader.
     textures_.at( resourceID )->sendToShader( textureOffset, textureScale );
 }
@@ -114,6 +119,7 @@ void TexturesManager::sendTextureToShader( const ResourceID& resourceID, glm::ve
 
 void TexturesManager::loadTexture( const ResourceID &textureID, std::string imagePath )
 {
+    lock();
     boost::system::error_code errorCode;
     std::string dstPath =
             TEXTURES_DIR_PATH_ +

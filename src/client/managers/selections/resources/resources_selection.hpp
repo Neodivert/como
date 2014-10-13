@@ -25,11 +25,12 @@
 #include <memory>
 #include <queue>
 #include <common/resources/resource.hpp>
+#include <common/utilities/lockable.hpp>
 
 namespace como {
 
 template <class ResourceType>
-class ResourcesSelection : public virtual Observable {
+class ResourcesSelection : public virtual Observable, public Lockable {
 
     static_assert( std::is_base_of<Resource, ResourceType>::value,
                    "ResourcesSelection - T must be a descendant of Resource" );
@@ -96,6 +97,7 @@ class ResourcesSelection : public virtual Observable {
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::addResource( ResourceID id, std::unique_ptr< ResourceType > resource, bool notifyObservers )
 {
+    lock();
     this->resources_[id] = std::move( resource );
 
     if( notifyObservers ){
@@ -107,6 +109,7 @@ void ResourcesSelection<ResourceType>::addResource( ResourceID id, std::unique_p
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::removeResource( ResourceID id )
 {
+    lock();
     this->resources_.erase( id );
 
     this->notifyObservers();
@@ -120,6 +123,7 @@ void ResourcesSelection<ResourceType>::removeResource( ResourceID id )
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::moveResource( ResourceID resourceID, ResourcesSelection<ResourceType>& dstSelection )
 {
+    // TODO: lock(); or deadlock?
     // Don't notify observers when adding resource to destiny.
     // Observers may query source selection, which holds a
     // null "moved" pointer at that time.
@@ -132,6 +136,7 @@ void ResourcesSelection<ResourceType>::moveResource( ResourceID resourceID, Reso
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::moveAll( ResourcesSelection<ResourceType>& dstSelection )
 {
+    // TODO: lock(); or deadlock?
     // TODO: Maybe a more efficient way?
     for( auto& resourcePair : this->resources_ ){
         dstSelection.addResource( resourcePair.first, std::move( resourcePair.second ), false );

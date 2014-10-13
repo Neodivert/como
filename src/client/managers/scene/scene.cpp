@@ -161,36 +161,42 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
 
 std::shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
 {
+    lock();
     return oglContext_;
 }
 
 
 UsersManagerPtr Scene::getUsersManager() const
 {
+    lock();
     return usersManager_;
 }
 
 
 MeshesManagerPtr Scene::getMeshesManager() const
 {
+    lock();
     return entitiesManager_->getMeshesManager();
 }
 
 
 MaterialsManagerPtr Scene::getMaterialsManager() const
 {
+    lock();
     return materialsManager_;
 }
 
 
 LightsManagerPtr Scene::getLightsManager() const
 {
+    lock();
     return entitiesManager_->getLightsManager();
 }
 
 
 ClientPrimitivesManagerPtr Scene::getPrimitivesManager() const
 {
+    lock();
     return primitivesManager_;
 }
 
@@ -203,30 +209,35 @@ EntitiesManagerPtr Scene::getEntitiesManager() const
 
 GeometricPrimitivesFactoryPtr Scene::getGeometricPrimitivesFactory() const
 {
+    lock();
     return geometricPrimitivesFactory_  ;
 }
 
 
 TextureWallsManager *Scene::getTextureWallsManager() const
 {
+    lock();
     return textureWallsManager_.get();
 }
 
 
 TexturesManager *Scene::getTexturesManager() const
 {
+    lock();
     return texturesManager_.get();
 }
 
 
 OpenGLPtr Scene::getOpenGL() const
 {
+    lock();
     return openGL_;
 }
 
 
 AuxiliarLinesRenderer *Scene::linesRenderer() const
 {
+    lock();
     return linesRenderer_.get();
 }
 
@@ -243,6 +254,7 @@ void Scene::setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloa
 
 void Scene::takeOpenGLContext()
 {
+    lock();
     oglContext_->makeCurrent( this );
 }
 
@@ -270,6 +282,8 @@ void Scene::emitRenderNeeded()
 
 void Scene::executeRemoteCommand( std::shared_ptr< const Command > command )
 {
+    lock();
+
     log_->debug( "Scene - Executing remote command(",
                  commandTargetStrings[static_cast<unsigned int>( command->getTarget() )],
                  ") ...\n" );
@@ -339,6 +353,7 @@ void Scene::run()
 
 void Scene::update()
 {
+    lock();
     notifyObservers();
 }
 

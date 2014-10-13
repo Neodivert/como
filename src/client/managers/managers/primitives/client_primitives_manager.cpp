@@ -41,6 +41,7 @@ ClientPrimitivesManager::ClientPrimitivesManager( std::string sceneDirPath, std:
 
 std::string ClientPrimitivesManager::createPrimitive( std::string filePath, ResourceID categoryID )
 {
+    lock();
     ResourceID id = importMeshFile( filePath, categoryID );
 
     log_->debug( "Primitive imported. Sending command\n" );
@@ -61,6 +62,7 @@ std::string ClientPrimitivesManager::createPrimitive( std::string filePath, Reso
 
 ResourceID ClientPrimitivesManager::importMeshFile( std::string srcFilePath, ResourceID categoryID )
 {
+    lock();
     OBJPrimitivesImporter primitivesImporter;
     PrimitiveInfo primitive;
     char primitiveNameSuffix[64];
@@ -81,6 +83,7 @@ ResourceID ClientPrimitivesManager::importMeshFile( std::string srcFilePath, Res
 
 void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 {
+    lock();
     ImportedPrimitiveData primitiveData;
     primitiveData.importFromFile( getPrimitiveFilePath( primitiveID ) );
 
@@ -98,6 +101,7 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 // FIXME: Duplicated code.
 void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID primitiveID, ResourceID meshID, ResourceID firstMaterialID )
 {
+    lock();
     (void)( userID );
 
     ImportedPrimitiveData primitiveData;
@@ -115,6 +119,7 @@ void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID pr
 
 void ClientPrimitivesManager::executeRemoteCommand( const PrimitiveCategoryCommand& command )
 {
+    lock();
     switch( command.getType() ){
         case PrimitiveCategoryCommandType::PRIMITIVE_CATEGORY_CREATION:{
             const PrimitiveCategoryCreationCommand& categoryCreationCommand =
@@ -128,6 +133,7 @@ void ClientPrimitivesManager::executeRemoteCommand( const PrimitiveCategoryComma
 
 void ClientPrimitivesManager::executeRemoteCommand( const PrimitiveCommand& command )
 {
+    lock();
     switch( command.getType() ){
         case PrimitiveCommandType::PRIMITIVE_CREATION:{
             const PrimitiveCreationCommand& primitiveCreationCommand =
