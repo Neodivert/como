@@ -16,14 +16,15 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include <string>
-
 #ifndef ABSTRACT_TEXTURES_MANAGER_HPP
 #define ABSTRACT_TEXTURES_MANAGER_HPP
 
+#include <string>
+#include <common/utilities/lockable.hpp>
+
 namespace como {
 
-class AbstractTexturesManager
+class AbstractTexturesManager : public Lockable
 {
     public:
         /***

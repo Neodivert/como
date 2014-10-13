@@ -4,10 +4,11 @@
 #include <common/commands/resource_commands/resource_commands.hpp>
 #include <common/commands/resources_selection_commands/resources_selection_command.hpp>
 #include <common/utilities/log.hpp>
+#include <common/utilities/lockable.hpp>
 
 namespace como {
 
-class AbstractResourcesOwnershipManager
+class AbstractResourcesOwnershipManager : public Lockable
 {
     private:
         LogPtr log_;

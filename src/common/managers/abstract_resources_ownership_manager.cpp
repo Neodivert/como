@@ -36,6 +36,7 @@ AbstractResourcesOwnershipManager::AbstractResourcesOwnershipManager( LogPtr log
 
 void AbstractResourcesOwnershipManager::executeResourceCommand( const ResourceCommand& command )
 {
+    lock();
     switch( command.getType() ){
         case ResourceCommandType::RESOURCE_LOCK:
             lockResource( command.getResourceID(), command.getUserID() );
@@ -51,6 +52,7 @@ void AbstractResourcesOwnershipManager::executeResourceCommand( const ResourceCo
 
 void AbstractResourcesOwnershipManager::executeResourcesSelectionCommand( const ResourcesSelectionCommand& command )
 {
+    lock();
     switch( command.getType() ){
         case ResourcesSelectionCommandType::SELECTION_UNLOCK:
             unlockResourcesSelection( command.getUserID() );
@@ -67,6 +69,7 @@ void AbstractResourcesOwnershipManager::executeResourcesSelectionCommand( const 
 
 LogPtr AbstractResourcesOwnershipManager::log()
 {
+    lock();
     return log_;
 }
 
