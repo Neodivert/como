@@ -68,6 +68,7 @@ void Scene::processCommand( const Command& command )
 void Scene::saveToFile( const std::string &fileName, bool replace )
 {
     lock();
+    char buffer[8];
     std::string filePath = SAVED_SCENES_DIR_PATH + '/' + fileName;
 
     if( !replace && boost::filesystem::exists( filePath ) ){
@@ -82,6 +83,12 @@ void Scene::saveToFile( const std::string &fileName, bool replace )
         throw FileNotOpenException( filePath );
     }
 
+    // Save the "next user's ID" to the file.
+    const PackableUserID nextUserID( nextUserID_ );
+    nextUserID.pack( buffer );
+    file.write( buffer, nextUserID.getPacketSize() );
+
+    // Save scene's resources to file.
     resourcesSyncLibrary_.saveToFile( file );
 
     file.close();
@@ -90,11 +97,18 @@ void Scene::saveToFile( const std::string &fileName, bool replace )
 
 void Scene::loadFromFile( const std::string &filePath )
 {
+    char buffer[8];
     lock();
     std::ifstream file( filePath, std::ios_base::binary );
     if( !file.is_open() ){
         throw FileNotOpenException( filePath );
     }
+
+    // Load the "next user's ID" from the file.
+    PackableUserID nextUserID;
+    file.read( buffer, nextUserID.getPacketSize() );
+    nextUserID.unpack( buffer );
+    nextUserID_ = nextUserID.getValue();
 
     resourcesSyncLibrary_.readFromFile( file );
 
