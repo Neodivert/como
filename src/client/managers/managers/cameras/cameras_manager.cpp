@@ -48,6 +48,7 @@ const Camera &CamerasManager::activeCamera() const
 
 void CamerasManager::executeRemoteCommand( const CameraCommand &command )
 {
+    lock();
     switch( command.getType() ){
         case CameraCommandType::CAMERA_CREATION:{
             const CameraCreationCommand& creationCommand =
@@ -68,6 +69,7 @@ void CamerasManager::executeRemoteCommand( const CameraCommand &command )
 
 void CamerasManager::clearResourcesSelection( UserID currentOwner )
 {
+    // Don't delete the camera, simply unlock it.
     unlockResourcesSelection( currentOwner );
 }
 
@@ -81,8 +83,7 @@ void CamerasManager::createCamera( const ResourceID &cameraID,
                                    const glm::vec3 &cameraEye,
                                    const glm::vec3 &cameraUp )
 {
-
-
+    lock();
     std::unique_ptr< Camera > camera( new Camera( *openGL_,
                                                   cameraCenter,
                                                   cameraEye,

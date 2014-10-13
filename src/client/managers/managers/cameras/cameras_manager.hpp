@@ -27,6 +27,8 @@ namespace como {
 class CamerasManager;
 typedef std::unique_ptr< CamerasManager > CamerasManagerPtr;
 
+// NOTE / FIXME: Although this is a cameraS manager, it currently uses only one
+// active and undeletable camera.
 class CamerasManager : public SpecializedEntitiesManager< Camera, CamerasSelection, LocalCamerasSelection >
 {
     public:

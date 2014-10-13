@@ -60,6 +60,8 @@ EntitiesManager::EntitiesManager( ServerInterfacePtr server, LogPtr log, OpenGL*
 
 void EntitiesManager::createUserSelection( UserID userID, const glm::vec4& selectionColor )
 {
+    lock();
+
     // TODO: Apply to all managers uniformly.
     lightsManager_->createResourcesSelection( userID, selectionColor );
     meshesManager_->createResourcesSelection( userID, selectionColor );
@@ -82,6 +84,7 @@ void EntitiesManager::removeUserSelection()
 
 void EntitiesManager::removeUserSelection( UserID userID )
 {
+    lock();
     lightsManager_->removeResourcesSelection( userID );
     meshesManager_->removeResourcesSelection( userID );
     camerasManager_->removeResourcesSelection( userID );
@@ -96,6 +99,7 @@ void EntitiesManager::removeUserSelection( UserID userID )
 
 LocalEntitiesSelection* EntitiesManager::getLocalSelection() const
 {
+    lock();
     return dynamic_cast< LocalEntitiesSelection* >( entitiesSelections_.at( localUserID() ).get() );
 }
 
@@ -120,6 +124,7 @@ CamerasManager* EntitiesManager::getCamerasManager()
 
 bool EntitiesManager::containsResource(const ResourceID &resourceID) const
 {
+    lock();
     for( const auto& manager : managers_ ){
         if( manager->containsResource( resourceID ) ){
             return true;
@@ -135,6 +140,8 @@ bool EntitiesManager::containsResource(const ResourceID &resourceID) const
 
 bool EntitiesManager::pick(const glm::vec3 &rayOrigin, glm::vec3 rayDirection, ResourceID &pickedElement, float &t, const float &MAX_T) const
 {
+    lock();
+
     unsigned int nIntersectedManagers = 0;
     float maxT = MAX_T;
 

@@ -35,8 +35,10 @@ LightsManager::LightsManager( ServerInterfacePtr server, LogPtr log, OpenGL* ope
  * 3. Getters
  ***/
 
+// TODO: Remove this method and use a ResourcesManager::getResourceName one.
 std::string LightsManager::getResourceName( const ResourceID& lightID ) const
 {
+    lock();
     (void)( lightID );
     return "Light";
 }
@@ -48,6 +50,7 @@ std::string LightsManager::getResourceName( const ResourceID& lightID ) const
 
 void LightsManager::requestDirectionalLightCreation()
 {
+    lock();
     // Create a default light color.
     Color lightColor( 255, 255, 255, 255 );
 
@@ -61,6 +64,7 @@ void LightsManager::requestDirectionalLightCreation()
 
 void LightsManager::addDirectionalLight( const ResourceID& lightID, const Color& lightColor )
 {
+    lock();
     std::unique_ptr< DirectionalLight >
             light( new DirectionalLight( lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), *openGL_ ) );
 
@@ -79,6 +83,7 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Color&
 // TODO: Change this and use a LightCommandConstPtr
 void LightsManager::executeRemoteCommand( const LightCommand& command )
 {
+    lock();
     switch( command.getType() ){
         case LightCommandType::LIGHT_CREATION:{
             const LightCreationCommand& lightCreationCommand =
@@ -136,6 +141,7 @@ void LightsManager::executeRemoteCommand( const LightCommand& command )
 
 void LightsManager::sendLightsToShader( OpenGL &openGL, const glm::mat4& viewMatrix ) const
 {
+    lock();
     openGL.setShadingMode( ShadingMode::SOLID_LIGHTING );
     for( const auto& lightSelection : resourcesSelections_ ){
         lightSelection.second->sendToShader( openGL, viewMatrix );
@@ -149,6 +155,7 @@ void LightsManager::sendLightsToShader( OpenGL &openGL, const glm::mat4& viewMat
 
 void LightsManager::update()
 {
+    lock();
     notifyObservers();
 }
 
