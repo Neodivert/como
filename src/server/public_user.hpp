@@ -30,6 +30,7 @@
 #include <common/users/user.hpp>
 #include <queue>
 #include <common/packets/packet.hpp> // Socket type.
+#include <common/utilities/lockable.hpp>
 
 namespace como {
 
@@ -41,7 +42,7 @@ typedef std::function< void (const boost::system::error_code& errorCode,
                              UserID userID,
                              const SceneUpdatePacket& sceneUpdate) > ProcessSceneUpdatePacketCallback;
 
-class PublicUser : public User
+class PublicUser : public User, public Lockable
 {
     private:
         // I/O service.
@@ -61,7 +62,6 @@ class PublicUser : public User
         SceneUpdatePacket sceneUpdatePacketFromUser_;
         SceneUpdatePacket outSceneUpdatePacketPacket_;
 
-        mutable std::recursive_mutex mutex_;
         bool synchronizing_;
 
 

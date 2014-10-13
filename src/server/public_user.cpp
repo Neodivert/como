@@ -62,14 +62,12 @@ PublicUser::PublicUser( UserID id, const char* name,
 
 void PublicUser::requestUpdate()
 {
-    mutex_.lock();
+    lock();
 
     if( !updateRequested_ && needsSceneUpdatePacket() ){
         updateRequested_ = true;
         io_service_->post( std::bind( &PublicUser::sendNextSceneUpdatePacket, this ) );
     }
-
-    mutex_.unlock();
 }
 
 /*
@@ -90,10 +88,9 @@ void PublicUser::update()
 
 void PublicUser::readSceneUpdatePacket()
 {
-    mutex_.lock();
+    lock();
     sceneUpdatePacketFromUser_.clear();
     sceneUpdatePacketFromUser_.asyncRecv( socket_, boost::bind( &PublicUser::onReadSceneUpdatePacket, this, _1, _2 ) );
-    mutex_.unlock();
 }
 
 
@@ -110,20 +107,15 @@ void PublicUser::onReadSceneUpdatePacket( const boost::system::error_code& error
 
 bool PublicUser::needsSceneUpdatePacket() const
 {
-    bool res;
-
-    mutex_.lock();
-    res = ( nextCommand_ < commandsHistoric_->getSize() ) ||
+    lock();
+    return ( nextCommand_ < commandsHistoric_->getSize() ) ||
             ( pendingResponseCommands_.size() );
-    mutex_.unlock();
-
-    return res;
 }
 
 
 void PublicUser::sendNextSceneUpdatePacket()
 {
-    mutex_.lock();
+    lock();
 
     updateRequested_ = false;
 
@@ -153,13 +145,12 @@ void PublicUser::sendNextSceneUpdatePacket()
         synchronizing_ = true;
     }
 //std::dynamic_pointer_cast<const SceneUpdatePacket>( packet )
-    mutex_.unlock();
 }
 
 
 void PublicUser::onWriteSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet )
 {
-    mutex_.lock();
+    lock();
 
     if( errorCode ){
         // FIXME: If there are an async read and an async write on the socket
@@ -180,8 +171,6 @@ void PublicUser::onWriteSceneUpdatePacket( const boost::system::error_code& erro
             synchronizing_ = false;
         }
     }
-
-    mutex_.unlock();
 }
 
 
@@ -192,12 +181,9 @@ void PublicUser::onWriteSceneUpdatePacket( const boost::system::error_code& erro
 
 void PublicUser::addResponseCommand( CommandConstPtr responseCommand)
 {
-    mutex_.lock();
-
+    lock();
     pendingResponseCommands_.push( std::move( responseCommand ) );
     requestUpdate();
-
-    mutex_.unlock();
 }
 
 
@@ -207,13 +193,8 @@ void PublicUser::addResponseCommand( CommandConstPtr responseCommand)
 
 std::uint32_t PublicUser::getColor()
 {
-    std::uint32_t color;
-
-    mutex_.lock();
-    color = color_;
-    mutex_.unlock();
-
-    return color;
+    lock();
+    return color_;
 }
 
 } // namespace como

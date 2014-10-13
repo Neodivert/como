@@ -37,6 +37,8 @@ ResourcesOwnershipManager::ResourcesOwnershipManager( UsersMap& usersMap, LogPtr
 
 void ResourcesOwnershipManager::registerResource(const ResourceID& resourceID, UserID ownerID, bool deletable )
 {
+    lock();
+
     resourcesOwnershipMap_[ resourceID ] = ownerID;
 
     if( !deletable ){
@@ -53,6 +55,8 @@ void ResourcesOwnershipManager::registerResource(const ResourceID& resourceID, U
 
 void ResourcesOwnershipManager::removeUser( UserID userID )
 {
+    lock();
+
     unlockResourcesSelection( userID );
 }
 
@@ -63,6 +67,7 @@ void ResourcesOwnershipManager::removeUser( UserID userID )
 
 void ResourcesOwnershipManager::lockResource( const ResourceID& resourceID, UserID userID )
 {
+    lock();
     log()->debug( "User (", userID, ") tries to lock resource (", resourceID, "): " );
     if( resourcesOwnershipMap_.at( resourceID ) == NO_USER ){
         resourcesOwnershipMap_.at( resourceID ) = userID;
@@ -78,6 +83,7 @@ void ResourcesOwnershipManager::lockResource( const ResourceID& resourceID, User
 
 void ResourcesOwnershipManager::unlockResourcesSelection( UserID userID )
 {
+    lock();
     log()->debug( "(User: ", userID, ") Unlocking Selection\n" );
     for( auto& resourceOwnership : resourcesOwnershipMap_ ){
         if( resourceOwnership.second == userID ){
@@ -88,6 +94,7 @@ void ResourcesOwnershipManager::unlockResourcesSelection( UserID userID )
 
 void ResourcesOwnershipManager::deleteResourcesSelection( UserID userID )
 {
+    lock();
     log()->debug( "(User: ", userID, ") Deleting Selection\n" );
     ResourcesOwnershipMap::iterator currentElement, nextElement;
 
@@ -112,6 +119,7 @@ void ResourcesOwnershipManager::deleteResourcesSelection( UserID userID )
 
 void ResourcesOwnershipManager::processLockResponse( const ResourceID& resourceID, bool lockResponse )
 {
+    lock();
     // TODO: Make this trick unnecessary.
     (void)( resourceID );
     (void)( lockResponse );
