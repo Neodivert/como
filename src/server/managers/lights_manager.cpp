@@ -41,6 +41,7 @@ LightsManager::LightsManager( unsigned int maxDirectionalLights,
 
 void LightsManager::update( ContainerAction lastContainerAction, ResourceID lastElementModified )
 {
+    lock();
     if( ( lastContainerAction == ContainerAction::ELEMENT_DELETION )
             && lights_.count( lastElementModified )  ){
         lights_.erase( lastElementModified );
@@ -54,6 +55,7 @@ void LightsManager::update( ContainerAction lastContainerAction, ResourceID last
 
 bool LightsManager::requestDirectionalLightCreation( const ResourceID& lightID )
 {
+    lock();
     if( lights_.size() < MAX_DIRECTIONAL_LIGHTS ){
         lights_.insert( lightID );
         resourcesOwnershipManager_->registerResource( lightID, lightID.getCreatorID() );

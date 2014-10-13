@@ -40,6 +40,7 @@ ResourcesSynchronizationLibrary::ResourcesSynchronizationLibrary( CommandsHistor
 
 void ResourcesSynchronizationLibrary::processCommand( const Command &command )
 {
+    lock();
     switch( command.getTarget() ){
         case CommandTarget::TEXTURE:{
             const TextureCommand& textureCommand =
@@ -66,6 +67,7 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
 
 void ResourcesSynchronizationLibrary::saveToFile( std::ofstream& file ) const
 {
+    lock();
     CommandsFileParser fileParser( unpackingDirPath_ );
 
     // First pass: write creation commands to file.
@@ -88,6 +90,7 @@ void ResourcesSynchronizationLibrary::saveToFile( std::ofstream& file ) const
 
 void ResourcesSynchronizationLibrary::readFromFile( std::ifstream& file )
 {
+    lock();
     CommandsFileParser fileParser( unpackingDirPath_ );
     CommandPtr command;
 

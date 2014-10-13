@@ -55,6 +55,7 @@ Scene::~Scene()
 
 void Scene::processCommand( const Command& command )
 {
+    lock();
     resourcesSyncLibrary_.processCommand( command );
 }
 
@@ -65,6 +66,7 @@ void Scene::processCommand( const Command& command )
 
 void Scene::saveToFile( const std::string &fileName, bool replace )
 {
+    lock();
     std::string filePath = SAVED_SCENES_DIR_PATH + '/' + fileName;
 
     if( !replace && boost::filesystem::exists( filePath ) ){
@@ -87,6 +89,7 @@ void Scene::saveToFile( const std::string &fileName, bool replace )
 
 void Scene::loadFromFile( const std::string &filePath )
 {
+    lock();
     std::ifstream file( filePath, std::ios_base::binary );
     if( !file.is_open() ){
         throw FileNotOpenException( filePath );

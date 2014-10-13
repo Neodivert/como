@@ -22,10 +22,11 @@
 #include <map>
 #include <server/sync_data/resource_sync_data.hpp>
 #include <server/commands_historic.hpp>
+#include <common/utilities/lockable.hpp>
 
 namespace como {
 
-class ResourcesSynchronizationLibrary
+class ResourcesSynchronizationLibrary : public Lockable
 {
     public:
         /***

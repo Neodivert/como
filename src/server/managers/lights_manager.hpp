@@ -25,10 +25,11 @@
 #include <common/utilities/observable_container/container_observer.hpp>
 #include <server/commands_historic.hpp>
 #include <server/resources_ownership_manager.hpp>
+#include <common/utilities/lockable.hpp>
 
 namespace como {
 
-class LightsManager : public ContainerObserver<ResourceID>
+class LightsManager : public ContainerObserver<ResourceID>, public Lockable
 {
     public:
         /***
