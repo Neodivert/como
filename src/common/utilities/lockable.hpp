@@ -20,6 +20,7 @@
 #define MONITOR_HPP
 
 #include <mutex>
+#include <memory> // std::unique_ptr
 
 namespace como {
 
@@ -51,8 +52,7 @@ class Lockable
         /***
          * 4. Locking / unlocking
          ***/
-        void lock() const;
-        void unlock() const;
+        std::unique_ptr< std::lock_guard<std::recursive_mutex> > lock() const;
 
 
     private:

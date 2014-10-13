@@ -61,7 +61,11 @@ AbstractPrimitivesManager::~AbstractPrimitivesManager()
 
 PrimitiveInfo AbstractPrimitivesManager::getPrimitiveInfo( ResourceID id ) const
 {
-    return primitiveInfo_.at( id );
+    lock();
+    PrimitiveInfo primitiveInfo = primitiveInfo_.at( id );
+
+
+    return primitiveInfo;
 }
 
 
@@ -71,26 +75,41 @@ PrimitiveInfo AbstractPrimitivesManager::getPrimitiveInfo( ResourceID id ) const
 
 std::string AbstractPrimitivesManager::getPrimitiveFilePath( ResourceID id ) const
 {
-    return primitiveInfo_.at( id ).filePath;
+    lock();
+    std::string filePath = primitiveInfo_.at( id ).filePath;
+
+
+    return filePath;
 }
 
 std::string AbstractPrimitivesManager::getPrimitiveRelativePath(ResourceID id) const
 {
+    lock();
     std::string relPath = primitiveInfo_.at( id ).filePath;
     relPath = relPath.substr( scenePrimitivesDir_.size() );
+
 
     return relPath;
 }
 
 std::string AbstractPrimitivesManager::getCategoryRelativePath( ResourceID id ) const
 {
-    return categoryNames_.at( id );
+    lock();
+    std::string categoryRelativePath = categoryNames_.at( id );
+
+
+    return categoryRelativePath;
 }
 
 
 std::string AbstractPrimitivesManager::getCategoryAbsoluteePath( ResourceID id ) const
 {
-    return scenePrimitivesDir_ + '/' + getCategoryRelativePath( id );
+    lock();
+    std::string categoryAbsolutePath =
+            scenePrimitivesDir_ + '/' + getCategoryRelativePath( id );
+
+
+    return categoryAbsolutePath;
 }
 
 
@@ -98,9 +117,11 @@ ResourcesList AbstractPrimitivesManager::getCategoriesList() const
 {
     ResourcesList categoriesList;
 
+    lock();
     for( auto category : categoryNames_ ){
         categoriesList.push_back( std::pair< ResourceID, std::string >( category.first, category.second ) );
     }
+
 
     return categoriesList;
 }
@@ -112,18 +133,21 @@ ResourcesList AbstractPrimitivesManager::getCategoriesList() const
 
 void AbstractPrimitivesManager::registerCategory( ResourceID id, std::string name )
 {
+    lock();
     if( categoryNameInUse( name ) ){
         throw std::runtime_error( std::string( "Category name [" ) +
                                   name +
                                   "] already in use" );
-    }
-
+    } 
     categoryNames_[ id ] = name;
+
 }
 
 
 void AbstractPrimitivesManager::createCategory( ResourceID id, std::string name )
 {
+    lock();
+
     boost::system::error_code errorCode;
 
     AbstractPrimitivesManager::registerCategory( id, name );
@@ -134,6 +158,8 @@ void AbstractPrimitivesManager::createCategory( ResourceID id, std::string name 
     }
 
     log_->debug( "Category created [", scenePrimitivesDir_ + '/' + name, "]\n" );
+
+
 }
 
 
@@ -143,6 +169,8 @@ void AbstractPrimitivesManager::createCategory( ResourceID id, std::string name 
 
 void AbstractPrimitivesManager::registerPrimitive( ResourceID id, PrimitiveInfo primitive )
 {
+    lock();
+
     log_->debug( "Primitive registered - id (", id,
                  "), name (", primitive.name,
                  ") - category(", primitive.category, ")",
@@ -158,6 +186,8 @@ void AbstractPrimitivesManager::registerPrimitive( ResourceID id, PrimitiveInfo 
 
 bool AbstractPrimitivesManager::categoryNameInUse( std::string categoryName ) const
 {
+    lock();
+
     for( auto categoryPair : categoryNames_ ){
         if( categoryPair.second == categoryName ){
             return true;

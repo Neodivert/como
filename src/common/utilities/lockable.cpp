@@ -24,15 +24,9 @@ namespace como {
  * 4. Locking / unlocking
  ***/
 
-void Lockable::lock() const
+std::unique_ptr< std::lock_guard<std::recursive_mutex> > Lockable::lock() const
 {
-    mutex_.lock();
-}
-
-
-void Lockable::unlock() const
-{
-    mutex_.unlock();
+    return std::unique_ptr< std::lock_guard<std::recursive_mutex> >( new std::lock_guard<std::recursive_mutex>( mutex_ ) );
 }
 
 } // namespace como

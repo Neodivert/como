@@ -113,7 +113,6 @@ void Log::write( T value )
 {
     lock();
     out_ << value;
-    unlock();
 }
 
 
@@ -123,7 +122,6 @@ void Log::write( T value, Args... args )
     lock();
     out_ << value;
     write( args... );
-    unlock();
 }
 
 

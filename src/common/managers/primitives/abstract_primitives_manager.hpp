@@ -26,6 +26,7 @@
 #include <common/ids/resource_id.hpp>
 #include <list>
 #include <common/primitives/primitive_info.hpp>
+#include <common/utilities/lockable.hpp>
 
 namespace como {
 
@@ -38,7 +39,7 @@ enum class PrimitiveComponent {
 // TODO: Move this
 typedef std::list< std::pair< ResourceID, std::string > > ResourcesList;
 
-class AbstractPrimitivesManager
+class AbstractPrimitivesManager : public Lockable
 {
     protected:
         std::string scenePrimitivesDir_;
