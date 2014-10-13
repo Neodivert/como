@@ -88,8 +88,6 @@ HEADERS += \
     ../../src/client/managers/selections/resources/local_resources_selection.hpp \
     ../../src/client/managers/selections/lights/local_lights_selection.hpp \
     ../../src/client/managers/selections/meshes/local_meshes_selection.hpp \
-    ../../src/client/managers/selections/materials/materials_selection.hpp \
-    ../../src/client/managers/selections/materials/local_materials_selection.hpp \
     ../../src/client/gui/tools_menu/properties_tab/lights_menu.hpp \
     ../../src/client/models/3d/entity.hpp \
     ../../src/client/models/3d/drawable.hpp \
@@ -183,8 +181,6 @@ SOURCES += \
     ../../src/client/managers/selections/lights/lights_selection.cpp \
     ../../src/client/managers/selections/lights/local_lights_selection.cpp \
     ../../src/client/managers/selections/meshes/local_meshes_selection.cpp \
-    ../../src/client/managers/selections/materials/materials_selection.cpp \
-    ../../src/client/managers/selections/materials/local_materials_selection.cpp \
     ../../src/client/gui/tools_menu/properties_tab/lights_menu.cpp \
     ../../src/client/models/3d/entity.cpp \
     ../../src/client/models/3d/transformable.cpp \

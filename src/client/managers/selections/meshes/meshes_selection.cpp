@@ -36,6 +36,7 @@ MeshesSelection::MeshesSelection( glm::vec4 borderColor ) :
 
 void MeshesSelection::addResource( ResourceID id, std::unique_ptr<Mesh> resource, bool notifyObservers )
 {
+    lock();
     resource->displayEdges( displayEdges_ );
 
     EntitiesSet<Mesh>::addResource( id, std::move( resource ), notifyObservers );
@@ -48,18 +49,21 @@ void MeshesSelection::addResource( ResourceID id, std::unique_ptr<Mesh> resource
 
 bool MeshesSelection::containsResource( const ResourceID& resourceID ) const
 {
+    lock();
     return resources_.count( resourceID );
 }
 
 
 std::string MeshesSelection::getResourceName( const ResourceID& resourceID ) const
 {
+    lock();
     return resources_.at( resourceID )->name();
 }
 
 
 void MeshesSelection::intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle ) const
 {
+    lock();
     for( const auto& mesh : resources_ ){
         mesh.second->intersects( r0, r1, t, triangle );
     }
@@ -67,6 +71,7 @@ void MeshesSelection::intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned
 
 bool MeshesSelection::containsProperty( const void* property ) const
 {
+    lock();
     for( const auto& mesh : resources_ ){
         if( mesh.second->containsProperty( property ) ){
             return true;
@@ -77,6 +82,7 @@ bool MeshesSelection::containsProperty( const void* property ) const
 
 ElementsMeetingCondition MeshesSelection::displaysVertexNormals() const
 {
+    lock();
     // Check whether first mesh in the selection is displaying normals or not.
     bool firstMeshDisplaysVertexNormals = false;
     if( resources_.size() ){
@@ -107,6 +113,7 @@ ElementsMeetingCondition MeshesSelection::displaysVertexNormals() const
 
 void MeshesSelection::displayVertexNormals( bool display )
 {
+    lock();
     for( auto& mesh : resources_ ){
         mesh.second->displayVertexNormals( display );
     }
@@ -116,6 +123,7 @@ void MeshesSelection::displayVertexNormals( bool display )
 
 void MeshesSelection::displayEdges( bool display )
 {
+    lock();
     for( auto& mesh : resources_ ){
         mesh.second->displayEdges( display );
     }

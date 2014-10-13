@@ -49,24 +49,28 @@ EntitiesSelection::EntitiesSelection( LightsSelection* lightsSelection, MeshesSe
 
 glm::vec3 EntitiesSelection::centroid() const
 {
+    lock();
     return centroid_;
 }
 
 
 PivotPointMode EntitiesSelection::pivotPointMode() const
 {
+    lock();
     return pivotPointMode_;
 }
 
 
 glm::vec4 EntitiesSelection::borderColor() const
 {
+    lock();
     return lightsSelection_->borderColor();
 }
 
 
 unsigned int EntitiesSelection::size() const
 {
+    lock();
     unsigned int size = 0;
 
     for( auto selection : specializedEntitiesSelections_ ){
@@ -83,6 +87,7 @@ unsigned int EntitiesSelection::size() const
 
 void EntitiesSelection::setPivotPointMode( PivotPointMode mode )
 {
+    lock();
     pivotPointMode_ = mode;
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->setPivotPointMode( mode );
@@ -92,6 +97,7 @@ void EntitiesSelection::setPivotPointMode( PivotPointMode mode )
 
 void EntitiesSelection::setBorderColor(const glm::vec4 &borderColor)
 {
+    lock();
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->setBorderColor( borderColor );
     }
@@ -104,6 +110,7 @@ void EntitiesSelection::setBorderColor(const glm::vec4 &borderColor)
 
 void EntitiesSelection::translate( glm::vec3 direction )
 {
+    lock();
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->translate( direction );
     }
@@ -112,6 +119,7 @@ void EntitiesSelection::translate( glm::vec3 direction )
 
 void EntitiesSelection::rotateAroundPivot( GLfloat angle, glm::vec3 axis, glm::vec3 pivot)
 {
+    lock();
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->rotateAroundPivot( angle, axis, pivot );
     }
@@ -120,6 +128,7 @@ void EntitiesSelection::rotateAroundPivot( GLfloat angle, glm::vec3 axis, glm::v
 
 void EntitiesSelection::rotateAroundIndividualCentroids( GLfloat angle, glm::vec3 axis)
 {
+    lock();
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->rotateAroundIndividualCentroids( angle, axis );
     }
@@ -128,6 +137,7 @@ void EntitiesSelection::rotateAroundIndividualCentroids( GLfloat angle, glm::vec
 
 void EntitiesSelection::scaleAroundPivot( glm::vec3 scaleFactors, glm::vec3 pivot)
 {
+    lock();
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->scaleAroundPivot( scaleFactors, pivot );
     }
@@ -136,6 +146,7 @@ void EntitiesSelection::scaleAroundPivot( glm::vec3 scaleFactors, glm::vec3 pivo
 
 void EntitiesSelection::scaleAroundIndividualCentroids( glm::vec3 scaleFactors )
 {
+    lock();
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->scaleAroundIndividualCentroids( scaleFactors );
     }
@@ -144,6 +155,7 @@ void EntitiesSelection::scaleAroundIndividualCentroids( glm::vec3 scaleFactors )
 
 void EntitiesSelection::applyTransformationMatrix(const glm::mat4 &transformation)
 {
+    lock();
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->applyTransformationMatrix( transformation );
     }
@@ -156,6 +168,7 @@ void EntitiesSelection::applyTransformationMatrix(const glm::mat4 &transformatio
 
 bool EntitiesSelection::intersectsRay(glm::vec3 r0, glm::vec3 r1, ResourceID &closestEntity, float &minT) const
 {
+    lock();
     // TODO: Return also the index of the closest intersected manager for
     // manipulating the closest entity faster after intersecting it?
     minT = FLT_MAX;
@@ -183,6 +196,7 @@ bool EntitiesSelection::intersectsRay(glm::vec3 r0, glm::vec3 r1, ResourceID &cl
 
 void EntitiesSelection::update()
 {
+    lock();
     centroid_ = glm::vec3( 0.0f );
     unsigned int nSelections = 0;
 
@@ -207,6 +221,7 @@ void EntitiesSelection::update()
 
 void EntitiesSelection::drawAll( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix ) const
 {
+    lock();
     for( auto selection : specializedEntitiesSelections_ ){
         selection->drawAll( openGL, viewMatrix, projectionMatrix );
     }

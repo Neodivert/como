@@ -27,7 +27,7 @@
 
 namespace como {
 
-class EntitiesSelection : public AbstractEntitiesSet, public Observer
+class EntitiesSelection : public AbstractEntitiesSet, public Observer, public Lockable
 {
     public:
         /***

@@ -38,6 +38,7 @@ LocalLightsSelection::LocalLightsSelection( ServerInterfacePtr server ) :
 
 ResourceID LocalLightsSelection::addResource( std::unique_ptr<DirectionalLight> resource )
 {
+    lock();
     // FIXME: Duplicated code in LocalMeshesSelection::addResource().
     ResourceID resourceID = reserveResourceIDs( 1 );
 
@@ -53,6 +54,7 @@ ResourceID LocalLightsSelection::addResource( std::unique_ptr<DirectionalLight> 
 
 void LocalLightsSelection::setLightColor( const Color &color )
 {
+    lock();
     LightsSelection::setLightColor( color );
 
     // TODO: Create and send a LightsSelectionColorChangeCommand?
@@ -67,6 +69,7 @@ void LocalLightsSelection::setLightColor( const Color &color )
 
 void LocalLightsSelection::setAmbientCoefficient( float coefficient )
 {
+    lock();
     LightsSelection::setAmbientCoefficient( coefficient );
 
     // TODO: Create and send a LightsSelectionAmbientCoefficientChangeCommand?

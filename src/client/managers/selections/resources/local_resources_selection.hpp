@@ -77,6 +77,7 @@ LocalResourcesSelection<ResourceType>::LocalResourcesSelection( ServerInterfaceP
 template <class ResourceType>
 ResourceID LocalResourcesSelection<ResourceType>::addResource( std::unique_ptr<ResourceType> resource )
 {
+    this->lock();
     ResourceID resourceID = this->reserveResourceIDs( 1 );
 
     this->ResourcesSelection<ResourceType>::addResource( resourceID, std::move( resource ) );
