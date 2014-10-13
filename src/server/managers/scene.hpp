@@ -60,7 +60,13 @@ class Scene : public BasicScene
 
 
         /***
-         * 5. Operators
+         * 5. Getters
+         ***/
+        UserID generateUserID();
+
+
+        /***
+         * 6. Operators
          ***/
         Scene& operator = ( const Scene& ) = delete;
         Scene& operator = ( Scene&& ) = delete;
@@ -71,6 +77,8 @@ class Scene : public BasicScene
          * Attributes
          ***/
         ResourcesSynchronizationLibrary resourcesSyncLibrary_;
+
+        UserID nextUserID_;
 };
 
 } // namespace como

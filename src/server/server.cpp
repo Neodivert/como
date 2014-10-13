@@ -35,7 +35,6 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
     N_THREADS( nThreads ),
     MAX_SESSIONS( maxSessions ),
     newSocket_( *io_service_ ),
-    newId_( 1 ),
     port_( port_ ),
     resourcesOwnershipManager_( users_, log_ ),
     lightsManager_( 4, &resourcesOwnershipManager_ ),
@@ -169,11 +168,11 @@ void Server::disconnect()
 {
     boost::system::error_code errorCode;
 
-    // Wait for the server's threads to finish.
-    threads_.join_all();
-
     // Stop the I/O processing.
     io_service_->stop();
+
+    // Wait for the server's threads to finish.
+    threads_.join_all();
 
     // Close the server's socket used for accepting new connections.
     if( newSocket_.is_open() ){
@@ -241,15 +240,17 @@ void Server::onAccept( const boost::system::error_code& errorCode )
 
         /*** Prepare an USER_ACCEPTED package in respond to the previous NEW_USER one ***/
 
+        const UserID newUserID = scene_.generateUserID();
+
         // Assign a id to the new user.
-        userAcceptedPacket.setId( newId_ );
+        userAcceptedPacket.setId( newUserID );
 
         // Check if the new user's name is already in use in the server. If
         // yes, concatenate the string (<id>) to it.
         if( !nameInUse( newUserPacket.getName() ) ){
             userAcceptedPacket.setName( newUserPacket.getName() );
         }else{
-            sprintf( buffer, "%s (%d)", newUserPacket.getName(), newId_ );
+            sprintf( buffer, "%s (%d)", newUserPacket.getName(), newUserID );
             userAcceptedPacket.setName( buffer );
         }
 
@@ -270,9 +271,9 @@ void Server::onAccept( const boost::system::error_code& errorCode )
         userAcceptedPacket.send( newSocket_ );
 
         // Add the new user to the users map.
-        users_[newId_] =
+        users_[newUserID] =
                 std::make_shared<PublicUser>(
-                        newId_,
+                        newUserID,
                         userAcceptedPacket.getName(),
                         io_service_,
                         std::move( newSocket_ ),
@@ -286,9 +287,6 @@ void Server::onAccept( const boost::system::error_code& errorCode )
 
         // Add an USER_CONNECTION scene command to the server historic.
         addCommand( CommandConstPtr( new UserConnectionCommand( userAcceptedPacket ) ) );
-
-        // Increment the "new id" for the next user.
-        newId_++;
 
         if( users_.size() < MAX_SESSIONS ){
             // There is room for more users, wait for a new connection.

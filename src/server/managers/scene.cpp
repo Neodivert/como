@@ -28,7 +28,8 @@ const std::string SAVED_SCENES_DIR_PATH = "./data/save";
 
 Scene::Scene( const std::string& sceneName, CommandsHistoricPtr commandsHistoric, LogPtr log, const std::string& sceneFilePath ) :
     BasicScene( sceneName, log ),
-    resourcesSyncLibrary_( commandsHistoric, getTempDirPath() )
+    resourcesSyncLibrary_( commandsHistoric, getTempDirPath() ),
+    nextUserID_( 1 )
 {
     boost::filesystem::create_directories( SAVED_SCENES_DIR_PATH );
 
@@ -98,6 +99,17 @@ void Scene::loadFromFile( const std::string &filePath )
     resourcesSyncLibrary_.readFromFile( file );
 
     file.close();
+}
+
+
+/***
+ * 5. Getters
+ ***/
+
+UserID Scene::generateUserID()
+{
+    lock();
+    return nextUserID_++;
 }
 
 

@@ -78,9 +78,6 @@ class Server : public Lockable
         // New socket
         Socket newSocket_;
 
-        // When a new user connect to the server, this will be the id givent to him/her.
-        UserID newId_;
-
         // Server's port.
         unsigned int port_;
 
