@@ -20,10 +20,11 @@
 #define RESOURCES_OWNERSHIP_MANAGER_HPP
 
 #include <common/ids/resource_id.hpp>
+#include <common/utilities/lockable.hpp>
 
 namespace como {
 
-class ResourcesOwnershipManager {
+class ResourcesOwnershipManager : public Lockable {
     friend class EntitiesManager; // FIXME
 
     public:
