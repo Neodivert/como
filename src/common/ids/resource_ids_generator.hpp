@@ -21,11 +21,11 @@
 
 #include "resource_id.hpp"
 #include <memory>
+#include <common/utilities/lockable.hpp>
 
 namespace como {
 
-// TODO: Inherit from a Monitor class.
-class ResourceIDsGenerator
+class ResourceIDsGenerator : public Lockable
 {
     public:
         /***

@@ -36,6 +36,8 @@ ResourceIDsGenerator::ResourceIDsGenerator(UserID userID) :
 
 ResourceID ResourceIDsGenerator::generateResourceIDs( unsigned int nIDs )
 {
+    lock();
+
     unsigned int i;
     ResourceID firstResourceID = nextResourceID_;
 
@@ -49,6 +51,7 @@ ResourceID ResourceIDsGenerator::generateResourceIDs( unsigned int nIDs )
 
 UserID ResourceIDsGenerator::userID() const
 {
+    lock();
     return nextResourceID_.getCreatorID();
 }
 
