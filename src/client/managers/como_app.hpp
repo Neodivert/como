@@ -48,7 +48,7 @@ enum class TransformationMode
     FIXED_Z
 };
 
-class ComoApp : public QObject {
+class ComoApp : public QObject, public Lockable {
     Q_OBJECT
 
     protected:

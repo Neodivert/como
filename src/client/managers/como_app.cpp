@@ -44,23 +44,27 @@ ComoApp::~ComoApp()
 
 TransformationMode ComoApp::getTransformationMode() const
 {
+    lock();
     return transformationMode;
 }
 
 
 TransformationType ComoApp::getTransformationType() const
 {
+    lock();
     return transformationType;
 }
 
 
 LogPtr ComoApp::getLog() const
 {
+    lock();
     return log_;
 }
 
 ScenePtr ComoApp::getScene() const
 {
+    lock();
     return scene_;
 }
 
@@ -71,6 +75,8 @@ ScenePtr ComoApp::getScene() const
 
 void ComoApp::setTransformationMode( TransformationMode transformationMode )
 {
+    lock();
+
     // Change the transformation mode.
     this->transformationMode = transformationMode;
 
@@ -84,6 +90,7 @@ void ComoApp::setTransformationMode( TransformationMode transformationMode )
 
 void ComoApp::setTransformationType( TransformationType transformationType )
 {
+    lock();
     this->transformationType = transformationType;
 }
 

@@ -124,6 +124,7 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
 
 void ServerInterface::disconnect()
 {
+    lock();
     boost::system::error_code errorCode;
 
     log_->debug( "Disconnecting from server ...\n" );
@@ -149,6 +150,8 @@ void ServerInterface::disconnect()
 
 void ServerInterface::onSceneUpdatePacketReceived( const boost::system::error_code& errorCode, PacketPtr packet )
 {
+    lock();
+
     if( errorCode ){
         log_->error( "Error when receiving packet: ", errorCode.message(), "\n" );
         return;
@@ -176,6 +179,8 @@ void ServerInterface::onSceneUpdatePacketReceived( const boost::system::error_co
 
 void ServerInterface::onSceneUpdatePacketSended( const boost::system::error_code& errorCode, PacketPtr packet )
 {
+    lock();
+
     if( errorCode ){
         log_->error( "Error when sending packet: ", errorCode.message(), "\n" );
         return;
@@ -193,6 +198,7 @@ void ServerInterface::onSceneUpdatePacketSended( const boost::system::error_code
 
 void ServerInterface::sendCommand( CommandConstPtr sceneCommand )
 {
+    lock();
     // Queue the new scene command.
     sceneCommandsToServer_.push( std::move( sceneCommand ) );
 }
@@ -210,6 +216,7 @@ void ServerInterface::run()
 
 void ServerInterface::sendPendingCommands()
 {
+    lock();
     unsigned int nCommands = 0;
 
     sceneUpdatePacketToServer_.clear();
@@ -238,6 +245,7 @@ void ServerInterface::sendPendingCommands()
 
 void ServerInterface::setTimer()
 {
+    lock();
     // Set a timer for sending pending commands to the server.
     timer_.expires_from_now( boost::posix_time::milliseconds( TIME_BETWEEN_SHIPMENTS ) );
     timer_.async_wait( boost::bind( &ServerInterface::sendPendingCommands, this ) );
@@ -246,6 +254,7 @@ void ServerInterface::setTimer()
 
 void ServerInterface::listen()
 {   
+    lock();
     log_->debug( "Listening for new scene updates from server ...\n" );
 
     sceneUpdatePacketFromServer_.clear();
@@ -285,18 +294,21 @@ void ServerInterface::work()
 
 ResourceID ServerInterface::reserveResourceIDs(unsigned int nIDs)
 {
+    lock();
     return resourceIDsGenerator_->generateResourceIDs( nIDs );
 }
 
 
 UserID ServerInterface::getLocalUserID() const
 {
+    lock();
     return resourceIDsGenerator_->userID();
 }
 
 
 Color ServerInterface::getLocalUserColor() const
 {
+    lock();
     return localUserColor_;
 }
 

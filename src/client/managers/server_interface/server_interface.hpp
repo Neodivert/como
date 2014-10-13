@@ -39,7 +39,7 @@ namespace como {
 const unsigned int MAX_COMMANDS_PER_SCENE_UPDATE = 4;
 const unsigned int SHIPMENTS_PER_SECOND = 33;
 
-class ServerInterface : public QObject
+class ServerInterface : public QObject, public Lockable
 {
     Q_OBJECT
 
