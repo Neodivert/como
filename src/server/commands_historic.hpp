@@ -23,12 +23,13 @@
 
 #include <list>
 #include <common/packets/packets.hpp>
+#include <common/utilities/lockable.hpp>
 
 namespace como {
 
 typedef std::list< CommandConstPtr > CommandsList;
 
-class CommandsHistoric
+class CommandsHistoric : public Lockable
 {
     private:
         // List of commands in the historic.
@@ -36,14 +37,6 @@ class CommandsHistoric
 
         // Function to be called when a command is added to the historic.
         std::function< void () > broadcastCallback_;
-
-        // Mutex for exclusive access to the previous list of commands.
-        // The mutable keyword allow us to modify the mutex (by calling lock()
-        // and unlock()) while preserving the logical constness of a given
-        // const instance of CommandsHistoric class.
-        // http://stackoverflow.com/questions/105014/does-the-mutable-keyword-have-any-purpose-other-than-allowing-the-variable-to
-        mutable std::mutex commandsMutex_;
-
 
     public:
         /***

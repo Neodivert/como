@@ -36,15 +36,8 @@ CommandsHistoric::CommandsHistoric( std::function< void () > broadcastCallback )
 
 unsigned int CommandsHistoric::getSize() const
 {
-    unsigned int size;
-
-    // Retrieve the historic's size.
-    commandsMutex_.lock();
-    size = commands_.size();
-    commandsMutex_.unlock();
-
-    // Return the historic's size.
-    return size;
+    lock();
+    return commands_.size();
 }
 
 
@@ -54,12 +47,12 @@ unsigned int CommandsHistoric::getSize() const
 
 void CommandsHistoric::addCommand( CommandConstPtr command )
 {
-    commandsMutex_.lock();
+    {
+        lock();
 
-    // Push back the given command.
-    commands_.push_back( std::move( command ) );
-
-    commandsMutex_.unlock();
+        // Push back the given command.
+        commands_.push_back( std::move( command ) );
+    }
 
     // Broadcast the added command.
     broadcastCallback_();
@@ -75,7 +68,7 @@ std::uint32_t CommandsHistoric::fillSceneUpdatePacketPacket( SceneUpdatePacket& 
                                                        const unsigned int nCommands,
                                                        UserID userID ) const
 {
-    commandsMutex_.lock();
+    lock();
 
     /*
     // Validity check: maxCommands can't be zero.
@@ -103,7 +96,6 @@ std::uint32_t CommandsHistoric::fillSceneUpdatePacketPacket( SceneUpdatePacket& 
         nextCommand++;
         it++;
     }
-    commandsMutex_.unlock();
 
     return nextCommand;
 }
