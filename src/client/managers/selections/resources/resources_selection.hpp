@@ -152,6 +152,7 @@ void ResourcesSelection<ResourceType>::moveAll( ResourcesSelection<ResourceType>
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::clear()
 {
+    lock();
     this->resources_.clear();
 
     this->notifyObservers();
@@ -165,6 +166,7 @@ void ResourcesSelection<ResourceType>::clear()
 template <class ResourceType>
 unsigned int ResourcesSelection<ResourceType>::size() const
 {
+    lock();
     return this->resources_.size();
 }
 
@@ -172,6 +174,7 @@ unsigned int ResourcesSelection<ResourceType>::size() const
 template <class ResourceType>
 bool ResourcesSelection<ResourceType>::containsResource(const ResourceID &resourceID) const
 {
+    lock();
     return ( this->resources_.count( resourceID ) != 0 );
 }
 
@@ -179,6 +182,7 @@ bool ResourcesSelection<ResourceType>::containsResource(const ResourceID &resour
 template <class ResourceType>
 ResourceHeadersList ResourcesSelection<ResourceType>::headers() const
 {
+    lock();
     ResourceHeadersList headers;
 
     for( const Resource& resource : resources_ ){
