@@ -37,7 +37,7 @@ class Lockable
         /***
          * 2. Destruction
          ***/
-        virtual ~Lockable() = 0;
+        virtual ~Lockable() = default;
 
 
         /***

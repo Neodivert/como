@@ -24,9 +24,9 @@
 #ifndef LOG_1_HPP
 #define LOG_1_HPP
 
-#include <thread>
-#include <mutex>
+#include <common/utilities/lockable.hpp>
 #include <iostream>
+#include <memory> // std::shared_ptr
 
 namespace como {
 
@@ -37,10 +37,13 @@ enum class LogMessageType {
 };
 
 
-class Log
+class Log;
+typedef std::shared_ptr< Log > LogPtr;
+
+
+class Log : public Lockable
 {
     private:
-        std::recursive_mutex mutex_;
         std::ostream& out_;
 
     public:
@@ -50,13 +53,6 @@ class Log
         Log() : out_( std::cout ) {}
         Log( const Log& ) = delete;
         Log( Log&& ) = delete;
-
-
-        /***
-         * 2. Mutex locking and unlocking
-         ***/
-        void lock(){ mutex_.lock(); }
-        void unlock(){ mutex_.unlock(); }
 
 
     private:
@@ -107,8 +103,6 @@ class Log
         Log& operator = ( Log&& ) = delete;
 };
 
-typedef std::shared_ptr< Log > LogPtr;
-
 
 /***
  * 3. Main writting methods
@@ -117,19 +111,19 @@ typedef std::shared_ptr< Log > LogPtr;
 template< class T>
 void Log::write( T value )
 {
-    mutex_.lock();
+    lock();
     out_ << value;
-    mutex_.unlock();
+    unlock();
 }
 
 
 template< class T, class... Args >
 void Log::write( T value, Args... args )
 {
-    mutex_.lock();
+    lock();
     out_ << value;
     write( args... );
-    mutex_.unlock();
+    unlock();
 }
 
 
