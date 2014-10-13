@@ -169,6 +169,9 @@ void Server::disconnect()
 {
     boost::system::error_code errorCode;
 
+    // Wait for the server's threads to finish.
+    threads_.join_all();
+
     // Stop the I/O processing.
     io_service_->stop();
 
@@ -180,14 +183,13 @@ void Server::disconnect()
 
     // Free the server's TCP acceptor.
     acceptor_.close( errorCode );
-
-    // Wait for the server's threads to finish.
-    threads_.join_all();
 }
 
 
 void Server::broadcast()
 {
+    lock();
+
     log_->debug( "Server - broadcasting\n" );
     UsersMap::iterator user;
 
@@ -204,6 +206,8 @@ void Server::broadcast()
 
 void Server::listen()
 {
+    lock();
+
     log_->debug( "Listening on port (", port_, ")\n" );
 
     // Wait for a new user connection.
@@ -217,6 +221,8 @@ void Server::listen()
 
 void Server::onAccept( const boost::system::error_code& errorCode )
 {
+    lock();
+
     boost::system::error_code closingErrorCode;
 
     como::NewUserPacket newUserPacket;
@@ -302,6 +308,8 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
                                  UserID userID,
                                  const SceneUpdatePacket& sceneUpdate )
 {
+    lock();
+
     const CommandsList* commands = nullptr;
 
     mutex_.lock();
@@ -330,6 +338,8 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
 
 void Server::processSceneCommand( const Command& sceneCommand )
 {
+    lock();
+
     // TODO: Move this code to Scene class.
     switch( sceneCommand.getTarget() ){
         case CommandTarget::PRIMITIVE:{
@@ -431,6 +441,7 @@ void Server::processSceneCommand( const Command& sceneCommand )
 
 void Server::addCommand( CommandConstPtr sceneCommand )
 {
+    lock();
     // Add the command to the historic.
     commandsHistoric_->addCommand( std::move( sceneCommand ) );
 }
@@ -443,6 +454,7 @@ void Server::addCommand( CommandConstPtr sceneCommand )
 
 void Server::deleteUser( UserID id )
 {
+    lock();
     log_->debug( "Server::deleteUser(", id, ")\n" );
 
     // Return user's color to free colors container.

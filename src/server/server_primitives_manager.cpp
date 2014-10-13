@@ -47,6 +47,7 @@ ServerPrimitivesManager::ServerPrimitivesManager(const std::string& sceneDirPath
 
 void ServerPrimitivesManager::createPrimitivesDir()
 {
+    lock();
     char consoleCommand[256] = {0};
     int lastCommandResult = 0;
 
@@ -74,6 +75,7 @@ void ServerPrimitivesManager::createPrimitivesDir()
 
 void ServerPrimitivesManager::syncPrimitivesDir()
 {
+    lock();
     //createPrimitivesDir();
 
     const char* filePath = nullptr;
@@ -96,6 +98,8 @@ void ServerPrimitivesManager::syncPrimitivesDir()
 
 ResourceID ServerPrimitivesManager::createCategory( std::string name )
 {
+    lock();
+
     const ResourceID categoryID = resourceIDsGenerator_->generateResourceIDs( 1 );
 
     AbstractPrimitivesManager::createCategory( categoryID, name );
@@ -111,6 +115,8 @@ ResourceID ServerPrimitivesManager::createCategory( std::string name )
 
 void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
 {
+    lock();
+
     const boost::filesystem::directory_iterator endIterator;
     boost::filesystem::directory_iterator fileIterator( dirPath );
     std::string filePath;
@@ -160,6 +166,8 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
 
 ResourceID ServerPrimitivesManager::registerCategory( std::string categoryName )
 {
+    lock();
+
     const ResourceID categoryID = resourceIDsGenerator_->generateResourceIDs( 1 );
 
     // Register the the given category.
@@ -180,12 +188,16 @@ ResourceID ServerPrimitivesManager::registerCategory( std::string categoryName )
 
 void ServerPrimitivesManager::registerPrimitive( PrimitiveInfo primitive )
 {
+    lock();
+
     const ResourceID primitiveID = resourceIDsGenerator_->generateResourceIDs( 1 );
     registerPrimitive( primitive, primitiveID );
 }
 
+
 void ServerPrimitivesManager::registerPrimitive(PrimitiveInfo primitive, const ResourceID &primitiveID)
 {
+    lock();
     // We are about to create a command which needs to keep a copy of the
     // current primitive, so we create such copy in the tmp directory.
     PrimitiveInfo primitiveCopy = primitive.copy(

@@ -38,6 +38,7 @@
 #include <server/managers/lights_manager.hpp>
 #include <server/managers/scene.hpp>
 #include <common/ids/resource_ids_generator.hpp>
+#include <common/utilities/lockable.hpp>
 
 using boost::asio::ip::tcp;
 
@@ -46,7 +47,7 @@ namespace como {
 typedef std::map< ResourceID, UserID > DrawableOwners;
 
 /*! Main server manager */
-class Server
+class Server : public Lockable
 {
     private:
         ResourceIDsGeneratorPtr resourceIDsGenerator_;
