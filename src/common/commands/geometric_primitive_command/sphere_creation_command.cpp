@@ -34,8 +34,8 @@ SphereCreationCommand::SphereCreationCommand() :
 }
 
 
-SphereCreationCommand::SphereCreationCommand( const ResourceID &sphereID, const ResourceID &materialID, const ResourceID &firstTextureWallID, float sphereRadius, std::uint16_t sphereNDivisions ) :
-    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::SPHERE_CREATION, sphereID, materialID, firstTextureWallID ),
+SphereCreationCommand::SphereCreationCommand( const ResourceID &sphereID, const ResourceID &materialID, const ResourceID &firstTextureWallID, float sphereRadius, std::uint16_t sphereNDivisions, const glm::vec3& centroid ) :
+    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::SPHERE_CREATION, sphereID, materialID, firstTextureWallID, centroid ),
     sphereRadius_( sphereRadius ),
     sphereNDivisions_( sphereNDivisions )
 {

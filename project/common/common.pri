@@ -129,7 +129,11 @@ HEADERS += \
     ../../src/common/commands/commands_file_parser.hpp \
     ../../src/common/packables/packable_packet_size.hpp \
     ../../src/common/ids/resource_ids_generator.hpp \
-    ../../src/common/utilities/lockable.hpp
+    ../../src/common/utilities/lockable.hpp \
+    ../../src/common/transformable/transformable.hpp \
+    ../../src/common/commands/entity_commands/entity_command.hpp \
+    ../../src/common/commands/entity_commands/entity_commands.hpp \
+    ../../src/common/commands/entity_commands/model_matrix_replacement_command.hpp
 
 
 # Common sources (used by both client and server).
@@ -203,4 +207,7 @@ SOURCES += \
     ../../src/common/utilities/color.cpp \
     ../../src/common/commands/commands_file_parser.cpp \
     ../../src/common/ids/resource_ids_generator.cpp \
-    ../../src/common/utilities/lockable.cpp
+    ../../src/common/utilities/lockable.cpp \
+    ../../src/common/transformable/transformable.cpp \
+    ../../src/common/commands/entity_commands/entity_command.cpp \
+    ../../src/common/commands/entity_commands/model_matrix_replacement_command.cpp

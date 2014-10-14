@@ -29,8 +29,8 @@ CubeCreationCommand::CubeCreationCommand() :
 }
 
 
-CubeCreationCommand::CubeCreationCommand( const ResourceID& cubeID, const ResourceID& materialID, const ResourceID& firstTextureWallID, float width, float height, float depth ) :
-    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::CUBE_CREATION, cubeID, materialID, firstTextureWallID ),
+CubeCreationCommand::CubeCreationCommand( const ResourceID& cubeID, const ResourceID& materialID, const ResourceID& firstTextureWallID, float width, float height, float depth, const glm::vec3& centroid ) :
+    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::CUBE_CREATION, cubeID, materialID, firstTextureWallID, centroid ),
     cubeWidth_( width ),
     cubeHeight_( height ),
     cubeDepth_( depth )

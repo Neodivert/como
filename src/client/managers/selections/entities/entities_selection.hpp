@@ -56,6 +56,7 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer, public Lo
         virtual PivotPointMode pivotPointMode() const;
         virtual glm::vec4 borderColor() const;
         virtual unsigned int size() const;
+        virtual bool containsEntity(const ResourceID &entityID) const;
 
 
         /***
@@ -63,6 +64,8 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer, public Lo
          ***/
         virtual void setPivotPointMode( PivotPointMode mode );
         virtual void setBorderColor( const glm::vec4& borderColor );
+        virtual void setEntityModelMatrix( const ResourceID& entityID,
+                                           const glm::mat4& modelMatrix );
 
 
         /***
@@ -74,6 +77,7 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer, public Lo
         virtual void scaleAroundPivot(glm::vec3 scaleFactors, glm::vec3 pivot);
         virtual void scaleAroundIndividualCentroids(glm::vec3 scaleFactors);
         virtual void applyTransformationMatrix( const glm::mat4 &transformation );
+        virtual void setModelMatrix(const glm::mat4 &modelMatrix);
 
 
         /***

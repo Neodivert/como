@@ -84,6 +84,10 @@ void CubesFactory::createCube( const ResourceID& cubeID, const ResourceID& mater
 
     cube = std::unique_ptr< Mesh >( new SystemMesh( cubeID, materialID, firstTextureWallID, generatePrimitiveData(), *materialsManager_ ) );
 
+    // On this version of COMO, geometric primitives are synchronized as they
+    // had a centroid 0, so check that this is true.
+    assert( cube->centroid() == glm::vec3( 0.0f ) );
+
     meshesManager_->addMesh( std::move( cube ), cubeID );
 }
 

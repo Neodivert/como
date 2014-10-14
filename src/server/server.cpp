@@ -39,7 +39,7 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
     resourcesOwnershipManager_( users_, log_ ),
     lightsManager_( 4, &resourcesOwnershipManager_ ),
     commandsHistoric_( new CommandsHistoric( std::bind( &Server::broadcast, this ) ) ),
-    scene_( sceneName, commandsHistoric_, log_, sceneFilePath )
+    scene_( sceneName, commandsHistoric_, users_, log_, sceneFilePath )
 {
     unsigned int i;
 
@@ -358,7 +358,7 @@ void Server::processSceneCommand( const Command& sceneCommand )
 
                     // Add a node to the Drawable Owners map for the recently added
                     // drawable. Mark it with a 0 (no owner).
-                    resourcesOwnershipManager_.registerResource( primitiveCommand.getMeshID(), primitiveCommand.getUserID() );
+                    resourcesOwnershipManager_.registerResource( primitiveCommand.getMeshID(), NO_USER );
 
                     log_->debug( "Mesh added! (", (int)( primitiveCommand.getMeshID().getCreatorID() ),
                                  ", ", (int)( primitiveCommand.getMeshID().getResourceIndex() ), "\n" );
@@ -387,41 +387,6 @@ void Server::processSceneCommand( const Command& sceneCommand )
                     // the commands historic.
                     return;
                 }
-            }
-        }break;
-        case CommandTarget::RESOURCE:{
-            const ResourceCommand& resourceCommand = dynamic_cast< const ResourceCommand& >( sceneCommand );
-            resourcesOwnershipManager_.executeResourceCommand( resourceCommand );
-        }break;
-        case CommandTarget::RESOURCES_SELECTION:{
-            const ResourcesSelectionCommand& resourcesSelectionCommand =
-                    dynamic_cast< const ResourcesSelectionCommand& >( sceneCommand );
-            resourcesOwnershipManager_.executeResourcesSelectionCommand( resourcesSelectionCommand );
-        }break;
-        case CommandTarget::GEOMETRIC_PRIMITIVE:{
-            const GeometricPrimitiveCommand& geometricPrimitiveCommand =
-                    dynamic_cast< const GeometricPrimitiveCommand& >( sceneCommand );
-
-            if( ( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::CUBE_CREATION ) ||
-                ( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::CONE_CREATION ) ||
-                ( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::CYLINDER_CREATION ) ||
-                ( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::SPHERE_CREATION ) ){
-                // Add a node to the Drawable Owners map for the recently added
-                // drawable. Mark it with a 0 (no owner).
-                resourcesOwnershipManager_.registerResource( geometricPrimitiveCommand.getMeshID(),
-                                                             geometricPrimitiveCommand.getUserID() );
-
-                log_->debug( "Geometric primitive added! (", geometricPrimitiveCommand.getMeshID(), "\n" );
-            }
-        }break;
-        case CommandTarget::CAMERA:{
-            const CameraCommand& cameraCommand =
-                    dynamic_cast< const CameraCommand& >( sceneCommand );
-
-            if( cameraCommand.getType() == CameraCommandType::CAMERA_CREATION ){
-                resourcesOwnershipManager_.registerResource( cameraCommand.cameraID(),
-                                                             cameraCommand.getUserID(),
-                                                             false );
             }
         }break;
         default:

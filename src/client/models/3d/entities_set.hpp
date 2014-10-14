@@ -53,6 +53,7 @@ class EntitiesSet : public AbstractEntitiesSet, public ResourcesSelection< Entit
         PivotPointMode pivotPointMode() const;
         glm::vec4 borderColor() const;
         virtual unsigned int size() const;
+        virtual bool containsEntity(const ResourceID &entityID) const;
 
 
         /***
@@ -60,6 +61,7 @@ class EntitiesSet : public AbstractEntitiesSet, public ResourcesSelection< Entit
          ***/
         void setPivotPointMode( PivotPointMode mode );
         void setBorderColor( const glm::vec4& borderColor );
+        virtual void setEntityModelMatrix(const ResourceID &entityID, const glm::mat4 &modelMatrix);
 
 
         /***
@@ -71,6 +73,7 @@ class EntitiesSet : public AbstractEntitiesSet, public ResourcesSelection< Entit
         virtual void scaleAroundPivot(glm::vec3 scaleFactors, glm::vec3 pivot);
         virtual void scaleAroundIndividualCentroids(glm::vec3 scaleFactors);
         virtual void applyTransformationMatrix( const glm::mat4 &transformationMatrix );
+        virtual void setModelMatrix(const glm::mat4 &modelMatrix);
 
 
         /***
@@ -152,6 +155,13 @@ unsigned int EntitiesSet<EntitySubtype>::size() const
 }
 
 
+template <class EntitySubtype>
+bool EntitiesSet<EntitySubtype>::containsEntity(const ResourceID &entityID) const
+{
+    return this->containsResource( entityID );
+}
+
+
 /***
  * 4. Setters
  ***/
@@ -167,6 +177,13 @@ template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::setBorderColor( const glm::vec4& borderColor )
 {
     this->borderColor_ = borderColor;
+}
+
+
+template <class EntitySubtype>
+void EntitiesSet<EntitySubtype>::setEntityModelMatrix(const ResourceID &entityID, const glm::mat4 &modelMatrix)
+{
+    this->resources_.at( entityID )->setModelMatrix( modelMatrix );
 }
 
 
@@ -229,6 +246,16 @@ void EntitiesSet<EntitySubtype>::applyTransformationMatrix(const glm::mat4 &tran
 {
     for( auto& entityPair : this->resources_ ){
         entityPair.second->applyTransformationMatrix( transformationMatrix );
+    }
+    this->notifyObservers();
+}
+
+
+template <class EntitySubtype>
+void EntitiesSet<EntitySubtype>::setModelMatrix( const glm::mat4 &modelMatrix )
+{
+    for( auto& entityPair : this->resources_ ){
+        entityPair.second->setModelMatrix( modelMatrix );
     }
     this->notifyObservers();
 }

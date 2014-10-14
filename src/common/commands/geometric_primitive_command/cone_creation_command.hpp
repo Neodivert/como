@@ -36,7 +36,8 @@ class ConeCreationCommand : public GeometricPrimitiveCommand
                              const ResourceID& firstTextureWallID,
                              float coneHeight,
                              float coneRadius,
-                             unsigned int coneNBaseVertices );
+                             unsigned int coneNBaseVertices,
+                             const glm::vec3& centroid = glm::vec3( 0.0f ) );
         ConeCreationCommand( const ConeCreationCommand& );
         ConeCreationCommand( ConeCreationCommand&& ) = delete;
         COMMAND_CLONE_METHOD( ConeCreationCommand )

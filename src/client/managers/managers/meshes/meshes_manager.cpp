@@ -155,7 +155,12 @@ ResourceID MeshesManager::addMesh( MeshPtr mesh )
 void MeshesManager::addMesh( MeshPtr mesh, const ResourceID& meshID )
 {
     lock();
-    getResourcesSelection( meshID.getCreatorID() )->addResource( meshID, std::move( mesh ) );
+    //getResourcesSelection( meshID.getCreatorID() )->addResource( meshID, std::move( mesh ) );
+
+    // FIXME: Meshes are initially unselected because when loading an Scene
+    // from file and then synchronizing them on the client, the created
+    // entities must be assigned to an existing user.
+    getResourcesSelection( NO_USER )->addResource( meshID, std::move( mesh ) );
 }
 
 

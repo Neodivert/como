@@ -327,6 +327,9 @@ void Scene::executeRemoteCommand( std::shared_ptr< const Command > command )
         case CommandTarget::CAMERA:
             entitiesManager_->getCamerasManager()->executeRemoteCommand( dynamic_cast< const CameraCommand& >( *command ) );
         break;
+        case CommandTarget::ENTITY:
+            entitiesManager_->executeRemoteEntityCommand( dynamic_cast< const EntityCommand& >( *command ) );
+        break;
     }
 
     log_->debug( "Scene - Executing remote command(",

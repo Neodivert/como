@@ -19,6 +19,7 @@
 #include "resources_synchronization_library.hpp"
 #include <common/commands/commands.hpp>
 #include <server/sync_data/texture_sync_data.hpp>
+#include <server/sync_data/entity_sync_data.hpp>
 #include <common/commands/commands_file_parser.hpp>
 
 namespace como {
@@ -28,9 +29,13 @@ namespace como {
  ***/
 
 ResourcesSynchronizationLibrary::ResourcesSynchronizationLibrary( CommandsHistoricPtr commandsHistoric,
-                                                                  const std::string &unpackingDirPath ) :
+                                                                  UsersMap& users,
+                                                                  const std::string &unpackingDirPath,
+                                                                  LogPtr log ) :
+    AbstractResourcesOwnershipManager( log ),
     commandsHistoric_( commandsHistoric ),
-    unpackingDirPath_( unpackingDirPath )
+    unpackingDirPath_( unpackingDirPath ),
+    users_( users )
 {}
 
 
@@ -42,15 +47,71 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
 {
     lock();
     switch( command.getTarget() ){
+        case CommandTarget::RESOURCE:{
+            const ResourceCommand& resourceCommand = dynamic_cast< const ResourceCommand& >( command );
+            executeResourceCommand( resourceCommand );
+        }break;
+        case CommandTarget::RESOURCES_SELECTION:{
+            const ResourcesSelectionCommand& resourcesSelectionCommand =
+                    dynamic_cast< const ResourcesSelectionCommand& >( command );
+            executeResourcesSelectionCommand( resourcesSelectionCommand );
+        }break;
         case CommandTarget::TEXTURE:{
             const TextureCommand& textureCommand =
                     dynamic_cast< const TextureCommand& >( command );
 
             if( textureCommand.getType() == TextureCommandType::TEXTURE_CREATION ){
-                resourcesSyncData_[ textureCommand.textureID() ] = ResourceSyncDataPtr( new TextureSyncData( &textureCommand ) );
+                resourcesSyncData_[ textureCommand.textureID() ] =
+                        ResourceSyncDataPtr(
+                            new TextureSyncData( &textureCommand,
+                                                 textureCommand.textureID() ) );
             }else{
                 resourcesSyncData_.at( textureCommand.textureID() )->processCommand( command );
             }
+        }break;
+        case CommandTarget::GEOMETRIC_PRIMITIVE:{
+            const GeometricPrimitiveCommand& geometricPrimitiveCommand =
+                    dynamic_cast< const GeometricPrimitiveCommand& >( command );
+
+            if( ( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::CUBE_CREATION ) ||
+                ( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::CONE_CREATION ) ||
+                ( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::CYLINDER_CREATION ) ||
+                ( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::SPHERE_CREATION ) ){
+                log()->debug( "Geometric primitive created (", geometricPrimitiveCommand.getMeshID(), ")\n" );
+                resourcesSyncData_[ geometricPrimitiveCommand.getMeshID() ] =
+                        ResourceSyncDataPtr( new EntitySyncData( &geometricPrimitiveCommand,
+                                                                 geometricPrimitiveCommand.getMeshID(),
+                                                                 geometricPrimitiveCommand.centroid() ) );
+            }else{
+                resourcesSyncData_.at( geometricPrimitiveCommand.getMeshID() )->processCommand( command );
+            }
+        }break;
+        case CommandTarget::CAMERA:{
+            const CameraCommand& cameraCommand =
+                    dynamic_cast< const CameraCommand& >( command );
+
+            if( cameraCommand.getType() == CameraCommandType::CAMERA_CREATION ){
+                // TODO: Retrieve real centroid from command.
+                resourcesSyncData_[ cameraCommand.cameraID() ] =
+                    ResourceSyncDataPtr( new EntitySyncData( &cameraCommand,
+                                                             cameraCommand.cameraID(),
+                                                             glm::vec3( 0.0f ) ) );
+                undeletableResources_.insert( cameraCommand.cameraID() );
+            }
+        }break;
+        case CommandTarget::SELECTION:{
+            // We have a command that updates the user's selection, so apply
+            // it to all resources currently owned by user.
+            for( std::pair< const ResourceID, ResourceSyncDataPtr >& resourcePair : resourcesSyncData_ ){
+                if( resourcePair.second->resourceOwner() == command.getUserID() ){
+                    resourcePair.second->processCommand( command );
+                }
+            }
+        }break;
+        case CommandTarget::ENTITY:{
+            const EntityCommand& entityCommand =
+                    dynamic_cast< const EntityCommand& >( command );
+            resourcesSyncData_.at( entityCommand.entityID() )->processCommand( entityCommand );
         }break;
         default:
             // TODO: Complete
@@ -97,6 +158,102 @@ void ResourcesSynchronizationLibrary::readFromFile( std::ifstream& file )
     while( ( command = fileParser.readNextCommand( file ) ) != nullptr ){
         processCommand( *command );
     }
+}
+
+
+/***
+ * 3. Resources registation
+ ***
+
+void ResourcesSynchronizationLibrary::registerResource(const ResourceID& resourceID, UserID ownerID, bool deletable )
+{
+    lock();
+
+    resourcesOwnershipMap_[ resourceID ] = ownerID;
+
+    if( !deletable ){
+        undeletableResources_.insert( resourceID );
+    }
+
+    notifyElementInsertion( resourceID );
+}
+*/
+
+/***
+ * 6. Owners management
+ ***/
+
+void ResourcesSynchronizationLibrary::removeUser( UserID userID )
+{
+    lock();
+
+    unlockResourcesSelection( userID );
+}
+
+
+/***
+ * 7. Resources ownership management
+ ***/
+
+void ResourcesSynchronizationLibrary::lockResource( const ResourceID& resourceID, UserID userID )
+{
+    lock();
+    log()->debug( "User (", userID, ") tries to lock resource (", resourceID, "): " );
+    if( resourcesSyncData_.at( resourceID )->resourceOwner() == NO_USER ){
+        resourcesSyncData_.at( resourceID )->setResourceOwner( userID );
+        //notifyElementUpdate( resourceID );
+        users_.at( userID )->addResponseCommand( CommandConstPtr( new ResourceSelectionResponse( resourceID, true ) ) );
+        log()->debug( "Yes!\n" );
+    }else{
+        users_.at( userID )->addResponseCommand( CommandConstPtr( new ResourceSelectionResponse( resourceID, false ) ) );
+        log()->debug( "No, resource already locked! :'-(\n" );
+    }
+}
+
+
+void ResourcesSynchronizationLibrary::unlockResourcesSelection( UserID userID )
+{
+    lock();
+    log()->debug( "(User: ", userID, ") Unlocking Selection\n" );
+    for( auto& resourceSyncData : resourcesSyncData_ ){
+        if( resourceSyncData.second->resourceOwner() == userID ){
+            resourceSyncData.second->setResourceOwner( userID );
+        }
+    }
+}
+
+void ResourcesSynchronizationLibrary::deleteResourcesSelection( UserID userID )
+{
+    lock();
+    log()->debug( "(User: ", userID, ") Deleting Selection\n" );
+    std::map< ResourceID, ResourceSyncDataPtr >::iterator currentElement, nextElement;
+
+    currentElement = nextElement = resourcesSyncData_.begin();
+    while( currentElement != resourcesSyncData_.end() ){
+        nextElement++;
+
+        if( currentElement->second->resourceOwner() == userID ){
+            if( !undeletableResources_.count( currentElement->first ) ){
+                //notifyElementDeletion( currentElement->first );
+                resourcesSyncData_.erase( currentElement );
+            }else{
+                //notifyElementUpdate( currentElement->first );
+                currentElement->second->setResourceOwner( NO_USER );
+            }
+        }
+
+        currentElement = nextElement;
+    }
+}
+
+
+void ResourcesSynchronizationLibrary::processLockResponse( const ResourceID& resourceID, bool lockResponse )
+{
+    lock();
+    // TODO: Make this trick unnecessary.
+    (void)( resourceID );
+    (void)( lockResponse );
+    throw std::runtime_error( "ResourcesOwnershipManager::processLockResponse called!" );
 }
 
 

@@ -34,7 +34,7 @@ class Scene : public BasicScene
         /***
          * 1. Construction
          ***/
-        Scene( const std::string& sceneName, CommandsHistoricPtr commandsHistoric, LogPtr log, const std::string& sceneFilePath = "" );
+        Scene( const std::string& sceneName, CommandsHistoricPtr commandsHistoric, UsersMap& users, LogPtr log, const std::string& sceneFilePath = "" );
         Scene() = delete;
         Scene( const Scene& ) = delete;
         Scene( Scene&& ) = delete;

@@ -49,6 +49,8 @@ class PackableArray : public AbstractPackableWrapper< std::array< ElementPlainTy
         /*! \brief Default constructor */
         PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>() = default;
 
+        PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>( const ElementPlainType& value );
+
         /*! \brief Constructs an packable array by copying a plain one */
         PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>( const ElementPlainType* values );
 
@@ -164,6 +166,17 @@ PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::PackableArray(
 }
 
 
+template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
+PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::PackableArray( const ElementPlainType& value )
+{
+    unsigned int i;
+
+    for( i=0; i<ARRAY_SIZE; i++ ){
+        elements_[i] = value;
+    }
+}
+
+
 /***
  * 3. Getters
  ***/
@@ -180,6 +193,7 @@ std::array< ElementPlainType, ARRAY_SIZE > PackableArray<ElementPackableType, El
 {
     return getValues();
 }
+
 
 template <class ElementPackableType, class ElementPlainType, unsigned int ARRAY_SIZE >
 std::array< ElementPlainType, ARRAY_SIZE > PackableArray<ElementPackableType, ElementPlainType, ARRAY_SIZE>::getValues() const

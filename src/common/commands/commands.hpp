@@ -57,4 +57,7 @@
 // Camera commands
 #include "camera_commands/camera_commands.hpp"
 
+// Entity commands
+#include "entity_commands/entity_commands.hpp"
+
 #endif // COMMANDS_HPP

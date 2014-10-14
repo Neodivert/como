@@ -20,15 +20,21 @@
 
 namespace como {
 
-GeometricPrimitiveCommand::GeometricPrimitiveCommand( GeometricPrimitiveCommandType commandType, const ResourceID& meshID, const ResourceID& materialID, const ResourceID& firstTextureWallID ) :
+GeometricPrimitiveCommand::GeometricPrimitiveCommand( GeometricPrimitiveCommandType commandType,
+                                                      const ResourceID& meshID,
+                                                      const ResourceID& materialID,
+                                                      const ResourceID& firstTextureWallID,
+                                                      const glm::vec3& centroid ) :
     TypeCommand( CommandTarget::GEOMETRIC_PRIMITIVE, commandType, meshID.getCreatorID() ),
     meshID_( meshID ),
     materialID_( materialID ),
-    firstTextureWallID_( firstTextureWallID )
+    firstTextureWallID_( firstTextureWallID ),
+    centroid_( centroid.x, centroid.y, centroid.z )
 {
     addPackable( &meshID_ );
     addPackable( &materialID_ );
     addPackable( &firstTextureWallID_ );
+    addPackable( &centroid_ );
 }
 
 
@@ -36,11 +42,13 @@ GeometricPrimitiveCommand::GeometricPrimitiveCommand( const GeometricPrimitiveCo
     TypeCommand( b ),
     meshID_( b.meshID_ ),
     materialID_( b.materialID_ ),
-    firstTextureWallID_( b.firstTextureWallID_ )
+    firstTextureWallID_( b.firstTextureWallID_ ),
+    centroid_( b.centroid_ )
 {
     addPackable( &meshID_ );
     addPackable( &materialID_ );
     addPackable( &firstTextureWallID_ );
+    addPackable( &centroid_ );
 }
 
 
@@ -63,6 +71,16 @@ ResourceID GeometricPrimitiveCommand::getMaterialID() const
 ResourceID GeometricPrimitiveCommand::getFirstTextureWallID() const
 {
     return firstTextureWallID_.getValue();
+}
+
+
+glm::vec3 GeometricPrimitiveCommand::centroid() const
+{
+    return glm::vec3(
+            centroid_.getValues()[0],
+            centroid_.getValues()[1],
+            centroid_.getValues()[2]
+            );
 }
 
 

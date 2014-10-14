@@ -49,6 +49,7 @@ class AbstractEntitiesSet : public Transformable, public virtual Observable // T
         virtual PivotPointMode pivotPointMode() const = 0;
         virtual glm::vec4 borderColor() const = 0;
         virtual unsigned int size() const = 0;
+        virtual bool containsEntity( const ResourceID& entityID ) const = 0;
 
 
         /***
@@ -56,6 +57,8 @@ class AbstractEntitiesSet : public Transformable, public virtual Observable // T
          ***/
         virtual void setPivotPointMode( PivotPointMode mode ) = 0;
         virtual void setBorderColor( const glm::vec4& borderColor ) = 0;
+        virtual void setEntityModelMatrix( const ResourceID& entityID,
+                                           const glm::mat4& modelMatrix ) = 0;
 
 
         /***

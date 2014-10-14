@@ -169,6 +169,11 @@ void SpheresFactory::createSphere(const ResourceID &sphereID, const ResourceID &
     sphereNDivisions_ = nDivisions;
 
     sphere = MeshPtr( new SystemMesh( sphereID, materialID, firstTextureWallID, generatePrimitiveData(), *materialsManager_ ) );
+
+    // On this version of COMO, geometric primitives are synchronized as they
+    // had a centroid 0, so check that this is true.
+    assert( sphere->centroid() == glm::vec3( 0.0f ) );
+
     meshesManager_->addMesh( std::move( sphere ), sphereID );
 }
 

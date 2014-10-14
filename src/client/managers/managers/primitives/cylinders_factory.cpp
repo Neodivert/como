@@ -236,6 +236,10 @@ void CylindersFactory::createCylinder( const ResourceID &cylinderID, const Resou
 
     cylinder = std::unique_ptr< Mesh >( new SystemMesh( cylinderID, materialID, firstTextureWallID, generatePrimitiveData(), *materialsManager_ ) );
 
+    // On this version of COMO, geometric primitives are synchronized as they
+    // had a centroid 0, so check that this is true.
+    assert( cylinder->centroid() == glm::vec3( 0.0f ) );
+
     meshesManager_->addMesh( std::move( cylinder ), cylinderID );
 }
 

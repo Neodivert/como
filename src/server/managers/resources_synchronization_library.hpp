@@ -23,17 +23,22 @@
 #include <server/sync_data/resource_sync_data.hpp>
 #include <server/commands_historic.hpp>
 #include <common/utilities/lockable.hpp>
+#include <common/managers/abstract_resources_ownership_manager.hpp>
+#include <set>
+#include <server/public_user.hpp>
 
 namespace como {
 
-class ResourcesSynchronizationLibrary : public Lockable
+class ResourcesSynchronizationLibrary : public AbstractResourcesOwnershipManager
 {
     public:
         /***
          * 1. Construction
          ***/
         ResourcesSynchronizationLibrary( CommandsHistoricPtr commandsHistoric,
-                                         const std::string& unpackingDirPath );
+                                         UsersMap& users,
+                                         const std::string& unpackingDirPath,
+                                         LogPtr log );
         ResourcesSynchronizationLibrary() = delete;
         ResourcesSynchronizationLibrary( const ResourcesSynchronizationLibrary& ) = delete;
         ResourcesSynchronizationLibrary( ResourcesSynchronizationLibrary&& ) = delete;
@@ -72,11 +77,28 @@ class ResourcesSynchronizationLibrary : public Lockable
         void saveCommandToFile();
 
 
+        /***
+         * 6. Owners management
+         ***/
+        void removeUser( UserID userID );
+
+
+        /***
+         * 7. Resources ownership management
+         ***/
+        virtual void lockResource( const ResourceID &resourceID, UserID userID );
+        virtual void unlockResourcesSelection( UserID userID );
+        virtual void deleteResourcesSelection( UserID userID );
+        virtual void processLockResponse( const ResourceID &resourceID, bool lockResponse );
+
     private:
         std::map< ResourceID, ResourceSyncDataPtr > resourcesSyncData_;
 
         CommandsHistoricPtr commandsHistoric_;
         const std::string unpackingDirPath_;
+
+        UsersMap& users_;
+        std::set< ResourceID > undeletableResources_;
 };
 
 typedef std::unique_ptr< ResourcesSynchronizationLibrary > ResourcesSynchronizationLibraryPtr;

@@ -25,6 +25,7 @@
 #include <client/managers/selections/entities/local_entities_selection.hpp>
 #include <client/managers/managers/entities/abstract_entities_manager.hpp>
 #include <client/managers/managers/users/users_manager.hpp>
+#include <common/commands/entity_commands/entity_commands.hpp>
 
 namespace como {
 
@@ -75,6 +76,7 @@ class EntitiesManager : public AbstractEntitiesManager, public ContainerObserver
          ***/
         void executeRemoteSelectionCommand( const SelectionCommand& command );
         void executeRemoteParameterChangeCommand( UserParameterChangeCommandConstPtr command );
+        void executeRemoteEntityCommand( const EntityCommand& command );
 
 
         /***

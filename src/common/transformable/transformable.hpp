@@ -19,7 +19,10 @@
 #ifndef TRANSFORMABLE_HPP
 #define TRANSFORMABLE_HPP
 
-#include <client/models/dependencies.hpp>
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <GL/gl.h>
 
 namespace como {
 
@@ -60,6 +63,7 @@ class Transformable
         void scaleAroundPivot( const glm::vec3& scaleFactors, const glm::vec3& pivot );
 
         virtual void applyTransformationMatrix( const glm::mat4& transformation ) = 0;
+        virtual void setModelMatrix( const glm::mat4& modelMatrix ) = 0;
 
 
         /***

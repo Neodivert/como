@@ -61,13 +61,14 @@ DrawableType Entity::getType() const
 
 void Entity::applyTransformationMatrix( const glm::mat4& transformation )
 {
-    // Move the drawable from world to object space, then apply the new
-    // transformation and finally move back the drawable from object to world
-    // space.
-    modelMatrix_ = transformation * modelMatrix_;
+    setModelMatrix( transformation * modelMatrix_ );
+}
 
-    // Update the transformed vertices using the original ones and the
-    // previous transformation matrix.
+
+void Entity::setModelMatrix(const glm::mat4 &modelMatrix)
+{
+    modelMatrix_ = modelMatrix;
+
     update();
 }
 

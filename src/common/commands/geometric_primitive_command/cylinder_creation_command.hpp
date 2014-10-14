@@ -36,7 +36,8 @@ class CylinderCreationCommand : public GeometricPrimitiveCommand
                              const ResourceID& firstTextureWallID,
                              float coneHeight,
                              float coneRadius,
-                             unsigned int coneNBaseVertices );
+                             unsigned int coneNBaseVertices,
+                             const glm::vec3& centroid = glm::vec3( 0.0f ) );
         CylinderCreationCommand( const CylinderCreationCommand& );
         CylinderCreationCommand( CylinderCreationCommand&& ) = delete;
         COMMAND_CLONE_METHOD( CylinderCreationCommand )

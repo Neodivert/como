@@ -315,6 +315,14 @@ CommandPtr PackableCommandsList::createEmtpyCommandFromBuffer(const void *buffer
             }
         break;
 
+        case CommandTarget::ENTITY:
+            switch( EntityCommand::getType( buffer ) ){
+                case EntityCommandType::MODEL_MATRIX_REPLACEMENT:
+                    command = CommandPtr( new ModelMatrixReplacementCommand );
+                break;
+            }
+        break;
+
         default:
             int commandTarget = static_cast< int >( Command::getTarget( buffer ) );
             throw std::runtime_error( "Received an unrecognized command type" +

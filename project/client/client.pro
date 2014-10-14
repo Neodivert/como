@@ -91,7 +91,6 @@ HEADERS += \
     ../../src/client/gui/tools_menu/properties_tab/lights_menu.hpp \
     ../../src/client/models/3d/entity.hpp \
     ../../src/client/models/3d/drawable.hpp \
-    ../../src/client/models/3d/transformable.hpp \
     ../../src/client/models/3d/entities_set.hpp \
     ../../src/client/models/3d/lights/light.hpp \
     ../../src/client/managers/managers/entities/entities_manager.hpp \
@@ -183,7 +182,6 @@ SOURCES += \
     ../../src/client/managers/selections/meshes/local_meshes_selection.cpp \
     ../../src/client/gui/tools_menu/properties_tab/lights_menu.cpp \
     ../../src/client/models/3d/entity.cpp \
-    ../../src/client/models/3d/transformable.cpp \
     ../../src/client/models/3d/lights/light.cpp \
     ../../src/client/managers/managers/entities/entities_manager.cpp \
     ../../src/client/managers/selections/entities/entities_selection.cpp \

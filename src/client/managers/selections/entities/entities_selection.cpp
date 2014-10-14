@@ -81,6 +81,18 @@ unsigned int EntitiesSelection::size() const
 }
 
 
+bool EntitiesSelection::containsEntity(const ResourceID &entityID) const
+{
+    lock();
+    for( auto& selection : specializedEntitiesSelections_ ){
+        if( selection->containsEntity( entityID ) ){
+            return true;
+        }
+    }
+    return false;
+}
+
+
 /***
  * 4. Setters
  ***/
@@ -100,6 +112,17 @@ void EntitiesSelection::setBorderColor(const glm::vec4 &borderColor)
     lock();
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->setBorderColor( borderColor );
+    }
+}
+
+
+void EntitiesSelection::setEntityModelMatrix( const ResourceID &entityID,
+                                              const glm::mat4 &modelMatrix )
+{
+    for( auto& selection : specializedEntitiesSelections_ ){
+        if( selection->containsEntity( entityID ) ){
+            selection->setEntityModelMatrix( entityID, modelMatrix );
+        }
     }
 }
 
@@ -158,6 +181,15 @@ void EntitiesSelection::applyTransformationMatrix(const glm::mat4 &transformatio
     lock();
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->applyTransformationMatrix( transformation );
+    }
+}
+
+
+void EntitiesSelection::setModelMatrix(const glm::mat4 &modelMatrix)
+{
+    lock();
+    for( auto& selection : specializedEntitiesSelections_ ){
+        selection->setModelMatrix( modelMatrix );
     }
 }
 

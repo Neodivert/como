@@ -41,8 +41,9 @@ ConeCreationCommand::ConeCreationCommand( const ResourceID &coneID,
                                           const ResourceID &firstTextureWallID,
                                           float coneHeight,
                                           float coneRadius,
-                                          unsigned int coneNBaseVertices ) :
-    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::CONE_CREATION, coneID, materialID, firstTextureWallID ),
+                                          unsigned int coneNBaseVertices,
+                                          const glm::vec3& centroid ) :
+    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::CONE_CREATION, coneID, materialID, firstTextureWallID, centroid ),
     coneHeight_( coneHeight ),
     coneRadius_( coneRadius ),
     coneNBaseVertices_( coneNBaseVertices )

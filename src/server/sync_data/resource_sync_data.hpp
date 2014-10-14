@@ -29,7 +29,7 @@ class ResourceSyncData : public SyncData
         /***
          * 1. Construction
          ***/
-        ResourceSyncData( const Command* creationCommand );
+        ResourceSyncData( const Command* creationCommand, const ResourceID& id );
         ResourceSyncData() = delete;
         ResourceSyncData( const ResourceSyncData& ) = default;
         ResourceSyncData( ResourceSyncData&& ) = default;
@@ -45,23 +45,32 @@ class ResourceSyncData : public SyncData
          * 3. Getters
          ***/
         virtual std::list< CommandConstPtr > generateUpdateCommands() const;
+        ResourceID resourceID() const;
+        UserID resourceOwner() const;
 
 
         /***
-         * 4. Updating
+         * 4. Setters
+         ***/
+        void setResourceOwner( UserID newOwner );
+
+
+        /***
+         * 5. Updating
          ***/
         virtual void processCommand( const Command& command );
 
 
         /***
-         * 5. Operators
+         * 6. Operators
          ***/
         ResourceSyncData& operator = ( const ResourceSyncData& ) = default;
         ResourceSyncData& operator = ( ResourceSyncData&& ) = default;
 
 
     private:
-        //const ResourceID resourceID_;
+        const ResourceID resourceID_;
+        UserID resourceOwner_;
         std::string resourceName_;
 };
 

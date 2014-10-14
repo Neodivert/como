@@ -58,7 +58,7 @@ bool LightsManager::requestDirectionalLightCreation( const ResourceID& lightID )
     lock();
     if( lights_.size() < MAX_DIRECTIONAL_LIGHTS ){
         lights_.insert( lightID );
-        resourcesOwnershipManager_->registerResource( lightID, lightID.getCreatorID() );
+        resourcesOwnershipManager_->registerResource( lightID, NO_USER );
         return true;
     }else{
         return false;

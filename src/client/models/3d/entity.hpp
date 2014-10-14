@@ -21,7 +21,7 @@
 
 #include <common/resources/resource.hpp>
 #include <client/models/3d/drawable.hpp>
-#include <client/models/3d/transformable.hpp>
+#include <common/transformable/transformable.hpp>
 #include <client/models/dependencies.hpp>
 #include <client/models/utilities/open_gl.hpp>
 
@@ -89,6 +89,7 @@ class Entity : public Resource, public Drawable, public Transformable
         virtual void intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned int* triangle = nullptr  ) const = 0;
 
         virtual void applyTransformationMatrix( const glm::mat4& newTransformation );
+        virtual void setModelMatrix(const glm::mat4 &modelMatrix);
 
 
         /***

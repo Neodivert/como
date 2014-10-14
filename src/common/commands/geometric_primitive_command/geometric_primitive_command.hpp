@@ -20,6 +20,8 @@
 #define GEOMETRIC_PRIMITIVE_COMMAND_HPP
 
 #include <common/commands/type_command.hpp>
+#include <common/packables/array/packable_array_3.hpp>
+#include <common/packables/packable_float.hpp>
 
 namespace como {
 
@@ -40,7 +42,8 @@ class GeometricPrimitiveCommand : public TypeCommand< GeometricPrimitiveCommandT
         GeometricPrimitiveCommand( GeometricPrimitiveCommandType type,
                                    const ResourceID& meshID,
                                    const ResourceID& materialID,
-                                   const ResourceID& firstTextureWallID );
+                                   const ResourceID& firstTextureWallID,
+                                   const glm::vec3& centroid = glm::vec3( 0.0f ) );
         GeometricPrimitiveCommand() = delete;
         GeometricPrimitiveCommand( const GeometricPrimitiveCommand& );
         GeometricPrimitiveCommand( GeometricPrimitiveCommand&& ) = delete;
@@ -58,6 +61,7 @@ class GeometricPrimitiveCommand : public TypeCommand< GeometricPrimitiveCommandT
         ResourceID getMeshID() const;
         ResourceID getMaterialID() const;
         ResourceID getFirstTextureWallID() const;
+        glm::vec3 centroid() const;
 
 
         /***
@@ -71,6 +75,7 @@ class GeometricPrimitiveCommand : public TypeCommand< GeometricPrimitiveCommandT
         PackableResourceID meshID_;
         PackableResourceID materialID_;
         PackableResourceID firstTextureWallID_;
+        PackableArray3< PackableFloat, float > centroid_;
 };
 
 } // namespace como

@@ -41,8 +41,9 @@ CylinderCreationCommand::CylinderCreationCommand( const ResourceID &cylinderID,
                                           const ResourceID &firstTextureWallID,
                                           float coneHeight,
                                           float coneRadius,
-                                          unsigned int coneNBaseVertices ) :
-    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::CYLINDER_CREATION, cylinderID, materialID, firstTextureWallID ),
+                                          unsigned int coneNBaseVertices,
+                                          const glm::vec3& centroid ) :
+    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::CYLINDER_CREATION, cylinderID, materialID, firstTextureWallID, centroid ),
     cylinderHeight_( coneHeight ),
     cylinderRadius_( coneRadius ),
     cylinderNRadialVertices_( coneNBaseVertices )

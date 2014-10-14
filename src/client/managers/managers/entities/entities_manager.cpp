@@ -210,6 +210,22 @@ void EntitiesManager::executeRemoteParameterChangeCommand( UserParameterChangeCo
 }
 
 
+void EntitiesManager::executeRemoteEntityCommand( const EntityCommand &command )
+{
+    // TODO: Apply entity command.
+    lock();
+
+    switch( command.getType() ){
+        case EntityCommandType::MODEL_MATRIX_REPLACEMENT:{
+            const ModelMatrixReplacementCommand& matrixCommand =
+                 dynamic_cast< const ModelMatrixReplacementCommand& >( command );
+
+            entitiesSelections_.at( matrixCommand.getUserID() )->setEntityModelMatrix( matrixCommand.entityID(), matrixCommand.modelMatrix() );
+        }break;
+    }
+}
+
+
 /***
  * 7. Drawing
  ***/

@@ -49,7 +49,8 @@ enum class CommandTarget : std::uint8_t
     GEOMETRIC_PRIMITIVE,
     TEXTURE,
     TEXTURE_WALL,
-    CAMERA
+    CAMERA,
+    ENTITY
 };
 
 
