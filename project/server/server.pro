@@ -33,7 +33,8 @@ HEADERS += \
     ../../src/server/sync_data/texture_sync_data.hpp \
     ../../src/server/managers/resources_synchronization_library.hpp \
     ../../src/server/managers/scene.hpp \
-    ../../src/server/sync_data/entity_sync_data.hpp
+    ../../src/server/sync_data/entity_sync_data.hpp \
+    ../../src/server/sync_data/texture_wall_sync_data.hpp
 
 # Server sources
 SOURCES += \
@@ -47,4 +48,5 @@ SOURCES += \
     ../../src/server/sync_data/resource_sync_data.cpp \
     ../../src/server/managers/resources_synchronization_library.cpp \
     ../../src/server/managers/scene.cpp \
-    ../../src/server/sync_data/entity_sync_data.cpp
+    ../../src/server/sync_data/entity_sync_data.cpp \
+    ../../src/server/sync_data/texture_wall_sync_data.cpp

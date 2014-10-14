@@ -20,6 +20,7 @@
 #include <common/commands/commands.hpp>
 #include <server/sync_data/texture_sync_data.hpp>
 #include <server/sync_data/entity_sync_data.hpp>
+#include <server/sync_data/texture_wall_sync_data.hpp>
 #include <common/commands/commands_file_parser.hpp>
 
 namespace como {
@@ -82,6 +83,15 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                         ResourceSyncDataPtr( new EntitySyncData( &geometricPrimitiveCommand,
                                                                  geometricPrimitiveCommand.getMeshID(),
                                                                  geometricPrimitiveCommand.centroid() ) );
+
+                // TODO: Retrieve number of texture walls from command.
+                ResourceID textureWallID = geometricPrimitiveCommand.getFirstTextureWallID();
+                for( unsigned int i = 0; i < 1; i++ ){
+                    resourcesSyncData_[textureWallID] =
+                            ResourceSyncDataPtr(
+                                new TextureWallSyncData( nullptr,
+                                                         textureWallID ) );
+                }
             }else{
                 resourcesSyncData_.at( geometricPrimitiveCommand.getMeshID() )->processCommand( command );
             }
@@ -156,6 +166,11 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                 }
             }
         }break;
+        case CommandTarget::TEXTURE_WALL:{
+            const TextureWallCommand& textureWallCommand =
+                    dynamic_cast< const TextureWallCommand& >( command );
+            resourcesSyncData_.at( textureWallCommand.textureWallID() )->processCommand( textureWallCommand );
+        }
         default:
             // TODO: Complete
         break;

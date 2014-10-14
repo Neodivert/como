@@ -29,6 +29,7 @@
 #include <common/resources/resource_header.hpp>
 #include <common/utilities/observable_container/observable_container.hpp>
 #include <common/commands/texture_commands/texture_commands.hpp>
+#include <client/models/3d/textures/texture.hpp>
 
 namespace como {
 

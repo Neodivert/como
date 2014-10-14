@@ -20,8 +20,6 @@
 #define TEXTURE_WALL_HPP
 
 #include <glm/vec2.hpp>
-#include <memory>
-#include "texture.hpp"
 #include <common/ids/resource_id.hpp>
 
 namespace como {
