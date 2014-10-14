@@ -113,6 +113,45 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                     dynamic_cast< const EntityCommand& >( command );
             resourcesSyncData_.at( entityCommand.entityID() )->processCommand( entityCommand );
         }break;
+        case CommandTarget::LIGHT:{
+            const LightCommand& lightCommand = dynamic_cast< const LightCommand& >( command );
+
+            if( lightCommand.getType() == LightCommandType::LIGHT_CREATION ){
+                log()->debug( lights_.size(), " < ", MAX_LIGHTS, "\n" );
+                // Request the creation of the light to the lights manager.
+                if( lights_.size() < MAX_LIGHTS ){
+                    log()->debug( "\t\tInserting light (", lightCommand.getResourceID(), ")\n" );
+                    lights_.insert( lightCommand.getResourceID() );
+
+                    resourcesSyncData_[ lightCommand.getResourceID() ] =
+                            ResourceSyncDataPtr(
+                                new EntitySyncData(
+                                    &lightCommand,
+                                    lightCommand.getResourceID(),
+                                    glm::vec3( 0.0f ) ) ); // TODO: Retrieve centroid from command.
+
+                    if( lightCommand.getUserID() != NO_USER ){
+                        users_.at( lightCommand.getUserID() )->addResponseCommand(
+                                    CommandConstPtr(
+                                        new LightCreationResponseCommand( lightCommand.getResourceID(),
+                                                                          true
+                                                                          ) ) );
+                    }
+                }else{
+                    if( lightCommand.getUserID() != NO_USER ){
+                        users_.at( lightCommand.getUserID() )->addResponseCommand(
+                                    CommandConstPtr(
+                                        new LightCreationResponseCommand( lightCommand.getResourceID(),
+                                                                          false
+                                                                          ) ) );
+                    }
+                    // If the request was denied, return from this method so
+                    // the creation command received from user isn't added to
+                    // the commands historic.
+                    return;
+                }
+            }
+        }break;
         default:
             // TODO: Complete
         break;
@@ -217,7 +256,7 @@ void ResourcesSynchronizationLibrary::unlockResourcesSelection( UserID userID )
     log()->debug( "(User: ", userID, ") Unlocking Selection\n" );
     for( auto& resourceSyncData : resourcesSyncData_ ){
         if( resourceSyncData.second->resourceOwner() == userID ){
-            resourceSyncData.second->setResourceOwner( userID );
+            resourceSyncData.second->setResourceOwner( NO_USER );
         }
     }
 }
@@ -231,6 +270,10 @@ void ResourcesSynchronizationLibrary::deleteResourcesSelection( UserID userID )
     currentElement = nextElement = resourcesSyncData_.begin();
     while( currentElement != resourcesSyncData_.end() ){
         nextElement++;
+
+        if( lights_.count( currentElement->first ) ){
+            lights_.erase( currentElement->first );
+        }
 
         if( currentElement->second->resourceOwner() == userID ){
             if( !undeletableResources_.count( currentElement->first ) ){

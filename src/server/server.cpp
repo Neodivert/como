@@ -37,7 +37,6 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
     newSocket_( *io_service_ ),
     port_( port_ ),
     resourcesOwnershipManager_( users_, log_ ),
-    lightsManager_( 4, &resourcesOwnershipManager_ ),
     commandsHistoric_( new CommandsHistoric( std::bind( &Server::broadcast, this ) ) ),
     scene_( sceneName, commandsHistoric_, users_, log_, sceneFilePath )
 {
@@ -127,8 +126,10 @@ void Server::run()
         // Create a directional light with with no owner and synchronize it in
         // the commands historic.
         std::uint8_t lightColor[4] = { 255, 255, 255, 255 };
-        lightsManager_.requestDirectionalLightCreation( DIRECTIONAL_LIGHT_ID );
-        addCommand( CommandConstPtr( new DirectionalLightCreationCommand( NO_USER, DIRECTIONAL_LIGHT_ID, lightColor ) ) );
+        processSceneCommand(
+                    DirectionalLightCreationCommand( NO_USER,
+                                                     DIRECTIONAL_LIGHT_ID,
+                                                     lightColor ) );
 
         // Create a camera with no owner and syncrhonize it in the commands
         // historic.
@@ -363,30 +364,6 @@ void Server::processSceneCommand( const Command& sceneCommand )
                     log_->debug( "Mesh added! (", (int)( primitiveCommand.getMeshID().getCreatorID() ),
                                  ", ", (int)( primitiveCommand.getMeshID().getResourceIndex() ), "\n" );
                 }break;
-            }
-        }break;
-        case CommandTarget::LIGHT:{
-            const LightCommand& lightCommand = dynamic_cast< const LightCommand& >( sceneCommand );
-
-            if( lightCommand.getType() == LightCommandType::LIGHT_CREATION ){
-                // Request the creation of the light to the lights manager.
-                if( lightsManager_.requestDirectionalLightCreation( lightCommand.getResourceID() ) ){
-                    users_.at( lightCommand.getUserID() )->addResponseCommand(
-                                CommandConstPtr(
-                                    new LightCreationResponseCommand( lightCommand.getResourceID(),
-                                                                      true
-                                                                      ) ) );
-                }else{
-                    users_.at( lightCommand.getUserID() )->addResponseCommand(
-                                CommandConstPtr(
-                                    new LightCreationResponseCommand( lightCommand.getResourceID(),
-                                                                      false
-                                                                      ) ) );
-                    // If the request was denied, return from this method so
-                    // the creation command received from user isn't added to
-                    // the commands historic.
-                    return;
-                }
             }
         }break;
         default:

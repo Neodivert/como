@@ -29,6 +29,8 @@
 
 namespace como {
 
+const unsigned int MAX_LIGHTS = 4;
+
 class ResourcesSynchronizationLibrary : public AbstractResourcesOwnershipManager
 {
     public:
@@ -99,6 +101,8 @@ class ResourcesSynchronizationLibrary : public AbstractResourcesOwnershipManager
 
         UsersMap& users_;
         std::set< ResourceID > undeletableResources_;
+
+        std::set< ResourceID > lights_;
 };
 
 typedef std::unique_ptr< ResourcesSynchronizationLibrary > ResourcesSynchronizationLibraryPtr;

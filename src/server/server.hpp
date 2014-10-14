@@ -35,7 +35,6 @@
 #include <server/server_primitives_manager.hpp>
 #include <common/scene/basic_scene.hpp>
 #include <server/resources_ownership_manager.hpp>
-#include <server/managers/lights_manager.hpp>
 #include <server/managers/scene.hpp>
 #include <common/ids/resource_ids_generator.hpp>
 #include <common/utilities/lockable.hpp>
@@ -93,8 +92,6 @@ class Server : public Lockable
 
         // Resources ownership manager
         ResourcesOwnershipManager resourcesOwnershipManager_;
-
-        LightsManager lightsManager_;
 
         // Historic of commands performed on the scene.
         CommandsHistoricPtr commandsHistoric_;
