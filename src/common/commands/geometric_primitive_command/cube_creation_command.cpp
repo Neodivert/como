@@ -21,7 +21,7 @@
 namespace como {
 
 CubeCreationCommand::CubeCreationCommand() :
-    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::CUBE_CREATION, NO_RESOURCE, NO_RESOURCE, NO_RESOURCE )
+    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::CUBE_CREATION, NO_RESOURCE, NO_RESOURCE, NO_RESOURCE, 6 )
 {
     addPackable( &cubeWidth_ );
     addPackable( &cubeHeight_ );
@@ -30,7 +30,7 @@ CubeCreationCommand::CubeCreationCommand() :
 
 
 CubeCreationCommand::CubeCreationCommand( const ResourceID& cubeID, const ResourceID& materialID, const ResourceID& firstTextureWallID, float width, float height, float depth, const glm::vec3& centroid ) :
-    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::CUBE_CREATION, cubeID, materialID, firstTextureWallID, centroid ),
+    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::CUBE_CREATION, cubeID, materialID, firstTextureWallID, 6, centroid ),
     cubeWidth_( width ),
     cubeHeight_( height ),
     cubeDepth_( depth )

@@ -84,13 +84,14 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                                                                  geometricPrimitiveCommand.getMeshID(),
                                                                  geometricPrimitiveCommand.centroid() ) );
 
-                // TODO: Retrieve number of texture walls from command.
+                // TODO: Synchronize texture walls names.
                 ResourceID textureWallID = geometricPrimitiveCommand.getFirstTextureWallID();
-                for( unsigned int i = 0; i < 1; i++ ){
+                for( unsigned int i = 0; i < geometricPrimitiveCommand.nTextureWalls(); i++ ){
                     resourcesSyncData_[textureWallID] =
                             ResourceSyncDataPtr(
                                 new TextureWallSyncData( nullptr,
                                                          textureWallID ) );
+                    textureWallID++;
                 }
             }else{
                 resourcesSyncData_.at( geometricPrimitiveCommand.getMeshID() )->processCommand( command );

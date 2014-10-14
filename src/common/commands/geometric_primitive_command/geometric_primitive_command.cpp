@@ -24,16 +24,19 @@ GeometricPrimitiveCommand::GeometricPrimitiveCommand( GeometricPrimitiveCommandT
                                                       const ResourceID& meshID,
                                                       const ResourceID& materialID,
                                                       const ResourceID& firstTextureWallID,
+                                                      std::uint8_t nTextureWalls,
                                                       const glm::vec3& centroid ) :
     TypeCommand( CommandTarget::GEOMETRIC_PRIMITIVE, commandType, meshID.getCreatorID() ),
     meshID_( meshID ),
     materialID_( materialID ),
     firstTextureWallID_( firstTextureWallID ),
+    nTextureWalls_( nTextureWalls ),
     centroid_( centroid.x, centroid.y, centroid.z )
 {
     addPackable( &meshID_ );
     addPackable( &materialID_ );
     addPackable( &firstTextureWallID_ );
+    addPackable( &nTextureWalls_ );
     addPackable( &centroid_ );
 }
 
@@ -43,11 +46,13 @@ GeometricPrimitiveCommand::GeometricPrimitiveCommand( const GeometricPrimitiveCo
     meshID_( b.meshID_ ),
     materialID_( b.materialID_ ),
     firstTextureWallID_( b.firstTextureWallID_ ),
+    nTextureWalls_( b.nTextureWalls_ ),
     centroid_( b.centroid_ )
 {
     addPackable( &meshID_ );
     addPackable( &materialID_ );
     addPackable( &firstTextureWallID_ );
+    addPackable( &nTextureWalls_ );
     addPackable( &centroid_ );
 }
 
@@ -71,6 +76,12 @@ ResourceID GeometricPrimitiveCommand::getMaterialID() const
 ResourceID GeometricPrimitiveCommand::getFirstTextureWallID() const
 {
     return firstTextureWallID_.getValue();
+}
+
+
+std::uint8_t GeometricPrimitiveCommand::nTextureWalls() const
+{
+    return nTextureWalls_.getValue();
 }
 
 

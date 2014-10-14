@@ -33,6 +33,7 @@ enum class GeometricPrimitiveCommandType : std::uint8_t
     SPHERE_CREATION
 };
 
+
 class GeometricPrimitiveCommand : public TypeCommand< GeometricPrimitiveCommandType >
 {
     public:
@@ -43,6 +44,7 @@ class GeometricPrimitiveCommand : public TypeCommand< GeometricPrimitiveCommandT
                                    const ResourceID& meshID,
                                    const ResourceID& materialID,
                                    const ResourceID& firstTextureWallID,
+                                   std::uint8_t nTextureWalls,
                                    const glm::vec3& centroid = glm::vec3( 0.0f ) );
         GeometricPrimitiveCommand() = delete;
         GeometricPrimitiveCommand( const GeometricPrimitiveCommand& );
@@ -61,6 +63,7 @@ class GeometricPrimitiveCommand : public TypeCommand< GeometricPrimitiveCommandT
         ResourceID getMeshID() const;
         ResourceID getMaterialID() const;
         ResourceID getFirstTextureWallID() const;
+        std::uint8_t nTextureWalls() const;
         glm::vec3 centroid() const;
 
 
@@ -75,6 +78,7 @@ class GeometricPrimitiveCommand : public TypeCommand< GeometricPrimitiveCommandT
         PackableResourceID meshID_;
         PackableResourceID materialID_;
         PackableResourceID firstTextureWallID_;
+        PackableUint8< std::uint8_t > nTextureWalls_;
         PackableArray3< PackableFloat, float > centroid_;
 };
 
