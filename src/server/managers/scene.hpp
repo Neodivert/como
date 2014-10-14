@@ -67,7 +67,13 @@ class Scene : public BasicScene
 
 
         /***
-         * 6. Operators
+         * 6. Users management
+         ***/
+        void removeUser( UserID userID );
+
+
+        /***
+         * 7. Operators
          ***/
         Scene& operator = ( const Scene& ) = delete;
         Scene& operator = ( Scene&& ) = delete;
@@ -75,7 +81,7 @@ class Scene : public BasicScene
 
     private:
         /***
-         * 7. Initialization
+         * 8. Initialization
          ***/
         void initEmptyScene();
 

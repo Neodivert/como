@@ -21,6 +21,7 @@
 #include <server/sync_data/texture_sync_data.hpp>
 #include <server/sync_data/entity_sync_data.hpp>
 #include <server/sync_data/texture_wall_sync_data.hpp>
+#include <server/sync_data/material_sync_data.hpp>
 #include <common/commands/commands_file_parser.hpp>
 
 namespace como {
@@ -93,6 +94,12 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                                                          textureWallID ) );
                     textureWallID++;
                 }
+
+                // TODO: Synchronize material names.
+                resourcesSyncData_[geometricPrimitiveCommand.getMaterialID()] =
+                        ResourceSyncDataPtr(
+                            new MaterialSyncData( nullptr,
+                                                  geometricPrimitiveCommand.getMaterialID() ) );
             }else{
                 resourcesSyncData_.at( geometricPrimitiveCommand.getMeshID() )->processCommand( command );
             }
@@ -123,6 +130,11 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
             const EntityCommand& entityCommand =
                     dynamic_cast< const EntityCommand& >( command );
             resourcesSyncData_.at( entityCommand.entityID() )->processCommand( entityCommand );
+        }break;
+        case CommandTarget::MATERIAL:{
+            const MaterialCommand& materialCommand =
+                    dynamic_cast< const MaterialCommand& >( command );
+            resourcesSyncData_.at( materialCommand.getMaterialID() )->processCommand( materialCommand );
         }break;
         case CommandTarget::LIGHT:{
             const LightCommand& lightCommand = dynamic_cast< const LightCommand& >( command );
@@ -239,7 +251,7 @@ void ResourcesSynchronizationLibrary::registerResource(const ResourceID& resourc
 */
 
 /***
- * 6. Owners management
+ * 5. Owners management
  ***/
 
 void ResourcesSynchronizationLibrary::removeUser( UserID userID )
@@ -251,7 +263,7 @@ void ResourcesSynchronizationLibrary::removeUser( UserID userID )
 
 
 /***
- * 7. Resources ownership management
+ * 6. Resources ownership management
  ***/
 
 void ResourcesSynchronizationLibrary::lockResource( const ResourceID& resourceID, UserID userID )

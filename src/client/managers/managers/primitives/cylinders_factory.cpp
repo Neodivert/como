@@ -125,6 +125,7 @@ void CylindersFactory::generateVertexData( MeshVertexData &vertexData )
                                                  currentTopVertexIndex + 1,
                                                  currentBottomVertexIndex + 1 });
     }
+
     currentTopVertexIndex = TOP_FIRST_RADIAL_VERTEX_INDEX + i;
     currentBottomVertexIndex = BOTTOM_FIRST_RADIAL_VERTEX_INDEX + i;
     vertexData.vertexTriangles.push_back({
@@ -152,6 +153,7 @@ void CylindersFactory::generateUVData(MeshTextureData &uvData)
     const unsigned int BOTTOM_CENTER_INDEX = TOP_CENTER_INDEX;
 
     // Create radial top UV vertices.
+    const unsigned int TOP_SIDE_FIRST_RADIAL_VERTEX_INDEX = uvData.uvVertices.size();
     for( i = 0; i < cylinderNRadialVertices_; i++ ){
         uvData.uvVertices.push_back(
                     glm::vec2(
@@ -160,6 +162,7 @@ void CylindersFactory::generateUVData(MeshTextureData &uvData)
     }
 
     // Create radial bottom UV vertices.
+    const unsigned int BOTTOM_SIDE_FIRST_RADIAL_VERTEX_INDEX = uvData.uvVertices.size();
     for( i = 0; i < cylinderNRadialVertices_; i++ ){
         uvData.uvVertices.push_back(
                     glm::vec2(
@@ -182,27 +185,24 @@ void CylindersFactory::generateUVData(MeshTextureData &uvData)
                              true );
 
     // Create radial triangles
-    const unsigned int TOP_SIDE_FIRST_RADIAL_VERTEX_INDEX = cylinderNRadialVertices_ + 1;
-    const unsigned int BOTTOM_SIDE_FIRST_RADIAL_VERTEX_INDEX = cylinderNRadialVertices_ * 2 + 1;
     for( i = 0; i < cylinderNRadialVertices_ - 1; i++ ){
         currentTopVertexIndex = TOP_SIDE_FIRST_RADIAL_VERTEX_INDEX + i;
         currentBottomVertexIndex = BOTTOM_SIDE_FIRST_RADIAL_VERTEX_INDEX + i;
+        uvData.uvTriangles.push_back({
+                                         currentTopVertexIndex,
+                                         currentBottomVertexIndex + 1,
+                                         currentBottomVertexIndex });
 
         uvData.uvTriangles.push_back({
-                                                 currentTopVertexIndex,
-                                                 currentBottomVertexIndex + 1,
-                                                 currentBottomVertexIndex });
-
-        uvData.uvTriangles.push_back({
-                                                 currentTopVertexIndex,
-                                                 currentTopVertexIndex + 1,
-                                                 currentBottomVertexIndex + 1 });
+                                         currentTopVertexIndex,
+                                         currentTopVertexIndex + 1,
+                                         currentBottomVertexIndex + 1 });
     }
     currentTopVertexIndex = TOP_SIDE_FIRST_RADIAL_VERTEX_INDEX + i;
     currentBottomVertexIndex = BOTTOM_SIDE_FIRST_RADIAL_VERTEX_INDEX + i;
     uvData.uvTriangles.push_back({ currentTopVertexIndex,
-                                   currentBottomVertexIndex,
-                                   BOTTOM_SIDE_FIRST_RADIAL_VERTEX_INDEX });
+                                   BOTTOM_SIDE_FIRST_RADIAL_VERTEX_INDEX,
+                                   currentBottomVertexIndex });
     uvData.uvTriangles.push_back({ currentTopVertexIndex,
                                    TOP_SIDE_FIRST_RADIAL_VERTEX_INDEX,
                                    BOTTOM_SIDE_FIRST_RADIAL_VERTEX_INDEX });

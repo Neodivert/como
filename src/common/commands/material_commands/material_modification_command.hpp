@@ -20,6 +20,7 @@
 #define MATERIAL_MODIFICATION_COMMAND_HPP
 
 #include "abstract_material_modification_command.hpp"
+#include <common/packables/packable_float.hpp>
 
 namespace como {
 

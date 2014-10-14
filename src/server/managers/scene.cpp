@@ -131,7 +131,17 @@ UserID Scene::generateUserID()
 
 
 /***
- * 7. Initialization
+ * 6. Users management
+ ***/
+
+void Scene::removeUser( UserID userID )
+{
+    resourcesSyncLibrary_.removeUser( userID );
+}
+
+
+/***
+ * 8. Initialization
  ***/
 
 void Scene::initEmptyScene()

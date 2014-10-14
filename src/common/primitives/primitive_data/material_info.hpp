@@ -29,20 +29,14 @@
 #include <vector>
 #include <fstream>
 #include <common/primitives/primitive_file.hpp> // TODO: Move PrimitiveFile::readVec3() method to another class.
+#include <common/3d/plain_material_data.hpp>
 
 namespace como {
 
-struct MaterialInfo
+// TODO: Rename to something like TexturedMaterialData.
+struct MaterialInfo : public PlainMaterialData
 {
     std::string name;
-
-    glm::vec4 color;
-
-    glm::vec3 ambientReflectivity;
-    glm::vec3 diffuseReflectivity;
-    glm::vec3 specularReflectivity;
-    float specularExponent;
-
     std::unique_ptr< TextureInfo > textureInfo;
 
 

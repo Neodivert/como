@@ -73,20 +73,14 @@ class ResourcesSynchronizationLibrary : public AbstractResourcesOwnershipManager
 
 
         /***
-         * 5. Auxiliar methods
-         ***/
-    protected:
-        void saveCommandToFile();
-
-
-        /***
-         * 6. Owners management
+         * 5. Owners management
          ***/
         void removeUser( UserID userID );
 
 
+    protected:
         /***
-         * 7. Resources ownership management
+         * 6. Resources ownership management
          ***/
         virtual void lockResource( const ResourceID &resourceID, UserID userID );
         virtual void unlockResourcesSelection( UserID userID );

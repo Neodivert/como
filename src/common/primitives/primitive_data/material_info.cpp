@@ -27,22 +27,13 @@ namespace como {
 
 MaterialInfo::MaterialInfo() :
     name( "Unnamed material" ),
-    color( 1.0f ),
-    ambientReflectivity( 0.9f ),
-    diffuseReflectivity( 0.9f ),
-    specularReflectivity( 0.9f ),
-    specularExponent( 1.0f ),
     textureInfo( nullptr )
 {}
 
 
 MaterialInfo::MaterialInfo( const MaterialInfo& b ) :
-    name( b.name ),
-    color( b.color ),
-    ambientReflectivity( b.ambientReflectivity ),
-    diffuseReflectivity( b.diffuseReflectivity ),
-    specularReflectivity( b.specularReflectivity ),
-    specularExponent( b.specularExponent )
+    PlainMaterialData( b ),
+    name( b.name )
 {
     if( b.textureInfo ){
         textureInfo = std::unique_ptr< TextureInfo >( new TextureInfo( *( b.textureInfo ) ) );

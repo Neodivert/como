@@ -80,10 +80,6 @@ void ConesFactory::executeRemoteCommand( const ConeCreationCommand &command )
 
 void ConesFactory::generateVertexData( MeshVertexData &vertexData )
 {
-    int i;
-    unsigned int currentTopVertexIndex;
-    unsigned int currentBottomVertexIndex;
-
     // Create top vertices
     const unsigned int TOP_CENTER_INDEX =
             generateHorizontalVerticesCircle( vertexData.vertices,
@@ -112,27 +108,6 @@ void ConesFactory::generateVertexData( MeshVertexData &vertexData )
                              BOTTOM_CENTER_INDEX,
                              BOTTOM_CENTER_INDEX + 1,
                              true );
-
-    /*** TODO: Remove this fragment (begin) ***/
-    // Create radial face
-    const unsigned int TOP_FIRST_RADIAL_VERTEX_INDEX = TOP_CENTER_INDEX + 1;
-    const unsigned int BOTTOM_FIRST_RADIAL_VERTEX_INDEX = BOTTOM_CENTER_INDEX + 1;
-
-    for( i = 0; i < coneNBaseVertices_ - 1; i++ ){
-        currentTopVertexIndex = TOP_FIRST_RADIAL_VERTEX_INDEX + i;
-        currentBottomVertexIndex = BOTTOM_FIRST_RADIAL_VERTEX_INDEX + i;
-
-        vertexData.vertexTriangles.push_back({
-                                                 currentTopVertexIndex,
-                                                 currentBottomVertexIndex + 1,
-                                                 currentBottomVertexIndex });
-
-        vertexData.vertexTriangles.push_back({
-                                                 currentTopVertexIndex,
-                                                 currentTopVertexIndex + 1,
-                                                 currentBottomVertexIndex + 1 });
-    }
-    /*** TODO: Remove this fragment (end) ***/
 }
 
 

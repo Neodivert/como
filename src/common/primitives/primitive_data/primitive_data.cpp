@@ -60,11 +60,26 @@ void PrimitiveData::generateOGLData()
 
     oglData.includesTextures = (uvData.uvTriangles.size() > 0);
 
+    if( vertexData.vertexTriangles.size() != normalData.normalTriangles.size() ){
+        throw std::runtime_error(
+                    "vertexTriangles != normalTriangles (" +
+                    std::to_string( vertexData.vertexTriangles.size() ) +
+                    " != " +
+                    std::to_string( normalData.normalTriangles.size() ) );
+    }
+    if( oglData.includesTextures && ( vertexData.vertexTriangles.size() != uvData.uvTriangles.size() ) ){
+        throw std::runtime_error(
+                    "vertexTriangles != uvTriangles (" +
+                    std::to_string( vertexData.vertexTriangles.size() ) +
+                    " != " +
+                    std::to_string( uvData.uvTriangles.size() ) );
+    }
+
     for( currentTriangleIndex = 0; currentTriangleIndex < vertexData.vertexTriangles.size(); currentTriangleIndex++ ){
         for( currentTriangleElement = 0; currentTriangleElement < 3; currentTriangleElement++ ){
             compoundVertex[0] = vertexData.vertexTriangles[currentTriangleIndex][currentTriangleElement];
             compoundVertex[1] = normalData.normalTriangles[currentTriangleIndex][currentTriangleElement];
-            compoundVertex[2] = ( currentTriangleIndex < uvData.uvTriangles.size() ) ? uvData.uvTriangles[currentTriangleIndex][currentTriangleElement] : 0;
+            compoundVertex[2] = oglData.includesTextures ? uvData.uvTriangles[currentTriangleIndex][currentTriangleElement] : 0;
 
             finalVerticesIt = compoundVerticesMap.find( compoundVertex );
 
@@ -86,6 +101,10 @@ void PrimitiveData::generateOGLData()
                 if( oglData.includesTextures ){
                     oglData.vboData.push_back( uvData.uvVertices[ compoundVertex[2] ][0] );
                     oglData.vboData.push_back( uvData.uvVertices[ compoundVertex[2] ][1] );
+
+                    if( compoundVertex[2] > uvData.uvTriangles.size() ){
+                        throw std::runtime_error( "compoundVertex[2] > uvData.uvTriangles.size()" );
+                    }
                 }
 
                 compoundVerticesMap.insert( std::pair< CompoundVertex, VertexIndice >( compoundVertex, compoundVertexIndex ) );

@@ -133,7 +133,8 @@ HEADERS += \
     ../../src/common/transformable/transformable.hpp \
     ../../src/common/commands/entity_commands/entity_command.hpp \
     ../../src/common/commands/entity_commands/entity_commands.hpp \
-    ../../src/common/commands/entity_commands/model_matrix_replacement_command.hpp
+    ../../src/common/commands/entity_commands/model_matrix_replacement_command.hpp \
+    ../../src/common/3d/plain_material_data.hpp
 
 
 # Common sources (used by both client and server).
