@@ -38,7 +38,7 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
     port_( port_ ),
     resourcesOwnershipManager_( users_, log_ ),
     commandsHistoric_( new CommandsHistoric( std::bind( &Server::broadcast, this ) ) ),
-    scene_( sceneName, commandsHistoric_, users_, log_, sceneFilePath )
+    scene_( sceneName, commandsHistoric_, users_, resourceIDsGenerator_, log_, sceneFilePath )
 {
     unsigned int i;
 
@@ -104,9 +104,6 @@ Server::~Server()
 
 void Server::run()
 {
-    const ResourceID DIRECTIONAL_LIGHT_ID = resourceIDsGenerator_->generateResourceIDs( 1 );
-    const ResourceID CAMERA_ID = resourceIDsGenerator_->generateResourceIDs( 1 );
-
     // Create a TCP resolver and a query for getting the endpoint the server
     // must listen to.
 
@@ -122,26 +119,6 @@ void Server::run()
                                                                                                           log_,
                                                                                                           resourceIDsGenerator_ ) );
         });
-
-        // Create a directional light with with no owner and synchronize it in
-        // the commands historic.
-        std::uint8_t lightColor[4] = { 255, 255, 255, 255 };
-        processSceneCommand(
-                    DirectionalLightCreationCommand( NO_USER,
-                                                     DIRECTIONAL_LIGHT_ID,
-                                                     lightColor ) );
-
-        // Create a camera with no owner and syncrhonize it in the commands
-        // historic.
-        const glm::vec3 cameraCenter( 0.0f, 0.0f, 0.0f );
-        const glm::vec3 cameraEye( 0.5f, 0.5f, 0.0f );
-        const glm::vec3 cameraUp( -0.5f, 0.5f, 0.0f );
-        processSceneCommand(
-                    CameraCreationCommand(
-                        CAMERA_ID,
-                        cameraCenter,
-                        cameraEye,
-                        cameraUp ) );
 
         // Initialize the container of free user colors.
         initUserColors();

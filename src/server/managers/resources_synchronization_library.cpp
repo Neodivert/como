@@ -130,7 +130,9 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                                     lightCommand.getResourceID(),
                                     glm::vec3( 0.0f ) ) ); // TODO: Retrieve centroid from command.
 
-                    if( lightCommand.getUserID() != NO_USER ){
+                    // If the user who originally made the request exists in
+                    // the system, send him / her a response command.
+                    if( users_.count( lightCommand.getUserID() ) ){
                         users_.at( lightCommand.getUserID() )->addResponseCommand(
                                     CommandConstPtr(
                                         new LightCreationResponseCommand( lightCommand.getResourceID(),
@@ -138,7 +140,9 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                                                                           ) ) );
                     }
                 }else{
-                    if( lightCommand.getUserID() != NO_USER ){
+                    // If the user who originally made the request exists in
+                    // the system, send him / her a response command.
+                    if( users_.count( lightCommand.getUserID() ) ){
                         users_.at( lightCommand.getUserID() )->addResponseCommand(
                                     CommandConstPtr(
                                         new LightCreationResponseCommand( lightCommand.getResourceID(),

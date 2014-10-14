@@ -26,15 +26,18 @@ const std::string SAVED_SCENES_DIR_PATH = "./data/save";
  * 1. Construction
  ***/
 
-Scene::Scene( const std::string& sceneName, CommandsHistoricPtr commandsHistoric, UsersMap& users, LogPtr log, const std::string& sceneFilePath ) :
+Scene::Scene( const std::string& sceneName, CommandsHistoricPtr commandsHistoric, UsersMap& users, ResourceIDsGeneratorPtr resourceIDsGenerator, LogPtr log, const std::string& sceneFilePath ) :
     BasicScene( sceneName, log ),
     resourcesSyncLibrary_( commandsHistoric, users, getTempDirPath(), log ),
+    resourceIDsGenerator_( resourceIDsGenerator ),
     nextUserID_( 1 )
 {
     boost::filesystem::create_directories( SAVED_SCENES_DIR_PATH );
 
     if( sceneFilePath != "" ){
         loadFromFile( sceneFilePath );
+    }else{
+        initEmptyScene();
     }
 }
 
@@ -124,6 +127,37 @@ UserID Scene::generateUserID()
 {
     lock();
     return nextUserID_++;
+}
+
+
+/***
+ * 7. Initialization
+ ***/
+
+void Scene::initEmptyScene()
+{
+    const ResourceID DIRECTIONAL_LIGHT_ID = resourceIDsGenerator_->generateResourceIDs( 1 );
+    const ResourceID CAMERA_ID = resourceIDsGenerator_->generateResourceIDs( 1 );
+
+    // Create a directional light with with no owner and synchronize it in
+    // the commands historic.
+    std::uint8_t lightColor[4] = { 255, 255, 255, 255 };
+    processCommand(
+                DirectionalLightCreationCommand( NO_USER,
+                                                 DIRECTIONAL_LIGHT_ID,
+                                                 lightColor ) );
+
+    // Create a camera with no owner and syncrhonize it in the commands
+    // historic.
+    const glm::vec3 cameraCenter( 0.0f, 0.0f, 0.0f );
+    const glm::vec3 cameraEye( 0.5f, 0.5f, 0.0f );
+    const glm::vec3 cameraUp( -0.5f, 0.5f, 0.0f );
+    processCommand(
+                CameraCreationCommand(
+                    CAMERA_ID,
+                    cameraCenter,
+                    cameraEye,
+                    cameraUp ) );
 }
 
 

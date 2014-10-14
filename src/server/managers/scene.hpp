@@ -22,6 +22,7 @@
 #include <common/scene/basic_scene.hpp>
 #include <server/commands_historic.hpp>
 #include <server/managers/resources_synchronization_library.hpp>
+#include <common/ids/resource_ids_generator.hpp>
 
 namespace como {
 
@@ -34,7 +35,7 @@ class Scene : public BasicScene
         /***
          * 1. Construction
          ***/
-        Scene( const std::string& sceneName, CommandsHistoricPtr commandsHistoric, UsersMap& users, LogPtr log, const std::string& sceneFilePath = "" );
+        Scene( const std::string& sceneName, CommandsHistoricPtr commandsHistoric, UsersMap& users, ResourceIDsGeneratorPtr resourceIDsGenerator, LogPtr log, const std::string& sceneFilePath = "" );
         Scene() = delete;
         Scene( const Scene& ) = delete;
         Scene( Scene&& ) = delete;
@@ -74,10 +75,17 @@ class Scene : public BasicScene
 
     private:
         /***
+         * 7. Initialization
+         ***/
+        void initEmptyScene();
+
+
+        /***
          * Attributes
          ***/
         ResourcesSynchronizationLibrary resourcesSyncLibrary_;
 
+        ResourceIDsGeneratorPtr resourceIDsGenerator_;
         UserID nextUserID_;
 };
 
