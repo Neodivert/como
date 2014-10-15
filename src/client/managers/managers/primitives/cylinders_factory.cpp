@@ -154,7 +154,7 @@ void CylindersFactory::generateUVData(MeshTextureData &uvData)
 
     // Create radial top UV vertices.
     const unsigned int TOP_SIDE_FIRST_RADIAL_VERTEX_INDEX = uvData.uvVertices.size();
-    for( i = 0; i < cylinderNRadialVertices_; i++ ){
+    for( i = 0; i < cylinderNRadialVertices_ + 1; i++ ){
         uvData.uvVertices.push_back(
                     glm::vec2(
                         static_cast<float>( i ) / static_cast<float>( cylinderNRadialVertices_ ),
@@ -163,7 +163,7 @@ void CylindersFactory::generateUVData(MeshTextureData &uvData)
 
     // Create radial bottom UV vertices.
     const unsigned int BOTTOM_SIDE_FIRST_RADIAL_VERTEX_INDEX = uvData.uvVertices.size();
-    for( i = 0; i < cylinderNRadialVertices_; i++ ){
+    for( i = 0; i < cylinderNRadialVertices_ + 1; i++ ){
         uvData.uvVertices.push_back(
                     glm::vec2(
                         static_cast<float>( i ) / static_cast<float>( cylinderNRadialVertices_ ),
@@ -185,7 +185,7 @@ void CylindersFactory::generateUVData(MeshTextureData &uvData)
                              true );
 
     // Create radial triangles
-    for( i = 0; i < cylinderNRadialVertices_ - 1; i++ ){
+    for( i = 0; i < cylinderNRadialVertices_; i++ ){
         currentTopVertexIndex = TOP_SIDE_FIRST_RADIAL_VERTEX_INDEX + i;
         currentBottomVertexIndex = BOTTOM_SIDE_FIRST_RADIAL_VERTEX_INDEX + i;
         uvData.uvTriangles.push_back({
@@ -198,14 +198,6 @@ void CylindersFactory::generateUVData(MeshTextureData &uvData)
                                          currentTopVertexIndex + 1,
                                          currentBottomVertexIndex + 1 });
     }
-    currentTopVertexIndex = TOP_SIDE_FIRST_RADIAL_VERTEX_INDEX + i;
-    currentBottomVertexIndex = BOTTOM_SIDE_FIRST_RADIAL_VERTEX_INDEX + i;
-    uvData.uvTriangles.push_back({ currentTopVertexIndex,
-                                   BOTTOM_SIDE_FIRST_RADIAL_VERTEX_INDEX,
-                                   currentBottomVertexIndex });
-    uvData.uvTriangles.push_back({ currentTopVertexIndex,
-                                   TOP_SIDE_FIRST_RADIAL_VERTEX_INDEX,
-                                   BOTTOM_SIDE_FIRST_RADIAL_VERTEX_INDEX });
 }
 
 
