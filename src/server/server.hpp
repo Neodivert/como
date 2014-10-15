@@ -32,7 +32,7 @@
 #include <map>
 #include <queue>
 #include <common/utilities/paths.hpp>
-#include <server/server_primitives_manager.hpp>
+#include <server/managers/server_primitives_manager.hpp>
 #include <common/scene/basic_scene.hpp>
 #include <server/managers/scene.hpp>
 #include <common/ids/resource_ids_generator.hpp>

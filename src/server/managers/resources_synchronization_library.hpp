@@ -26,6 +26,7 @@
 #include <common/managers/abstract_resources_ownership_manager.hpp>
 #include <set>
 #include <server/public_user.hpp>
+#include <server/managers/server_primitives_manager.hpp>
 
 namespace como {
 

@@ -26,7 +26,7 @@ HEADERS += \
     ../../src/server/server.hpp \
     ../../src/server/public_user.hpp \
     ../../src/server/commands_historic.hpp \
-    ../../src/server/server_primitives_manager.hpp \
+    ../../src/server/managers/server_primitives_manager.hpp \
     ../../src/server/sync_data/resource_sync_data.hpp \
     ../../src/server/sync_data/sync_data.hpp \
     ../../src/server/sync_data/texture_sync_data.hpp \
@@ -42,7 +42,7 @@ SOURCES += \
     ../../src/server/server.cpp \
     ../../src/server/public_user.cpp \
     ../../src/server/commands_historic.cpp \
-    ../../src/server/server_primitives_manager.cpp \
+    ../../src/server/managers/server_primitives_manager.cpp \
     ../../src/server/sync_data/sync_data.cpp \
     ../../src/server/sync_data/resource_sync_data.cpp \
     ../../src/server/managers/resources_synchronization_library.cpp \
