@@ -32,12 +32,19 @@ namespace como {
 
 ResourcesSynchronizationLibrary::ResourcesSynchronizationLibrary( CommandsHistoricPtr commandsHistoric,
                                                                   UsersMap& users,
-                                                                  const std::string &unpackingDirPath,
+                                                                  const std::string &sceneDirPath,
+                                                                  const std::string &tempDirPath,
+                                                                  ResourceIDsGeneratorPtr resourceIDsGenerator,
                                                                   LogPtr log ) :
     AbstractResourcesOwnershipManager( log ),
     commandsHistoric_( commandsHistoric ),
-    unpackingDirPath_( unpackingDirPath ),
-    users_( users )
+    unpackingDirPath_( tempDirPath ),
+    users_( users ),
+    primitivesManager_( sceneDirPath,
+                        tempDirPath,
+                        commandsHistoric_,
+                        log,
+                        resourceIDsGenerator )
 {}
 
 

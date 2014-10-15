@@ -79,13 +79,6 @@ class Server : public Lockable
         // Server's port.
         unsigned int port_;
 
-        // A map that relates each drawable in the scene with its owner.
-        DrawableOwners drawableOwners_;
-
-        std::unique_ptr< ServerPrimitivesManager > primitivesManager_;
-
-        mutable std::recursive_mutex mutex_;
-
         // Container of colors that aren't in use by any user.
         std::queue< std::uint32_t > freeUserColors_;
 

@@ -89,9 +89,10 @@ class Scene : public BasicScene
         /***
          * Attributes
          ***/
+        ResourceIDsGeneratorPtr resourceIDsGenerator_;
+
         ResourcesSynchronizationLibrary resourcesSyncLibrary_;
 
-        ResourceIDsGeneratorPtr resourceIDsGenerator_;
         UserID nextUserID_;
 };
 

@@ -40,7 +40,9 @@ class ResourcesSynchronizationLibrary : public AbstractResourcesOwnershipManager
          ***/
         ResourcesSynchronizationLibrary( CommandsHistoricPtr commandsHistoric,
                                          UsersMap& users,
-                                         const std::string& unpackingDirPath,
+                                         const std::string &sceneDirPath,
+                                         const std::string &tempDirPath,
+                                         ResourceIDsGeneratorPtr resourceIDsGenerator,
                                          LogPtr log );
         ResourcesSynchronizationLibrary() = delete;
         ResourcesSynchronizationLibrary( const ResourcesSynchronizationLibrary& ) = delete;
@@ -97,6 +99,7 @@ class ResourcesSynchronizationLibrary : public AbstractResourcesOwnershipManager
         UsersMap& users_;
         std::set< ResourceID > undeletableResources_;
 
+        ServerPrimitivesManager primitivesManager_;
         std::set< ResourceID > lights_;
 };
 

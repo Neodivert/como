@@ -92,8 +92,7 @@ void Server::initUserColors()
 
 Server::~Server()
 {
-    // Primitives manager must be destroyed before Server.
-    primitivesManager_.reset();
+    // TODO: Disconnect?
 }
 
 
@@ -108,16 +107,6 @@ void Server::run()
 
     try{
         log_->debug( "Press any key to exit\n" );
-
-        // Create and initialize the primitives directory for the current
-        // scene.
-        io_service_->post( [this](){
-            primitivesManager_ = std::unique_ptr< ServerPrimitivesManager >( new ServerPrimitivesManager( scene_.getDirPath(),
-                                                                                                          scene_.getTempDirPath(),
-                                                                                                          commandsHistoric_,
-                                                                                                          log_,
-                                                                                                          resourceIDsGenerator_ ) );
-        });
 
         // Initialize the container of free user colors.
         initUserColors();
@@ -287,12 +276,9 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
 
     const CommandsList* commands = nullptr;
 
-    mutex_.lock();
     if( errorCode ){
         log_->error( "ERROR reading SCENE_UPDATE packet from [", users_.at(userID)->getName(), "] : ", errorCode.message(), "\n" );
         deleteUser( userID );
-
-        mutex_.unlock();
     }else{
         // Get the commands from the packet.
         commands = sceneUpdate.getCommands();
@@ -303,8 +289,6 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
         for( const auto& command : *commands ){
             processSceneCommand( *command );
         }
-
-        mutex_.unlock();
 
         //broadcastCallback_();
         users_.at( userID )->readSceneUpdatePacket();
