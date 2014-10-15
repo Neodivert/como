@@ -80,13 +80,13 @@ void ConesFactory::executeRemoteCommand( const ConeCreationCommand &command )
 
 void ConesFactory::generateVertexData( MeshVertexData &vertexData )
 {
-    // Create top vertices
+    // Create top center vertex
     const unsigned int TOP_CENTER_INDEX =
-            generateHorizontalVerticesCircle( vertexData.vertices,
-                                              coneRadius_,
-                                              coneNBaseVertices_,
-                                              -coneHeight_ / 2.0f );
-    vertexData.vertices[TOP_CENTER_INDEX].y = coneHeight_ / 2.0f;
+            vertexData.vertices.size();
+    vertexData.vertices.push_back({
+                0.0f,
+                coneHeight_ / 2.0f,
+                0.0f });
 
     // Create bottom vertices
     const unsigned int BOTTOM_CENTER_INDEX =
@@ -94,19 +94,21 @@ void ConesFactory::generateVertexData( MeshVertexData &vertexData )
                                               coneRadius_,
                                               coneNBaseVertices_,
                                               -coneHeight_ / 2.0f );
+    const unsigned int FIRST_RADIAL_VERTEX_INDEX =
+            BOTTOM_CENTER_INDEX + 1;
 
-    // Create top face triangles
+    // Create radial face triangles
     generateTrianglesCircle( vertexData.vertexTriangles,
                              coneNBaseVertices_,
                              TOP_CENTER_INDEX,
-                             TOP_CENTER_INDEX + 1,
+                             FIRST_RADIAL_VERTEX_INDEX,
                              false );
 
     // Create bottom face triangles
     generateTrianglesCircle( vertexData.vertexTriangles,
                              coneNBaseVertices_,
                              BOTTOM_CENTER_INDEX,
-                             BOTTOM_CENTER_INDEX + 1,
+                             FIRST_RADIAL_VERTEX_INDEX,
                              true );
 }
 
@@ -118,19 +120,21 @@ void ConesFactory::generateUVData( MeshTextureData &uvData )
             generateHorizontalUVCircle( uvData.uvVertices,
                                         coneNBaseVertices_ );
     const unsigned int BOTTOM_CENTER_INDEX = TOP_CENTER_INDEX;
+    const unsigned int FIRST_RADIAL_VERTEX_INDEX =
+            BOTTOM_CENTER_INDEX + 1;
 
-    // Create top UV triangles
+    // Create radial UV triangles
     generateTrianglesCircle( uvData.uvTriangles,
                              coneNBaseVertices_,
                              TOP_CENTER_INDEX,
-                             TOP_CENTER_INDEX + 1,
+                             FIRST_RADIAL_VERTEX_INDEX,
                              false );
 
     // Create bottom UV triangles
     generateTrianglesCircle( uvData.uvTriangles,
                              coneNBaseVertices_,
                              BOTTOM_CENTER_INDEX,
-                             BOTTOM_CENTER_INDEX + 1,
+                             FIRST_RADIAL_VERTEX_INDEX,
                              true );
 }
 
