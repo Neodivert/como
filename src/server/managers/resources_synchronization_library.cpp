@@ -124,8 +124,16 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                     const PrimitiveCreationCommand& primitiveCreationCommand =
                             dynamic_cast< const PrimitiveCreationCommand& >( command );
 
+                    primitivesManager_.registerPrimitive( primitiveCreationCommand.getPrimitiveInfo(),
+                                                          primitiveCreationCommand.getPrimitiveID() );
+
                     // TODO: Complete, Save new primitive (Move it from temp to category directory).
                     log()->debug( "Primitive received [", primitiveCreationCommand.getPrimitiveInfo().name, "]\n" );
+
+                    // primitivesManager_.registerPrimitive() already inserts
+                    // the creation command into the historic, so return for
+                    // avoiding double insertion.
+                    return;
                 }break;
                 case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:{
                     const PrimitiveInstantiationCommand& primitiveCommand =
@@ -133,11 +141,25 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
 
                     // Add a node to the Drawable Owners map for the recently added
                     // drawable. Mark it with a 0 (no owner).
-                    // TODO: Use a PrimitiveSyncData struct.
                     resourcesSyncData_[ primitiveCommand.getMeshID() ] =
                         ResourceSyncDataPtr(
-                                new ResourceSyncData( &primitiveCommand,
-                                                      primitiveCommand.getMeshID() ) );
+                                new EntitySyncData( &primitiveCommand,
+                                                    primitiveCommand.getMeshID(),
+                                                    primitiveCommand.centroid() ) );
+
+                    // Synchronize new mesh's materials.
+                    std::list<PlainMaterialData> primitiveMaterials =
+                            primitivesManager_.primitivePlainMaterialsData( primitiveCommand.getPrimitiveID() );
+
+                    ResourceID materialID = primitiveCommand.getMaterialID();
+
+                    for( const PlainMaterialData& materialData : primitiveMaterials ){
+                        resourcesSyncData_[ materialID ] =
+                            ResourceSyncDataPtr(
+                                    new MaterialSyncData( materialID,
+                                                          materialData ) );
+                        materialID++;
+                    }
 
                     log()->debug( "Mesh added! (", (int)( primitiveCommand.getMeshID().getCreatorID() ),
                                  ", ", (int)( primitiveCommand.getMeshID().getResourceIndex() ), "\n" );
@@ -181,10 +203,8 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
             const LightCommand& lightCommand = dynamic_cast< const LightCommand& >( command );
 
             if( lightCommand.getType() == LightCommandType::LIGHT_CREATION ){
-                log()->debug( lights_.size(), " < ", MAX_LIGHTS, "\n" );
                 // Request the creation of the light to the lights manager.
                 if( lights_.size() < MAX_LIGHTS ){
-                    log()->debug( "\t\tInserting light (", lightCommand.getResourceID(), ")\n" );
                     lights_.insert( lightCommand.getResourceID() );
 
                     resourcesSyncData_[ lightCommand.getResourceID() ] =

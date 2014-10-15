@@ -68,6 +68,12 @@ class ServerPrimitivesManager : public AbstractPrimitivesManager
 
 
         /***
+         * 4. Getters
+         ***/
+        std::list< PlainMaterialData > primitivePlainMaterialsData( const ResourceID& primitiveID );
+
+
+        /***
          * 4. Categories management
          ***/
     private:
@@ -77,8 +83,10 @@ class ServerPrimitivesManager : public AbstractPrimitivesManager
         /***
          * 5. Primitives management
          ***/
+    public:
         void registerPrimitive( PrimitiveInfo primitive );
         void registerPrimitive( PrimitiveInfo primitive, const ResourceID& primitiveID );
+    private:
 
 
         /***

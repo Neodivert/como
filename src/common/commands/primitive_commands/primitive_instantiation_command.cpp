@@ -28,23 +28,27 @@ PrimitiveInstantiationCommand::PrimitiveInstantiationCommand() :
     PrimitiveCommand( PrimitiveCommandType::PRIMITIVE_INSTANTIATION, 0, ResourceID() ), // TODO: Remove ResourceID().
     primitiveID_( NO_RESOURCE ),
     meshID_( NO_RESOURCE ),
-    materialID_( NO_RESOURCE )
+    materialID_( NO_RESOURCE ),
+    centroid_( 0.0f, 0.0f, 0.0f )
 {
     addPackable( &primitiveID_ );
     addPackable( &meshID_ );
     addPackable( &materialID_ );
+    addPackable( &centroid_ );
 }
 
 
-PrimitiveInstantiationCommand::PrimitiveInstantiationCommand( UserID userID, ResourceID primitiveID, ResourceID drawableID, const ResourceID& materialID ) :
+PrimitiveInstantiationCommand::PrimitiveInstantiationCommand( UserID userID, ResourceID primitiveID, ResourceID drawableID, const ResourceID& materialID, const glm::vec3& centroid ) :
     PrimitiveCommand( PrimitiveCommandType::PRIMITIVE_INSTANTIATION, userID, primitiveID ),
     primitiveID_( primitiveID ),
     meshID_( drawableID ),
-    materialID_( materialID )
+    materialID_( materialID ),
+    centroid_( centroid.x, centroid.y, centroid.z )
 {
     addPackable( &primitiveID_ );
     addPackable( &meshID_ );
     addPackable( &materialID_ );
+    addPackable( &centroid_ );
 }
 
 
@@ -52,11 +56,13 @@ PrimitiveInstantiationCommand::PrimitiveInstantiationCommand( const PrimitiveIns
     PrimitiveCommand( b ),
     primitiveID_( b.primitiveID_ ),
     meshID_( b.meshID_ ),
-    materialID_( b.materialID_ )
+    materialID_( b.materialID_ ),
+    centroid_( b.centroid_ )
 {
     addPackable( &primitiveID_ );
     addPackable( &meshID_ );
     addPackable( &materialID_ );
+    addPackable( &centroid_ );
 }
 
 
@@ -79,6 +85,16 @@ ResourceID PrimitiveInstantiationCommand::getMeshID() const
 ResourceID PrimitiveInstantiationCommand::getMaterialID() const
 {
     return materialID_.getValue();
+}
+
+
+glm::vec3 PrimitiveInstantiationCommand::centroid() const
+{
+    return glm::vec3(
+                centroid_.getValues()[0],
+                centroid_.getValues()[1],
+                centroid_.getValues()[2]
+                );
 }
 
 } // namespace como

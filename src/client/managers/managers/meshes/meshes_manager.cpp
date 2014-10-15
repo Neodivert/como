@@ -132,12 +132,15 @@ ResourceID MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData
 }
 
 
-void MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData, const ResourceID& meshID, const ResourceID& firstMaterialID )
+glm::vec3 MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData, const ResourceID& meshID, const ResourceID& firstMaterialID )
 {
     lock();
     std::unique_ptr< Mesh > mesh( new ImportedMesh( meshID, firstMaterialID, primitiveData, *materialsManager_, newMeshesDisplayVertexNormals_ ) );
+    glm::vec3 meshCentroid = mesh->centroid();
 
     addMesh( std::move( mesh ), meshID );
+
+    return meshCentroid;
 }
 
 

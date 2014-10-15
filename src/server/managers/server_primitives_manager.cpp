@@ -161,6 +161,26 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
 
 
 /***
+ * 4. Getters
+ ***/
+
+std::list<PlainMaterialData> ServerPrimitivesManager::primitivePlainMaterialsData( const ResourceID &primitiveID )
+{
+    // TODO: Avoid reading full primitive only for retrieving its materials.
+    log_->debug( "Getting materials from primitive (", primitiveID, ")\n" );
+    ImportedPrimitiveData primitiveData;
+    primitiveData.importFromFile( getPrimitiveFilePath( primitiveID ) );
+
+    std::list< PlainMaterialData > materialsData;
+    for( const MaterialInfo& materialInfo : primitiveData.materialsInfo_ ){
+        materialsData.push_back( materialInfo );
+    }
+
+    return materialsData;
+}
+
+
+/***
  * 4. Categories management
  ***/
 

@@ -80,7 +80,7 @@ class MeshesManager : public SpecializedEntitiesManager< Mesh, MeshesSelection, 
          * 6. Meshes management
          ***/
         ResourceID createMesh( const ImportedPrimitiveData& primitiveData );
-        void createMesh( const ImportedPrimitiveData& primitiveData, const ResourceID& meshID, const ResourceID& firstMaterialID );
+        glm::vec3 createMesh( const ImportedPrimitiveData& primitiveData, const ResourceID& meshID, const ResourceID& firstMaterialID );
 
         ResourceID addMesh( MeshPtr mesh );
         void addMesh( MeshPtr mesh, const ResourceID& meshID );

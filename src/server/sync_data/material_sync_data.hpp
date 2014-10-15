@@ -31,6 +31,7 @@ class MaterialSyncData : public ResourceSyncData
          * 1. Construction
          ***/
         MaterialSyncData( const Command* creationCommand, const ResourceID& id );
+        MaterialSyncData( const ResourceID& id, PlainMaterialData materialData );
         MaterialSyncData() = delete;
         MaterialSyncData( const MaterialSyncData& ) = default;
         MaterialSyncData( MaterialSyncData&& ) = default;

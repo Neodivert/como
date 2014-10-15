@@ -48,7 +48,7 @@ void PrimitiveImportDialog::validate()
             std::string primitiveRelativePath =
                     primitivesManager_->createPrimitive( filePath, primitiveCategorySelector_->getCurrentResourceID() );
 
-            QMessageBox::warning( nullptr, "Primitive saved", primitiveRelativePath.c_str() );
+            QMessageBox::information( nullptr, "Primitive saved", primitiveRelativePath.c_str() );
 
             accept();
         }catch( std::exception& ex ){

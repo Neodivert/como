@@ -21,6 +21,8 @@
 
 #include "primitive_command.hpp"
 #include <common/packables/ids/packable_resource_id.hpp>
+#include <common/packables/array/packable_array_3.hpp>
+#include <common/packables/packable_float.hpp>
 
 namespace como {
 
@@ -33,12 +35,14 @@ class PrimitiveInstantiationCommand : public PrimitiveCommand
         PackableResourceID meshID_;
         PackableResourceID materialID_;
 
+        PackableArray3< PackableFloat, float > centroid_;
+
     public:
         /***
          * 1. Construction
          ***/
         PrimitiveInstantiationCommand();
-        PrimitiveInstantiationCommand( UserID userID, ResourceID primitiveID, ResourceID drawableID, const ResourceID& materialID );
+        PrimitiveInstantiationCommand( UserID userID, ResourceID primitiveID, ResourceID drawableID, const ResourceID& materialID, const glm::vec3& centroid );
         PrimitiveInstantiationCommand( const PrimitiveInstantiationCommand& b );
         PrimitiveInstantiationCommand( PrimitiveInstantiationCommand&& ) = delete;
         COMMAND_CLONE_METHOD( PrimitiveInstantiationCommand )
@@ -56,6 +60,7 @@ class PrimitiveInstantiationCommand : public PrimitiveCommand
         ResourceID getPrimitiveID() const;
         ResourceID getMeshID() const;
         ResourceID getMaterialID() const;
+        glm::vec3 centroid() const;
 
 
         /***

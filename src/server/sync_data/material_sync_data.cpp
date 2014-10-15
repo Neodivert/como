@@ -30,6 +30,12 @@ MaterialSyncData::MaterialSyncData( const Command *creationCommand, const Resour
 {}
 
 
+MaterialSyncData::MaterialSyncData( const ResourceID &id, PlainMaterialData materialData ) :
+    ResourceSyncData( nullptr, id ),
+    material_( materialData )
+{}
+
+
 /***
  * 3. Getters
  ***/

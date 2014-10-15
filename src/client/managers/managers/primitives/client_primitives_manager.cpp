@@ -90,11 +90,17 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
     const ResourceID meshID = server_->reserveResourceIDs( 1 );
     const ResourceID firstMaterialID = server_->reserveResourceIDs( primitiveData.materialsInfo_.size() );
 
-    meshesManager_->createMesh( primitiveData, meshID, firstMaterialID );
+    glm::vec3 meshCentroid = meshesManager_->createMesh( primitiveData, meshID, firstMaterialID );
 
     // Send the command to the server (the MaterialCreationCommand command was
-    // already sent in previous call to materialsManager_->createMaterial() ).
-    server_->sendCommand( CommandConstPtr( new PrimitiveInstantiationCommand( server_->getLocalUserID(), primitiveID, meshID, firstMaterialID ) ) );
+    server_->sendCommand(
+                CommandConstPtr(
+                    new PrimitiveInstantiationCommand(
+                        server_->getLocalUserID(),
+                        primitiveID,
+                        meshID,
+                        firstMaterialID,
+                        meshCentroid ) ) );
 }
 
 
