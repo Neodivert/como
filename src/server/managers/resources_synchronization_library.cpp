@@ -104,6 +104,36 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                 resourcesSyncData_.at( geometricPrimitiveCommand.getMeshID() )->processCommand( command );
             }
         }break;
+        case CommandTarget::PRIMITIVE:{
+            const PrimitiveCommand& primitiveCommand =
+                    dynamic_cast< const PrimitiveCommand& >( command );
+
+            switch( primitiveCommand.getType() ){
+                case PrimitiveCommandType::PRIMITIVE_CREATION:{
+                    // PRIMITIVE_CREATION command received, cast its pointer.
+                    const PrimitiveCreationCommand& primitiveCreationCommand =
+                            dynamic_cast< const PrimitiveCreationCommand& >( command );
+
+                    // TODO: Complete, Save new primitive (Move it from temp to category directory).
+                    log()->debug( "Primitive received [", primitiveCreationCommand.getPrimitiveInfo().name, "]\n" );
+                }break;
+                case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:{
+                    const PrimitiveInstantiationCommand& primitiveCommand =
+                            dynamic_cast< const PrimitiveInstantiationCommand& >( command );
+
+                    // Add a node to the Drawable Owners map for the recently added
+                    // drawable. Mark it with a 0 (no owner).
+                    // TODO: Use a PrimitiveSyncData struct.
+                    resourcesSyncData_[ primitiveCommand.getMeshID() ] =
+                        ResourceSyncDataPtr(
+                                new ResourceSyncData( &primitiveCommand,
+                                                      primitiveCommand.getMeshID() ) );
+
+                    log()->debug( "Mesh added! (", (int)( primitiveCommand.getMeshID().getCreatorID() ),
+                                 ", ", (int)( primitiveCommand.getMeshID().getResourceIndex() ), "\n" );
+                }break;
+            }
+        }break;
         case CommandTarget::CAMERA:{
             const CameraCommand& cameraCommand =
                     dynamic_cast< const CameraCommand& >( command );

@@ -34,7 +34,6 @@
 #include <common/utilities/paths.hpp>
 #include <server/server_primitives_manager.hpp>
 #include <common/scene/basic_scene.hpp>
-#include <server/resources_ownership_manager.hpp>
 #include <server/managers/scene.hpp>
 #include <common/ids/resource_ids_generator.hpp>
 #include <common/utilities/lockable.hpp>
@@ -89,9 +88,6 @@ class Server : public Lockable
 
         // Container of colors that aren't in use by any user.
         std::queue< std::uint32_t > freeUserColors_;
-
-        // Resources ownership manager
-        ResourcesOwnershipManager resourcesOwnershipManager_;
 
         // Historic of commands performed on the scene.
         CommandsHistoricPtr commandsHistoric_;

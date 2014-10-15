@@ -36,7 +36,6 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
     MAX_SESSIONS( maxSessions ),
     newSocket_( *io_service_ ),
     port_( port_ ),
-    resourcesOwnershipManager_( users_, log_ ),
     commandsHistoric_( new CommandsHistoric( std::bind( &Server::broadcast, this ) ) ),
     scene_( sceneName, commandsHistoric_, users_, resourceIDsGenerator_, log_, sceneFilePath )
 {
@@ -315,37 +314,6 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
 void Server::processSceneCommand( const Command& sceneCommand )
 {
     lock();
-
-    // TODO: Move this code to Scene class.
-    switch( sceneCommand.getTarget() ){
-        case CommandTarget::PRIMITIVE:{
-            const PrimitiveCommand& primitiveCommand = dynamic_cast< const PrimitiveCommand& >( sceneCommand );
-
-            switch( primitiveCommand.getType() ){
-                case PrimitiveCommandType::PRIMITIVE_CREATION:{
-                    // PRIMITIVE_CREATION command received, cast its pointer.
-                    const PrimitiveCreationCommand& primitiveCreationCommand =
-                            dynamic_cast< const PrimitiveCreationCommand& >( sceneCommand );
-
-                    // TODO: Complete, Save new primitive (Move it from temp to category directory).
-                    log_->debug( "Primitive received [", primitiveCreationCommand.getPrimitiveInfo().name, "]\n" );
-                }break;
-                case PrimitiveCommandType::PRIMITIVE_INSTANTIATION:{
-                    const PrimitiveInstantiationCommand& primitiveCommand =
-                            dynamic_cast< const PrimitiveInstantiationCommand& >( sceneCommand );
-
-                    // Add a node to the Drawable Owners map for the recently added
-                    // drawable. Mark it with a 0 (no owner).
-                    resourcesOwnershipManager_.registerResource( primitiveCommand.getMeshID(), NO_USER );
-
-                    log_->debug( "Mesh added! (", (int)( primitiveCommand.getMeshID().getCreatorID() ),
-                                 ", ", (int)( primitiveCommand.getMeshID().getResourceIndex() ), "\n" );
-                }break;
-            }
-        }break;
-        default:
-        break;
-    }
 
     // This includes inserting the command into the historic.
     scene_.processCommand( sceneCommand );
