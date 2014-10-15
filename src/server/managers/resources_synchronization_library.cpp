@@ -127,9 +127,15 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                     primitivesManager_.registerPrimitive( primitiveCreationCommand.getPrimitiveInfo(),
                                                           primitiveCreationCommand.getPrimitiveID() );
 
+                    // We also register the primitive creation command here
+                    // for saving / loading it along with the scene.
+                    resourcesSyncData_[primitiveCreationCommand.getPrimitiveID()] =
+                            ResourceSyncDataPtr(
+                                new ResourceSyncData(
+                                    &primitiveCreationCommand,
+                                    primitiveCreationCommand.getPrimitiveID() ) );
+
                     // TODO: Complete, Save new primitive (Move it from temp to category directory).
-                    log()->debug( "Primitive received [", primitiveCreationCommand.getPrimitiveInfo().name, "]\n" );
-                    log()->debug( "\tSender: ", primitiveCreationCommand.getUserID() );
 
                     // primitivesManager_.registerPrimitive() already inserts
                     // the creation command into the historic, so return for
@@ -198,7 +204,6 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
         case CommandTarget::MATERIAL:{
             const MaterialCommand& materialCommand =
                     dynamic_cast< const MaterialCommand& >( command );
-
             resourcesSyncData_.at( materialCommand.getMaterialID() )->processCommand( materialCommand );
         }break;
         case CommandTarget::LIGHT:{
