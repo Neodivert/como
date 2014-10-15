@@ -79,7 +79,7 @@ void PrimitiveData::generateOGLData()
         for( currentTriangleElement = 0; currentTriangleElement < 3; currentTriangleElement++ ){
             compoundVertex[0] = vertexData.vertexTriangles[currentTriangleIndex][currentTriangleElement];
             compoundVertex[1] = normalData.normalTriangles[currentTriangleIndex][currentTriangleElement];
-            compoundVertex[2] = oglData.includesTextures ? uvData.uvTriangles[currentTriangleIndex][currentTriangleElement] : 0;
+            compoundVertex[2] = ( oglData.includesTextures ? uvData.uvTriangles[currentTriangleIndex][currentTriangleElement] : 0 );
 
             finalVerticesIt = compoundVerticesMap.find( compoundVertex );
 
@@ -102,8 +102,12 @@ void PrimitiveData::generateOGLData()
                     oglData.vboData.push_back( uvData.uvVertices[ compoundVertex[2] ][0] );
                     oglData.vboData.push_back( uvData.uvVertices[ compoundVertex[2] ][1] );
 
-                    if( compoundVertex[2] > uvData.uvTriangles.size() ){
-                        throw std::runtime_error( "compoundVertex[2] > uvData.uvTriangles.size()" );
+                    if( compoundVertex[2] > uvData.uvVertices.size() ){
+                        throw std::runtime_error(
+                                    "compoundVertex[2] > uvData.uvVertices.size()" +
+                                    std::to_string( compoundVertex[2] ) +
+                                    " > " +
+                                    std::to_string( uvData.uvVertices.size() ) );
                     }
                 }
 
