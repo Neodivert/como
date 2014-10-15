@@ -251,7 +251,7 @@ void Mesh::initVAO()
     glEnableVertexAttribArray( SHADER_NORMAL_ATTR_LOCATION );
 
     if( includesTexture_ ){
-        glVertexAttribPointer( SHADER_UV_ATTR_LOCATION, 3, GL_FLOAT, GL_FALSE, getBytesPerVertex(), (void *)( COMPONENTS_PER_VERTEX_POSITION * 2 * sizeof( GL_FLOAT ) ) );
+        glVertexAttribPointer( SHADER_UV_ATTR_LOCATION, 2, GL_FLOAT, GL_FALSE, getBytesPerVertex(), (void *)( COMPONENTS_PER_VERTEX_POSITION * 2 * sizeof( GL_FLOAT ) ) );
         glEnableVertexAttribArray( SHADER_UV_ATTR_LOCATION );
     }
 }
