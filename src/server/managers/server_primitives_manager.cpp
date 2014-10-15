@@ -230,7 +230,7 @@ void ServerPrimitivesManager::registerPrimitive(PrimitiveInfo primitive, const R
 
     AbstractPrimitivesManager::registerPrimitive( primitiveID, primitive );
 
-    commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCreationCommand( 0,
+    commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCreationCommand( primitiveID.getCreatorID(),
                                                                                   primitiveID,
                                                                                   primitiveCopy,
                                                                                   tempDirPath_ ) ) );

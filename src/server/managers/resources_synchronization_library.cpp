@@ -129,6 +129,7 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
 
                     // TODO: Complete, Save new primitive (Move it from temp to category directory).
                     log()->debug( "Primitive received [", primitiveCreationCommand.getPrimitiveInfo().name, "]\n" );
+                    log()->debug( "\tSender: ", primitiveCreationCommand.getUserID() );
 
                     // primitivesManager_.registerPrimitive() already inserts
                     // the creation command into the historic, so return for
@@ -141,6 +142,7 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
 
                     // Add a node to the Drawable Owners map for the recently added
                     // drawable. Mark it with a 0 (no owner).
+                    log()->debug( "Primitive instantiated (", primitiveCommand.getMeshID(), ")\n" );
                     resourcesSyncData_[ primitiveCommand.getMeshID() ] =
                         ResourceSyncDataPtr(
                                 new EntitySyncData( &primitiveCommand,
