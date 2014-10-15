@@ -407,15 +407,14 @@ void Mesh::drawTriangles( unsigned int firstTriangleIndex, unsigned int nTriangl
     glDrawElements( GL_TRIANGLES,
                     nTriangles * 3,
                     GL_UNSIGNED_INT,
-                    ( std::intptr_t* )( firstTriangleIndex * 3 * sizeof( GL_UNSIGNED_INT ) ) );
+                    ( void* )( firstTriangleIndex * 3 * sizeof( GL_UNSIGNED_INT ) ) );
 }
 
 
 void Mesh::drawEdges( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec4* contourColor ) const
 {
-    openGL->setMVPMatrix( modelMatrix_, viewMatrix, projectionMatrix );
-
-    // TODO: Bind VAO, VBO and EBO or make this method protected?
+    // TODO: Remove this call when making this method protected / private.
+    sendToShader( *openGL, viewMatrix, projectionMatrix );
 
     // Set the color for the mesh's contour.
     // TODO: Use only one condition (force contourColor to be passed as a
