@@ -48,6 +48,9 @@ ResourcesSynchronizationLibrary::ResourcesSynchronizationLibrary( CommandsHistor
 void ResourcesSynchronizationLibrary::processCommand( const Command &command )
 {
     lock();
+    log()->debug( "Processing command (target: ",
+                  commandTargetStrings[(int)( command.getTarget())],
+                  ")\n" );
     switch( command.getTarget() ){
         case CommandTarget::RESOURCE:{
             const ResourceCommand& resourceCommand = dynamic_cast< const ResourceCommand& >( command );
@@ -164,6 +167,7 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
         case CommandTarget::MATERIAL:{
             const MaterialCommand& materialCommand =
                     dynamic_cast< const MaterialCommand& >( command );
+
             resourcesSyncData_.at( materialCommand.getMaterialID() )->processCommand( materialCommand );
         }break;
         case CommandTarget::LIGHT:{

@@ -108,7 +108,10 @@ void MaterialEditor::refresh()
     ambientReflectivityButton_->setColor( currentMaterial_->getAmbientReflectivity() );
     diffuseReflectivityButton_->setColor( currentMaterial_->getDiffuseReflectivity() );
     specularReflectivityButton_->setColor( currentMaterial_->getSpecularReflectivity() );
+
+    specularExponentSpinBox_->blockSignals( true );
     specularExponentSpinBox_->setValue( currentMaterial_->getSpecularExponent() );
+    specularExponentSpinBox_->blockSignals( false );
 }
 
 

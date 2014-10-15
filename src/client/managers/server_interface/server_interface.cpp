@@ -234,7 +234,7 @@ void ServerInterface::sendPendingCommands()
     // If there in the packet, send it to the server. Otherwise, set a timer
     // to call this method again.
     if( nCommands ){
-        log_->debug( "Sending SCENE_UPDATE packet to the server\n" );
+        log_->debug( "Sending SCENE_UPDATE packet to the server with (", nCommands, ") commands\n" );
         sceneUpdatePacketToServer_.asyncSend( socket_, std::bind( &ServerInterface::onSceneUpdatePacketSended, this, std::placeholders::_1, std::placeholders::_2 ) );
     }else{
         //log_->debug( "No commands to send to the server\n" );
