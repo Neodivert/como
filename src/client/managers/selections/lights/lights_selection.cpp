@@ -67,12 +67,26 @@ void LightsSelection::setLightColor( const Color& color )
 }
 
 
+void LightsSelection::setLightColor(const ResourceID &lightID, const Color &color)
+{
+    lock();
+    resources_.at( lightID )->setLightColor( color );
+}
+
+
 void LightsSelection::setAmbientCoefficient( float coefficient )
 {
     lock();
     for( auto& lightPair : resources_ ){
         lightPair.second->setAmbientCoefficient( coefficient );
     }
+}
+
+
+void LightsSelection::setAmbientCoefficient( const ResourceID &lightID, float coefficient )
+{
+    lock();
+    resources_.at( lightID )->setAmbientCoefficient( coefficient );
 }
 
 

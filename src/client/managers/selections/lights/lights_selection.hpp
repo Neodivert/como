@@ -52,7 +52,9 @@ class LightsSelection : public virtual EntitiesSet<DirectionalLight>, public Abs
          * 4. Setters
          ***/
         virtual void setLightColor( const Color& color );
+        virtual void setLightColor( const ResourceID& lightID, const Color& color );
         virtual void setAmbientCoefficient( float coefficient );
+        virtual void setAmbientCoefficient( const ResourceID& lightID, float coefficient );
 
 
         /***

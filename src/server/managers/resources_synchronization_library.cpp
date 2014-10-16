@@ -23,6 +23,7 @@
 #include <server/sync_data/texture_wall_sync_data.hpp>
 #include <server/sync_data/material_sync_data.hpp>
 #include <server/sync_data/camera_sync_data.hpp>
+#include <server/sync_data/light_sync_data.hpp>
 #include <common/commands/commands_file_parser.hpp>
 
 namespace como {
@@ -225,12 +226,14 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                 if( lights_.size() < MAX_LIGHTS ){
                     lights_.insert( lightCommand.getResourceID() );
 
+                    log()->debug( "Light created (",
+                                  lightCommand.getResourceID(),
+                                  ")\n" );
+
                     resourcesSyncData_[ lightCommand.getResourceID() ] =
                             ResourceSyncDataPtr(
-                                new EntitySyncData(
-                                    &lightCommand,
-                                    lightCommand.getResourceID(),
-                                    glm::vec3( 0.0f ) ) ); // TODO: Retrieve centroid from command.
+                                new LightSyncData(
+                                    dynamic_cast< const DirectionalLightCreationCommand& >( command ) ) );
 
                     // If the user who originally made the request exists in
                     // the system, send him / her a response command.
@@ -251,11 +254,17 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                                                                           false
                                                                           ) ) );
                     }
+
                     // If the request was denied, return from this method so
                     // the creation command received from user isn't added to
                     // the commands historic.
                     return;
                 }
+            }else{
+                log()->debug( "Editing light (",
+                              lightCommand.getResourceID(),
+                              ")\n" );
+                resourcesSyncData_.at( lightCommand.getResourceID() )->processCommand( lightCommand );
             }
         }break;
         case CommandTarget::TEXTURE_WALL:{

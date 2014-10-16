@@ -35,7 +35,8 @@ HEADERS += \
     ../../src/server/sync_data/entity_sync_data.hpp \
     ../../src/server/sync_data/texture_wall_sync_data.hpp \
     ../../src/server/sync_data/material_sync_data.hpp \
-    ../../src/server/sync_data/camera_sync_data.hpp
+    ../../src/server/sync_data/camera_sync_data.hpp \
+    ../../src/server/sync_data/light_sync_data.hpp
 
 # Server sources
 SOURCES += \
@@ -51,4 +52,5 @@ SOURCES += \
     ../../src/server/sync_data/entity_sync_data.cpp \
     ../../src/server/sync_data/texture_wall_sync_data.cpp \
     ../../src/server/sync_data/material_sync_data.cpp \
-    ../../src/server/sync_data/camera_sync_data.cpp
+    ../../src/server/sync_data/camera_sync_data.cpp \
+    ../../src/server/sync_data/light_sync_data.cpp

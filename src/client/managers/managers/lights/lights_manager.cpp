@@ -104,7 +104,9 @@ void LightsManager::executeRemoteCommand( const LightCommand& command )
             const LightColorChangeCommand& lightCommand =
                     dynamic_cast< const LightColorChangeCommand& >( command );
 
-            getResourcesSelection( lightCommand.getUserID() )->setLightColor( lightCommand.getLightColor() );
+            getResourcesSelection( lightCommand.getUserID() )->setLightColor(
+                        lightCommand.getResourceID(),
+                        lightCommand.getLightColor() );
 
             notifyObservers();
         }break;
@@ -112,7 +114,9 @@ void LightsManager::executeRemoteCommand( const LightCommand& command )
             const LightAmbientCoefficientChangeCommand& lightCommand =
                     dynamic_cast< const LightAmbientCoefficientChangeCommand& >( command );
 
-            getResourcesSelection( lightCommand.getUserID() )->setAmbientCoefficient( lightCommand.getAmbientCoefficient() );
+            getResourcesSelection( lightCommand.getUserID() )->setAmbientCoefficient(
+                        lightCommand.getResourceID(),
+                        lightCommand.getAmbientCoefficient() );
 
             notifyObservers();
         }break;
