@@ -65,6 +65,8 @@ Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, MeshTyp
     }
 
     init( primitiveData.oglData );
+
+    translate( -centroid() );
 }
 
 
@@ -84,6 +86,8 @@ Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, const P
         materialIDs_.push_back( currentMaterialID );
         currentMaterialID++;
     }
+
+    translate( -centroid() );
 }
 
 
