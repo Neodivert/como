@@ -194,7 +194,7 @@ void Viewport::wheelEvent( QWheelEvent *ev )
 {
     // TODO: If we are in View::CAMERA, change to View::USER and apply zoom.
     if( view_ != View::CAMERA ){
-        const float step = ( ev->delta() > 0 ) ? 0.1f : -0.1f;
+        const float step = ( ev->delta() > 0 ) ? -0.1f : 0.1f;
         const glm::vec3 direction = step * glm::vec3( camera->getCenterVector() );
 
         camera->translate( direction );
@@ -231,6 +231,32 @@ void Viewport::keyPressEvent( QKeyEvent *e )
         break;
         case Qt::Key_Delete:
             comoApp->getScene()->getEntitiesManager()->requestSelectionDeletion();
+        break;
+        case Qt::Key_Up:
+            if( view_ != View::CAMERA ){
+                camera->translate( 0.1f * camera->getUpVector() );
+            }
+        break;
+        case Qt::Key_Down:
+            if( view_ != View::CAMERA ){
+                camera->translate( -0.1f * camera->getUpVector() );
+            }
+        break;
+        case Qt::Key_Left:
+            if( view_ != View::CAMERA ){
+                const glm::vec3 direction =
+                        -0.1f * glm::cross( camera->getUpVector(),
+                                            glm::vec3( camera->getCenterVector() ) );
+                std::cout << "direction: (" << direction.x << ", " << direction.y << ", " << direction.z << ")" << std::endl;
+
+                camera->translate( direction );
+            }
+        break;
+        case Qt::Key_Right:
+            if( view_ != View::CAMERA ){
+                camera->translate( 0.1f * glm::cross( camera->getUpVector(),
+                                                       glm::vec3( camera->getCenterVector() ) ) );
+            }
         break;
         default:
         break;

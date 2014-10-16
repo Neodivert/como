@@ -49,16 +49,28 @@ glm::mat4 Camera::getViewMatrix() const
     return viewMatrix;
 }
 
-// TODO: Rename - center is not a vector, but a position!
-glm::vec4 Camera::getCenterVector() const
+
+glm::vec4 Camera::getCenterPosition() const
 {
     return transformedCenter;
+}
+
+
+glm::vec4 Camera::getCenterVector() const
+{
+    return transformedCenter - transformedEye;
 }
 
 
 glm::vec3 Camera::getEye() const
 {
     return glm::vec3( transformedEye );
+}
+
+
+glm::vec3 Camera::getUpVector() const
+{
+    return glm::vec3( transformedUp );
 }
 
 
