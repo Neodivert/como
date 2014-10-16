@@ -91,6 +91,7 @@ class ResourcesSynchronizationLibrary : public AbstractResourcesOwnershipManager
         virtual void deleteResource( const ResourceID& resourceID );
         virtual void processLockResponse( const ResourceID &resourceID, bool lockResponse );
 
+
     private:
         std::map< ResourceID, ResourceSyncDataPtr > resourcesSyncData_;
 

@@ -22,6 +22,7 @@
 #include <server/sync_data/entity_sync_data.hpp>
 #include <server/sync_data/texture_wall_sync_data.hpp>
 #include <server/sync_data/material_sync_data.hpp>
+#include <server/sync_data/camera_sync_data.hpp>
 #include <common/commands/commands_file_parser.hpp>
 
 namespace como {
@@ -187,11 +188,13 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                     dynamic_cast< const CameraCommand& >( command );
 
             if( cameraCommand.getType() == CameraCommandType::CAMERA_CREATION ){
+                const CameraCreationCommand& cameraCreationCommand =
+                        dynamic_cast< const CameraCreationCommand& >( command );
+
                 // TODO: Retrieve real centroid from command.
                 resourcesSyncData_[ cameraCommand.cameraID() ] =
-                    ResourceSyncDataPtr( new EntitySyncData( &cameraCommand,
-                                                             cameraCommand.cameraID(),
-                                                             glm::vec3( 0.0f ) ) );
+                    ResourceSyncDataPtr(
+                            new CameraSyncData( cameraCreationCommand ) );
                 undeletableResources_.insert( cameraCommand.cameraID() );
             }
         }break;
