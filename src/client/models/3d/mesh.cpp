@@ -66,6 +66,7 @@ Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, MeshTyp
 
     init( primitiveData.oglData );
 
+    computeCentroid();
     translate( -centroid() );
 }
 
@@ -87,6 +88,7 @@ Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, const P
         currentMaterialID++;
     }
 
+    computeCentroid();
     translate( -centroid() );
 }
 
@@ -283,6 +285,8 @@ void Mesh::computeCentroid()
 
     originalCentroid /= vertexData_.vertices.size();
     originalCentroid.w = 1.0f;
+
+    transformedCentroid = originalCentroid;
 }
 
 
