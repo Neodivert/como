@@ -77,7 +77,9 @@ const char commandTargetStrings[][32]
     "RESOURCES_SELECTION",
     "GEOMETRIC_PRIMITIVE",
     "TEXTURE",
-    "TEXTURE_WALL"
+    "TEXTURE_WALL",
+    "CAMERA",
+    "ENTITY"
 };
 
 #define COMMAND_CLONE_METHOD(T) virtual Command* clone() const { return new T( *this ); }
