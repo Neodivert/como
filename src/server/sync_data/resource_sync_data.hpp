@@ -47,12 +47,14 @@ class ResourceSyncData : public SyncData
         virtual std::list< CommandConstPtr > generateUpdateCommands() const;
         ResourceID resourceID() const;
         UserID resourceOwner() const;
+        std::list< ResourceID > childResourceIDs() const;
 
 
         /***
          * 4. Setters
          ***/
         void setResourceOwner( UserID newOwner );
+        void addChildResource( const ResourceID& childID );
 
 
         /***
@@ -72,6 +74,7 @@ class ResourceSyncData : public SyncData
         const ResourceID resourceID_;
         UserID resourceOwner_;
         std::string resourceName_;
+        std::list< ResourceID > childResourceIDs_;
 };
 
 typedef std::unique_ptr< ResourceSyncData > ResourceSyncDataPtr;

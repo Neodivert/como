@@ -102,6 +102,9 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                             ResourceSyncDataPtr(
                                 new TextureWallSyncData( nullptr,
                                                          textureWallID ) );
+
+                    resourcesSyncData_.at( geometricPrimitiveCommand.getMeshID() )->addChildResource( textureWallID );
+
                     textureWallID++;
                 }
 
@@ -110,6 +113,8 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                         ResourceSyncDataPtr(
                             new MaterialSyncData( nullptr,
                                                   geometricPrimitiveCommand.getMaterialID() ) );
+
+                resourcesSyncData_.at( geometricPrimitiveCommand.getMeshID() )->addChildResource( geometricPrimitiveCommand.getMaterialID() );
             }else{
                 resourcesSyncData_.at( geometricPrimitiveCommand.getMeshID() )->processCommand( command );
             }
@@ -166,6 +171,9 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                             ResourceSyncDataPtr(
                                     new MaterialSyncData( materialID,
                                                           materialData ) );
+
+                        resourcesSyncData_.at( primitiveCommand.getMeshID() )->addChildResource( materialID );
+
                         materialID++;
                     }
 
@@ -365,27 +373,45 @@ void ResourcesSynchronizationLibrary::deleteResourcesSelection( UserID userID )
 {
     lock();
     log()->debug( "(User: ", userID, ") Deleting Selection\n" );
-    std::map< ResourceID, ResourceSyncDataPtr >::iterator currentElement, nextElement;
+    std::map< ResourceID, ResourceSyncDataPtr >::iterator currentElement;
 
-    currentElement = nextElement = resourcesSyncData_.begin();
+    currentElement = resourcesSyncData_.begin();
     while( currentElement != resourcesSyncData_.end() ){
-        nextElement++;
-
         if( lights_.count( currentElement->first ) ){
             lights_.erase( currentElement->first );
         }
 
         if( currentElement->second->resourceOwner() == userID ){
-            if( !undeletableResources_.count( currentElement->first ) ){
-                //notifyElementDeletion( currentElement->first );
-                resourcesSyncData_.erase( currentElement );
-            }else{
-                //notifyElementUpdate( currentElement->first );
-                currentElement->second->setResourceOwner( NO_USER );
-            }
+            deleteResource( currentElement->first );
+
+            // deleteResource() removes resources recursively, so this
+            // iterator could end invalidated. Start again from the
+            // begining.
+            // TODO: Optimize this!.
+            currentElement = resourcesSyncData_.begin();
+        }else{
+            currentElement++;
+        }
+    }
+}
+
+
+void ResourcesSynchronizationLibrary::deleteResource( const ResourceID &resourceID )
+{
+    ResourceSyncData& resourceSyncData =
+            *( resourcesSyncData_.at( resourceID ) );
+
+    if( !undeletableResources_.count( resourceID ) ){
+        // Delete first the children of the resource.
+        for( const ResourceID& childResourceID : resourceSyncData.childResourceIDs() ){
+            deleteResource( childResourceID );
         }
 
-        currentElement = nextElement;
+        //notifyElementDeletion( currentElement->first );
+        resourcesSyncData_.erase( resourceID );
+    }else{
+        //notifyElementUpdate( currentElement->first );
+        resourceSyncData.setResourceOwner( NO_USER );
     }
 }
 

@@ -55,6 +55,11 @@ UserID ResourceSyncData::resourceOwner() const
     return resourceOwner_;
 }
 
+std::list<ResourceID> ResourceSyncData::childResourceIDs() const
+{
+    return childResourceIDs_;
+}
+
 
 /***
  * 4. Setters
@@ -63,6 +68,12 @@ UserID ResourceSyncData::resourceOwner() const
 void ResourceSyncData::setResourceOwner( UserID newOwner )
 {
     resourceOwner_ = newOwner;
+}
+
+
+void ResourceSyncData::addChildResource(const ResourceID &childID)
+{
+    childResourceIDs_.push_back( childID );
 }
 
 
