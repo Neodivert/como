@@ -169,6 +169,10 @@ void Texture::initSamplerShaderLocation()
     textureScaleShaderLocation_ =
             glGetUniformLocation( currentShaderProgram, "textureScale" );
     assert( textureScaleShaderLocation_ != -1 );
+
+    textureWallsEnabledShaderLocation_ =
+            glGetUniformLocation( currentShaderProgram, "textureWallsEnabled" );
+    assert( textureWallsEnabledShaderLocation_ != -1 );
 }
 
 
@@ -190,6 +194,9 @@ void Texture::sendToShader( glm::vec2 textureOffset, glm::vec2 textureScale ) co
 {
     OpenGL::checkStatus( "Texture::sendToShader() - begin" );
 
+    // Enable texture walls in shader.
+    glUniform1i( textureWallsEnabledShaderLocation_, 1 );
+
     // Texture offset is expressed as a %, so we multiply it by 0.01 for
     // transforming it to range [0.0f, 1.0f]
     textureOffset *= 0.01f;
@@ -202,11 +209,30 @@ void Texture::sendToShader( glm::vec2 textureOffset, glm::vec2 textureScale ) co
                   1,
                   glm::value_ptr( textureScale ) );
 
+    connectTextureToShaderSampler();
+}
+
+
+void Texture::sendToShader() const
+{
+    // Disable texture walls in shader.
+    glUniform1i( textureWallsEnabledShaderLocation_, 0 );
+
+    connectTextureToShaderSampler();
+}
+
+
+/***
+ * 7. Auxiliar methods
+ ***/
+
+void Texture::connectTextureToShaderSampler() const
+{
     // Connect sampler to texture unit 0.
     glActiveTexture( GL_TEXTURE0 );
     glUniform1i( samplerShaderLocation_, 0 );
     glBindTexture( GL_TEXTURE_2D, oglName_ );
-    OpenGL::checkStatus( "Texture::sendToShader() - end" );
+    OpenGL::checkStatus( "Texture::connectTextureToShaderSampler() - end" );
 }
 
 }

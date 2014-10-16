@@ -52,6 +52,8 @@ in vec2 uvCoordinates;
 
 out vec4 finalColor;
 
+uniform bool textureWallsEnabled;
+
 void main()
 {
 	finalColor = vec4( 0.0f );
@@ -79,13 +81,18 @@ void main()
 				vec3 reflectedLight = lights[ directionalLights[i].lightIndex ].color * specular * material.specularReflectivity;
 	
 				if( texturingEnabled ){
-					if( ( uvCoordinates.x >= textureOffset.x ) && ( uvCoordinates.y >= textureOffset.y ) ){
-						meshColor = texture( textureSampler, vec2(
-							min( 1.0f, uvCoordinates.x - textureOffset.x ) * textureScale.x,
-							min( 1.0f, uvCoordinates.y - textureOffset.y ) * textureScale.y ) );
-						meshColor.a = 1.0f;
+					if( textureWallsEnabled ){
+						if( ( uvCoordinates.x >= textureOffset.x ) && ( uvCoordinates.y >= textureOffset.y ) ){
+							// TODO: Use material color for something here?
+							meshColor = texture( textureSampler, vec2(
+								min( 1.0f, uvCoordinates.x - textureOffset.x ) * textureScale.x,
+								min( 1.0f, uvCoordinates.y - textureOffset.y ) * textureScale.y ) );
+							meshColor.a = 1.0f;
+						}else{
+							meshColor = vec4( material.color.rgb, 1.0f );
+						}
 					}else{
-						meshColor = vec4( material.color.rgb, 1.0f );
+						meshColor = texture( textureSampler, uvCoordinates );
 					}
 				}else{
 					meshColor = vec4( material.color.rgb, 1.0f );

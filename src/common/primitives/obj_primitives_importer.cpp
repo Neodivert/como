@@ -113,6 +113,7 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
 
         // Invert Y component. (TODO: Move this computation to another place?)
         textureCoordinates.y = 1.0f - textureCoordinates.y;
+
         primitiveData.uvData.uvVertices.push_back( textureCoordinates );
     }else if( lineHeader == "vn" ){
         glm::vec3 normal;

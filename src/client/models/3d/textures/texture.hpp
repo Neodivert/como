@@ -55,6 +55,7 @@ class Texture
 
         GLint textureOffsetShaderLocation_;
         GLint textureScaleShaderLocation_;
+        GLint textureWallsEnabledShaderLocation_;
 
     public:
         /***
@@ -90,8 +91,9 @@ class Texture
         /***
          * 5. Shader communication
          ***/
-        void sendToShader( glm::vec2 textureOffset = glm::vec2( 0.0f ),
-                           glm::vec2 textureScale = glm::vec2( 1.0f ) ) const;
+        void sendToShader( glm::vec2 textureOffset,
+                           glm::vec2 textureScale  ) const;
+        void sendToShader() const;
 
 
         /***
@@ -99,6 +101,13 @@ class Texture
          ***/
         Texture& operator = ( const Texture& ) = delete;
         Texture& operator = ( Texture&& ) = delete;
+
+
+    private:
+        /***
+         * 7. Auxiliar methods
+         ***/
+        void connectTextureToShaderSampler() const;
 };
 
 typedef std::unique_ptr< Texture > TexturePtr;
