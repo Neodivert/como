@@ -74,6 +74,12 @@ glm::vec3 Camera::getUpVector() const
 }
 
 
+std::string Camera::typeName() const
+{
+    return "Camera";
+}
+
+
 /***
  * 3. Setters
  ***/

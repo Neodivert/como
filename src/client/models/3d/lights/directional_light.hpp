@@ -72,6 +72,7 @@ class DirectionalLight : public Light
         glm::vec3 getLightVector() const;
         glm::vec3 getHalfVector() const;
         GLint getLightIndex() const;
+        virtual std::string typeName() const;
 
 
         /***

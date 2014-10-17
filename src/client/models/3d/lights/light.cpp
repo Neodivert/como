@@ -96,6 +96,12 @@ GLuint Light::getBaseLightIndex() const
 }
 
 
+std::string Light::typeName() const
+{
+    return "Light";
+}
+
+
 /***
  * 4. Setters
  ***/

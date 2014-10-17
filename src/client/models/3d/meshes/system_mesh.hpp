@@ -46,19 +46,25 @@ class SystemMesh : public Mesh
 
 
         /***
-         * 3. Setters
+         * 3. Getters
+         ***/
+        virtual std::string typeName() const;
+
+
+        /***
+         * 4. Setters
          ***/
         static void setTextureWallsManager( TextureWallsManager& textureWallsManager );
 
 
         /***
-         * 4. Drawing
+         * 5. Drawing
          ***/
         virtual void draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const glm::vec4 *contourColor ) const;
 
 
         /***
-         * 5. Operators
+         * 6. Operators
          ***/
         SystemMesh& operator = ( const SystemMesh& ) = delete;
         SystemMesh& operator = ( SystemMesh&& ) = delete;

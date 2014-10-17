@@ -46,7 +46,17 @@ SystemMesh::SystemMesh(const ResourceID &meshID, const ResourceID& firstMaterial
 
 
 /***
- * 3. Setters
+ * 3. Getters
+ ***/
+
+std::string SystemMesh::typeName() const
+{
+    return "System mesh";
+}
+
+
+/***
+ * 4. Setters
  ***/
 
 void SystemMesh::setTextureWallsManager( TextureWallsManager& textureWallsManager )
@@ -56,7 +66,7 @@ void SystemMesh::setTextureWallsManager( TextureWallsManager& textureWallsManage
 
 
 /***
- * 4. Drawing
+ * 5. Drawing
  ***/
 
 void SystemMesh::draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const glm::vec4 *contourColor ) const

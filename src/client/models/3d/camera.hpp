@@ -67,6 +67,7 @@ class Camera : public ImportedMesh
         glm::vec4 getCenterVector() const ;
         glm::vec3 getEye() const;
         glm::vec3 getUpVector() const;
+        virtual std::string typeName() const;
 
 
         /***

@@ -103,6 +103,12 @@ GLint DirectionalLight::getLightIndex() const
 }
 
 
+std::string DirectionalLight::typeName() const
+{
+    return "DirectionalLight";
+}
+
+
 /***
  * 4. Updating
  ***/

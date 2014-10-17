@@ -77,6 +77,7 @@ class Light : public AbstractLight, public ImportedMesh
         virtual float getAmbientCoefficient() const;
         virtual GLint getLightIndex() const = 0;
         virtual GLuint getBaseLightIndex() const;
+        virtual std::string typeName() const;
 
 
         /***

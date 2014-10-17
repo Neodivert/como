@@ -43,13 +43,19 @@ class ImportedMesh : public Mesh
 
 
         /***
-         * 3. Drawing
+         * 3. Getters
+         ***/
+        virtual std::string typeName() const;
+
+
+        /***
+         * 4. Drawing
          ***/
         virtual void draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec4* contourColor = nullptr ) const;
 
 
         /***
-         * 4. Operators
+         * 5. Operators
          ***/
         ImportedMesh& operator = ( const ImportedMesh& ) = delete;
         ImportedMesh& operator = ( ImportedMesh&& ) = delete;
@@ -57,7 +63,7 @@ class ImportedMesh : public Mesh
 
     protected:
         /***
-         * 5. Protected construction
+         * 6. Protected construction
          ***/
         // TODO: This constructor is needed by Light and Camera classes. Create
         // a new base class XMesh for Light and Camera which doesn't use

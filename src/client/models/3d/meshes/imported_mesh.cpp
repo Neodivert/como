@@ -31,7 +31,17 @@ ImportedMesh::ImportedMesh( const ResourceID& id, const ResourceID& firstMateria
 
 
 /***
- * 3. Drawing
+ * 3. Getters
+ ***/
+
+std::string ImportedMesh::typeName() const
+{
+    return "Imported mesh";
+}
+
+
+/***
+ * 4. Drawing
  ***/
 
 void ImportedMesh::draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const glm::vec4 *contourColor ) const
@@ -60,7 +70,7 @@ void ImportedMesh::draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const gl
 
 
 /***
- * 5. Protected construction
+ * 6. Protected construction
  ***/
 
 // TODO: This dangerous MaterialsManager is created so next constructor can be
