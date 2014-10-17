@@ -44,7 +44,7 @@ const GLint SHADER_UV_ATTR_LOCATION = 2;
 
 // TODO: Remove this constructor.
 Mesh::Mesh( const ResourceID& meshID, const std::string& meshName, const ResourceID& firstMaterialID, MeshType type, const char* filePath, MaterialsManager& materialsManager, bool displayVertexNormals ) :
-    Entity( meshID, meshName, DrawableType::MESH ),
+    Entity( meshID, meshName + " # " + meshID.toString(), DrawableType::MESH ),
     type_( type ),
     displayVertexNormals_( displayVertexNormals ),
     displayEdges_( true ),
@@ -69,7 +69,7 @@ Mesh::Mesh( const ResourceID& meshID, const std::string& meshName, const Resourc
 
 
 Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, const PrimitiveData& primitiveData, MaterialsManager& materialsManager, bool displayVertexNormals ) :
-    Entity( meshID, primitiveData.name, DrawableType::MESH ),
+    Entity( meshID, primitiveData.name + " # " + meshID.toString(), DrawableType::MESH ),
     type_( MeshType::MESH ),
     vertexData_( primitiveData.vertexData ),
     displayVertexNormals_( displayVertexNormals ),

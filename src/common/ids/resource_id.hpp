@@ -61,6 +61,7 @@ class ResourceID
          ***/
         UserID getCreatorID() const;
         ResourceIndex getResourceIndex() const;
+        std::string toString() const;
 
 
         /***

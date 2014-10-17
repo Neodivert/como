@@ -51,6 +51,14 @@ ResourceIndex ResourceID::getResourceIndex() const
 }
 
 
+std::string ResourceID::toString() const
+{
+    return std::to_string( creatorID_ ) +
+           ":" +
+           std::to_string( resourceIndex_ );
+}
+
+
 /***
  * 4. Operators
  ***/
@@ -122,8 +130,7 @@ ResourceID ResourceID::operator ++ ( int )
 
 std::ostream& operator << ( std::ostream& os, const ResourceID& id )
 {
-    os << "(" << static_cast< int >( id.getCreatorID() ) << ", "
-       << static_cast<int>( id.getResourceIndex() ) << ")";
+    os << "(" << id.toString() << ")";
 
     return os;
 }
