@@ -121,7 +121,63 @@ void PrimitiveData::generateOGLData()
 
 
 /***
- * 3. File reading
+ * 3. Importing / exporting
+ ***/
+
+void PrimitiveData::importFromFile( const std::string &filePath )
+{
+    std::ifstream file;
+
+    file.open( filePath );
+    if( !file.is_open() ){
+        throw FileNotOpenException( filePath );
+    }
+
+    read( file );
+
+    file.close();
+}
+
+
+void PrimitiveData::exportToFile( const std::string& filePath ) const
+{
+    std::ofstream file;
+
+    file.open( filePath );
+    if( !file.is_open() ){
+        throw FileNotOpenException( filePath );
+    }
+
+    write( file );
+
+    file.close();
+}
+
+
+/***
+ * 3. File reading / writing
+ ***/
+
+void PrimitiveData::read( std::ifstream &file )
+{
+    readVertices( file );
+    readTriangles( file );
+    readOpenGLData( file );
+    readMaterials( file );
+}
+
+
+void PrimitiveData::write( std::ofstream &file ) const
+{
+    writeVertices( file );
+    writeTriangles( file );
+    writeOpenGLData( file );
+    writeMaterials( file );
+}
+
+
+/***
+ * 4. File reading (auxiliar methods)
  ***/
 
 void PrimitiveData::readVertices( std::ifstream &file )
@@ -238,7 +294,7 @@ void PrimitiveData::readMaterials(std::ifstream &file)
 
 
 /***
- * 4. File writting
+ * 4. File writting (auxiliar methods)
  ***/
 
 void PrimitiveData::writeVertices( std::ofstream& file ) const

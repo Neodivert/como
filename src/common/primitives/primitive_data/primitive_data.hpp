@@ -60,9 +60,24 @@ struct PrimitiveData
         void generateOGLData();
 
 
+        /***
+         * 3. Importing / exporting
+         ***/
+        virtual void importFromFile( const std::string &filePath );
+        virtual void exportToFile( const std::string& filePath ) const;
+
+
     protected:
         /***
-         * 3. File reading
+         * 3. File reading / writing
+         ***/
+        virtual void read( std::ifstream& file );
+        virtual void write( std::ofstream& file ) const;
+
+
+    private:
+        /***
+         * 4. File reading (auxiliar methods)
          ***/
         void readVertices( std::ifstream& file );
         void readTriangles( std::ifstream& file );
@@ -71,7 +86,7 @@ struct PrimitiveData
 
 
         /***
-         * 4. File writting
+         * 5. File writting (auxiliar methods)
          ***/
         void writeVertices( std::ofstream& file ) const;
         void writeTriangles( std::ofstream& file ) const;

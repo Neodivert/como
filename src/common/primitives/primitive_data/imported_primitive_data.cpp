@@ -32,49 +32,25 @@ ImportedPrimitiveData::ImportedPrimitiveData(std::string filePath)
 
 
 /***
- * 2. File importing / exporting
+ * 2. File reading / writing
  ***/
 
-void ImportedPrimitiveData::importFromFile( const std::string &filePath )
+void ImportedPrimitiveData::read( std::ifstream &file )
 {
-    std::ifstream file;
-
-    file.open( filePath );
-    if( !file.is_open() ){
-        throw FileNotOpenException( filePath );
-    }
-
-    readVertices( file );
-    readTriangles( file );
+    PrimitiveData::read( file );
     readTrianglesGroups( file );
-    readOpenGLData( file );
-    readMaterials( file );
-
-    file.close();
 }
 
 
-void ImportedPrimitiveData::exportToFile( const std::string& filePath ) const
+void ImportedPrimitiveData::write( std::ofstream &file ) const
 {
-    std::ofstream file;
-
-    file.open( filePath );
-    if( !file.is_open() ){
-        throw FileNotOpenException( filePath );
-    }
-
-    writeVertices( file );
-    writeTriangles( file );
+    PrimitiveData::write( file );
     writeTrianglesGroups( file );
-    writeOpenGLData( file );
-    writeMaterials( file );
-
-    file.close();
 }
 
 
 /***
- * 3. File reading
+ * 3. File reading (auxiliar methods)
  ***/
 
 void ImportedPrimitiveData::readTrianglesGroups( std::ifstream& file )
@@ -99,7 +75,7 @@ void ImportedPrimitiveData::readTrianglesGroups( std::ifstream& file )
 
 
 /***
- * 4. File writting
+ * 4. File writting (auxiliar methods)
  ***/
 
 void ImportedPrimitiveData::writeTrianglesGroups( std::ofstream &file ) const

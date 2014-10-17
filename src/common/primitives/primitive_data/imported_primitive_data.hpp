@@ -39,22 +39,22 @@ struct ImportedPrimitiveData : public PrimitiveData
         ImportedPrimitiveData( std::string filePath );
 
 
+    protected:
         /***
-         * 2. File importing / exporting
+         * 2. File reading / writing
          ***/
-        virtual void importFromFile( const std::string &filePath );
-        virtual void exportToFile( const std::string &filePath ) const;
-
+        virtual void read( std::ifstream &file );
+        virtual void write( std::ofstream &file ) const;
 
     private:
         /***
-         * 3. File reading
+         * 3. File reading (auxiliar methods)
          ***/
         void readTrianglesGroups( std::ifstream& file );
 
 
         /***
-         * 4. File writting
+         * 4. File writting (auxiliar methods)
          ***/
         void writeTrianglesGroups( std::ofstream& file ) const;
 };
