@@ -29,20 +29,16 @@ GeneralInfoMenu::GeneralInfoMenu( LocalEntitiesSelection* userSelection ) :
     // Create a layout for this widget.
     QFormLayout* layout = new QFormLayout;
 
-    // Create a text input for manipulating the name of the currently selected
-    // 3D object.
-    objectName_ = new QLineEdit( "Unnamed" );
-    objectName_->setReadOnly( true );
-
-    // Create a label with the type of the object.
-    objectType_ = new QLabel( "Unknown" );
+    // Create name labels.
+    objectName_ = new QLabel( "Unnamed" );
+    objectTypeName_ = new QLabel( "Unnamed" );
 
     // Create a label for displaying the centroid of the user's selection.
     centroidPosition_ = new QLabel( "Undefined" );
 
     // Add widgets to the layout and set the latter as the current one.
     layout->addRow( new QLabel( "Name:" ), objectName_ );
-    layout->addRow( new QLabel( "Type:" ), objectType_ );
+    layout->addRow( new QLabel( "Type:" ), objectTypeName_ );
     layout->addRow( "Centroid position:", centroidPosition_ );
     setLayout( layout );
 
@@ -65,10 +61,8 @@ void GeneralInfoMenu::update()
     // Write the previous "centroid std::string" to its corresponding label.
     centroidPosition_->setText( centroidStr );
 
-    /*
-    objectName_->setText( userSelection_->getName().c_str() );
-    objectType_->setText( userSelection_->getTypeName().c_str() );
-    */
+    objectName_->setText( userSelection_->name().c_str() );
+    objectTypeName_->setText( userSelection_->typeName().c_str() );
 }
 
 } // namespace como

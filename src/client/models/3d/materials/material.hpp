@@ -66,6 +66,7 @@ class Material : public Resource
         Color getDiffuseReflectivity() const;
         Color getSpecularReflectivity() const;
         float getSpecularExponent() const;
+        virtual std::string typeName() const;
 
 
         /***

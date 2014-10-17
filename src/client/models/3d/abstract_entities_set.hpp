@@ -50,6 +50,8 @@ class AbstractEntitiesSet : public Transformable, public virtual Observable // T
         virtual glm::vec4 borderColor() const = 0;
         virtual unsigned int size() const = 0;
         virtual bool containsEntity( const ResourceID& entityID ) const = 0;
+        virtual std::string name() const = 0;
+        virtual std::string typeName() const = 0;
 
 
         /***

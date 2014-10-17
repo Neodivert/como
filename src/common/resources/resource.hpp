@@ -47,6 +47,7 @@ class Resource
         ResourceHeader header() const;
         ResourceID id() const;
         std::string name() const;
+        virtual std::string typeName() const = 0;
 
 
         /***

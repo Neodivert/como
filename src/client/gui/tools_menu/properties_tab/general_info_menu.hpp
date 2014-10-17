@@ -36,8 +36,11 @@ class GeneralInfoMenu : public QWidget, public Observer
 
         QLabel* centroidPosition_;
 
-        /*! Name of the currently selected 3D object. */
-        QLineEdit* objectName_;
+        /*! Name of the currently selected 3D object (or selection). */
+        QLabel* objectName_;
+
+        /*! Name of the currently selected 3D object's type (or selection). */
+        QLabel* objectTypeName_;
 
         /*! Type of the currently selected 3D object. */
         QLabel* objectType_;

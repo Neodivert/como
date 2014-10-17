@@ -62,6 +62,13 @@ class EntitiesSet : public AbstractEntitiesSet, public ResourcesSelection< Entit
         void setPivotPointMode( PivotPointMode mode );
         void setBorderColor( const glm::vec4& borderColor );
         virtual void setEntityModelMatrix(const ResourceID &entityID, const glm::mat4 &modelMatrix);
+        /*
+         * size() == 0 -> "(Nothing selected)"
+         * size() == 1 -> Name of the unique resource in the selection.
+         * size() > 1 -> (Multiple entities)".
+         */
+        virtual std::string name() const;
+        virtual std::string typeName() const;
 
 
         /***
@@ -184,6 +191,30 @@ template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::setEntityModelMatrix(const ResourceID &entityID, const glm::mat4 &modelMatrix)
 {
     this->resources_.at( entityID )->setModelMatrix( modelMatrix );
+}
+
+
+template <class EntitySubtype>
+std::string EntitiesSet<EntitySubtype>::name() const
+{
+    if( this->size() == 0 ){
+        return "(Nothing selected)";
+    }else if( this->size() == 1 ){
+        return this->resources_.begin()->second->name();
+    }else{
+        return "(Multiple entities selected)";
+    }
+}
+
+
+template <class EntitySubtype>
+std::string EntitiesSet<EntitySubtype>::typeName() const
+{
+    if( this->size() == 1 ){
+        return this->resources_.begin()->second->typeName();
+    }else{
+        return "Selection";
+    }
 }
 
 

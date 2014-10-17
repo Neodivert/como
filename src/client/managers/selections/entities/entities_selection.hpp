@@ -57,6 +57,8 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer, public Lo
         virtual glm::vec4 borderColor() const;
         virtual unsigned int size() const;
         virtual bool containsEntity(const ResourceID &entityID) const;
+        virtual std::string name() const;
+        virtual std::string typeName() const;
 
 
         /***

@@ -93,6 +93,40 @@ bool EntitiesSelection::containsEntity(const ResourceID &entityID) const
 }
 
 
+std::string EntitiesSelection::name() const
+{
+    if( size() == 0 ){
+        return "(Nothing selected)";
+    }else if( size() == 1 ){
+        std::string name;
+        for( auto& selection : specializedEntitiesSelections_ ){
+            if( selection->size() == 1 ){
+                name = selection->name();
+            }
+        }
+        return name;
+    }else{
+        return "(Multiple objects)";
+    }
+}
+
+
+std::string EntitiesSelection::typeName() const
+{
+    if( size() == 1 ){
+        std::string typeName;
+        for( auto& selection : specializedEntitiesSelections_ ){
+            if( selection->size() == 1 ){
+                typeName = selection->typeName();
+            }
+        }
+        return typeName;
+    }else{
+        return "Selection";
+    }
+}
+
+
 /***
  * 4. Setters
  ***/

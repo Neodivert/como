@@ -316,6 +316,12 @@ bool Mesh::includesTextures() const
 }
 
 
+std::string Mesh::typeName() const
+{
+    return "Mesh";
+}
+
+
 /***
  * 6. Setters
  ***/

@@ -69,6 +69,11 @@ float Material::getSpecularExponent() const
     return specularExponent_;
 }
 
+std::string Material::typeName() const
+{
+    return "Material";
+}
+
 
 /***
  * 4. Setters
