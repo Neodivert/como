@@ -44,11 +44,10 @@ bool TextureWallsManager::textureWallIncludesTexture( const ResourceID& textureW
 ResourceHeadersList TextureWallsManager::getSelectableResourcesHeaders() const
 {
     ResourceHeadersList headersList;
-    ResourceHeader currentHeader;
 
     for( const auto& textureWallID : selectableTextureWalls_ ){
-        currentHeader.id = textureWallID;
-        currentHeader.name = textureWalls_.at( textureWallID ).name;
+        ResourceHeader currentHeader( textureWallID,
+                                      textureWalls_.at( textureWallID ).name );
         headersList.push_back( currentHeader );
     }
 
