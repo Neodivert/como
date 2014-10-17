@@ -28,8 +28,8 @@ namespace como {
  * 1. Construction
  ***/
 
-Light::Light( LightType type, const Color& color, std::string path, OpenGL& openGL ) :
-    ImportedMesh( path ),
+Light::Light( const ResourceID& id, LightType type, const Color& color, std::string path, OpenGL& openGL ) :
+    ImportedMesh( id, path ),
     type_( type ),
     index_( lockShaderLight( openGL ) )
 {

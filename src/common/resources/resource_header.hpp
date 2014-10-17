@@ -26,7 +26,7 @@
 namespace como {
 
 struct ResourceHeader {
-    ResourceID id;
+    const ResourceID id;
     std::string name;
 
     ResourceHeader( const ResourceID& id, const std::string& name ) :

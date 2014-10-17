@@ -66,7 +66,7 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Color&
 {
     lock();
     std::unique_ptr< DirectionalLight >
-            light( new DirectionalLight( lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), *openGL_ ) );
+            light( new DirectionalLight( lightID, lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), *openGL_ ) );
 
     getResourcesSelection( NO_USER )->addResource( lightID, std::move( light ) );
 

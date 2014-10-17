@@ -62,7 +62,7 @@ class ImportedMesh : public Mesh
         // TODO: This constructor is needed by Light and Camera classes. Create
         // a new base class XMesh for Light and Camera which doesn't use
         // materials manager and / or ResourceIDs.
-        ImportedMesh( const std::string& filePath );
+        ImportedMesh( const ResourceID& id, const std::string& filePath );
 
 
         // TODO: Make this private and remove direct access from DirectionalLight.

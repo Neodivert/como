@@ -48,9 +48,10 @@ class Camera : public ImportedMesh
         /***
          * 1. Initializations
          ***/
-        Camera( const Camera& ) = default;
-        Camera( Camera&& ) = default;
-        Camera( OpenGL& openGL,
+        Camera( const Camera& ) = delete;
+        Camera( Camera&& ) = delete;
+        Camera( const ResourceID& id,
+                OpenGL& openGL,
                 const glm::vec3& cameraCenter = glm::vec3( 0.0f, 0.0f, 0.0f ),
                 const glm::vec3& cameraEye = glm::vec3( 0.0f, 0.0f, 1.0f ),
                 const glm::vec3& cameraUp = glm::vec3( 0.0f, 1.0f, 0.0f ) );

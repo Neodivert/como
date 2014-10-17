@@ -68,8 +68,8 @@ void ImportedMesh::draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const gl
 // manager in any way. FIX THIS.
 MaterialsManager fooMaterialsManager( nullptr, nullptr );
 
-ImportedMesh::ImportedMesh( const std::string &filePath ) :
-    Mesh( NO_RESOURCE, PrimitiveData::getNameFromFile( filePath.c_str() ), NO_RESOURCE, MeshType::MESH, filePath.c_str(), fooMaterialsManager )
+ImportedMesh::ImportedMesh( const ResourceID &id, const std::string &filePath ) :
+    Mesh( id, PrimitiveData::getNameFromFile( filePath.c_str() ), NO_RESOURCE, MeshType::MESH, filePath.c_str(), fooMaterialsManager )
 {}
 
 } // namespace como

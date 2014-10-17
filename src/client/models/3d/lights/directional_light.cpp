@@ -29,8 +29,8 @@ const glm::vec4 DEFAULT_LIGHT_VECTOR = glm::vec4( 0.0f, 1.0f, 0.0f, 0.0f );
  * 1. Construction
  ***/
 
-DirectionalLight::DirectionalLight( const Color& lightColor, const glm::vec3& lightVector, OpenGL& openGL ) :
-    Light( LightType::DIRECTIONAL_LIGHT, lightColor, "data/system/primitives/directional_light.prim", openGL ), // TODO: Load material from file.
+DirectionalLight::DirectionalLight( const ResourceID& id, const Color& lightColor, const glm::vec3& lightVector, OpenGL& openGL ) :
+    Light( id, LightType::DIRECTIONAL_LIGHT, lightColor, "data/system/primitives/directional_light.prim", openGL ), // TODO: Load material from file.
     directionalLightIndex_( lockShaderDirectionalLight( openGL ) )
 {
     (void)( lightVector ); // TODO: Remove this argument.

@@ -26,8 +26,8 @@ namespace como {
 
 GLint Camera::eyeVectorLocation_ = -1;
 
-Camera::Camera( OpenGL &openGL, const glm::vec3 &cameraCenter, const glm::vec3 &cameraEye, const glm::vec3 &cameraUp ) :
-    ImportedMesh( "data/system/primitives/camera.prim" ),
+Camera::Camera( const ResourceID& id, OpenGL &openGL, const glm::vec3 &cameraCenter, const glm::vec3 &cameraEye, const glm::vec3 &cameraUp ) :
+    ImportedMesh( id, "data/system/primitives/camera.prim" ),
     originalEye     ( 0.0f, 0.0f, 1.0f, 1.0f ),
     originalUp      ( 0.0f, 1.0f, 0.0f, 0.0f ),
     originalCenter  ( 0.0f, 0.0f, 0.0f, 1.0f )

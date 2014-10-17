@@ -57,9 +57,9 @@ class Light : public AbstractLight, public ImportedMesh
          ***/
         Light() = delete;
     protected:
-        Light( LightType type, const Color& color, std::string path, OpenGL& openGL );
+        Light( const ResourceID& id, LightType type, const Color& color, std::string path, OpenGL& openGL );
     public:
-        Light( const Light& ) = default; // TODO: Implement using shader limit (MAX_LIGHTS) (or remove clone()).
+        Light( const Light& ) = delete; // TODO: Implement using shader limit (MAX_LIGHTS) (or remove clone()).
         Light( Light&& ) = delete;
 
 

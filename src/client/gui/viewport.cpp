@@ -77,7 +77,7 @@ Viewport::Viewport( View view, Projection projection, std::shared_ptr< ComoApp >
         assert( viewProjectionMatrixLocation != -1 );
 
         // Create the camera.
-        camera = new Camera( *( comoApp->getScene()->getOpenGL() ) );
+        camera = new Camera( NO_RESOURCE, *( comoApp->getScene()->getOpenGL() ) );
 
         // Set the requested view.
         setView( view );

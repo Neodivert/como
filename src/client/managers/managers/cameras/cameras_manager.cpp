@@ -84,7 +84,8 @@ void CamerasManager::createCamera( const ResourceID &cameraID,
                                    const glm::vec3 &cameraUp )
 {
     lock();
-    std::unique_ptr< Camera > camera( new Camera( *openGL_,
+    std::unique_ptr< Camera > camera( new Camera( cameraID,
+                                                  *openGL_,
                                                   cameraCenter,
                                                   cameraEye,
                                                   cameraUp ) );
