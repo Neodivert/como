@@ -121,7 +121,7 @@ void PrimitiveData::generateOGLData()
 
 
 /***
- * 3. Importing / exporting
+ * 3. File importing / exporting
  ***/
 
 void PrimitiveData::importFromFile( const std::string &filePath )
@@ -155,7 +155,29 @@ void PrimitiveData::exportToFile( const std::string& filePath ) const
 
 
 /***
- * 3. File reading / writing
+ * 4. Auxiliar methods
+ ***/
+
+std::string PrimitiveData::getNameFromFile(const std::string &filePath)
+{
+    std::ifstream file;
+    std::string primitiveName;
+
+    file.open( filePath );
+    if( !file.is_open() ){
+        throw FileNotOpenException( filePath );
+    }
+
+    std::getline( file, primitiveName );
+
+    file.close();
+
+    return primitiveName;
+}
+
+
+/***
+ * 5. File reading / writing
  ***/
 
 void PrimitiveData::read( std::ifstream &file )
@@ -179,7 +201,7 @@ void PrimitiveData::write( std::ofstream &file ) const
 
 
 /***
- * 4. File reading (auxiliar methods)
+ * 6. File reading (auxiliar methods)
  ***/
 
 void PrimitiveData::readVertices( std::ifstream &file )
@@ -296,7 +318,7 @@ void PrimitiveData::readMaterials(std::ifstream &file)
 
 
 /***
- * 4. File writting (auxiliar methods)
+ * 7. File writting (auxiliar methods)
  ***/
 
 void PrimitiveData::writeVertices( std::ofstream& file ) const

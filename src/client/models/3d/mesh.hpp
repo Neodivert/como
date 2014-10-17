@@ -100,7 +100,7 @@ class Mesh : public AbstractMesh, public Entity
          * 1. Construction.
          ***/
     protected:
-        Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, MeshType type, const char* file, MaterialsManager& materialsManager, bool displayVertexNormals = false );
+        Mesh( const ResourceID& meshID, const std::string& meshName, const ResourceID& firstMaterialID, MeshType type, const char* file, MaterialsManager& materialsManager, bool displayVertexNormals = false );
     public:
         Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, const PrimitiveData& primitiveData, MaterialsManager& materialsManager, bool displayVertexNormals = false );
         Mesh( const Mesh& b ) = default;

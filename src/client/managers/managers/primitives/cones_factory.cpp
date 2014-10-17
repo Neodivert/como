@@ -28,7 +28,7 @@ namespace como {
  ***/
 
 ConesFactory::ConesFactory(ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager *textureWallsManager) :
-    SpecializedSystemPrimitivesFactory( server, meshesManager, materialsManager, textureWallsManager )
+    SpecializedSystemPrimitivesFactory( server, "Cone", meshesManager, materialsManager, textureWallsManager )
 {}
 
 

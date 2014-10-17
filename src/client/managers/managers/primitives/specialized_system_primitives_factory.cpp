@@ -24,8 +24,9 @@ namespace como {
  * 1. Construction
  ***/
 
-SpecializedSystemPrimitivesFactory::SpecializedSystemPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager* textureWallsManager ) :
+SpecializedSystemPrimitivesFactory::SpecializedSystemPrimitivesFactory( ServerInterfacePtr server, const std::string& primitiveName, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager* textureWallsManager ) :
     ServerWriter( server ),
+    primitiveName_( primitiveName ),
     meshesManager_( meshesManager ),
     textureWallsManager_( textureWallsManager ),
     materialsManager_( materialsManager )
@@ -40,6 +41,7 @@ SystemPrimitiveData SpecializedSystemPrimitivesFactory::generatePrimitiveData()
 {
     SystemPrimitiveData primitiveData;
 
+    primitiveData.name = primitiveName_;
     generateVertexData( primitiveData.vertexData );
     generateNormalData( primitiveData.vertexData, primitiveData.normalData );
     generateUVData( primitiveData.uvData );

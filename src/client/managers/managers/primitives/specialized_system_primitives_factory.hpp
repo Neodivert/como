@@ -33,7 +33,7 @@ class SpecializedSystemPrimitivesFactory : public ServerWriter
         /***
          * 1. Construction
          ***/
-        SpecializedSystemPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager* textureWallsManager );
+        SpecializedSystemPrimitivesFactory( ServerInterfacePtr server, const std::string& primitiveName, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager* textureWallsManager );
         SpecializedSystemPrimitivesFactory() = delete;
         SpecializedSystemPrimitivesFactory( const SpecializedSystemPrimitivesFactory& ) = delete;
         SpecializedSystemPrimitivesFactory( SpecializedSystemPrimitivesFactory&& ) = delete;
@@ -72,6 +72,7 @@ class SpecializedSystemPrimitivesFactory : public ServerWriter
         void generateTrianglesCircle(std::vector<IndicesTriangle> &triangles, unsigned int nDivisions, unsigned int centerVertexIndex, unsigned int firstRadialVertexIndex, bool increaseIndices);
 
 
+        const std::string primitiveName_;
         MeshesManagerPtr meshesManager_;
         TextureWallsManager* textureWallsManager_;
         MaterialsManagerPtr materialsManager_;

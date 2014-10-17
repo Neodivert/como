@@ -28,7 +28,7 @@ const float FIRST_RADIAL_VERTEX_INDEX = 2;
  ***/
 
 SpheresFactory::SpheresFactory(ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager *textureWallsManager) :
-    SpecializedSystemPrimitivesFactory( server, meshesManager, materialsManager, textureWallsManager )
+    SpecializedSystemPrimitivesFactory( server, "Sphere", meshesManager, materialsManager, textureWallsManager )
 {}
 
 

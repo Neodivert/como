@@ -62,15 +62,21 @@ struct PrimitiveData
 
 
         /***
-         * 3. Importing / exporting
+         * 3. File importing / exporting
          ***/
         virtual void importFromFile( const std::string &filePath );
         virtual void exportToFile( const std::string& filePath ) const;
 
 
+        /***
+         * 4. Auxiliar methods
+         ***/
+        static std::string getNameFromFile( const std::string& filePath );
+
+
     protected:
         /***
-         * 3. File reading / writing
+         * 5. File reading / writing
          ***/
         virtual void read( std::ifstream& file );
         virtual void write( std::ofstream& file ) const;
@@ -78,7 +84,7 @@ struct PrimitiveData
 
     private:
         /***
-         * 4. File reading (auxiliar methods)
+         * 6. File reading (auxiliar methods)
          ***/
         void readVertices( std::ifstream& file );
         void readTriangles( std::ifstream& file );
@@ -87,7 +93,7 @@ struct PrimitiveData
 
 
         /***
-         * 5. File writting (auxiliar methods)
+         * 7. File writting (auxiliar methods)
          ***/
         void writeVertices( std::ofstream& file ) const;
         void writeTriangles( std::ofstream& file ) const;

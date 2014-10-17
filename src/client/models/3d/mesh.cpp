@@ -37,17 +37,14 @@ const GLint SHADER_VERTEX_ATTR_LOCATION = 0;
 const GLint SHADER_NORMAL_ATTR_LOCATION = 1;
 const GLint SHADER_UV_ATTR_LOCATION = 2;
 
-const char DEFAULT_MESH_NAME[] = "Mesh #";
-
-
 
 /***
  * 1. Construction.
  ***/
 
 // TODO: Remove this constructor.
-Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, MeshType type, const char* filePath, MaterialsManager& materialsManager, bool displayVertexNormals ) :
-    Entity( meshID, DEFAULT_MESH_NAME, DrawableType::MESH ),
+Mesh::Mesh( const ResourceID& meshID, const std::string& meshName, const ResourceID& firstMaterialID, MeshType type, const char* filePath, MaterialsManager& materialsManager, bool displayVertexNormals ) :
+    Entity( meshID, meshName, DrawableType::MESH ),
     type_( type ),
     displayVertexNormals_( displayVertexNormals ),
     displayEdges_( true ),
@@ -72,7 +69,7 @@ Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, MeshTyp
 
 
 Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, const PrimitiveData& primitiveData, MaterialsManager& materialsManager, bool displayVertexNormals ) :
-    Entity( meshID, DEFAULT_MESH_NAME, DrawableType::MESH ),
+    Entity( meshID, primitiveData.name, DrawableType::MESH ),
     type_( MeshType::MESH ),
     vertexData_( primitiveData.vertexData ),
     displayVertexNormals_( displayVertexNormals ),

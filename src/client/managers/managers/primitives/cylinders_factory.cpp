@@ -25,7 +25,7 @@ namespace como {
  ***/
 
 CylindersFactory::CylindersFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager *textureWallsManager ) :
-    SpecializedSystemPrimitivesFactory( server, meshesManager, materialsManager, textureWallsManager )
+    SpecializedSystemPrimitivesFactory( server, "Cylinder", meshesManager, materialsManager, textureWallsManager )
 {}
 
 
