@@ -18,10 +18,11 @@ By now, COMO allows users to have fun with meshes and simple materials :). Each 
 
 ### Dependencies
 COMO makes use of the following APIs and libraries:
-* Qt 5.2.
-* Boost 1.55 (boost_system, boost_thread and boost_filesystem).
-* OpenGL 4.2 and GLSL.
-* GLM.
+* Qt v5.2.1
+* Boost v1.55 (boost_system, boost_thread and boost_filesystem).
+* OpenGL v4.2 and GLSL.
+* GLM v0.9.5.1
+* SDL2_image
 
 ## Building COMO (Ubuntu 14.04)
 
@@ -39,9 +40,9 @@ COMO makes use of the following APIs and libraries:
    glxinfo | grep OpenGL
    ```
 
-3. Install the rest of dependencies
+3. Install the rest of dependencies (make sure that the versions are equal or greater than those indicated in "Dependencies".
    ```
-   sudo apt-get install libglm-dev libboost1.55-dev libboost-system1.55.0 libboost-filesystem1.55.0    libboost-thread1.55.0 libboost-system1.55-dev libboost-thread1.55-dev libboost-filesystem1.55-dev
+   sudo apt-get install libglm-dev libboost1.55-dev libboost-system1.55.0 libboost-filesystem1.55.0 libboost-thread1.55.0 libboost-system1.55-dev libboost-thread1.55-dev libboost-filesystem1.55-dev
    ```
 
 ### Building
