@@ -28,6 +28,11 @@ namespace como {
 struct ResourceHeader {
     ResourceID id;
     std::string name;
+
+    ResourceHeader( const ResourceID& id, const std::string& name ) :
+        id( id ),
+        name( name )
+    {}
 };
 
 typedef std::list< ResourceHeader > ResourceHeadersList;

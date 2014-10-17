@@ -134,7 +134,8 @@ HEADERS += \
     ../../src/common/commands/entity_commands/entity_command.hpp \
     ../../src/common/commands/entity_commands/entity_commands.hpp \
     ../../src/common/commands/entity_commands/model_matrix_replacement_command.hpp \
-    ../../src/common/3d/plain_material_data.hpp
+    ../../src/common/3d/plain_material_data.hpp \
+    ../../src/common/packables/resources/packable_resource_header.hpp
 
 
 # Common sources (used by both client and server).
@@ -211,4 +212,5 @@ SOURCES += \
     ../../src/common/utilities/lockable.cpp \
     ../../src/common/transformable/transformable.cpp \
     ../../src/common/commands/entity_commands/entity_command.cpp \
-    ../../src/common/commands/entity_commands/model_matrix_replacement_command.cpp
+    ../../src/common/commands/entity_commands/model_matrix_replacement_command.cpp \
+    ../../src/common/packables/resources/packable_resource_header.cpp
