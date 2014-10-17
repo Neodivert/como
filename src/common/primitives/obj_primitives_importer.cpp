@@ -96,6 +96,7 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
     splitFileLine( line, lineHeader, lineBody );
 
     if( lineHeader == "o" ){
+        primitiveData.name = lineBody;
         primitiveInfo.name = lineBody;
     }else if( lineHeader == "g" ){
         // TODO: Create a new triangles group?

@@ -160,6 +160,7 @@ void PrimitiveData::exportToFile( const std::string& filePath ) const
 
 void PrimitiveData::read( std::ifstream &file )
 {
+    std::getline( file, name );
     readVertices( file );
     readTriangles( file );
     readOpenGLData( file );
@@ -169,6 +170,7 @@ void PrimitiveData::read( std::ifstream &file )
 
 void PrimitiveData::write( std::ofstream &file ) const
 {
+    file << name << std::endl;
     writeVertices( file );
     writeTriangles( file );
     writeOpenGLData( file );

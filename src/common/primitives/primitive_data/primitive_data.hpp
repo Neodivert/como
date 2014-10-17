@@ -39,6 +39,7 @@ typedef std::map< CompoundVertex, VertexIndice > CompoundVerticesMap;
 struct PrimitiveData
 {
     public:
+        std::string name;
         MeshVertexData vertexData;
         MeshNormalData normalData;
         MeshTextureData uvData;
