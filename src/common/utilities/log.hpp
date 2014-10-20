@@ -30,13 +30,6 @@
 
 namespace como {
 
-enum class LogMessageType {
-    DEBUG = 0,
-    WARNING,
-    ERROR
-};
-
-
 class Log;
 typedef std::shared_ptr< Log > LogPtr;
 

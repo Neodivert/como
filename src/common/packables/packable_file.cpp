@@ -126,7 +126,7 @@ void* PackableFile::PackableFile::pack( void* buffer ) const
     file_.read( castedBuffer, fileSize_.getValue() );
 
     if( !file_ ){
-        sprintf( errorMessage, "ERROR unpacking file. Only %ld bytes could be read", file_.gcount() );
+        sprintf( errorMessage, "ERROR unpacking file. Only %lld bytes could be read", file_.gcount() );
         throw std::runtime_error( errorMessage );
     }
 

@@ -43,8 +43,8 @@ PrimitiveInfo OBJPrimitivesImporter::importPrimitive( std::string srcFilePath, s
 
     primitiveInfo.name += nameSuffix;
     primitiveInfo.filePath =
-            dstDirectory + '/' +
-            primitiveInfo.name +
+            ( boost::filesystem::path( dstDirectory ) /
+              boost::filesystem::path( primitiveInfo.name ) ).string() +
             ".prim";
 
     // TODO: Remove this?
@@ -148,8 +148,9 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
             break;
         }
     }else if( lineHeader == "mtllib" ){
-        std::string fileDirectory = filePath.substr( 0, filePath.rfind( '/' ) );
-        std::string materialFilePath = fileDirectory + '/' + lineBody;
+        boost::filesystem::path fileDirectory = boost::filesystem::path( filePath ).parent_path();
+        std::string materialFilePath = ( fileDirectory / lineBody ).string();
+        std::cout << "materialFilePath: [" << materialFilePath << "]" << std::endl;
 
         processMaterialFile( materialFilePath, primitiveData.oglData.includesTextures, primitiveData.materialsInfo_ );
     }else if( lineHeader == "usemtl" ){

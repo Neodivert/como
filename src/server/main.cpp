@@ -18,9 +18,6 @@
 
 #include "server.hpp"
 #include <common/packets/packets.hpp>
-extern "C" {
-    #include <endian.h>
-}
 #include <common/utilities/log.hpp>
 #include <clocale>
 #include <boost/filesystem.hpp>
@@ -44,8 +41,8 @@ int main( int argc, char* argv[] )
         // Variable argv[0] contains the string used for invoking this server
         // program. We now retrieve the basename of that string for getting a
         // relative path to the same directory where the server resides.
-        std::string serverRelativePath( argv[0] );
-        serverRelativePath = serverRelativePath.substr( 0, serverRelativePath.rfind( "/server" ) );
+        boost::filesystem::path p( argv[0] );
+        std::string serverRelativePath( p.parent_path().string() );
 
         // Change directory so now we are in the same directory as the server
         // executable (we need this because Server class uses relative paths).
