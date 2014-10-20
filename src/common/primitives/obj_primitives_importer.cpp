@@ -150,7 +150,6 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
     }else if( lineHeader == "mtllib" ){
         boost::filesystem::path fileDirectory = boost::filesystem::path( filePath ).parent_path();
         std::string materialFilePath = ( fileDirectory / lineBody ).string();
-        std::cout << "materialFilePath: [" << materialFilePath << "]" << std::endl;
 
         processMaterialFile( materialFilePath, primitiveData.oglData.includesTextures, primitiveData.materialsInfo_ );
     }else if( lineHeader == "usemtl" ){
@@ -220,7 +219,7 @@ void OBJPrimitivesImporter::processMaterialFileLine( std::string filePath, std::
         materials.back().specularExponent = std::atof( lineBody.c_str() );
     }else if( lineHeader == "map_Kd" ){
         includesTextures = true;
-        std::string textureFilePath = filePath.substr( 0, filePath.rfind( '/' ) ) + '/' + lineBody;
+        std::string textureFilePath = ( boost::filesystem::path( filePath ).parent_path() / lineBody ).string();
         processTextureFile( textureFilePath, materials.back().textureInfo );
     }
 }
