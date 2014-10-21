@@ -19,13 +19,13 @@
 #ifndef MATERIAL_HPP
 #define MATERIAL_HPP
 
-#include <client/models/dependencies.hpp>
 #include <common/packables/packable_color.hpp>
 #include <common/primitives/primitive_data/material_info.hpp>
 #include <client/models/3d/textures/texture.hpp>
 #include <list>
 #include <common/resources/resource.hpp>
-
+#include <glm/vec4.hpp>
+#include <glm/vec3.hpp>
 
 namespace como {
 

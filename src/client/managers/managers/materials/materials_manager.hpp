@@ -19,8 +19,8 @@
 #ifndef MATERIALS_MANAGER_HPP
 #define MATERIALS_MANAGER_HPP
 
-#include <map>
 #include <client/managers/managers/materials/material_handler.hpp>
+#include <map>
 #include <common/ids/resource_id.hpp>
 #include <string>
 #include <memory>

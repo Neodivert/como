@@ -18,6 +18,7 @@
 
 #include <QFormLayout>
 #include <QIntValidator>
+#include <QMessageBox>
 
 #include "page_ids.hpp"
 #include "create_server_page.hpp"

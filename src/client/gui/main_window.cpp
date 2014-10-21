@@ -16,6 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
+#include <QHBoxLayout>
 #include "main_window.hpp"
 #include "render_panel.hpp"
 #include "tools_menu/tools_menu.hpp"

@@ -22,6 +22,10 @@
 #include <glm/gtc/matrix_transform.hpp>     // glm::lookAt
 #include <glm/gtc/type_ptr.hpp>             // glm::value_ptr
 
+extern "C" {
+     #include <GL/glext.h>
+}
+
 namespace como {
 
 GLint Camera::eyeVectorLocation_ = -1;

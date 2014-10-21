@@ -19,6 +19,12 @@
 #ifndef DEPENDENCIES_HPP
 #define DEPENDENCIES_HPP
 
+#ifdef _WIN32
+extern "C" {
+    #include "winsock2.h"
+}
+#endif
+
 // Qt OpenGL
 // http://www.opengl.org/discussion_boards/showthread.php/172481-glGenBuffer-was-not-declared
 #define GL_GLEXT_PROTOTYPES
@@ -26,8 +32,10 @@
 
 // OpenGL
 extern "C" {
-    #include <GL/gl.h>
+    //#include <GL/gl.h>
+#ifdef __linux
     #include <GL/glx.h>
+#endif
 }
 
 // GLM

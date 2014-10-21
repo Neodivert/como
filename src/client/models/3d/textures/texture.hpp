@@ -20,12 +20,10 @@
 #define TEXTURE_HPP
 
 #include <string>
-
+#define GL_GLEXT_PROTOTYPES
 extern "C" {
-    #define GL_GLEXT_PROTOTYPES
-    #include <GL/gl.h>  
+    #include <GL/gl.h>
 }
-
 #include <glm/vec2.hpp>
 #include <memory>
 #include <common/primitives/primitive_data/texture_info.hpp>

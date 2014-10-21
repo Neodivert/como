@@ -19,8 +19,8 @@
 #ifndef NEW_USER_PACKET_HPP
 #define NEW_USER_PACKET_HPP
 
-#include <common/packables/packable_string.hpp>
 #include "packet.hpp"
+#include <common/packables/packable_string.hpp>
 
 namespace como {
 

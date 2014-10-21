@@ -20,7 +20,6 @@
 #define PUBLIC_USER_HPP
 
 #include <memory>
-#include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <functional>
 #include <common/packets/packets.hpp>

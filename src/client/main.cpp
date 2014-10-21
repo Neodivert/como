@@ -16,7 +16,13 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
+#ifdef _WIN32
+//#include <winsock2.h>
+#define WIN32_LEAN_AND_MEAN
+#endif
+
 #include <QGuiApplication>
+#include <QApplication>
 #include "gui/main_window.hpp"
 #include "gui/connection_wizard/connection_wizard.hpp"
 #include "managers/como_app.hpp"

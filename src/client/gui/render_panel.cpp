@@ -17,6 +17,8 @@
 ***/
 
 #include <QSplitter>
+#include <QHBoxLayout>
+#include <QTimer>
 #include "render_panel.hpp"
 
 

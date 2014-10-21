@@ -22,6 +22,7 @@
 /***
  * Includes
  ***/
+#include <client/managers/managers/materials/materials_manager.hpp>
 #include "abstract_mesh.hpp"
 #include <vector>
 #include <array>
@@ -30,7 +31,7 @@
 #include <client/models/3d/materials/material.hpp>
 #include <common/packables/packable_color.hpp>
 #include <common/primitives/primitive_data/primitive_data.hpp>
-#include <client/managers/managers/materials/materials_manager.hpp>
+
 
 namespace como {
 

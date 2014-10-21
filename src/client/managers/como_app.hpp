@@ -19,9 +19,8 @@
 #ifndef COMO_APP_HPP
 #define COMO_APP_HPP
 
-#include <QOpenGLContext>
-#include <QObject>
 #include "scene/scene.hpp"
+#include <QObject>
 #include <string>
 #include <map>
 #include <array>

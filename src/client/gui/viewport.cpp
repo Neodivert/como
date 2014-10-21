@@ -16,7 +16,6 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include <client/models/dependencies.hpp>
 #include "viewport.hpp"
 #define GLM_FORCE_RADIANS
 #include <glm/gtx/vector_angle.hpp>

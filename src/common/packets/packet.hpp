@@ -19,9 +19,9 @@
 #ifndef PACKET_HPP
 #define PACKET_HPP
 
+#include <boost/asio.hpp>
 #include <common/packables/composite_packable.hpp>
 #include <stdexcept>
-#include <boost/asio.hpp>
 #include <functional>
 #include <boost/bind.hpp>
 #include "packet_header.hpp"

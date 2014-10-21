@@ -22,6 +22,7 @@
 #include <QWizardPage>
 #include <QLineEdit>
 #include <QLabel>
+#include <QSpinBox>
 
 #include <client/managers/scene/scene.hpp>
 #include <memory>

@@ -22,7 +22,7 @@
 #include <common/resources/resource.hpp>
 #include <client/models/3d/drawable.hpp>
 #include <common/transformable/transformable.hpp>
-#include <client/models/dependencies.hpp>
+#include <glm/vec4.hpp>
 #include <client/models/utilities/open_gl.hpp>
 
 namespace como {

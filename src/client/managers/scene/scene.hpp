@@ -19,14 +19,13 @@
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
+//#include <client/models/3d/camera.hpp>
 #include <map>
 #include <list>
-#include <client/models/3d/camera.hpp>
 #include <common/utilities/log.hpp>
 #include <common/commands/commands.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
 #include <queue>
-#include <client/models/3d/lights/lights.hpp>
 #include <client/managers/managers/materials/materials_manager.hpp>
 #include <common/users/user.hpp>
 #include <common/utilities/paths.hpp>
@@ -38,6 +37,8 @@
 #include <client/managers/managers/textures/texture_walls_manager.hpp>
 #include <client/models/3d/auxiliar_lines_renderer.hpp>
 #include <memory> // std::shared_ptr
+#define GL_GLEXT_PROTOTYPES
+#include <QOpenGLContext>
 
 namespace como {
 

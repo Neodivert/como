@@ -21,6 +21,7 @@
 
 #include <QFrame>
 #include <QLineEdit>
+#include <QDoubleSpinBox>
 #include <client/managers/managers/materials/material_handler.hpp>
 #include <client/gui/utilities/color_button.hpp>
 

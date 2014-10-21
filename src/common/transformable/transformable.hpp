@@ -22,7 +22,10 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <GL/gl.h>
+#define GL_GLEXT_PROTOTYPES
+extern "C" {
+    #include <GL/gl.h>
+}
 
 namespace como {
 

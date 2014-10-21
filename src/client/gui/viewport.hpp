@@ -24,9 +24,9 @@
  * Includes
  ***/
 
+#include <client/managers/como_app.hpp>
 #include <QWindow>
 #include <QMouseEvent>
-#include <client/managers/como_app.hpp>
 #include <client/models/3d/camera.hpp>
 #include <client/managers/managers/cameras/cameras_manager.hpp>
 

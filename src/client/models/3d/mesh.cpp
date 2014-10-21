@@ -26,6 +26,12 @@
 
 #include <iostream>
 
+#define GL_GLEXT_PROTOTYPES
+extern "C" {
+    #include <GL/glext.h>
+    #include <GL/gl.h>
+}
+
 namespace como {
 
 // Initialize the location of various uniform shader variables as unitialized (-1).
@@ -121,7 +127,6 @@ Mesh::~Mesh()
     glDeleteBuffers( 1, &ebo );
     glDeleteVertexArrays( 1, &vao );
 }
-
 
 /***
  * 3. Initialization.
