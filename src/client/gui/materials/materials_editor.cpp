@@ -17,6 +17,7 @@
 ***/
 
 #include <QGridLayout>
+#include <QLabel>
 #include "materials_editor.hpp"
 
 namespace como {

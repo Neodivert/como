@@ -27,7 +27,11 @@
 #include <client/managers/scene/scene.hpp>
 #include <memory>
 
+#ifdef _WIN32
+const char SERVER_PATH[] = "..\\server\\server";
+#else
 const char SERVER_PATH[] = "../server/server";
+#endif
 
 namespace como {
 

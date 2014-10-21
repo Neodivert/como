@@ -17,6 +17,7 @@
 ***/
 
 #include "creation_tab.hpp"
+#include <QLabel>
 
 namespace como {
 

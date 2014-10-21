@@ -28,8 +28,11 @@
 
 #define GL_GLEXT_PROTOTYPES
 extern "C" {
-    #include <GL/glext.h>
-    #include <GL/gl.h>
+#ifdef _WIN32
+    #include <GL/wglext.h>
+#endif
+#include <GL/glext.h>
+#include <GL/gl.h>
 }
 
 namespace como {

@@ -19,8 +19,9 @@
 #ifndef CAMERAS_SELECTION_HPP
 #define CAMERAS_SELECTION_HPP
 
-#include <client/models/3d/entities_set.hpp>
 #include <client/models/3d/camera.hpp>
+#include <client/models/3d/entities_set.hpp>
+
 
 namespace como {
 

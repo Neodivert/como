@@ -20,6 +20,7 @@
 #define TRANSFORMATION_TAB_HPP
 
 #include <QFrame>
+#include <QComboBox>
 #include <client/managers/como_app.hpp>
 
 namespace como {

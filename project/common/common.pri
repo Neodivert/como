@@ -12,7 +12,7 @@ unix {
 }
 win32 {
     # TODO: Remove specific versions from libboost_* libraries.
-    LIBS += -lws2_32 -lmswsock -llibboost_system-mgw49-mt-1_56 -llibboost_thread-mgw49-mt-1_56 -llibboost_filesystem-mgw49-mt-1_56
+    LIBS += -lpthread -lws2_32 -lmswsock -llibboost_system-mgw49-mt-1_56 -llibboost_thread-mgw49-mt-1_56 -llibboost_filesystem-mgw49-mt-1_56
 }
 
 # C++11 support (http://qt-project.org/forums/viewthread/19989)

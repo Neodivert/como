@@ -19,8 +19,8 @@
 #ifndef LIGHT_HPP
 #define LIGHT_HPP
 
-#include "client/models/3d/entity.hpp" // GL types.
 #include <client/models/3d/meshes/imported_mesh.hpp>
+#include "client/models/3d/entity.hpp" // GL types.
 #include <common/commands/light_commands/light_creation_command.hpp> // "LightType" type.
 #include "abstract_light.hpp"
 

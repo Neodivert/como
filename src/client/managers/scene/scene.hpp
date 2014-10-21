@@ -20,10 +20,10 @@
 #define SCENE_HPP
 
 //#include <client/models/3d/camera.hpp>
+#include <common/commands/commands.hpp>
 #include <map>
 #include <list>
 #include <common/utilities/log.hpp>
-#include <common/commands/commands.hpp>
 #include <client/managers/server_interface/server_interface.hpp>
 #include <queue>
 #include <client/managers/managers/materials/materials_manager.hpp>
@@ -41,7 +41,6 @@
 #include <QOpenGLContext>
 
 namespace como {
-
 
 class Scene : public QOffscreenSurface, public BasicScene, public Observer, public Observable
 {

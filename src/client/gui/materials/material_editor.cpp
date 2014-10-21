@@ -16,6 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
+#include <QLabel>
 #include <QFormLayout>
 #include "material_editor.hpp"
 

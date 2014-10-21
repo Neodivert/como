@@ -21,6 +21,11 @@
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/type_ptr.hpp>
 
+#ifdef _WIN32
+    #include <GL/wglext.h>
+#endif
+#include <GL/glext.h>
+
 namespace como {
 
 const glm::vec4 DEFAULT_LIGHT_VECTOR = glm::vec4( 0.0f, 1.0f, 0.0f, 0.0f );

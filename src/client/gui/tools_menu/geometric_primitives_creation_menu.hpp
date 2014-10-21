@@ -19,6 +19,7 @@
 #ifndef GEOMETRY_PRIMITIVES_CREATION_MENU_HPP
 #define GEOMETRY_PRIMITIVES_CREATION_MENU_HPP
 
+#include <QPushButton>
 #include <QFrame>
 #include <client/managers/managers/primitives/geometry_primitives_factory.hpp>
 

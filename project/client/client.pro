@@ -30,11 +30,13 @@ UI_DIR = $$BUILD_DATA_DIR/ui
 
 INCLUDEPATH += ../../src
 
-LIBS += -lSDL2_image -lSDL2 -lGL
-
+LIBS += -lSDL2_image -lSDL2
 
 # Include files and parameters that are common to both client and server.
 include( ../common/common.pri )
+
+unix: LIBS += -lGL
+win32: LIBS += -lopengl32
 
 # Cliet headers
 HEADERS += \

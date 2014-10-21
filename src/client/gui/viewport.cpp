@@ -294,7 +294,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     const glm::vec3 currentMouseWorldPos = rayOrigin + rayDirection * t;
 
     // TODO: Make this check unuseful.
-    if( isnan( D ) || isnan( t ) ){
+    if( std::isnan( D ) || std::isnan( t ) ){
         return;
     }
 
@@ -372,9 +372,9 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                                              currentMouseWorldRelPos.z / lastMouseWorldRelPos.z );
 
                 // TODO: Make this check unuseful.
-                if(     isnan( transformVector.x ) ||
-                        isnan( transformVector.y ) ||
-                        isnan( transformVector.z ) ){
+                if(     std::isnan( transformVector.x ) ||
+                        std::isnan( transformVector.y ) ||
+                        std::isnan( transformVector.z ) ){
                     break;
                 }
 

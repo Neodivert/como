@@ -17,6 +17,7 @@
 ***/
 
 #include <QVBoxLayout>
+#include <QLabel>
 #include "geometric_primitives_creation_menu.hpp"
 
 namespace como {

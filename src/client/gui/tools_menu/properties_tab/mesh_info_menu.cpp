@@ -17,6 +17,7 @@
 ***/
 
 #include <QRadioButton>
+#include <QFormLayout>
 #include "mesh_info_menu.hpp"
 
 

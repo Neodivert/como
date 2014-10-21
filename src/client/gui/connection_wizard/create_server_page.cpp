@@ -23,6 +23,8 @@
 #include "page_ids.hpp"
 #include "create_server_page.hpp"
 
+#include <QProcess>
+
 
 namespace como {
 
@@ -70,11 +72,12 @@ CreateServerPage::CreateServerPage( ScenePtr& scene, LogPtr log ) :
 
 bool CreateServerPage::validatePage()
 {
-    char serverCommand[256];
-    int pid;
+    //char serverCommand[256];
+    //int pid;
 
     log_->debug( "Creating server with port(", portInput_->text().toLocal8Bit().data(), ") and maxUsers(", maxUsersInput_->text().toLocal8Bit().data(), ")\n" );
 
+    /*
     pid = fork();
     if( pid == 0 ){
         // FIXME: This isn't multiplatform.
@@ -88,6 +91,18 @@ bool CreateServerPage::validatePage()
                      "\tReturn value: ", system( serverCommand ), "\n" );
         exit( 0 );
     }
+    */
+
+    std::string serverCommand =
+            std::string( SERVER_PATH ) + " " +
+            portInput_->text().toStdString() + " " +
+            std::to_string( maxUsersInput_->value() ) + " " +
+            sceneNameInput_->text().toStdString();
+
+
+    QMessageBox::information( nullptr, "Creating server", serverCommand.c_str() );
+
+    QProcess::execute( serverCommand.c_str() );
 
     QMessageBox::information( nullptr, "Server created", "The server has been created" );
 

@@ -17,6 +17,7 @@
 ***/
 
 #include <QFormLayout>
+#include <QLabel>
 #include "lights_menu.hpp"
 
 namespace como {

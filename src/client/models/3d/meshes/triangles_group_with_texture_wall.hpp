@@ -19,12 +19,13 @@
 #ifndef TRIANGLES_GROUP_WITH_TEXTURE_WALL_HPP
 #define TRIANGLES_GROUP_WITH_TEXTURE_WALL_HPP
 
+#include <client/managers/managers/textures/texture_walls_manager.hpp>
 #include <common/primitives/primitive_data/triangles_group.hpp>
 #include <client/models/3d/textures/texture_wall.hpp>
 #include <client/models/3d/textures/texture.hpp>
 
 #include <common/ids/resource_id.hpp>
-#include <client/managers/managers/textures/texture_walls_manager.hpp>
+
 
 namespace como {
 

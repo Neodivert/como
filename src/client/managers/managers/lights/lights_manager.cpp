@@ -16,6 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
+#include <QMessageBox>
 #include "lights_manager.hpp"
 
 namespace como {
