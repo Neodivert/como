@@ -23,11 +23,6 @@
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/type_ptr.hpp>
 
-#ifdef _WIN32
-    #include <GL/wglext.h>
-#endif
-#include <GL/glext.h>
-
 namespace como {
 
 Material::Material( const ResourceID& materialID, const MaterialInfo& materialInfo ) :

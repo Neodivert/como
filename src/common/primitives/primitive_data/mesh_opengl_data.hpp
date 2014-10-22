@@ -21,9 +21,7 @@
 
 #include <vector>
 
-#define GL_GLEXT_PROTOTYPES
 extern "C" {
-    #define GL_GLEXT_PROTOTYPES
     #include <GL/gl.h>
 }
 

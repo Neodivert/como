@@ -101,7 +101,6 @@ HEADERS += \
     ../../src/common/commands/resource_commands/resource_commands.hpp \
     ../../src/common/managers/abstract_resources_ownership_manager.hpp \
     ../../src/common/utilities/observable_container/container_observer.hpp \
-    ../../src/common/managers/managers/resources/resources_ownership_manager.hpp \
     ../../src/common/commands/light_commands/light_creation_response_command.hpp \
     ../../src/common/primitives/primitive_data/triangles_group.hpp \
     ../../src/common/primitives/primitive_data/imported_primitive_data.hpp \

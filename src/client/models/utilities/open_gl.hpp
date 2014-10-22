@@ -26,8 +26,9 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
+extern "C" {
+    #include <GL/gl.h>
+}
 
 namespace como {
 

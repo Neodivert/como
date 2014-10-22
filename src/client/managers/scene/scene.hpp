@@ -40,6 +40,7 @@
 #define GL_GLEXT_PROTOTYPES
 #include <QOpenGLContext>
 
+
 namespace como {
 
 class Scene : public QOffscreenSurface, public BasicScene, public Observer, public Observable
