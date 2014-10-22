@@ -72,37 +72,18 @@ CreateServerPage::CreateServerPage( ScenePtr& scene, LogPtr log ) :
 
 bool CreateServerPage::validatePage()
 {
-    //char serverCommand[256];
-    //int pid;
-
     log_->debug( "Creating server with port(", portInput_->text().toLocal8Bit().data(), ") and maxUsers(", maxUsersInput_->text().toLocal8Bit().data(), ")\n" );
 
-    /*
-    pid = fork();
-    if( pid == 0 ){
-        // FIXME: This isn't multiplatform.
-        sprintf( serverCommand, "gnome-terminal -e \" \\\"%s\\\" %d %d \\\"%s\\\"\"",
-                                            SERVER_PATH,                                        // Server bin.
-                                            atoi( portInput_->text().toLocal8Bit().data() ),    // Port.
-                                            maxUsersInput_->value(),                            // Max. users.
-                                            sceneNameInput_->text().toLocal8Bit().data()        // Scene name.
-                 );
-        log_->debug( "Server command: [", serverCommand, "]\n",
-                     "\tReturn value: ", system( serverCommand ), "\n" );
-        exit( 0 );
-    }
-    */
+    char serverCommand[256];
 
-    std::string serverCommand =
-            std::string( SERVER_PATH ) + " " +
-            portInput_->text().toStdString() + " " +
-            std::to_string( maxUsersInput_->value() ) + " " +
-            sceneNameInput_->text().toStdString();
+    sprintf( serverCommand,
+             "gnome-terminal -e \" \"%s\" %d %d \"%s\"\"",
+             SERVER_PATH,                                       // Server bin.
+             atoi( portInput_->text().toLocal8Bit().data() ),   // Port.
+             maxUsersInput_->value(),                           // Max. users.
+             sceneNameInput_->text().toLocal8Bit().data() );    // Scene name.
 
-
-    QMessageBox::information( nullptr, "Creating server", serverCommand.c_str() );
-
-    QProcess::execute( serverCommand.c_str() );
+    QProcess::execute( serverCommand );
 
     QMessageBox::information( nullptr, "Server created", "The server has been created" );
 
