@@ -21,6 +21,10 @@
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/constants.hpp> // glm::pi
 
+const unsigned int TOP_CENTER_VERTEX_INDEX = 0;
+const unsigned int BOTTOM_CENTER_VERTEX_INDEX = 1;
+const unsigned int FIRST_RADIAL_VERTEX_INDEX = 2;
+
 namespace como {
 
 /***
@@ -74,75 +78,55 @@ void ConesFactory::executeRemoteCommand( const ConeCreationCommand &command )
 }
 
 
+
+
 /***
  * 6. Primitive data generation
  ***/
 
-void ConesFactory::generateVertexData( MeshVertexData &vertexData )
+void ConesFactory::generateVerticesPositionsAndUV( std::vector<glm::vec3> &positions, std::vector<glm::vec2> &uvCoordinates )
 {
-    // Create top center vertex
-    const unsigned int TOP_CENTER_INDEX =
-            vertexData.vertices.size();
-    vertexData.vertices.push_back({
-                0.0f,
-                coneHeight_ / 2.0f,
-                0.0f });
+    assert( TOP_CENTER_VERTEX_INDEX == positions.size() );
+    assert( TOP_CENTER_VERTEX_INDEX == uvCoordinates.size() );
 
-    // Create bottom vertices
-    const unsigned int BOTTOM_CENTER_INDEX =
-            generateHorizontalVerticesCircle( vertexData.vertices,
-                                              coneRadius_,
-                                              coneNBaseVertices_,
-                                              -coneHeight_ / 2.0f );
-    const unsigned int FIRST_RADIAL_VERTEX_INDEX =
-            BOTTOM_CENTER_INDEX + 1;
+    // Create top center vertex (position and UV).
+    positions.push_back({
+                            0.0f,
+                            coneHeight_ / 2.0f,
+                            0.0f });
+    uvCoordinates.push_back({ 0.5f, 0.5f });
 
-    // Create radial face triangles
-    generateTrianglesCircle( vertexData.vertexTriangles,
-                             coneNBaseVertices_,
-                             TOP_CENTER_INDEX,
-                             FIRST_RADIAL_VERTEX_INDEX,
-                             false );
+    assert( BOTTOM_CENTER_VERTEX_INDEX == positions.size() );
+    assert( BOTTOM_CENTER_VERTEX_INDEX == uvCoordinates.size() );
 
-    // Create bottom face triangles
-    generateTrianglesCircle( vertexData.vertexTriangles,
-                             coneNBaseVertices_,
-                             BOTTOM_CENTER_INDEX,
-                             FIRST_RADIAL_VERTEX_INDEX,
-                             true );
+    // Create bottom vertices (positions and UVs).
+    generateHorizontalVerticesCircle( positions,
+                                      coneRadius_,
+                                      coneNBaseVertices_,
+                                      -coneHeight_ / 2.0f );
+    generateHorizontalUVCircle( uvCoordinates,
+                                coneNBaseVertices_ );
 }
 
 
-void ConesFactory::generateUVData( MeshTextureData &uvData )
+void ConesFactory::generateWalls( SystemPrimitiveData &primitiveData )
 {
-    // Create top and bottom UV vertices
-    const unsigned int TOP_CENTER_INDEX =
-            generateHorizontalUVCircle( uvData.uvVertices,
-                                        coneNBaseVertices_ );
-    const unsigned int BOTTOM_CENTER_INDEX = TOP_CENTER_INDEX;
-    const unsigned int FIRST_RADIAL_VERTEX_INDEX =
-            BOTTOM_CENTER_INDEX + 1;
-
-    // Create radial UV triangles
-    generateTrianglesCircle( uvData.uvTriangles,
+    // Create radial face triangles (positions and UV).
+    generateTrianglesCircle( primitiveData,
                              coneNBaseVertices_,
-                             TOP_CENTER_INDEX,
+                             TOP_CENTER_VERTEX_INDEX,
                              FIRST_RADIAL_VERTEX_INDEX,
                              false );
 
-    // Create bottom UV triangles
-    generateTrianglesCircle( uvData.uvTriangles,
+    // Create base face triangles (positions and UV).
+    generateTrianglesCircle( primitiveData,
                              coneNBaseVertices_,
-                             BOTTOM_CENTER_INDEX,
+                             BOTTOM_CENTER_VERTEX_INDEX,
                              FIRST_RADIAL_VERTEX_INDEX,
                              true );
-}
 
-
-void ConesFactory::generateTrianglesGroups( std::vector<NamedTrianglesGroup> &trianglesGroups )
-{
-    trianglesGroups.push_back( NamedTrianglesGroup( "Round", 0, coneNBaseVertices_ ) );
-    trianglesGroups.push_back( NamedTrianglesGroup( "Base", coneNBaseVertices_, coneNBaseVertices_ ) );
+    primitiveData.trianglesGroups.push_back( NamedTrianglesGroup( "Round", 0, coneNBaseVertices_ ) );
+    primitiveData.trianglesGroups.push_back( NamedTrianglesGroup( "Base", coneNBaseVertices_, coneNBaseVertices_ ) );
 }
 
 

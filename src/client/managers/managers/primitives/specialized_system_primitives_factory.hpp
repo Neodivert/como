@@ -68,7 +68,8 @@ class SpecializedSystemPrimitivesFactory : public ServerWriter
          ***/
         unsigned int generateHorizontalVerticesCircle(std::vector<glm::vec3> &vertices, float radius, unsigned int nDivisions, float height);
         unsigned int generateHorizontalUVCircle(std::vector<glm::vec2> &vertices, unsigned int nDivisions);
-        void generateTrianglesCircle(std::vector<IndicesTriangle> &triangles, unsigned int nDivisions, unsigned int centerVertexIndex, unsigned int firstRadialVertexIndex, bool increaseIndices);
+        void generateTrianglesCircle(SystemPrimitiveData &primitiveData, unsigned int nDivisions, unsigned int centerVertexIndex, unsigned int firstRadialVertexIndex, bool increaseIndices);
+        void generateTrianglesCircle(std::vector<IndicesTriangle> &triangles, unsigned int nDivisions, unsigned int centerVertexIndex, unsigned int firstRadialVertexIndex, bool increaseIndices); // TODO: Remove this one.
 
 
         const std::string primitiveName_;

@@ -108,6 +108,43 @@ unsigned int SpecializedSystemPrimitivesFactory::generateHorizontalUVCircle(std:
 }
 
 
+void SpecializedSystemPrimitivesFactory::generateTrianglesCircle( SystemPrimitiveData& primitiveData, unsigned int nDivisions, unsigned int centerVertexIndex, unsigned int firstRadialVertexIndex, bool increaseIndices )
+{
+    unsigned int i;
+    unsigned int currentVertexIndex;
+
+    IndicesTriangle currentTriangle;
+
+    if( increaseIndices ){
+        for( i = 0; i < nDivisions - 1; i++ ){
+            currentVertexIndex = firstRadialVertexIndex + i;
+            currentTriangle = { centerVertexIndex,
+                                currentVertexIndex,
+                                currentVertexIndex + 1 };
+            primitiveData.addTriangle( currentTriangle, currentTriangle );
+        }
+        currentVertexIndex = firstRadialVertexIndex + i;
+        currentTriangle = { centerVertexIndex,
+                            currentVertexIndex,
+                            firstRadialVertexIndex };
+        primitiveData.addTriangle( currentTriangle, currentTriangle );
+    }else{
+        for( i = 0; i < nDivisions - 1; i++ ){
+            currentVertexIndex = firstRadialVertexIndex + i;
+            currentTriangle = { centerVertexIndex,
+                                currentVertexIndex + 1,
+                                currentVertexIndex };
+            primitiveData.addTriangle( currentTriangle, currentTriangle );
+        }
+        currentVertexIndex = firstRadialVertexIndex + i;
+        currentTriangle = { centerVertexIndex,
+                            firstRadialVertexIndex,
+                            currentVertexIndex };
+        primitiveData.addTriangle( currentTriangle, currentTriangle );
+    }
+}
+
+
 void SpecializedSystemPrimitivesFactory::generateTrianglesCircle( std::vector< IndicesTriangle >& triangles, unsigned int nDivisions, unsigned int centerVertexIndex, unsigned int firstRadialVertexIndex, bool increaseIndices )
 {
     unsigned int i;
