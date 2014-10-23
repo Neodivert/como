@@ -91,77 +91,34 @@ void CubesFactory::createCube( const ResourceID& cubeID, const ResourceID& mater
     meshesManager_->addMesh( std::move( cube ), cubeID );
 }
 
-
 /***
  * 7. SystemPrimitiveData generation
  ***/
 
-void CubesFactory::generateVertexData( MeshVertexData &vertexData )
+void CubesFactory::generateVerticesPositionsAndUV( std::vector<glm::vec3> &positions,
+                                                   std::vector<glm::vec2> &uvCoordinates )
 {
     // Front face (vertices)
-    vertexData.vertices.push_back( glm::vec3( width_ / 2.0f, height_ / 2.0f, depth_ / 2.0f ) );
-    vertexData.vertices.push_back( glm::vec3( -width_ / 2.0f, height_ / 2.0f, depth_ / 2.0f ) );
-    vertexData.vertices.push_back( glm::vec3( -width_ / 2.0f, -height_ / 2.0f, depth_ / 2.0f ) );
-    vertexData.vertices.push_back( glm::vec3( width_ / 2.0f, -height_ / 2.0f, depth_ / 2.0f ) );
+    positions.push_back( glm::vec3( width_ / 2.0f, height_ / 2.0f, depth_ / 2.0f ) );
+    positions.push_back( glm::vec3( -width_ / 2.0f, height_ / 2.0f, depth_ / 2.0f ) );
+    positions.push_back( glm::vec3( -width_ / 2.0f, -height_ / 2.0f, depth_ / 2.0f ) );
+    positions.push_back( glm::vec3( width_ / 2.0f, -height_ / 2.0f, depth_ / 2.0f ) );
 
     // Back face (vertices)
-    vertexData.vertices.push_back( glm::vec3( width_ / 2.0f, height_ / 2.0f, -depth_ / 2.0f ) );
-    vertexData.vertices.push_back( glm::vec3( -width_ / 2.0f, height_ / 2.0f, -depth_ / 2.0f ) );
-    vertexData.vertices.push_back( glm::vec3( -width_ / 2.0f, -height_ / 2.0f, -depth_ / 2.0f ) );
-    vertexData.vertices.push_back( glm::vec3( width_ / 2.0f, -height_ / 2.0f, -depth_ / 2.0f ) );
+    positions.push_back( glm::vec3( width_ / 2.0f, height_ / 2.0f, -depth_ / 2.0f ) );
+    positions.push_back( glm::vec3( -width_ / 2.0f, height_ / 2.0f, -depth_ / 2.0f ) );
+    positions.push_back( glm::vec3( -width_ / 2.0f, -height_ / 2.0f, -depth_ / 2.0f ) );
+    positions.push_back( glm::vec3( width_ / 2.0f, -height_ / 2.0f, -depth_ / 2.0f ) );
 
-    // Front face (triangles)
-    vertexData.vertexTriangles.push_back( IndicesTriangle{ 0, 2, 3 } );
-    vertexData.vertexTriangles.push_back( IndicesTriangle{ 0, 1, 2 } );
-
-    // Right face (triangles)
-    vertexData.vertexTriangles.push_back( IndicesTriangle{ 4, 3, 7 } );
-    vertexData.vertexTriangles.push_back( IndicesTriangle{ 4, 0, 3 } );
-
-    // Left face (triangles)
-    vertexData.vertexTriangles.push_back( IndicesTriangle{ 1, 6, 2 } );
-    vertexData.vertexTriangles.push_back( IndicesTriangle{ 1, 5, 6 } );
-
-    // Back face (triangles)
-    vertexData.vertexTriangles.push_back( IndicesTriangle{ 5, 7, 6 } );
-    vertexData.vertexTriangles.push_back( IndicesTriangle{ 5, 4, 7 } );
-
-    // Top face (triangles)
-    vertexData.vertexTriangles.push_back( IndicesTriangle{ 4, 1, 0 } );
-    vertexData.vertexTriangles.push_back( IndicesTriangle{ 4, 5, 1 } );
-
-    // Bottom face (triangles)
-    vertexData.vertexTriangles.push_back( IndicesTriangle{ 3, 6, 7 } );
-    vertexData.vertexTriangles.push_back( IndicesTriangle{ 3, 2, 6 } );
+    // UV vertices
+    uvCoordinates.push_back( glm::vec2( 1.0f, 0.0f ) ); // Top right
+    uvCoordinates.push_back( glm::vec2( 0.0f, 0.0f ) ); // Top left
+    uvCoordinates.push_back( glm::vec2( 0.0f, 1.0f ) ); // Bottom left
+    uvCoordinates.push_back( glm::vec2( 1.0f, 1.0f ) ); // Botom right
 }
 
 
-void CubesFactory::generateUVData( MeshTextureData &uvData )
-{
-    const unsigned int N_CUBE_FACES = 6;
-    unsigned int cubeFaceIndex;
-
-    // UV - Top right
-    uvData.uvVertices.push_back( glm::vec2( 1.0f, 0.0f ) );
-
-    // UV - Top left
-    uvData.uvVertices.push_back( glm::vec2( 0.0f, 0.0f ) );
-
-    // UV - Bottom left
-    uvData.uvVertices.push_back( glm::vec2( 0.0f, 1.0f ) );
-
-    // UV - Botom right
-    uvData.uvVertices.push_back( glm::vec2( 1.0f, 1.0f ) );
-
-    // UV triangles
-    for( cubeFaceIndex = 0; cubeFaceIndex < N_CUBE_FACES; cubeFaceIndex++ ){
-        uvData.uvTriangles.push_back( IndicesTriangle{ 0, 2, 3 } );
-        uvData.uvTriangles.push_back( IndicesTriangle{ 0, 1, 2 } );
-    }
-}
-
-
-void CubesFactory::generateTrianglesGroups( std::vector<NamedTrianglesGroup> &trianglesGroups )
+void CubesFactory::generateWalls( SystemPrimitiveData &primitiveData )
 {
     unsigned int cubeFaceIndex;
     const char textureWallsNames[][32] =
@@ -174,9 +131,32 @@ void CubesFactory::generateTrianglesGroups( std::vector<NamedTrianglesGroup> &tr
         "Bottom face"
     };
 
-    trianglesGroups.clear();
+    // Front face
+    primitiveData.addQuad( IndicesQuad{ 0, 1, 2, 3 },
+                           IndicesQuad{ 0, 1, 2, 3 } );
+
+    // Right face
+    primitiveData.addQuad( IndicesQuad{ 4, 0, 3, 7 },
+                           IndicesQuad{ 0, 1, 2, 3 } );
+
+    // Left face
+    primitiveData.addQuad( IndicesQuad{ 1, 5, 6, 2 },
+                           IndicesQuad{ 0, 1, 2, 3 } );
+
+    // Back face
+    primitiveData.addQuad( IndicesQuad{ 5, 4, 7, 6 },
+                           IndicesQuad{ 0, 1, 2, 3 } );
+
+    // Top face
+    primitiveData.addQuad( IndicesQuad{ 4, 5, 1, 0 },
+                           IndicesQuad{ 0, 1, 2, 3 } );
+
+    // Bottom face
+    primitiveData.addQuad( IndicesQuad{ 3, 2, 6, 7 },
+                           IndicesQuad{ 0, 1, 2, 3 } );
+
     for( cubeFaceIndex = 0; cubeFaceIndex < 6; cubeFaceIndex++ ){
-        trianglesGroups.push_back(
+        primitiveData.trianglesGroups.push_back(
                     NamedTrianglesGroup(
                         textureWallsNames[cubeFaceIndex],
                         cubeFaceIndex * 2,

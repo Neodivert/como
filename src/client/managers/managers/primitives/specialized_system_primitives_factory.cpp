@@ -42,19 +42,12 @@ SystemPrimitiveData SpecializedSystemPrimitivesFactory::generatePrimitiveData()
     SystemPrimitiveData primitiveData;
 
     primitiveData.name = primitiveName_;
-    generateVertexData( primitiveData.vertexData );
-    generateNormalData( primitiveData.vertexData, primitiveData.normalData );
-    generateUVData( primitiveData.uvData );
-    generateTrianglesGroups( primitiveData.trianglesGroups );
+    generateVerticesPositionsAndUV( primitiveData.vertexData.vertices,
+                                    primitiveData.uvData.uvVertices );
+    generateWalls( primitiveData );
     generateOGLData( primitiveData );
 
     return primitiveData;
-}
-
-
-void SpecializedSystemPrimitivesFactory::generateNormalData(const MeshVertexData &vertexData, MeshNormalData &normalData)
-{
-    normalData.initFromMeshVertexData( vertexData );
 }
 
 

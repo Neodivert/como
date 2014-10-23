@@ -59,6 +59,10 @@ struct PrimitiveData
          * 2. Data generation
          ***/
         void generateOGLData();
+        void addQuad( const IndicesQuad& verticesQuad,
+                      const IndicesQuad& uvQuad );
+        void addTriangle( const IndicesTriangle& verticesTriangle,
+                          const IndicesTriangle& uvTriangle );
 
 
         /***
@@ -72,6 +76,7 @@ struct PrimitiveData
          * 4. Auxiliar methods
          ***/
         static std::string getNameFromFile( const std::string& filePath );
+        static void triangulateQuad( const IndicesQuad &quad, IndicesTriangle &triangle1, IndicesTriangle &triangle2 );
 
 
     protected:

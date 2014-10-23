@@ -71,15 +71,20 @@ class CubesFactory : public SpecializedSystemPrimitivesFactory
         /***
          * 7. SystemPrimitiveData generation
          ***/
+        virtual void generateVerticesPositionsAndUV(std::vector<glm::vec3> &positions, std::vector<glm::vec2> &uvCoordinates);
+        virtual void generateWalls(SystemPrimitiveData &primitiveData);
+
+
+        /*
         virtual void generateVertexData( MeshVertexData &vertexData );
         virtual void generateUVData(MeshTextureData &uvData);
         virtual void generateTrianglesGroups( std::vector<NamedTrianglesGroup> &trianglesGroups );
-
+        */
 
     private:
         float width_;
         float height_;
-        float depth_;
+        float depth_;       
 };
 
 } // namespace como

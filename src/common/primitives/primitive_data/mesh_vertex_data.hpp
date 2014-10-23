@@ -31,6 +31,7 @@ namespace como {
 
 typedef glm::vec3 Vertex;
 typedef std::array< GLuint, 3 > IndicesTriangle;
+typedef std::array< GLuint, 4 > IndicesQuad;
 
 typedef std::vector< Vertex > VerticesVector;
 typedef std::vector< IndicesTriangle > IndicesTrianglesVector;

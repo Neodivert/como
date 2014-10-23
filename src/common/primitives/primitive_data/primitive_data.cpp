@@ -120,6 +120,40 @@ void PrimitiveData::generateOGLData()
 }
 
 
+void PrimitiveData::addQuad( const IndicesQuad &verticesQuad, const IndicesQuad &uvQuad )
+{
+    IndicesTriangle verticesTriangle1, verticesTriangle2;
+    IndicesTriangle uvTriangle1, uvTriangle2;
+
+    triangulateQuad( verticesQuad, verticesTriangle1, verticesTriangle2 );
+    triangulateQuad( uvQuad, uvTriangle1, uvTriangle2 );
+
+    addTriangle( verticesTriangle1, uvTriangle1 );
+    addTriangle( verticesTriangle2, uvTriangle2 );
+}
+
+
+void PrimitiveData::addTriangle( const IndicesTriangle &verticesTriangle, const IndicesTriangle &uvTriangle )
+{
+    vertexData.vertexTriangles.push_back( verticesTriangle );
+    uvData.uvTriangles.push_back( uvTriangle );
+
+    // Compute the triangle's normal.
+    glm::vec3 triangleNormal = glm::cross(
+                vertexData.vertices[ verticesTriangle[1] ] - vertexData.vertices[ verticesTriangle[0] ],
+                vertexData.vertices[ verticesTriangle[2] ] - vertexData.vertices[ verticesTriangle[0] ] );
+    if( triangleNormal.length() > 0.0f ){
+        triangleNormal = glm::normalize( triangleNormal );
+    }
+
+    // Save the triangle's normal and assign it to the triangle's vertices.
+    const unsigned int ni = normalData.normals.size(); // ni = Normal's index
+    normalData.normals.push_back( triangleNormal );
+
+    normalData.normalTriangles.push_back( IndicesTriangle{ ni, ni, ni } );
+}
+
+
 /***
  * 3. File importing / exporting
  ***/
@@ -173,6 +207,20 @@ std::string PrimitiveData::getNameFromFile(const std::string &filePath)
     file.close();
 
     return primitiveName;
+}
+
+
+void PrimitiveData::triangulateQuad( const IndicesQuad &quad, IndicesTriangle &triangle1, IndicesTriangle &triangle2 )
+{
+    // First triangle
+    triangle1[0] = quad[0];
+    triangle1[1] = quad[1];
+    triangle1[2] = quad[2];
+
+    // Second triangle
+    triangle2[0] = quad[0];
+    triangle2[1] = quad[2];
+    triangle2[2] = quad[3];
 }
 
 
@@ -389,6 +437,9 @@ void PrimitiveData::writeMaterials(std::ofstream &file) const
         material.writeToFile( file );
     }
 }
+
+
+
 
 
 } // namespace como
