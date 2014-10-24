@@ -20,6 +20,7 @@
 
 namespace como {
 
+
 /***
  * 1. Construction
  ***/
@@ -69,148 +70,117 @@ void CylindersFactory::executeRemoteCommand( const CylinderCreationCommand &comm
                     command.cylinderNRadialVertices() );
 }
 
+
 /***
  * 6. Primitive data generation
  ***/
 
-void CylindersFactory::generateVertexData( MeshVertexData &vertexData )
+void CylindersFactory::generateVerticesPositionsAndUV(std::vector<glm::vec3> &positions, std::vector<glm::vec2> &uvCoordinates)
 {
     int i;
-    unsigned int currentTopVertexIndex;
-    unsigned int currentBottomVertexIndex;
 
-    // Create top vertices
-    const unsigned int TOP_CENTER_INDEX =
-            generateHorizontalVerticesCircle( vertexData.vertices,
-                                              cylinderRadius_,
-                                              cylinderNRadialVertices_,
-                                              cylinderHeight_ / 2.0f );
+    // Create top vertices (positions and UV)
+    generateHorizontalVerticesCircle( positions,
+                                      cylinderRadius_,
+                                      cylinderNRadialVertices_,
+                                      cylinderHeight_ / 2.0f );
+    generateHorizontalUVCircle( uvCoordinates,
+                                cylinderNRadialVertices_ );
 
-    // Create bottom vertices
-    const unsigned int BOTTOM_CENTER_INDEX =
-            generateHorizontalVerticesCircle( vertexData.vertices,
-                                              cylinderRadius_,
-                                              cylinderNRadialVertices_,
-                                              -cylinderHeight_ / 2.0f );
-
-    // Create top face triangles
-    generateTrianglesCircle( vertexData.vertexTriangles,
-                             cylinderNRadialVertices_,
-                             TOP_CENTER_INDEX,
-                             TOP_CENTER_INDEX + 1,
-                             false );
-
-    // Create bottom face triangles
-    generateTrianglesCircle( vertexData.vertexTriangles,
-                             cylinderNRadialVertices_,
-                             BOTTOM_CENTER_INDEX,
-                             BOTTOM_CENTER_INDEX + 1,
-                             true );
-
-    // Create radial face
-    const unsigned int TOP_FIRST_RADIAL_VERTEX_INDEX = TOP_CENTER_INDEX + 1;
-    const unsigned int BOTTOM_FIRST_RADIAL_VERTEX_INDEX = BOTTOM_CENTER_INDEX + 1;
-
-    for( i = 0; i < cylinderNRadialVertices_ - 1; i++ ){
-        currentTopVertexIndex = TOP_FIRST_RADIAL_VERTEX_INDEX + i;
-        currentBottomVertexIndex = BOTTOM_FIRST_RADIAL_VERTEX_INDEX + i;
-
-        vertexData.vertexTriangles.push_back({
-                                                 currentTopVertexIndex,
-                                                 currentBottomVertexIndex + 1,
-                                                 currentBottomVertexIndex });
-
-        vertexData.vertexTriangles.push_back({
-                                                 currentTopVertexIndex,
-                                                 currentTopVertexIndex + 1,
-                                                 currentBottomVertexIndex + 1 });
-    }
-
-    currentTopVertexIndex = TOP_FIRST_RADIAL_VERTEX_INDEX + i;
-    currentBottomVertexIndex = BOTTOM_FIRST_RADIAL_VERTEX_INDEX + i;
-    vertexData.vertexTriangles.push_back({
-                                             currentTopVertexIndex,
-                                             BOTTOM_FIRST_RADIAL_VERTEX_INDEX,
-                                             currentBottomVertexIndex });
-
-    vertexData.vertexTriangles.push_back({
-                                             currentTopVertexIndex,
-                                             TOP_FIRST_RADIAL_VERTEX_INDEX,
-                                             BOTTOM_FIRST_RADIAL_VERTEX_INDEX });
-}
-
-
-void CylindersFactory::generateUVData(MeshTextureData &uvData)
-{
-    int i;
-    unsigned int currentTopVertexIndex;
-    unsigned int currentBottomVertexIndex;
-
-    // Create top and bottom UV vertices
-    const unsigned int TOP_CENTER_INDEX =
-            generateHorizontalUVCircle( uvData.uvVertices,
-                                        cylinderNRadialVertices_ );
-    const unsigned int BOTTOM_CENTER_INDEX = TOP_CENTER_INDEX;
+    // Create bottom vertices (positions and UV)
+    generateHorizontalVerticesCircle( positions,
+                                      cylinderRadius_,
+                                      cylinderNRadialVertices_,
+                                      -cylinderHeight_ / 2.0f );
+    // FIXME: Duplicated UV vertices.
+    generateHorizontalUVCircle( uvCoordinates,
+                                cylinderNRadialVertices_ );
 
     // Create radial top UV vertices.
-    const unsigned int TOP_SIDE_FIRST_RADIAL_VERTEX_INDEX = uvData.uvVertices.size();
     for( i = 0; i < cylinderNRadialVertices_ + 1; i++ ){
-        uvData.uvVertices.push_back(
+        uvCoordinates.push_back(
                     glm::vec2(
                         static_cast<float>( i ) / static_cast<float>( cylinderNRadialVertices_ ),
                         0.0f ) );
     }
 
     // Create radial bottom UV vertices.
-    const unsigned int BOTTOM_SIDE_FIRST_RADIAL_VERTEX_INDEX = uvData.uvVertices.size();
     for( i = 0; i < cylinderNRadialVertices_ + 1; i++ ){
-        uvData.uvVertices.push_back(
+        uvCoordinates.push_back(
                     glm::vec2(
                         static_cast<float>( i ) / static_cast<float>( cylinderNRadialVertices_ ),
                         1.0f ) );
     }
-
-    // Create top UV triangles
-    generateTrianglesCircle( uvData.uvTriangles,
-                             cylinderNRadialVertices_,
-                             TOP_CENTER_INDEX,
-                             TOP_CENTER_INDEX + 1,
-                             false );
-
-    // Create bottom UV triangles
-    generateTrianglesCircle( uvData.uvTriangles,
-                             cylinderNRadialVertices_,
-                             BOTTOM_CENTER_INDEX,
-                             BOTTOM_CENTER_INDEX + 1,
-                             true );
-
-    // Create radial triangles
-    for( i = 0; i < cylinderNRadialVertices_; i++ ){
-        currentTopVertexIndex = TOP_SIDE_FIRST_RADIAL_VERTEX_INDEX + i;
-        currentBottomVertexIndex = BOTTOM_SIDE_FIRST_RADIAL_VERTEX_INDEX + i;
-        uvData.uvTriangles.push_back({
-                                         currentTopVertexIndex,
-                                         currentBottomVertexIndex + 1,
-                                         currentBottomVertexIndex });
-
-        uvData.uvTriangles.push_back({
-                                         currentTopVertexIndex,
-                                         currentTopVertexIndex + 1,
-                                         currentBottomVertexIndex + 1 });
-    }
 }
 
 
-void CylindersFactory::generateTrianglesGroups( std::vector<NamedTrianglesGroup> &trianglesGroups )
+void CylindersFactory::generateWalls( SystemPrimitiveData &primitiveData )
 {
-    // Top face
-    trianglesGroups.push_back( NamedTrianglesGroup( "Top", 0, cylinderNRadialVertices_ ) );
+    IndicesQuad currentVertexQuad;
+    IndicesQuad currentUVQuad;
+    int i;
+    unsigned int currentTopVertexIndex;
+    unsigned int currentBottomVertexIndex;
+    unsigned int currentTopUVIndex;
+    unsigned int currentBottomUVIndex;
 
-    // Bottom face
-    trianglesGroups.push_back( NamedTrianglesGroup( "Bottom", cylinderNRadialVertices_, cylinderNRadialVertices_ ) );
+    // Create top wall's triangles (positions and UV).
+    generateTrianglesCircle( primitiveData,
+                             cylinderNRadialVertices_,
+                             0,
+                             1,
+                             false );
 
-    // Radial face
-    trianglesGroups.push_back( NamedTrianglesGroup( "Radial", cylinderNRadialVertices_ * 2, cylinderNRadialVertices_ * 2 ) );
+    // Create bottom wall's triangles (positions and UV).
+    generateTrianglesCircle( primitiveData,
+                             cylinderNRadialVertices_,
+                             cylinderNRadialVertices_ + 1,
+                             cylinderNRadialVertices_ + 2,
+                             true );
+
+    // Create radial wall's triangles (positions).
+    const unsigned int TOP_FIRST_RADIAL_VERTEX_INDEX = 1;
+    const unsigned int BOTTOM_FIRST_RADIAL_VERTEX_INDEX = cylinderNRadialVertices_ + 2;
+    const unsigned int TOP_FIRST_RADIAL_UV_INDEX = 2 + cylinderNRadialVertices_ * 2;
+    const unsigned int BOTTOM_FIRST_RADIA_UV_INDEX = 3 + cylinderNRadialVertices_ * 3;
+
+    for( i = 0; i < cylinderNRadialVertices_ - 1; i++ ){
+        currentTopVertexIndex = TOP_FIRST_RADIAL_VERTEX_INDEX + i;
+        currentTopUVIndex = TOP_FIRST_RADIAL_UV_INDEX + i;
+        currentBottomVertexIndex = BOTTOM_FIRST_RADIAL_VERTEX_INDEX + i;
+        currentBottomUVIndex = BOTTOM_FIRST_RADIA_UV_INDEX + i;
+
+        currentVertexQuad = { currentTopVertexIndex,
+                              currentTopVertexIndex + 1,
+                              currentBottomVertexIndex + 1,
+                              currentBottomVertexIndex };
+        currentUVQuad = { currentTopUVIndex,
+                          currentTopUVIndex + 1,
+                          currentBottomUVIndex + 1,
+                          currentBottomUVIndex };
+
+        primitiveData.addQuad( currentVertexQuad, currentUVQuad );
+    }
+
+    currentTopVertexIndex = TOP_FIRST_RADIAL_VERTEX_INDEX + i;
+    currentTopUVIndex = TOP_FIRST_RADIAL_UV_INDEX + i;
+    currentBottomVertexIndex = BOTTOM_FIRST_RADIAL_VERTEX_INDEX + i;
+    currentBottomUVIndex = BOTTOM_FIRST_RADIA_UV_INDEX + i;
+
+    currentVertexQuad = { currentTopVertexIndex,
+                          TOP_FIRST_RADIAL_VERTEX_INDEX,
+                          BOTTOM_FIRST_RADIAL_VERTEX_INDEX,
+                          currentBottomVertexIndex };
+    currentUVQuad = { currentTopUVIndex,
+                      currentTopUVIndex + 1,
+                      currentBottomUVIndex + 1,
+                      currentBottomUVIndex };
+    primitiveData.addQuad( currentVertexQuad, currentUVQuad );
+
+    // Create walls
+    primitiveData.trianglesGroups.push_back( NamedTrianglesGroup( "Top", 0, cylinderNRadialVertices_ ) );
+    primitiveData.trianglesGroups.push_back( NamedTrianglesGroup( "Bottom", cylinderNRadialVertices_, cylinderNRadialVertices_ ) );
+    primitiveData.trianglesGroups.push_back( NamedTrianglesGroup( "Radial", cylinderNRadialVertices_ * 2, cylinderNRadialVertices_ * 2 ) );
 }
 
 

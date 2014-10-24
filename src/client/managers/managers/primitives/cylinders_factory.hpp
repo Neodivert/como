@@ -66,9 +66,8 @@ class CylindersFactory : public SpecializedSystemPrimitivesFactory
         /***
          * 6. Primitive data generation
          ***/
-        virtual void generateVertexData( MeshVertexData &vertexData );
-        virtual void generateUVData( MeshTextureData &uvData );
-        virtual void generateTrianglesGroups( std::vector<NamedTrianglesGroup> &trianglesGroups );
+        virtual void generateVerticesPositionsAndUV(std::vector<glm::vec3> &positions, std::vector<glm::vec2> &uvCoordinates);
+        virtual void generateWalls(SystemPrimitiveData &primitiveData);
 
 
     private:
