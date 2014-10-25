@@ -63,6 +63,9 @@ struct PrimitiveData
                       const IndicesQuad& uvQuad );
         void addTriangle( const IndicesTriangle& verticesTriangle,
                           const IndicesTriangle& uvTriangle );
+        void addTriangle( const IndicesTriangle& verticesTriangle,
+                          const IndicesTriangle& uvTriangle,
+                          const IndicesTriangle& normalsTriangle );
 
 
         /***
