@@ -1,5 +1,6 @@
 #include "primitive_import_dialog.hpp"
 
+
 namespace como {
 
 /***
@@ -20,8 +21,18 @@ PrimitiveImportDialog::PrimitiveImportDialog( ClientPrimitivesManager *primitive
 
     // When fileInput button is clicked, open a QFileDialog.
     QObject::connect( fileInput_, &QPushButton::clicked, [this](){
-        fileInput_->setText( QFileDialog::getOpenFileName(this,
-            tr("Open file"), "data/local/primitives", tr("Primitive Files (*.obj)") ) );
+        const QString filePath =
+                QFileDialog::getOpenFileName( this,
+                                              tr("Open file"),
+                                              "data/local/primitives",
+                                              tr("Primitive Files (*.obj)" ) );
+
+        fileInfo_.setFile( filePath );
+        if( filePath.size() > 0 ){
+            fileInput_->setText( fileInfo_.fileName() );
+        }else{
+            fileInput_->setText( "Select file" );
+        }
     });
 
     // Set accept and reject buttons behaviour.
@@ -42,7 +53,7 @@ PrimitiveImportDialog::PrimitiveImportDialog( ClientPrimitivesManager *primitive
 
 void PrimitiveImportDialog::validate()
 {
-    std::string filePath = fileInput_->text().toStdString();
+    std::string filePath = fileInfo_.absoluteFilePath().toStdString();
     if( boost::filesystem::exists( filePath ) ){
         try {
             std::string primitiveRelativePath =

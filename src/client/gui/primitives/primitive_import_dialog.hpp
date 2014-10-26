@@ -27,6 +27,7 @@
 #include <QMessageBox>
 #include <client/managers/managers/primitives/client_primitives_manager.hpp>
 #include <client/gui/resources/resource_selector.hpp>
+#include <QFileInfo>
 
 namespace como {
 
@@ -38,6 +39,7 @@ class PrimitiveImportDialog : public QDialog
         ClientPrimitivesManager* primitivesManager_;
 
         QPushButton* fileInput_;
+        QFileInfo fileInfo_;
         ResourceSelector* primitiveCategorySelector_;
 
         QPushButton* okButton_;
