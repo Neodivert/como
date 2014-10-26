@@ -58,8 +58,8 @@ class SpecializedSystemPrimitivesFactory : public ServerWriter
          ***/
         virtual SystemPrimitiveData generatePrimitiveData();
         virtual void generateVerticesPositionsAndUV( std::vector< glm::vec3 >& positions,
-                                                     std::vector< glm::vec2 >& uvCoordinates ){ (void)( positions ); (void)( uvCoordinates ); }
-        virtual void generateWalls( SystemPrimitiveData& primitiveData ){ (void)( primitiveData ); }
+                                                     std::vector< glm::vec2 >& uvCoordinates ) = 0;
+        virtual void generateWalls( SystemPrimitiveData& primitiveData ) = 0;
         virtual void generateOGLData( SystemPrimitiveData& primitiveData );
 
 

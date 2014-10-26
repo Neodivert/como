@@ -75,18 +75,20 @@ void SpheresFactory::executeRemoteCommand( const SphereCreationCommand &command 
  * 6. Primitive data generation
  ***/
 
-void SpheresFactory::generateVertexData( MeshVertexData &vertexData )
+void SpheresFactory::generateVerticesPositionsAndUV(std::vector<glm::vec3> &positions, std::vector<glm::vec2> &uvCoordinates)
 {
     int currentDivision = 0;
     float currentRadius;
     float currentY;
-    int firstCircleIndex;
-    int secondCircleIndex;
+    float currentX;
+    float currentVerticalAngle = 0.0f;
+    float currentHorizontalAngle = 0.0f;
+    int currentHorizontalDivision;
+
     const float DELTA_ANGLE = glm::pi<float>() / sphereNDivisions_;
     float currentAngle = 0.0f;
 
-    vertexData.vertices.reserve( nExpectedVertices() );
-    vertexData.vertexTriangles.reserve( nExpectedTriangles() );
+    positions.reserve( nExpectedVertices() );
 
     // Generate the vertices of the sphere.
     for( currentDivision = 0; currentDivision < sphereNDivisions_ + 1; currentDivision++ ){
@@ -94,11 +96,55 @@ void SpheresFactory::generateVertexData( MeshVertexData &vertexData )
         currentY = cos( currentAngle ) * sphereRadius_;
         currentRadius = sin( currentAngle ) * sphereRadius_;
 
-        generateHorizontalCircleVertices( vertexData.vertices,
+        generateHorizontalCircleVertices( positions,
                                           currentRadius,
                                           sphereNDivisions_ + 1,
                                           currentY );
     }
+
+    // Generate the UV vertices of the sphere.
+    for( currentDivision = 0; currentDivision < sphereNDivisions_ + 1; currentDivision++ ){
+        currentVerticalAngle = currentDivision * DELTA_ANGLE;
+        currentY = 0.5f + 0.5f * -cos( currentVerticalAngle );
+
+        for( currentHorizontalDivision = 0; currentHorizontalDivision < sphereNDivisions_ + 1; currentHorizontalDivision++ ){
+            currentHorizontalAngle = currentHorizontalDivision * DELTA_ANGLE;
+            currentX = 0.5f + 0.5f * cos( currentHorizontalAngle );
+
+            uvCoordinates.push_back( glm::vec2( currentX, currentY ) );
+        }
+    }
+}
+
+
+void SpheresFactory::generateWalls(SystemPrimitiveData &primitiveData)
+{
+    int firstCircleIndex;
+    int secondCircleIndex;
+    unsigned int currentDivision;
+
+    // Generate the triangles of the sphere (positions and UV).
+    for( currentDivision = 0; currentDivision < sphereNDivisions_; currentDivision++ ){
+        firstCircleIndex = currentDivision * ( sphereNDivisions_ + 1 );
+        secondCircleIndex = firstCircleIndex + ( sphereNDivisions_ + 1 );
+
+        generateTriangles( primitiveData,
+                           firstCircleIndex,
+                           secondCircleIndex,
+                           sphereNDivisions_ + 1 );
+    }
+
+    primitiveData.trianglesGroups.push_back( NamedTrianglesGroup( "Sphere", 0, nExpectedTriangles() ) );
+}
+
+/*
+void SpheresFactory::generateVertexData( MeshVertexData &vertexData )
+{
+    int firstCircleIndex;
+    int secondCircleIndex;
+
+    vertexData.vertexTriangles.reserve( nExpectedTriangles() );
+
 
     // Generate the triangles of the sphere.
     for( currentDivision = 0; currentDivision < sphereNDivisions_; currentDivision++ ){
@@ -150,12 +196,7 @@ void SpheresFactory::generateUVData( MeshTextureData &uvData )
     }
 }
 
-
-void SpheresFactory::generateTrianglesGroups( std::vector<NamedTrianglesGroup> &trianglesGroups )
-{
-    trianglesGroups.push_back( NamedTrianglesGroup( "Sphere", 0, nExpectedTriangles() ) );
-}
-
+*/
 
 /***
  * 7. Remote spheres creation
@@ -198,7 +239,31 @@ void SpheresFactory::generateHorizontalCircleVertices(std::vector<glm::vec3>& ve
 }
 
 
-void SpheresFactory::generateTriangles( std::vector<IndicesTriangle>& triangles, unsigned int firstCircleStartIndex, unsigned int secondCircleStartIndex, unsigned int nDivisions )
+void SpheresFactory::generateTriangles(SystemPrimitiveData &primitiveData, unsigned int firstCircleStartIndex, unsigned int secondCircleStartIndex, unsigned int nDivisions)
+{
+    std::vector<IndicesTriangle> vertexTriangles;
+    std::vector<IndicesTriangle> uvTriangles;
+    unsigned int i = 0;
+
+    generatePositionTriangles( vertexTriangles,
+                               firstCircleStartIndex,
+                               secondCircleStartIndex,
+                               nDivisions );
+
+    generateUVTriangles( uvTriangles,
+                         firstCircleStartIndex,
+                         secondCircleStartIndex,
+                         nDivisions );
+
+
+    for( i = 0; i < vertexTriangles.size(); i++ ){
+        primitiveData.addTriangle( vertexTriangles[i],
+                                   uvTriangles[i] );
+    }
+}
+
+
+void SpheresFactory::generatePositionTriangles( std::vector<IndicesTriangle>& triangles, unsigned int firstCircleStartIndex, unsigned int secondCircleStartIndex, unsigned int nDivisions )
 {
     unsigned int i;
     unsigned int firstCircleCurrentVertex;
@@ -236,6 +301,34 @@ void SpheresFactory::generateTriangles( std::vector<IndicesTriangle>& triangles,
                                     secondCircleStartIndex,
                                     secondCircleCurrentVertex
                                 }) );
+}
+
+
+void SpheresFactory::generateUVTriangles(std::vector<IndicesTriangle> &triangles, unsigned int firstCircleStartIndex, unsigned int secondCircleStartIndex, unsigned int nDivisions)
+{
+    unsigned int i;
+    unsigned int firstCircleCurrentVertex;
+    unsigned int secondCircleCurrentVertex;
+
+    //currentDivision = 0; currentDivision < sphereNDivisions_ + 1
+
+    for( i = 0; i < nDivisions; i++ ){
+        firstCircleCurrentVertex = firstCircleStartIndex + i;
+        secondCircleCurrentVertex = secondCircleStartIndex + i;
+
+        triangles.push_back(
+                    IndicesTriangle({
+                                        firstCircleCurrentVertex,
+                                        firstCircleCurrentVertex + 1,
+                                        secondCircleCurrentVertex
+                                    }) );
+        triangles.push_back(
+                    IndicesTriangle({
+                                        firstCircleCurrentVertex + 1,
+                                        secondCircleCurrentVertex + 1,
+                                        secondCircleCurrentVertex
+                                    }) );
+    }
 }
 
 

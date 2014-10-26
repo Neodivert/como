@@ -66,9 +66,8 @@ class SpheresFactory : public SpecializedSystemPrimitivesFactory
         /***
          * 6. Primitive data generation
          ***/
-        virtual void generateVertexData( MeshVertexData &vertexData );
-        virtual void generateUVData( MeshTextureData &uvData );
-        virtual void generateTrianglesGroups( std::vector<NamedTrianglesGroup> &trianglesGroups );
+        virtual void generateVerticesPositionsAndUV(std::vector<glm::vec3> &positions, std::vector<glm::vec2> &uvCoordinates);
+        virtual void generateWalls(SystemPrimitiveData &primitiveData);
 
 
     private:
@@ -82,7 +81,9 @@ class SpheresFactory : public SpecializedSystemPrimitivesFactory
          * 8. Auxiliar methods
          ***/
         void generateHorizontalCircleVertices( std::vector< glm::vec3 >& vertices, float radius, unsigned int nDivisions, float y );
-        void generateTriangles( std::vector< IndicesTriangle >& triangles, unsigned int firstCircleStartIndex, unsigned int secondCircleStartIndex, unsigned int nDivisions );
+        void generateTriangles( SystemPrimitiveData& primitiveData, unsigned int firstCircleStartIndex, unsigned int secondCircleStartIndex, unsigned int nDivisions );
+        void generatePositionTriangles( std::vector< IndicesTriangle >& triangles, unsigned int firstCircleStartIndex, unsigned int secondCircleStartIndex, unsigned int nDivisions );
+        void generateUVTriangles( std::vector< IndicesTriangle >& triangles, unsigned int firstCircleStartIndex, unsigned int secondCircleStartIndex, unsigned int nDivisions );
         unsigned int nExpectedVertices() const;
         unsigned int nExpectedTriangles() const;
 
