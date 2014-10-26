@@ -28,6 +28,7 @@ GeneralInfoMenu::GeneralInfoMenu( LocalEntitiesSelection* userSelection ) :
 {
     // Create a layout for this widget.
     QFormLayout* layout = new QFormLayout;
+    layout->setRowWrapPolicy( QFormLayout::WrapAllRows );
 
     // Create name labels.
     objectName_ = new QLabel( "Unnamed" );

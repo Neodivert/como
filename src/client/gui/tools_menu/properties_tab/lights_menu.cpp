@@ -28,6 +28,7 @@ LightsMenu::LightsMenu( LocalLightsSelection* lights ) :
 {
     // Create the widgets for modifying light properties.
     QFormLayout* layout = new QFormLayout();
+    layout->setRowWrapPolicy( QFormLayout::WrapAllRows );
     lightColorButton_ = new ColorButton( QColor( 255, 0, 0, 255 ) );
     lightAmbientCoefficientSpinBox_ = new QDoubleSpinBox;
     lightAmbientCoefficientSpinBox_->setRange( 0.0f, 1.0f );

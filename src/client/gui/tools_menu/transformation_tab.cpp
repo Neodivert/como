@@ -28,6 +28,7 @@ TransformationTab::TransformationTab( ComoAppPtr comoApp ) :
 {
     // Set this widget's layout.
     QFormLayout* layout = new QFormLayout;
+    layout->setRowWrapPolicy( QFormLayout::WrapAllRows );
     layout->addRow( "Select pivot point mode:",
                     createPivotPointModeSelector( comoApp->getScene()->getEntitiesManager()->getLocalSelection() ) );
     setLayout( layout );

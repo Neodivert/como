@@ -34,6 +34,7 @@ MeshInfoMenu::MeshInfoMenu( LocalMeshesSelection* userSelection ) :
 
     // Set this widget's layout.
     QFormLayout* layout = new QFormLayout;
+    layout->setRowWrapPolicy( QFormLayout::WrapAllRows );
     layout->addWidget( displayVertexNormalsCheckBox_ );
     setLayout( layout );
 

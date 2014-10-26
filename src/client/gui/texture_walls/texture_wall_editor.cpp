@@ -35,6 +35,7 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
     texturesViewer_( new TexturesViewer( texturesManager, this ) )
 {
     QFormLayout* layout = new QFormLayout;
+    layout->setRowWrapPolicy( QFormLayout::WrapAllRows );
     textureOffsetXSpinBox_ = new QDoubleSpinBox;
     textureOffsetYSpinBox_ = new QDoubleSpinBox;
     textureScaleXSpinBox_ = new QDoubleSpinBox;

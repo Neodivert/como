@@ -28,6 +28,7 @@ MaterialEditor::MaterialEditor() :
 {
     // Create the widgets for modifying material properties.
     QFormLayout* layout = new QFormLayout();
+    layout->setRowWrapPolicy( QFormLayout::WrapAllRows );
     nameInput_ = new QLineEdit();
     colorButton_ = new ColorButton( QColor( 255, 0, 0, 255 ) );
     ambientReflectivityButton_ = new ColorButton( QColor( 255, 0, 0, 255 ) );
