@@ -135,6 +135,12 @@ void SpheresFactory::generateWalls(SystemPrimitiveData &primitiveData)
     }
 
     primitiveData.trianglesGroups.push_back( NamedTrianglesGroup( "Sphere", 0, nExpectedTriangles() ) );
+
+    for( unsigned int wallIndex = 0;
+         wallIndex < primitiveData.trianglesGroups.size();
+         wallIndex++ ){
+        primitiveData.generatePerVertexNormals( wallIndex );
+    }
 }
 
 /*

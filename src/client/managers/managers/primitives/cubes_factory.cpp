@@ -161,6 +161,8 @@ void CubesFactory::generateWalls( SystemPrimitiveData &primitiveData )
                         textureWallsNames[cubeFaceIndex],
                         cubeFaceIndex * 2,
                         2 ) );
+
+        primitiveData.generatePerFaceNormals( cubeFaceIndex );
     }
 }
 

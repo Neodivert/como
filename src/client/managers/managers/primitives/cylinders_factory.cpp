@@ -181,6 +181,12 @@ void CylindersFactory::generateWalls( SystemPrimitiveData &primitiveData )
     primitiveData.trianglesGroups.push_back( NamedTrianglesGroup( "Top", 0, cylinderNRadialVertices_ ) );
     primitiveData.trianglesGroups.push_back( NamedTrianglesGroup( "Bottom", cylinderNRadialVertices_, cylinderNRadialVertices_ ) );
     primitiveData.trianglesGroups.push_back( NamedTrianglesGroup( "Radial", cylinderNRadialVertices_ * 2, cylinderNRadialVertices_ * 2 ) );
+
+    for( unsigned int wallIndex = 0;
+         wallIndex < primitiveData.trianglesGroups.size();
+         wallIndex++ ){
+        primitiveData.generatePerVertexNormals( wallIndex );
+    }
 }
 
 

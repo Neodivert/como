@@ -126,7 +126,10 @@ void ConesFactory::generateWalls( SystemPrimitiveData &primitiveData )
                              true );
 
     primitiveData.trianglesGroups.push_back( NamedTrianglesGroup( "Round", 0, coneNBaseVertices_ ) );
+    primitiveData.generatePerVertexNormals( 0 );
+
     primitiveData.trianglesGroups.push_back( NamedTrianglesGroup( "Base", coneNBaseVertices_, coneNBaseVertices_ ) );
+    primitiveData.generatePerVertexNormals( 1 );
 }
 
 

@@ -136,20 +136,26 @@ void PrimitiveData::addQuad( const IndicesQuad &verticesQuad, const IndicesQuad 
 void PrimitiveData::addTriangle( const IndicesTriangle &verticesTriangle, const IndicesTriangle &uvTriangle )
 {
     // Compute the triangle's normal.
+    /*
     glm::vec3 triangleNormal = glm::cross(
                 vertexData.vertices[ verticesTriangle[1] ] - vertexData.vertices[ verticesTriangle[0] ],
                 vertexData.vertices[ verticesTriangle[2] ] - vertexData.vertices[ verticesTriangle[0] ] );
     if( triangleNormal.length() > 0.0f ){
         triangleNormal = glm::normalize( triangleNormal );
-    }
-
+    }    
     // Save the triangle's normal and assign it to the triangle's vertices.
     const unsigned int ni = normalData.normals.size(); // ni = Normal's index
     normalData.normals.push_back( triangleNormal );
+    */
 
+    vertexData.vertexTriangles.push_back( verticesTriangle );
+    uvData.uvTriangles.push_back( uvTriangle );
+
+    /*
     addTriangle( verticesTriangle,
                  uvTriangle,
                  IndicesTriangle{ ni, ni, ni } );
+                 */
 }
 
 

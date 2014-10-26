@@ -32,6 +32,9 @@ struct SystemPrimitiveData : public PrimitiveData
     std::vector< NamedTrianglesGroup > trianglesGroups;
 
     SystemPrimitiveData(){ materialsInfo_.push_back( MaterialInfo() ); }
+
+    void generatePerVertexNormals( unsigned int wallIndex );
+    void generatePerFaceNormals( unsigned int wallIndex );
 };
 
 } // namespace como

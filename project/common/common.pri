@@ -218,4 +218,5 @@ SOURCES += \
     ../../src/common/transformable/transformable.cpp \
     ../../src/common/commands/entity_commands/entity_command.cpp \
     ../../src/common/commands/entity_commands/model_matrix_replacement_command.cpp \
-    ../../src/common/packables/resources/packable_resource_header.cpp
+    ../../src/common/packables/resources/packable_resource_header.cpp \
+    ../../src/common/primitives/primitive_data/system_primitive_data.cpp
