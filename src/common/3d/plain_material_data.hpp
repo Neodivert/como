@@ -35,10 +35,10 @@ struct PlainMaterialData {
 
     PlainMaterialData() :
         color( 1.0f ),
-        ambientReflectivity( 0.9f ),
-        diffuseReflectivity( 0.9f ),
-        specularReflectivity( 0.9f ),
-        specularExponent( 1.0f )
+        ambientReflectivity( 1.0f ),
+        diffuseReflectivity( 0.5f ),
+        specularReflectivity( 0.4f ),
+        specularExponent( 30.0f )
     {}
     PlainMaterialData( const PlainMaterialData& ) = default;
 };
