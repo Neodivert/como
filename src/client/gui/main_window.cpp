@@ -23,6 +23,7 @@
 #include "connection_wizard/connection_wizard.hpp"
 #include <client/gui/users/users_list.hpp>
 #include <client/gui/menu_bar.hpp>
+#include <QSplitter>
 
 namespace como {
 
@@ -36,6 +37,7 @@ MainWindow::MainWindow( QWidget* parent, std::shared_ptr< ComoApp > comoApp ) :
     ToolsMenu* toolsMenu = nullptr;
     RenderPanel* renderPanel = nullptr;
     UsersList* usersList = nullptr;
+    QSplitter* splitter = nullptr;
 
     // Set window's title.
     setWindowTitle( tr( "Cooperative Modeller" ) );
@@ -67,13 +69,18 @@ MainWindow::MainWindow( QWidget* parent, std::shared_ptr< ComoApp > comoApp ) :
     // Set the window title.
     setWindowTitle( ( comoApp->getScene()->getName() + " - Cooperative Modeller" ).c_str() );
 
-    // Set window layout.
+    // Set splitter's layout.
+    splitter = new QSplitter( Qt::Horizontal );
+    splitter->addWidget( toolsMenu );
+    splitter->addWidget( renderPanel );
+    splitter->addWidget( usersList );
+    splitter->setStretchFactor( 0, 5 );
+    splitter->setStretchFactor( 1, 80 );
+    splitter->setStretchFactor( 2, 10 );
+
+    // Set window's layout.
     QHBoxLayout *layout = new QHBoxLayout;
-
-    layout->addWidget( toolsMenu, 10 );
-    layout->addWidget( renderPanel, 80 );
-    layout->addWidget( usersList, 10 );
-
+    layout->addWidget( splitter );
     centralWidget()->setLayout( layout );
 }
 
