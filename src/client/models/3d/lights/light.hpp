@@ -26,6 +26,8 @@
 
 namespace como {
 
+const float DEFAULT_LIGHT_AMBIENT_COEFFICIENT = 0.2f;
+
 class Light : public AbstractLight, public ImportedMesh
 {
     private:

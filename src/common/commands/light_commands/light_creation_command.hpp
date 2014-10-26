@@ -34,6 +34,8 @@ class LightCreationCommand : public LightCommand
     private:
         const PackableLightType lightType_;
         PackableColor lightColor_;
+        // TODO: Add an AmbientCoefficient attribute.
+
 
     protected:
         /***

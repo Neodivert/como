@@ -54,7 +54,7 @@ Light::Light( const ResourceID& id, LightType type, const Color& color, std::str
 
     // Update light color in the shader.
     setLightColor( color );
-    setAmbientCoefficient( 0.01f );
+    setAmbientCoefficient( DEFAULT_LIGHT_AMBIENT_COEFFICIENT );
 }
 
 
