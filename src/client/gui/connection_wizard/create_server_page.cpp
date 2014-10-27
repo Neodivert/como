@@ -100,8 +100,11 @@ bool CreateServerPage::validatePage()
 
     char serverCommand[512];
 
-    const std::string sceneFilePath =
-            sceneFileInfo_.absoluteFilePath().toStdString();
+    std::string sceneFilePath;
+    if( sceneFileInfo_.isFile() ){
+        sceneFilePath =
+                    sceneFileInfo_.absoluteFilePath().toStdString();
+    }
 
     sprintf( serverCommand,
              "gnome-terminal -e \" \"%s\" %d %d \"\"\"%s\"\"\" \"\"\"%s\"\"\" \"",
