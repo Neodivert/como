@@ -22,11 +22,10 @@
 #include <client/models/3d/meshes/imported_mesh.hpp>
 #include "client/models/3d/entity.hpp" // GL types.
 #include <common/commands/light_commands/light_creation_command.hpp> // "LightType" type.
+#include <common/3d/light_data.hpp>
 #include "abstract_light.hpp"
 
 namespace como {
-
-const float DEFAULT_LIGHT_AMBIENT_COEFFICIENT = 0.3f;
 
 class Light : public AbstractLight, public ImportedMesh
 {
@@ -49,8 +48,7 @@ class Light : public AbstractLight, public ImportedMesh
         GLint colorLocation_;
 
         // Light attributes.
-        glm::vec3 color_;
-        float ambientCoefficient_;
+        LightData lightData_;
 
 
     public:

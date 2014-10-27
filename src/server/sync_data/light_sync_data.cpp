@@ -27,19 +27,17 @@ namespace como {
 LightSyncData::LightSyncData( const DirectionalLightCreationCommand &creationCommand ) :
     EntitySyncData( &creationCommand,
                     creationCommand.getResourceID(),
-                    glm::vec3( 0.0f ) ),
-    color_( creationCommand.getLightColor().toVec3() ),
-    // TODO: Duplicated "magic number" in client code,
-    // move to a shared constant or base class.
-    ambientCoefficient_( 0.01f )
+                    glm::vec3( 0.0f ) )
 {
+    light_.color = creationCommand.getLightColor().toVec3();
+    // TODO: Sync ambient coefficient?
+
     std::cout << "Light synchronized ("
               << creationCommand.getResourceID()
               << ") - ("
               << creationCommand.getLightColor().toVec3().x << ", "
               << creationCommand.getLightColor().toVec3().y << ", "
               << creationCommand.getLightColor().toVec3().z << ")" << std::endl;
-
 }
 
 
@@ -57,7 +55,7 @@ std::list<CommandConstPtr> LightSyncData::generateUpdateCommands() const
                     new LightColorChangeCommand(
                         NO_USER,
                         resourceID(),
-                        color_
+                        light_.color
                         ) ) );
 
     updateCommands.push_back(
@@ -65,7 +63,7 @@ std::list<CommandConstPtr> LightSyncData::generateUpdateCommands() const
                     new LightAmbientCoefficientChangeCommand(
                         NO_USER,
                         resourceID(),
-                        ambientCoefficient_
+                        light_.ambientCoefficient
                         ) ) );
 
     return updateCommands;
@@ -92,12 +90,14 @@ void LightSyncData::processCommand( const Command &command )
                           << colorChangeCommand.getLightColor().toVec3().x << ", "
                           << colorChangeCommand.getLightColor().toVec3().y << ", "
                           << colorChangeCommand.getLightColor().toVec3().z << ")" << std::endl;
-                color_ = colorChangeCommand.getLightColor().toVec3();
+                light_.color =
+                        colorChangeCommand.getLightColor().toVec3();
             }break;
             case LightCommandType::LIGHT_AMBIENT_COEFFICIENT_CHANGE:{
                 const LightAmbientCoefficientChangeCommand& ambientCoeffChangeCommand =
                         dynamic_cast< const LightAmbientCoefficientChangeCommand& >( command );
-                ambientCoefficient_ = ambientCoeffChangeCommand.getAmbientCoefficient();
+                light_.ambientCoefficient =
+                        ambientCoeffChangeCommand.getAmbientCoefficient();
             }break;
             default:
                 throw std::runtime_error( "Unexpected light command received in LightSyncData::processCommand()" );

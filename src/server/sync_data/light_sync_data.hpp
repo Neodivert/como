@@ -21,6 +21,7 @@
 
 #include "entity_sync_data.hpp"
 #include <common/commands/light_commands/light_commands.hpp>
+#include <common/3d/light_data.hpp>
 
 namespace como {
 
@@ -65,8 +66,7 @@ class LightSyncData : public EntitySyncData
         /***
          * Attributes
          ***/
-        glm::vec3 color_;
-        float ambientCoefficient_;
+        LightData light_;
 };
 
 } // namespace como

@@ -80,13 +80,13 @@ LightType Light::getLightType() const
 
 Color Light::getLightColor() const
 {
-    return Color( color_ );
+    return Color( lightData_.color );
 }
 
 
 float Light::getAmbientCoefficient() const
 {
-    return ambientCoefficient_;
+    return lightData_.ambientCoefficient;
 }
 
 
@@ -108,13 +108,13 @@ std::string Light::typeName() const
 
 void Light::setLightColor( const Color &color )
 {
-    color_ = color.toVec3();
+    lightData_.color = color.toVec3();
 }
 
 
 void Light::setAmbientCoefficient( float coefficient )
 {
-    ambientCoefficient_ = coefficient;
+    lightData_.ambientCoefficient = coefficient;
 }
 
 
@@ -127,8 +127,8 @@ void Light::sendToShader( OpenGL &openGL, const glm::mat4& viewMatrix ) const
     (void)( openGL );
     (void)( viewMatrix );
 
-    glUniform3fv( colorLocation_, 1, glm::value_ptr( color_ ) );
-    glUniform1f( ambientCoefficientLocation_, ambientCoefficient_ );
+    glUniform3fv( colorLocation_, 1, glm::value_ptr( lightData_.color ) );
+    glUniform1f( ambientCoefficientLocation_, lightData_.ambientCoefficient );
 }
 
 
