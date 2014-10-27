@@ -170,7 +170,6 @@ class Server : public Lockable
     public:
         void deleteUser( UserID id );
     private:
-        std::string getCurrentDayTime() const ;
         void workerThread();
         void openAcceptor();
         bool nameInUse( const char* newName ) const ;

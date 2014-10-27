@@ -53,7 +53,7 @@ int main( int argc, char* argv[] )
 
         // Run the server.
         const std::string sceneFilePath = ( argc > 4 ) ? argv[4] : "";
-        como::Server server( atoi( argv[1] ), atoi( argv[2] ), argv[3], sceneFilePath.c_str(), 1 );
+        como::Server server( atoi( argv[1] ), atoi( argv[2] ), argv[3], sceneFilePath.c_str() );
         server.run();
 
     }catch (std::exception& e){

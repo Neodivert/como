@@ -363,13 +363,6 @@ void Server::deleteUser( UserID id )
 }
 
 
-std::string Server::getCurrentDayTime() const
-{
-    std::time_t now = std::time( 0 );
-    return std::ctime(&now);
-}
-
-
 void Server::workerThread()
 {
     log_->debug( "[", boost::this_thread::get_id(), "] Thread Start\n" );
