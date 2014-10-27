@@ -60,6 +60,8 @@ int main( int argc, char* argv[] )
         std::cerr << e.what() << std::endl;
     }
 
+    como::Scene::askForUserKeyPress( "Press any key to exit\n" );
+
     // The server has been shutdown. Return to the path from where the server
     // was invoked.
     boost::filesystem::current_path( oldPath );

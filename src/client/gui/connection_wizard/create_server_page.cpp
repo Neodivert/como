@@ -24,9 +24,11 @@
 #include "create_server_page.hpp"
 
 #include <QProcess>
-
+#include <QFileDialog>
 
 namespace como {
+
+const std::string NO_SCENE_FILE_SELECTED = "No scene file selected";
 
 /***
  * 1. Initialization and destruction
@@ -54,11 +56,30 @@ CreateServerPage::CreateServerPage( ScenePtr& scene, LogPtr log ) :
     maxUsersInput_->setMaximum( 16 );
     maxUsersInput_->setValue( 5 );
 
+    // Create a scene's file input.
+    sceneFileInput_ = new QPushButton( NO_SCENE_FILE_SELECTED.c_str() );
+    QObject::connect( sceneFileInput_, &QPushButton::clicked, [this](){
+        const QString sceneFilePath =
+                QFileDialog::getOpenFileName( this,
+                                              tr("Open file"),
+                                              "../server/data/save",
+                                              tr( "COMO Scene files (*.csf)" ) );
+
+                if( sceneFilePath.size() > 0 ){
+                    sceneFileInfo_.setFile( sceneFilePath );
+                    sceneFileInput_->setText( sceneFileInfo_.fileName() );
+                }else{
+                    sceneFileInfo_.setFile( "" );
+                    sceneFileInput_->setText( NO_SCENE_FILE_SELECTED.c_str() );
+                }
+    });
+
     // Create the page's layout
     layout = new QFormLayout;
     layout->addRow( tr( "Scene name: " ), sceneNameInput_ );
     layout->addRow( tr( "Port (0 - 65535): " ), portInput_ );
     layout->addRow( tr( "Max users (1 - 16): " ), maxUsersInput_ );
+    layout->addRow( tr( "Load scene from file: " ), sceneFileInput_ );
 
     // Set the page's title and layout.
     setTitle( tr( "Create server" ) );
@@ -72,16 +93,25 @@ CreateServerPage::CreateServerPage( ScenePtr& scene, LogPtr log ) :
 
 bool CreateServerPage::validatePage()
 {
-    log_->debug( "Creating server with port(", portInput_->text().toLocal8Bit().data(), ") and maxUsers(", maxUsersInput_->text().toLocal8Bit().data(), ")\n" );
+    log_->debug( "Creating server with port(",
+                 portInput_->text().toLocal8Bit().data(),
+                 ") and maxUsers(",
+                 maxUsersInput_->text().toLocal8Bit().data(), ")\n" );
 
-    char serverCommand[256];
+    char serverCommand[512];
+
+    const std::string sceneFilePath =
+            sceneFileInfo_.absoluteFilePath().toStdString();
 
     sprintf( serverCommand,
-             "gnome-terminal -e \" \"%s\" %d %d \"%s\"\"",
+             "gnome-terminal -e \" \"%s\" %d %d \"\"\"%s\"\"\" \"\"\"%s\"\"\" \"",
              SERVER_PATH,                                       // Server bin.
              atoi( portInput_->text().toLocal8Bit().data() ),   // Port.
              maxUsersInput_->value(),                           // Max. users.
-             sceneNameInput_->text().toLocal8Bit().data() );    // Scene name.
+             sceneNameInput_->text().toLocal8Bit().data(),      // Scene name.
+             sceneFilePath.c_str() );                           // Scene file.
+
+    log_->debug( serverCommand );
 
     QProcess::execute( serverCommand );
 

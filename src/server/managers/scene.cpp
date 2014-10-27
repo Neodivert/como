@@ -48,17 +48,6 @@ Scene::Scene( const std::string& sceneName, CommandsHistoricPtr commandsHistoric
 
 
 /***
- * 2. Destruction
- ***/
-
-Scene::~Scene()
-{
-    // TODO: Remove
-    saveToFile( "autosave", true );
-}
-
-
-/***
  * 3. Command processing
  ***/
 
@@ -73,19 +62,42 @@ void Scene::processCommand( const Command& command )
  * 4. Scene saving / loading
  ***/
 
-void Scene::saveToFile( const std::string &fileName, bool replace )
+std::string Scene::saveToFile()
 {
     lock();
-    char buffer[8];
-    std::string filePath = SAVED_SCENES_DIR_PATH + '/' + fileName;
+    bool saveToFile = false;
+    bool exitLoop = false;
+    std::string fileName;
+    std::string filePath;
 
-    if( !replace && boost::filesystem::exists( filePath ) ){
-        throw std::runtime_error(
-                    std::string( "Scene::saveToFile - file already exists (" ) +
-                    std::string( filePath ) +
-                    std::string( ")" ) );
+    while( !exitLoop ){
+        std::cout << std::endl << std::endl;
+
+        fileName = askForUserString( "Enter a file name for saving this scene into (Press ENTER if you don't want to save the scene): " );
+
+        if( fileName.size() == 0 &&
+                askForUserResponse( "Are you sure that you don't want to save scene? (y/n): " ) ){
+            return "";
+        }
+
+        if( fileName.size() > 0 ){
+            filePath = generateSaveFilePath( fileName );
+
+            if( boost::filesystem::exists( filePath ) ){
+                saveToFile =
+                        exitLoop =
+                            askForUserResponse( "File already exists. Do you want to overwrite it? (y/n): " );
+            }else{
+                saveToFile = exitLoop = true;
+            }
+        }
     }
 
+    if( !saveToFile ){
+        return "";
+    }
+
+    char buffer[8];
     std::ofstream file( filePath, std::ios_base::binary );
     if( !file.is_open() ){
         throw FileNotOpenException( filePath );
@@ -100,6 +112,8 @@ void Scene::saveToFile( const std::string &fileName, bool replace )
     resourcesSyncLibrary_.saveToFile( file );
 
     file.close();
+
+    return filePath;
 }
 
 
@@ -146,7 +160,43 @@ void Scene::removeUser( UserID userID )
 
 
 /***
- * 8. Initialization
+ * 7. Auxiliar I/O methods
+ ***/
+
+bool Scene::askForUserResponse( const std::string& question )
+{
+    char userResponse = 'x';
+
+    do {
+        std::cout << question;
+        std::cin >> userResponse;
+        std::cin.get();
+    }while( !std::cin.fail() && userResponse != 'n' && userResponse != 'y' );
+
+    return ( userResponse == 'y' );
+}
+
+
+std::string Scene::askForUserString( const std::string &question )
+{
+    std::string userString;
+
+    std::cout << question;
+    std::getline( std::cin, userString );
+
+    return userString;
+}
+
+
+void Scene::askForUserKeyPress( const std::string& message )
+{
+    std::cout << message;
+    std::cin.get();
+}
+
+
+/***
+ * 10. Initialization
  ***/
 
 void Scene::initEmptyScene()
@@ -175,5 +225,23 @@ void Scene::initEmptyScene()
                     cameraUp ) );
 }
 
+
+/***
+ * 9. Auxiliar methods
+ ***/
+
+std::string Scene::generateSaveFilePath( const std::string &fileName )
+{
+#ifdef _WIN32
+    const char DIR_SEPARATOR_CHAR = '\\';
+#else
+    const char DIR_SEPARATOR_CHAR = '/';
+#endif
+    return
+        std::string( SAVED_SCENES_DIR_PATH ) +
+        DIR_SEPARATOR_CHAR +
+        fileName +
+        std::string( ".csf" );
+}
 
 } // namespace como

@@ -123,6 +123,14 @@ void Server::run()
         // User pressed a key; disconnect server.
         disconnect();
 
+        // Save scene to file.
+        const std::string filePath = scene_.saveToFile();
+        if( filePath != "" ){
+            log_->debug( "Scene file saved: [",
+                         filePath,
+                         "]\n" );
+        }
+
     }catch( std::exception& ex ){
         log_->error( "Exception: ", ex.what(), "\n" );
     }

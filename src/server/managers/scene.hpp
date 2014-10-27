@@ -44,7 +44,7 @@ class Scene : public BasicScene
         /***
          * 2. Destruction
          ***/
-        virtual ~Scene();
+        virtual ~Scene() = default;
 
 
         /***
@@ -56,7 +56,7 @@ class Scene : public BasicScene
         /***
          * 4. Scene saving / loading
          ***/
-        void saveToFile( const std::string& fileName, bool replace = false );
+        std::string saveToFile();
         void loadFromFile( const std::string& filePath );
 
 
@@ -73,7 +73,15 @@ class Scene : public BasicScene
 
 
         /***
-         * 7. Operators
+         * 7. Auxiliar I/O methods
+         ***/
+        static bool askForUserResponse( const std::string& question );
+        static std::string askForUserString( const std::string& question );
+        static void askForUserKeyPress( const std::string& message );
+
+
+        /***
+         * 8. Operators
          ***/
         Scene& operator = ( const Scene& ) = delete;
         Scene& operator = ( Scene&& ) = delete;
@@ -81,9 +89,15 @@ class Scene : public BasicScene
 
     private:
         /***
-         * 8. Initialization
+         * 9. Initialization
          ***/
         void initEmptyScene();
+
+
+        /***
+         * 10. Auxiliar methods
+         ***/
+        std::string generateSaveFilePath( const std::string& fileName );
 
 
         /***

@@ -23,6 +23,8 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QSpinBox>
+#include <QFileInfo>
+#include <QPushButton>
 
 #include <client/managers/scene/scene.hpp>
 #include <memory>
@@ -44,6 +46,8 @@ class CreateServerPage : public QWizardPage
         QLineEdit* sceneNameInput_;
         QLineEdit* portInput_;
         QSpinBox* maxUsersInput_;
+        QPushButton* sceneFileInput_;
+        QFileInfo sceneFileInfo_;
 
         // Log
         LogPtr log_;
