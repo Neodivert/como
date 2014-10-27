@@ -72,10 +72,18 @@ Texture::Texture( const ResourceID& id, const std::string& name, const TextureIn
     // TODO: Take components order into account too (RGBA != ABGR).
     if( textureImage->format->BytesPerPixel == 4 ){
         textureInternalFormat = GL_RGBA8;
-        format_ = GL_RGBA;
+        if( textureImage->format->Bmask <  textureImage->format->Rmask ){
+            format_ = GL_BGRA;
+        }else{
+            format_ = GL_RGBA;
+        }
     }else if( textureImage->format->BytesPerPixel == 3 ){
         textureInternalFormat = GL_RGB8;
-        format_ = GL_RGB;
+        if( textureImage->format->Bmask <  textureImage->format->Rmask ){
+            format_ = GL_BGR;
+        }else{
+            format_ = GL_RGB;
+        }
     }else{
         throw std::runtime_error( "Unexpected number of Bytes Per Pixel in texture (" +
                                   std::to_string( textureImage->format->BytesPerPixel ) +
