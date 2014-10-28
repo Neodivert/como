@@ -17,6 +17,7 @@
 ***/
 
 #include "packable_file.hpp"
+#include <common/exceptions/file_not_open_exception.hpp>
 
 namespace como {
 
@@ -123,8 +124,11 @@ void* PackableFile::PackableFile::pack( void* buffer ) const
     castedBuffer = static_cast< char* >( buffer );
 
     file_.open( filePath_.c_str(), std::ios_base::in | std::ios_base::binary );
-    file_.read( castedBuffer, fileSize_.getValue() );
+    if( !file_ ){
+        throw FileNotOpenException( filePath_ );
+    }
 
+    file_.read( castedBuffer, fileSize_.getValue() );
     if( !file_ ){
         unsigned int bytesRead = static_cast< unsigned int >( file_.gcount() );
         sprintf( errorMessage,
