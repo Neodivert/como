@@ -192,6 +192,10 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                 const CameraCreationCommand& cameraCreationCommand =
                         dynamic_cast< const CameraCreationCommand& >( command );
 
+                log()->debug( "Camera created (",
+                              cameraCommand.cameraID(),
+                              ")\n" );
+
                 // TODO: Retrieve real centroid from command.
                 resourcesSyncData_[ cameraCommand.cameraID() ] =
                     ResourceSyncDataPtr(

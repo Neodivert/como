@@ -40,8 +40,12 @@ Scene::Scene( const std::string& sceneName, CommandsHistoricPtr commandsHistoric
     boost::filesystem::create_directories( SAVED_SCENES_DIR_PATH );
 
     if( sceneFilePath != "" ){
+        log_->debug( "Loading scene from file [",
+                      sceneFilePath,
+                      "]\n" );
         loadFromFile( sceneFilePath );
     }else{
+        log_->debug( "Initializing an empty scene\n" );
         initEmptyScene();
     }
 }
