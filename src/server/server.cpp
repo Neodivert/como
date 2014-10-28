@@ -382,6 +382,7 @@ void Server::workerThread()
         catch( std::exception & ex )
         {
             log_->error( "[", boost::this_thread::get_id(), "] Exception: ", ex.what(), "\n" );
+            throw;
         }
     }
 
