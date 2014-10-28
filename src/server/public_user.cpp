@@ -64,7 +64,7 @@ void PublicUser::requestUpdate()
 {
     lock();
 
-    if( !updateRequested_ && needsSceneUpdatePacket() ){
+    if( !synchronizing_&& !updateRequested_ && needsSceneUpdatePacket() ){
         updateRequested_ = true;
         io_service_->post( std::bind( &PublicUser::sendNextSceneUpdatePacket, this ) );
     }
