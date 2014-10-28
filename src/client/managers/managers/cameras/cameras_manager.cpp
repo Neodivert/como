@@ -36,9 +36,9 @@ CamerasManager::CamerasManager( OpenGL& openGL, ServerInterfacePtr server, LogPt
  * 3. Getters
  ***/
 
-const Camera &CamerasManager::activeCamera() const
+const Camera* CamerasManager::activeCamera() const
 {
-    return *activeCamera_;
+    return activeCamera_;
 }
 
 

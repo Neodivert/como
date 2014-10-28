@@ -662,7 +662,7 @@ void Viewport::updateTransformGuideLine( const GLfloat& x, const GLfloat& y )
 const Camera& Viewport::currentCamera() const
 {
     if( view_ == View::CAMERA ){
-        return camerasManager_->activeCamera();
+        return *( camerasManager_->activeCamera() );
     }else{
         return *camera;
     }

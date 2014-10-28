@@ -50,7 +50,7 @@ class CamerasManager : public SpecializedEntitiesManager< Camera, CamerasSelecti
         /***
          * 3. Getters
          ***/
-        const Camera& activeCamera() const;
+        const Camera* activeCamera() const;
         glm::mat4 activeCameraViewMatrix() const;
 
 
