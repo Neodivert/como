@@ -127,7 +127,10 @@ void* PackableFile::PackableFile::pack( void* buffer ) const
 
     if( !file_ ){
         unsigned int bytesRead = static_cast< unsigned int >( file_.gcount() );
-        sprintf( errorMessage, "ERROR unpacking file. Only %u bytes could be read", bytesRead );
+        sprintf( errorMessage,
+                 "ERROR packing file [%s]. Only %u bytes could be read",
+                 filePath_.c_str(),
+                 bytesRead );
         throw std::runtime_error( errorMessage );
     }
 

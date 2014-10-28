@@ -331,6 +331,8 @@ CommandPtr PackableCommandsList::createEmtpyCommandFromBuffer(const void *buffer
         break;
     }
 
+    assert( command != nullptr );
+
     return command;
 }
 
