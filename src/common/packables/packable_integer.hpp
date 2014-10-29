@@ -21,6 +21,7 @@
 
 #include <common/packables/packable_wrapper.hpp>
 #include <cstdint>
+#include <cassert> // TODO: Remove
 
 namespace como {
 
@@ -169,6 +170,7 @@ void* PackableInteger<PackedType, UnpackedType>::pack( void* buffer ) const
 #endif
 
     // Pack the wrapper's inner value into the buffer.
+    assert( castedBuffer != nullptr );
     *castedBuffer = networkValue;
 
     // Return a pointer to the next position in buffer.

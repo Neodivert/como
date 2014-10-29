@@ -61,9 +61,6 @@ class PublicUser : public User, public Lockable
         SceneUpdatePacket sceneUpdatePacketFromUser_;
         SceneUpdatePacket outSceneUpdatePacketPacket_;
 
-        bool synchronizing_;
-
-
         CommandsHistoricPtr commandsHistoric_;
 
         LogPtr log_;

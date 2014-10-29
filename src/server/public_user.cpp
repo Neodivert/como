@@ -42,16 +42,14 @@ PublicUser::PublicUser( UserID id, const char* name,
     nextCommand_( 0 ),
     sceneUpdatePacketFromUser_( unpackingDirPath ),
     outSceneUpdatePacketPacket_( unpackingDirPath ),
-    synchronizing_( false ),
     commandsHistoric_( commandsHistoric ),
     log_( log ),
     updateRequested_( false ),
     color_( color )
 {
+    lock();
+
     readSceneUpdatePacket();
-
-    //sync();
-
     requestUpdate();
 }
 
@@ -64,7 +62,7 @@ void PublicUser::requestUpdate()
 {
     lock();
 
-    if( !synchronizing_&& !updateRequested_ && needsSceneUpdatePacket() ){
+    if( !updateRequested_ && needsSceneUpdatePacket() ){
         updateRequested_ = true;
         io_service_->post( std::bind( &PublicUser::sendNextSceneUpdatePacket, this ) );
     }
@@ -96,6 +94,9 @@ void PublicUser::readSceneUpdatePacket()
 
 void PublicUser::onReadSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet )
 {
+    // Call to lock() or deadlock Server-PublicUser?
+    lock();
+
     // Call to the processing callback in the server.
     processSceneUpdatePacketCallback_( errorCode, getID(), *( std::dynamic_pointer_cast<const SceneUpdatePacket>( packet ) ) );
 }
@@ -140,9 +141,6 @@ void PublicUser::sendNextSceneUpdatePacket()
     if( nCommandsInLastPacket_ ){
         // Pack the previous packet and send it to the client.
         outSceneUpdatePacketPacket_.asyncSend( socket_, boost::bind( &PublicUser::onWriteSceneUpdatePacket, this, _1, _2 ) );
-
-        // Signal that the user is being synchronized (permorming an async send).
-        synchronizing_ = true;
     }
 //std::dynamic_pointer_cast<const SceneUpdatePacket>( packet )
 }
@@ -151,6 +149,8 @@ void PublicUser::sendNextSceneUpdatePacket()
 void PublicUser::onWriteSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet )
 {
     lock();
+
+    updateRequested_ = false;
 
     if( errorCode ){
         // FIXME: If there are an async read and an async write on the socket
@@ -163,13 +163,7 @@ void PublicUser::onWriteSceneUpdatePacket( const boost::system::error_code& erro
                      ") - nextCommand_(",
                      (int)nextCommand_, ")\n" );
 
-        if( needsSceneUpdatePacket() ){
-            requestUpdate();
-            //sendNextSceneUpdatePacket();
-        }else{
-            updateRequested_ = false;
-            synchronizing_ = false;
-        }
+        requestUpdate();
     }
 }
 
