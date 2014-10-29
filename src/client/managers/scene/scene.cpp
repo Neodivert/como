@@ -54,9 +54,6 @@ Scene::Scene( const char* host, const char* port, const char* userName, LogPtr l
 
         initManagers( userAcceptancePacket );
 
-        // Set the background color.
-        setBackgroundColor( 0.9f, 0.9f, 0.9f, 0.9f );
-
         OpenGL::checkStatus( "Scene - constructor\n" );
 
     }catch( std::exception& ){
@@ -248,7 +245,7 @@ AuxiliarLinesRenderer *Scene::linesRenderer() const
  * 6. Setters
  ***/
 
-void Scene::setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a )
+void Scene::setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a ) const
 {
     glClearColor( r, g, b, a );
 }
@@ -267,6 +264,9 @@ void Scene::takeOpenGLContext()
 
 void Scene::draw( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
+    // Set the background color.
+    setBackgroundColor( 0.9f, 0.9f, 0.9f, 1.0f );
+
     // Draw all the entities.
     entitiesManager_->drawAll( openGL_, viewMatrix, projectionMatrix );
 }

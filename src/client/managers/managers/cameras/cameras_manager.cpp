@@ -95,6 +95,8 @@ void CamerasManager::createCamera( const ResourceID &cameraID,
     }
 
     resourcesSelections_.at( cameraID.getCreatorID() )->addResource( cameraID, std::move( camera ) );
+
+    notifyObservers();
 }
 
 } // namespace como

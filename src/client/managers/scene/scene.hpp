@@ -120,7 +120,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
          * 6. Setters
          ***/
     public:
-        void setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a );
+        void setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a ) const;
 
     protected:
         void createSceneDirectory();

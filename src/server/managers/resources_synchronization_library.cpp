@@ -192,15 +192,19 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                 const CameraCreationCommand& cameraCreationCommand =
                         dynamic_cast< const CameraCreationCommand& >( command );
 
-                log()->debug( "Camera created (",
-                              cameraCommand.cameraID(),
-                              ")\n" );
+                log()->debug( "Creating camera (",
+                              cameraCreationCommand.cameraID(),
+                              ") ...\n" );
 
                 // TODO: Retrieve real centroid from command.
-                resourcesSyncData_[ cameraCommand.cameraID() ] =
+                resourcesSyncData_[ cameraCreationCommand.cameraID() ] =
                     ResourceSyncDataPtr(
                             new CameraSyncData( cameraCreationCommand ) );
-                undeletableResources_.insert( cameraCommand.cameraID() );
+                undeletableResources_.insert( cameraCreationCommand.cameraID() );
+
+                log()->debug( "Creating camera (",
+                              cameraCreationCommand.cameraID(),
+                              ") ...OK\n" );
             }
         }break;
         case CommandTarget::SELECTION:{

@@ -26,7 +26,7 @@
 
 namespace como {
 
-class ViewFrame : public QFrame
+class ViewFrame : public QFrame, public Observer
 {
     Q_OBJECT
 
@@ -34,6 +34,9 @@ class ViewFrame : public QFrame
         // OpenGL rendering surface.
         Viewport* viewport;
         ViewportToolBar* toolbar_;
+        QWidget* viewportWidget_;
+
+        CamerasManager* camerasManager_;
 
     public:
         /***
@@ -57,6 +60,7 @@ class ViewFrame : public QFrame
         /***
          * 3. Updating and drawing
          ***/
+        virtual void update();
     public slots:
         virtual void renderIfNeeded();
         virtual void render();

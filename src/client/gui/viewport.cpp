@@ -459,6 +459,18 @@ void Viewport::render()
     // Make viewport occuppy the full canvas.
     glViewport( 0, 0, width(), height() );
 
+    if( view_ == View::CAMERA && camerasManager_->activeCamera() == nullptr ){
+        glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+
+        // Clear buffers.
+        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+        // Swap buffers.
+        comoApp->getScene()->getOpenGLContext()->swapBuffers( this );
+
+        return;
+    }
+
     // Clear buffers.
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
