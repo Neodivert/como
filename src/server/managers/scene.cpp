@@ -52,6 +52,16 @@ Scene::Scene( const std::string& sceneName, CommandsHistoricPtr commandsHistoric
 
 
 /***
+ * 2. Destruction
+ ***/
+
+Scene::~Scene()
+{
+    saveToFile( generateSaveFilePath( "autosave" ) );
+}
+
+
+/***
  * 3. Command processing
  ***/
 
@@ -101,21 +111,7 @@ std::string Scene::saveToFile()
         return "";
     }
 
-    char buffer[8];
-    std::ofstream file( filePath, std::ios_base::binary );
-    if( !file.is_open() ){
-        throw FileNotOpenException( filePath );
-    }
-
-    // Save the "next user's ID" to the file.
-    const PackableUserID nextUserID( nextUserID_ );
-    nextUserID.pack( buffer );
-    file.write( buffer, nextUserID.getPacketSize() );
-
-    // Save scene's resources to file.
-    resourcesSyncLibrary_.saveToFile( file );
-
-    file.close();
+    this->saveToFile( filePath );
 
     return filePath;
 }
@@ -246,6 +242,28 @@ std::string Scene::generateSaveFilePath( const std::string &fileName )
         DIR_SEPARATOR_CHAR +
         fileName +
         std::string( ".csf" );
+}
+
+
+void Scene::saveToFile( const std::string &filePath )
+{
+    char buffer[8];
+
+    // Open the file.
+    std::ofstream file( filePath, std::ios_base::binary );
+    if( !file.is_open() ){
+        throw FileNotOpenException( filePath );
+    }
+
+    // Save the "next user's ID" to the file.
+    const PackableUserID nextUserID( nextUserID_ );
+    nextUserID.pack( buffer );
+    file.write( buffer, nextUserID.getPacketSize() );
+
+    // Save scene's resources to file.
+    resourcesSyncLibrary_.saveToFile( file );
+
+    file.close();
 }
 
 } // namespace como

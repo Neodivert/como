@@ -44,7 +44,7 @@ class Scene : public BasicScene
         /***
          * 2. Destruction
          ***/
-        virtual ~Scene() = default;
+        virtual ~Scene();
 
 
         /***
@@ -98,6 +98,7 @@ class Scene : public BasicScene
          * 10. Auxiliar methods
          ***/
         std::string generateSaveFilePath( const std::string& fileName );
+        void saveToFile( const std::string& filePath );
 
 
         /***
