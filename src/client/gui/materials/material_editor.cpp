@@ -43,7 +43,6 @@ MaterialEditor::MaterialEditor() :
     specularExponentSpinBox_->setRange( 0.0, 1000.0 );
 
     // Set this panel's layout.
-    layout->addWidget( new QLabel( "Material panel" ) );
     layout->addRow( "Material name", nameInput_ );
     layout->addRow( "Color: ", colorButton_ );
     layout->addRow( "Ambient reflectivity: ", ambientReflectivityButton_ );

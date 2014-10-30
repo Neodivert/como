@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include <QGridLayout>
+#include <QVBoxLayout>
 #include <QLabel>
 #include "materials_editor.hpp"
 
@@ -28,13 +28,13 @@ MaterialsEditor::MaterialsEditor( MaterialsManagerPtr materialsManager, LocalMes
     materialsManager_( materialsManager ),
     localMeshesSelection_( localMeshesSelection )
 {
-    QGridLayout* layout = new QGridLayout;
+    QVBoxLayout* layout = new QVBoxLayout;
     materialsList_ = new MaterialsListWidget( materialsManager );
     materialEditor_ = new MaterialEditor;
 
-    layout->addWidget( new QLabel( "Select material: " ), 0, 0 );
-    layout->addWidget( materialsList_, 0, 1 );
-    layout->addWidget( materialEditor_, 1, 0, 1, 2 );
+    layout->addWidget( new QLabel( "Select material: " ) );
+    layout->addWidget( materialsList_ );
+    layout->addWidget( materialEditor_ );
     setLayout( layout );
 
     QObject::connect( materialsList_, &MaterialsListWidget::materialSelected,
