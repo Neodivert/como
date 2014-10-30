@@ -118,8 +118,6 @@ void PublicUser::sendNextSceneUpdatePacket()
 {
     lock();
 
-    updateRequested_ = false;
-
     // Create and prepare a SCENE_UPDATE packet.
     outSceneUpdatePacketPacket_.clear();
 
@@ -141,6 +139,8 @@ void PublicUser::sendNextSceneUpdatePacket()
     if( nCommandsInLastPacket_ ){
         // Pack the previous packet and send it to the client.
         outSceneUpdatePacketPacket_.asyncSend( socket_, boost::bind( &PublicUser::onWriteSceneUpdatePacket, this, _1, _2 ) );
+    }else{
+        updateRequested_ = false;
     }
 //std::dynamic_pointer_cast<const SceneUpdatePacket>( packet )
 }
