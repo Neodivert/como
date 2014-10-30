@@ -141,9 +141,12 @@ void PublicUser::sendNextSceneUpdatePacket()
         // Pack the previous packet and send it to the client.
         outSceneUpdatePacketPacket_.asyncSend( socket_, boost::bind( &PublicUser::onWriteSceneUpdatePacket, this, _1, _2 ) );
     }else{
+        // This can be executed, for example, when all pending commands in the
+        // historic where sent by this user, so the server doesn't have to
+        // resend them to its emitter.
         updateRequested_ = false;
+        requestUpdate();
     }
-//std::dynamic_pointer_cast<const SceneUpdatePacket>( packet )
 }
 
 
