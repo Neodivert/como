@@ -325,7 +325,7 @@ CommandPtr PackableCommandsList::createEmtpyCommandFromBuffer(const void *buffer
 
         default:
             int commandTarget = static_cast< int >( Command::getTarget( buffer ) );
-            throw std::runtime_error( "Received an unrecognized command type" +
+            throw std::runtime_error( "Received an unrecognized command (target: " +
                                       std::to_string( commandTarget ) +
                                       ")" );
         break;
