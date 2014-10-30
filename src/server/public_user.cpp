@@ -159,7 +159,9 @@ void PublicUser::onWriteSceneUpdatePacket( const boost::system::error_code& erro
         log_->error( "ERROR writting SCENE_UPDATE packet: ", errorCode.message(), "\n" );
         removeUserCallback_( getID() );
     }else{
-        log_->debug( "SCENE_UPDATE sent - commands(",
+        log_->debug( "SCENE_UPDATE sent to user (",
+                     getName(),
+                     ") - commands(",
                      dynamic_cast< const SceneUpdatePacket* >( packet.get() )->getCommands()->size(),
                      ") - nextCommand_(",
                      (int)nextCommand_, ")\n" );
