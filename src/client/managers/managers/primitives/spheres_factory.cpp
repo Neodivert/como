@@ -109,7 +109,7 @@ void SpheresFactory::generateVerticesPositionsAndUV(std::vector<glm::vec3> &posi
 
         for( currentHorizontalDivision = 0; currentHorizontalDivision < sphereNDivisions_ + 1; currentHorizontalDivision++ ){
             currentHorizontalAngle = currentHorizontalDivision * DELTA_ANGLE;
-            currentX = 0.5f + 0.5f * cos( currentHorizontalAngle );
+            currentX = 0.5f + 0.5f * -cos( currentHorizontalAngle );
 
             uvCoordinates.push_back( glm::vec2( currentX, currentY ) );
         }
@@ -315,8 +315,6 @@ void SpheresFactory::generateUVTriangles(std::vector<IndicesTriangle> &triangles
     unsigned int i;
     unsigned int firstCircleCurrentVertex;
     unsigned int secondCircleCurrentVertex;
-
-    //currentDivision = 0; currentDivision < sphereNDivisions_ + 1
 
     for( i = 0; i < nDivisions; i++ ){
         firstCircleCurrentVertex = firstCircleStartIndex + i;
