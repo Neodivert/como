@@ -104,7 +104,6 @@ class Log : public Lockable
 template< class T>
 void Log::write( T value )
 {
-    lock();
     out_ << value;
 }
 
@@ -112,7 +111,6 @@ void Log::write( T value )
 template< class T, class... Args >
 void Log::write( T value, Args... args )
 {
-    lock();
     out_ << value;
     write( args... );
 }
@@ -125,6 +123,7 @@ void Log::write( T value, Args... args )
 template< class T>
 void Log::debug( T value )
 {
+    lock();
     write( "[DEBUG] ", value );
 }
 
@@ -132,6 +131,7 @@ void Log::debug( T value )
 template< class T, class... Args >
 void Log::debug( T value, Args... args )
 {
+    lock();
     write( "[DEBUG] ", value, args... );
 }
 
@@ -143,6 +143,7 @@ void Log::debug( T value, Args... args )
 template< class T>
 void Log::warning( T value )
 {
+    lock();
     write( "[WARNING] ", value );
 }
 
@@ -150,6 +151,7 @@ void Log::warning( T value )
 template< class T, class... Args >
 void Log::warning( T value, Args... args )
 {
+    lock();
     write( "[WARNING] ", value, args... );
 }
 
@@ -161,6 +163,7 @@ void Log::warning( T value, Args... args )
 template< class T >
 void Log::error( T value )
 {
+    lock();
     write( "[ERROR] ", value );
 }
 
@@ -168,6 +171,7 @@ void Log::error( T value )
 template< class T, class... Args >
 void Log::error( T value, Args... args )
 {
+    lock();
     write( "[ERROR] ", value, args... );
 }
 
