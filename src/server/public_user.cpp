@@ -123,7 +123,8 @@ void PublicUser::sendNextSceneUpdatePacket()
 
     // If there is any response command to be sent to the user, add it to the
     // scene update packet.
-    if( pendingResponseCommands_.size() ){
+    if( pendingResponseCommands_.size() &&
+            ( outSceneUpdatePacketPacket_.getCommands()->size() < MAX_COMMANDS_PER_PACKET ) ){
         outSceneUpdatePacketPacket_.addCommand( std::move( pendingResponseCommands_.front() ) );
         pendingResponseCommands_.pop();
     }
