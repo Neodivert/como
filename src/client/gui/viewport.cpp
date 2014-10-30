@@ -246,7 +246,6 @@ void Viewport::keyPressEvent( QKeyEvent *e )
                 const glm::vec3 direction =
                         -0.1f * glm::cross( camera->getUpVector(),
                                             glm::vec3( camera->getCenterVector() ) );
-                std::cout << "direction: (" << direction.x << ", " << direction.y << ", " << direction.z << ")" << std::endl;
 
                 camera->translate( direction );
             }

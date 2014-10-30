@@ -150,7 +150,6 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
     }else if( lineHeader == "mtllib" ){
         boost::filesystem::path fileDirectory = boost::filesystem::path( filePath ).parent_path();
         std::string materialFilePath = ( fileDirectory / lineBody ).string();
-        std::cout << "materialFilePath: [" << materialFilePath << "]" << std::endl;
 
         processMaterialFile( materialFilePath, primitiveData.oglData.includesTextures, primitiveData.materialsInfo_ );
     }else if( lineHeader == "usemtl" ){

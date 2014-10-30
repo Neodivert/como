@@ -31,13 +31,6 @@ LightSyncData::LightSyncData( const DirectionalLightCreationCommand &creationCom
 {
     light_.color = creationCommand.getLightColor().toVec3();
     // TODO: Sync ambient coefficient?
-
-    std::cout << "Light synchronized ("
-              << creationCommand.getResourceID()
-              << ") - ("
-              << creationCommand.getLightColor().toVec3().x << ", "
-              << creationCommand.getLightColor().toVec3().y << ", "
-              << creationCommand.getLightColor().toVec3().z << ")" << std::endl;
 }
 
 
@@ -84,12 +77,6 @@ void LightSyncData::processCommand( const Command &command )
             case LightCommandType::LIGHT_COLOR_CHANGE:{
                 const LightColorChangeCommand& colorChangeCommand =
                         dynamic_cast< const LightColorChangeCommand& >( command );
-                std::cout << "Changing ("
-                          << resourceID()
-                          << ") color to ("
-                          << colorChangeCommand.getLightColor().toVec3().x << ", "
-                          << colorChangeCommand.getLightColor().toVec3().y << ", "
-                          << colorChangeCommand.getLightColor().toVec3().z << ")" << std::endl;
                 light_.color =
                         colorChangeCommand.getLightColor().toVec3();
             }break;
