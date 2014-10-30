@@ -112,7 +112,7 @@ class Server : public Lockable
         /***
          * 2. Destruction
          ***/
-        ~Server();
+        ~Server() = default;
 
 
         /***

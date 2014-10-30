@@ -87,16 +87,6 @@ void Server::initUserColors()
 
 
 /***
- * 2. Destruction
- ***/
-
-Server::~Server()
-{
-    // TODO: Disconnect?
-}
-
-
-/***
  * 3. Main loop
  ***/
 
