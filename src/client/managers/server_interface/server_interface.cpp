@@ -152,28 +152,35 @@ void ServerInterface::onSceneUpdatePacketReceived( const boost::system::error_co
 {
     lock();
 
-    if( errorCode ){
-        log_->error( "Error when receiving packet: ", errorCode.message(), "\n" );
-        return;
+    try {
+        if( errorCode ){
+            throw std::runtime_error(
+                        std::string( "Error when receiving packet: " ) +
+                        errorCode.message() +
+                        "\n"
+                        );
+        }
+
+        const CommandsList* sceneCommands = nullptr;
+
+        SceneUpdatePacket* sceneUpdate = dynamic_cast< SceneUpdatePacket *>( packet.get() );
+        //const UserConnectionCommand* userConnectedCommand = nullptr;
+
+        if( !sceneUpdate ){
+            throw std::runtime_error( std::string( "ERROR in \"onSceneUpdatePacketReceived\": not a SCENE_UPDATE packet" ) );
+        }
+
+        log_->debug( "Scene update received with nCommands: ", sceneUpdate->getCommands()->size(), "\n" );
+
+        sceneCommands = sceneUpdate->getCommands();
+        for( const auto& command : *sceneCommands ){
+            emit commandReceived( std::shared_ptr< const Command >( command->clone() ) );
+        }
+
+        listen();
+    }catch( std::runtime_error& ){
+        lastException_ = std::current_exception();
     }
-
-    const CommandsList* sceneCommands = nullptr;
-
-    SceneUpdatePacket* sceneUpdate = dynamic_cast< SceneUpdatePacket *>( packet.get() );
-    //const UserConnectionCommand* userConnectedCommand = nullptr;
-
-    if( !sceneUpdate ){
-        throw std::runtime_error( std::string( "ERROR in \"onSceneUpdatePacketReceived\": not a SCENE_UPDATE packet" ) );
-    }
-
-    log_->debug( "Scene update received with nCommands: ", sceneUpdate->getCommands()->size(), "\n" );
-
-    sceneCommands = sceneUpdate->getCommands();
-    for( const auto& command : *sceneCommands ){
-        emit commandReceived( std::shared_ptr< const Command >( command->clone() ) );
-    }
-
-    listen();
 }
 
 
@@ -181,14 +188,21 @@ void ServerInterface::onSceneUpdatePacketSended( const boost::system::error_code
 {
     lock();
 
-    if( errorCode ){
-        log_->error( "Error when sending packet: ", errorCode.message(), "\n" );
-        return;
+    try {
+        if( errorCode ){
+            throw std::runtime_error(
+                        std::string( "Error when sending packet: " ) +
+                        errorCode.message() +
+                        "\n"
+                        );
+        }
+
+        log_->debug( "SCENE_UPDATE sent to the server - nCommands ", ( dynamic_cast< const SceneUpdatePacket* >( packet.get() ) )->getCommands()->size(), "\n" );
+
+        setTimer();
+    }catch( std::exception& ){
+        lastException_ = std::current_exception();
     }
-
-    log_->debug( "SCENE_UPDATE sent to the server - nCommands ", ( dynamic_cast< const SceneUpdatePacket* >( packet.get() ) )->getCommands()->size(), "\n" );
-
-    setTimer();
 }
 
 
@@ -199,6 +213,11 @@ void ServerInterface::onSceneUpdatePacketSended( const boost::system::error_code
 void ServerInterface::sendCommand( CommandConstPtr sceneCommand )
 {
     lock();
+
+    if( lastException_ ){
+        std::rethrow_exception( lastException_ );
+    }
+
     // Queue the new scene command.
     sceneCommandsToServer_.push( std::move( sceneCommand ) );
 }

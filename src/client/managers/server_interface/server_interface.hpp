@@ -64,6 +64,8 @@ class ServerInterface : public QObject, public Lockable
 
         boost::thread_group workerThreads_;
 
+        std::exception_ptr lastException_;
+
     public:
         /***
          * 1. Construction

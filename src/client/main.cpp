@@ -21,8 +21,7 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include <QGuiApplication>
-#include <QApplication>
+#include <client/gui/application.hpp>
 #include "gui/main_window.hpp"
 #include "gui/connection_wizard/connection_wizard.hpp"
 #include "managers/como_app.hpp"
@@ -46,7 +45,7 @@ int main( int argc, char *argv[] )
     boost::system::error_code errorCode;
 
     // Create a Qt application.
-    QApplication app( argc, argv );
+    como::Application app( argc, argv );
 
     // Variable argv[0] contains the std::string used for invoking this program
     // We now retrieve the basename of that std::string for getting a

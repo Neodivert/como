@@ -133,7 +133,8 @@ HEADERS += \
     ../../src/client/managers/managers/cameras/cameras_manager.hpp \
     ../../src/client/managers/selections/cameras/cameras_selection.hpp \
     ../../src/client/managers/selections/cameras/local_cameras_selection.hpp \
-    ../../src/client/models/3d/auxiliar_lines_renderer.hpp
+    ../../src/client/models/3d/auxiliar_lines_renderer.hpp \
+    ../../src/client/gui/application.hpp
 
 
 # Client sources
@@ -219,4 +220,5 @@ SOURCES += \
     ../../src/client/managers/managers/cameras/cameras_manager.cpp \
     ../../src/client/managers/selections/cameras/cameras_selection.cpp \
     ../../src/client/managers/selections/cameras/local_cameras_selection.cpp \
-    ../../src/client/models/3d/auxiliar_lines_renderer.cpp
+    ../../src/client/models/3d/auxiliar_lines_renderer.cpp \
+    ../../src/client/gui/application.cpp
