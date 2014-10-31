@@ -81,7 +81,7 @@ void SpheresFactory::generateVerticesPositionsAndUV(std::vector<glm::vec3> &posi
     float currentRadius;
     float currentY;
 
-    const float DELTA_ANGLE = glm::pi<float>() / (sphereNDivisions_ - 1);
+    const float DELTA_ANGLE = glm::pi<float>() / ( sphereNDivisions_ - 1 );
     const float DELTA_UV = 1.0f / (float)sphereNDivisions_;
     float currentAngle = 0.0f;
 
@@ -159,7 +159,7 @@ void SpheresFactory::createSphere(const ResourceID &sphereID, const ResourceID &
 void SpheresFactory::generateHorizontalCircleVertices(std::vector<glm::vec3>& vertices, float radius, unsigned int nDivisions, float y)
 {
     unsigned int i = 0;
-    const float DELTA_ANGLE = ( 2.0f * glm::pi<float>() ) / ( (float)nDivisions - 1 );
+    const float DELTA_ANGLE = ( 2.0f * glm::pi<float>() ) / (float)nDivisions;
     float currentAngle = 0.0f;
 
     for( i = 0; i < nDivisions; i++ ){
