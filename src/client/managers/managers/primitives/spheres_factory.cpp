@@ -81,7 +81,7 @@ void SpheresFactory::generateVerticesPositionsAndUV(std::vector<glm::vec3> &posi
     float currentRadius;
     float currentY;
 
-    const float DELTA_ANGLE = glm::pi<float>() / sphereNDivisions_;
+    const float DELTA_ANGLE = glm::pi<float>() / (sphereNDivisions_ - 1);
     const float DELTA_UV = 1.0f / (float)sphereNDivisions_;
     float currentAngle = 0.0f;
 
