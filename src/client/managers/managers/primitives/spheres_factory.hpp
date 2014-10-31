@@ -81,9 +81,10 @@ class SpheresFactory : public SpecializedSystemPrimitivesFactory
          * 8. Auxiliar methods
          ***/
         void generateHorizontalCircleVertices( std::vector< glm::vec3 >& vertices, float radius, unsigned int nDivisions, float y );
-        void generateTriangles( SystemPrimitiveData& primitiveData, unsigned int firstCircleStartIndex, unsigned int secondCircleStartIndex, unsigned int nDivisions );
-        void generatePositionTriangles( std::vector< IndicesTriangle >& triangles, unsigned int firstCircleStartIndex, unsigned int secondCircleStartIndex, unsigned int nDivisions );
-        void generateUVTriangles( std::vector< IndicesTriangle >& triangles, unsigned int firstCircleStartIndex, unsigned int secondCircleStartIndex, unsigned int nDivisions );
+        void generateHorizontalCircleUV(std::vector<glm::vec2> &uvCoordinates, unsigned int nDivisions, float y);
+        void generateTriangles( SystemPrimitiveData& primitiveData, unsigned int firstCircleIndex, unsigned int nDivisions );
+        void generatePositionTriangles( std::vector< IndicesTriangle >& triangles, unsigned int firstCircleIndex, unsigned int nDivisions );
+        void generateUVTriangles( std::vector< IndicesTriangle >& triangles, unsigned int firstCircleIndex, unsigned int nDivisions );
         unsigned int nExpectedVertices() const;
         unsigned int nExpectedTriangles() const;
 
