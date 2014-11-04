@@ -70,7 +70,6 @@ class SystemMesh : public Mesh
         SystemMesh& operator = ( SystemMesh&& ) = delete;
 
     private:
-        std::vector< Texture > textures_;
         std::vector< TrianglesGroupWithTextureWall > trianglesGroups_;
 
         static TextureWallsManager* textureWallsManager_;
