@@ -24,16 +24,16 @@
 #include <common/commands/material_commands/material_commands.hpp>
 #include <functional>
 #include <common/utilities/observer_pattern/observable.hpp>
+#include <client/managers/utilities/server_writer.hpp>
 
 namespace como {
 
 // TODO: Inherit this class and Material from a common MaterialInterface.
-class MaterialHandler : public Observable
+class MaterialHandler : public ServerWriter, public Observable
 {
     private:
         ResourceID materialID_; // TODO: Remove this attribute and use material_->id() instead.
         MaterialPtr material_;
-        ServerInterfacePtr server_;
 
     public:
         /***
@@ -77,7 +77,7 @@ class MaterialHandler : public Observable
          * 3. Operators
          ***/
         MaterialHandler& operator = ( const MaterialHandler& ) = delete;
-        MaterialHandler& operator = ( MaterialHandler&& );
+        MaterialHandler& operator = ( MaterialHandler&& ) = default;
 };
 
 typedef std::shared_ptr< MaterialHandler > MaterialHandlerPtr;

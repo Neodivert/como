@@ -25,16 +25,16 @@ namespace como {
  ***/
 
 MaterialHandler::MaterialHandler( ResourceID materialID, MaterialPtr material, ServerInterfacePtr server ) :
+    ServerWriter( server ),
     materialID_( materialID ),
-    material_( material ),
-    server_( server )
+    material_( material )
 {}
 
 
 MaterialHandler::MaterialHandler( MaterialHandler&& b ) :
+    ServerWriter( b.server() ),
     materialID_( b.materialID_ ),
-    material_( b.material_ ),
-    server_( b.server_ )
+    material_( b.material_ )
 {}
 
 
@@ -88,7 +88,7 @@ void MaterialHandler::setColor( const Color& color )
 {
     material_->setColor( color );
 
-    server_->sendCommand( CommandConstPtr( new MaterialColorChangeCommand( server_->getLocalUserID(), materialID_, color ) ) );
+    sendCommandToServer( CommandConstPtr( new MaterialColorChangeCommand( localUserID(), materialID_, color ) ) );
 
     notifyObservers();
 }
@@ -97,7 +97,7 @@ void MaterialHandler::setAmbientReflectivity( const Color& ambientReflectivity )
 {
     material_->setAmbientReflectivity( ambientReflectivity );
 
-    server_->sendCommand( CommandConstPtr( new MaterialAmbientReflectivityChangeCommand( server_->getLocalUserID(), materialID_, ambientReflectivity ) ) );
+    sendCommandToServer( CommandConstPtr( new MaterialAmbientReflectivityChangeCommand( localUserID(), materialID_, ambientReflectivity ) ) );
 
     notifyObservers();
 }
@@ -106,7 +106,7 @@ void MaterialHandler::setDiffuseReflectivity( const Color& diffuseReflectivity )
 {
     material_->setDiffuseReflectivity( diffuseReflectivity );
 
-    server_->sendCommand( CommandConstPtr( new MaterialDiffuseReflectivityChangeCommand( server_->getLocalUserID(), materialID_, diffuseReflectivity ) ) );
+    sendCommandToServer( CommandConstPtr( new MaterialDiffuseReflectivityChangeCommand( localUserID(), materialID_, diffuseReflectivity ) ) );
 
     notifyObservers();
 }
@@ -115,7 +115,7 @@ void MaterialHandler::setSpecularReflectivity( const Color& specularReflectivity
 {
     material_->setSpecularReflectivity( specularReflectivity );
 
-    server_->sendCommand( CommandConstPtr( new MaterialSpecularReflectivityChangeCommand( server_->getLocalUserID(), materialID_, specularReflectivity ) ) );
+    sendCommandToServer( CommandConstPtr( new MaterialSpecularReflectivityChangeCommand( localUserID(), materialID_, specularReflectivity ) ) );
 
     notifyObservers();
 }
@@ -124,23 +124,9 @@ void MaterialHandler::setSpecularExponent( float specularExponent )
 {
     material_->setSpecularExponent( specularExponent );
 
-    server_->sendCommand( CommandConstPtr( new MaterialSpecularExponentChangeCommand( server_->getLocalUserID(), materialID_, specularExponent ) ) );
+    sendCommandToServer( CommandConstPtr( new MaterialSpecularExponentChangeCommand( localUserID(), materialID_, specularExponent ) ) );
 
     notifyObservers();
-}
-
-
-/***
- * 3. Operators
- ***/
-
-MaterialHandler& MaterialHandler::operator = ( MaterialHandler&& b )
-{
-    materialID_ = b.materialID_;
-    material_ = b.material_;
-    server_ = b.server_;
-
-    return *this;
 }
 
 } // namespace como
