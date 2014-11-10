@@ -116,7 +116,7 @@ bool CreateServerPage::validatePage()
 
     log_->debug( serverCommand );
 
-    QProcess::execute( serverCommand );
+    QProcess::startDetached( serverCommand );
 
     QMessageBox::information( nullptr, "Server created", "The server has been created" );
 
