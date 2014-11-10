@@ -19,7 +19,7 @@ By now, COMO allows users to have fun with meshes and simple materials :). Each 
 ### Dependencies
 COMO makes use of the following APIs and libraries:
 * Qt v5.2.1
-* Boost v1.55 (boost_system, boost_thread and boost_filesystem).
+* Boost v1.55 (boost_system, boost_thread, boost_filesystem and boost_asio).
 * OpenGL v4.2 and GLSL.
 * GLM v0.9.5.1
 * SDL2_image
