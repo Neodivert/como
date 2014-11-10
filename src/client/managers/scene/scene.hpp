@@ -33,7 +33,7 @@
 #include <common/scene/basic_scene.hpp>
 #include <client/managers/managers/entities/entities_manager.hpp>
 #include <client/managers/managers/users/users_manager.hpp>
-#include <client/managers/managers/primitives/geometry_primitives_factory.hpp>
+#include <client/managers/managers/primitives/system_primitives_factory.hpp>
 #include <client/managers/managers/textures/texture_walls_manager.hpp>
 #include <client/models/3d/auxiliar_lines_renderer.hpp>
 #include <memory> // std::shared_ptr

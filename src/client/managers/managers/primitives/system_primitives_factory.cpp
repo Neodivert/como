@@ -16,7 +16,7 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "geometry_primitives_factory.hpp"
+#include "system_primitives_factory.hpp"
 
 namespace como {
 
@@ -25,7 +25,7 @@ namespace como {
  * 1. Construction
  ***/
 
-GeometricPrimitivesFactory::GeometricPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager* textureWallsManager ) :
+SystemPrimitivesFactory::SystemPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager* textureWallsManager ) :
     ServerWriter( server ),
     cubesFactory_( server, meshesManager, materialsManager, textureWallsManager ),
     conesFactory_( server, meshesManager, materialsManager, textureWallsManager ),
@@ -40,28 +40,28 @@ GeometricPrimitivesFactory::GeometricPrimitivesFactory( ServerInterfacePtr serve
  * 3. Geometry primitives creation
  ***/
 
-ResourceID GeometricPrimitivesFactory::createCube( float width, float height, float depth )
+ResourceID SystemPrimitivesFactory::createCube( float width, float height, float depth )
 {
     lock();
     return cubesFactory_.createCube( width, height, depth );
 }
 
 
-ResourceID GeometricPrimitivesFactory::createCone( float height, float radius, std::uint16_t nBaseVertices )
+ResourceID SystemPrimitivesFactory::createCone( float height, float radius, std::uint16_t nBaseVertices )
 {
     lock();
     return conesFactory_.createCone( height, radius, nBaseVertices );
 }
 
 
-ResourceID GeometricPrimitivesFactory::createCylinder( float height, float radius, std::uint16_t nRadialVertices )
+ResourceID SystemPrimitivesFactory::createCylinder( float height, float radius, std::uint16_t nRadialVertices )
 {
     lock();
     return cylindersFactory_.createCylinder( height, radius, nRadialVertices );
 }
 
 
-ResourceID GeometricPrimitivesFactory::createSphere( float radius, std::uint16_t nDivisions )
+ResourceID SystemPrimitivesFactory::createSphere( float radius, std::uint16_t nDivisions )
 {
     lock();
     return spheresFactory_.createSphere( radius, nDivisions );
@@ -72,7 +72,7 @@ ResourceID GeometricPrimitivesFactory::createSphere( float radius, std::uint16_t
  * 4. Command execution
  ***/
 
-void GeometricPrimitivesFactory::executeRemoteCommand( const GeometricPrimitiveCommand& command )
+void SystemPrimitivesFactory::executeRemoteCommand( const GeometricPrimitiveCommand& command )
 {
     lock();
     switch( command.getType() ){

@@ -16,8 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef GEOMETRY_PRIMITIVES_FACTORY_HPP
-#define GEOMETRY_PRIMITIVES_FACTORY_HPP
+#ifndef SYSTEM_PRIMITIVES_FACTORY_HPP
+#define SYSTEM_PRIMITIVES_FACTORY_HPP
 
 #include <client/managers/utilities/server_writer.hpp>
 #include <client/managers/managers/primitives/cubes_factory.hpp>
@@ -28,25 +28,25 @@
 
 namespace como {
 
-class GeometricPrimitivesFactory;
-typedef std::shared_ptr< GeometricPrimitivesFactory > GeometricPrimitivesFactoryPtr;
+class SystemPrimitivesFactory;
+typedef std::shared_ptr< SystemPrimitivesFactory > GeometricPrimitivesFactoryPtr;
 
-class GeometricPrimitivesFactory : public ServerWriter, public Lockable
+class SystemPrimitivesFactory : public ServerWriter, public Lockable
 {
     public:
         /***
          * 1. Construction
          ***/
-        GeometricPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager* textureWallsManager );
-        GeometricPrimitivesFactory() = delete;
-        GeometricPrimitivesFactory( const GeometricPrimitivesFactory& ) = delete;
-        GeometricPrimitivesFactory( GeometricPrimitivesFactory&& ) = delete;
+        SystemPrimitivesFactory( ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, TextureWallsManager* textureWallsManager );
+        SystemPrimitivesFactory() = delete;
+        SystemPrimitivesFactory( const SystemPrimitivesFactory& ) = delete;
+        SystemPrimitivesFactory( SystemPrimitivesFactory&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~GeometricPrimitivesFactory() = default;
+        ~SystemPrimitivesFactory() = default;
 
 
         /***
@@ -67,8 +67,8 @@ class GeometricPrimitivesFactory : public ServerWriter, public Lockable
         /***
          * 5. Operators
          ***/
-        GeometricPrimitivesFactory& operator = ( const GeometricPrimitivesFactory& ) = delete;
-        GeometricPrimitivesFactory& operator = ( GeometricPrimitivesFactory&& ) = delete;
+        SystemPrimitivesFactory& operator = ( const SystemPrimitivesFactory& ) = delete;
+        SystemPrimitivesFactory& operator = ( SystemPrimitivesFactory&& ) = delete;
 
 
     private:
@@ -81,4 +81,4 @@ class GeometricPrimitivesFactory : public ServerWriter, public Lockable
 
 } // namespace como
 
-#endif // GEOMETRY_PRIMITIVES_FACTORY_HPP
+#endif // SYSTEM_PRIMITIVES_FACTORY_HPP

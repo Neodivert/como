@@ -114,7 +114,6 @@ HEADERS += \
     ../../src/client/gui/materials/materials_list_widget.hpp \
     ../../src/client/managers/managers/primitives/specialized_system_primitives_factory.hpp \
     ../../src/client/managers/managers/primitives/cubes_factory.hpp \
-    ../../src/client/managers/managers/primitives/geometry_primitives_factory.hpp \
     ../../src/client/gui/tools_menu/geometric_primitives_creation_menu.hpp \
     ../../src/client/models/3d/textures/texture_wall.hpp \
     ../../src/client/managers/managers/textures/textures_manager.hpp \
@@ -134,7 +133,8 @@ HEADERS += \
     ../../src/client/managers/selections/cameras/cameras_selection.hpp \
     ../../src/client/managers/selections/cameras/local_cameras_selection.hpp \
     ../../src/client/models/3d/auxiliar_lines_renderer.hpp \
-    ../../src/client/gui/application.hpp
+    ../../src/client/gui/application.hpp \
+    ../../src/client/managers/managers/primitives/system_primitives_factory.hpp
 
 
 # Client sources
@@ -202,7 +202,6 @@ SOURCES += \
     ../../src/client/gui/materials/materials_list_widget.cpp \
     ../../src/client/managers/managers/primitives/specialized_system_primitives_factory.cpp \
     ../../src/client/managers/managers/primitives/cubes_factory.cpp \
-    ../../src/client/managers/managers/primitives/geometry_primitives_factory.cpp \
     ../../src/client/gui/tools_menu/geometric_primitives_creation_menu.cpp \
     ../../src/client/managers/managers/textures/textures_manager.cpp \
     ../../src/client/models/3d/meshes/triangles_group_with_texture_wall.cpp \
@@ -221,4 +220,5 @@ SOURCES += \
     ../../src/client/managers/selections/cameras/cameras_selection.cpp \
     ../../src/client/managers/selections/cameras/local_cameras_selection.cpp \
     ../../src/client/models/3d/auxiliar_lines_renderer.cpp \
-    ../../src/client/gui/application.cpp
+    ../../src/client/gui/application.cpp \
+    ../../src/client/managers/managers/primitives/system_primitives_factory.cpp

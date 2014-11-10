@@ -21,7 +21,7 @@
 
 #include <QPushButton>
 #include <QFrame>
-#include <client/managers/managers/primitives/geometry_primitives_factory.hpp>
+#include <client/managers/managers/primitives/system_primitives_factory.hpp>
 
 namespace como {
 
