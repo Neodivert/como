@@ -47,14 +47,13 @@ class ClientPrimitivesManager : public QOffscreenSurface, public AbstractPrimiti
         ServerInterfacePtr server_;
 
         MeshesManagerPtr meshesManager_;
-        MaterialsManagerPtr materialsManager_;
 
     public:
         /***
          * 1. Construction
          ***/
         ClientPrimitivesManager() = delete;
-        ClientPrimitivesManager( std::string sceneDirPath, std::string sceneTempDirPath, ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, LogPtr log );
+        ClientPrimitivesManager( std::string sceneDirPath, std::string sceneTempDirPath, ServerInterfacePtr server, MeshesManagerPtr meshesManager, LogPtr log );
         ClientPrimitivesManager( const ClientPrimitivesManager& ) = delete;
         ClientPrimitivesManager( ClientPrimitivesManager&& ) = delete;
 

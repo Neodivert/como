@@ -27,11 +27,10 @@ namespace como {
  * 1. Construction
  ***/
 
-ClientPrimitivesManager::ClientPrimitivesManager( std::string sceneDirPath, std::string sceneTempDirPath, ServerInterfacePtr server, MeshesManagerPtr meshesManager, MaterialsManagerPtr materialsManager, LogPtr log ) :
+ClientPrimitivesManager::ClientPrimitivesManager( std::string sceneDirPath, std::string sceneTempDirPath, ServerInterfacePtr server, MeshesManagerPtr meshesManager, LogPtr log ) :
     AbstractPrimitivesManager( sceneDirPath, sceneTempDirPath, log ),
     server_( server ),
-    meshesManager_( meshesManager ),
-    materialsManager_( materialsManager )
+    meshesManager_( meshesManager )
 {}
 
 
@@ -114,7 +113,6 @@ void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID pr
 
     primitiveData.importFromFile( getPrimitiveFilePath( primitiveID ) );
 
-    //materialsManager_->createMaterials( primitiveData.materialsInfo_, materialID, meshID );
     meshesManager_->createMesh( primitiveData, meshID, firstMaterialID );
 }
 

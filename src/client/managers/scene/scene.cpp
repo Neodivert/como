@@ -144,7 +144,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         geometricPrimitivesFactory_ = GeometricPrimitivesFactoryPtr( new SystemPrimitivesFactory( server_, entitiesManager_->getMeshesManager(), materialsManager_, textureWallsManager_.get() ) );
 
         // Initialize the primitives manager.
-        primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, entitiesManager_->getMeshesManager(), materialsManager_, log_ ) );
+        primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, entitiesManager_->getMeshesManager(), log_ ) );
 
         localUserConnectionCommand_ = UserConnectionCommandConstPtr( new UserConnectionCommand( userAcceptancePacket ) );
     }catch( std::exception& ex ){
