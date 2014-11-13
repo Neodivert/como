@@ -37,7 +37,7 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer, public Lo
         EntitiesSelection( LightsSelection* lightsSelection,
                            MeshesSelection* meshesSelection,
                            CamerasSelection* camerasSelection,
-                           PivotPointMode pivotPointMode = PivotPointMode::MEDIAN_POINT );
+                           PivotPointMode pivotPointMode = PivotPointMode::SELECTION_CENTROID );
         EntitiesSelection() = delete;
         EntitiesSelection( const EntitiesSelection& ) = delete;
         EntitiesSelection( EntitiesSelection&& ) = delete;

@@ -41,7 +41,7 @@ glm::vec3 LocalEntitiesSelection::graphicPivotPoint() const
     lock();
     switch( pivotPointMode() ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
-        case PivotPointMode::MEDIAN_POINT:
+        case PivotPointMode::SELECTION_CENTROID:
             return centroid();
         break;
         default:
@@ -175,7 +175,7 @@ void LocalEntitiesSelection::rotate( GLfloat angle, glm::vec3 axis )
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
             rotateAroundIndividualCentroids( angle, axis );
         break;
-        case PivotPointMode::MEDIAN_POINT:
+        case PivotPointMode::SELECTION_CENTROID:
             rotateAroundPivot( angle, axis, centroid() );
         break;
         case PivotPointMode::WORLD_ORIGIN:
@@ -192,7 +192,7 @@ void LocalEntitiesSelection::scale( glm::vec3 scaleFactors )
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
             scaleAroundIndividualCentroids( scaleFactors );
         break;
-        case PivotPointMode::MEDIAN_POINT:
+        case PivotPointMode::SELECTION_CENTROID:
             scaleAroundPivot( scaleFactors, centroid() );
         break;
         case PivotPointMode::WORLD_ORIGIN:

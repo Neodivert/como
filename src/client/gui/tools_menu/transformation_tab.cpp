@@ -45,8 +45,8 @@ QComboBox* TransformationTab::createPivotPointModeSelector( LocalEntitiesSelecti
     const unsigned int N_PIVOT_POINT_MODES = 3;
     const char pivotPointModeStrings[N_PIVOT_POINT_MODES][32] =
     {
-         "Median Point",
-         "Individual Centroid",
+         "Selection's centroid",
+         "Individual centroids",
          "World origin"
     };
 

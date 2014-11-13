@@ -28,7 +28,7 @@ UserParameterChangeCommand::UserParameterChangeCommand( UserID userID ) :
     UserCommand( UserCommandType::PARAMETER_CHANGE, userID ),
     parameterType_( ParameterType::PIVOT_POINT_MODE )
 {
-    pivotPointMode_ = PivotPointMode::MEDIAN_POINT;
+    pivotPointMode_ = PivotPointMode::SELECTION_CENTROID;
 
     addPackable( &parameterType_ );
     addPackable( &pivotPointMode_ );
