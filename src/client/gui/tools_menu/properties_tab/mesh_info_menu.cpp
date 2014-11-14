@@ -18,6 +18,7 @@
 
 #include <QRadioButton>
 #include <QFormLayout>
+#include <QLabel>
 #include "mesh_info_menu.hpp"
 
 
@@ -35,6 +36,7 @@ MeshInfoMenu::MeshInfoMenu( LocalMeshesSelection* userSelection ) :
     // Set this widget's layout.
     QFormLayout* layout = new QFormLayout;
     layout->setRowWrapPolicy( QFormLayout::WrapAllRows );
+    layout->addWidget( new QLabel( "Meshes panel" ) );
     layout->addWidget( displayVertexNormalsCheckBox_ );
     setLayout( layout );
 

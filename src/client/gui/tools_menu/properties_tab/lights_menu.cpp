@@ -36,8 +36,8 @@ LightsMenu::LightsMenu( LocalLightsSelection* lights ) :
     lightAmbientCoefficientSpinBox_->setValue( 0.05f );
 
     // Set this panel's layout.
-    layout->addWidget( new QLabel( "MeshLight panel" ) );
-    layout->addRow( "MeshLight color", lightColorButton_ );
+    layout->addWidget( new QLabel( "Lights panel" ) );
+    layout->addRow( "Light color", lightColorButton_ );
     layout->addRow( "Ambient coefficient", lightAmbientCoefficientSpinBox_ );
     setLayout( layout );
 
