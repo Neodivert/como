@@ -26,7 +26,7 @@ namespace como {
 GLint Viewport::viewProjectionMatrixLocation = -1;
 
 const float ORTHO_CUBE_SIDE = 2.0f;
-const float Z_NEAR = 0.00001f;
+const float Z_NEAR = 0.01f;
 const float Z_FAR = 100.0f;
 
 
