@@ -112,10 +112,10 @@ void SpheresFactory::generateVerticesPositionsAndUV(std::vector<glm::vec3> &posi
 
 void SpheresFactory::generateWalls(SystemPrimitiveData &primitiveData)
 {
-    unsigned int currentDivision;
+    int currentDivision;
 
     // Generate the triangles of the sphere (positions and UV).
-    for( currentDivision = 0; currentDivision < sphereNDivisions_; currentDivision++ ){
+    for( currentDivision = 0; currentDivision < sphereNDivisions_ - 1; currentDivision++ ){
         generateTriangles( primitiveData,
                            currentDivision,
                            sphereNDivisions_ );
@@ -289,7 +289,7 @@ unsigned int SpheresFactory::nExpectedVertices() const
 
 unsigned int SpheresFactory::nExpectedTriangles() const
 {
-    return sphereNDivisions_ * sphereNDivisions_ * 2;
+    return sphereNDivisions_ * ( sphereNDivisions_ - 1 ) * 2;
 }
 
 } // namespace como
