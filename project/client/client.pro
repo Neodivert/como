@@ -134,7 +134,8 @@ HEADERS += \
     ../../src/client/managers/selections/cameras/local_cameras_selection.hpp \
     ../../src/client/models/3d/auxiliar_lines_renderer.hpp \
     ../../src/client/gui/application.hpp \
-    ../../src/client/managers/managers/primitives/system_primitives_factory.hpp
+    ../../src/client/managers/managers/primitives/system_primitives_factory.hpp \
+    ../../src/client/models/3d/materials/abstract_material.hpp
 
 
 # Client sources

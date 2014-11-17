@@ -29,7 +29,7 @@
 namespace como {
 
 // TODO: Inherit this class and Material from a common MaterialInterface.
-class MaterialHandler : public ServerWriter, public Observable
+class MaterialHandler : public ServerWriter, public Observable, public AbstractMaterial
 {
     private:
         ResourceID materialID_; // TODO: Remove this attribute and use material_->id() instead.
@@ -56,21 +56,21 @@ class MaterialHandler : public ServerWriter, public Observable
          ***/
         ResourceID getID() const;
         std::string getName() const;
-        Color getColor() const;
-        Color getAmbientReflectivity() const;
-        Color getDiffuseReflectivity() const;
-        Color getSpecularReflectivity() const;
-        float getSpecularExponent() const;
+        virtual Color getColor() const;
+        virtual Color getAmbientReflectivity() const;
+        virtual Color getDiffuseReflectivity() const;
+        virtual Color getSpecularReflectivity() const;
+        virtual float getSpecularExponent() const;
 
 
         /***
          * 4. Setters
          ***/
-        void setColor( const Color& color );
-        void setAmbientReflectivity( const Color& ambientReflectivity );
-        void setDiffuseReflectivity( const Color& diffuseReflectivity );
-        void setSpecularReflectivity( const Color& specularReflectivity );
-        void setSpecularExponent( float specularExponent );
+        virtual void setColor( const Color& color );
+        virtual void setAmbientReflectivity( const Color& ambientReflectivity );
+        virtual void setDiffuseReflectivity( const Color& diffuseReflectivity );
+        virtual void setSpecularReflectivity( const Color& specularReflectivity );
+        virtual void setSpecularExponent( float specularExponent );
 
 
         /***

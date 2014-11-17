@@ -26,10 +26,11 @@
 #include <common/resources/resource.hpp>
 #include <glm/vec4.hpp>
 #include <glm/vec3.hpp>
+#include "abstract_material.hpp"
 
 namespace como {
 
-class Material : public Resource
+class Material : public Resource, public AbstractMaterial
 {
     private:
         glm::vec4 color_;
@@ -61,22 +62,22 @@ class Material : public Resource
         /***
          * 3. Getters
          ***/
-        Color getColor() const;
-        Color getAmbientReflectivity() const;
-        Color getDiffuseReflectivity() const;
-        Color getSpecularReflectivity() const;
-        float getSpecularExponent() const;
+        virtual Color getColor() const;
+        virtual Color getAmbientReflectivity() const;
+        virtual Color getDiffuseReflectivity() const;
+        virtual Color getSpecularReflectivity() const;
+        virtual float getSpecularExponent() const;
         virtual std::string typeName() const;
 
 
         /***
          * 4. Setters
          ***/
-        void setColor( const Color& color );
-        void setAmbientReflectivity( const Color& ambientReflectivity );
-        void setDiffuseReflectivity( const Color& diffuseReflectivity );
-        void setSpecularReflectivity( const Color& specularReflectivity );
-        void setSpecularExponent( float specularExponent );
+        virtual void setColor( const Color& color );
+        virtual void setAmbientReflectivity( const Color& ambientReflectivity );
+        virtual void setDiffuseReflectivity( const Color& diffuseReflectivity );
+        virtual void setSpecularReflectivity( const Color& specularReflectivity );
+        virtual void setSpecularExponent( float specularExponent );
 
 
         /***
