@@ -6,17 +6,10 @@ COMO is a project which aims to create a Cooperative Modeller, where users could
 * An online modelling course. Teacher can chat with his/her students and teach them how to create the model while doing it. When finished, students can try to make their own models while the teacher supervises the process.
 * A team working on a map for a videogame. Main designer can sketch the world while the others see it. When finished, the main designer assignes each part of the map to a junior designer, so all can work in parallel while seeing how the whole map envolves.
 
-## Roadmap
-The proyect will be developed through prototypes.
+[Check our COMO's wiki](https://github.com/moisesjbc/como/wiki) for learning what you can do with COMO and how to do it.
 
-### Current status
-By now, COMO allows users to have fun with meshes and simple materials :). Each user can do the following things and the others will see it:
-* Creating, selecting and deleting meshes.
-* Translating, rotating and scalling selections of meshes. The rotations and scales can be made relative to three different pivot points: selection centroid, individual origins and world origin.
-* Editing mesh's materials (one material per mesh).
-* Rotating a single directional light.
 
-### Dependencies
+## Dependencies
 COMO makes use of the following APIs and libraries:
 * Qt v5.2.1
 * Boost v1.55 (boost_system, boost_thread, boost_filesystem and boost_asio).
