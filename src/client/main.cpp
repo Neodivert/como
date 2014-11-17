@@ -54,8 +54,8 @@ int main( int argc, char *argv[] )
     // to the same directory where the symlink resides, not to the same
     // directory where the actual executable resides.
     // (The same for server program).
-    std::string programRelativePath( argv[0] );
-    programRelativePath = programRelativePath.substr( 0, programRelativePath.rfind( "/" ) );
+    std::string programRelativePath =
+            boost::filesystem::path( argv[0] ).parent_path().string();
 
     // Change directory so now we are in the same directory as the client
     // executable (we need this because this program uses relative paths).
