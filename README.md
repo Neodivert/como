@@ -6,7 +6,7 @@ COMO is a project which aims to create a Cooperative Modeller, where users could
 * An online modelling course. Teacher can chat with his/her students and teach them how to create the model while doing it. When finished, students can try to make their own models while the teacher supervises the process.
 * A team working on a map for a videogame. Main designer can sketch the world while the others see it. When finished, the main designer assignes each part of the map to a junior designer, so all can work in parallel while seeing how the whole map envolves.
 
-[Check our COMO's wiki](https://github.com/moisesjbc/como/wiki) for learning what you can do with COMO and how to do it.
+[Check COMO's wiki](https://github.com/moisesjbc/como/wiki) for learning what you can do with COMO and how to do it.
 
 
 ## Dependencies
