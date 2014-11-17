@@ -47,13 +47,19 @@ class TexturesGallery : public QListWidget, public Observer
 
 
         /***
-         * 3. Updating (observer pattern)
+         * 3. Getters
+         ***/
+        ResourceID currentTextureID() const;
+
+
+        /***
+         * 4. Updating (observer pattern)
          ***/
         virtual void update();
 
 
         /***
-         * 4. Operators
+         * 5. Operators
          ***/
         TexturesGallery& operator = ( const TexturesGallery& ) = delete;
         TexturesGallery& operator = ( TexturesGallery&& ) = delete;

@@ -48,7 +48,24 @@ TexturesGallery::TexturesGallery( TexturesManager* texturesManager ) :
 
 
 /***
- * 3. Updating (observer pattern)
+ * 3. Getters
+ ***/
+
+ResourceID TexturesGallery::currentTextureID() const
+{
+    if( currentRow() != -1 ){
+        TexturesGalleryItem* currentTextureItem =
+                dynamic_cast< TexturesGalleryItem* >( currentItem() );
+
+        return currentTextureItem->textureID();
+    }else{
+        return NO_RESOURCE;
+    }
+}
+
+
+/***
+ * 4. Updating (observer pattern)
  ***/
 
 void TexturesGallery::update()

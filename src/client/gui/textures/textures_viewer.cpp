@@ -33,8 +33,9 @@ namespace como {
 TexturesViewer::TexturesViewer( TexturesManager *texturesManager, QWidget* parent ) :
     QDialog( parent )
 {
-    QPushButton* loadTextureButton = new QPushButton( "Load new texture" );
+    QPushButton* applyTextureButton = new QPushButton( "Apply texture" );
     QPushButton* clearTextureButton = new QPushButton( "Clear texture" );
+    QPushButton* loadTextureButton = new QPushButton( "Load new texture" );
     QVBoxLayout* layout = new QVBoxLayout;
     TexturesGallery* texturesGallery = new TexturesGallery( texturesManager );
 
@@ -59,6 +60,13 @@ TexturesViewer::TexturesViewer( TexturesManager *texturesManager, QWidget* paren
         }
     });
 
+    // When user click on "apply texture", emit a signal "textureSelected".
+    QObject::connect( applyTextureButton,
+                      &QPushButton::pressed,
+                      [=](){
+        emit textureSelected( texturesGallery->currentTextureID() );
+    });
+
     // Whenever a "textureSelected" signal is received from TexturesGallery,
     // simply forward it to the outside.
     QObject::connect( texturesGallery,
@@ -77,6 +85,7 @@ TexturesViewer::TexturesViewer( TexturesManager *texturesManager, QWidget* paren
 
     // Set this widget's layout.
     layout->addWidget( texturesGallery );
+    layout->addWidget( applyTextureButton );
     layout->addWidget( clearTextureButton );
     layout->addWidget( loadTextureButton );
     setLayout( layout );
