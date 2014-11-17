@@ -55,7 +55,7 @@ class SystemPrimitivesFactory : public ServerWriter, public Lockable
         ResourceID createCube( float width = 1.0f, float height = 1.0f, float depth = 1.0f );
         ResourceID createCone( float height = 1.0f, float radius = 0.5f, std::uint16_t nBaseVertices = 32 );
         ResourceID createCylinder( float height = 1.0f, float radius = 0.5f, std::uint16_t nRadialVertices = 32 );
-        ResourceID createSphere( float radius = 1.0f, std::uint16_t nDivisions = 32 );
+        ResourceID createSphere( float radius = 0.5f, std::uint16_t nDivisions = 32 );
 
 
         /***
