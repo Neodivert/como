@@ -31,7 +31,7 @@ int main( int argc, char* argv[] )
 
     try {
         if( argc < 4 ){
-            std::cerr << "Usage: server <port> <max_users> <scene_name>" << std::endl;
+            std::cerr << "Usage: server <port> <max_users> <scene_name> [scene_load_file]" << std::endl;
             exit( -1 );
         }
 
