@@ -292,8 +292,7 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
     const float t = -( ( A * rayOrigin.x + B * rayOrigin.y + C * rayOrigin.z + D ) / ( A * rayDirection.x + B * rayDirection.y + C * rayDirection.z ) );
     const glm::vec3 currentMouseWorldPos = rayOrigin + rayDirection * t;
 
-    // TODO: Make this check unuseful.
-    if( std::isnan( D ) || std::isnan( t ) ){
+    if( !std::isfinite( D ) || !std::isfinite( t ) ){
         return;
     }
 
@@ -370,10 +369,9 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                                              currentMouseWorldRelPos.y / lastMouseWorldRelPos.y,
                                              currentMouseWorldRelPos.z / lastMouseWorldRelPos.z );
 
-                // TODO: Make this check unuseful.
-                if(     std::isnan( transformVector.x ) ||
-                        std::isnan( transformVector.y ) ||
-                        std::isnan( transformVector.z ) ){
+                if(     !std::isfinite( transformVector.x ) ||
+                        !std::isfinite( transformVector.y ) ||
+                        !std::isfinite( transformVector.z ) ){
                     break;
                 }
 
