@@ -40,7 +40,8 @@ ResourceID CylindersFactory::createCylinder( float height, float radius, std::ui
     const ResourceID materialID = reserveResourceIDs( 1 );
     const ResourceID firstTextureWallID = reserveResourceIDs( 3 );
 
-    createCylinder( meshID, materialID, firstTextureWallID, height, radius, nRadialVertices );
+    const glm::vec3 cylinderCentroid =
+            createCylinder( meshID, materialID, firstTextureWallID, height, radius, nRadialVertices );
 
     sendCommandToServer(
                 CommandConstPtr(
@@ -50,7 +51,8 @@ ResourceID CylindersFactory::createCylinder( float height, float radius, std::ui
                         firstTextureWallID,
                         height,
                         radius,
-                        nRadialVertices ) ) );
+                        nRadialVertices,
+                        cylinderCentroid ) ) );
 
     return meshID;
 }
@@ -194,7 +196,7 @@ void CylindersFactory::generateWalls( SystemPrimitiveData &primitiveData )
  * 7. Remote cylinders creation
  ***/
 
-void CylindersFactory::createCylinder( const ResourceID &cylinderID, const ResourceID &materialID, const ResourceID &firstTextureWallID, float height, float radius, std::uint16_t nRadialVertices )
+glm::vec3 CylindersFactory::createCylinder( const ResourceID &cylinderID, const ResourceID &materialID, const ResourceID &firstTextureWallID, float height, float radius, std::uint16_t nRadialVertices )
 {
     std::unique_ptr< Mesh > cylinder = nullptr;
 
@@ -203,12 +205,12 @@ void CylindersFactory::createCylinder( const ResourceID &cylinderID, const Resou
     cylinderNRadialVertices_ = nRadialVertices;
 
     cylinder = std::unique_ptr< Mesh >( new SystemMesh( cylinderID, materialID, firstTextureWallID, generatePrimitiveData(), *materialsManager_ ) );
-
-    // On this version of COMO, geometric primitives are synchronized as they
-    // had a centroid 0, so check that this is true.
-    assert( cylinder->centroid() == glm::vec3( 0.0f ) );
+    const glm::vec3 cylinderCentroid =
+            cylinder->getOriginalCentroid();
 
     meshesManager_->addMesh( std::move( cylinder ), cylinderID );
+
+    return cylinderCentroid;
 }
 
 } // namespace como

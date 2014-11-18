@@ -42,7 +42,8 @@ ResourceID SpheresFactory::createSphere( float radius, std::uint16_t nDivisions 
     const ResourceID materialID = reserveResourceIDs( 1 );
     const ResourceID firstTextureWallID = reserveResourceIDs( 1 );
 
-    createSphere( sphereID, materialID, firstTextureWallID, radius, nDivisions );
+    const glm::vec3 sphereCentroid =
+        createSphere( sphereID, materialID, firstTextureWallID, radius, nDivisions );
 
     sendCommandToServer(
                 CommandConstPtr(
@@ -51,7 +52,8 @@ ResourceID SpheresFactory::createSphere( float radius, std::uint16_t nDivisions 
                         materialID,
                         firstTextureWallID,
                         radius,
-                        nDivisions ) ) );
+                        nDivisions,
+                        sphereCentroid ) ) );
 
     return sphereID;
 }
@@ -135,7 +137,7 @@ void SpheresFactory::generateWalls(SystemPrimitiveData &primitiveData)
  * 7. Remote spheres creation
  ***/
 
-void SpheresFactory::createSphere(const ResourceID &sphereID, const ResourceID &materialID, const ResourceID &firstTextureWallID, float radius, std::uint16_t nDivisions )
+glm::vec3 SpheresFactory::createSphere(const ResourceID &sphereID, const ResourceID &materialID, const ResourceID &firstTextureWallID, float radius, std::uint16_t nDivisions )
 {
     MeshPtr sphere;
 
@@ -143,12 +145,12 @@ void SpheresFactory::createSphere(const ResourceID &sphereID, const ResourceID &
     sphereNDivisions_ = nDivisions;
 
     sphere = MeshPtr( new SystemMesh( sphereID, materialID, firstTextureWallID, generatePrimitiveData(), *materialsManager_ ) );
-
-    // On this version of COMO, geometric primitives are synchronized as they
-    // had a centroid 0, so check that this is true.
-    assert( sphere->centroid() == glm::vec3( 0.0f ) );
+    const glm::vec3 sphereCentroid =
+            sphere->getOriginalCentroid();
 
     meshesManager_->addMesh( std::move( sphere ), sphereID );
+
+    return sphereCentroid;
 }
 
 

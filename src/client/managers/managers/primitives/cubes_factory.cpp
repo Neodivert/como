@@ -40,7 +40,8 @@ ResourceID CubesFactory::createCube( float width, float height, float depth )
     ResourceID materialID = reserveResourceIDs( 1 );
     ResourceID firstTextureWallID = reserveResourceIDs( 6 );
 
-    createCube( cubeID, materialID, firstTextureWallID, width, height, depth );
+    const glm::vec3 cubeCentroid =
+        createCube( cubeID, materialID, firstTextureWallID, width, height, depth );
 
     sendCommandToServer(
                 CommandConstPtr(
@@ -49,7 +50,8 @@ ResourceID CubesFactory::createCube( float width, float height, float depth )
                                              firstTextureWallID,
                                              width,
                                              height,
-                                             depth ) ) );
+                                             depth,
+                                             cubeCentroid ) ) );
 
     return cubeID;
 }
@@ -74,7 +76,7 @@ void CubesFactory::executeRemoteCommand( const CubeCreationCommand &command )
  * 6. Remote cubes creation
  ***/
 
-void CubesFactory::createCube( const ResourceID& cubeID, const ResourceID& materialID, const ResourceID& firstTextureWallID, float width, float height, float depth )
+glm::vec3 CubesFactory::createCube( const ResourceID& cubeID, const ResourceID& materialID, const ResourceID& firstTextureWallID, float width, float height, float depth )
 {
     std::unique_ptr< Mesh > cube;
 
@@ -83,12 +85,12 @@ void CubesFactory::createCube( const ResourceID& cubeID, const ResourceID& mater
     depth_ = depth;
 
     cube = std::unique_ptr< Mesh >( new SystemMesh( cubeID, materialID, firstTextureWallID, generatePrimitiveData(), *materialsManager_ ) );
-
-    // On this version of COMO, geometric primitives are synchronized as they
-    // had a centroid 0, so check that this is true.
-    assert( cube->centroid() == glm::vec3( 0.0f ) );
+    const glm::vec3 cubeCentroid =
+            cube->getOriginalCentroid();
 
     meshesManager_->addMesh( std::move( cube ), cubeID );
+
+    return cubeCentroid;
 }
 
 /***

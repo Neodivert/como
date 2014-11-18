@@ -37,7 +37,7 @@ class ConeCreationCommand : public GeometricPrimitiveCommand
                              float coneHeight,
                              float coneRadius,
                              unsigned int coneNBaseVertices,
-                             const glm::vec3& centroid = glm::vec3( 0.0f ) );
+                             const glm::vec3& centroid );
         ConeCreationCommand( const ConeCreationCommand& );
         ConeCreationCommand( ConeCreationCommand&& ) = delete;
         COMMAND_CLONE_METHOD( ConeCreationCommand )

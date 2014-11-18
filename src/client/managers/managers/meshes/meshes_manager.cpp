@@ -136,7 +136,7 @@ glm::vec3 MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData,
 {
     lock();
     std::unique_ptr< Mesh > mesh( new ImportedMesh( meshID, firstMaterialID, primitiveData, *materialsManager_, newMeshesDisplayVertexNormals_ ) );
-    glm::vec3 meshCentroid = mesh->centroid();
+    glm::vec3 meshCentroid = mesh->getOriginalCentroid();
 
     addMesh( std::move( mesh ), meshID );
 

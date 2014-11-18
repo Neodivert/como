@@ -79,7 +79,7 @@ class ConesFactory : public SpecializedSystemPrimitivesFactory
         /***
          * 7. Remote cones creation
          ***/
-        void createCone( const ResourceID& coneID, const ResourceID& materialID, const ResourceID& firstTextureWallID, float height, float radius, std::uint16_t nBaseVertices );
+        glm::vec3 createCone( const ResourceID& coneID, const ResourceID& materialID, const ResourceID& firstTextureWallID, float height, float radius, std::uint16_t nBaseVertices );
 
 
     private:

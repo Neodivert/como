@@ -74,7 +74,7 @@ class SpheresFactory : public SpecializedSystemPrimitivesFactory
         /***
          * 7. Remote spheres creation
          ***/
-        void createSphere( const ResourceID& sphereID, const ResourceID& materialID, const ResourceID& firstTextureWallID, float radius, std::uint16_t nDivisions );
+        glm::vec3 createSphere( const ResourceID& sphereID, const ResourceID& materialID, const ResourceID& firstTextureWallID, float radius, std::uint16_t nDivisions );
 
 
         /***

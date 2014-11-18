@@ -37,7 +37,7 @@ class CylinderCreationCommand : public GeometricPrimitiveCommand
                              float coneHeight,
                              float coneRadius,
                              unsigned int coneNBaseVertices,
-                             const glm::vec3& centroid = glm::vec3( 0.0f ) );
+                             const glm::vec3& centroid );
         CylinderCreationCommand( const CylinderCreationCommand& );
         CylinderCreationCommand( CylinderCreationCommand&& ) = delete;
         COMMAND_CLONE_METHOD( CylinderCreationCommand )

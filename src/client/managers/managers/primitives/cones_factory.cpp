@@ -46,7 +46,8 @@ ResourceID ConesFactory::createCone( float height, float radius, std::uint16_t n
     ResourceID materialID = reserveResourceIDs( 1 );
     ResourceID firstTextureWallID = reserveResourceIDs( 6 );
 
-    createCone( coneID, materialID, firstTextureWallID, height, radius, nBaseVertices );
+    const glm::vec3 coneCentroid =
+            createCone( coneID, materialID, firstTextureWallID, height, radius, nBaseVertices );
 
     // Send command to server
     sendCommandToServer(
@@ -57,7 +58,8 @@ ResourceID ConesFactory::createCone( float height, float radius, std::uint16_t n
                         firstTextureWallID,
                         height,
                         radius,
-                        nBaseVertices ) ) );
+                        nBaseVertices,
+                        coneCentroid ) ) );
 
     return coneID;
 }
@@ -137,7 +139,7 @@ void ConesFactory::generateWalls( SystemPrimitiveData &primitiveData )
  * 7. Remote cones creation
  ***/
 
-void ConesFactory::createCone( const ResourceID &coneID, const ResourceID &materialID, const ResourceID &firstTextureWallID, float height, float radius, std::uint16_t nBaseVertices )
+glm::vec3 ConesFactory::createCone( const ResourceID &coneID, const ResourceID &materialID, const ResourceID &firstTextureWallID, float height, float radius, std::uint16_t nBaseVertices )
 {
     std::unique_ptr< Mesh > cone;
 
@@ -146,12 +148,11 @@ void ConesFactory::createCone( const ResourceID &coneID, const ResourceID &mater
     coneNBaseVertices_ = nBaseVertices;
 
     cone = std::unique_ptr< Mesh >( new SystemMesh( coneID, materialID, firstTextureWallID, generatePrimitiveData(), *materialsManager_ ) );
-
-    // On this version of COMO, geometric primitives are synchronized as they
-    // had a centroid 0, so check that this is true.
-    assert( cone->centroid() == glm::vec3( 0.0f ) );
+    const glm::vec3 coneCentroid = cone->getOriginalCentroid();
 
     meshesManager_->addMesh( std::move( cone ), coneID );
+
+    return coneCentroid;
 }
 
 

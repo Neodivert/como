@@ -139,6 +139,7 @@ class Mesh : public AbstractMesh, public Entity
     public:
         MeshType getType() const ;
         bool displaysVertexNormals() const;
+        glm::vec3 getOriginalCentroid() const;
         virtual glm::vec3 centroid() const;
         bool includesTextures() const;
         virtual std::string typeName() const;

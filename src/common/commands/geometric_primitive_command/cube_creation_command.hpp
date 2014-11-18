@@ -37,7 +37,7 @@ class CubeCreationCommand : public GeometricPrimitiveCommand
                              float width,
                              float height,
                              float depth,
-                             const glm::vec3& centroid = glm::vec3( 0.0f ) );
+                             const glm::vec3& centroid );
         CubeCreationCommand( const CubeCreationCommand& );
         CubeCreationCommand( CubeCreationCommand&& ) = delete;
         COMMAND_CLONE_METHOD( CubeCreationCommand )

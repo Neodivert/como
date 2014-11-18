@@ -37,7 +37,7 @@ class SphereCreationCommand : public GeometricPrimitiveCommand
                                const ResourceID& firstTextureWallID,
                                float sphereRadius,
                                std::uint16_t sphereNDivisions,
-                               const glm::vec3& centroid = glm::vec3( 0.0f ) );
+                               const glm::vec3& centroid );
         SphereCreationCommand( const SphereCreationCommand& );
         SphereCreationCommand( SphereCreationCommand&& ) = delete;
         COMMAND_CLONE_METHOD( SphereCreationCommand )

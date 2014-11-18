@@ -74,7 +74,7 @@ class CylindersFactory : public SpecializedSystemPrimitivesFactory
         /***
          * 7. Remote cylinders creation
          ***/
-        void createCylinder( const ResourceID& cylinderID, const ResourceID& materialID, const ResourceID& firstTextureWallID, float height, float radius, std::uint16_t nRadialVertices );
+        glm::vec3 createCylinder( const ResourceID& cylinderID, const ResourceID& materialID, const ResourceID& firstTextureWallID, float height, float radius, std::uint16_t nRadialVertices );
 
 
     private:

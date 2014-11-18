@@ -70,7 +70,6 @@ Mesh::Mesh( const ResourceID& meshID, const std::string& meshName, const Resourc
     init( primitiveData.oglData );
 
     computeCentroid();
-    translate( -centroid() );
 }
 
 
@@ -92,7 +91,6 @@ Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, const P
     }
 
     computeCentroid();
-    translate( -centroid() );
 }
 
 
@@ -295,6 +293,11 @@ MeshType Mesh::getType() const
 bool Mesh::displaysVertexNormals() const
 {
     return displayVertexNormals_;
+}
+
+glm::vec3 Mesh::getOriginalCentroid() const
+{
+    return glm::vec3( originalCentroid );
 }
 
 glm::vec3 Mesh::centroid() const
