@@ -15,13 +15,10 @@ win32 {
     LIBS += -lpthread -lws2_32 -lmswsock -llibboost_system-mgw49-mt-1_56 -llibboost_thread-mgw49-mt-1_56 -llibboost_filesystem-mgw49-mt-1_56
 }
 
-# C++11 support (http://qt-project.org/forums/viewthread/19989)
-CONFIG += c++11
-
 INCLUDEPATH += ../../src
 
 # C++ flags
-QMAKE_CXXFLAGS += -Wall -Werror -Wextra -pthread -pedantic-errors -std=c++11
+QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra -Werror -pthread -pedantic -pedantic-errors
 
 # Common headers (used by both client and server).
 HEADERS += \
