@@ -375,6 +375,32 @@ void Viewport::mouseMoveEvent( QMouseEvent* mouseMoveEvent )
                     break;
                 }
 
+                // Compute the difference between mouse's current and last
+                // positions.
+                glm::vec3 diffVector = currentMouseWorldRelPos - lastMouseWorldRelPos;
+
+                // Get the greatest absolute component from previous
+                // difference.
+                float scaleFactorIndex;
+                if( pow( diffVector.x, 2 ) > pow( diffVector.y, 2 ) ){
+                    scaleFactorIndex = 0;
+                }else{
+                    scaleFactorIndex = 1;
+                }
+                if( pow( diffVector.z, 2 ) > pow( diffVector[scaleFactorIndex], 2 ) ){
+                    scaleFactorIndex = 2;
+                }
+
+                // Use previous component as the scale factor. Discard it if
+                // it is too small.
+                const float scaleFactor =
+                        transformVector[scaleFactorIndex];
+                if( scaleFactor > -0.01f && scaleFactor < 0.01f ){
+                    break;
+                }
+
+                // Apply the scale factor to the 3 components.
+                transformVector = glm::vec3( scaleFactor );
 
                 // If requested, attach the tranformation vector to an axis.
                 switch( transformationMode ){
