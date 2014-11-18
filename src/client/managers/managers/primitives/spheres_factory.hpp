@@ -44,7 +44,7 @@ class SpheresFactory : public SpecializedSystemPrimitivesFactory
 
 
         /***
-         * 3. Local cones creation
+         * 3. Local spheres creation
          ***/
         ResourceID createSphere( float radius, std::uint16_t nDivisions );
 

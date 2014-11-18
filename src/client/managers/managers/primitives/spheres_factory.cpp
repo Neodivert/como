@@ -33,7 +33,7 @@ SpheresFactory::SpheresFactory(ServerInterfacePtr server, MeshesManagerPtr meshe
 
 
 /***
- * 3. Local cones creation
+ * 3. Local spheres creation
  ***/
 
 ResourceID SpheresFactory::createSphere( float radius, std::uint16_t nDivisions )
