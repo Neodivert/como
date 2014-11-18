@@ -278,16 +278,7 @@ unsigned int Mesh::getComponentsPerVertex() const
 
 void Mesh::computeCentroid()
 {
-    unsigned int i = 0;
-
-    originalCentroid = glm::vec4( 0.0f, 0.0f, 0.0f, 1.0f );
-    for( i = 0; i < vertexData_.vertices.size(); i++ ){
-        originalCentroid += glm::vec4( vertexData_.vertices[i], 1.0f );
-    }
-
-    originalCentroid /= vertexData_.vertices.size();
-    originalCentroid.w = 1.0f;
-
+    originalCentroid = glm::vec4( vertexData_.centroid(), 1.0f );
     transformedCentroid = originalCentroid;
 }
 

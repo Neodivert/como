@@ -39,7 +39,24 @@ typedef std::vector< IndicesTriangle > IndicesTrianglesVector;
 struct MeshVertexData {
     VerticesVector vertices;
     IndicesTrianglesVector vertexTriangles;
+
+    inline glm::vec3 centroid() const;
 };
+
+
+glm::vec3 MeshVertexData::centroid() const
+{
+    glm::vec3 centroid( 0.0f );
+
+    for( const glm::vec3& v : vertices ){
+        centroid += v;
+    }
+    if( vertices.size() > 0 ){
+        centroid /= vertices.size();
+    }
+
+    return centroid;
+}
 
 } // namespace como
 
