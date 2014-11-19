@@ -199,7 +199,7 @@ bool AbstractPrimitivesManager::categoryNameInUse( std::string categoryName ) co
 
 /***
  * 8. Auxiliar methods
- ***/
+***/
 
 std::string AbstractPrimitivesManager::getCurrentDateTimeStr()
 {
@@ -215,5 +215,6 @@ std::string AbstractPrimitivesManager::getCurrentDateTimeStr()
 
     return buffer;
 }
+
 
 } // namespace como

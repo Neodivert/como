@@ -95,6 +95,7 @@ bool EntitiesSelection::containsEntity(const ResourceID &entityID) const
 
 std::string EntitiesSelection::name() const
 {
+    lock();
     if( size() == 0 ){
         return "(Nothing selected)";
     }else if( size() == 1 ){
@@ -113,6 +114,7 @@ std::string EntitiesSelection::name() const
 
 std::string EntitiesSelection::typeName() const
 {
+    lock();
     if( size() == 1 ){
         std::string typeName;
         for( auto& selection : specializedEntitiesSelections_ ){

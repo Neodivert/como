@@ -37,6 +37,8 @@ MaterialsManager::MaterialsManager( ServerInterfacePtr server, LogPtr log ) :
 
 ResourceID MaterialsManager::createMaterials( const std::vector< MaterialInfo >& materialsInfo, const ResourceID &meshID )
 {
+    lock();
+
     ResourceID firstMaterialID = reserveResourceIDs( 1 );
 
     createMaterials( materialsInfo, firstMaterialID, meshID );
@@ -47,6 +49,8 @@ ResourceID MaterialsManager::createMaterials( const std::vector< MaterialInfo >&
 
 ResourceID MaterialsManager::createMaterial( const MaterialInfo& materialInfo, const ResourceID &meshID )
 {
+    lock();
+
     ResourceID materialID = reserveResourceIDs( 1 );
 
     // Add the new material to the materials container.
@@ -58,6 +62,7 @@ ResourceID MaterialsManager::createMaterial( const MaterialInfo& materialInfo, c
 
 void MaterialsManager::createMaterials( const std::vector< MaterialInfo >& materialsInfo, const ResourceID &firstMaterialID, const ResourceID& meshID)
 {
+    lock();
     ResourceID materialID = firstMaterialID;
 
     for( const auto& materialInfo : materialsInfo ){

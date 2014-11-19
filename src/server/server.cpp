@@ -130,6 +130,8 @@ void Server::run()
 // TODO: Make use of errorCode?
 void Server::disconnect()
 {
+    lock();
+
     boost::system::error_code errorCode;
 
     // Stop the I/O processing.
@@ -382,6 +384,8 @@ void Server::workerThread()
 
 void Server::openAcceptor()
 {
+    lock();
+
     // Set an endpoint for given server TCP port.
     boost::asio::ip::tcp::endpoint endpoint( boost::asio::ip::tcp::v4(), port_ );
 
@@ -401,6 +405,8 @@ void Server::openAcceptor()
 
 bool Server::nameInUse( const char* newName ) const
 {
+    lock();
+
     UsersMap::const_iterator user;
 
     for( user = users_.begin(); user != users_.end(); user++ ){

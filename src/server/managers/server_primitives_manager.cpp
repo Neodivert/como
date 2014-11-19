@@ -166,6 +166,8 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
 
 std::list<PlainMaterialData> ServerPrimitivesManager::primitivePlainMaterialsData( const ResourceID &primitiveID )
 {
+    lock();
+
     // TODO: Avoid reading full primitive only for retrieving its materials.
     log_->debug( "Getting materials from primitive (", primitiveID, ")\n" );
     ImportedPrimitiveData primitiveData;

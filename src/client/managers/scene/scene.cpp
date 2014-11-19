@@ -264,6 +264,8 @@ void Scene::takeOpenGLContext()
 
 void Scene::draw( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
+    lock();
+
     // Set the background color.
     setBackgroundColor( 0.9f, 0.9f, 0.9f, 1.0f );
 

@@ -37,12 +37,14 @@ TextureWallsManager::TextureWallsManager( ServerInterfacePtr server, TexturesMan
 
 bool TextureWallsManager::textureWallIncludesTexture( const ResourceID& textureWallID ) const
 {
+    lock();
     return ( textureWalls_.at( textureWallID ).textureID != NO_RESOURCE );
 }
 
 
 ResourceHeadersList TextureWallsManager::getSelectableResourcesHeaders() const
 {
+    lock();
     ResourceHeadersList headersList;
 
     for( const auto& textureWallID : selectableTextureWalls_ ){
@@ -57,6 +59,7 @@ ResourceHeadersList TextureWallsManager::getSelectableResourcesHeaders() const
 
 bool TextureWallsManager::isResourceSelectable( const ResourceID& resourceID ) const
 {
+    lock();
     return ( std::find( selectableTextureWalls_.begin(),
                         selectableTextureWalls_.end(),
                         resourceID ) != selectableTextureWalls_.end() );
@@ -65,12 +68,14 @@ bool TextureWallsManager::isResourceSelectable( const ResourceID& resourceID ) c
 
 std::string TextureWallsManager::getResourceName( const ResourceID &resourceID ) const
 {
+    lock();
     return textureWalls_.at( resourceID ).name;
 }
 
 
 TextureWallHandler *TextureWallsManager::getCurrentTextureWall() const
 {
+    lock();
     return currentTextureWallHandler_.get();
 }
 
@@ -81,6 +86,8 @@ TextureWallHandler *TextureWallsManager::getCurrentTextureWall() const
 
 ResourceID TextureWallsManager::createTextureWall( std::string name, const ResourceID& meshID )
 {
+    lock();
+
     ResourceID textureWallID = reserveResourceIDs( 1 );
 
     createTextureWall( name, textureWallID, meshID );
@@ -91,6 +98,8 @@ ResourceID TextureWallsManager::createTextureWall( std::string name, const Resou
 
 void TextureWallsManager::createTextureWall(std::string name, const ResourceID &textureWallID, const ResourceID &meshID)
 {
+    lock();
+
     textureWalls_.emplace( textureWallID, name );
     meshesTextureWalls_[meshID].push_back( textureWallID );
 
@@ -102,6 +111,7 @@ void TextureWallsManager::createTextureWall(std::string name, const ResourceID &
 
 void TextureWallsManager::toggleTextureWallSeletable( const ResourceID& textureWallID, bool selectable )
 {
+    lock();
     if( selectable ){
         selectableTextureWalls_.push_back( textureWallID );
     }else{
@@ -113,6 +123,8 @@ void TextureWallsManager::toggleTextureWallSeletable( const ResourceID& textureW
 
 void TextureWallsManager::toggleMeshTextureWallsSeletable( const ResourceID& meshID, bool selectable )
 {
+    lock();
+
     if( meshesTextureWalls_.count( meshID ) == 0 ){
         return;
     }
@@ -135,6 +147,8 @@ void TextureWallsManager::toggleMeshTextureWallsSeletable( const ResourceID& mes
 
 void TextureWallsManager::unlockSelectableTextureWalls()
 {
+    lock();
+
     std::list< ResourceID > removedElementIDs;
 
     for( const ResourceID& textureWallID : selectableTextureWalls_ ){
@@ -151,6 +165,8 @@ void TextureWallsManager::unlockSelectableTextureWalls()
 
 void TextureWallsManager::removeSelectableTextureWalls()
 {
+    lock();
+
     for( const ResourceID& textureWallID : selectableTextureWalls_ ){
         notifyElementDeletion( textureWallID );
         textureWalls_.erase( textureWallID );
@@ -162,6 +178,8 @@ void TextureWallsManager::removeSelectableTextureWalls()
 
 TextureWallHandler* TextureWallsManager::selectTextureWall( const ResourceID &textureWallID )
 {
+    lock();
+
     currentTextureWallHandler_ = std::unique_ptr< TextureWallHandler >(
                 new TextureWallHandler( server(), textureWallID, textureWalls_.at( textureWallID ) ) );
     return currentTextureWallHandler_.get();
@@ -170,6 +188,8 @@ TextureWallHandler* TextureWallsManager::selectTextureWall( const ResourceID &te
 
 bool TextureWallsManager::thereIsSelectableTextureWalls() const
 {
+    lock();
+
     return ( selectableTextureWalls_.size() > 0 );
 }
 
@@ -180,6 +200,8 @@ bool TextureWallsManager::thereIsSelectableTextureWalls() const
 
 void TextureWallsManager::requestResourceLock( const ResourceID &resourceID )
 {
+    lock();
+
     if( !isResourceSelectable( resourceID ) ){
         throw std::runtime_error( "Texture wall not selectable" );
     }
@@ -194,6 +216,8 @@ void TextureWallsManager::requestResourceLock( const ResourceID &resourceID )
 
 void TextureWallsManager::executeRemoteCommand(const TextureWallCommand &command)
 {
+    lock();
+
     TextureWall& textureWall = textureWalls_.at( command.textureWallID() );
 
     switch( command.getType() ){
@@ -236,6 +260,8 @@ void TextureWallsManager::executeRemoteCommand(const TextureWallCommand &command
 
 void TextureWallsManager::sendTextureWallToShader( const ResourceID &resourceID ) const
 {
+    lock();
+
     OpenGL::checkStatus( "TextureWallsManager::sendTextureWallToShader - begin" );
     texturesManager_->sendTextureToShader( textureWalls_.at( resourceID ).textureID,
                                            textureWalls_.at( resourceID ).textureOffset,
@@ -250,6 +276,7 @@ void TextureWallsManager::sendTextureWallToShader( const ResourceID &resourceID 
 
 void TextureWallsManager::lockResource(const ResourceID &resourceID, UserID newOwner)
 {
+    lock();
     // TODO: Complete or delete.
     (void)( resourceID );
     (void)( newOwner );
@@ -258,6 +285,7 @@ void TextureWallsManager::lockResource(const ResourceID &resourceID, UserID newO
 
 void TextureWallsManager::unlockResourcesSelection(UserID currentOwner)
 {
+    lock();
     // TODO: Complete or delete.
     (void)( currentOwner );
 }
@@ -265,6 +293,7 @@ void TextureWallsManager::unlockResourcesSelection(UserID currentOwner)
 
 void TextureWallsManager::clearResourcesSelection(UserID currentOwner)
 {
+    lock();
     // TODO: Complete or delete.
     (void)( currentOwner );
 }

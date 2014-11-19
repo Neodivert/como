@@ -36,6 +36,7 @@ ResourceCommandsExecuter::ResourceCommandsExecuter(ServerInterfacePtr server) :
 
 void ResourceCommandsExecuter::executeResourceCommand( const ResourceCommand& command )
 {
+    lock();
     switch( command.getType() ){
         case ResourceCommandType::RESOURCE_LOCK:
             lockResource( command.getResourceID(), command.getUserID() );
@@ -50,6 +51,7 @@ void ResourceCommandsExecuter::executeResourceCommand( const ResourceCommand& co
 
 void ResourceCommandsExecuter::executeResourcesSelectionCommand( const ResourcesSelectionCommand& command )
 {
+    lock();
     switch( command.getType() ){
         case ResourcesSelectionCommandType::SELECTION_UNLOCK:
             unlockResourcesSelection( command.getUserID() );

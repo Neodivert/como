@@ -78,6 +78,7 @@ void EntitiesManager::createUserSelection( UserID userID, const glm::vec4& selec
 
 void EntitiesManager::removeUserSelection()
 {
+    lock();
     removeUserSelection( localUserID() );
 }
 
@@ -106,18 +107,21 @@ LocalEntitiesSelection* EntitiesManager::getLocalSelection() const
 
 MeshesManagerPtr EntitiesManager::getMeshesManager()
 {
+    lock();
     return meshesManager_;
 }
 
 
 LightsManagerPtr EntitiesManager::getLightsManager()
 {
+    lock();
     return lightsManager_;
 }
 
 
 CamerasManager* EntitiesManager::getCamerasManager()
 {
+    lock();
     return camerasManager_.get();
 }
 
@@ -163,6 +167,7 @@ bool EntitiesManager::pick(const glm::vec3 &rayOrigin, glm::vec3 rayDirection, R
 
 void EntitiesManager::executeRemoteSelectionCommand( const SelectionCommand& command )
 {
+    lock();
     switch( command.getType() ){
         case SelectionCommandType::SELECTION_TRANSFORMATION:{
             // Cast to a SELECTION_TRANSFORMATION command.
@@ -201,6 +206,7 @@ void EntitiesManager::executeRemoteSelectionCommand( const SelectionCommand& com
 
 void EntitiesManager::executeRemoteParameterChangeCommand( UserParameterChangeCommandConstPtr command )
 {
+    lock();
     // Change parameter.
     switch( command->getParameterType() ){
         case ParameterType::PIVOT_POINT_MODE:
@@ -232,6 +238,7 @@ void EntitiesManager::executeRemoteEntityCommand( const EntityCommand &command )
 
 void EntitiesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
+    lock();
     lightsManager_->sendLightsToShader( *openGL, viewMatrix );
 
     for( const auto& manager : managers_ ){
@@ -246,6 +253,7 @@ void EntitiesManager::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, co
 
 void EntitiesManager::update( ContainerAction lastContainerAction, UserID modifiedUser )
 {
+    lock();
     if( lastContainerAction == ContainerAction::ELEMENT_INSERTION ){
         createUserSelection( modifiedUser, usersManager_->user( modifiedUser  ).color() );
     }else if( lastContainerAction == ContainerAction::ELEMENT_DELETION ){
@@ -261,6 +269,7 @@ void EntitiesManager::update( ContainerAction lastContainerAction, UserID modifi
 
 void EntitiesManager::lockResource(const ResourceID &resourceID, UserID newOwner)
 {
+    lock();
     for( auto& manager : managers_ ){
         if( manager->containsResource( resourceID ) ){
             manager->lockResource( resourceID, newOwner );
@@ -271,6 +280,7 @@ void EntitiesManager::lockResource(const ResourceID &resourceID, UserID newOwner
 
 void EntitiesManager::unlockResourcesSelection(UserID currentOwner)
 {
+    lock();
     for( auto& manager : managers_ ){
         manager->unlockResourcesSelection( currentOwner );
     }
@@ -279,6 +289,7 @@ void EntitiesManager::unlockResourcesSelection(UserID currentOwner)
 
 void EntitiesManager::clearResourcesSelection(UserID currentOwner)
 {
+    lock();
     for( auto& manager : managers_ ){
         manager->clearResourcesSelection( currentOwner );
     }
