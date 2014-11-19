@@ -39,11 +39,6 @@ struct PackablePair {
     const Packable* constant;
     Packable* variable;
 
-    PackablePair() :
-        constant( nullptr ),
-        variable( nullptr )
-    {}
-
     PackablePair( const Packable* packable ) :
         constant( packable ),
         variable( nullptr )
