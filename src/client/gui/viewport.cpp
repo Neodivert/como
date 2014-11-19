@@ -244,7 +244,7 @@ void Viewport::keyPressEvent( QKeyEvent *e )
         case Qt::Key_Left:
             if( view_ != View::CAMERA ){
                 const glm::vec3 direction =
-                        -0.1f * glm::cross( camera->getUpVector(),
+                        0.1f * glm::cross( camera->getUpVector(),
                                             glm::vec3( camera->getCenterVector() ) );
 
                 camera->translate( direction );
@@ -252,7 +252,7 @@ void Viewport::keyPressEvent( QKeyEvent *e )
         break;
         case Qt::Key_Right:
             if( view_ != View::CAMERA ){
-                camera->translate( 0.1f * glm::cross( camera->getUpVector(),
+                camera->translate( -0.1f * glm::cross( camera->getUpVector(),
                                                        glm::vec3( camera->getCenterVector() ) ) );
             }
         break;
