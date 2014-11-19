@@ -38,6 +38,7 @@ ResourcesOwnershipRequester::ResourcesOwnershipRequester( ServerInterfacePtr ser
 
 void ResourcesOwnershipRequester::requestResourceLock( const ResourceID &resourceID )
 {
+    lock();
     pendingSelections_.insert( resourceID );
     sendCommandToServer( CommandConstPtr( new ResourceCommand( ResourceCommandType::RESOURCE_LOCK, localUserID(), resourceID ) ) );
 }
@@ -45,6 +46,7 @@ void ResourcesOwnershipRequester::requestResourceLock( const ResourceID &resourc
 
 void ResourcesOwnershipRequester::requestSelectionUnlock()
 {
+    lock();
     CommandConstPtr selectionUnlockCommand =
             CommandConstPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_UNLOCK, localUserID() ) );
     sendCommandToServer( std::move( selectionUnlockCommand ) );
@@ -55,6 +57,7 @@ void ResourcesOwnershipRequester::requestSelectionUnlock()
 
 void ResourcesOwnershipRequester::requestSelectionDeletion()
 {
+    lock();
     CommandConstPtr selectionDeletionCommand =
             CommandConstPtr( new ResourcesSelectionCommand( ResourcesSelectionCommandType::SELECTION_DELETION, localUserID() ) );
     sendCommandToServer( std::move( selectionDeletionCommand ) );
@@ -69,6 +72,7 @@ void ResourcesOwnershipRequester::requestSelectionDeletion()
 
 void ResourcesOwnershipRequester::processLockResponse( const ResourceID &resourceID, bool lockResponse )
 {
+    lock();
     pendingSelections_.erase( resourceID );
     if( lockResponse ){
         lockResource( resourceID, localUserID() );
