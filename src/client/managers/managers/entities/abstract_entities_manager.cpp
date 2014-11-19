@@ -29,8 +29,6 @@ ResourceID AbstractEntitiesManager::selectEntityByRayPicking(glm::vec3 rayOrigin
     if( pick( rayOrigin, rayDirection, closestObject, t, MAX_T ) ){
         // Request to the server the lock of the intersected drawable.
         requestResourceLock( closestObject );
-    }else{
-        requestSelectionUnlock();
     }
 
     return closestObject;
