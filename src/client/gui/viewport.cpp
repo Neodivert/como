@@ -193,7 +193,7 @@ void Viewport::wheelEvent( QWheelEvent *ev )
 {
     // TODO: If we are in View::CAMERA, change to View::USER and apply zoom.
     if( view_ != View::CAMERA ){
-        const float step = ( ev->delta() > 0 ) ? -0.1f : 0.1f;
+        const float step = ( ev->delta() > 0 ) ? 0.1f : -0.1f;
         const glm::vec3 direction = step * glm::vec3( camera->getCenterVector() );
 
         camera->translate( direction );
