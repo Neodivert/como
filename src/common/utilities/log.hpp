@@ -21,8 +21,8 @@
  * http://en.wikipedia.org/wiki/Variadic_template
  ***/
 
-#ifndef LOG_1_HPP
-#define LOG_1_HPP
+#ifndef LOG_HPP
+#define LOG_HPP
 
 #include <common/utilities/lockable.hpp>
 #include <iostream>
@@ -179,4 +179,4 @@ void Log::error( T value, Args... args )
 
 } // namespace como
 
-#endif // LOG_1_HPP
+#endif // LOG_HPP
