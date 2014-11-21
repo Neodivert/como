@@ -105,6 +105,7 @@ template< class T>
 void Log::write( T value )
 {
     out_ << value;
+    out_.flush();
 }
 
 
