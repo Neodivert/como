@@ -246,12 +246,14 @@ void OBJPrimitivesImporter::readLine( std::ifstream &file, std::string &fileLine
 
 
 FaceType OBJPrimitivesImporter::getFaceType( const std::string &faceBody )
-{
-    int nSpaces = std::count( faceBody.begin(), faceBody.end(), ' ' );
+{   
+    char str[150];
+    const int nFaces =
+            sscanf( faceBody.c_str(), " %s %s %s %s ", str, str, str, str );
 
-    if( nSpaces == 2 ){
+    if( nFaces == 3 ){
         return FaceType::TRIANGLE;
-    }else if( nSpaces == 3 ){
+    }else if( nFaces == 4 ){
         return FaceType::QUAD;
     }else{
         return FaceType::OTHER;
