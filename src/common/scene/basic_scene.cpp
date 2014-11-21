@@ -78,7 +78,7 @@ void BasicScene::createSceneDirectory()
 
 void BasicScene::initScene( const std::string &sceneName )
 {
-    lock();
+    LOCK
 
     sceneName_ = sceneName;
 
@@ -92,28 +92,28 @@ void BasicScene::initScene( const std::string &sceneName )
 
 std::string BasicScene::getName() const
 {
-    lock();
+    LOCK
     return sceneName_;
 }
 
 
 std::string BasicScene::getDirPath() const
 {
-    lock();
+    LOCK
     return sceneDirPath_;
 }
 
 
 std::string BasicScene::getTempDirPath() const
 {
-    lock();
+    LOCK
     return sceneTempDirPath_;
 }
 
 
 LogPtr BasicScene::log() const
 {
-    lock();
+    LOCK
     return log_;
 }
 

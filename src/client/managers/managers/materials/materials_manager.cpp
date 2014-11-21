@@ -37,7 +37,7 @@ MaterialsManager::MaterialsManager( ServerInterfacePtr server, LogPtr log ) :
 
 ResourceID MaterialsManager::createMaterials( const std::vector< MaterialInfo >& materialsInfo, const ResourceID &meshID )
 {
-    lock();
+    LOCK
 
     ResourceID firstMaterialID = reserveResourceIDs( 1 );
 
@@ -49,7 +49,7 @@ ResourceID MaterialsManager::createMaterials( const std::vector< MaterialInfo >&
 
 ResourceID MaterialsManager::createMaterial( const MaterialInfo& materialInfo, const ResourceID &meshID )
 {
-    lock();
+    LOCK
 
     ResourceID materialID = reserveResourceIDs( 1 );
 
@@ -62,7 +62,7 @@ ResourceID MaterialsManager::createMaterial( const MaterialInfo& materialInfo, c
 
 void MaterialsManager::createMaterials( const std::vector< MaterialInfo >& materialsInfo, const ResourceID &firstMaterialID, const ResourceID& meshID)
 {
-    lock();
+    LOCK
     ResourceID materialID = firstMaterialID;
 
     for( const auto& materialInfo : materialsInfo ){
@@ -74,7 +74,7 @@ void MaterialsManager::createMaterials( const std::vector< MaterialInfo >& mater
 
 void MaterialsManager::createMaterial( const MaterialInfo& materialInfo, const ResourceID &materialID, const ResourceID& meshID )
 {
-    lock();
+    LOCK
     materials_[materialID] = MaterialPtr( new Material( materialID, materialInfo ) );
 
     if( meshMaterials_.count( meshID ) == 0 ){
@@ -110,7 +110,7 @@ void MaterialsManager::createMaterial( const MaterialInfo& materialInfo, const R
 
 MaterialHandlerPtr MaterialsManager::selectMaterial( const ResourceID& id )
 {
-    lock();
+    LOCK
     if( materialsOwners_.at( id ) != localUserID() ){
         throw std::runtime_error( "You don't have permission for selecting this material!" );
     }
@@ -137,7 +137,7 @@ MaterialHandlerPtr MaterialsManager::selectMaterial( const ResourceID& id )
 
 ResourceHeadersList MaterialsManager::getLocalMaterialsHeaders() const
 {
-    lock();
+    LOCK
     ResourceHeadersList headers;
 
     for( const auto& materialPair : materials_ ){
@@ -152,14 +152,14 @@ ResourceHeadersList MaterialsManager::getLocalMaterialsHeaders() const
 
 bool MaterialsManager::materialOwnedByLocalUser( const ResourceID& resourceID ) const
 {
-    lock();
+    LOCK
     return ( materialsOwners_.at( resourceID ) == localUserID() );
 }
 
 // TODO: Remove this method and use ResourcesManager::resourceName() instead.
 std::string MaterialsManager::getResourceName( const ResourceID& resourceID ) const
 {
-    lock();
+    LOCK
     (void)( resourceID );
     return "Material";
 }
@@ -167,13 +167,13 @@ std::string MaterialsManager::getResourceName( const ResourceID& resourceID ) co
 
 MaterialConstPtr MaterialsManager::getMaterial( const ResourceID& id ) const
 {
-    lock();
+    LOCK
     return materials_.at( id );
 }
 
 ConstMaterialsVector MaterialsManager::getMaterials( const ResourceID& firstMaterialID, unsigned int nMaterials ) const
 {
-    lock();
+    LOCK
     ConstMaterialsVector materials;
     unsigned int i = 0;
     ResourceID materialID = firstMaterialID;
@@ -195,7 +195,7 @@ ConstMaterialsVector MaterialsManager::getMaterials( const ResourceID& firstMate
 
 void MaterialsManager::executeRemoteCommand( const MaterialCommand& command )
 {
-    lock();
+    LOCK
     //log()->debug( "MaterialsManager - executing remote command - Material ID: ", command->getMaterialID(), "\n" );
 
     switch( command.getType() ){
@@ -263,7 +263,7 @@ void MaterialsManager::executeRemoteCommand( const MaterialCommand& command )
 
 void MaterialsManager::update()
 {
-    lock();
+    LOCK
     //notifyElementModification( materialHandler_->getID() );
 
     notifyObservers();
@@ -276,7 +276,7 @@ void MaterialsManager::update()
 
 void MaterialsManager::lockMaterial( const ResourceID &materialID, UserID newOwner )
 {
-    lock();
+    LOCK
     materialsOwners_[materialID] = newOwner;
     notifyElementUpdate( materialID );
 }
@@ -284,7 +284,7 @@ void MaterialsManager::lockMaterial( const ResourceID &materialID, UserID newOwn
 
 void MaterialsManager::lockMeshMaterials( const ResourceID& meshID, UserID newOwner )
 {
-    lock();
+    LOCK
     for( const auto& materialID : meshMaterials_.at( meshID ) ){
         lockMaterial( materialID, newOwner );
     }
@@ -293,7 +293,7 @@ void MaterialsManager::lockMeshMaterials( const ResourceID& meshID, UserID newOw
 
 void MaterialsManager::unlockMaterial(const ResourceID &materialID)
 {
-    lock();
+    LOCK
     materialsOwners_[materialID] = NO_USER;
     notifyElementUpdate( materialID );
 }
@@ -301,7 +301,7 @@ void MaterialsManager::unlockMaterial(const ResourceID &materialID)
 
 void MaterialsManager::unlockMeshMaterials(const ResourceID &meshID )
 {
-    lock();
+    LOCK
     for( const auto& materialID : meshMaterials_.at( meshID ) ){
         unlockMaterial( materialID );
     }
@@ -310,7 +310,7 @@ void MaterialsManager::unlockMeshMaterials(const ResourceID &meshID )
 
 void MaterialsManager::unlockUserMaterials( UserID userID )
 {
-    lock();
+    LOCK
     std::list< ResourceID > meshesToBeUnlocked;
 
     // All the materials associated to a same mesh have the same owner, so
@@ -336,7 +336,7 @@ void MaterialsManager::unlockUserMaterials( UserID userID )
 
 void MaterialsManager::removeMaterial( const ResourceID &materialID )
 {
-    lock();
+    LOCK
     materials_.erase( materialID );
     materialsOwners_.erase( materialID );
 
@@ -346,7 +346,7 @@ void MaterialsManager::removeMaterial( const ResourceID &materialID )
 
 void MaterialsManager::removeMeshMaterials(const ResourceID &meshID)
 {
-    lock();
+    LOCK
     for( const auto& materialID : meshMaterials_.at( meshID ) ){
         removeMaterial( materialID );
     }
@@ -356,7 +356,7 @@ void MaterialsManager::removeMeshMaterials(const ResourceID &meshID)
 
 void MaterialsManager::removeUserMaterials(UserID userID)
 {
-    lock();
+    LOCK
     std::list< ResourceID > meshesToBeRemoved;
 
     // All the materials associated to a same mesh have the same owner, so
@@ -381,7 +381,7 @@ void MaterialsManager::removeUserMaterials(UserID userID)
 
 void MaterialsManager::sendMaterialToShader( const ResourceID &materialID )
 {
-    lock();
+    LOCK
     materials_.at( materialID )->sendToShader();
 }
 

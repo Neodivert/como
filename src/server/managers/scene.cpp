@@ -67,7 +67,7 @@ Scene::~Scene()
 
 void Scene::processCommand( const Command& command )
 {
-    lock();
+    LOCK
     resourcesSyncLibrary_.processCommand( command );
 }
 
@@ -78,7 +78,7 @@ void Scene::processCommand( const Command& command )
 
 std::string Scene::saveToFile()
 {
-    lock();
+    LOCK
     bool saveToFile = false;
     bool exitLoop = false;
     std::string fileName;
@@ -120,7 +120,7 @@ std::string Scene::saveToFile()
 void Scene::loadFromFile( const std::string &filePath )
 {
     char buffer[8];
-    lock();
+    LOCK
     std::ifstream file( filePath, std::ios_base::binary );
     if( !file.is_open() ){
         throw FileNotOpenException( filePath );
@@ -144,7 +144,7 @@ void Scene::loadFromFile( const std::string &filePath )
 
 UserID Scene::generateUserID()
 {
-    lock();
+    LOCK
     return nextUserID_++;
 }
 

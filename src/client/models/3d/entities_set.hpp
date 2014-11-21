@@ -127,7 +127,7 @@ EntitiesSet<EntitySubtype>::EntitiesSet( glm::vec4 borderColor, PivotPointMode m
 template <class EntitySubtype>
 glm::vec3 EntitiesSet<EntitySubtype>::centroid() const
 {
-    this->lock();
+    LOCK
 
     glm::vec3 centroid( 0.0f );
 
@@ -146,7 +146,7 @@ glm::vec3 EntitiesSet<EntitySubtype>::centroid() const
 template <class EntitySubtype>
 PivotPointMode EntitiesSet<EntitySubtype>::pivotPointMode() const
 {
-    this->lock();
+    LOCK
 
     return pivotPointMode_;
 }
@@ -155,7 +155,7 @@ PivotPointMode EntitiesSet<EntitySubtype>::pivotPointMode() const
 template <class EntitySubtype>
 glm::vec4 EntitiesSet<EntitySubtype>::borderColor() const
 {
-    this->lock();
+    LOCK
 
     return borderColor_;
 }
@@ -164,7 +164,7 @@ glm::vec4 EntitiesSet<EntitySubtype>::borderColor() const
 template <class EntitySubtype>
 unsigned int EntitiesSet<EntitySubtype>::size() const
 {
-    this->lock();
+    LOCK
 
     return this->ResourcesSelection<EntitySubtype>::size();
 }
@@ -173,7 +173,7 @@ unsigned int EntitiesSet<EntitySubtype>::size() const
 template <class EntitySubtype>
 bool EntitiesSet<EntitySubtype>::containsEntity(const ResourceID &entityID) const
 {
-    this->lock();
+    LOCK
 
     return this->containsResource( entityID );
 }
@@ -186,7 +186,7 @@ bool EntitiesSet<EntitySubtype>::containsEntity(const ResourceID &entityID) cons
 template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::setPivotPointMode( PivotPointMode mode)
 {
-    this->lock();
+    LOCK
 
     pivotPointMode_ = mode;
 }
@@ -195,7 +195,7 @@ void EntitiesSet<EntitySubtype>::setPivotPointMode( PivotPointMode mode)
 template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::setBorderColor( const glm::vec4& borderColor )
 {
-    this->lock();
+    LOCK
 
     this->borderColor_ = borderColor;
 }
@@ -204,7 +204,7 @@ void EntitiesSet<EntitySubtype>::setBorderColor( const glm::vec4& borderColor )
 template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::setEntityModelMatrix(const ResourceID &entityID, const glm::mat4 &modelMatrix)
 {
-    this->lock();
+    LOCK
 
     this->resources_.at( entityID )->setModelMatrix( modelMatrix );
 }
@@ -213,7 +213,7 @@ void EntitiesSet<EntitySubtype>::setEntityModelMatrix(const ResourceID &entityID
 template <class EntitySubtype>
 std::string EntitiesSet<EntitySubtype>::name() const
 {
-    this->lock();
+    LOCK
 
     if( this->size() == 0 ){
         return "(Nothing selected)";
@@ -228,7 +228,7 @@ std::string EntitiesSet<EntitySubtype>::name() const
 template <class EntitySubtype>
 std::string EntitiesSet<EntitySubtype>::typeName() const
 {
-    this->lock();
+    LOCK
 
     if( this->size() == 1 ){
         return this->resources_.begin()->second->typeName();
@@ -245,7 +245,7 @@ std::string EntitiesSet<EntitySubtype>::typeName() const
 template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::translate( glm::vec3 direction )
 {
-    this->lock();
+    LOCK
 
     for( auto& entityPair : this->resources_ ){
         entityPair.second->translate( direction );
@@ -257,7 +257,7 @@ void EntitiesSet<EntitySubtype>::translate( glm::vec3 direction )
 template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::rotateAroundPivot( GLfloat angle, glm::vec3 axis, glm::vec3 pivot )
 {
-    this->lock();
+    LOCK
 
     for( auto& entityPair : this->resources_ ){
         entityPair.second->rotateAroundPivot( angle, axis, pivot );
@@ -269,7 +269,7 @@ void EntitiesSet<EntitySubtype>::rotateAroundPivot( GLfloat angle, glm::vec3 axi
 template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::rotateAroundIndividualCentroids( GLfloat angle, glm::vec3 axis)
 {
-    this->lock();
+    LOCK
 
     for( auto& entityPair : this->resources_ ){
         entityPair.second->rotateAroundCentroid( angle, axis );
@@ -281,7 +281,7 @@ void EntitiesSet<EntitySubtype>::rotateAroundIndividualCentroids( GLfloat angle,
 template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::scaleAroundPivot( glm::vec3 scaleFactors, glm::vec3 pivot)
 {
-    this->lock();
+    LOCK
 
     for( auto& entityPair : this->resources_ ){
         entityPair.second->scaleAroundPivot( scaleFactors, pivot );
@@ -293,7 +293,7 @@ void EntitiesSet<EntitySubtype>::scaleAroundPivot( glm::vec3 scaleFactors, glm::
 template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::scaleAroundIndividualCentroids( glm::vec3 scaleFactors)
 {
-    this->lock();
+    LOCK
 
     for( auto& entityPair : this->resources_ ){
         entityPair.second->scaleAroundCentroid( scaleFactors );
@@ -305,7 +305,7 @@ void EntitiesSet<EntitySubtype>::scaleAroundIndividualCentroids( glm::vec3 scale
 template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::applyTransformationMatrix(const glm::mat4 &transformationMatrix)
 {
-    this->lock();
+    LOCK
 
     for( auto& entityPair : this->resources_ ){
         entityPair.second->applyTransformationMatrix( transformationMatrix );
@@ -317,7 +317,7 @@ void EntitiesSet<EntitySubtype>::applyTransformationMatrix(const glm::mat4 &tran
 template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::setModelMatrix( const glm::mat4 &modelMatrix )
 {
-    this->lock();
+    LOCK
 
     for( auto& entityPair : this->resources_ ){
         entityPair.second->setModelMatrix( modelMatrix );
@@ -333,7 +333,7 @@ void EntitiesSet<EntitySubtype>::setModelMatrix( const glm::mat4 &modelMatrix )
 template <class EntitySubtype>
 bool EntitiesSet<EntitySubtype>::intersectsRay( glm::vec3 r0, glm::vec3 r1, ResourceID& closestEntity, float& minT ) const
 {
-    this->lock();
+    LOCK
 
     float t;
     bool entityIntersected = false;
@@ -362,7 +362,7 @@ bool EntitiesSet<EntitySubtype>::intersectsRay( glm::vec3 r0, glm::vec3 r1, Reso
 template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) const
 {
-    this->lock();
+    LOCK
 
     for( auto& entityPair : this->resources_ ){
         entityPair.second->draw( openGL, viewMatrix, projectionMatrix, &borderColor_ );

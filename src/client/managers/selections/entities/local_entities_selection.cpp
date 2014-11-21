@@ -38,7 +38,7 @@ LocalEntitiesSelection::LocalEntitiesSelection( ServerInterfacePtr server, Local
 
 glm::vec3 LocalEntitiesSelection::graphicPivotPoint() const
 {
-    lock();
+    LOCK
     switch( pivotPointMode() ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
         case PivotPointMode::SELECTION_CENTROID:
@@ -57,7 +57,7 @@ glm::vec3 LocalEntitiesSelection::graphicPivotPoint() const
 
 void LocalEntitiesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 {
-    lock();
+    LOCK
     EntitiesSelection::setPivotPointMode( pivotPointMode );
 
     sendCommandToServer( CommandConstPtr( new UserParameterChangeCommand( localUserID(), pivotPointMode ) ) );
@@ -70,7 +70,7 @@ void LocalEntitiesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 
 void LocalEntitiesSelection::translate( glm::vec3 direction )
 {
-    lock();
+    LOCK
     // Only aplly the transformation if there are drawables selected.
     if( size() ){
         SelectionTransformationCommand translationCommand( localUserID() );
@@ -90,7 +90,7 @@ void LocalEntitiesSelection::translate( glm::vec3 direction )
 
 void LocalEntitiesSelection::rotateAroundPivot( GLfloat angle, glm::vec3 axis, glm::vec3 pivot )
 {
-    lock();
+    LOCK
     // Only aplly the transformation if there are entities selected.
     if( size() ){
         SelectionTransformationCommand rotationCommand( localUserID() );
@@ -110,7 +110,7 @@ void LocalEntitiesSelection::rotateAroundPivot( GLfloat angle, glm::vec3 axis, g
 
 void LocalEntitiesSelection::rotateAroundIndividualCentroids(GLfloat angle, glm::vec3 axis)
 {
-    lock();
+    LOCK
     // Only aplly the transformation if there are entities selected.
     if( size() ){
         SelectionTransformationCommand rotationCommand( localUserID() );
@@ -130,7 +130,7 @@ void LocalEntitiesSelection::rotateAroundIndividualCentroids(GLfloat angle, glm:
 
 void LocalEntitiesSelection::scaleAroundPivot(glm::vec3 scaleFactors, glm::vec3 pivot)
 {
-    lock();
+    LOCK
     // Only aplly the transformation if there are entities selected.
     if( size() ){
         SelectionTransformationCommand scaleCommand( localUserID() );
@@ -150,7 +150,7 @@ void LocalEntitiesSelection::scaleAroundPivot(glm::vec3 scaleFactors, glm::vec3 
 
 void LocalEntitiesSelection::scaleAroundIndividualCentroids(glm::vec3 scaleFactors)
 {
-    lock();
+    LOCK
     // Only aplly the transformation if there are entities selected.
     if( size() ){
         SelectionTransformationCommand scaleCommand( localUserID() );
@@ -170,7 +170,7 @@ void LocalEntitiesSelection::scaleAroundIndividualCentroids(glm::vec3 scaleFacto
 
 void LocalEntitiesSelection::rotate( GLfloat angle, glm::vec3 axis )
 {
-    lock();
+    LOCK
     switch( pivotPointMode() ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
             rotateAroundIndividualCentroids( angle, axis );
@@ -187,7 +187,7 @@ void LocalEntitiesSelection::rotate( GLfloat angle, glm::vec3 axis )
 
 void LocalEntitiesSelection::scale( glm::vec3 scaleFactors )
 {
-    lock();
+    LOCK
     switch( pivotPointMode() ){
         case PivotPointMode::INDIVIDUAL_CENTROIDS:
             scaleAroundIndividualCentroids( scaleFactors );

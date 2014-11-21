@@ -160,42 +160,42 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
 
 std::shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
 {
-    lock();
+    LOCK
     return oglContext_;
 }
 
 
 UsersManagerPtr Scene::getUsersManager() const
 {
-    lock();
+    LOCK
     return usersManager_;
 }
 
 
 MeshesManagerPtr Scene::getMeshesManager() const
 {
-    lock();
+    LOCK
     return entitiesManager_->getMeshesManager();
 }
 
 
 MaterialsManagerPtr Scene::getMaterialsManager() const
 {
-    lock();
+    LOCK
     return materialsManager_;
 }
 
 
 LightsManagerPtr Scene::getLightsManager() const
 {
-    lock();
+    LOCK
     return entitiesManager_->getLightsManager();
 }
 
 
 ClientPrimitivesManagerPtr Scene::getPrimitivesManager() const
 {
-    lock();
+    LOCK
     return primitivesManager_;
 }
 
@@ -208,35 +208,35 @@ EntitiesManagerPtr Scene::getEntitiesManager() const
 
 GeometricPrimitivesFactoryPtr Scene::getGeometricPrimitivesFactory() const
 {
-    lock();
+    LOCK
     return geometricPrimitivesFactory_  ;
 }
 
 
 TextureWallsManager *Scene::getTextureWallsManager() const
 {
-    lock();
+    LOCK
     return textureWallsManager_.get();
 }
 
 
 TexturesManager *Scene::getTexturesManager() const
 {
-    lock();
+    LOCK
     return texturesManager_.get();
 }
 
 
 OpenGLPtr Scene::getOpenGL() const
 {
-    lock();
+    LOCK
     return openGL_;
 }
 
 
 AuxiliarLinesRenderer *Scene::linesRenderer() const
 {
-    lock();
+    LOCK
     return linesRenderer_.get();
 }
 
@@ -253,7 +253,7 @@ void Scene::setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloa
 
 void Scene::takeOpenGLContext()
 {
-    lock();
+    LOCK
     oglContext_->makeCurrent( this );
 }
 
@@ -264,7 +264,7 @@ void Scene::takeOpenGLContext()
 
 void Scene::draw( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
-    lock();
+    LOCK
 
     // Set the background color.
     setBackgroundColor( 0.9f, 0.9f, 0.9f, 1.0f );
@@ -286,7 +286,7 @@ void Scene::emitRenderNeeded()
 
 void Scene::executeRemoteCommand( std::shared_ptr< const Command > command )
 {
-    lock();
+    LOCK
 
     log_->debug( "Scene - Executing remote command(",
                  commandTargetStrings[static_cast<unsigned int>( command->getTarget() )],
@@ -360,7 +360,7 @@ void Scene::run()
 
 void Scene::update()
 {
-    lock();
+    LOCK
     notifyObservers();
 }
 

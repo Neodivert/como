@@ -49,28 +49,28 @@ EntitiesSelection::EntitiesSelection( LightsSelection* lightsSelection, MeshesSe
 
 glm::vec3 EntitiesSelection::centroid() const
 {
-    lock();
+    LOCK
     return centroid_;
 }
 
 
 PivotPointMode EntitiesSelection::pivotPointMode() const
 {
-    lock();
+    LOCK
     return pivotPointMode_;
 }
 
 
 glm::vec4 EntitiesSelection::borderColor() const
 {
-    lock();
+    LOCK
     return lightsSelection_->borderColor();
 }
 
 
 unsigned int EntitiesSelection::size() const
 {
-    lock();
+    LOCK
     unsigned int size = 0;
 
     for( auto selection : specializedEntitiesSelections_ ){
@@ -83,7 +83,7 @@ unsigned int EntitiesSelection::size() const
 
 bool EntitiesSelection::containsEntity(const ResourceID &entityID) const
 {
-    lock();
+    LOCK
     for( auto& selection : specializedEntitiesSelections_ ){
         if( selection->containsEntity( entityID ) ){
             return true;
@@ -95,7 +95,7 @@ bool EntitiesSelection::containsEntity(const ResourceID &entityID) const
 
 std::string EntitiesSelection::name() const
 {
-    lock();
+    LOCK
     if( size() == 0 ){
         return "(Nothing selected)";
     }else if( size() == 1 ){
@@ -114,7 +114,7 @@ std::string EntitiesSelection::name() const
 
 std::string EntitiesSelection::typeName() const
 {
-    lock();
+    LOCK
     if( size() == 1 ){
         std::string typeName;
         for( auto& selection : specializedEntitiesSelections_ ){
@@ -135,7 +135,7 @@ std::string EntitiesSelection::typeName() const
 
 void EntitiesSelection::setPivotPointMode( PivotPointMode mode )
 {
-    lock();
+    LOCK
     pivotPointMode_ = mode;
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->setPivotPointMode( mode );
@@ -145,7 +145,7 @@ void EntitiesSelection::setPivotPointMode( PivotPointMode mode )
 
 void EntitiesSelection::setBorderColor(const glm::vec4 &borderColor)
 {
-    lock();
+    LOCK
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->setBorderColor( borderColor );
     }
@@ -169,7 +169,7 @@ void EntitiesSelection::setEntityModelMatrix( const ResourceID &entityID,
 
 void EntitiesSelection::translate( glm::vec3 direction )
 {
-    lock();
+    LOCK
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->translate( direction );
     }
@@ -178,7 +178,7 @@ void EntitiesSelection::translate( glm::vec3 direction )
 
 void EntitiesSelection::rotateAroundPivot( GLfloat angle, glm::vec3 axis, glm::vec3 pivot)
 {
-    lock();
+    LOCK
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->rotateAroundPivot( angle, axis, pivot );
     }
@@ -187,7 +187,7 @@ void EntitiesSelection::rotateAroundPivot( GLfloat angle, glm::vec3 axis, glm::v
 
 void EntitiesSelection::rotateAroundIndividualCentroids( GLfloat angle, glm::vec3 axis)
 {
-    lock();
+    LOCK
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->rotateAroundIndividualCentroids( angle, axis );
     }
@@ -196,7 +196,7 @@ void EntitiesSelection::rotateAroundIndividualCentroids( GLfloat angle, glm::vec
 
 void EntitiesSelection::scaleAroundPivot( glm::vec3 scaleFactors, glm::vec3 pivot)
 {
-    lock();
+    LOCK
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->scaleAroundPivot( scaleFactors, pivot );
     }
@@ -205,7 +205,7 @@ void EntitiesSelection::scaleAroundPivot( glm::vec3 scaleFactors, glm::vec3 pivo
 
 void EntitiesSelection::scaleAroundIndividualCentroids( glm::vec3 scaleFactors )
 {
-    lock();
+    LOCK
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->scaleAroundIndividualCentroids( scaleFactors );
     }
@@ -214,7 +214,7 @@ void EntitiesSelection::scaleAroundIndividualCentroids( glm::vec3 scaleFactors )
 
 void EntitiesSelection::applyTransformationMatrix(const glm::mat4 &transformation)
 {
-    lock();
+    LOCK
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->applyTransformationMatrix( transformation );
     }
@@ -223,7 +223,7 @@ void EntitiesSelection::applyTransformationMatrix(const glm::mat4 &transformatio
 
 void EntitiesSelection::setModelMatrix(const glm::mat4 &modelMatrix)
 {
-    lock();
+    LOCK
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->setModelMatrix( modelMatrix );
     }
@@ -236,7 +236,7 @@ void EntitiesSelection::setModelMatrix(const glm::mat4 &modelMatrix)
 
 bool EntitiesSelection::intersectsRay(glm::vec3 r0, glm::vec3 r1, ResourceID &closestEntity, float &minT) const
 {
-    lock();
+    LOCK
     // TODO: Return also the index of the closest intersected manager for
     // manipulating the closest entity faster after intersecting it?
     minT = FLT_MAX;
@@ -264,7 +264,7 @@ bool EntitiesSelection::intersectsRay(glm::vec3 r0, glm::vec3 r1, ResourceID &cl
 
 void EntitiesSelection::update()
 {
-    lock();
+    LOCK
     centroid_ = glm::vec3( 0.0f );
     unsigned int nSelections = 0;
 
@@ -289,7 +289,7 @@ void EntitiesSelection::update()
 
 void EntitiesSelection::drawAll( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix ) const
 {
-    lock();
+    LOCK
     for( auto selection : specializedEntitiesSelections_ ){
         selection->drawAll( openGL, viewMatrix, projectionMatrix );
     }

@@ -22,6 +22,15 @@
 #include <mutex>
 #include <memory> // std::unique_ptr
 
+// Yes, I know this is ugly, but I tried to make a method Lockable::lock()
+// returning a std::unique_guard,
+// a std::unique_ptr< std::unique_lock< std::recursive_mutex > >,
+// a std::unique_ptr< std::lock_guard< std::recursive_mutex > > and it
+// didn't work.
+#define LOCK \
+    std::lock_guard< std::recursive_mutex > lock( this->mutex_ );
+
+
 namespace como {
 
 class Lockable
@@ -49,13 +58,6 @@ class Lockable
 
 
     protected:
-        /***
-         * 4. Locking / unlocking
-         ***/
-        std::unique_ptr< std::lock_guard<std::recursive_mutex> > lock() const;
-
-
-    private:
         mutable std::recursive_mutex mutex_;
 };
 

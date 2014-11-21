@@ -97,7 +97,7 @@ class ResourcesSelection : public virtual Observable, public Lockable {
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::addResource( ResourceID id, std::unique_ptr< ResourceType > resource, bool notifyObservers )
 {
-    this->lock();
+    LOCK
     this->resources_[id] = std::move( resource );
 
     if( notifyObservers ){
@@ -109,7 +109,7 @@ void ResourcesSelection<ResourceType>::addResource( ResourceID id, std::unique_p
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::removeResource( ResourceID id )
 {
-    this->lock();
+    LOCK
     this->resources_.erase( id );
 
     this->notifyObservers();
@@ -123,7 +123,7 @@ void ResourcesSelection<ResourceType>::removeResource( ResourceID id )
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::moveResource( ResourceID resourceID, ResourcesSelection<ResourceType>& dstSelection )
 {
-    this->lock();
+    LOCK
     // Don't notify observers when adding resource to destiny.
     // Observers may query source selection, which holds a
     // null "moved" pointer at that time.
@@ -136,7 +136,7 @@ void ResourcesSelection<ResourceType>::moveResource( ResourceID resourceID, Reso
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::moveAll( ResourcesSelection<ResourceType>& dstSelection )
 {
-    this->lock();
+    LOCK
     // TODO: Maybe a more efficient way?
     for( auto& resourcePair : this->resources_ ){
         dstSelection.addResource( resourcePair.first, std::move( resourcePair.second ), false );
@@ -152,7 +152,7 @@ void ResourcesSelection<ResourceType>::moveAll( ResourcesSelection<ResourceType>
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::clear()
 {
-    this->lock();
+    LOCK
     this->resources_.clear();
 
     this->notifyObservers();
@@ -166,7 +166,7 @@ void ResourcesSelection<ResourceType>::clear()
 template <class ResourceType>
 unsigned int ResourcesSelection<ResourceType>::size() const
 {
-    this->lock();
+    LOCK
     return this->resources_.size();
 }
 
@@ -174,7 +174,7 @@ unsigned int ResourcesSelection<ResourceType>::size() const
 template <class ResourceType>
 bool ResourcesSelection<ResourceType>::containsResource(const ResourceID &resourceID) const
 {
-    this->lock();
+    LOCK
     return ( this->resources_.count( resourceID ) != 0 );
 }
 
@@ -182,7 +182,7 @@ bool ResourcesSelection<ResourceType>::containsResource(const ResourceID &resour
 template <class ResourceType>
 ResourceHeadersList ResourcesSelection<ResourceType>::headers() const
 {
-    this->lock();
+    LOCK
     ResourceHeadersList headers;
 
     for( const Resource& resource : resources_ ){

@@ -91,7 +91,7 @@ SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesS
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 std::string SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getResourceName(const ResourceID &resourceID) const
 {
-    lock();
+    LOCK
     (void)( resourceID );
     return "light";
 }
@@ -100,7 +100,7 @@ std::string SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, Loc
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 bool SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::containsResource(const ResourceID &resourceID) const
 {
-    lock();
+    LOCK
     return this->ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::containsResource( resourceID );
 }
 
@@ -112,7 +112,7 @@ bool SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResou
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 bool SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::pick(const glm::vec3 &rayOrigin, glm::vec3 rayDirection, ResourceID& closestObject, float &t, const float &MAX_T) const
 {
-    lock();
+    LOCK
 
     t = MAX_T;
 
@@ -131,7 +131,7 @@ bool SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResou
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 void SpecializedEntitiesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::drawAll( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
 {
-    lock();
+    LOCK
     for( const auto& entitiesSelectionPair : this->resourcesSelections_ ){
         entitiesSelectionPair.second->drawAll( openGL, viewMatrix, projectionMatrix );
     }

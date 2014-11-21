@@ -212,7 +212,6 @@ SOURCES += \
     ../../src/common/utilities/color.cpp \
     ../../src/common/commands/commands_file_parser.cpp \
     ../../src/common/ids/resource_ids_generator.cpp \
-    ../../src/common/utilities/lockable.cpp \
     ../../src/common/transformable/transformable.cpp \
     ../../src/common/commands/entity_commands/entity_command.cpp \
     ../../src/common/commands/entity_commands/model_matrix_replacement_command.cpp \

@@ -147,7 +147,7 @@ ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionTy
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 bool ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::containsResource( const ResourceID& resourceID ) const
 {
-    lock();
+    LOCK
     for( const auto& selection : resourcesSelections_ ){
         if( selection.second->containsResource( resourceID ) ){
             return true;
@@ -161,7 +161,7 @@ bool ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 LocalResourcesSelectionType* ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getLocalResourcesSelection() const
 {
-    lock();
+    LOCK
     return static_cast< LocalResourcesSelectionType* >( resourcesSelections_.at( localUserID() ).get() );
 }
 
@@ -169,7 +169,7 @@ LocalResourcesSelectionType* ResourcesManager<ResourceType, ResourcesSelectionTy
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 ResourceHeadersList ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::headers() const
 {
-    lock();
+    LOCK
     ResourceHeadersList headers;
     ResourceHeadersList selectionHeaders;
 
@@ -186,7 +186,7 @@ ResourceHeadersList ResourcesManager<ResourceType, ResourcesSelectionType, Local
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 ResourceHeadersList ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::localHeaders() const
 {
-    lock();
+    LOCK
     return resourcesSelections_.at( localUserID() )->headers();
 }
 
@@ -198,7 +198,7 @@ ResourceHeadersList ResourcesManager<ResourceType, ResourcesSelectionType, Local
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::update()
 {
-    lock();
+    LOCK
     // Simply forward the notification.
     notifyObservers();
 }
@@ -207,7 +207,7 @@ void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::addResourcesSelectionObserver( UserID userID, Observer *observer )
 {
-    lock();
+    LOCK
     resourcesSelections_.at( userID )->Observable::addObserver( observer );
 }
 
@@ -215,7 +215,7 @@ void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::removeResourcesSelectionObserver( UserID userID, Observer *observer )
 {
-    lock();
+    LOCK
     resourcesSelections_.at( userID )->Observable::removeObserver( observer );
 }
 
@@ -228,7 +228,7 @@ template <class ResourceType, class ResourcesSelectionType, class LocalResources
 template <typename... Args>
 void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::createResourcesSelection( UserID userID, Args... args )
 {
-    lock();
+    LOCK
     resourcesSelections_[userID] = std::unique_ptr< ResourcesSelectionType >( new ResourcesSelectionType( args... ) );
 
     addResourcesSelectionObserver( userID, this );
@@ -238,7 +238,7 @@ void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::removeResourcesSelection(UserID userID)
 {
-    lock();
+    LOCK
     resourcesSelections_.erase( userID );
 }
 
@@ -250,7 +250,7 @@ void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 ResourcesSelectionType* ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::getResourcesSelection( UserID userID ) const
 {
-    lock();
+    LOCK
     return resourcesSelections_.at( userID ).get();
 }
 
@@ -262,7 +262,7 @@ ResourcesSelectionType* ResourcesManager<ResourceType, ResourcesSelectionType, L
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::lockResource( const ResourceID& resourceID, UserID newOwner )
 {
-    lock();
+    LOCK
     this->nonSelectedResources_->moveResource( resourceID, *( this->getResourcesSelection( newOwner ) ) );
 }
 
@@ -270,7 +270,7 @@ void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::unlockResourcesSelection( UserID currentOwner )
 {
-    lock();
+    LOCK
     this->getResourcesSelection( currentOwner )->moveAll( *( this->nonSelectedResources_ ) );
 }
 
@@ -278,7 +278,7 @@ void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelect
 template <class ResourceType, class ResourcesSelectionType, class LocalResourcesSelectionType>
 void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::clearResourcesSelection( UserID currentOwner )
 {
-    lock();
+    LOCK
     this->getResourcesSelection( currentOwner )->clear();
 }
 

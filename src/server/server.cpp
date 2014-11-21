@@ -130,7 +130,7 @@ void Server::run()
 // TODO: Make use of errorCode?
 void Server::disconnect()
 {
-    lock();
+    LOCK
 
     boost::system::error_code errorCode;
 
@@ -153,7 +153,7 @@ void Server::disconnect()
 
 void Server::broadcast()
 {
-    lock();
+    LOCK
 
     log_->debug( "Server - broadcasting\n" );
     UsersMap::iterator user;
@@ -171,7 +171,7 @@ void Server::broadcast()
 
 void Server::listen()
 {
-    lock();
+    LOCK
 
     log_->debug( "Listening on port (", port_, ")\n" );
 
@@ -186,7 +186,7 @@ void Server::listen()
 
 void Server::onAccept( const boost::system::error_code& errorCode )
 {
-    lock();
+    LOCK
 
     boost::system::error_code closingErrorCode;
 
@@ -272,7 +272,7 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
                                  UserID userID,
                                  const SceneUpdatePacket& sceneUpdate )
 {
-    lock();
+    LOCK
 
     const CommandsList* commands = nullptr;
 
@@ -297,7 +297,7 @@ void Server::processSceneUpdatePacket( const boost::system::error_code& errorCod
 
 void Server::processSceneCommand( const Command& sceneCommand )
 {
-    lock();
+    LOCK
 
     // This includes inserting the command into the historic.
     scene_.processCommand( sceneCommand );
@@ -310,7 +310,7 @@ void Server::processSceneCommand( const Command& sceneCommand )
 
 void Server::addCommand( CommandConstPtr sceneCommand )
 {
-    lock();
+    LOCK
     // Add the command to the historic.
     commandsHistoric_->addCommand( std::move( sceneCommand ) );
 }
@@ -323,7 +323,7 @@ void Server::addCommand( CommandConstPtr sceneCommand )
 
 void Server::deleteUser( UserID id )
 {
-    lock();
+    LOCK
     log_->debug( "Server::deleteUser(", id, ")\n" );
 
     // Return user's color to free colors container.
@@ -384,7 +384,7 @@ void Server::workerThread()
 
 void Server::openAcceptor()
 {
-    lock();
+    LOCK
 
     // Set an endpoint for given server TCP port.
     boost::asio::ip::tcp::endpoint endpoint( boost::asio::ip::tcp::v4(), port_ );
@@ -405,7 +405,7 @@ void Server::openAcceptor()
 
 bool Server::nameInUse( const char* newName ) const
 {
-    lock();
+    LOCK
 
     UsersMap::const_iterator user;
 

@@ -38,7 +38,7 @@ UserID User::getID() const
 {
     UserID id;
 
-    //mutex_.lock();
+    //mutex_.LOCK
     id = id_;
     //mutex_.unlock();
 
@@ -48,7 +48,7 @@ UserID User::getID() const
 
 std::string User::getName() const
 {
-    //mutex_.lock();
+    //mutex_.LOCK
     //mutex_.unlock();
 
     return name_;

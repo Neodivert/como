@@ -124,7 +124,7 @@ void Log::write( T value, Args... args )
 template< class T>
 void Log::debug( T value )
 {
-    lock();
+    LOCK
     write( "[DEBUG] ", value );
 }
 
@@ -132,7 +132,7 @@ void Log::debug( T value )
 template< class T, class... Args >
 void Log::debug( T value, Args... args )
 {
-    lock();
+    LOCK
     write( "[DEBUG] ", value, args... );
 }
 
@@ -144,7 +144,7 @@ void Log::debug( T value, Args... args )
 template< class T>
 void Log::warning( T value )
 {
-    lock();
+    LOCK
     write( "[WARNING] ", value );
 }
 
@@ -152,7 +152,7 @@ void Log::warning( T value )
 template< class T, class... Args >
 void Log::warning( T value, Args... args )
 {
-    lock();
+    LOCK
     write( "[WARNING] ", value, args... );
 }
 
@@ -164,7 +164,7 @@ void Log::warning( T value, Args... args )
 template< class T >
 void Log::error( T value )
 {
-    lock();
+    LOCK
     write( "[ERROR] ", value );
 }
 
@@ -172,7 +172,7 @@ void Log::error( T value )
 template< class T, class... Args >
 void Log::error( T value, Args... args )
 {
-    lock();
+    LOCK
     write( "[ERROR] ", value, args... );
 }
 

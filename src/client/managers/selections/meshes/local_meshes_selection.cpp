@@ -33,7 +33,7 @@ LocalMeshesSelection::LocalMeshesSelection( ServerInterfacePtr server ) :
 
 ResourceID LocalMeshesSelection::addResource( std::unique_ptr<Mesh> resource )
 {
-    lock();
+    LOCK
     // FIXME: Duplicated code in LocalLightsSelection::addResource().
     ResourceID resourceID = reserveResourceIDs( 1 );
 

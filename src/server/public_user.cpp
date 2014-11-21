@@ -47,7 +47,7 @@ PublicUser::PublicUser( UserID id, const char* name,
     updateRequested_( false ),
     color_( color )
 {
-    lock();
+    LOCK
 
     readSceneUpdatePacket();
     requestUpdate();
@@ -60,7 +60,7 @@ PublicUser::PublicUser( UserID id, const char* name,
 
 void PublicUser::requestUpdate()
 {
-    lock();
+    LOCK
 
     if( !updateRequested_ && needsSceneUpdatePacket() ){
         updateRequested_ = true;
@@ -71,7 +71,7 @@ void PublicUser::requestUpdate()
 /*
 void PublicUser::update()
 {
-    mutex_.lock();
+    mutex_.LOCK
     if( !synchronizing_ && needsSceneUpdatePacket() ){
         sendNextSceneUpdatePacket();
     }
@@ -86,7 +86,7 @@ void PublicUser::update()
 
 void PublicUser::readSceneUpdatePacket()
 {
-    lock();
+    LOCK
     sceneUpdatePacketFromUser_.clear();
     sceneUpdatePacketFromUser_.asyncRecv( socket_, boost::bind( &PublicUser::onReadSceneUpdatePacket, this, _1, _2 ) );
 }
@@ -95,7 +95,7 @@ void PublicUser::readSceneUpdatePacket()
 void PublicUser::onReadSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet )
 {
     // Call to lock() or deadlock Server-PublicUser?
-    lock();
+    LOCK
 
     // Call to the processing callback in the server.
     processSceneUpdatePacketCallback_( errorCode, getID(), *( std::dynamic_pointer_cast<const SceneUpdatePacket>( packet ) ) );
@@ -108,7 +108,7 @@ void PublicUser::onReadSceneUpdatePacket( const boost::system::error_code& error
 
 bool PublicUser::needsSceneUpdatePacket() const
 {
-    lock();
+    LOCK
     return ( nextCommand_ < commandsHistoric_->getSize() ) ||
             ( pendingResponseCommands_.size() );
 }
@@ -116,7 +116,7 @@ bool PublicUser::needsSceneUpdatePacket() const
 
 void PublicUser::sendNextSceneUpdatePacket()
 {
-    lock();
+    LOCK
 
     // Create and prepare a SCENE_UPDATE packet.
     outSceneUpdatePacketPacket_.clear();
@@ -152,7 +152,7 @@ void PublicUser::sendNextSceneUpdatePacket()
 
 void PublicUser::onWriteSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet )
 {
-    lock();
+    LOCK
 
     updateRequested_ = false;
 
@@ -181,7 +181,7 @@ void PublicUser::onWriteSceneUpdatePacket( const boost::system::error_code& erro
 
 void PublicUser::addResponseCommand( CommandConstPtr responseCommand)
 {
-    lock();
+    LOCK
     pendingResponseCommands_.push( std::move( responseCommand ) );
     requestUpdate();
 }
@@ -193,7 +193,7 @@ void PublicUser::addResponseCommand( CommandConstPtr responseCommand)
 
 std::uint32_t PublicUser::getColor()
 {
-    lock();
+    LOCK
     return color_;
 }
 

@@ -47,7 +47,7 @@ ServerPrimitivesManager::ServerPrimitivesManager(const std::string& sceneDirPath
 
 void ServerPrimitivesManager::createPrimitivesDir()
 {
-    lock();
+    LOCK
     char consoleCommand[256] = {0};
     int lastCommandResult = 0;
 
@@ -75,7 +75,7 @@ void ServerPrimitivesManager::createPrimitivesDir()
 
 void ServerPrimitivesManager::syncPrimitivesDir()
 {
-    lock();
+    LOCK
     //createPrimitivesDir();
 
     const char* filePath = nullptr;
@@ -98,7 +98,7 @@ void ServerPrimitivesManager::syncPrimitivesDir()
 
 ResourceID ServerPrimitivesManager::createCategory( std::string name )
 {
-    lock();
+    LOCK
 
     const ResourceID categoryID = resourceIDsGenerator_->generateResourceIDs( 1 );
 
@@ -115,7 +115,7 @@ ResourceID ServerPrimitivesManager::createCategory( std::string name )
 
 void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
 {
-    lock();
+    LOCK
 
     const boost::filesystem::directory_iterator endIterator;
     boost::filesystem::directory_iterator fileIterator( dirPath );
@@ -166,7 +166,7 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
 
 std::list<PlainMaterialData> ServerPrimitivesManager::primitivePlainMaterialsData( const ResourceID &primitiveID )
 {
-    lock();
+    LOCK
 
     // TODO: Avoid reading full primitive only for retrieving its materials.
     log_->debug( "Getting materials from primitive (", primitiveID, ")\n" );
@@ -188,7 +188,7 @@ std::list<PlainMaterialData> ServerPrimitivesManager::primitivePlainMaterialsDat
 
 ResourceID ServerPrimitivesManager::registerCategory( std::string categoryName )
 {
-    lock();
+    LOCK
 
     const ResourceID categoryID = resourceIDsGenerator_->generateResourceIDs( 1 );
 
@@ -210,7 +210,7 @@ ResourceID ServerPrimitivesManager::registerCategory( std::string categoryName )
 
 void ServerPrimitivesManager::registerPrimitive( PrimitiveInfo primitive )
 {
-    lock();
+    LOCK
 
     const ResourceID primitiveID = resourceIDsGenerator_->generateResourceIDs( 1 );
     registerPrimitive( primitive, primitiveID );
@@ -219,7 +219,7 @@ void ServerPrimitivesManager::registerPrimitive( PrimitiveInfo primitive )
 
 void ServerPrimitivesManager::registerPrimitive(PrimitiveInfo primitive, const ResourceID &primitiveID)
 {
-    lock();
+    LOCK
     // We are about to create a command which needs to keep a copy of the
     // current primitive, so we create such copy in the tmp directory.
     PrimitiveInfo primitiveCopy = primitive.copy(

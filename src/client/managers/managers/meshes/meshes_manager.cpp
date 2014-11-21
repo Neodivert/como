@@ -43,7 +43,7 @@ MeshesManager::MeshesManager( ServerInterfacePtr server, LogPtr log, MaterialsMa
 // TODO: Remove and use ResourcesManager::resourceName() instead.
 std::string MeshesManager::getResourceName( const ResourceID& resourceID ) const
 {
-    lock();
+    LOCK
     for( const auto& meshesSelection : resourcesSelections_ ){
         if( meshesSelection.second->containsResource( resourceID ) ){
             return meshesSelection.second->getResourceName( resourceID );
@@ -56,7 +56,7 @@ std::string MeshesManager::getResourceName( const ResourceID& resourceID ) const
 
 ElementsMeetingCondition MeshesManager::displaysVertexNormals() const
 {
-    lock();
+    LOCK
     const ElementsMeetingCondition firstSelectionValue =
             resourcesSelections_.begin()->second->displaysVertexNormals();
 
@@ -76,7 +76,7 @@ ElementsMeetingCondition MeshesManager::displaysVertexNormals() const
 
 unsigned int MeshesManager::getTotalMeshes() const
 {
-    lock();
+    LOCK
     unsigned int totalMeshes = 0;
 
     for( const auto& meshesSelection : resourcesSelections_ ){
@@ -93,7 +93,7 @@ unsigned int MeshesManager::getTotalMeshes() const
 
 void MeshesManager::displayVertexNormals( bool display )
 {
-    lock();
+    LOCK
     newMeshesDisplayVertexNormals_ = display;
 
     for( auto& meshesSelection : resourcesSelections_ ){
@@ -104,7 +104,7 @@ void MeshesManager::displayVertexNormals( bool display )
 
 void MeshesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
 {
-    lock();
+    LOCK
     switch( frequency ){
         case MeshEdgesDisplayFrequency::ALWAYS:
             getResourcesSelection( NO_USER )->displayEdges( true );
@@ -122,7 +122,7 @@ void MeshesManager::displayEdges( MeshEdgesDisplayFrequency frequency )
 
 ResourceID MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData )
 {    
-    lock();
+    LOCK
     const ResourceID& meshID = reserveResourceIDs( 1 );
     const ResourceID& firstMaterialID = reserveResourceIDs( primitiveData.materialsInfo_.size() );
 
@@ -134,7 +134,7 @@ ResourceID MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData
 
 glm::vec3 MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData, const ResourceID& meshID, const ResourceID& firstMaterialID )
 {
-    lock();
+    LOCK
     std::unique_ptr< Mesh > mesh( new ImportedMesh( meshID, firstMaterialID, primitiveData, *materialsManager_, newMeshesDisplayVertexNormals_ ) );
     glm::vec3 meshCentroid = mesh->getOriginalCentroid();
 
@@ -146,7 +146,7 @@ glm::vec3 MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData,
 
 ResourceID MeshesManager::addMesh( MeshPtr mesh )
 {
-    lock();
+    LOCK
     ResourceID meshID = reserveResourceIDs( 1 );
 
     addMesh( std::move( mesh ), meshID );
@@ -157,7 +157,7 @@ ResourceID MeshesManager::addMesh( MeshPtr mesh )
 
 void MeshesManager::addMesh( MeshPtr mesh, const ResourceID& meshID )
 {
-    lock();
+    LOCK
     //getResourcesSelection( meshID.getCreatorID() )->addResource( meshID, std::move( mesh ) );
 
     // FIXME: Meshes are initially unselected because when loading an Scene
@@ -173,14 +173,14 @@ void MeshesManager::addMesh( MeshPtr mesh, const ResourceID& meshID )
 
 void MeshesManager::registerUser( UserID userID )
 {
-    lock();
+    LOCK
     resourcesSelections_[ userID ];
 }
 
 
 void MeshesManager::removeUser( UserID userID )
 {
-    lock();
+    LOCK
     unlockResourcesSelection( userID );
     resourcesSelections_.erase( userID );
 }
@@ -192,7 +192,7 @@ void MeshesManager::removeUser( UserID userID )
 
 void MeshesManager::lockResource( const ResourceID &resourceID, UserID newOwner )
 {
-    lock();
+    LOCK
     ResourcesManager::lockResource( resourceID, newOwner );
 
     materialsManager_->lockMeshMaterials( resourceID, newOwner );
@@ -203,7 +203,7 @@ void MeshesManager::lockResource( const ResourceID &resourceID, UserID newOwner 
 
 void MeshesManager::unlockResourcesSelection( UserID currentOwner )
 {   
-    lock();
+    LOCK
     ResourcesManager::unlockResourcesSelection( currentOwner );
 
     materialsManager_->unlockUserMaterials( currentOwner );
@@ -214,7 +214,7 @@ void MeshesManager::unlockResourcesSelection( UserID currentOwner )
 
 void MeshesManager::clearResourcesSelection( UserID currentOwner )
 {
-    lock();
+    LOCK
     ResourcesManager::clearResourcesSelection( currentOwner );
 
     materialsManager_->removeUserMaterials( currentOwner );

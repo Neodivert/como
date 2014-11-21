@@ -42,28 +42,28 @@ SystemPrimitivesFactory::SystemPrimitivesFactory( ServerInterfacePtr server, Mes
 
 ResourceID SystemPrimitivesFactory::createCube( float width, float height, float depth )
 {
-    lock();
+    LOCK
     return cubesFactory_.createCube( width, height, depth );
 }
 
 
 ResourceID SystemPrimitivesFactory::createCone( float height, float radius, std::uint16_t nBaseVertices )
 {
-    lock();
+    LOCK
     return conesFactory_.createCone( height, radius, nBaseVertices );
 }
 
 
 ResourceID SystemPrimitivesFactory::createCylinder( float height, float radius, std::uint16_t nRadialVertices )
 {
-    lock();
+    LOCK
     return cylindersFactory_.createCylinder( height, radius, nRadialVertices );
 }
 
 
 ResourceID SystemPrimitivesFactory::createSphere( float radius, std::uint16_t nDivisions )
 {
-    lock();
+    LOCK
     return spheresFactory_.createSphere( radius, nDivisions );
 }
 
@@ -74,7 +74,7 @@ ResourceID SystemPrimitivesFactory::createSphere( float radius, std::uint16_t nD
 
 void SystemPrimitivesFactory::executeRemoteCommand( const GeometricPrimitiveCommand& command )
 {
-    lock();
+    LOCK
     switch( command.getType() ){
         case GeometricPrimitiveCommandType::CUBE_CREATION:{
             const CubeCreationCommand& creationCommand =

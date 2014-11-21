@@ -48,7 +48,7 @@ const Camera* CamerasManager::activeCamera() const
 
 void CamerasManager::executeRemoteCommand( const CameraCommand &command )
 {
-    lock();
+    LOCK
     switch( command.getType() ){
         case CameraCommandType::CAMERA_CREATION:{
             const CameraCreationCommand& creationCommand =
@@ -83,7 +83,7 @@ void CamerasManager::createCamera( const ResourceID &cameraID,
                                    const glm::vec3 &cameraEye,
                                    const glm::vec3 &cameraUp )
 {
-    lock();
+    LOCK
     std::unique_ptr< Camera > camera( new Camera( cameraID,
                                                   *openGL_,
                                                   cameraCenter,

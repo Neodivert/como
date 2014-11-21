@@ -36,7 +36,7 @@ LightsSelection::LightsSelection( glm::vec4 borderColor ) :
 
 Color LightsSelection::getLightColor() const
 {
-    lock();
+    LOCK
     if( resources_.size() == 0 ){
         throw std::runtime_error( "LightsSelection::getLightColor() called on empty LightsSelection" );
     }
@@ -46,7 +46,7 @@ Color LightsSelection::getLightColor() const
 
 float LightsSelection::getAmbientCoefficient() const
 {
-    lock();
+    LOCK
     if( resources_.size() == 0 ){
         throw std::runtime_error( "LightsSelection::getAmbientCoefficient() called on empty LightsSelection" );
     }
@@ -60,7 +60,7 @@ float LightsSelection::getAmbientCoefficient() const
 
 void LightsSelection::setLightColor( const Color& color )
 {
-    lock();
+    LOCK
     for( auto& lightPair : resources_ ){
         lightPair.second->setLightColor( color );
     }
@@ -69,14 +69,14 @@ void LightsSelection::setLightColor( const Color& color )
 
 void LightsSelection::setLightColor(const ResourceID &lightID, const Color &color)
 {
-    lock();
+    LOCK
     resources_.at( lightID )->setLightColor( color );
 }
 
 
 void LightsSelection::setAmbientCoefficient( float coefficient )
 {
-    lock();
+    LOCK
     for( auto& lightPair : resources_ ){
         lightPair.second->setAmbientCoefficient( coefficient );
     }
@@ -85,7 +85,7 @@ void LightsSelection::setAmbientCoefficient( float coefficient )
 
 void LightsSelection::setAmbientCoefficient( const ResourceID &lightID, float coefficient )
 {
-    lock();
+    LOCK
     resources_.at( lightID )->setAmbientCoefficient( coefficient );
 }
 
@@ -96,7 +96,7 @@ void LightsSelection::setAmbientCoefficient( const ResourceID &lightID, float co
 
 void LightsSelection::sendToShader( OpenGL &openGL, const glm::mat4& viewMatrix ) const
 {
-    lock();
+    LOCK
     for( const auto& light : resources_ ){
         light.second->sendToShader( openGL, viewMatrix );
     }

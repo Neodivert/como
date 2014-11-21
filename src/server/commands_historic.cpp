@@ -36,7 +36,7 @@ CommandsHistoric::CommandsHistoric( std::function< void () > broadcastCallback )
 
 unsigned int CommandsHistoric::getSize() const
 {
-    lock();
+    LOCK
     return commands_.size();
 }
 
@@ -48,7 +48,7 @@ unsigned int CommandsHistoric::getSize() const
 void CommandsHistoric::addCommand( CommandConstPtr command )
 {
     {
-        lock();
+        LOCK
 
         // Push back the given command.
         commands_.push_back( std::move( command ) );
@@ -68,7 +68,7 @@ std::uint32_t CommandsHistoric::fillSceneUpdatePacketPacket( SceneUpdatePacket& 
                                                        const unsigned int nCommands,
                                                        UserID userID ) const
 {
-    lock();
+    LOCK
 
     /*
     // Validity check: maxCommands can't be zero.

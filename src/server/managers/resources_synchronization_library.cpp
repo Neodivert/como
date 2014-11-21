@@ -56,7 +56,7 @@ ResourcesSynchronizationLibrary::ResourcesSynchronizationLibrary( CommandsHistor
 
 void ResourcesSynchronizationLibrary::processCommand( const Command &command )
 {
-    lock();
+    LOCK
     log()->debug( "Processing command (target: ",
                   commandTargetStrings[(int)( command.getTarget())],
                   ")\n" );
@@ -295,7 +295,7 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
 
 void ResourcesSynchronizationLibrary::saveToFile( std::ofstream& file ) const
 {
-    lock();
+    LOCK
     CommandsFileParser fileParser( unpackingDirPath_ );
 
     // First pass: write creation commands to file.
@@ -318,7 +318,7 @@ void ResourcesSynchronizationLibrary::saveToFile( std::ofstream& file ) const
 
 void ResourcesSynchronizationLibrary::readFromFile( std::ifstream& file )
 {
-    lock();
+    LOCK
     CommandsFileParser fileParser( unpackingDirPath_ );
     CommandPtr command;
 
@@ -334,7 +334,7 @@ void ResourcesSynchronizationLibrary::readFromFile( std::ifstream& file )
 
 void ResourcesSynchronizationLibrary::registerResource(const ResourceID& resourceID, UserID ownerID, bool deletable )
 {
-    lock();
+    LOCK
 
     resourcesOwnershipMap_[ resourceID ] = ownerID;
 
@@ -352,7 +352,7 @@ void ResourcesSynchronizationLibrary::registerResource(const ResourceID& resourc
 
 void ResourcesSynchronizationLibrary::removeUser( UserID userID )
 {
-    lock();
+    LOCK
 
     unlockResourcesSelection( userID );
 }
@@ -364,7 +364,7 @@ void ResourcesSynchronizationLibrary::removeUser( UserID userID )
 
 void ResourcesSynchronizationLibrary::lockResource( const ResourceID& resourceID, UserID userID )
 {
-    lock();
+    LOCK
     log()->debug( "User (", userID, ") tries to lock resource (", resourceID, "): " );
     if( resourcesSyncData_.at( resourceID )->resourceOwner() == NO_USER ){
         resourcesSyncData_.at( resourceID )->setResourceOwner( userID );
@@ -380,7 +380,7 @@ void ResourcesSynchronizationLibrary::lockResource( const ResourceID& resourceID
 
 void ResourcesSynchronizationLibrary::unlockResourcesSelection( UserID userID )
 {
-    lock();
+    LOCK
     log()->debug( "(User: ", userID, ") Unlocking Selection\n" );
     for( auto& resourceSyncData : resourcesSyncData_ ){
         if( resourceSyncData.second->resourceOwner() == userID ){
@@ -391,7 +391,7 @@ void ResourcesSynchronizationLibrary::unlockResourcesSelection( UserID userID )
 
 void ResourcesSynchronizationLibrary::deleteResourcesSelection( UserID userID )
 {
-    lock();
+    LOCK
     log()->debug( "(User: ", userID, ") Deleting Selection\n" );
     std::map< ResourceID, ResourceSyncDataPtr >::iterator currentElement;
 
@@ -438,7 +438,7 @@ void ResourcesSynchronizationLibrary::deleteResource( const ResourceID &resource
 
 void ResourcesSynchronizationLibrary::processLockResponse( const ResourceID& resourceID, bool lockResponse )
 {
-    lock();
+    LOCK
     // TODO: Make this trick unnecessary.
     (void)( resourceID );
     (void)( lockResponse );
