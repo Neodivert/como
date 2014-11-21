@@ -24,38 +24,42 @@
 
 namespace como {
 
-// TODO: Convert into a monitor.
 class User : public std::enable_shared_from_this< User >
 {
-    private:
-        // User's id and name.
-        UserID id_;
-        std::string name_;
-
     public:
         /***
-         * 1. Initialization and destruction
+         * 1. Construction
          ***/
         User( UserID id, std::string name );
         User() = delete;
         User( const User& ) = default;
         User( User&& ) = default;
 
+
+        /***
+         * 2. Destruction
+         ***/
         virtual ~User() = default;
 
 
         /***
-         * 2. Getters
+         * 3. Getters
          ***/
         UserID getID() const ;
         std::string getName() const ;
 
 
         /***
-         * 3. Operators
+         * 4. Operators
          ***/
         User& operator = (const User& ) = delete;
         User& operator = ( User&& ) = delete;
+
+
+    private:
+        // User's id and name.
+        UserID id_;
+        std::string name_;
 };
 
 } // namespace como

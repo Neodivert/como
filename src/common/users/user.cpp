@@ -21,7 +21,7 @@
 namespace como {
 
 /***
- * 1. Initialization and destruction
+ * 1. Construction
  ***/
 
 User::User( UserID id, std::string name ) :
@@ -31,26 +31,17 @@ User::User( UserID id, std::string name ) :
 
 
 /***
- * 2. Getters
+ * 3. Getters
  ***/
 
 UserID User::getID() const
 {
-    UserID id;
-
-    //mutex_.LOCK
-    id = id_;
-    //mutex_.unlock();
-
-    return id;
+    return id_;
 }
 
 
 std::string User::getName() const
 {
-    //mutex_.LOCK
-    //mutex_.unlock();
-
     return name_;
 }
 
