@@ -67,13 +67,6 @@ void PrimitiveData::generateOGLData()
                     " != " +
                     std::to_string( normalData.normalTriangles.size() ) );
     }
-    if( oglData.includesTextures && ( vertexData.vertexTriangles.size() != uvData.uvTriangles.size() ) ){
-        throw std::runtime_error(
-                    "vertexTriangles != uvTriangles (" +
-                    std::to_string( vertexData.vertexTriangles.size() ) +
-                    " != " +
-                    std::to_string( uvData.uvTriangles.size() ) );
-    }
 
     for( currentTriangleIndex = 0; currentTriangleIndex < vertexData.vertexTriangles.size(); currentTriangleIndex++ ){
         for( currentTriangleElement = 0; currentTriangleElement < 3; currentTriangleElement++ ){
