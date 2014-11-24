@@ -115,4 +115,15 @@ void SystemPrimitiveData::generatePerFaceNormals( unsigned int wallIndex )
     }
 }
 
+
+std::vector<TrianglesGroup> SystemPrimitiveData::getTrianglesGroups() const
+{
+    std::vector<TrianglesGroup> trianglesGroups;
+    for( const TrianglesGroup& trianglesGroup : this->trianglesGroups ){
+        trianglesGroups.push_back( trianglesGroup );
+    }
+
+    return trianglesGroups;
+}
+
 } // namespace como

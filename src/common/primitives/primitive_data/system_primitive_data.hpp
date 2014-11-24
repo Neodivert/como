@@ -35,6 +35,9 @@ struct SystemPrimitiveData : public PrimitiveData
 
     void generatePerVertexNormals( unsigned int wallIndex );
     void generatePerFaceNormals( unsigned int wallIndex );
+
+
+    virtual std::vector<TrianglesGroup> getTrianglesGroups() const;
 };
 
 } // namespace como

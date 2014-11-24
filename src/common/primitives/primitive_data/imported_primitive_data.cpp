@@ -32,7 +32,22 @@ ImportedPrimitiveData::ImportedPrimitiveData(std::string filePath)
 
 
 /***
- * 2. File reading / writing
+ * 2. Getters
+ ***/
+
+std::vector<TrianglesGroup> ImportedPrimitiveData::getTrianglesGroups() const
+{
+    std::vector<TrianglesGroup> trianglesGroups;
+    for( const TrianglesGroup& trianglesGroup : trianglesGroups_ ){
+        trianglesGroups.push_back( trianglesGroup );
+    }
+
+    return trianglesGroups;
+}
+
+
+/***
+ * 3. File reading / writing
  ***/
 
 void ImportedPrimitiveData::read( std::ifstream &file )
@@ -50,12 +65,13 @@ void ImportedPrimitiveData::write( std::ofstream &file ) const
 
 
 /***
- * 3. File reading (auxiliar methods)
+ * 4. File reading (auxiliar methods)
  ***/
 
 void ImportedPrimitiveData::readTrianglesGroups( std::ifstream& file )
 {
     std::string fileLine;
+    int includesUV;
 
     // Read the number of triangles groups and reserve space for them.
     std::getline( file, fileLine );
@@ -66,16 +82,19 @@ void ImportedPrimitiveData::readTrianglesGroups( std::ifstream& file )
         std::getline( file, fileLine );
 
         sscanf( fileLine.c_str(),
-                "%u %u %u",
+                "%u %u %d %u",
                 &( trianglesGroup.firstTriangleIndex ),
                 &( trianglesGroup.nTriangles ),
+                &( includesUV ),
                 &( trianglesGroup.materialIndex ) );
+
+        trianglesGroup.includesUV = (includesUV != 0);
     }
 }
 
 
 /***
- * 4. File writting (auxiliar methods)
+ * 5. File writting (auxiliar methods)
  ***/
 
 void ImportedPrimitiveData::writeTrianglesGroups( std::ofstream &file ) const
@@ -87,6 +106,7 @@ void ImportedPrimitiveData::writeTrianglesGroups( std::ofstream &file ) const
     for( const auto& trianglesGroup : trianglesGroups_ ){
         file << trianglesGroup.firstTriangleIndex << " "
              << trianglesGroup.nTriangles << " "
+             << trianglesGroup.includesUV << " "
              << trianglesGroup.materialIndex << std::endl;
     }
 }

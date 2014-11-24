@@ -141,6 +141,9 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
             primitiveData.trianglesGroups_.push_back( newTrianglesGroup );
         }
 
+        const unsigned int nUVTrianglesBeforeFaceInsertion =
+                primitiveData.uvData.uvTriangles.size();
+
         switch( getFaceType( lineBody ) ){
             case FaceType::TRIANGLE:
                 processTriangleFaceStr( lineBody, primitiveData );
@@ -152,11 +155,18 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
                 throw std::runtime_error( "OBJ primitive importer can't process faces others than triangles and quads" );
             break;
         }
+
+        const unsigned int nUVTrianglesAfterFaceInsertion =
+                primitiveData.uvData.uvTriangles.size();
+
+        primitiveData.trianglesGroups_.back().includesUV =
+                ( nUVTrianglesAfterFaceInsertion != nUVTrianglesBeforeFaceInsertion );
+
     }else if( lineHeader == "mtllib" ){
         boost::filesystem::path fileDirectory = boost::filesystem::path( filePath ).parent_path();
         std::string materialFilePath = ( fileDirectory / lineBody ).string();
 
-        processMaterialFile( materialFilePath, primitiveData.oglData.includesTextures, primitiveData.materialsInfo_ );
+        processMaterialFile( materialFilePath, primitiveData.oglData.includesUV, primitiveData.materialsInfo_ );
     }else if( lineHeader == "usemtl" ){
         TrianglesGroupWithMaterial newTrianglesGroup;
         if( primitiveData.trianglesGroups_.size() ){
@@ -177,11 +187,11 @@ void OBJPrimitivesImporter::computeNormalData( const MeshVertexData& meshVertexD
 }
 
 
-void OBJPrimitivesImporter::processMaterialFile( std::string filePath, bool &includesTextures, MaterialsInfoVector &materials )
+void OBJPrimitivesImporter::processMaterialFile( std::string filePath, bool &includesUV, MaterialsInfoVector &materials )
 {
     std::ifstream file;
     std::string fileLine;
-    includesTextures = false;
+    includesUV = false;
 
     file.open( filePath );
     if( !file.is_open() ){
@@ -191,14 +201,14 @@ void OBJPrimitivesImporter::processMaterialFile( std::string filePath, bool &inc
     while( !file.eof() ){
         readLine( file, fileLine );
 
-        processMaterialFileLine( filePath, fileLine, materials, includesTextures );
+        processMaterialFileLine( filePath, fileLine, materials, includesUV );
     }
 
     file.close();
 }
 
 
-void OBJPrimitivesImporter::processMaterialFileLine( std::string filePath, std::string fileLine, MaterialsInfoVector& materials, bool &includesTextures )
+void OBJPrimitivesImporter::processMaterialFileLine( std::string filePath, std::string fileLine, MaterialsInfoVector& materials, bool &includesUV )
 {
     std::string lineHeader;
     std::string lineBody;
@@ -223,7 +233,7 @@ void OBJPrimitivesImporter::processMaterialFileLine( std::string filePath, std::
     }else if( lineHeader == "Ns" ){
         materials.back().specularExponent = std::atof( lineBody.c_str() );
     }else if( lineHeader == "map_Kd" ){
-        includesTextures = true;
+        includesUV = true;
         std::string textureFilePath = filePath.substr( 0, filePath.rfind( '/' ) ) + '/' + lineBody;
         processTextureFile( textureFilePath, materials.back().textureInfo );
     }

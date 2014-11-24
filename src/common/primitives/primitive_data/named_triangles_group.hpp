@@ -31,7 +31,7 @@ struct NamedTrianglesGroup : TrianglesGroup
     NamedTrianglesGroup( const std::string& name,
                          unsigned int firstTriangleIndex = 0,
                          unsigned int nTriangles = 0 ) :
-        TrianglesGroup( firstTriangleIndex, nTriangles ),
+        TrianglesGroup( firstTriangleIndex, nTriangles, true ),
         name( name ){}
 };
 

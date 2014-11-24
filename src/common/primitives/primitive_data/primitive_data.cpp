@@ -51,14 +51,15 @@ unsigned int PrimitiveData::getMaterialIndex( const std::string& name ) const
 void PrimitiveData::generateOGLData()
 {
     CompoundVerticesMap compoundVerticesMap;
-    unsigned int currentTriangleIndex = 0;
+    unsigned int currentVertexTriangleIndex = 0;
     unsigned int currentTriangleElement = 0;
+    unsigned int currentUVTriangleIndex = 0;
 
     CompoundVertex compoundVertex;
     CompoundVerticesMap::const_iterator finalVerticesIt;
     VertexIndice compoundVertexIndex;
 
-    oglData.includesTextures = (uvData.uvTriangles.size() > 0);
+    oglData.includesUV = (uvData.uvTriangles.size() > 0);
 
     if( vertexData.vertexTriangles.size() != normalData.normalTriangles.size() ){
         throw std::runtime_error(
@@ -68,46 +69,46 @@ void PrimitiveData::generateOGLData()
                     std::to_string( normalData.normalTriangles.size() ) );
     }
 
-    for( currentTriangleIndex = 0; currentTriangleIndex < vertexData.vertexTriangles.size(); currentTriangleIndex++ ){
-        for( currentTriangleElement = 0; currentTriangleElement < 3; currentTriangleElement++ ){
-            compoundVertex[0] = vertexData.vertexTriangles[currentTriangleIndex][currentTriangleElement];
-            compoundVertex[1] = normalData.normalTriangles[currentTriangleIndex][currentTriangleElement];
-            compoundVertex[2] = ( oglData.includesTextures ? uvData.uvTriangles[currentTriangleIndex][currentTriangleElement] : 0 );
+    for( const TrianglesGroup& trianglesGroup : getTrianglesGroups() ){
+        for( currentVertexTriangleIndex = trianglesGroup.firstTriangleIndex;
+             currentVertexTriangleIndex < trianglesGroup.firstTriangleIndex + trianglesGroup.nTriangles;
+             currentVertexTriangleIndex++ ){
 
-            finalVerticesIt = compoundVerticesMap.find( compoundVertex );
+            for( currentTriangleElement = 0; currentTriangleElement < 3; currentTriangleElement++ ){
+                compoundVertex[0] = vertexData.vertexTriangles[currentVertexTriangleIndex][currentTriangleElement];
+                compoundVertex[1] = normalData.normalTriangles[currentVertexTriangleIndex][currentTriangleElement];
+                compoundVertex[2] = ( trianglesGroup.includesUV ? uvData.uvTriangles[currentUVTriangleIndex][currentTriangleElement] : 0 );
 
-            if( finalVerticesIt != compoundVerticesMap.end() ){
-                compoundVertexIndex = finalVerticesIt->second;
-            }else{
-                compoundVertexIndex = compoundVerticesMap.size();
+                finalVerticesIt = compoundVerticesMap.find( compoundVertex );
 
-                oglData.vboData.push_back( vertexData.vertices[ compoundVertex[0] ][0] );
-                oglData.vboData.push_back( vertexData.vertices[ compoundVertex[0] ][1] );
-                oglData.vboData.push_back( vertexData.vertices[ compoundVertex[0] ][2] );
+                if( finalVerticesIt != compoundVerticesMap.end() ){
+                    compoundVertexIndex = finalVerticesIt->second;
+                }else{
+                    compoundVertexIndex = compoundVerticesMap.size();
 
-                // Insert vertex normal.
-                oglData.vboData.push_back( normalData.normals[ compoundVertex[1] ][0] );
-                oglData.vboData.push_back( normalData.normals[ compoundVertex[1] ][1] );
-                oglData.vboData.push_back( normalData.normals[ compoundVertex[1] ][2] );
+                    oglData.vboData.push_back( vertexData.vertices[ compoundVertex[0] ][0] );
+                    oglData.vboData.push_back( vertexData.vertices[ compoundVertex[0] ][1] );
+                    oglData.vboData.push_back( vertexData.vertices[ compoundVertex[0] ][2] );
 
-                // Insert UV coordinates (if exist).
-                if( oglData.includesTextures ){
-                    oglData.vboData.push_back( uvData.uvVertices[ compoundVertex[2] ][0] );
-                    oglData.vboData.push_back( uvData.uvVertices[ compoundVertex[2] ][1] );
+                    // Insert vertex normal.
+                    oglData.vboData.push_back( normalData.normals[ compoundVertex[1] ][0] );
+                    oglData.vboData.push_back( normalData.normals[ compoundVertex[1] ][1] );
+                    oglData.vboData.push_back( normalData.normals[ compoundVertex[1] ][2] );
 
-                    if( compoundVertex[2] > uvData.uvVertices.size() ){
-                        throw std::runtime_error(
-                                    "compoundVertex[2] > uvData.uvVertices.size()" +
-                                    std::to_string( compoundVertex[2] ) +
-                                    " > " +
-                                    std::to_string( uvData.uvVertices.size() ) );
+                    // Insert UV coordinates (if exist).
+                    if( oglData.includesUV ){
+                        oglData.vboData.push_back( uvData.uvVertices[ compoundVertex[2] ][0] );
+                        oglData.vboData.push_back( uvData.uvVertices[ compoundVertex[2] ][1] );
                     }
+
+                    compoundVerticesMap.insert( std::pair< CompoundVertex, VertexIndice >( compoundVertex, compoundVertexIndex ) );
                 }
 
-                compoundVerticesMap.insert( std::pair< CompoundVertex, VertexIndice >( compoundVertex, compoundVertexIndex ) );
+                oglData.eboData.push_back( compoundVertexIndex );
             }
-
-            oglData.eboData.push_back( compoundVertexIndex );
+            if( trianglesGroup.includesUV ){
+                currentUVTriangleIndex++;
+            }
         }
     }
 }
@@ -319,7 +320,7 @@ void PrimitiveData::readOpenGLData( std::ifstream& file )
     // Read the number of components per vertex.
     // Read a boolean indicating if the OGL Data includes texture data.
     std::getline( file, fileLine );
-    oglData.includesTextures = atoi( fileLine.c_str() );
+    oglData.includesUV = atoi( fileLine.c_str() );
 
     // Read the number of VBO vertices.
     std::getline( file, fileLine );
@@ -412,7 +413,7 @@ void PrimitiveData::writeOpenGLData( std::ofstream& file ) const
     nVBOVertices = oglData.vboData.size() / componentsPerVertex;
 
     // Write a boolean indicating if the OGL Data includes texture data.
-    file << oglData.includesTextures << std::endl;
+    file << oglData.includesUV << std::endl;
 
     // Write the number of VBO vertices.
     file << nVBOVertices << std::endl;

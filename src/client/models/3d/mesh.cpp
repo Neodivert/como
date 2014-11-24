@@ -138,7 +138,7 @@ void Mesh::init( const MeshOpenGLData& oglData )
 
     populateOpenGLBuffers( oglData );
 
-    includesTexture_ = oglData.includesTextures;
+    includesUV_ = oglData.includesUV;
     componensPerVertex_ = oglData.componentsPerVertex();
 
     initVAO();
@@ -256,7 +256,7 @@ void Mesh::initVAO()
     glEnableVertexAttribArray( SHADER_VERTEX_ATTR_LOCATION );
     glEnableVertexAttribArray( SHADER_NORMAL_ATTR_LOCATION );
 
-    if( includesTexture_ ){
+    if( includesUV_ ){
         glVertexAttribPointer( SHADER_UV_ATTR_LOCATION, 2, GL_FLOAT, GL_FALSE, getBytesPerVertex(), (void *)( COMPONENTS_PER_VERTEX_POSITION * 2 * sizeof( GL_FLOAT ) ) );
         glEnableVertexAttribArray( SHADER_UV_ATTR_LOCATION );
     }
@@ -306,15 +306,21 @@ glm::vec3 Mesh::centroid() const
 }
 
 
-bool Mesh::includesTextures() const
+bool Mesh::includesUV() const
 {
-    return includesTexture_;
+    return includesUV_;
 }
 
 
 std::string Mesh::typeName() const
 {
     return "Mesh";
+}
+
+
+bool Mesh::materialIncludesTexture( unsigned int index ) const
+{
+    return materialsManager_->materialIncludesTexture( materialIDs_[index] );
 }
 
 
@@ -458,7 +464,7 @@ void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, con
     openGL->setMVPMatrix( modelMatrix_, viewMatrix, projectionMatrix );
 
     // We don't want to send UV coordinates to shader.
-    if( includesTexture_ ){
+    if( includesUV_ ){
         glDisableVertexAttribArray( SHADER_UV_ATTR_LOCATION );
     }
 
@@ -470,7 +476,7 @@ void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, con
 
     glDrawArrays( GL_POINTS, 0, vertexData_.vertices.size() * componensPerVertex_ );
 
-    if( includesTexture_ ){
+    if( includesUV_ ){
         glEnableVertexAttribArray( SHADER_UV_ATTR_LOCATION );
     }
 }

@@ -25,7 +25,7 @@ namespace como {
  ***/
 
 TrianglesGroupWithTextureWall::TrianglesGroupWithTextureWall( const ResourceID& textureWallID, unsigned int firstTriangleIndex, unsigned int nTriangles ) :
-    TrianglesGroup( firstTriangleIndex, nTriangles ),
+    TrianglesGroup( firstTriangleIndex, nTriangles, true ),
     textureWallID( textureWallID )
 {}
 

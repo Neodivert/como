@@ -76,8 +76,8 @@ class OBJPrimitivesImporter : PrimitivesImporter {
         void computeNormalData( const MeshVertexData& vertexData, MeshNormalData& normalData );
 
     private:
-        void processMaterialFile( std::string filePath, bool& includesTextures, MaterialsInfoVector& materials );
-        void processMaterialFileLine( std::string filePath, std::string fileLine, MaterialsInfoVector& materials, bool &includesTextures );
+        void processMaterialFile( std::string filePath, bool& includesUV, MaterialsInfoVector& materials );
+        void processMaterialFileLine( std::string filePath, std::string fileLine, MaterialsInfoVector& materials, bool &includesUV );
 
         void processTextureFile( std::string filePath, std::unique_ptr< TextureInfo >& textureInfo );
 

@@ -189,6 +189,13 @@ ConstMaterialsVector MaterialsManager::getMaterials( const ResourceID& firstMate
 }
 
 
+bool MaterialsManager::materialIncludesTexture( const ResourceID& materialID ) const
+{
+    LOCK
+    return materials_.at( materialID )->includesTexture();
+}
+
+
 /***
  * 6. Remote command execution
  ***/

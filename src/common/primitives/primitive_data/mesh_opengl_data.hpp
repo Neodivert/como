@@ -32,7 +32,7 @@ typedef std::vector< GLuint > GLUintBuffer;
 
 
 struct MeshOpenGLData {
-    bool includesTextures;
+    bool includesUV;
 
     GLFloatBuffer vboData;
     GLUintBuffer eboData;

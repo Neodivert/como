@@ -25,7 +25,7 @@ namespace como {
  ***/
 
 MeshOpenGLData::MeshOpenGLData() :
-    includesTextures( false )
+    includesUV( false )
 {}
 
 
@@ -35,7 +35,7 @@ MeshOpenGLData::MeshOpenGLData() :
 
 GLuint MeshOpenGLData::componentsPerVertex() const
 {
-    return ( includesTextures ? 8 : 6 );
+    return ( includesUV ? 8 : 6 );
 }
 
 } // namespace como

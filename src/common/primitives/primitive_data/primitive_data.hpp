@@ -28,6 +28,7 @@
 #include <fstream>
 #include <common/exceptions/file_not_open_exception.hpp>
 #include <map>
+#include <common/primitives/primitive_data/triangles_group.hpp>
 
 namespace como {
 
@@ -53,6 +54,7 @@ struct PrimitiveData
          * 1. Getters
          ***/
         unsigned int getMaterialIndex( const std::string& name ) const;
+        virtual std::vector<TrianglesGroup> getTrianglesGroups() const = 0;
 
 
         /***

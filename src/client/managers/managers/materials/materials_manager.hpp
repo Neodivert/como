@@ -98,6 +98,7 @@ class MaterialsManager : public ServerWriter, public Observer, public Observable
         virtual std::string getResourceName( const ResourceID& resourceID ) const; // TODO: Move to ResourcesManager or any other class.
         MaterialConstPtr getMaterial( const ResourceID& id ) const;
         ConstMaterialsVector getMaterials( const ResourceID& firstMaterialID, unsigned int nMaterials ) const;
+        bool materialIncludesTexture( const ResourceID& materialID ) const;
 
 
         /***

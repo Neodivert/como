@@ -68,6 +68,7 @@ class Material : public Resource, public AbstractMaterial
         virtual Color getSpecularReflectivity() const;
         virtual float getSpecularExponent() const;
         virtual std::string typeName() const;
+        bool includesTexture() const;
 
 
         /***

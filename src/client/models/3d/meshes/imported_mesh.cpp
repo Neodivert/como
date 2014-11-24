@@ -46,15 +46,15 @@ std::string ImportedMesh::typeName() const
 
 void ImportedMesh::draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const glm::vec4 *contourColor ) const
 {
-    if( includesTextures() ){
-        openGL->setShadingMode( ShadingMode::SOLID_LIGHTING_AND_TEXTURING );
-    }else{
-        openGL->setShadingMode( ShadingMode::SOLID_LIGHTING );
-    }
-
     sendToShader( *openGL, viewMatrix, projectionMatrix );
 
     for( const auto& trianglesGroup : trianglesGroups_ ){
+        if( materialIncludesTexture( trianglesGroup.materialIndex ) ){
+            openGL->setShadingMode( ShadingMode::SOLID_LIGHTING_AND_TEXTURING );
+        }else{
+            openGL->setShadingMode( ShadingMode::SOLID_LIGHTING );
+        }
+
         // Send this mesh's material to shader.
         sendMaterialToShader( trianglesGroup.materialIndex );
 

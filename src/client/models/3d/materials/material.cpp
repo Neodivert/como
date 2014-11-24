@@ -74,6 +74,11 @@ std::string Material::typeName() const
     return "Material";
 }
 
+bool Material::includesTexture() const
+{
+    return ( texture_ != nullptr );
+}
+
 
 /***
  * 4. Setters

@@ -27,10 +27,12 @@ struct TrianglesGroup
 {
     unsigned int firstTriangleIndex;
     unsigned int nTriangles;
+    bool includesUV;
 
-    TrianglesGroup( unsigned int firstTriangleIndex = 0, unsigned int nTriangles = 0 ) :
+    TrianglesGroup( unsigned int firstTriangleIndex = 0, unsigned int nTriangles = 0, bool includesUV = false ) :
         firstTriangleIndex( firstTriangleIndex ),
-        nTriangles( nTriangles ){}
+        nTriangles( nTriangles ),
+        includesUV( includesUV ){}
 };
 
 } // namespace como

@@ -79,7 +79,7 @@ class Mesh : public AbstractMesh, public Entity
         GLuint ebo;
         GLsizei nEboElements_;
 
-        bool includesTexture_;
+        bool includesUV_;
 
         bool displayVertexNormals_;
 
@@ -141,8 +141,11 @@ class Mesh : public AbstractMesh, public Entity
         bool displaysVertexNormals() const;
         glm::vec3 getOriginalCentroid() const;
         virtual glm::vec3 centroid() const;
-        bool includesTextures() const;
+        bool includesUV() const;
         virtual std::string typeName() const;
+    protected:
+        bool materialIncludesTexture( unsigned int index ) const;
+    public:
 
 
         /***
