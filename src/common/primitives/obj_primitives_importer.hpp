@@ -71,7 +71,7 @@ class OBJPrimitivesImporter : PrimitivesImporter {
 
     private:
         virtual void processMeshFile( std::string filePath, PrimitiveInfo& primitiveInfo, ImportedPrimitiveData& primitiveData );
-        void processMeshFileLine( std::string filePath, std::string line, PrimitiveInfo& primitiveInfo, ImportedPrimitiveData& primitiveData );
+        void processMeshFileLine( std::string filePath, std::string line, ImportedPrimitiveData& primitiveData );
         void generateMeshVertexData( ImportedPrimitiveData& primitiveData );
         void computeNormalData( const MeshVertexData& vertexData, MeshNormalData& normalData );
 

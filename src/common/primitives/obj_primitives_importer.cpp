@@ -41,11 +41,6 @@ PrimitiveInfo OBJPrimitivesImporter::importPrimitive( std::string srcFilePath, s
 
     processMeshFile( srcFilePath, primitiveInfo, primitiveData );
 
-    // If we have an unnamed primitive, name it with its filename.
-    if( primitiveInfo.name.size() == 0 ){
-        primitiveInfo.name =
-                boost::filesystem::basename( srcFilePath );
-    }
     primitiveInfo.name += nameSuffix;
     primitiveInfo.filePath =
             ( boost::filesystem::path( dstDirectory ) /
@@ -73,10 +68,13 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
         throw FileNotOpenException( filePath );
     }
 
+    primitiveData.name = boost::filesystem::basename( filePath );
+    primitiveInfo.name = primitiveData.name;
+
     while( !file.eof() ){
         readLine( file, fileLine );
 
-        processMeshFileLine( filePath, fileLine, primitiveInfo, primitiveData );
+        processMeshFileLine( filePath, fileLine, primitiveData );
     }
 
     file.close();
@@ -89,7 +87,7 @@ void OBJPrimitivesImporter::processMeshFile( std::string filePath, PrimitiveInfo
     primitiveData.generateOGLData();
 }
 
-void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::string line, PrimitiveInfo& primitiveInfo, ImportedPrimitiveData& primitiveData )
+void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::string line, ImportedPrimitiveData& primitiveData )
 {
     std::string lineHeader;
     std::string lineBody;
@@ -100,12 +98,7 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
 
     splitFileLine( line, lineHeader, lineBody );
 
-    if( lineHeader == "o" ){
-        primitiveData.name = lineBody;
-        primitiveInfo.name = lineBody;
-    }else if( lineHeader == "g" ){
-        // TODO: Create a new triangles group?
-    }else if( lineHeader == "v" ){
+    if( lineHeader == "v" ){
         glm::vec3 vertex;
 
         // Extract the vertex from the line and add it to the Mesh.
