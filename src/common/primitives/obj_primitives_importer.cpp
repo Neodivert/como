@@ -41,6 +41,11 @@ PrimitiveInfo OBJPrimitivesImporter::importPrimitive( std::string srcFilePath, s
 
     processMeshFile( srcFilePath, primitiveInfo, primitiveData );
 
+    // If we have an unnamed primitive, name it with its filename.
+    if( primitiveInfo.name.size() == 0 ){
+        primitiveInfo.name =
+                boost::filesystem::basename( srcFilePath );
+    }
     primitiveInfo.name += nameSuffix;
     primitiveInfo.filePath =
             ( boost::filesystem::path( dstDirectory ) /
