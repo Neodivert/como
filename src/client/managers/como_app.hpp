@@ -47,9 +47,7 @@ enum class TransformationMode
     FIXED_Z
 };
 
-class ComoApp : public QObject, public Lockable {
-    Q_OBJECT
-
+class ComoApp : public Lockable {
     protected:
         //
         ScenePtr scene_;
@@ -94,7 +92,6 @@ class ComoApp : public QObject, public Lockable {
         /***
          * 4. Setters (slots)
          ***/
-    public slots:
         void setTransformationMode( TransformationMode transformationMode );
         void setTransformationType( TransformationType transformationType );
 };
