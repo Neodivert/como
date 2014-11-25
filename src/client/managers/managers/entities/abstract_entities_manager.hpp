@@ -29,8 +29,6 @@ namespace como {
  * This is an auxiliar base class created for allowing vectors of managers
  * implementing the multiple interfaces this class inherits from.
  ***/
-// TODO: Inherit from DrawablesSet? (DrawablesSet contains a borderColor we
-// don't need here).
 class AbstractEntitiesManager : public virtual ResourceCommandsExecuter, public PickablesSet
 {
     public:

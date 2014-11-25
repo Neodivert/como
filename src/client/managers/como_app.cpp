@@ -82,9 +82,6 @@ void ComoApp::setTransformationMode( TransformationMode transformationMode )
 
     // Emit signal.
     emit transformationModeIndexChanged( static_cast< int >( transformationMode ) );
-
-    // TODO: Reimplement this.
-    //scene->renderNeeded();
 }
 
 
