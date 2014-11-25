@@ -21,6 +21,8 @@
 
 namespace como {
 
+const char LOCAL_PRIMITIVES_DIR[] = "data/local/primitives";
+
 /***
  * 1. Construction
  ***/

@@ -23,7 +23,6 @@
 #include <common/ids/resource_id.hpp>
 #include <string>
 #include <server/commands_historic.hpp>
-#include <common/utilities/paths.hpp>
 #include <common/ids/resource_ids_generator.hpp>
 
 

@@ -61,7 +61,6 @@ HEADERS += \
     ../../src/common/commands/parameter_change_command.hpp \
     ../../src/common/commands/light_commands/light_color_change_command.hpp \
     ../../src/common/utilities/observable_container/observable_container.hpp \
-    ../../src/common/utilities/paths.hpp \
     ../../src/common/commands/primitive_category_commands/primitive_category_command.hpp \
     ../../src/common/commands/primitive_category_commands/primitive_category_creation_command.hpp \
     ../../src/common/commands/primitive_category_commands/primitive_category_commands.hpp \

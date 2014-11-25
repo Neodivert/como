@@ -20,6 +20,8 @@
 
 namespace como {
 
+const char SCENES_DIR[] = "data/scenes";
+
 
 /***
  * 1. Construction

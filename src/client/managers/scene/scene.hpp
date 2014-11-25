@@ -28,7 +28,6 @@
 #include <queue>
 #include <client/managers/managers/materials/materials_manager.hpp>
 #include <common/users/user.hpp>
-#include <common/utilities/paths.hpp>
 #include <client/managers/managers/primitives/client_primitives_manager.hpp>
 #include <common/scene/basic_scene.hpp>
 #include <client/managers/managers/entities/entities_manager.hpp>

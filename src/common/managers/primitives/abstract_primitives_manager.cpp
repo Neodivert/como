@@ -18,7 +18,6 @@
 
 #include "abstract_primitives_manager.hpp"
 #include <boost/filesystem.hpp>
-#include <common/utilities/paths.hpp>
 #include <iostream>
 #include <iomanip>
 #include <ctime>
