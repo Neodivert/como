@@ -131,13 +131,21 @@ void TextureWallEditor::setTextureWall( TextureWallHandler *textureWall )
 
     const glm::vec2 textureOffset =
             currentTextureWall_->getTextureOffset();
+    textureOffsetXSpinBox_->blockSignals( true );
     textureOffsetXSpinBox_->setValue( textureOffset.x );
+    textureOffsetXSpinBox_->blockSignals( false );
+    textureOffsetYSpinBox_->blockSignals( true );
     textureOffsetYSpinBox_->setValue( textureOffset.y );
+    textureOffsetYSpinBox_->blockSignals( false );
 
     const glm::vec2 textureScale =
             currentTextureWall_->getTextureScale();
+    textureScaleXSpinBox_->blockSignals( true );
     textureScaleXSpinBox_->setValue( textureScale.x );
+    textureScaleXSpinBox_->blockSignals( false );
+    textureScaleYSpinBox_->blockSignals( true );
     textureScaleYSpinBox_->setValue( textureScale.y );
+    textureScaleYSpinBox_->blockSignals( false );
 }
 
 } // namespace como
