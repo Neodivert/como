@@ -45,6 +45,111 @@ typedef std::map< ResourceID, UserID > DrawableOwners;
 /*! Main server manager */
 class Server : public Lockable
 {
+    public:
+        /***
+         * 1. Construction
+         ***/
+        Server() = delete;
+        Server( const Server& ) = delete;
+        Server( Server&& ) = delete;
+        Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, const char* sceneFilePath, unsigned int nThreads = 3 );
+
+
+        /***
+         * 2. Destruction
+         ***/
+        ~Server() = default;
+
+
+        /***
+         * 3. Main loop
+         ***/
+        /*! \brief Start the server's main loop. */
+        void run();
+
+
+        /***
+         * 4. Operators
+         ***/
+        Server& operator = (const Server& ) = delete;
+        Server& operator = ( Server&& ) = delete;
+
+
+    private:
+        /***
+         * 5. Initialization
+         ***/
+        /*!
+          * \brief Initialize the server's container of free colors for identifying users.
+          */
+        void initUserColors();
+
+
+        /***
+         * 6. Disconnection
+         ***/
+        /*! \brief Disconnect from the server. */
+        void disconnect();
+
+
+        /***
+         * 7. Commands broadcasting
+         ***/
+        /*! \brief Notify to all the users that there are new commands to
+         * synchronize. */
+        void broadcast();
+
+
+        /***
+         * 8. Listeners
+         ***/
+        void openAcceptor();
+        /*! \brief Listen for a new connection */
+        void listen();
+
+
+        /***
+         * 9. Handlers
+         ***/
+        /*! \brief Handler for a new connection */
+        void onAccept( const boost::system::error_code& errorCode );
+
+        /*! \brief Process a SCENE_UPDATE packet received from client
+         * \param errorCode Error code associated with the packet reception.
+         * \param userID ID of the user who sent the packet.
+         * \param sceneUpdate SCENE_UPDATE packet received from client.
+        */
+        void processSceneUpdatePacket( const boost::system::error_code& errorCode,
+                                 UserID userID,
+                                 const SceneUpdatePacket& sceneUpdate );
+
+        /*! \brief Process a scene command.
+         * \param userID ID of the user who sent the command.
+         * \param sceneCommand Scene command.
+         */
+        void processSceneCommand( const Command& sceneCommand );
+
+
+        /***
+         * 10. Commands historic management.
+         ***/
+        /*! \brief Add a command to the historic. */
+        void addCommand( CommandConstPtr sceneCommand );
+
+
+        /***
+         * 11. Users management
+         ***/
+        bool nameInUse( const char* newName ) const;
+        void deleteUser( UserID id );
+
+
+        /***
+         * 12. Auxiliar methods
+         ***/
+        void workerThread();
+
+
     private:
         ResourceIDsGeneratorPtr resourceIDsGenerator_;
 
@@ -84,101 +189,6 @@ class Server : public Lockable
         CommandsHistoricPtr commandsHistoric_;
 
         Scene scene_;
-
-    public:
-        /***
-         * 1. Construction
-         ***/
-        Server() = delete;
-        Server( const Server& ) = delete;
-        Server( Server&& ) = delete;
-
-        /*! \brief Initialize a server.
-         * \param port_ port the server will be listening to.
-         * \param maxSessions maximum number of allowed simultaneous clients.
-         * \param sceneName name of the scene to be created.
-         * \param nThreads number of threads used during server execution.
-         */
-        Server( unsigned int port_, unsigned int maxSessions, const char* sceneName, const char* sceneFilePath, unsigned int nThreads = 3 );
-
-    private:
-        /*!
-          * \brief Initialize the server's container of free colors for identifying users.
-          */
-        void initUserColors();
-
-    public:
-        /***
-         * 2. Destruction
-         ***/
-        ~Server() = default;
-
-
-        /***
-         * 3. Main loop
-         ***/
-        /*! \brief Start the server's main loop. */
-        void run();
-
-        /*! \brief Disconnect from the server. */
-        void disconnect();
-
-    private:
-        /*! \brief Notify to all the users that there is new commands to synchronize. */
-        void broadcast();
-
-        /***
-         * 4. Listeners
-         ***/
-        /*! \brief Listen for a new connection */
-        void listen();
-
-
-        /***
-         * 5. Handlers
-         ***/
-        /*! \brief Handler for a new connection */
-        void onAccept( const boost::system::error_code& errorCode );
-
-        /*! \brief Process a SCENE_UPDATE packet received from client
-         * \param errorCode Error code associated with the packet reception.
-         * \param userID ID of the user who sent the packet.
-         * \param sceneUpdate SCENE_UPDATE packet received from client.
-        */
-        void processSceneUpdatePacket( const boost::system::error_code& errorCode,
-                                 UserID userID,
-                                 const SceneUpdatePacket& sceneUpdate );
-
-        /*! \brief Process a scene command.
-         * \param userID ID of the user who sent the command.
-         * \param sceneCommand Scene command.
-         */
-        void processSceneCommand( const Command& sceneCommand );
-
-
-        /***
-         * 6. Commands historic management.
-         ***/
-        /*! \brief Add a command to the historic. */
-        void addCommand( CommandConstPtr sceneCommand );
-
-
-        /***
-         * 7. Auxiliar methods
-         ***/
-    public:
-        void deleteUser( UserID id );
-    private:
-        void workerThread();
-        void openAcceptor();
-        bool nameInUse( const char* newName ) const ;
-
-    public:
-        /***
-         * 8. Operators
-         ***/
-        Server& operator = (const Server& ) = delete;
-        Server& operator = ( Server&& ) = delete;
 };
 
 } // namespace como

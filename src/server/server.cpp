@@ -48,44 +48,6 @@ Server::Server( unsigned int port_, unsigned int maxSessions, const char* sceneN
 }
 
 
-// TODO: Generate more colors?
-void Server::initUserColors()
-{
-    std::uint32_t mask = 0xFF;
-    std::uint32_t color = 0;
-
-    // Clear the container of free user colors.
-    std::queue< std::uint32_t > empty;
-    std::swap( freeUserColors_, empty );
-
-    unsigned int partition;
-    unsigned int partitionElement;
-
-    //const unsigned int MAX_USERS = 32;
-    const unsigned int MAX_USER_COLORS = 24;
-    const unsigned int PARTITION_SIZE = 8;
-    const unsigned int N_PARTITIONS = MAX_USER_COLORS / PARTITION_SIZE;
-
-    for( partition = 0; partition < N_PARTITIONS; partition++ ){
-        mask = 0xFF - partition * 0x55;
-        for( partitionElement = 1; partitionElement < PARTITION_SIZE; partitionElement++ ){
-            color = 0;
-            if( partitionElement & 0x1 ){
-                color |= mask;
-            }
-            if( partitionElement & 0x2 ){
-                color |= (mask << 8);
-            }
-            if( partitionElement & 0x4 ){
-                color |= (mask << 16);
-            }
-
-            freeUserColors_.push( color );
-        }
-    }
-}
-
-
 /***
  * 3. Main loop
  ***/
@@ -126,6 +88,53 @@ void Server::run()
     }
 }
 
+
+/***
+ * 5. Initialization
+ ***/
+
+// TODO: Generate more colors?
+void Server::initUserColors()
+{
+    std::uint32_t mask = 0xFF;
+    std::uint32_t color = 0;
+
+    // Clear the container of free user colors.
+    std::queue< std::uint32_t > empty;
+    std::swap( freeUserColors_, empty );
+
+    unsigned int partition;
+    unsigned int partitionElement;
+
+    //const unsigned int MAX_USERS = 32;
+    const unsigned int MAX_USER_COLORS = 24;
+    const unsigned int PARTITION_SIZE = 8;
+    const unsigned int N_PARTITIONS = MAX_USER_COLORS / PARTITION_SIZE;
+
+    for( partition = 0; partition < N_PARTITIONS; partition++ ){
+        mask = 0xFF - partition * 0x55;
+        for( partitionElement = 1; partitionElement < PARTITION_SIZE; partitionElement++ ){
+            color = 0;
+            if( partitionElement & 0x1 ){
+                color |= mask;
+            }
+            if( partitionElement & 0x2 ){
+                color |= (mask << 8);
+            }
+            if( partitionElement & 0x4 ){
+                color |= (mask << 16);
+            }
+
+            freeUserColors_.push( color );
+        }
+    }
+}
+
+
+/***
+ * 6. Disconnection
+ ***/
+
 // TODO: Call this method when exceptions are thrown.
 // TODO: Make use of errorCode?
 void Server::disconnect()
@@ -153,6 +162,10 @@ void Server::disconnect()
 }
 
 
+/***
+ * 7. Commands broadcasting
+ ***/
+
 void Server::broadcast()
 {
     LOCK
@@ -166,10 +179,30 @@ void Server::broadcast()
 }
 
 
-
 /***
- * 4. Listeners
+ * 8. Listeners
  ***/
+
+void Server::openAcceptor()
+{
+    LOCK
+
+    // Set an endpoint for given server TCP port.
+    boost::asio::ip::tcp::endpoint endpoint( boost::asio::ip::tcp::v4(), port_ );
+
+    // Open the acceptor.
+    acceptor_.open( endpoint.protocol() );
+
+    // Set "reuse_address" to true in order to avoid "Already in use" error.
+    acceptor_.set_option( boost::asio::ip::tcp::acceptor::reuse_address( true ) );
+
+    // Bind the acceptor to the previous endpoint.
+    acceptor_.bind( endpoint );
+
+    // Start listening.
+    acceptor_.listen( 0 );
+}
+
 
 void Server::listen()
 {
@@ -183,7 +216,7 @@ void Server::listen()
 
 
 /***
- * 5. Handlers
+ * 9. Handlers
  ***/
 
 void Server::onAccept( const boost::system::error_code& errorCode )
@@ -307,7 +340,7 @@ void Server::processSceneCommand( const Command& sceneCommand )
 
 
 /***
- * 6. Commands historic management.
+ * 10. Commands historic management.
  ***/
 
 void Server::addCommand( CommandConstPtr sceneCommand )
@@ -319,8 +352,23 @@ void Server::addCommand( CommandConstPtr sceneCommand )
 
 
 /***
- * 7. Auxiliar methods
+ * 11. Users management
  ***/
+
+bool Server::nameInUse( const char* newName ) const
+{
+    LOCK
+
+    UsersMap::const_iterator user;
+
+    for( user = users_.begin(); user != users_.end(); user++ ){
+        if( !strcmp( newName, user->second->getName().c_str() ) ){
+            return true;
+        }
+    }
+
+    return false;
+}
 
 
 void Server::deleteUser( UserID id )
@@ -357,6 +405,9 @@ void Server::deleteUser( UserID id )
 }
 
 
+/***
+ * 12. Auxiliar methods
+ ***/
 void Server::workerThread()
 {
     boost::system::error_code errorCode;
@@ -376,43 +427,6 @@ void Server::workerThread()
     }
 
     log_->debug( "[", boost::this_thread::get_id(), "] thread end\n" );
-}
-
-
-void Server::openAcceptor()
-{
-    LOCK
-
-    // Set an endpoint for given server TCP port.
-    boost::asio::ip::tcp::endpoint endpoint( boost::asio::ip::tcp::v4(), port_ );
-
-    // Open the acceptor.
-    acceptor_.open( endpoint.protocol() );
-
-    // Set "reuse_address" to true in order to avoid "Already in use" error.
-    acceptor_.set_option( boost::asio::ip::tcp::acceptor::reuse_address( true ) );
-
-    // Bind the acceptor to the previous endpoint.
-    acceptor_.bind( endpoint );
-
-    // Start listening.
-    acceptor_.listen( 0 );
-}
-
-
-bool Server::nameInUse( const char* newName ) const
-{
-    LOCK
-
-    UsersMap::const_iterator user;
-
-    for( user = users_.begin(); user != users_.end(); user++ ){
-        if( !strcmp( newName, user->second->getName().c_str() ) ){
-            return true;
-        }
-    }
-
-    return false;
 }
 
 } // namespace como
