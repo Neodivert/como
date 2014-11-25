@@ -59,24 +59,10 @@ class Packet : public CompositePackable
         /***
          * 1. Construction.
          ***/
-
-        /*! \brief Default constructor. */
         Packet() = delete ;
-
-        /*! \brief Constructs a Packet of the given type. */
         Packet( PacketType type );
-
-        /*! \brief Copy constructor. */
         Packet( const Packet& b );
-
-        /*! \brief Default constructor. */
         Packet( Packet&& ) = delete;
-
-        // TODO: Memory leak?
-        /*!
-         * \brief Clone method
-         * \return a pointer to a new copy of this instance of Packet.
-         */
         virtual Packet* clone() const = 0;
 
 
@@ -89,8 +75,6 @@ class Packet : public CompositePackable
         /***
          * 3. Getters.
          ***/
-
-        /*! \brief Returns a PacketType indicating the type of this Packet */
         PacketType getType() const ;
 
         /*!
@@ -276,11 +260,7 @@ class Packet : public CompositePackable
         /***
          * 11. Operators.
          ***/
-
-        /*! \brief Copy assignment operator */
         Packet& operator = ( const Packet& b );
-
-        /*! \brief Move assignment operator */
         Packet& operator = ( Packet&& ) = delete;
 };
 
