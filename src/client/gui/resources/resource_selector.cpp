@@ -42,7 +42,7 @@ ResourceSelector::ResourceSelector()
 }
 
 
-ResourceSelector::ResourceSelector( const ResourcesList resourcesList ) :
+ResourceSelector::ResourceSelector( const ResourcesList resourcesList )
 {
     resourcesIDs_.reserve( resourcesList.size() );
 

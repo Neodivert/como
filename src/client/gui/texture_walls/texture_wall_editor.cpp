@@ -103,8 +103,6 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
     layout->addRow( "Texture scale (X)", textureScaleXSpinBox_ );
     layout->addRow( "Texture scale (Y)", textureScaleYSpinBox_ );
     setLayout( layout );
-
-    update();
 }
 
 
@@ -112,56 +110,34 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
  * 3. Setters
  ***/
 
-void TextureWallEditor::setTextureWall(TextureWallHandler *textureWall)
-{
-    currentTextureWall_ = textureWall;
-    update();
-}
-
-
-/***
- * 4. Updating (observer pattern)
- ***/
-
-// TODO: Remove this method because another user won't change the same texture
-// wall we are changing? Or at least make TextureWallEditor to not be an
-// Observer anymore for avoiding confusion.
-void TextureWallEditor::update()
+void TextureWallEditor::setTextureWall( TextureWallHandler *textureWall )
 {
     std::string textureLabelName;
-    glm::vec2 textureOffset;
-    glm::vec2 textureScale;
 
-    if( currentTextureWall_ != nullptr ){
-        // Retrieve texture offset.
-        textureOffset = currentTextureWall_->getTextureOffset();
-        textureScale = currentTextureWall_->getTextureScale();
-
-        if( currentTextureWall_->getTextureID() != NO_RESOURCE ){
-            textureLabelName =
-                    texturesManager_->getTextureData( currentTextureWall_->getTextureID() ).name;
-        }else{
-            textureLabelName = "Select a texture";
-        }
-        textureInput_->setText( textureLabelName.c_str() );
-
-        textureOffsetXSpinBox_->blockSignals( true );
-        textureOffsetXSpinBox_->setValue( textureOffset.x );
-        textureOffsetXSpinBox_->blockSignals( false );
-
-        textureOffsetYSpinBox_->blockSignals( true );
-        textureOffsetYSpinBox_->setValue( textureOffset.y );
-        textureOffsetYSpinBox_->blockSignals( false );
-
-        textureScaleXSpinBox_->blockSignals( true );
-        textureScaleXSpinBox_->setValue( textureScale.x );
-        textureScaleXSpinBox_->blockSignals( false );
-
-        textureScaleYSpinBox_->blockSignals( true );
-        textureScaleYSpinBox_->setValue( textureScale.y );
-        textureScaleYSpinBox_->blockSignals( false );
+    // Point to the new texture wall.
+    if( textureWall == nullptr ){
+        return;
     }
-}
+    currentTextureWall_ = textureWall;
 
+    // Display the information about the new texture wall.
+    if( currentTextureWall_->getTextureID() != NO_RESOURCE ){
+        textureLabelName =
+                texturesManager_->getTextureData( currentTextureWall_->getTextureID() ).name;
+    }else{
+        textureLabelName = "Select a texture";
+    }
+    textureInput_->setText( textureLabelName.c_str() );
+
+    const glm::vec2 textureOffset =
+            currentTextureWall_->getTextureOffset();
+    textureOffsetXSpinBox_->setValue( textureOffset.x );
+    textureOffsetYSpinBox_->setValue( textureOffset.y );
+
+    const glm::vec2 textureScale =
+            currentTextureWall_->getTextureScale();
+    textureScaleXSpinBox_->setValue( textureScale.x );
+    textureScaleYSpinBox_->setValue( textureScale.y );
+}
 
 } // namespace como
