@@ -16,8 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef GEOMETRY_PRIMITIVES_CREATION_MENU_HPP
-#define GEOMETRY_PRIMITIVES_CREATION_MENU_HPP
+#ifndef SYSTEM_PRIMITIVES_CREATION_MENU_HPP
+#define SYSTEM_PRIMITIVES_CREATION_MENU_HPP
 
 #include <QPushButton>
 #include <QFrame>
@@ -25,7 +25,7 @@
 
 namespace como {
 
-class GeometricPrimitivesCreationMenu : public QFrame
+class SystemPrimitivesCreationMenu : public QFrame
 {
     Q_OBJECT
 
@@ -33,23 +33,23 @@ class GeometricPrimitivesCreationMenu : public QFrame
         /***
          * 1. Construction
          ***/
-        GeometricPrimitivesCreationMenu( GeometricPrimitivesFactoryPtr geometricPrimitivesFactory );
-        GeometricPrimitivesCreationMenu() = delete;
-        GeometricPrimitivesCreationMenu( const GeometricPrimitivesCreationMenu& ) = delete;
-        GeometricPrimitivesCreationMenu( GeometricPrimitivesCreationMenu&& ) = delete;
+        SystemPrimitivesCreationMenu( GeometricPrimitivesFactoryPtr geometricPrimitivesFactory );
+        SystemPrimitivesCreationMenu() = delete;
+        SystemPrimitivesCreationMenu( const SystemPrimitivesCreationMenu& ) = delete;
+        SystemPrimitivesCreationMenu( SystemPrimitivesCreationMenu&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~GeometricPrimitivesCreationMenu() = default;
+        ~SystemPrimitivesCreationMenu() = default;
 
 
         /***
          * 3. Operators
          ***/
-        GeometricPrimitivesCreationMenu& operator = ( const GeometricPrimitivesCreationMenu& ) = delete;
-        GeometricPrimitivesCreationMenu& operator = ( GeometricPrimitivesCreationMenu&& ) = delete;
+        SystemPrimitivesCreationMenu& operator = ( const SystemPrimitivesCreationMenu& ) = delete;
+        SystemPrimitivesCreationMenu& operator = ( SystemPrimitivesCreationMenu&& ) = delete;
 
 
     private:
@@ -67,4 +67,4 @@ class GeometricPrimitivesCreationMenu : public QFrame
 
 } // namespace como
 
-#endif // GEOMETRY_PRIMITIVES_CREATION_MENU_HPP
+#endif // SYSTEM_PRIMITIVES_CREATION_MENU_HPP

@@ -18,7 +18,7 @@
 
 #include <QVBoxLayout>
 #include <QLabel>
-#include "geometric_primitives_creation_menu.hpp"
+#include "system_primitives_creation_menu.hpp"
 
 namespace como {
 
@@ -26,7 +26,7 @@ namespace como {
  * 1. Construction
  ***/
 
-GeometricPrimitivesCreationMenu::GeometricPrimitivesCreationMenu( GeometricPrimitivesFactoryPtr geometricPrimitivesFactory ) :
+SystemPrimitivesCreationMenu::SystemPrimitivesCreationMenu( GeometricPrimitivesFactoryPtr geometricPrimitivesFactory ) :
     geometricPrimitivesFactory_( geometricPrimitivesFactory )
 {
     QVBoxLayout* layout = new QVBoxLayout;
@@ -45,7 +45,7 @@ GeometricPrimitivesCreationMenu::GeometricPrimitivesCreationMenu( GeometricPrimi
  * 4. Initialization
  ***/
 
-QPushButton* GeometricPrimitivesCreationMenu::createCubeCreationButton() const
+QPushButton* SystemPrimitivesCreationMenu::createCubeCreationButton() const
 {
     QPushButton* cubeCreationButton = new QPushButton( "Create cube" );
 
@@ -57,7 +57,7 @@ QPushButton* GeometricPrimitivesCreationMenu::createCubeCreationButton() const
 }
 
 
-QPushButton *GeometricPrimitivesCreationMenu::createConeCreationButton() const
+QPushButton *SystemPrimitivesCreationMenu::createConeCreationButton() const
 {
     QPushButton* coneCreationButton = new QPushButton( "Create cone" );
 
@@ -69,7 +69,7 @@ QPushButton *GeometricPrimitivesCreationMenu::createConeCreationButton() const
 }
 
 
-QPushButton *GeometricPrimitivesCreationMenu::createCylinderCreationButton() const
+QPushButton *SystemPrimitivesCreationMenu::createCylinderCreationButton() const
 {
     QPushButton* cylinderCreationButton = new QPushButton( "Create cylinder" );
 
@@ -81,7 +81,7 @@ QPushButton *GeometricPrimitivesCreationMenu::createCylinderCreationButton() con
 }
 
 
-QPushButton *GeometricPrimitivesCreationMenu::createSphereCreationButton() const
+QPushButton *SystemPrimitivesCreationMenu::createSphereCreationButton() const
 {
     QPushButton* sphereCreationButton = new QPushButton( "Create sphere" );
 

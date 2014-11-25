@@ -114,7 +114,7 @@ HEADERS += \
     ../../src/client/gui/materials/materials_list_widget.hpp \
     ../../src/client/managers/managers/primitives/specialized_system_primitives_factory.hpp \
     ../../src/client/managers/managers/primitives/cubes_factory.hpp \
-    ../../src/client/gui/tools_menu/geometric_primitives_creation_menu.hpp \
+    ../../src/client/gui/tools_menu/system_primitives_creation_menu.hpp \
     ../../src/client/models/3d/textures/texture_wall.hpp \
     ../../src/client/managers/managers/textures/textures_manager.hpp \
     ../../src/client/models/3d/meshes/triangles_group_with_texture_wall.hpp \
@@ -203,7 +203,7 @@ SOURCES += \
     ../../src/client/gui/materials/materials_list_widget.cpp \
     ../../src/client/managers/managers/primitives/specialized_system_primitives_factory.cpp \
     ../../src/client/managers/managers/primitives/cubes_factory.cpp \
-    ../../src/client/gui/tools_menu/geometric_primitives_creation_menu.cpp \
+    ../../src/client/gui/tools_menu/system_primitives_creation_menu.cpp \
     ../../src/client/managers/managers/textures/textures_manager.cpp \
     ../../src/client/models/3d/meshes/triangles_group_with_texture_wall.cpp \
     ../../src/client/managers/managers/textures/texture_walls_manager.cpp \

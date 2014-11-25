@@ -21,7 +21,7 @@
 
 #include <QFrame>
 #include <client/gui/primitives/primitive_import_dialog.hpp>
-#include <client/gui/tools_menu/geometric_primitives_creation_menu.hpp>
+#include <client/gui/tools_menu/system_primitives_creation_menu.hpp>
 #include <client/managers/scene/scene.hpp>
 
 namespace como {
