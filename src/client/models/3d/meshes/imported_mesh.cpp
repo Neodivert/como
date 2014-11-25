@@ -46,6 +46,7 @@ std::string ImportedMesh::typeName() const
 
 void ImportedMesh::draw( OpenGLPtr openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const glm::vec4 *contourColor ) const
 {
+    openGL->setShadingMode( ShadingMode::SOLID_LIGHTING );
     sendToShader( *openGL, viewMatrix, projectionMatrix );
 
     for( const auto& trianglesGroup : trianglesGroups_ ){
