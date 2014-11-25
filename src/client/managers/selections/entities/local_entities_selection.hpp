@@ -28,6 +28,14 @@
 
 namespace como {
 
+// Available pivot point modes.
+enum class PivotPointMode : std::uint8_t
+{
+    SELECTION_CENTROID = 0,
+    INDIVIDUAL_CENTROIDS,
+    WORLD_ORIGIN
+};
+
 class LocalEntitiesSelection : public EntitiesSelection, public ServerWriter
 {
     public:

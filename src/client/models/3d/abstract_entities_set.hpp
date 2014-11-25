@@ -21,7 +21,6 @@
 
 #include <client/managers/selections/resources/resources_selection.hpp>
 #include <client/models/3d/entity.hpp>
-#include <common/commands/user_commands/user_parameter_change_command.hpp> // PivotPointMode type
 
 namespace como {
 

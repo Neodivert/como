@@ -165,9 +165,6 @@ CommandPtr PackableCommandsList::createEmtpyCommandFromBuffer(const void *buffer
                 case UserCommandType::USER_DISCONNECTION:
                     command =  CommandPtr( new UserDisconnectionCommand );
                 break;
-                case UserCommandType::PARAMETER_CHANGE:
-                    command = CommandPtr( new UserParameterChangeCommand );
-                break;
             }
         break;
 

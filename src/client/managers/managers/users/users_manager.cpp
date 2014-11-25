@@ -62,9 +62,6 @@ void UsersManager::executeRemoteCommand( const UserCommand& userCommand )
         case UserCommandType::USER_DISCONNECTION:
             removeUser( userCommand.getUserID() );
         break;
-        case UserCommandType::PARAMETER_CHANGE:
-            // TODO: Remove
-        break;
     }
 }
 

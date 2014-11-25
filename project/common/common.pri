@@ -64,7 +64,6 @@ HEADERS += \
     ../../src/common/commands/light_commands/light_commands.hpp \
     ../../src/common/utilities/observer_pattern/observer.hpp \
     ../../src/common/utilities/observer_pattern/observable.hpp \
-    ../../src/common/commands/user_commands/user_parameter_change_command.hpp \
     ../../src/common/commands/parameter_change_command.hpp \
     ../../src/common/commands/light_commands/light_color_change_command.hpp \
     ../../src/common/utilities/observable_container/observable_container.hpp \
@@ -169,7 +168,6 @@ SOURCES += \
     ../../src/common/commands/material_commands/abstract_material_modification_command.cpp \
     ../../src/common/commands/light_commands/light_command.cpp \
     ../../src/common/utilities/observer_pattern/observable.cpp \
-    ../../src/common/commands/user_commands/user_parameter_change_command.cpp \
     ../../src/common/commands/light_commands/light_color_change_command.cpp \
     ../../src/common/commands/primitive_category_commands/primitive_category_command.cpp \
     ../../src/common/commands/primitive_category_commands/primitive_category_creation_command.cpp \

@@ -26,8 +26,7 @@ namespace como {
 enum class UserCommandType : std::uint8_t
 {
     USER_CONNECTION,
-    USER_DISCONNECTION,
-    PARAMETER_CHANGE
+    USER_DISCONNECTION
 };
 typedef PackableUint8< UserCommandType > PackableUserCommandType;
 

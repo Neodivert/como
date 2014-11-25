@@ -22,7 +22,6 @@
 // User commands
 #include "user_commands/user_connection_command.hpp"
 #include "user_commands/user_disconnection_command.hpp"
-#include "user_commands/user_parameter_change_command.hpp"
 
 // Selection commands
 #include "selection_commands/selection_transformation_command.hpp"
