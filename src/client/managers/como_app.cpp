@@ -21,7 +21,7 @@
 namespace como {
 
 /***
- * 1. Initialization and destruction
+ * 1. Construction
  ***/
 
 ComoApp::ComoApp( ScenePtr scene, LogPtr log ) :
@@ -32,14 +32,8 @@ ComoApp::ComoApp( ScenePtr scene, LogPtr log ) :
 {}
 
 
-ComoApp::~ComoApp()
-{
-    log_->debug( "ComoApp destroyed\n" );
-}
-
-
 /***
- * 2. Getters
+ * 3. Getters
  ***/
 
 TransformationMode ComoApp::getTransformationMode() const
@@ -70,7 +64,7 @@ ScenePtr ComoApp::getScene() const
 
 
 /***
- * 4. Setters (slots)
+ * 3. Setters
  ***/
 
 void ComoApp::setTransformationMode( TransformationMode transformationMode )

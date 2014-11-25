@@ -20,10 +20,6 @@
 #define COMO_APP_HPP
 
 #include "scene/scene.hpp"
-#include <QObject>
-#include <string>
-#include <map>
-#include <array>
 #include <common/utilities/log.hpp>
 #include <memory> // std::shared_ptr
 
@@ -38,6 +34,7 @@ enum class TransformationType
     SCALE
 };
 
+
 // Available transformation modes.
 enum class TransformationMode
 {
@@ -47,34 +44,26 @@ enum class TransformationMode
     FIXED_Z
 };
 
+
 class ComoApp : public Lockable {
-    protected:
-        //
-        ScenePtr scene_;
-
-        // This sets if the current user transformation is free or fixed to a axis.
-        TransformationMode transformationMode;
-
-        // Current transformation type.
-        TransformationType transformationType;
-
-        // Log
-        LogPtr log_;
-
-
-        /***
-         * 1. Initialization and destruction
-         ***/
     public:
+        /***
+         * 1. Construction
+         ***/
         ComoApp() = delete;
         ComoApp( const ComoApp& ) = delete;
         ComoApp( ComoApp&& ) = delete;
         ComoApp( ScenePtr scene, LogPtr log );
 
-        ~ComoApp();
 
         /***
-         * 2. Getters
+         * 2. Destruction
+         ***/
+        ~ComoApp() = default;
+
+
+        /***
+         * 3. Getters
          ***/
         TransformationType getTransformationType() const ;
         TransformationMode getTransformationMode() const ;
@@ -83,17 +72,29 @@ class ComoApp : public Lockable {
 
 
         /***
-         * 3. Operators
+         * 4. Setters
+         ***/
+        void setTransformationMode( TransformationMode transformationMode );
+        void setTransformationType( TransformationType transformationType );
+
+
+        /***
+         * 5. Operators
          ***/
         ComoApp& operator=( const ComoApp& ) = delete ;
         ComoApp& operator=( ComoApp&& ) = delete;
 
 
-        /***
-         * 4. Setters (slots)
-         ***/
-        void setTransformationMode( TransformationMode transformationMode );
-        void setTransformationType( TransformationType transformationType );
+    private:
+        ScenePtr scene_;
+
+        // This sets if the current user transformation is free or fixed to a axis.
+        TransformationMode transformationMode;
+
+        // Current transformation type (translation, rotation, etc).
+        TransformationType transformationType;
+
+        LogPtr log_;
 };
 
 
