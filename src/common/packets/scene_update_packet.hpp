@@ -50,62 +50,30 @@ class SceneUpdatePacket : public Packet
         /***
          * 1. Construction
          ***/
-
-        /*! \brief Default constructor */
         SceneUpdatePacket() = delete;
-
-        /*!
-         * \brief Constructs an emtpy
-         * SceneUpdatePacket (0 commands).
-         */
         SceneUpdatePacket( const std::string& unpackingDirPath );
-
-        /*! \brief Copy constructor */
         SceneUpdatePacket( const SceneUpdatePacket& b );
-
-        /*! \brief Move constructor */
         SceneUpdatePacket( SceneUpdatePacket&& ) = delete;
-
-        /*!
-         * \brief Clone method
-         * \return a pointer to a copy of this SceneUpdatePacket.
-         */
         virtual Packet* clone() const ;
 
 
         /***
          * 2. Destruction
          ***/
-
-        /*! \brief Destructor */
         virtual ~SceneUpdatePacket() = default;
 
 
         /***
          * 3. Getters
          ***/
-
-        /*!
-         * \brief Returns the number of commands to be synchronised from
-         * server to be fully synchronised with it.
-         */
         std::uint32_t getUnsyncCommands() const ;
-
-        /*! \brief Get a pointer to the list of commands inside this packet */
         const CommandsList* getCommands() const ;
-
-        /*! \brief see Packet::expectedType const */
         virtual bool expectedType() const ;
 
 
         /***
          * 4. Setters
          ***/
-
-        /*!
-         * \brief Adds the given command to the list of commands held by this
-         * packet.
-         */
         void addCommand( CommandConstPtr command );
 
         /*!
@@ -119,23 +87,13 @@ class SceneUpdatePacket : public Packet
         void addCommand( CommandConstPtr command,
                          const std::uint32_t& commandIndex,
                          const std::uint32_t& historicSize );
-
-
-        /*!
-         * \brief Empty the commands list of this SceneUpdatePacket and set
-         * the number of commands to be synchronised from server to zero.
-         */
         void clear();
 
 
         /***
          * 5. Operators
          ***/
-
-        /*! \brief Copy assignment operator */
         SceneUpdatePacket& operator = (const SceneUpdatePacket& b) = delete;
-
-        /*! \brief Move assignment operator */
         SceneUpdatePacket& operator = ( SceneUpdatePacket&& ) = delete;
 };
 
