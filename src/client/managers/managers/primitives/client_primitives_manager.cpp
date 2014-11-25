@@ -158,7 +158,6 @@ void ClientPrimitivesManager::executeRemoteCommand( const PrimitiveCommand& comm
 
             // Emit a signal indicating the primitive insertion. Include
             // primitive's name and ID in the signal.
-            // TODO: Complete
             emit primitiveAdded( primitiveCreationCommand.getPrimitiveID(),
                                  getPrimitiveRelativePath( primitiveCreationCommand.getPrimitiveID() ) );
         }break;
