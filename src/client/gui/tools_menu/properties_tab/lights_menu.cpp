@@ -73,7 +73,6 @@ void LightsMenu::update()
 
         // We don't want to emmit signals from lightAmbientCoefficientSpinBox_ when
         // we call setValue() directly, so we block them temporarily.
-        // TODO: is there a more elegant way?
         bool oldBlockingState = lightAmbientCoefficientSpinBox_->blockSignals( true );
         lightAmbientCoefficientSpinBox_->setValue( lights_->getAmbientCoefficient() );
         lightAmbientCoefficientSpinBox_->blockSignals( oldBlockingState );

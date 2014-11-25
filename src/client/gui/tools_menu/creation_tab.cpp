@@ -80,8 +80,6 @@ QFrame* CreationTab::createMeshFromPrimitiveCreationMenu()
                     "]: " +
                     ex.what();
 
-            // TODO: If a primitive isn't instantiable, shouldn't I prevent
-            // user for importing it at first?
             QMessageBox::critical( nullptr,
                                    "Error instantiating primitive",
                                    errorMessage.c_str() );

@@ -36,8 +36,11 @@ extern "C" {
 
 int main( int argc, char *argv[] )
 {
-    // TODO: Add checking code.
-    IMG_Init( IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF );
+    // Initialize SDL2_image.
+    const int sdlImageFlags = IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF;
+    if( ( IMG_Init( sdlImageFlags ) & sdlImageFlags ) != sdlImageFlags ){
+        throw std::runtime_error( IMG_GetError() );
+    }
     atexit( IMG_Quit );
 
     int mainExitValue = 0;

@@ -601,7 +601,6 @@ void Viewport::setProjection( Projection projection )
 {
     projection_ = projection;
 
-    // TODO: Make both projections share some connection.
     switch( projection_ ){
         case Projection::ORTHO:
             projectionMatrix =
