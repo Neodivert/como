@@ -27,11 +27,7 @@ namespace como {
 
 Material::Material( const ResourceID& materialID, const MaterialInfo& materialInfo ) :
     Resource( materialID, materialInfo.name ),
-    color_( materialInfo.color ),
-    ambientReflectivity_( materialInfo.ambientReflectivity ),
-    diffuseReflectivity_( materialInfo.diffuseReflectivity ),
-    specularReflectivity_( materialInfo.specularReflectivity ),
-    specularExponent_( materialInfo.specularExponent )
+    materialData_( materialInfo )
 {
     if( materialInfo.textureInfo ){
         texture_ = std::unique_ptr< Texture >( new Texture( NO_RESOURCE, "<texture>", *( materialInfo.textureInfo ) ) );
@@ -46,27 +42,27 @@ Material::Material( const ResourceID& materialID, const MaterialInfo& materialIn
 
 Color Material::getColor() const
 {
-    return Color( color_ );
+    return Color( materialData_.color );
 }
 
 Color Material::getAmbientReflectivity() const
 {
-    return Color( ambientReflectivity_ );
+    return Color( materialData_.ambientReflectivity );
 }
 
 Color Material::getDiffuseReflectivity() const
 {
-    return Color( diffuseReflectivity_ );
+    return Color( materialData_.diffuseReflectivity );
 }
 
 Color Material::getSpecularReflectivity() const
 {
-    return Color( specularReflectivity_ );
+    return Color( materialData_.specularReflectivity );
 }
 
 float Material::getSpecularExponent() const
 {
-    return specularExponent_;
+    return materialData_.specularExponent;
 }
 
 std::string Material::typeName() const
@@ -86,27 +82,27 @@ bool Material::includesTexture() const
 
 void Material::setColor( const Color& color )
 {
-    color_ = color.toVec4();
+    materialData_.color = color.toVec4();
 }
 
 void Material::setAmbientReflectivity( const Color& ambientReflectivity )
 {
-    ambientReflectivity_ = ambientReflectivity.toVec3();
+    materialData_.ambientReflectivity = ambientReflectivity.toVec3();
 }
 
 void Material::setDiffuseReflectivity( const Color& diffuseReflectivity )
 {
-    diffuseReflectivity_ = diffuseReflectivity.toVec3();
+    materialData_.diffuseReflectivity = diffuseReflectivity.toVec3();
 }
 
 void Material::setSpecularReflectivity( const Color& specularReflectivity )
 {
-    specularReflectivity_ = specularReflectivity.toVec3();
+    materialData_.specularReflectivity = specularReflectivity.toVec3();
 }
 
 void Material::setSpecularExponent( float specularExponent )
 {
-    specularExponent_ = specularExponent;
+    materialData_.specularExponent = specularExponent;
 }
 
 
@@ -124,23 +120,23 @@ void Material::sendToShader() const
 
     // Send material color to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.color" );
-    glUniform4fv( uniformLocation, 1, glm::value_ptr( color_ ) );
+    glUniform4fv( uniformLocation, 1, glm::value_ptr( materialData_.color ) );
 
     // Send ambient reflectivity to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.ambientReflectivity" );
-    glUniform3fv( uniformLocation, 1, glm::value_ptr( ambientReflectivity_ ) );
+    glUniform3fv( uniformLocation, 1, glm::value_ptr( materialData_.ambientReflectivity ) );
 
     // Send diffuse reflectivity to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.diffuseReflectivity" );
-    glUniform3fv( uniformLocation, 1, glm::value_ptr( diffuseReflectivity_ ) );
+    glUniform3fv( uniformLocation, 1, glm::value_ptr( materialData_.diffuseReflectivity ) );
 
     // Send diffuse reflectivity to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.specularReflectivity" );
-    glUniform3fv( uniformLocation, 1, glm::value_ptr( specularReflectivity_ ) );
+    glUniform3fv( uniformLocation, 1, glm::value_ptr( materialData_.specularReflectivity ) );
 
     // Send specular exponent to shader.
     uniformLocation = glGetUniformLocation( currentShaderProgram, "material.specularExponent" );
-    glUniform1f( uniformLocation, specularExponent_ );
+    glUniform1f( uniformLocation, materialData_.specularExponent );
 
     // Send texture, if any, to shader.
     if( texture_ != nullptr ){

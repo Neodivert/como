@@ -33,12 +33,7 @@ namespace como {
 class Material : public Resource, public AbstractMaterial
 {
     private:
-        glm::vec4 color_;
-
-        glm::vec3 ambientReflectivity_;  // ("Ka" in a *.mtl file).
-        glm::vec3 diffuseReflectivity_;  // ("Kd" in a *.mtl file).
-        glm::vec3 specularReflectivity_; // ("Ks" in a *.mtl file).
-        float specularExponent_;         // ("Ns" in a *.mtl file).
+        PlainMaterialData materialData_;
 
         std::unique_ptr< Texture > texture_;
 

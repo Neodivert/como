@@ -24,7 +24,6 @@
 
 namespace como {
 
-// TODO: Use in client class Material.
 struct PlainMaterialData {
     glm::vec4 color;
 
