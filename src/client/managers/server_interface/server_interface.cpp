@@ -124,20 +124,22 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
 
 void ServerInterface::disconnect()
 {
-    LOCK
-    boost::system::error_code errorCode;
+    {
+        LOCK
+        boost::system::error_code errorCode;
 
-    log_->debug( "Disconnecting from server ...\n" );
+        log_->debug( "Disconnecting from server ...\n" );
 
-    // Close the socket to the server if it's open.
-    if( socket_.is_open() ){
-        socket_.shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
-        socket_.close();
+        // Close the socket to the server if it's open.
+        if( socket_.is_open() ){
+            socket_.shutdown( boost::asio::ip::tcp::socket::shutdown_both, errorCode );
+            socket_.close();
+        }
+
+        // Stop the IO service and join the threads group.
+        work_.reset();
+        io_service_.stop();
     }
-
-    // Stop the IO service and join the threads group.
-    work_.reset();
-    io_service_.stop();
     workerThreads_.join_all();
 
     log_->debug( "Disconnecting from server ...OK\n" );
@@ -284,23 +286,19 @@ void ServerInterface::listen()
 void ServerInterface::work()
 {
     boost::system::error_code errorCode;
-    bool exit = false;
 
     log_->debug( "[", boost::this_thread::get_id(), "] thread start\n" );
 
-    while( !exit ){
-        try{
-            io_service_.run( errorCode );
-            log_->debug( "[", boost::this_thread::get_id(), "] io_service::run() ...OK\n" );
-            if( errorCode ){
-                log_->error( "[", boost::this_thread::get_id(), "] Error: ", errorCode.message(), "\n" );
-            }
-            exit = true;
-        }catch( std::exception& ex ){
-            // TODO: close the server correctly.
-            log_->debug( ex.what(), "\n" );
-            throw;
+    try{
+        io_service_.run( errorCode );
+        if( errorCode ){
+            throw std::runtime_error( errorCode.message() );
         }
+    }catch( std::exception& ex ){
+        log_->error( "[", boost::this_thread::get_id(), "] terminated - "
+                     " Error: ",
+                     ex.what(), "\n" );
+        throw;
     }
 
     log_->debug( "[", boost::this_thread::get_id(), "] thread end\n" );
