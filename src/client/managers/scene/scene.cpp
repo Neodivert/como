@@ -20,8 +20,6 @@
 
 namespace como {
 
-
-
 /***
  * 1. Construction.
  ***/
@@ -74,7 +72,204 @@ Scene::~Scene()
 
 
 /***
- * 3. Initialization
+ * 3. Getters
+ ***/
+
+std::shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
+{
+    LOCK
+    return oglContext_;
+}
+
+
+UsersManagerPtr Scene::getUsersManager() const
+{
+    LOCK
+    return usersManager_;
+}
+
+
+MeshesManagerPtr Scene::getMeshesManager() const
+{
+    LOCK
+    return entitiesManager_->getMeshesManager();
+}
+
+
+MaterialsManagerPtr Scene::getMaterialsManager() const
+{
+    LOCK
+    return materialsManager_;
+}
+
+
+LightsManagerPtr Scene::getLightsManager() const
+{
+    LOCK
+    return entitiesManager_->getLightsManager();
+}
+
+
+ClientPrimitivesManagerPtr Scene::getPrimitivesManager() const
+{
+    LOCK
+    return primitivesManager_;
+}
+
+
+EntitiesManagerPtr Scene::getEntitiesManager() const
+{
+    LOCK
+    return entitiesManager_;
+}
+
+
+SystemPrimitivesFactoryPtr Scene::getSystemPrimitivesFactory() const
+{
+    LOCK
+    return systemPrimitivesFactory_  ;
+}
+
+
+TextureWallsManager *Scene::getTextureWallsManager() const
+{
+    LOCK
+    return textureWallsManager_.get();
+}
+
+
+TexturesManager *Scene::getTexturesManager() const
+{
+    LOCK
+    return texturesManager_.get();
+}
+
+
+OpenGLPtr Scene::getOpenGL() const
+{
+    LOCK
+    return openGL_;
+}
+
+
+AuxiliarLinesRenderer *Scene::linesRenderer() const
+{
+    LOCK
+    return linesRenderer_.get();
+}
+
+
+/***
+ * 4. Setters
+ ***/
+
+void Scene::setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a ) const
+{
+    glClearColor( r, g, b, a );
+}
+
+
+/***
+ * 5. Drawing
+ ***/
+
+void Scene::draw( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
+{
+    LOCK
+
+    // Set the background color.
+    setBackgroundColor( 0.9f, 0.9f, 0.9f, 1.0f );
+
+    // Draw all the entities.
+    entitiesManager_->drawAll( openGL_, viewMatrix, projectionMatrix );
+}
+
+
+/***
+ * 6. Main loop
+ ***/
+
+void Scene::run()
+{
+    server_->run();
+}
+
+
+/***
+ * 7. Updating (Observer pattern)
+ ***/
+
+void Scene::update()
+{
+    LOCK
+    notifyObservers();
+}
+
+
+/***
+ * 9. Slots
+ ***/
+
+void Scene::executeRemoteCommand( std::shared_ptr< const Command > command )
+{
+    LOCK
+
+    log_->debug( "Scene - Executing remote command(",
+                 commandTargetStrings[static_cast<unsigned int>( command->getTarget() )],
+                 ") ...\n" );
+
+    switch( command->getTarget() ){
+        case CommandTarget::USER:
+            usersManager_->executeRemoteCommand( dynamic_cast< const UserCommand& >( *command ) );
+        break;
+        case CommandTarget::SELECTION:
+            entitiesManager_->executeRemoteSelectionCommand( dynamic_cast< const SelectionCommand& >( *command ) );
+        break;
+        case CommandTarget::PRIMITIVE:
+            primitivesManager_->executeRemoteCommand( dynamic_cast< const PrimitiveCommand& >( *command ) );
+        break;
+        case CommandTarget::PRIMITIVE_CATEGORY:
+            primitivesManager_->executeRemoteCommand( dynamic_cast< const PrimitiveCategoryCommand& >( *command ) );
+        break;
+        case CommandTarget::MATERIAL:
+            materialsManager_->executeRemoteCommand( dynamic_cast< const MaterialCommand& >( *command ) );
+        break;
+        case CommandTarget::LIGHT:
+            entitiesManager_->getLightsManager()->executeRemoteCommand( dynamic_cast< const LightCommand& >( *command ) );
+        break;
+        case CommandTarget::RESOURCE:{
+            entitiesManager_->executeResourceCommand( dynamic_cast< const ResourceCommand& >( *command ) );
+            // TODO: materialsManager_->executeResourceCommand( resourceCommand );
+        }break;
+        case CommandTarget::RESOURCES_SELECTION:{
+            entitiesManager_->executeResourcesSelectionCommand( dynamic_cast< const ResourcesSelectionCommand& >( *command ) );
+            // TODO: materialsManager_->executeResourcesSelectionCommand( selectionCommand );
+        }break;
+        case CommandTarget::GEOMETRIC_PRIMITIVE:{
+            systemPrimitivesFactory_->executeRemoteCommand( dynamic_cast< const SystemPrimitiveCommand& >( *command ) );
+        }break;
+        case CommandTarget::TEXTURE:
+            texturesManager_->executeRemoteCommand( dynamic_cast< const TextureCommand& >( *command ) );
+        break;
+        case CommandTarget::TEXTURE_WALL:
+            textureWallsManager_->executeRemoteCommand( dynamic_cast< const TextureWallCommand& >( *command ) );
+        break;
+        case CommandTarget::CAMERA:
+            entitiesManager_->getCamerasManager()->executeRemoteCommand( dynamic_cast< const CameraCommand& >( *command ) );
+        break;
+        case CommandTarget::ENTITY:
+            entitiesManager_->executeRemoteEntityCommand( dynamic_cast< const EntityCommand& >( *command ) );
+        break;
+    }
+
+    log_->debug( "Scene - Executing remote command(",
+                 commandTargetStrings[static_cast<unsigned int>( command->getTarget() )],
+                 ") ...OK\n" );
+}
+
+
+/***
+ * 10. Initialization
  ***/
 
 void Scene::initOpenGL()
@@ -150,205 +345,6 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         log_->error( ex.what(), "\n" );
         throw;
     }
-}
-
-
-/***
- * 5. Getters
- ***/
-
-std::shared_ptr< QOpenGLContext > Scene::getOpenGLContext() const
-{
-    LOCK
-    return oglContext_;
-}
-
-
-UsersManagerPtr Scene::getUsersManager() const
-{
-    LOCK
-    return usersManager_;
-}
-
-
-MeshesManagerPtr Scene::getMeshesManager() const
-{
-    LOCK
-    return entitiesManager_->getMeshesManager();
-}
-
-
-MaterialsManagerPtr Scene::getMaterialsManager() const
-{
-    LOCK
-    return materialsManager_;
-}
-
-
-LightsManagerPtr Scene::getLightsManager() const
-{
-    LOCK
-    return entitiesManager_->getLightsManager();
-}
-
-
-ClientPrimitivesManagerPtr Scene::getPrimitivesManager() const
-{
-    LOCK
-    return primitivesManager_;
-}
-
-
-EntitiesManagerPtr Scene::getEntitiesManager() const
-{
-    return entitiesManager_;
-}
-
-
-SystemPrimitivesFactoryPtr Scene::getSystemPrimitivesFactory() const
-{
-    LOCK
-    return systemPrimitivesFactory_  ;
-}
-
-
-TextureWallsManager *Scene::getTextureWallsManager() const
-{
-    LOCK
-    return textureWallsManager_.get();
-}
-
-
-TexturesManager *Scene::getTexturesManager() const
-{
-    LOCK
-    return texturesManager_.get();
-}
-
-
-OpenGLPtr Scene::getOpenGL() const
-{
-    LOCK
-    return openGL_;
-}
-
-
-AuxiliarLinesRenderer *Scene::linesRenderer() const
-{
-    LOCK
-    return linesRenderer_.get();
-}
-
-
-/***
- * 6. Setters
- ***/
-
-void Scene::setBackgroundColor( const GLfloat& r, const GLfloat& g, const GLfloat &b, const GLfloat &a ) const
-{
-    glClearColor( r, g, b, a );
-}
-
-
-void Scene::takeOpenGLContext()
-{
-    LOCK
-    oglContext_->makeCurrent( this );
-}
-
-
-/***
- * 10. Drawing
- ***/
-
-void Scene::draw( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix ) const
-{
-    LOCK
-
-    // Set the background color.
-    setBackgroundColor( 0.9f, 0.9f, 0.9f, 1.0f );
-
-    // Draw all the entities.
-    entitiesManager_->drawAll( openGL_, viewMatrix, projectionMatrix );
-}
-
-
-/***
- * 12. Slots
- ***/
-
-void Scene::executeRemoteCommand( std::shared_ptr< const Command > command )
-{
-    LOCK
-
-    log_->debug( "Scene - Executing remote command(",
-                 commandTargetStrings[static_cast<unsigned int>( command->getTarget() )],
-                 ") ...\n" );
-
-    switch( command->getTarget() ){
-        case CommandTarget::USER:
-            usersManager_->executeRemoteCommand( dynamic_cast< const UserCommand& >( *command ) );
-        break;
-        case CommandTarget::SELECTION:
-            entitiesManager_->executeRemoteSelectionCommand( dynamic_cast< const SelectionCommand& >( *command ) );
-        break;
-        case CommandTarget::PRIMITIVE:
-            primitivesManager_->executeRemoteCommand( dynamic_cast< const PrimitiveCommand& >( *command ) );
-        break;
-        case CommandTarget::PRIMITIVE_CATEGORY:
-            primitivesManager_->executeRemoteCommand( dynamic_cast< const PrimitiveCategoryCommand& >( *command ) );
-        break;
-        case CommandTarget::MATERIAL:
-            materialsManager_->executeRemoteCommand( dynamic_cast< const MaterialCommand& >( *command ) );
-        break;
-        case CommandTarget::LIGHT:
-            entitiesManager_->getLightsManager()->executeRemoteCommand( dynamic_cast< const LightCommand& >( *command ) );
-        break;
-        case CommandTarget::RESOURCE:{
-            entitiesManager_->executeResourceCommand( dynamic_cast< const ResourceCommand& >( *command ) );
-            // TODO: materialsManager_->executeResourceCommand( resourceCommand );
-        }break;
-        case CommandTarget::RESOURCES_SELECTION:{
-            entitiesManager_->executeResourcesSelectionCommand( dynamic_cast< const ResourcesSelectionCommand& >( *command ) );
-            // TODO: materialsManager_->executeResourcesSelectionCommand( selectionCommand );
-        }break;
-        case CommandTarget::GEOMETRIC_PRIMITIVE:{
-            systemPrimitivesFactory_->executeRemoteCommand( dynamic_cast< const SystemPrimitiveCommand& >( *command ) );
-        }break;
-        case CommandTarget::TEXTURE:
-            texturesManager_->executeRemoteCommand( dynamic_cast< const TextureCommand& >( *command ) );
-        break;
-        case CommandTarget::TEXTURE_WALL:
-            textureWallsManager_->executeRemoteCommand( dynamic_cast< const TextureWallCommand& >( *command ) );
-        break;
-        case CommandTarget::CAMERA:
-            entitiesManager_->getCamerasManager()->executeRemoteCommand( dynamic_cast< const CameraCommand& >( *command ) );
-        break;
-        case CommandTarget::ENTITY:
-            entitiesManager_->executeRemoteEntityCommand( dynamic_cast< const EntityCommand& >( *command ) );
-        break;
-    }
-
-    log_->debug( "Scene - Executing remote command(",
-                 commandTargetStrings[static_cast<unsigned int>( command->getTarget() )],
-                 ") ...OK\n" );
-}
-
-
-void Scene::run()
-{
-    server_->run();
-}
-
-
-/***
- * 14. Updating (Observer pattern)
- ***/
-
-void Scene::update()
-{
-    LOCK
-    notifyObservers();
 }
 
 } // namespace como
