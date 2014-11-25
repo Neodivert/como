@@ -76,12 +76,7 @@ ScenePtr ComoApp::getScene() const
 void ComoApp::setTransformationMode( TransformationMode transformationMode )
 {
     LOCK
-
-    // Change the transformation mode.
     this->transformationMode = transformationMode;
-
-    // Emit signal.
-    emit transformationModeIndexChanged( static_cast< int >( transformationMode ) );
 }
 
 

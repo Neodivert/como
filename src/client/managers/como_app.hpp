@@ -97,9 +97,6 @@ class ComoApp : public QObject, public Lockable {
     public slots:
         void setTransformationMode( TransformationMode transformationMode );
         void setTransformationType( TransformationType transformationType );
-
-    signals:
-        void transformationModeIndexChanged( int index );
 };
 
 
