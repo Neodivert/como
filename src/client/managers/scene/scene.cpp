@@ -146,7 +146,6 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         // Initialize the primitives manager.
         primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, entitiesManager_->getMeshesManager(), log_ ) );
 
-        localUserConnectionCommand_ = UserConnectionCommandConstPtr( new UserConnectionCommand( userAcceptancePacket ) );
     }catch( std::exception& ex ){
         log_->error( ex.what(), "\n" );
         throw;

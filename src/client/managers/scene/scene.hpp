@@ -66,8 +66,6 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
         // Auxiliar class for rendering lines on the scene.
         std::unique_ptr< AuxiliarLinesRenderer > linesRenderer_;
 
-        UserConnectionCommandConstPtr localUserConnectionCommand_;
-
     public:
         /***
          * 1. Construction.
