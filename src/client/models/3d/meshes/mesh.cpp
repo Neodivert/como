@@ -138,21 +138,6 @@ void Mesh::displayEdges( bool display )
 }
 
 
-bool Mesh::containsProperty( const void* property ) const
-{
-    (void)( property );
-
-    /*
-    for( auto material : materials_ ){
-        if( material.get() == property ){
-            return true;
-        }
-    }
-    */
-    return false;
-}
-
-
 /***
  * 5. Intersections.
  ***/

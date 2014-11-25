@@ -69,16 +69,6 @@ void MeshesSelection::intersects( glm::vec3 r0, glm::vec3 r1, float& t, unsigned
     }
 }
 
-bool MeshesSelection::containsProperty( const void* property ) const
-{
-    LOCK
-    for( const auto& mesh : resources_ ){
-        if( mesh.second->containsProperty( property ) ){
-            return true;
-        }
-    }
-    return false;
-}
 
 ElementsMeetingCondition MeshesSelection::displaysVertexNormals() const
 {

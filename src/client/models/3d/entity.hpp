@@ -80,7 +80,6 @@ class Entity : public Resource, public Drawable, public Transformable
          ***/
         glm::mat4 getModelMatrix() const;
         DrawableType getType() const;
-        virtual bool containsProperty( const void* property ) const = 0;
 
 
         /***

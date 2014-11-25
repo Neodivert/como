@@ -77,7 +77,6 @@ class Mesh : public AbstractMesh, public Entity
         virtual glm::vec3 centroid() const;
         bool includesUV() const;
         virtual std::string typeName() const;
-        bool containsProperty( const void* property ) const;
 
 
         /***

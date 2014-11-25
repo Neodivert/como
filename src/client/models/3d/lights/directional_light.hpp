@@ -115,7 +115,6 @@ class DirectionalLight : public Light
         /***
          * 9. Auxiliar methods
          ***/
-        virtual bool containsProperty( const void* property ) const;
         static GLuint lockShaderDirectionalLight( OpenGL& openGL );
 };
 

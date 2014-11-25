@@ -209,12 +209,6 @@ void DirectionalLight::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, cons
  * 9. Auxiliar methods
  ***/
 
-bool DirectionalLight::containsProperty( const void *property ) const
-{
-    return Mesh::containsProperty( property );
-}
-
-
 // FIXME: Duplicated code (Light::lockShaderLight()).
 GLuint DirectionalLight::lockShaderDirectionalLight( OpenGL& openGL )
 {
