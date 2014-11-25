@@ -47,30 +47,23 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
     Q_OBJECT
 
     private:
-        // Users sharing this scene.
+        // Users and resources managers.
         UsersManagerPtr usersManager_;
-
         ClientPrimitivesManagerPtr primitivesManager_;
-
         MaterialsManagerPtr materialsManager_;
-
         TextureWallsManagerPtr textureWallsManager_;
-
         TexturesManagerPtr texturesManager_;
-
         EntitiesManagerPtr entitiesManager_;
-
         SystemPrimitivesFactoryPtr systemPrimitivesFactory_;
 
+        // OpenGL support.
         OpenGLPtr openGL_; // TODO: Initialize this class outside and pass it to the constructor.
-
         std::shared_ptr< QOpenGLContext > oglContext_; // TODO: Initialize this inside of OpenGL constructor?
 
         // Interface with the server.
         ServerInterfacePtr server_;
 
-        // Lines VAO, VBO and offsets. // TODO: Move to Viewport (x4) / RenderPanel class
-        // // TODO: Move to Viewport (x4) / RenderPanel class
+        // Auxiliar class for rendering lines on the scene.
         std::unique_ptr< AuxiliarLinesRenderer > linesRenderer_;
 
         UserConnectionCommandConstPtr localUserConnectionCommand_;
