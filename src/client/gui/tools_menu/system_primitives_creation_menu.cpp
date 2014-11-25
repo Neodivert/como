@@ -26,8 +26,8 @@ namespace como {
  * 1. Construction
  ***/
 
-SystemPrimitivesCreationMenu::SystemPrimitivesCreationMenu( GeometricPrimitivesFactoryPtr geometricPrimitivesFactory ) :
-    geometricPrimitivesFactory_( geometricPrimitivesFactory )
+SystemPrimitivesCreationMenu::SystemPrimitivesCreationMenu( SystemPrimitivesFactoryPtr systemPrimitivesFactory ) :
+    systemPrimitivesFactory_( systemPrimitivesFactory )
 {
     QVBoxLayout* layout = new QVBoxLayout;
 
@@ -50,7 +50,7 @@ QPushButton* SystemPrimitivesCreationMenu::createCubeCreationButton() const
     QPushButton* cubeCreationButton = new QPushButton( "Create cube" );
 
     QObject::connect( cubeCreationButton, &QPushButton::pressed, [this](){
-        geometricPrimitivesFactory_->createCube();
+        systemPrimitivesFactory_->createCube();
     });
 
     return cubeCreationButton;
@@ -62,7 +62,7 @@ QPushButton *SystemPrimitivesCreationMenu::createConeCreationButton() const
     QPushButton* coneCreationButton = new QPushButton( "Create cone" );
 
     QObject::connect( coneCreationButton, &QPushButton::pressed, [this](){
-        geometricPrimitivesFactory_->createCone();
+        systemPrimitivesFactory_->createCone();
     });
 
     return coneCreationButton;
@@ -74,7 +74,7 @@ QPushButton *SystemPrimitivesCreationMenu::createCylinderCreationButton() const
     QPushButton* cylinderCreationButton = new QPushButton( "Create cylinder" );
 
     QObject::connect( cylinderCreationButton, &QPushButton::pressed, [this](){
-        geometricPrimitivesFactory_->createCylinder();
+        systemPrimitivesFactory_->createCylinder();
     });
 
     return cylinderCreationButton;
@@ -86,7 +86,7 @@ QPushButton *SystemPrimitivesCreationMenu::createSphereCreationButton() const
     QPushButton* sphereCreationButton = new QPushButton( "Create sphere" );
 
     QObject::connect( sphereCreationButton, &QPushButton::pressed, [this](){
-        geometricPrimitivesFactory_->createSphere();
+        systemPrimitivesFactory_->createSphere();
     });
 
     return sphereCreationButton;
