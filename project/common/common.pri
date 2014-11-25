@@ -128,7 +128,6 @@ HEADERS += \
     ../../src/common/commands/entity_commands/entity_commands.hpp \
     ../../src/common/commands/entity_commands/model_matrix_replacement_command.hpp \
     ../../src/common/3d/plain_material_data.hpp \
-    ../../src/common/packables/packable_list.hpp \
     ../../src/common/3d/light_data.hpp
 
 
