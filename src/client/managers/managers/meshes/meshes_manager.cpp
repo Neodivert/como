@@ -135,7 +135,7 @@ ResourceID MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData
 glm::vec3 MeshesManager::createMesh( const ImportedPrimitiveData& primitiveData, const ResourceID& meshID, const ResourceID& firstMaterialID )
 {
     LOCK
-    std::unique_ptr< Mesh > mesh( new ImportedMesh( meshID, firstMaterialID, primitiveData, *materialsManager_, newMeshesDisplayVertexNormals_ ) );
+    std::unique_ptr< Mesh > mesh( new ImportedMesh( meshID, firstMaterialID, primitiveData, *materialsManager_ ) );
     glm::vec3 meshCentroid = mesh->getOriginalCentroid();
 
     addMesh( std::move( mesh ), meshID );
@@ -158,7 +158,8 @@ ResourceID MeshesManager::addMesh( MeshPtr mesh )
 void MeshesManager::addMesh( MeshPtr mesh, const ResourceID& meshID )
 {
     LOCK
-    //getResourcesSelection( meshID.getCreatorID() )->addResource( meshID, std::move( mesh ) );
+
+    mesh->displayVertexNormals( newMeshesDisplayVertexNormals_ );
 
     // FIXME: Meshes are initially unselected because when loading an Scene
     // from file and then synchronizing them on the client, the created
