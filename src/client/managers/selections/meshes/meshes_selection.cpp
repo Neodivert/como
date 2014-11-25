@@ -84,7 +84,7 @@ ElementsMeetingCondition MeshesSelection::displaysVertexNormals() const
 {
     LOCK
     // Check whether first mesh in the selection is displaying normals or not.
-    bool firstMeshDisplaysVertexNormals = false;
+    bool firstMeshDisplaysVertexNormals = true;
     if( resources_.size() ){
         firstMeshDisplaysVertexNormals = resources_.begin()->second->displaysVertexNormals();
     }
