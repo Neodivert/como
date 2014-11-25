@@ -29,7 +29,7 @@
 namespace como {
 
 class SystemPrimitivesFactory;
-typedef std::shared_ptr< SystemPrimitivesFactory > GeometricPrimitivesFactoryPtr;
+typedef std::shared_ptr< SystemPrimitivesFactory > SystemPrimitivesFactoryPtr;
 
 class SystemPrimitivesFactory : public ServerWriter, public Lockable
 {

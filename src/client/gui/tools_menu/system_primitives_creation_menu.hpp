@@ -33,7 +33,7 @@ class SystemPrimitivesCreationMenu : public QFrame
         /***
          * 1. Construction
          ***/
-        SystemPrimitivesCreationMenu( GeometricPrimitivesFactoryPtr geometricPrimitivesFactory );
+        SystemPrimitivesCreationMenu( SystemPrimitivesFactoryPtr geometricPrimitivesFactory );
         SystemPrimitivesCreationMenu() = delete;
         SystemPrimitivesCreationMenu( const SystemPrimitivesCreationMenu& ) = delete;
         SystemPrimitivesCreationMenu( SystemPrimitivesCreationMenu&& ) = delete;
@@ -62,7 +62,7 @@ class SystemPrimitivesCreationMenu : public QFrame
         QPushButton* createSphereCreationButton() const;
 
 
-        GeometricPrimitivesFactoryPtr geometricPrimitivesFactory_;
+        SystemPrimitivesFactoryPtr geometricPrimitivesFactory_;
 };
 
 } // namespace como
