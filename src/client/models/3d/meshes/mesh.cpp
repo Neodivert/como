@@ -47,6 +47,165 @@ const GLint SHADER_UV_ATTR_LOCATION = 2;
  * 1. Construction.
  ***/
 
+Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, const PrimitiveData& primitiveData, MaterialsManager& materialsManager, bool displayVertexNormals ) :
+    Entity( meshID, primitiveData.name + " # " + meshID.toString(), DrawableType::MESH ),
+    type_( MeshType::MESH ),
+    vertexData_( primitiveData.vertexData ),
+    displayVertexNormals_( displayVertexNormals ),
+    displayEdges_( true ),
+    materialsManager_( &materialsManager )
+{
+    ResourceID currentMaterialID = firstMaterialID;
+
+    init( primitiveData.oglData );
+    for( const auto& materialInfo : primitiveData.materialsInfo_ ){
+        materialsManager_->createMaterial( materialInfo, currentMaterialID, id() );
+        materialIDs_.push_back( currentMaterialID );
+        currentMaterialID++;
+    }
+
+    computeCentroid();
+}
+
+
+/***
+ * 2. Destruction.
+ ***/
+
+Mesh::~Mesh()
+{
+    // Tell OpenGL we are done with allocated buffer objects and
+    // vertex attribute arrays.
+    // TODO: If sometime move semantics are implemented, make sure
+    // moved Mesh doesn't delete OpenGL resources on
+    // destruction.
+    glDeleteBuffers( 1, &vbo );
+    glDeleteBuffers( 1, &ebo );
+    glDeleteVertexArrays( 1, &vao );
+}
+
+
+/***
+ * 3. Getters
+ ***/
+
+MeshType Mesh::getType() const
+{
+    return type_;
+}
+
+bool Mesh::displaysVertexNormals() const
+{
+    return displayVertexNormals_;
+}
+
+glm::vec3 Mesh::getOriginalCentroid() const
+{
+    return glm::vec3( originalCentroid );
+}
+
+glm::vec3 Mesh::centroid() const
+{
+    return glm::vec3( transformedCentroid );
+}
+
+
+bool Mesh::includesUV() const
+{
+    return includesUV_;
+}
+
+
+std::string Mesh::typeName() const
+{
+    return "Mesh";
+}
+
+
+/***
+ * 4. Setters
+ ***/
+
+void Mesh::displayVertexNormals( bool display )
+{
+    displayVertexNormals_ = display;
+}
+
+
+void Mesh::displayEdges( bool display )
+{
+    displayEdges_ = display;
+}
+
+
+bool Mesh::containsProperty( const void* property ) const
+{
+    (void)( property );
+
+    /*
+    for( auto material : materials_ ){
+        if( material.get() == property ){
+            return true;
+        }
+    }
+    */
+    return false;
+}
+
+
+/***
+ * 5. Intersections.
+ ***/
+
+void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT, unsigned int* triangle ) const
+{
+    const float MAX_T = 999999.9f;
+    float t = MAX_T;
+    glm::vec3 intersection;
+
+    minT = MAX_T;
+
+    // Transform the ray's origin and direction from world to object
+    // coordinates.
+    rayOrigin = glm::vec3( glm::inverse( modelMatrix_ ) * glm::vec4( rayOrigin, 1.0f ) );
+    rayDirection = glm::vec3( glm::inverse( modelMatrix_ ) * glm::vec4( rayDirection, 0.0f ) );
+
+    // Normalize the direction of the ray.
+    rayDirection = rayDirection;
+
+    // Compute intersections with all triangles in this Mesh.
+    for( unsigned int i = 0; i < vertexData_.vertexTriangles.size(); i++ ){
+        if( glm::intersectRayTriangle( rayOrigin,
+                                       rayDirection,
+                                       vertexData_.vertices[vertexData_.vertexTriangles[i][0]],
+                                       vertexData_.vertices[vertexData_.vertexTriangles[i][1]],
+                                       vertexData_.vertices[vertexData_.vertexTriangles[i][2]],
+                                       intersection ) ){
+
+            // There was an intersection with this triangle. Get the parameter t.
+            t = intersection.z;
+
+            // Do we have a new minimum t?
+            if( t < minT ){
+                minT = t;
+                if( triangle != nullptr ){
+                    *triangle = i;
+                }
+            }
+        }
+    }
+
+    // If the ray didn't intersect the mesh, we "return" -1.
+    if( minT >= MAX_T ){
+        minT = -1.0f;
+    }
+}
+
+
+/***
+ * 7. Construction (protected)
+ ***/
+
 // TODO: Remove this constructor.
 Mesh::Mesh( const ResourceID& meshID, const std::string& meshName, const ResourceID& firstMaterialID, MeshType type, const char* filePath, MaterialsManager& materialsManager, bool displayVertexNormals ) :
     Entity( meshID, meshName + " # " + meshID.toString(), DrawableType::MESH ),
@@ -72,61 +231,8 @@ Mesh::Mesh( const ResourceID& meshID, const std::string& meshName, const Resourc
 }
 
 
-Mesh::Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, const PrimitiveData& primitiveData, MaterialsManager& materialsManager, bool displayVertexNormals ) :
-    Entity( meshID, primitiveData.name + " # " + meshID.toString(), DrawableType::MESH ),
-    type_( MeshType::MESH ),
-    vertexData_( primitiveData.vertexData ),
-    displayVertexNormals_( displayVertexNormals ),
-    displayEdges_( true ),
-    materialsManager_( &materialsManager )
-{
-    ResourceID currentMaterialID = firstMaterialID;
-
-    init( primitiveData.oglData );
-    for( const auto& materialInfo : primitiveData.materialsInfo_ ){
-        materialsManager_->createMaterial( materialInfo, currentMaterialID, id() );
-        materialIDs_.push_back( currentMaterialID );
-        currentMaterialID++;
-    }
-
-    computeCentroid();
-}
-
-
-/*
-Mesh::Mesh( const Mesh& b ) :
-    Entity( b ),
-    type_( b.type_ ),
-    vertexData_( b.vertexData_ ),
-    triangles( b.triangles ),
-    originalCentroid( b.originalCentroid ),
-    transformedCentroid( b.transformedCentroid ),
-    material_( b.material_ )
-{
-    init( oglData );
-    // TODO: Copy buffers.
-}
-*/
-
-
 /***
- * 2. Destruction.
- ***/
-
-Mesh::~Mesh()
-{
-    // Tell OpenGL we are done with allocated buffer objects and
-    // vertex attribute arrays.
-    // TODO: If sometime move semantics are implemented, make sure
-    // moved Mesh doesn't delete OpenGL resources on
-    // destruction.
-    glDeleteBuffers( 1, &vbo );
-    glDeleteBuffers( 1, &ebo );
-    glDeleteVertexArrays( 1, &vao );
-}
-
-/***
- * 3. Initialization.
+ * 8. Initialization
  ***/
 
 void Mesh::init( const MeshOpenGLData& oglData )
@@ -262,6 +368,17 @@ void Mesh::initVAO()
 }
 
 
+void Mesh::computeCentroid()
+{
+    originalCentroid = glm::vec4( vertexData_.centroid(), 1.0f );
+    transformedCentroid = originalCentroid;
+}
+
+
+/***
+ * 9. Getters (protected)
+ ***/
+
 unsigned int Mesh::getBytesPerVertex() const
 {
     return getComponentsPerVertex() * sizeof( GL_FLOAT );
@@ -273,50 +390,6 @@ unsigned int Mesh::getComponentsPerVertex() const
 }
 
 
-void Mesh::computeCentroid()
-{
-    originalCentroid = glm::vec4( vertexData_.centroid(), 1.0f );
-    transformedCentroid = originalCentroid;
-}
-
-
-/***
- * 5. Getters.
- ***/
-
-MeshType Mesh::getType() const
-{
-    return type_;
-}
-
-bool Mesh::displaysVertexNormals() const
-{
-    return displayVertexNormals_;
-}
-
-glm::vec3 Mesh::getOriginalCentroid() const
-{
-    return glm::vec3( originalCentroid );
-}
-
-glm::vec3 Mesh::centroid() const
-{
-    return glm::vec3( transformedCentroid );
-}
-
-
-bool Mesh::includesUV() const
-{
-    return includesUV_;
-}
-
-
-std::string Mesh::typeName() const
-{
-    return "Mesh";
-}
-
-
 bool Mesh::materialIncludesTexture( unsigned int index ) const
 {
     return materialsManager_->materialIncludesTexture( materialIDs_[index] );
@@ -324,72 +397,21 @@ bool Mesh::materialIncludesTexture( unsigned int index ) const
 
 
 /***
- * 6. Setters
+ * 10. Updating
  ***/
 
-void Mesh::displayVertexNormals( bool display )
+void Mesh::update()
 {
-    displayVertexNormals_ = display;
-}
+    // Update mesh's orientation.
+    Entity::update();
 
-
-void Mesh::displayEdges( bool display )
-{
-    displayEdges_ = display;
+    // Update mesh's centroid.
+    transformedCentroid = modelMatrix_ * originalCentroid;
 }
 
 
 /***
- * 7. Intersections.
- ***/
-
-void Mesh::intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT, unsigned int* triangle ) const
-{
-    const float MAX_T = 999999.9f;
-    float t = MAX_T;
-    glm::vec3 intersection;
-
-    minT = MAX_T;
-
-    // Transform the ray's origin and direction from world to object
-    // coordinates.
-    rayOrigin = glm::vec3( glm::inverse( modelMatrix_ ) * glm::vec4( rayOrigin, 1.0f ) );
-    rayDirection = glm::vec3( glm::inverse( modelMatrix_ ) * glm::vec4( rayDirection, 0.0f ) );
-
-    // Normalize the direction of the ray.
-    rayDirection = rayDirection;
-
-    // Compute intersections with all triangles in this Mesh.
-    for( unsigned int i = 0; i < vertexData_.vertexTriangles.size(); i++ ){
-        if( glm::intersectRayTriangle( rayOrigin,
-                                       rayDirection,
-                                       vertexData_.vertices[vertexData_.vertexTriangles[i][0]],
-                                       vertexData_.vertices[vertexData_.vertexTriangles[i][1]],
-                                       vertexData_.vertices[vertexData_.vertexTriangles[i][2]],
-                                       intersection ) ){
-
-            // There was an intersection with this triangle. Get the parameter t.
-            t = intersection.z;
-
-            // Do we have a new minimum t?
-            if( t < minT ){
-                minT = t;
-                if( triangle != nullptr ){
-                    *triangle = i;
-                }
-            }
-        }
-    }
-
-    // If the ray didn't intersect the mesh, we "return" -1.
-    if( minT >= MAX_T ){
-        minT = -1.0f;
-    }
-}
-
-
-/***
- * 8. Shader communication
+ * 11. Shader communication
  ***/
 
 void Mesh::sendToShader( OpenGL& openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix ) const
@@ -404,27 +426,15 @@ void Mesh::sendToShader( OpenGL& openGL, const glm::mat4 &viewMatrix, const glm:
 }
 
 
+void Mesh::sendMaterialToShader( const unsigned int index ) const
+{
+    materialsManager_->sendMaterialToShader( materialIDs_.at( index ) );
+}
+
+
 /***
- * 8. Update and drawing.
+ * 12. Drawing
  ***/
-
-void Mesh::update()
-{
-    // Update mesh's orientation.
-    Entity::update();
-
-    // Update mesh's centroid.
-    transformedCentroid = modelMatrix_ * originalCentroid;
-}
-
-void Mesh::drawTriangles( unsigned int firstTriangleIndex, unsigned int nTriangles ) const
-{
-    glDrawElements( GL_TRIANGLES,
-                    nTriangles * 3,
-                    GL_UNSIGNED_INT,
-                    ( void* )( firstTriangleIndex * 3 * sizeof( GL_UNSIGNED_INT ) ) );
-}
-
 
 void Mesh::drawEdges( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const glm::vec4* contourColor ) const
 {
@@ -481,24 +491,14 @@ void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, con
 }
 
 
-bool Mesh::containsProperty( const void* property ) const
-{
-    (void)( property );
 
-    /*
-    for( auto material : materials_ ){
-        if( material.get() == property ){
-            return true;
-        }
-    }
-    */
-    return false;
+void Mesh::drawTriangles( unsigned int firstTriangleIndex, unsigned int nTriangles ) const
+{
+    glDrawElements( GL_TRIANGLES,
+                    nTriangles * 3,
+                    GL_UNSIGNED_INT,
+                    ( void* )( firstTriangleIndex * 3 * sizeof( GL_UNSIGNED_INT ) ) );
 }
 
-
-void Mesh::sendMaterialToShader( const unsigned int index ) const
-{
-    materialsManager_->sendMaterialToShader( materialIDs_.at( index ) );
-}
 
 } // namespace como

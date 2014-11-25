@@ -53,6 +53,104 @@ class Mesh : public AbstractMesh, public Entity
 {
     friend class DirectionalLight; // TODO: Remove
 
+    public:
+        /***
+         * 1. Construction.
+         ***/
+        Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, const PrimitiveData& primitiveData, MaterialsManager& materialsManager, bool displayVertexNormals = false );
+        Mesh( const Mesh& b ) = delete;
+        Mesh( Mesh&& ) = delete;
+
+
+        /***
+         * 2. Destruction.
+         ***/
+        virtual ~Mesh();
+
+
+        /***
+         * 3. Getters.
+         ***/
+        MeshType getType() const ;
+        bool displaysVertexNormals() const;
+        glm::vec3 getOriginalCentroid() const;
+        virtual glm::vec3 centroid() const;
+        bool includesUV() const;
+        virtual std::string typeName() const;
+        bool containsProperty( const void* property ) const;
+
+
+        /***
+         * 4. Setters
+         ***/
+        void displayVertexNormals( bool display );
+        virtual void displayEdges( bool display );
+
+
+        /***
+         * 5. Intersections.
+         ***/
+        virtual void intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT, unsigned int* triangle = nullptr ) const ;
+
+
+        /***
+         * 6. Operators
+         ***/
+        Mesh& operator=( const Mesh& ) = delete;
+        Mesh& operator=( Mesh&& ) = delete;
+
+
+    protected:
+        /***
+         * 7. Construction (protected)
+         ***/
+        Mesh( const ResourceID& meshID, const std::string& meshName, const ResourceID& firstMaterialID, MeshType type, const char* file, MaterialsManager& materialsManager, bool displayVertexNormals = false );
+
+
+        /***
+         * 8. Initialization
+         ***/
+        void init( const MeshOpenGLData& oglData );
+        void genOpenGLBuffers();
+        void initShaderLocations();
+        void populateOpenGLBuffers( const MeshOpenGLData& oglData );
+        void initMeshBuffers();
+        void initVBO();
+        virtual void initVAO();
+        void computeCentroid();
+
+
+        /***
+         * 9. Getters (protected)
+         ***/
+        virtual unsigned int getBytesPerVertex() const;
+        virtual unsigned int getComponentsPerVertex() const;
+        bool materialIncludesTexture( unsigned int index ) const;
+
+
+        /***
+         * 10. Updating
+         ***/
+        // Recompute transformed vertices based on original ones and
+        // transformation matrix.
+        virtual void update();
+
+
+        /***
+         * 11. Shader communication
+         ***/
+        virtual void sendToShader( OpenGL& openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix ) const;
+        void sendMaterialToShader( const unsigned int index ) const;
+
+
+        /***
+         * 12. Drawing
+         ***/
+        virtual void drawEdges( OpenGLPtr openGL, const glm::mat4& view, const glm::mat4& projection, const glm::vec4* contourColor = nullptr ) const;
+        virtual void drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, glm::vec4 color ) const;
+        virtual void drawTriangles( unsigned int firstTriangleIndex, unsigned int nTriangles ) const;
+
+
     private:
         // Mesh type
         MeshType type_;
@@ -96,105 +194,6 @@ class Mesh : public AbstractMesh, public Entity
         bool displayEdges_;
 
         MaterialsManager* materialsManager_;
-
-        /***
-         * 1. Construction.
-         ***/
-    protected:
-        Mesh( const ResourceID& meshID, const std::string& meshName, const ResourceID& firstMaterialID, MeshType type, const char* file, MaterialsManager& materialsManager, bool displayVertexNormals = false );
-    public:
-        Mesh( const ResourceID& meshID, const ResourceID& firstMaterialID, const PrimitiveData& primitiveData, MaterialsManager& materialsManager, bool displayVertexNormals = false );
-        Mesh( const Mesh& b ) = default;
-        Mesh( Mesh&& ) = delete;
-
-
-        /***
-         * 2. Destruction.
-         ***/
-        virtual ~Mesh();
-
-
-        /***
-         * 3. Initialization.
-         ***/
-    protected:
-        void init( const MeshOpenGLData& oglData );
-        void genOpenGLBuffers();
-        void initShaderLocations();
-        void populateOpenGLBuffers( const MeshOpenGLData& oglData );
-
-        void initMeshBuffers();
-
-        void initVBO();
-        virtual void initVAO();
-        virtual unsigned int getBytesPerVertex() const;
-        virtual unsigned int getComponentsPerVertex() const;
-
-        void computeCentroid();
-
-
-        /***
-         * 5. Getters.
-         ***/
-    public:
-        MeshType getType() const ;
-        bool displaysVertexNormals() const;
-        glm::vec3 getOriginalCentroid() const;
-        virtual glm::vec3 centroid() const;
-        bool includesUV() const;
-        virtual std::string typeName() const;
-    protected:
-        bool materialIncludesTexture( unsigned int index ) const;
-    public:
-
-
-        /***
-         * 6. Setters
-         ***/
-        void displayVertexNormals( bool display );
-        virtual void displayEdges( bool display );
-
-
-        /***
-         * 7. Intersections.
-         ***/
-        virtual void intersects( glm::vec3 rayOrigin, glm::vec3 rayDirection, float& minT, unsigned int* triangle = nullptr ) const ;
-
-
-        /***
-         * 8. Shader communication
-         ***/
-        virtual void sendToShader( OpenGL& openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix ) const;
-
-
-        /***
-         * 8. Update and drawing.
-         ***/
-    protected:
-        // Recompute transformed vertices based on original ones and transformation matrix.
-        virtual void update();
-
-        virtual void drawTriangles( unsigned int firstTriangleIndex, unsigned int nTriangles ) const;
-
-    public:
-        // Send mesh to OpenGL server for rendering it.
-
-        virtual void drawEdges( OpenGLPtr openGL, const glm::mat4& view, const glm::mat4& projection, const glm::vec4* contourColor = nullptr ) const;
-        virtual void drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, glm::vec4 color ) const;
-    public:
-
-        /***
-         * 9. Auxliar methods.
-         ***/
-        bool containsProperty( const void* property ) const;
-        void sendMaterialToShader( const unsigned int index ) const;
-
-
-        /***
-         * 10. Operators
-         ***/
-        Mesh& operator=( const Mesh& ) = delete;
-        Mesh& operator=( Mesh&& ) = delete;
 };
 
 typedef std::unique_ptr< Mesh > MeshPtr;
