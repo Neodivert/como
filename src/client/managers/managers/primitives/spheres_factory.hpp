@@ -21,7 +21,7 @@
 
 #include <client/managers/managers/primitives/specialized_system_primitives_factory.hpp>
 #include <client/models/3d/meshes/system_mesh.hpp>
-#include <common/commands/geometric_primitive_command/sphere_creation_command.hpp>
+#include <common/commands/system_primitive_commands/sphere_creation_command.hpp>
 
 namespace como {
 

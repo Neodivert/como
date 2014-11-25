@@ -16,60 +16,60 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef CUBE_CREATION_COMMAND_HPP
-#define CUBE_CREATION_COMMAND_HPP
+#ifndef CONE_CREATION_COMMAND_HPP
+#define CONE_CREATION_COMMAND_HPP
 
-#include "geometric_primitive_command.hpp"
+#include "system_primitive_command.hpp"
 #include <common/packables/packable_float.hpp>
 
 namespace como {
 
-class CubeCreationCommand : public GeometricPrimitiveCommand
+class ConeCreationCommand : public SystemPrimitiveCommand
 {
     public:
         /***
          * 1. Construction
          ***/
-        CubeCreationCommand();
-        CubeCreationCommand( const ResourceID& cubeID,
+        ConeCreationCommand();
+        ConeCreationCommand( const ResourceID& coneID,
                              const ResourceID& materialID,
                              const ResourceID& firstTextureWallID,
-                             float width,
-                             float height,
-                             float depth,
+                             float coneHeight,
+                             float coneRadius,
+                             unsigned int coneNBaseVertices,
                              const glm::vec3& centroid );
-        CubeCreationCommand( const CubeCreationCommand& );
-        CubeCreationCommand( CubeCreationCommand&& ) = delete;
-        COMMAND_CLONE_METHOD( CubeCreationCommand )
+        ConeCreationCommand( const ConeCreationCommand& );
+        ConeCreationCommand( ConeCreationCommand&& ) = delete;
+        COMMAND_CLONE_METHOD( ConeCreationCommand )
 
 
         /***
          * 2. Destruction
          ***/
-        ~CubeCreationCommand() = default;
+        virtual ~ConeCreationCommand() = default;
 
 
         /***
          * 3. Getters
          ***/
-        float getCubeWidth() const;
-        float getCubeHeight() const;
-        float getCubeDepth() const;
+        float coneHeight() const;
+        float coneRadius() const;
+        std::uint16_t coneNBaseVertices() const;
 
 
         /***
          * 4. Operators
          ***/
-        CubeCreationCommand& operator = ( const CubeCreationCommand& ) = delete;
-        CubeCreationCommand& operator = ( CubeCreationCommand&& ) = delete;
+        ConeCreationCommand& operator = ( const ConeCreationCommand& ) = delete;
+        ConeCreationCommand& operator = ( ConeCreationCommand&& ) = delete;
 
 
     private:
-        PackableFloat cubeWidth_;
-        PackableFloat cubeHeight_;
-        PackableFloat cubeDepth_;
+        PackableFloat coneHeight_;
+        PackableFloat coneRadius_;
+        PackableUint16<std::uint16_t> coneNBaseVertices_;
 };
 
 } // namespace como
 
-#endif // CUBE_CREATION_COMMAND_HPP
+#endif // CONE_CREATION_COMMAND_HPP

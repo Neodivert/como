@@ -314,7 +314,7 @@ void Scene::executeRemoteCommand( std::shared_ptr< const Command > command )
             // TODO: materialsManager_->executeResourcesSelectionCommand( selectionCommand );
         }break;
         case CommandTarget::GEOMETRIC_PRIMITIVE:{
-            geometricPrimitivesFactory_->executeRemoteCommand( dynamic_cast< const GeometricPrimitiveCommand& >( *command ) );
+            geometricPrimitivesFactory_->executeRemoteCommand( dynamic_cast< const SystemPrimitiveCommand& >( *command ) );
         }break;
         case CommandTarget::TEXTURE:
             texturesManager_->executeRemoteCommand( dynamic_cast< const TextureCommand& >( *command ) );

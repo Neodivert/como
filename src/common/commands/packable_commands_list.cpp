@@ -269,17 +269,17 @@ CommandPtr PackableCommandsList::createEmtpyCommandFromBuffer(const void *buffer
         break;
 
         case CommandTarget::GEOMETRIC_PRIMITIVE:
-            switch( GeometricPrimitiveCommand::getType( buffer ) ){
-                case GeometricPrimitiveCommandType::CUBE_CREATION:
+            switch( SystemPrimitiveCommand::getType( buffer ) ){
+                case SystemPrimitiveCommandType::CUBE_CREATION:
                     command = CommandPtr( new CubeCreationCommand );
                 break;
-                case GeometricPrimitiveCommandType::CONE_CREATION:
+                case SystemPrimitiveCommandType::CONE_CREATION:
                     command = CommandPtr( new ConeCreationCommand );
                 break;
-                case GeometricPrimitiveCommandType::CYLINDER_CREATION:
+                case SystemPrimitiveCommandType::CYLINDER_CREATION:
                     command = CommandPtr( new CylinderCreationCommand );
                 break;
-                case GeometricPrimitiveCommandType::SPHERE_CREATION:
+                case SystemPrimitiveCommandType::SPHERE_CREATION:
                     command = CommandPtr( new SphereCreationCommand );
                 break;
             }

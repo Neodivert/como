@@ -61,7 +61,7 @@ class SystemPrimitivesFactory : public ServerWriter, public Lockable
         /***
          * 4. Command execution
          ***/
-        void executeRemoteCommand( const GeometricPrimitiveCommand& command );
+        void executeRemoteCommand( const SystemPrimitiveCommand& command );
 
 
         /***

@@ -19,13 +19,13 @@
 #ifndef SPHERE_CREATION_COMMAND_HPP
 #define SPHERE_CREATION_COMMAND_HPP
 
-#include "geometric_primitive_command.hpp"
+#include "system_primitive_command.hpp"
 #include <common/packables/packable_float.hpp>
 #include <common/packables/packable_integer.hpp>
 
 namespace como {
 
-class SphereCreationCommand : public GeometricPrimitiveCommand
+class SphereCreationCommand : public SystemPrimitiveCommand
 {
     public:
         /***

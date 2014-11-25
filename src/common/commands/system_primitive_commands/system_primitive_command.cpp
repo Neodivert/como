@@ -16,11 +16,11 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#include "geometric_primitive_command.hpp"
+#include "system_primitive_command.hpp"
 
 namespace como {
 
-GeometricPrimitiveCommand::GeometricPrimitiveCommand( GeometricPrimitiveCommandType commandType,
+SystemPrimitiveCommand::SystemPrimitiveCommand( SystemPrimitiveCommandType commandType,
                                                       const ResourceID& meshID,
                                                       const ResourceID& materialID,
                                                       const ResourceID& firstTextureWallID,
@@ -41,7 +41,7 @@ GeometricPrimitiveCommand::GeometricPrimitiveCommand( GeometricPrimitiveCommandT
 }
 
 
-GeometricPrimitiveCommand::GeometricPrimitiveCommand( const GeometricPrimitiveCommand& b ) :
+SystemPrimitiveCommand::SystemPrimitiveCommand( const SystemPrimitiveCommand& b ) :
     TypeCommand( b ),
     meshID_( b.meshID_ ),
     materialID_( b.materialID_ ),
@@ -61,31 +61,31 @@ GeometricPrimitiveCommand::GeometricPrimitiveCommand( const GeometricPrimitiveCo
  * 3. Getters
  ***/
 
-ResourceID GeometricPrimitiveCommand::getMeshID() const
+ResourceID SystemPrimitiveCommand::getMeshID() const
 {
     return meshID_.getValue();
 }
 
 
-ResourceID GeometricPrimitiveCommand::getMaterialID() const
+ResourceID SystemPrimitiveCommand::getMaterialID() const
 {
     return materialID_.getValue();
 }
 
 
-ResourceID GeometricPrimitiveCommand::getFirstTextureWallID() const
+ResourceID SystemPrimitiveCommand::getFirstTextureWallID() const
 {
     return firstTextureWallID_.getValue();
 }
 
 
-std::uint8_t GeometricPrimitiveCommand::nTextureWalls() const
+std::uint8_t SystemPrimitiveCommand::nTextureWalls() const
 {
     return nTextureWalls_.getValue();
 }
 
 
-glm::vec3 GeometricPrimitiveCommand::centroid() const
+glm::vec3 SystemPrimitiveCommand::centroid() const
 {
     return glm::vec3(
             centroid_.getValues()[0],

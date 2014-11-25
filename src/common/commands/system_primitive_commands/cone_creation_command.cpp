@@ -25,7 +25,7 @@ namespace como {
  ***/
 
 ConeCreationCommand::ConeCreationCommand() :
-    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::CONE_CREATION, NO_RESOURCE, NO_RESOURCE, NO_RESOURCE, 2 ),
+    SystemPrimitiveCommand( SystemPrimitiveCommandType::CONE_CREATION, NO_RESOURCE, NO_RESOURCE, NO_RESOURCE, 2 ),
     coneHeight_( 1.0f ),
     coneRadius_( 1.0f ),
     coneNBaseVertices_( 16 )
@@ -43,7 +43,7 @@ ConeCreationCommand::ConeCreationCommand( const ResourceID &coneID,
                                           float coneRadius,
                                           unsigned int coneNBaseVertices,
                                           const glm::vec3& centroid ) :
-    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::CONE_CREATION, coneID, materialID, firstTextureWallID, 2, centroid ),
+    SystemPrimitiveCommand( SystemPrimitiveCommandType::CONE_CREATION, coneID, materialID, firstTextureWallID, 2, centroid ),
     coneHeight_( coneHeight ),
     coneRadius_( coneRadius ),
     coneNBaseVertices_( coneNBaseVertices )
@@ -55,7 +55,7 @@ ConeCreationCommand::ConeCreationCommand( const ResourceID &coneID,
 
 
 ConeCreationCommand::ConeCreationCommand(const ConeCreationCommand &b ) :
-    GeometricPrimitiveCommand( b ),
+    SystemPrimitiveCommand( b ),
     coneHeight_( b.coneHeight_ ),
     coneRadius_( b.coneRadius_ ),
     coneNBaseVertices_( b.coneNBaseVertices_ )

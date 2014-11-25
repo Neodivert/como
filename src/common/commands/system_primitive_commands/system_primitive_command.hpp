@@ -16,8 +16,8 @@
  * along with COMO.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef GEOMETRIC_PRIMITIVE_COMMAND_HPP
-#define GEOMETRIC_PRIMITIVE_COMMAND_HPP
+#ifndef SYSTEM_PRIMITIVE_COMMAND_HPP
+#define SYSTEM_PRIMITIVE_COMMAND_HPP
 
 #include <common/commands/type_command.hpp>
 #include <common/packables/array/packable_array_3.hpp>
@@ -26,7 +26,7 @@
 
 namespace como {
 
-enum class GeometricPrimitiveCommandType : std::uint8_t
+enum class SystemPrimitiveCommandType : std::uint8_t
 {
     CUBE_CREATION = 0,
     CONE_CREATION,
@@ -35,27 +35,27 @@ enum class GeometricPrimitiveCommandType : std::uint8_t
 };
 
 
-class GeometricPrimitiveCommand : public TypeCommand< GeometricPrimitiveCommandType >
+class SystemPrimitiveCommand : public TypeCommand< SystemPrimitiveCommandType >
 {
     public:
         /***
          * 1. Construction
          ***/
-        GeometricPrimitiveCommand( GeometricPrimitiveCommandType type,
+        SystemPrimitiveCommand( SystemPrimitiveCommandType type,
                                    const ResourceID& meshID,
                                    const ResourceID& materialID,
                                    const ResourceID& firstTextureWallID,
                                    std::uint8_t nTextureWalls,
                                    const glm::vec3& centroid = glm::vec3( 0.0f ) );
-        GeometricPrimitiveCommand() = delete;
-        GeometricPrimitiveCommand( const GeometricPrimitiveCommand& );
-        GeometricPrimitiveCommand( GeometricPrimitiveCommand&& ) = delete;
+        SystemPrimitiveCommand() = delete;
+        SystemPrimitiveCommand( const SystemPrimitiveCommand& );
+        SystemPrimitiveCommand( SystemPrimitiveCommand&& ) = delete;
 
 
         /***
          * 2. Destruction
          ***/
-        ~GeometricPrimitiveCommand() = default;
+        ~SystemPrimitiveCommand() = default;
 
 
         /***
@@ -71,8 +71,8 @@ class GeometricPrimitiveCommand : public TypeCommand< GeometricPrimitiveCommandT
         /***
          * 4. Operators
          ***/
-        GeometricPrimitiveCommand& operator = ( const GeometricPrimitiveCommand& ) = delete;
-        GeometricPrimitiveCommand& operator = ( GeometricPrimitiveCommand&& ) = delete;
+        SystemPrimitiveCommand& operator = ( const SystemPrimitiveCommand& ) = delete;
+        SystemPrimitiveCommand& operator = ( SystemPrimitiveCommand&& ) = delete;
 
 
     private:
@@ -85,4 +85,4 @@ class GeometricPrimitiveCommand : public TypeCommand< GeometricPrimitiveCommandT
 
 } // namespace como
 
-#endif // GEOMETRIC_PRIMITIVE_COMMAND_HPP
+#endif // SYSTEM_PRIMITIVE_COMMAND_HPP

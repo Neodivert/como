@@ -25,7 +25,7 @@ namespace como {
  ***/
 
 CylinderCreationCommand::CylinderCreationCommand() :
-    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::CYLINDER_CREATION, NO_RESOURCE, NO_RESOURCE, NO_RESOURCE, 3 ),
+    SystemPrimitiveCommand( SystemPrimitiveCommandType::CYLINDER_CREATION, NO_RESOURCE, NO_RESOURCE, NO_RESOURCE, 3 ),
     cylinderHeight_( 1.0f ),
     cylinderRadius_( 1.0f ),
     cylinderNRadialVertices_( 16 )
@@ -43,7 +43,7 @@ CylinderCreationCommand::CylinderCreationCommand( const ResourceID &cylinderID,
                                           float coneRadius,
                                           unsigned int coneNBaseVertices,
                                           const glm::vec3& centroid ) :
-    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::CYLINDER_CREATION, cylinderID, materialID, firstTextureWallID, 3, centroid ),
+    SystemPrimitiveCommand( SystemPrimitiveCommandType::CYLINDER_CREATION, cylinderID, materialID, firstTextureWallID, 3, centroid ),
     cylinderHeight_( coneHeight ),
     cylinderRadius_( coneRadius ),
     cylinderNRadialVertices_( coneNBaseVertices )
@@ -55,7 +55,7 @@ CylinderCreationCommand::CylinderCreationCommand( const ResourceID &cylinderID,
 
 
 CylinderCreationCommand::CylinderCreationCommand(const CylinderCreationCommand &b ) :
-    GeometricPrimitiveCommand( b ),
+    SystemPrimitiveCommand( b ),
     cylinderHeight_( b.cylinderHeight_ ),
     cylinderRadius_( b.cylinderRadius_ ),
     cylinderNRadialVertices_( b.cylinderNRadialVertices_ )

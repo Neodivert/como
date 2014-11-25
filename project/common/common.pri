@@ -98,9 +98,9 @@ HEADERS += \
     ../../src/common/primitives/primitive_data/material_info.hpp \
     ../../src/common/primitives/primitive_data/triangles_group_with_material.hpp \
     ../../src/common/primitives/primitive_data/system_primitive_data.hpp \
-    ../../src/common/commands/geometric_primitive_command/geometric_primitive_command.hpp \
-    ../../src/common/commands/geometric_primitive_command/geometric_primitive_commands.hpp \
-    ../../src/common/commands/geometric_primitive_command/cube_creation_command.hpp \
+    ../../src/common/commands/system_primitive_commands/system_primitive_command.hpp \
+    ../../src/common/commands/system_primitive_commands/system_primitive_commands.hpp \
+    ../../src/common/commands/system_primitive_commands/cube_creation_command.hpp \
     ../../src/common/managers/textures/abstract_textures_manager.hpp \
     ../../src/common/resources/resource_header.hpp \
     ../../src/common/resources/selectable_resources_container.hpp \
@@ -112,9 +112,9 @@ HEADERS += \
     ../../src/common/commands/texture_wall_commands/texture_wall_commands.hpp \
     ../../src/common/commands/texture_wall_commands/texture_wall_modification_command.hpp \
     ../../src/common/commands/texture_wall_commands/texture_wall_texture_change_command.hpp \
-    ../../src/common/commands/geometric_primitive_command/cone_creation_command.hpp \
-    ../../src/common/commands/geometric_primitive_command/cylinder_creation_command.hpp \
-    ../../src/common/commands/geometric_primitive_command/sphere_creation_command.hpp \
+    ../../src/common/commands/system_primitive_commands/cone_creation_command.hpp \
+    ../../src/common/commands/system_primitive_commands/cylinder_creation_command.hpp \
+    ../../src/common/commands/system_primitive_commands/sphere_creation_command.hpp \
     ../../src/common/commands/camera_commands/camera_command.hpp \
     ../../src/common/commands/camera_commands/camera_creation_command.hpp \
     ../../src/common/commands/camera_commands/camera_commands.hpp \
@@ -185,8 +185,8 @@ SOURCES += \
     ../../src/common/primitives/primitive_data/imported_primitive_data.cpp \
     ../../src/common/primitives/primitive_data/mesh_normal_data.cpp \
     ../../src/common/primitives/primitive_data/mesh_opengl_data.cpp \
-    ../../src/common/commands/geometric_primitive_command/geometric_primitive_command.cpp \
-    ../../src/common/commands/geometric_primitive_command/cube_creation_command.cpp \
+    ../../src/common/commands/system_primitive_commands/system_primitive_command.cpp \
+    ../../src/common/commands/system_primitive_commands/cube_creation_command.cpp \
     ../../src/common/primitives/primitive_data/material_info.cpp \
     ../../src/common/managers/textures/abstract_textures_manager.cpp \
     ../../src/common/primitives/primitive_data/texture_info.cpp \
@@ -195,9 +195,9 @@ SOURCES += \
     ../../src/common/commands/texture_wall_commands/texture_wall_command.cpp \
     ../../src/common/commands/texture_wall_commands/texture_wall_modification_command.cpp \
     ../../src/common/commands/texture_wall_commands/texture_wall_texture_change_command.cpp \
-    ../../src/common/commands/geometric_primitive_command/cone_creation_command.cpp \
-    ../../src/common/commands/geometric_primitive_command/cylinder_creation_command.cpp \
-    ../../src/common/commands/geometric_primitive_command/sphere_creation_command.cpp \
+    ../../src/common/commands/system_primitive_commands/cone_creation_command.cpp \
+    ../../src/common/commands/system_primitive_commands/cylinder_creation_command.cpp \
+    ../../src/common/commands/system_primitive_commands/sphere_creation_command.cpp \
     ../../src/common/commands/camera_commands/camera_command.cpp \
     ../../src/common/commands/camera_commands/camera_creation_command.cpp \
     ../../src/common/resources/resource.cpp \

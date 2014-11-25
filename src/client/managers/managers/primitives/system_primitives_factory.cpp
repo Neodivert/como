@@ -72,29 +72,29 @@ ResourceID SystemPrimitivesFactory::createSphere( float radius, std::uint16_t nD
  * 4. Command execution
  ***/
 
-void SystemPrimitivesFactory::executeRemoteCommand( const GeometricPrimitiveCommand& command )
+void SystemPrimitivesFactory::executeRemoteCommand( const SystemPrimitiveCommand& command )
 {
     LOCK
     switch( command.getType() ){
-        case GeometricPrimitiveCommandType::CUBE_CREATION:{
+        case SystemPrimitiveCommandType::CUBE_CREATION:{
             const CubeCreationCommand& creationCommand =
                 dynamic_cast< const CubeCreationCommand& >( command );
 
             cubesFactory_.executeRemoteCommand( creationCommand );
         }break;
-        case GeometricPrimitiveCommandType::CONE_CREATION:{
+        case SystemPrimitiveCommandType::CONE_CREATION:{
             const ConeCreationCommand& creationCommand =
                 dynamic_cast< const ConeCreationCommand& >( command );
 
             conesFactory_.executeRemoteCommand( creationCommand );
         }break;
-        case GeometricPrimitiveCommandType::CYLINDER_CREATION:{
+        case SystemPrimitiveCommandType::CYLINDER_CREATION:{
             const CylinderCreationCommand& creationCommand =
                 dynamic_cast< const CylinderCreationCommand& >( command );
 
             cylindersFactory_.executeRemoteCommand( creationCommand );
         }break;
-        case GeometricPrimitiveCommandType::SPHERE_CREATION:{
+        case SystemPrimitiveCommandType::SPHERE_CREATION:{
             const SphereCreationCommand& creationCommand =
                 dynamic_cast< const SphereCreationCommand& >( command );
 

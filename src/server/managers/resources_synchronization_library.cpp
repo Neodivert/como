@@ -84,13 +84,13 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
             }
         }break;
         case CommandTarget::GEOMETRIC_PRIMITIVE:{
-            const GeometricPrimitiveCommand& geometricPrimitiveCommand =
-                    dynamic_cast< const GeometricPrimitiveCommand& >( command );
+            const SystemPrimitiveCommand& geometricPrimitiveCommand =
+                    dynamic_cast< const SystemPrimitiveCommand& >( command );
 
-            if( ( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::CUBE_CREATION ) ||
-                ( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::CONE_CREATION ) ||
-                ( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::CYLINDER_CREATION ) ||
-                ( geometricPrimitiveCommand.getType() == GeometricPrimitiveCommandType::SPHERE_CREATION ) ){
+            if( ( geometricPrimitiveCommand.getType() == SystemPrimitiveCommandType::CUBE_CREATION ) ||
+                ( geometricPrimitiveCommand.getType() == SystemPrimitiveCommandType::CONE_CREATION ) ||
+                ( geometricPrimitiveCommand.getType() == SystemPrimitiveCommandType::CYLINDER_CREATION ) ||
+                ( geometricPrimitiveCommand.getType() == SystemPrimitiveCommandType::SPHERE_CREATION ) ){
                 log()->debug( "Geometric primitive created (", geometricPrimitiveCommand.getMeshID(), ")\n" );
                 resourcesSyncData_[ geometricPrimitiveCommand.getMeshID() ] =
                         ResourceSyncDataPtr( new EntitySyncData( &geometricPrimitiveCommand,

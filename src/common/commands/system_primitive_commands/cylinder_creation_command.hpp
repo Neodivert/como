@@ -19,12 +19,12 @@
 #ifndef CYLINDER_CREATION_COMMAND_HPP
 #define CYLINDER_CREATION_COMMAND_HPP
 
-#include "geometric_primitive_command.hpp"
+#include "system_primitive_command.hpp"
 #include <common/packables/packable_float.hpp>
 
 namespace como {
 
-class CylinderCreationCommand : public GeometricPrimitiveCommand
+class CylinderCreationCommand : public SystemPrimitiveCommand
 {
     public:
         /***

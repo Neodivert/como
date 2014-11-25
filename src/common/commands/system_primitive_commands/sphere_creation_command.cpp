@@ -25,7 +25,7 @@ namespace como {
  ***/
 
 SphereCreationCommand::SphereCreationCommand() :
-    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::SPHERE_CREATION, NO_RESOURCE, NO_RESOURCE, NO_RESOURCE, 1 ),
+    SystemPrimitiveCommand( SystemPrimitiveCommandType::SPHERE_CREATION, NO_RESOURCE, NO_RESOURCE, NO_RESOURCE, 1 ),
     sphereRadius_( 1.0f ),
     sphereNDivisions_( 16 )
 {
@@ -35,7 +35,7 @@ SphereCreationCommand::SphereCreationCommand() :
 
 
 SphereCreationCommand::SphereCreationCommand( const ResourceID &sphereID, const ResourceID &materialID, const ResourceID &firstTextureWallID, float sphereRadius, std::uint16_t sphereNDivisions, const glm::vec3& centroid ) :
-    GeometricPrimitiveCommand( GeometricPrimitiveCommandType::SPHERE_CREATION, sphereID, materialID, firstTextureWallID, 1, centroid ),
+    SystemPrimitiveCommand( SystemPrimitiveCommandType::SPHERE_CREATION, sphereID, materialID, firstTextureWallID, 1, centroid ),
     sphereRadius_( sphereRadius ),
     sphereNDivisions_( sphereNDivisions )
 {
@@ -45,7 +45,7 @@ SphereCreationCommand::SphereCreationCommand( const ResourceID &sphereID, const 
 
 
 SphereCreationCommand::SphereCreationCommand( const SphereCreationCommand &b ) :
-    GeometricPrimitiveCommand( b ),
+    SystemPrimitiveCommand( b ),
     sphereRadius_( b.sphereRadius_ ),
     sphereNDivisions_( b.sphereNDivisions_ )
 {

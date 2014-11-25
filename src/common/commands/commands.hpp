@@ -35,7 +35,7 @@
 // Material commands
 #include "material_commands/material_commands.hpp" // TODO: Make this with the rest of commands.
 
-// MeshLight commands
+// Light commands
 #include "light_commands/light_commands.hpp"
 
 // Resource commands
@@ -44,8 +44,8 @@
 // Resources selection commands
 #include "resources_selection_commands/resources_selection_command.hpp"
 
-// Geometric primitives commands
-#include "geometric_primitive_command/geometric_primitive_commands.hpp"
+// System primitives commands
+#include "system_primitive_commands/system_primitive_commands.hpp"
 
 // Texture commands
 #include "texture_commands/texture_commands.hpp"
