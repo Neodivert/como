@@ -203,20 +203,10 @@ bool MaterialsManager::materialIncludesTexture( const ResourceID& materialID ) c
 void MaterialsManager::executeRemoteCommand( const MaterialCommand& command )
 {
     LOCK
-    //log()->debug( "MaterialsManager - executing remote command - Material ID: ", command->getMaterialID(), "\n" );
 
     switch( command.getType() ){
         case MaterialCommandType::MATERIAL_CREATION:{
-        /*
-            const MaterialCreationCommand& materialCreationCommand =
-                    dynamic_cast< const MaterialCreationCommand& >( command );
-
-            //log()->debug( "\tMaterial name: ", materialCreationCommand->getMaterialData().name, "\n" );
-
-            createMaterial( materialCreationCommand.getMaterialID(),
-                            materialCreationCommand.getMaterialData() );
-                            */
-            throw std::runtime_error( "MATERIAL_CREATION command received" );
+            throw std::runtime_error( "MATERIAL_CREATION commands aren't supported in this version of COMO" );
         }break;
 
         case MaterialCommandType::MATERIAL_MODIFICATION:{

@@ -26,6 +26,8 @@
 
 namespace como {
 
+// NOTE: MaterialCreationCommand isn't used / supported on this version of
+// COMO.
 class MaterialCreationCommand : public MaterialCommand
 {
     private:

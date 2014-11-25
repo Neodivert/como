@@ -91,7 +91,7 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 
     glm::vec3 meshCentroid = meshesManager_->createMesh( primitiveData, meshID, firstMaterialID );
 
-    // Send the command to the server (the MaterialCreationCommand command was
+    // Send the command to the server.
     server_->sendCommand(
                 CommandConstPtr(
                     new PrimitiveInstantiationCommand(
