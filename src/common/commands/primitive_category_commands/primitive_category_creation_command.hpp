@@ -59,10 +59,6 @@ class PrimitiveCategoryCreationCommand : public PrimitiveCategoryCommand
         PrimitiveCategoryCreationCommand& operator = ( PrimitiveCategoryCreationCommand&& ) = delete;
 };
 
-DEFINE_SHARED_POINTERS( PrimitiveCategoryCreationCommand,
-                        PrimitiveCategoryCreationCommandPtr,
-                        PrimitiveCategoryCreationCommandConstPtr )
-
 } // namespace como
 
 #endif // PRIMITIVE_CATEGORY_CREATION_COMMAND_HPP

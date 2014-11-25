@@ -67,8 +67,6 @@ class ResourceCommand : public TypeCommand< ResourceCommandType >
         ResourceCommand& operator = ( ResourceCommand&& ) = delete;
 };
 
-typedef std::shared_ptr< const ResourceCommand > ResourceCommandConstPtr;
-
 } // namespace como
 
 #endif // RESOURCE_COMMAND_HPP

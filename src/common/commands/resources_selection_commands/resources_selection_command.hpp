@@ -38,9 +38,6 @@ class ResourcesSelectionCommand : public TypeCommand< ResourcesSelectionCommandT
         ResourcesSelectionCommand& operator = ( ResourcesSelectionCommand&& ) = delete;
 };
 
-
-typedef std::shared_ptr< const ResourcesSelectionCommand > ResourcesSelectionCommandConstPtr;
-
 } // namespace como
 
 #endif // RESOURCES_SELECTION_COMMAND_HPP

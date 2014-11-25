@@ -56,9 +56,6 @@ class UserCommand : public TypeCommand< UserCommandType >
         UserCommand& operator=( UserCommand&& ) = delete;
 };
 
-
-typedef std::shared_ptr< const UserCommand > UserCommandConstPtr;
-
 } // namespace como
 
 #endif // USER_COMMAND_HPP

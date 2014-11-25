@@ -53,8 +53,6 @@ class SelectionCommand : public TypeCommand<SelectionCommandType>
         SelectionCommand& operator=( SelectionCommand&& ) = delete;
 };
 
-typedef std::shared_ptr< const SelectionCommand > SelectionCommandConstPtr;
-
 } // namespace como
 
 #endif // SELECTION_COMMAND_HPP

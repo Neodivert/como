@@ -95,8 +95,6 @@ class PrimitiveCommand : public TypeCommand< PrimitiveCommandType >
         PrimitiveCommand& operator=( PrimitiveCommand&& ) = delete;
 };
 
-typedef std::shared_ptr< const PrimitiveCommand > PrimitiveCommandConstPtr;
-
 } // namespace como
 
 #endif // PRIMITIVE_COMMAND_HPP

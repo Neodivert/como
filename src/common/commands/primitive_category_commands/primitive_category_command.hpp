@@ -65,10 +65,6 @@ class PrimitiveCategoryCommand : public TypeCommand< PrimitiveCategoryCommandTyp
         PrimitiveCategoryCommand& operator = ( PrimitiveCategoryCommand&& ) = delete;
 };
 
-DEFINE_SHARED_POINTERS( PrimitiveCategoryCommand,
-                        PrimitiveCategoryCommandPtr,
-                        PrimitiveCategoryCommandConstPtr )
-
 } // namespace como
 
 #endif // PRIMITIVE_CATEGORY_COMMAND_HPP
