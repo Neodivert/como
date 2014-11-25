@@ -592,7 +592,6 @@ void Viewport::setView( View view )
     // in a signal.
     emit viewIndexChanged( static_cast< int >( view ) );
 
-    //comoApp->getScene()->renderNeeded();
     forceRender();
 }
 

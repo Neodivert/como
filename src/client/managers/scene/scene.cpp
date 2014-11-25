@@ -274,14 +274,8 @@ void Scene::draw( const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix
 }
 
 
-void Scene::emitRenderNeeded()
-{
-    emit renderNeeded();
-}
-
-
 /***
- * 13. Slots
+ * 12. Slots
  ***/
 
 void Scene::executeRemoteCommand( std::shared_ptr< const Command > command )
@@ -344,18 +338,12 @@ void Scene::executeRemoteCommand( std::shared_ptr< const Command > command )
 
 void Scene::run()
 {
-    // When the server was created, the local user was added to the Scene
-    // but as the GUI wasn't yet initialized, the GUI users list wasn't
-    // updated. We reemit here the signal for GUI updating.
-    // TODO: Remove this and find a better way of initializing the users list?
-    emit userConnected( localUserConnectionCommand_ );
-
     server_->run();
 }
 
 
 /***
- * 15. Updating (Observer pattern)
+ * 14. Updating (Observer pattern)
  ***/
 
 void Scene::update()

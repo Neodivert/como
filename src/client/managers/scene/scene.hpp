@@ -147,18 +147,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
 
 
         /***
-         * 12. Signals
-         ***/
-        void emitRenderNeeded();
-    signals:
-        void renderNeeded();
-        void userConnected( UserConnectionCommandConstPtr command );
-        void userDisconnected( UserID userID );
-        void primitiveAdded( QString primitiveName, ResourceID primitiveID );
-
-
-        /***
-         * 13. Slots
+         * 12. Slots
          ***/
     public slots:
         // TODO: Pass command by reference. By now it must be passed using
@@ -167,13 +156,14 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
 
 
         /***
-         * 14. Auxiliar methods
+         * 13. Auxiliar methods
          ***/
     public:
         void run();
 
+
         /***
-         * 15. Updating (Observer pattern)
+         * 14. Updating (Observer pattern)
          ***/
         virtual void update();
 };
