@@ -42,30 +42,6 @@ class ServerInterface : public QObject, public Lockable
 {
     Q_OBJECT
 
-    private:
-        boost::asio::io_service io_service_;
-        std::shared_ptr< boost::asio::io_service::work > work_;
-
-        Socket socket_;
-
-        SceneUpdatePacket sceneUpdatePacketFromServer_;
-        SceneUpdatePacket sceneUpdatePacketToServer_;
-
-        // Queue with scene commands to be sended to the server.
-        std::queue< CommandConstPtr > sceneCommandsToServer_;
-
-        boost::asio::deadline_timer timer_;
-
-        ResourceIDsGeneratorPtr resourceIDsGenerator_;
-        Color localUserColor_;
-
-        // Log
-        LogPtr log_;
-
-        boost::thread_group workerThreads_;
-
-        std::exception_ptr lastException_;
-
     public:
         /***
          * 1. Construction
@@ -83,14 +59,57 @@ class ServerInterface : public QObject, public Lockable
 
 
         /***
-         * 2. Connection and disconnection
+         * 3. Connection and disconnection
          ***/
         void connect( const char* host, const char* port, const char* userName, UserAcceptancePacket& userAcceptancePacket );
         void disconnect();
 
 
         /***
-         * 3. Handlers
+         * 4. Getters
+         ***/
+        ResourceID reserveResourceIDs( unsigned int nIDs );
+        UserID getLocalUserID() const;
+        Color getLocalUserColor() const;
+
+
+        /***
+         * 5. Server communication
+         ***/
+        void sendCommand( CommandConstPtr sceneCommand );
+        void run();
+
+
+        /***
+         * 6. Operators
+         ***/
+        ServerInterface& operator=( const ServerInterface& ) = delete ;
+        ServerInterface& operator=( ServerInterface&& ) = delete;
+
+
+    private:
+        /***
+         * 7. Commands shipments
+         ***/
+        void setTimer();
+        void sendPendingCommands();
+
+
+        /***
+         * 8. Commands reception.
+         ***/
+        void listen();
+
+
+        /***
+         * 9. Signals
+         ***/
+    signals:
+        void commandReceived( std::shared_ptr< const Command > command );
+
+
+        /***
+         * 10. Handlers
          ***/
     private:
         void onSceneUpdatePacketReceived( const boost::system::error_code& errorCode, PacketPtr packet );
@@ -98,45 +117,42 @@ class ServerInterface : public QObject, public Lockable
 
 
         /***
-         * 4. Server communication
+         * 11. Worker threads
          ***/
-    public:
-        void sendCommand( CommandConstPtr sceneCommand );
-        void sendCommand( const Command* sceneCommand );
-        void run();
-
-    private:
-        void sendPendingCommands();
-        void setTimer();
-
-    private:
-        void listen();
         void work();
 
 
-        /***
-         * 5. Getters
-         ***/
-    public:
-        ResourceID reserveResourceIDs( unsigned int nIDs );
+    private:
+        // Boost ASIO's objects for asynchronous I/O.
+        boost::asio::io_service io_service_;
+        std::shared_ptr< boost::asio::io_service::work > work_;
+        Socket socket_;
 
-        UserID getLocalUserID() const;
-        Color getLocalUserColor() const;
+        // I/O packets.
+        SceneUpdatePacket sceneUpdatePacketFromServer_;
+        SceneUpdatePacket sceneUpdatePacketToServer_;
 
+        // Queue with scene commands to be sended to the server.
+        std::queue< CommandConstPtr > sceneCommandsToServer_;
 
-        /***
-         * 6. Operators
-         ***/
-    public:
-        ServerInterface& operator=( const ServerInterface& ) = delete ;
-        ServerInterface& operator=( ServerInterface&& ) = delete;
+        // Timer used for shipping packets to the server on a regular basis.
+        boost::asio::deadline_timer timer_;
 
+        // Generator of ResourceIDs for local user's created resources.
+        ResourceIDsGeneratorPtr resourceIDsGenerator_;
 
-        /***
-         * 7. Signals
-         ***/
-    signals:
-        void commandReceived( std::shared_ptr< const Command > command );
+        // Local user's color.
+        Color localUserColor_;
+
+        // Log.
+        LogPtr log_;
+
+        // Worker threads.
+        boost::thread_group workerThreads_;
+
+        // This is used for catching, in the main thread, the exception thrown
+        // by a worker thread.
+        std::exception_ptr lastException_;
 };
 
 typedef std::shared_ptr<ServerInterface> ServerInterfacePtr;

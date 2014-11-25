@@ -24,7 +24,7 @@ const unsigned int TIME_BETWEEN_SHIPMENTS = 1000 / SHIPMENTS_PER_SECOND;
 
 
 /***
- * 1. Initialization and destruction
+ * 1. Construction
  ***/
 
 ServerInterface::ServerInterface( const char *host, const char *port, const char *userName, const std::string& unpackingDirPath, LogPtr log, UserAcceptancePacket &userAcceptancePacket ) :
@@ -64,7 +64,7 @@ ServerInterface::~ServerInterface()
 
 
 /***
- * 2. Connection and disconnection
+ * 3. Connection and disconnection
  ***/
 
 void ServerInterface::connect( const char* host, const char* port, const char* userName, UserAcceptancePacket& userAcceptancePacket )
@@ -116,9 +116,6 @@ void ServerInterface::connect( const char* host, const char* port, const char* u
     if( errorCode ){
         throw std::runtime_error( std::string( "ERROR when receiving USER_ACCEPTED package from server (" ) + errorCode.message() + ")" );
     }
-
-
-    //listenerThread = new std::thread( std::bind( &ServerInterface::listen, this ) );
 }
 
 
@@ -147,7 +144,115 @@ void ServerInterface::disconnect()
 
 
 /***
- * 3. Handlers
+ * 4. Getters
+ ***/
+
+ResourceID ServerInterface::reserveResourceIDs(unsigned int nIDs)
+{
+    LOCK
+    return resourceIDsGenerator_->generateResourceIDs( nIDs );
+}
+
+
+UserID ServerInterface::getLocalUserID() const
+{
+    LOCK
+    return resourceIDsGenerator_->userID();
+}
+
+
+Color ServerInterface::getLocalUserColor() const
+{
+    LOCK
+    return localUserColor_;
+}
+
+
+/***
+ * 5. Server communication
+ ***/
+
+void ServerInterface::sendCommand( CommandConstPtr sceneCommand )
+{
+    LOCK
+
+    if( lastException_ ){
+        std::rethrow_exception( lastException_ );
+    }
+
+    // Queue the new scene command.
+    sceneCommandsToServer_.push( std::move( sceneCommand ) );
+}
+
+
+void ServerInterface::run()
+{
+    // Start to listen to server.
+    listen();
+
+    // Set timer for sending pending commands to server on a regular basis.
+    setTimer();
+}
+
+
+/***
+ * 7. Commands shipments
+ ***/
+
+void ServerInterface::setTimer()
+{
+    LOCK
+    // Set a timer for sending pending commands to the server.
+    timer_.expires_from_now( boost::posix_time::milliseconds( TIME_BETWEEN_SHIPMENTS ) );
+    timer_.async_wait( boost::bind( &ServerInterface::sendPendingCommands, this ) );
+}
+
+
+void ServerInterface::sendPendingCommands()
+{
+    LOCK
+    unsigned int nCommands = 0;
+
+    sceneUpdatePacketToServer_.clear();
+
+    // Move commands from the queue to the SCENE_UPDATE packet.
+    while( ( nCommands < MAX_COMMANDS_PER_SCENE_UPDATE ) && !sceneCommandsToServer_.empty() ){
+        // TODO: Delete the second argument is not necessary in a SCENE_UPDATE
+        // packet sent from client to server.
+        sceneUpdatePacketToServer_.addCommand( std::move( sceneCommandsToServer_.front() ), 0, 0 );
+        sceneCommandsToServer_.pop();
+
+        nCommands++;
+    }
+
+    // If there in the packet, send it to the server. Otherwise, set a timer
+    // to call this method again.
+    if( nCommands ){
+        log_->debug( "Sending SCENE_UPDATE packet to the server with (", nCommands, ") commands\n" );
+        sceneUpdatePacketToServer_.asyncSend( socket_, std::bind( &ServerInterface::onSceneUpdatePacketSended, this, std::placeholders::_1, std::placeholders::_2 ) );
+    }else{
+        //log_->debug( "No commands to send to the server\n" );
+        setTimer();
+    }
+}
+
+
+/***
+ * 8. Commands reception.
+ ***/
+
+void ServerInterface::listen()
+{
+    LOCK
+    log_->debug( "Listening for new scene updates from server ...\n" );
+
+    sceneUpdatePacketFromServer_.clear();
+    sceneUpdatePacketFromServer_.asyncRecv( socket_, std::bind( &ServerInterface::onSceneUpdatePacketReceived, this, std::placeholders::_1, std::placeholders::_2 ) );
+}
+
+
+/***
+ * 10. Handlers
  ***/
 
 void ServerInterface::onSceneUpdatePacketReceived( const boost::system::error_code& errorCode, PacketPtr packet )
@@ -209,79 +314,8 @@ void ServerInterface::onSceneUpdatePacketSended( const boost::system::error_code
 
 
 /***
- * 4. Server communication
+ * 11. Worker threads
  ***/
-
-void ServerInterface::sendCommand( CommandConstPtr sceneCommand )
-{
-    LOCK
-
-    if( lastException_ ){
-        std::rethrow_exception( lastException_ );
-    }
-
-    // Queue the new scene command.
-    sceneCommandsToServer_.push( std::move( sceneCommand ) );
-}
-
-
-void ServerInterface::run()
-{
-    // Start to listen to server.
-    listen();
-
-    // Set timer for sending pending commands to server on a regular basis.
-    setTimer();
-}
-
-
-void ServerInterface::sendPendingCommands()
-{
-    LOCK
-    unsigned int nCommands = 0;
-
-    sceneUpdatePacketToServer_.clear();
-
-    // Move commands from the queue to the SCENE_UPDATE packet.
-    while( ( nCommands < MAX_COMMANDS_PER_SCENE_UPDATE ) && !sceneCommandsToServer_.empty() ){
-        // TODO: Delete the second argument is not necessary in a SCENE_UPDATE
-        // packet sent from client to server.
-        sceneUpdatePacketToServer_.addCommand( std::move( sceneCommandsToServer_.front() ), 0, 0 );
-        sceneCommandsToServer_.pop();
-
-        nCommands++;
-    }
-
-    // If there in the packet, send it to the server. Otherwise, set a timer
-    // to call this method again.
-    if( nCommands ){
-        log_->debug( "Sending SCENE_UPDATE packet to the server with (", nCommands, ") commands\n" );
-        sceneUpdatePacketToServer_.asyncSend( socket_, std::bind( &ServerInterface::onSceneUpdatePacketSended, this, std::placeholders::_1, std::placeholders::_2 ) );
-    }else{
-        //log_->debug( "No commands to send to the server\n" );
-        setTimer();
-    }
-}
-
-
-void ServerInterface::setTimer()
-{
-    LOCK
-    // Set a timer for sending pending commands to the server.
-    timer_.expires_from_now( boost::posix_time::milliseconds( TIME_BETWEEN_SHIPMENTS ) );
-    timer_.async_wait( boost::bind( &ServerInterface::sendPendingCommands, this ) );
-}
-
-
-void ServerInterface::listen()
-{   
-    LOCK
-    log_->debug( "Listening for new scene updates from server ...\n" );
-
-    sceneUpdatePacketFromServer_.clear();
-    sceneUpdatePacketFromServer_.asyncRecv( socket_, std::bind( &ServerInterface::onSceneUpdatePacketReceived, this, std::placeholders::_1, std::placeholders::_2 ) );
-}
-
 
 void ServerInterface::work()
 {
@@ -305,28 +339,6 @@ void ServerInterface::work()
 }
 
 
-/***
- * 5. Getters
- ***/
 
-ResourceID ServerInterface::reserveResourceIDs(unsigned int nIDs)
-{
-    LOCK
-    return resourceIDsGenerator_->generateResourceIDs( nIDs );
-}
-
-
-UserID ServerInterface::getLocalUserID() const
-{
-    LOCK
-    return resourceIDsGenerator_->userID();
-}
-
-
-Color ServerInterface::getLocalUserColor() const
-{
-    LOCK
-    return localUserColor_;
-}
 
 } // namespace como
