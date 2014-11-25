@@ -26,8 +26,6 @@ namespace como {
 
 typedef PackableUint32< PacketSize > PackablePacketSize;
 
-//static_assert( PackablePacketSize::packetSize() == sizeof( PacketSize ), "PackablePacketSize and PackablePacketSize" );
-
 } // namespace como
 
 #endif // PACKABLE_PACKET_SIZE_HPP

@@ -22,7 +22,6 @@
 #include <common/commands/type_command.hpp>
 #include <common/packables/array/packable_array_3.hpp>
 #include <common/packables/packable_float.hpp>
-#include <common/packables/packable_list.hpp>
 
 namespace como {
 
