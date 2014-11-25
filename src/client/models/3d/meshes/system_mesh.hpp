@@ -19,7 +19,7 @@
 #ifndef SYSTEM_MESH_HPP
 #define SYSTEM_MESH_HPP
 
-#include <client/models/3d/mesh.hpp>
+#include <client/models/3d/meshes/mesh.hpp>
 #include <common/primitives/primitive_data/system_primitive_data.hpp>
 #include "triangles_group_with_texture_wall.hpp"
 #include <client/managers/managers/textures/texture_walls_manager.hpp>

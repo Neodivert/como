@@ -19,7 +19,7 @@
 #ifndef ABSTRACT_MESH_HPP
 #define ABSTRACT_MESH_HPP
 
-#include "entity.hpp"
+#include <client/models/3d/entity.hpp>
 
 namespace como {
 

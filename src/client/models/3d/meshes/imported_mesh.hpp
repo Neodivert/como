@@ -19,7 +19,7 @@
 #ifndef IMPORTED_MESH_HPP
 #define IMPORTED_MESH_HPP
 
-#include <client/models/3d/mesh.hpp>
+#include <client/models/3d/meshes/mesh.hpp>
 #include <common/primitives/primitive_data/imported_primitive_data.hpp>
 
 namespace como {

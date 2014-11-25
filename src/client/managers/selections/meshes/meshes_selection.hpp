@@ -19,7 +19,7 @@
 #ifndef MESHES_SELECTION_HPP
 #define MESHES_SELECTION_HPP
 
-#include <client/models/3d/mesh.hpp>
+#include <client/models/3d/meshes/mesh.hpp>
 #include <map>
 #include <common/ids/resource_id.hpp>
 #include <common/utilities/observer_pattern/observable.hpp>

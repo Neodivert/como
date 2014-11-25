@@ -47,7 +47,7 @@ HEADERS += \
     ../../src/client/gui/main_window.hpp \
     ../../src/client/managers/scene/scene.hpp \
     ../../src/client/managers/como_app.hpp \
-    ../../src/client/models/3d/mesh.hpp \
+    ../../src/client/models/3d/meshes/mesh.hpp \
     ../../src/client/models/3d/camera.hpp \
     ../../src/client/models/utilities/msl/src/shader_loader.hpp \
     ../../src/client/gui/connection_wizard/connection_wizard.hpp \
@@ -79,7 +79,7 @@ HEADERS += \
     ../../src/client/models/3d/textures/texture.hpp \
     ../../src/client/gui/rendering/viewport_tool_bar.hpp \
     ../../src/client/gui/menu_bar.hpp \
-    ../../src/client/models/3d/abstract_mesh.hpp \
+    ../../src/client/models/3d/meshes/abstract_mesh.hpp \
     ../../src/client/managers/selections/meshes/meshes_selection.hpp \
     ../../src/client/gui/rendering/viewport_view_menu.hpp \
     ../../src/client/gui/rendering/viewport_projection_menu.hpp \
@@ -147,7 +147,7 @@ SOURCES += \
     ../../src/client/gui/main_window.cpp \
     ../../src/client/managers/scene/scene.cpp \
     ../../src/client/managers/como_app.cpp \
-    ../../src/client/models/3d/mesh.cpp \
+    ../../src/client/models/3d/meshes/mesh.cpp \
     ../../src/client/models/3d/camera.cpp \
     ../../src/client/models/utilities/msl/src/shader_loader.cpp \
     ../../src/client/main.cpp \
