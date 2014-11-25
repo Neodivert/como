@@ -24,7 +24,6 @@
 #include "mesh_normal_data.hpp"
 #include "mesh_texture_data.hpp"
 #include "mesh_opengl_data.hpp"
-#include "polygon_group_data.hpp"
 #include <fstream>
 #include <common/exceptions/file_not_open_exception.hpp>
 #include <map>

@@ -54,15 +54,15 @@ void MaterialInfo::readFromFile( std::ifstream &file )
 
     // Read the material's ambient reflectivity.
     std::getline( file, fileLine );
-    ambientReflectivity = PrimitiveFile::readVec3( fileLine );
+    ambientReflectivity = readVec3( fileLine );
 
     // Read the material's diffuse reflectivity.
     std::getline( file, fileLine );
-    diffuseReflectivity = PrimitiveFile::readVec3( fileLine );
+    diffuseReflectivity = readVec3( fileLine );
 
     // Read the material's specular reflectivity.
     std::getline( file, fileLine );
-    specularReflectivity = PrimitiveFile::readVec3( fileLine );
+    specularReflectivity = readVec3( fileLine );
 
     // Read the material's specular exponent.
     std::getline( file, fileLine );
@@ -125,6 +125,20 @@ void MaterialInfo::writeToFile( std::ofstream &file ) const
     }else{
         file << "0" << std::endl;
     }
+}
+
+
+/***
+ * 5. Auxiliar methods
+ ***/
+
+glm::vec3 MaterialInfo::readVec3( std::string str )
+{
+    glm::vec3 v;
+
+    sscanf( str.c_str(), "%f %f %f", &v[0], &v[1], &v[2] );
+
+    return v;
 }
 
 } // namespace como

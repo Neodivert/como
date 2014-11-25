@@ -20,7 +20,6 @@
 #include <fstream>
 #include <stdexcept>
 #include <common/exceptions/file_not_open_exception.hpp>
-#include <common/primitives/primitive_file.hpp>
 #include <common/primitives/primitive_data/imported_primitive_data.hpp>
 #include <map>
 #include <array>
@@ -218,11 +217,11 @@ void OBJPrimitivesImporter::processMaterialFileLine( std::string filePath, std::
         newMaterial.name = lineBody;
         materials.push_back( newMaterial );
     }else if( lineHeader == "Ka" ){
-        materials.back().ambientReflectivity = PrimitiveFile::readVec3( lineBody );
+        materials.back().ambientReflectivity = MaterialInfo::readVec3( lineBody );
     }else if( lineHeader == "Kd" ){
-        materials.back().diffuseReflectivity = PrimitiveFile::readVec3( lineBody );
+        materials.back().diffuseReflectivity = MaterialInfo::readVec3( lineBody );
     }else if( lineHeader == "Ks" ){
-        materials.back().specularReflectivity = PrimitiveFile::readVec3( lineBody );
+        materials.back().specularReflectivity = MaterialInfo::readVec3( lineBody );
     }else if( lineHeader == "Ns" ){
         materials.back().specularExponent = std::atof( lineBody.c_str() );
     }else if( lineHeader == "map_Kd" ){

@@ -75,14 +75,12 @@ HEADERS += \
     ../../src/common/primitives/obj_primitives_importer.hpp \
     ../../src/common/exceptions/file_not_open_exception.hpp \
     ../../src/common/primitives/primitive_info.hpp \
-    ../../src/common/primitives/primitive_file.hpp \
     ../../src/common/primitives/primitive_data/mesh_vertex_data.hpp \
     ../../src/common/primitives/primitive_data/mesh_normal_data.hpp \
     ../../src/common/primitives/primitive_data/mesh_texture_data.hpp \
     ../../src/common/primitives/primitive_data/mesh_opengl_data.hpp \
     ../../src/common/primitives/primitive_data/texture_info.hpp \
     ../../src/common/scene/basic_scene.hpp \
-    ../../src/common/primitives/primitive_data/polygon_group_data.hpp \
     ../../src/common/commands/light_commands/light_ambient_coefficient_change_command.hpp \
     ../../src/common/commands/resource_commands/resource_command.hpp \
     ../../src/common/commands/resources_selection_commands/resources_selection_command.hpp \
@@ -169,7 +167,6 @@ SOURCES += \
     ../../src/common/primitives/obj_primitives_importer.cpp \
     ../../src/common/exceptions/file_not_open_exception.cpp \
     ../../src/common/primitives/primitive_info.cpp \
-    ../../src/common/primitives/primitive_file.cpp \
     ../../src/common/scene/basic_scene.cpp \
     ../../src/common/commands/light_commands/light_ambient_coefficient_change_command.cpp \
     ../../src/common/packables/packable_string.cpp \

@@ -26,8 +26,6 @@
 #include "gui/connection_wizard/connection_wizard.hpp"
 #include "managers/como_app.hpp"
 #include <boost/filesystem.hpp>
-
-#include <common/primitives/primitive_file.hpp>
 #include <client/managers/scene/scene.hpp>
 
 extern "C" {

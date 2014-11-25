@@ -21,7 +21,6 @@
 #define GLM_FORCE_RADIANS
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <common/primitives/primitive_file.hpp>
 #include <common/primitives/primitive_data/imported_primitive_data.hpp>
 
 #include <iostream>

@@ -28,7 +28,6 @@
 #include <memory>
 #include <vector>
 #include <fstream>
-#include <common/primitives/primitive_file.hpp> // TODO: Move PrimitiveFile::readVec3() method to another class.
 #include <common/3d/plain_material_data.hpp>
 
 namespace como {
@@ -67,7 +66,13 @@ struct MaterialInfo : public PlainMaterialData
 
 
     /***
-     * 5. Operators
+     * 5. Auxiliar methods
+     ***/
+    static glm::vec3 readVec3( std::string str );
+
+
+    /***
+     * 6. Operators
      ***/
     MaterialInfo& operator = ( const MaterialInfo& ) = delete;
     MaterialInfo& operator = ( MaterialInfo&& ) = default;

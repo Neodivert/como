@@ -19,7 +19,6 @@
 #include "client_primitives_manager.hpp"
 #include <boost/filesystem.hpp>
 #include <common/utilities/paths.hpp>
-#include <common/primitives/primitive_file.hpp>
 
 namespace como {
 
