@@ -75,7 +75,6 @@ HEADERS += \
     ../../src/common/primitives/obj_primitives_importer.hpp \
     ../../src/common/exceptions/file_not_open_exception.hpp \
     ../../src/common/primitives/primitive_info.hpp \
-    ../../src/common/packables/conditional_packable_wrapper.hpp \
     ../../src/common/primitives/primitive_file.hpp \
     ../../src/common/primitives/primitive_data/mesh_vertex_data.hpp \
     ../../src/common/primitives/primitive_data/mesh_normal_data.hpp \
