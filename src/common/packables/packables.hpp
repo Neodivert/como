@@ -27,6 +27,5 @@
 #include "packable_float.hpp"
 #include "composite_packable.hpp"
 #include "ids/packable_resource_id.hpp"
-#include "conditional_packable_wrapper.hpp"
 
 #endif // PACKABLES_HPP
