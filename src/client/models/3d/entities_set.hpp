@@ -35,7 +35,7 @@ class EntitiesSet : public AbstractEntitiesSet, public ResourcesSelection< Entit
         /***
          * 1. Construction
          ***/
-        EntitiesSet( glm::vec4 borderColor = DEFAULT_BORDER_COLOR, PivotPointMode mode = PivotPointMode::WORLD_ORIGIN );
+        EntitiesSet( glm::vec4 borderColor = DEFAULT_BORDER_COLOR );
         EntitiesSet( const EntitiesSet& ) = default;
         EntitiesSet( EntitiesSet&& ) = default;
 
@@ -50,7 +50,6 @@ class EntitiesSet : public AbstractEntitiesSet, public ResourcesSelection< Entit
          * 3. Getters
          ***/
         virtual glm::vec3 centroid() const;
-        PivotPointMode pivotPointMode() const;
         glm::vec4 borderColor() const;
         virtual unsigned int size() const;
         virtual bool containsEntity(const ResourceID &entityID) const;
@@ -59,7 +58,6 @@ class EntitiesSet : public AbstractEntitiesSet, public ResourcesSelection< Entit
         /***
          * 4. Setters
          ***/
-        void setPivotPointMode( PivotPointMode mode );
         void setBorderColor( const glm::vec4& borderColor );
         virtual void setEntityModelMatrix(const ResourceID &entityID, const glm::mat4 &modelMatrix);
         /*
@@ -103,8 +101,6 @@ class EntitiesSet : public AbstractEntitiesSet, public ResourcesSelection< Entit
 
 
     private:
-        PivotPointMode pivotPointMode_;
-
         glm::vec4 borderColor_;
 };
 
@@ -114,8 +110,7 @@ class EntitiesSet : public AbstractEntitiesSet, public ResourcesSelection< Entit
  ***/
 
 template <class EntitySubtype>
-EntitiesSet<EntitySubtype>::EntitiesSet( glm::vec4 borderColor, PivotPointMode mode ) :
-    pivotPointMode_( mode ),
+EntitiesSet<EntitySubtype>::EntitiesSet( glm::vec4 borderColor ) :
     borderColor_( borderColor )
 {}
 
@@ -140,15 +135,6 @@ glm::vec3 EntitiesSet<EntitySubtype>::centroid() const
     }
 
     return centroid;
-}
-
-
-template <class EntitySubtype>
-PivotPointMode EntitiesSet<EntitySubtype>::pivotPointMode() const
-{
-    LOCK
-
-    return pivotPointMode_;
 }
 
 
@@ -182,15 +168,6 @@ bool EntitiesSet<EntitySubtype>::containsEntity(const ResourceID &entityID) cons
 /***
  * 4. Setters
  ***/
-
-template <class EntitySubtype>
-void EntitiesSet<EntitySubtype>::setPivotPointMode( PivotPointMode mode)
-{
-    LOCK
-
-    pivotPointMode_ = mode;
-}
-
 
 template <class EntitySubtype>
 void EntitiesSet<EntitySubtype>::setBorderColor( const glm::vec4& borderColor )

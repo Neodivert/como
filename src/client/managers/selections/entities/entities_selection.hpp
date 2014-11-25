@@ -36,8 +36,7 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer, public Lo
         // TODO: Pass *selections in a vector?
         EntitiesSelection( LightsSelection* lightsSelection,
                            MeshesSelection* meshesSelection,
-                           CamerasSelection* camerasSelection,
-                           PivotPointMode pivotPointMode = PivotPointMode::SELECTION_CENTROID );
+                           CamerasSelection* camerasSelection );
         EntitiesSelection() = delete;
         EntitiesSelection( const EntitiesSelection& ) = delete;
         EntitiesSelection( EntitiesSelection&& ) = delete;
@@ -53,7 +52,6 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer, public Lo
          * 3. Getters
          ***/
         virtual glm::vec3 centroid() const;
-        virtual PivotPointMode pivotPointMode() const;
         virtual glm::vec4 borderColor() const;
         virtual unsigned int size() const;
         virtual bool containsEntity(const ResourceID &entityID) const;
@@ -64,7 +62,6 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer, public Lo
         /***
          * 4. Setters
          ***/
-        virtual void setPivotPointMode( PivotPointMode mode );
         virtual void setBorderColor( const glm::vec4& borderColor );
         virtual void setEntityModelMatrix( const ResourceID& entityID,
                                            const glm::mat4& modelMatrix );
@@ -114,8 +111,7 @@ class EntitiesSelection : public AbstractEntitiesSet, public Observer, public Lo
         MeshesSelection* meshesSelection_;
         CamerasSelection* camerasSelection_;
 
-        PivotPointMode pivotPointMode_;
-        glm::vec3 centroid_;    
+        glm::vec3 centroid_;
 };
 
 

@@ -26,10 +26,16 @@ const unsigned int TRANSFORMATION_FLOAT_PRECISION = 10000;
  * 1. Construction
  ***/
 
-LocalEntitiesSelection::LocalEntitiesSelection( ServerInterfacePtr server, LocalLightsSelection* lightsSelection, LocalMeshesSelection* meshesSelection, LocalCamerasSelection* camerasSelection ) :
+LocalEntitiesSelection::LocalEntitiesSelection( ServerInterfacePtr server,
+                                                LocalLightsSelection* lightsSelection,
+                                                LocalMeshesSelection* meshesSelection,
+                                                LocalCamerasSelection* camerasSelection,
+                                                PivotPointMode pivotPointMode ) :
     EntitiesSelection( lightsSelection, meshesSelection, camerasSelection ),
     ServerWriter( server )
-{}
+{
+    setPivotPointMode( pivotPointMode );
+}
 
 
 /***
@@ -51,6 +57,13 @@ glm::vec3 LocalEntitiesSelection::graphicPivotPoint() const
 }
 
 
+PivotPointMode LocalEntitiesSelection::pivotPointMode() const
+{
+    LOCK
+    return pivotPointMode_;
+}
+
+
 /***
  * 4. Setters
  ***/
@@ -58,9 +71,7 @@ glm::vec3 LocalEntitiesSelection::graphicPivotPoint() const
 void LocalEntitiesSelection::setPivotPointMode( PivotPointMode pivotPointMode )
 {
     LOCK
-    EntitiesSelection::setPivotPointMode( pivotPointMode );
-
-    sendCommandToServer( CommandConstPtr( new UserParameterChangeCommand( localUserID(), pivotPointMode ) ) );
+    pivotPointMode_ = pivotPointMode;
 }
 
 

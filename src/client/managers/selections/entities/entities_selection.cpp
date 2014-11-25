@@ -25,7 +25,7 @@ namespace como {
  * 1. Construction
  ***/
 
-EntitiesSelection::EntitiesSelection( LightsSelection* lightsSelection, MeshesSelection* meshesSelection, CamerasSelection* camerasSelection, PivotPointMode pivotPointMode ) :
+EntitiesSelection::EntitiesSelection( LightsSelection* lightsSelection, MeshesSelection* meshesSelection, CamerasSelection* camerasSelection ) :
     lightsSelection_( lightsSelection ),
     meshesSelection_( meshesSelection ),
     camerasSelection_( camerasSelection ),
@@ -38,8 +38,6 @@ EntitiesSelection::EntitiesSelection( LightsSelection* lightsSelection, MeshesSe
     for( auto& selection : specializedEntitiesSelections_ ){
         selection->Observable::addObserver( this );
     }
-
-    setPivotPointMode( pivotPointMode );
 }
 
 
@@ -51,13 +49,6 @@ glm::vec3 EntitiesSelection::centroid() const
 {
     LOCK
     return centroid_;
-}
-
-
-PivotPointMode EntitiesSelection::pivotPointMode() const
-{
-    LOCK
-    return pivotPointMode_;
 }
 
 
@@ -132,16 +123,6 @@ std::string EntitiesSelection::typeName() const
 /***
  * 4. Setters
  ***/
-
-void EntitiesSelection::setPivotPointMode( PivotPointMode mode )
-{
-    LOCK
-    pivotPointMode_ = mode;
-    for( auto& selection : specializedEntitiesSelections_ ){
-        selection->setPivotPointMode( mode );
-    }
-}
-
 
 void EntitiesSelection::setBorderColor(const glm::vec4 &borderColor)
 {

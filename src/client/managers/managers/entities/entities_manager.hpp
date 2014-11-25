@@ -75,7 +75,6 @@ class EntitiesManager : public AbstractEntitiesManager, public ContainerObserver
          * 6. Command execution
          ***/
         void executeRemoteSelectionCommand( const SelectionCommand& command );
-        void executeRemoteParameterChangeCommand( UserParameterChangeCommandConstPtr command );
         void executeRemoteEntityCommand( const EntityCommand& command );
 
 

@@ -204,18 +204,6 @@ void EntitiesManager::executeRemoteSelectionCommand( const SelectionCommand& com
 }
 
 
-void EntitiesManager::executeRemoteParameterChangeCommand( UserParameterChangeCommandConstPtr command )
-{
-    LOCK
-    // Change parameter.
-    switch( command->getParameterType() ){
-        case ParameterType::PIVOT_POINT_MODE:
-            entitiesSelections_.at( command->getUserID() )->setPivotPointMode( command->getPivotPointMode() );
-        break;
-    }
-}
-
-
 void EntitiesManager::executeRemoteEntityCommand( const EntityCommand &command )
 {
     // TODO: Apply entity command.

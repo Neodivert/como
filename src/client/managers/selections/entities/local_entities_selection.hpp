@@ -34,7 +34,11 @@ class LocalEntitiesSelection : public EntitiesSelection, public ServerWriter
         /***
          * 1. Construction
          ***/
-        LocalEntitiesSelection( ServerInterfacePtr server, LocalLightsSelection* lightsSelection, LocalMeshesSelection* meshesSelection, LocalCamerasSelection* camerasSelection );
+        LocalEntitiesSelection( ServerInterfacePtr server,
+                                LocalLightsSelection* lightsSelection,
+                                LocalMeshesSelection* meshesSelection,
+                                LocalCamerasSelection* camerasSelection,
+                                PivotPointMode pivotPointMode = PivotPointMode::SELECTION_CENTROID );
         LocalEntitiesSelection() = delete;
         LocalEntitiesSelection( const LocalEntitiesSelection& ) = delete;
         LocalEntitiesSelection( LocalEntitiesSelection&& ) = delete;
@@ -50,6 +54,7 @@ class LocalEntitiesSelection : public EntitiesSelection, public ServerWriter
          * 3. Getters
          ***/
         glm::vec3 graphicPivotPoint() const;
+        PivotPointMode pivotPointMode() const;
 
 
         /***
@@ -83,6 +88,10 @@ class LocalEntitiesSelection : public EntitiesSelection, public ServerWriter
          ***/
         LocalEntitiesSelection& operator = ( const LocalEntitiesSelection& ) = delete;
         LocalEntitiesSelection& operator = ( LocalEntitiesSelection&& ) = delete;
+
+
+    private:
+        PivotPointMode pivotPointMode_;
 };
 
 } // namespace como

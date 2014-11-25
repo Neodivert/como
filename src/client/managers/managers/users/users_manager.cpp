@@ -63,9 +63,7 @@ void UsersManager::executeRemoteCommand( const UserCommand& userCommand )
             removeUser( userCommand.getUserID() );
         break;
         case UserCommandType::PARAMETER_CHANGE:
-            // TODO: Change the ParameterChange hierarchy for distinguishing
-            // those that affects selections from others.
-            //entitiesManager_->executeRemoteParameterChangeCommand( dynamic_pointer_cast< const UserParameterChangeCommand >( command ) );
+            // TODO: Remove
         break;
     }
 }
