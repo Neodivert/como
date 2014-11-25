@@ -60,7 +60,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
 
         EntitiesManagerPtr entitiesManager_;
 
-        SystemPrimitivesFactoryPtr geometricPrimitivesFactory_;
+        SystemPrimitivesFactoryPtr systemPrimitivesFactory_;
 
         OpenGLPtr openGL_; // TODO: Initialize this class outside and pass it to the constructor.
 
@@ -108,7 +108,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
         LightsManagerPtr getLightsManager() const;
         ClientPrimitivesManagerPtr getPrimitivesManager() const;
         EntitiesManagerPtr getEntitiesManager() const;
-        SystemPrimitivesFactoryPtr getGeometricPrimitivesFactory() const;
+        SystemPrimitivesFactoryPtr getSystemPrimitivesFactory() const;
         TextureWallsManager *getTextureWallsManager() const;
         TexturesManager* getTexturesManager() const;
         OpenGLPtr getOpenGL() const;

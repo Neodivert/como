@@ -141,7 +141,7 @@ void Scene::initManagers( const UserAcceptancePacket& userAcceptancePacket )
         entitiesManager_ = EntitiesManagerPtr( new EntitiesManager( server_, log_, openGL_.get(), usersManager_, materialsManager_, textureWallsManager_.get() ) );
 
         // Initialize the geometric primitives factory.
-        geometricPrimitivesFactory_ = SystemPrimitivesFactoryPtr( new SystemPrimitivesFactory( server_, entitiesManager_->getMeshesManager(), materialsManager_, textureWallsManager_.get() ) );
+        systemPrimitivesFactory_ = SystemPrimitivesFactoryPtr( new SystemPrimitivesFactory( server_, entitiesManager_->getMeshesManager(), materialsManager_, textureWallsManager_.get() ) );
 
         // Initialize the primitives manager.
         primitivesManager_ = ClientPrimitivesManagerPtr( new ClientPrimitivesManager( getDirPath(), getTempDirPath(), server_, entitiesManager_->getMeshesManager(), log_ ) );
@@ -206,10 +206,10 @@ EntitiesManagerPtr Scene::getEntitiesManager() const
 }
 
 
-SystemPrimitivesFactoryPtr Scene::getGeometricPrimitivesFactory() const
+SystemPrimitivesFactoryPtr Scene::getSystemPrimitivesFactory() const
 {
     LOCK
-    return geometricPrimitivesFactory_  ;
+    return systemPrimitivesFactory_  ;
 }
 
 
@@ -314,7 +314,7 @@ void Scene::executeRemoteCommand( std::shared_ptr< const Command > command )
             // TODO: materialsManager_->executeResourcesSelectionCommand( selectionCommand );
         }break;
         case CommandTarget::GEOMETRIC_PRIMITIVE:{
-            geometricPrimitivesFactory_->executeRemoteCommand( dynamic_cast< const SystemPrimitiveCommand& >( *command ) );
+            systemPrimitivesFactory_->executeRemoteCommand( dynamic_cast< const SystemPrimitiveCommand& >( *command ) );
         }break;
         case CommandTarget::TEXTURE:
             texturesManager_->executeRemoteCommand( dynamic_cast< const TextureCommand& >( *command ) );
