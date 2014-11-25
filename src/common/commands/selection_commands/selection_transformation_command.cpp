@@ -25,21 +25,6 @@
 
 namespace como {
 
-//const char FLOAT_TO_STRING_FORMAT[32] = "%.3f#%.3f#%.3f";
-const char FLOAT_TO_STRING_FORMAT[32] = "%f#%f#%f#%f";
-const char STRING_TO_FLOAT_FORMAT[32] = "%f#%f#%f#%f";
-
-
-void replaceChacacter( char* str, char oldChar, char newChar )
-{
-    while( *str ){
-        if( *str == oldChar ){
-            *str = newChar;
-        }
-        str++;
-    }
-}
-
 
 /***
  * 1. Initialization and destruction
