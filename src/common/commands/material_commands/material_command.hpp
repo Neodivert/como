@@ -41,9 +41,7 @@ class MaterialCommand : public TypeCommand< MaterialCommandType >
     public:
         MaterialCommand() = delete;
         MaterialCommand( MaterialCommandType commandType );
-    //protected:
         MaterialCommand( MaterialCommandType commandType, UserID userID, const ResourceID& materialID );
-    public:
         MaterialCommand( const MaterialCommand& b );
         MaterialCommand( MaterialCommand&& ) = delete;
         COMMAND_CLONE_METHOD( MaterialCommand )
@@ -65,9 +63,6 @@ class MaterialCommand : public TypeCommand< MaterialCommandType >
         MaterialCommand& operator = ( const MaterialCommand& ) = delete;
         MaterialCommand& operator = ( MaterialCommand&& ) = delete;
 };
-
-typedef std::shared_ptr< MaterialCommand > MaterialCommandPtr;
-typedef std::shared_ptr< const MaterialCommand > MaterialCommandConstPtr;
 
 } // namespace como
 
