@@ -30,7 +30,7 @@ ResourceSelector::ResourceSelector()
     // TODO: Duplicated code.
 
     // Select the first element as the current one.
-    // TODO: And if there is no categories?
+    // TODO: And if there is no resources?
     setCurrentIndex( 0 );
 
     // Whenever the current index changes, emit a signal with the associated
@@ -42,7 +42,7 @@ ResourceSelector::ResourceSelector()
 }
 
 
-ResourceSelector::ResourceSelector( const ResourcesList resourcesList )
+ResourceSelector::ResourceSelector( const ResourcesList resourcesList ) :
 {
     resourcesIDs_.reserve( resourcesList.size() );
 

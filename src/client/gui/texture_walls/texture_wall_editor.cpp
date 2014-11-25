@@ -66,8 +66,8 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
     textureScaleYSpinBox_->setSingleStep( 1.0 );
     textureScaleYSpinBox_->setRange( 0.0, 100.0 );
 
-    // When user click on file path input button, open a dialog for selecting
-    // a file.
+    // When user click on texture input widget, open the textures
+    // viewer.
     QObject::connect( textureInput_, &QPushButton::clicked, [=](){
         // Before executing the textures viewer, make a signal / slot
         // connection so whenever a texture is selected, display a
@@ -75,12 +75,6 @@ TextureWallEditor::TextureWallEditor( TextureWallsManager* textureWallsManager, 
         QObject::connect( texturesViewer_,
                           &TexturesViewer::textureSelected,
                           [this]( ResourceID textureID ){
-
-            assert( currentTextureWall_ != nullptr );
-
-            // TODO: Call to currentTextureWall_->addObserver( this ), but
-            // being careful to not repeat observers:
-
             currentTextureWall_->setTextureID( textureID );
         });
 
