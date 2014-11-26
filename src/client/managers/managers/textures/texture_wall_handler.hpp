@@ -20,7 +20,7 @@
 #define TEXTURE_WALL_HANDLER_HPP
 
 #include <client/managers/utilities/server_writer.hpp>
-#include <client/models/3d/textures/texture_wall.hpp>
+#include <common/3d/texture_wall.hpp>
 
 namespace como {
 

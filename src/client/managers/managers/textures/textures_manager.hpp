@@ -22,7 +22,7 @@
 #include <common/managers/textures/abstract_textures_manager.hpp>
 #include <client/managers/utilities/server_writer.hpp>
 #include <common/ids/resource_id.hpp>
-#include <client/models/3d/textures/texture_wall.hpp>
+#include <common/3d/texture_wall.hpp>
 #include <map>
 #include <client/models/utilities/open_gl.hpp>
 #include <client/managers/managers/resources/resources_ownership_requester.hpp>

@@ -23,7 +23,7 @@
 #include <map>
 #include <list>
 #include <common/resources/resource_header.hpp>
-#include <client/models/3d/textures/texture_wall.hpp>
+#include <common/3d/texture_wall.hpp>
 #include <client/managers/managers/textures/textures_manager.hpp>
 #include <common/resources/selectable_resources_container.hpp>
 #include <client/managers/managers/textures/texture_wall_handler.hpp>

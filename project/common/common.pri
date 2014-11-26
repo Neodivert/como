@@ -125,7 +125,8 @@ HEADERS += \
     ../../src/common/commands/entity_commands/entity_commands.hpp \
     ../../src/common/commands/entity_commands/model_matrix_replacement_command.hpp \
     ../../src/common/3d/plain_material_data.hpp \
-    ../../src/common/3d/light_data.hpp
+    ../../src/common/3d/light_data.hpp \
+    ../../src/common/3d/texture_wall.hpp
 
 
 # Common sources (used by both client and server).

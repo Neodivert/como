@@ -21,7 +21,7 @@
 
 #include "resource_sync_data.hpp"
 #include <common/commands/texture_wall_commands/texture_wall_commands.hpp>
-#include <client/models/3d/textures/texture_wall.hpp> // TODO: Move include to common code.
+#include <common/3d/texture_wall.hpp>
 
 namespace como {
 
