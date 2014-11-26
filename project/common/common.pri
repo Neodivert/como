@@ -58,7 +58,6 @@ HEADERS += \
     ../../src/common/commands/light_commands/light_commands.hpp \
     ../../src/common/utilities/observer_pattern/observer.hpp \
     ../../src/common/utilities/observer_pattern/observable.hpp \
-    ../../src/common/commands/parameter_change_command.hpp \
     ../../src/common/commands/light_commands/light_color_change_command.hpp \
     ../../src/common/utilities/observable_container/observable_container.hpp \
     ../../src/common/commands/primitive_category_commands/primitive_category_command.hpp \
