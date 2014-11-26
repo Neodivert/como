@@ -22,7 +22,7 @@
 #include "resource_sync_data.hpp"
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
-#include <common/transformable/transformable.hpp>
+#include <common/3d/transformable.hpp>
 
 namespace como {
 
