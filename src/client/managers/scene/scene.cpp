@@ -239,11 +239,9 @@ void Scene::executeRemoteCommand( std::shared_ptr< const Command > command )
         break;
         case CommandTarget::RESOURCE:{
             entitiesManager_->executeResourceCommand( dynamic_cast< const ResourceCommand& >( *command ) );
-            // TODO: materialsManager_->executeResourceCommand( resourceCommand );
         }break;
         case CommandTarget::RESOURCES_SELECTION:{
             entitiesManager_->executeResourcesSelectionCommand( dynamic_cast< const ResourcesSelectionCommand& >( *command ) );
-            // TODO: materialsManager_->executeResourcesSelectionCommand( selectionCommand );
         }break;
         case CommandTarget::GEOMETRIC_PRIMITIVE:{
             systemPrimitivesFactory_->executeRemoteCommand( dynamic_cast< const SystemPrimitiveCommand& >( *command ) );
