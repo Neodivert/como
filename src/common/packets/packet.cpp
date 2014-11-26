@@ -150,7 +150,6 @@ void Packet::asyncSendBody( const boost::system::error_code& headerErrorCode, st
 void Packet::onPacketSend( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler )
 {
     // Call the packet handler.
-    // FIXME: Is there any way to allow only not null PacketHandlers?
     packetHandler( errorCode, PacketPtr( clone() ) );
 
     bodyBuffer_.clear();

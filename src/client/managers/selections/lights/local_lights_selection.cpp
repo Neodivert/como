@@ -39,7 +39,7 @@ LocalLightsSelection::LocalLightsSelection( ServerInterfacePtr server ) :
 ResourceID LocalLightsSelection::addResource( std::unique_ptr<DirectionalLight> resource )
 {
     LOCK
-    // FIXME: Duplicated code in LocalMeshesSelection::addResource().
+
     ResourceID resourceID = reserveResourceIDs( 1 );
 
     LightsSelection::addResource( resourceID, std::move( resource ) );
