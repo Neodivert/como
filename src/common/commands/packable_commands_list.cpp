@@ -17,7 +17,6 @@
 ***/
 
 #include "packable_commands_list.hpp"
-#include <iostream>
 
 namespace como {
 

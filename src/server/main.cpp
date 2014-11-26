@@ -21,6 +21,7 @@
 #include <common/utilities/log.hpp>
 #include <clocale>
 #include <boost/filesystem.hpp>
+#include <iostream>
 
 #include <common/primitives/obj_primitives_importer.hpp>
 

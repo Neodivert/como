@@ -20,7 +20,6 @@
 #define FILE_NOT_OPEN_EXCEPTION_HPP
 
 #include <stdexcept>
-#include <iostream>
 
 namespace como {
 

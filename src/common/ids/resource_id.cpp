@@ -17,6 +17,7 @@
 ***/
 
 #include "resource_id.hpp"
+#include <iostream>
 
 namespace como {
 

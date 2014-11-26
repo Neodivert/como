@@ -17,7 +17,6 @@
 ***/
 
 #include "composite_packable.hpp"
-#include <iostream>
 
 namespace como {
 

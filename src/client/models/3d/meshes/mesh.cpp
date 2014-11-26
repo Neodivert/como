@@ -23,8 +23,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <common/primitives/primitive_data/imported_primitive_data.hpp>
 
-#include <iostream>
-
 #define GL_GLEXT_PROTOTYPES
 extern "C" {
     #include <GL/gl.h>
