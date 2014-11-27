@@ -52,8 +52,6 @@ class PublicUser : public User, public Lockable
         ProcessSceneUpdatePacketCallback processSceneUpdatePacketCallback_;
         std::function<void (UserID)> removeUserCallback_;
 
-        //std::function<void ()> broadcastCallback_;
-
         std::uint32_t nextCommand_;
         std::uint8_t nCommandsInLastPacket_;
         std::uint32_t lastCommandSent_;
@@ -96,43 +94,46 @@ class PublicUser : public User, public Lockable
 
 
         /***
-         * 3. User updating
-         ***/
-        void requestUpdate();
-
-    //private:
-        //void sync();
-    public:
-
-        /***
-         * 4. Socket reading
-         ***/
-        void readSceneUpdatePacket();
-        void onReadSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet );
-
-
-        /***
-         * 5. Socket writing
-         ***/
-        bool needsSceneUpdatePacket() const ;
-        void sendNextSceneUpdatePacket();
-        void onWriteSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet );
-
-
-        /***
-         * 6. Response commands
-         ***/
-        void addResponseCommand( CommandConstPtr responseCommand );
-
-
-        /***
-         * 7. Getters
+         * 3. Getters
          ***/
         std::uint32_t getColor();
 
 
         /***
-         * 8. Operators
+         * 4. User synchronization
+         ***/
+        void requestUpdate();
+        void readSceneUpdatePacket();
+
+
+        /***
+         * 5. Response commands
+         ***/
+        void addResponseCommand( CommandConstPtr responseCommand );
+
+
+    private:
+        /***
+         * 6. Getters (private)
+         ***/
+        bool needsSceneUpdatePacket() const;
+
+
+        /***
+         * 7. Handlers
+         ***/
+        void onReadSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet );
+        void onWriteSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet );
+
+
+        /***
+         * 8. Socket writing
+         ***/
+        void sendNextSceneUpdatePacket();
+
+
+        /***
+         * 9. Operators
          ***/
         PublicUser& operator = (const PublicUser& ) = delete;
         PublicUser& operator = ( PublicUser&& ) = delete;

@@ -53,7 +53,18 @@ PublicUser::PublicUser( UserID id, const char* name,
 
 
 /***
- * 3. User updating
+ * 3. Getters
+ ***/
+
+std::uint32_t PublicUser::getColor()
+{
+    LOCK
+    return color_;
+}
+
+
+/***
+ * 4. User synchronization
  ***/
 
 void PublicUser::requestUpdate()
@@ -66,21 +77,6 @@ void PublicUser::requestUpdate()
     }
 }
 
-/*
-void PublicUser::update()
-{
-    mutex_.LOCK
-    if( !synchronizing_ && needsSceneUpdatePacket() ){
-        sendNextSceneUpdatePacket();
-    }
-    mutex_.unlock();
-}
-*/
-
-
-/***
- * 4. Socket reading
- ***/
 
 void PublicUser::readSceneUpdatePacket()
 {
@@ -89,6 +85,34 @@ void PublicUser::readSceneUpdatePacket()
     sceneUpdatePacketFromUser_.asyncRecv( socket_, boost::bind( &PublicUser::onReadSceneUpdatePacket, this, _1, _2 ) );
 }
 
+
+/***
+ * 6. Response commands
+ ***/
+
+void PublicUser::addResponseCommand( CommandConstPtr responseCommand)
+{
+    LOCK
+    pendingResponseCommands_.push( std::move( responseCommand ) );
+    requestUpdate();
+}
+
+
+/***
+ * 6. Getters (private)
+ ***/
+
+bool PublicUser::needsSceneUpdatePacket() const
+{
+    LOCK
+    return ( nextCommand_ < commandsHistoric_->getSize() ) ||
+            ( pendingResponseCommands_.size() );
+}
+
+
+/***
+ * 7. Handlers
+ ***/
 
 void PublicUser::onReadSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet )
 {
@@ -100,17 +124,33 @@ void PublicUser::onReadSceneUpdatePacket( const boost::system::error_code& error
 }
 
 
-/***
- * 5. Socket writing
- ***/
-
-bool PublicUser::needsSceneUpdatePacket() const
+void PublicUser::onWriteSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet )
 {
     LOCK
-    return ( nextCommand_ < commandsHistoric_->getSize() ) ||
-            ( pendingResponseCommands_.size() );
+
+    updateRequested_ = false;
+
+    if( errorCode ){
+        // FIXME: If there are an async read and an async write on the socket
+        // at the same time, could it lead to errors (like deleting the user twice)?.
+        log_->error( "ERROR writting SCENE_UPDATE packet: ", errorCode.message(), "\n" );
+        removeUserCallback_( getID() );
+    }else{
+        log_->debug( "SCENE_UPDATE sent to user (",
+                     getName(),
+                     ") - commands(",
+                     dynamic_cast< const SceneUpdatePacket* >( packet.get() )->getCommands()->size(),
+                     ") - nextCommand_(",
+                     (int)nextCommand_, ")\n" );
+
+        requestUpdate();
+    }
 }
 
+
+/***
+ * 8. Socket writing
+ ***/
 
 void PublicUser::sendNextSceneUpdatePacket()
 {
@@ -145,54 +185,6 @@ void PublicUser::sendNextSceneUpdatePacket()
         updateRequested_ = false;
         requestUpdate();
     }
-}
-
-
-void PublicUser::onWriteSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet )
-{
-    LOCK
-
-    updateRequested_ = false;
-
-    if( errorCode ){
-        // FIXME: If there are an async read and an async write on the socket
-        // at the same time, could it lead to errors (like deleting the user twice)?.
-        log_->error( "ERROR writting SCENE_UPDATE packet: ", errorCode.message(), "\n" );
-        removeUserCallback_( getID() );
-    }else{
-        log_->debug( "SCENE_UPDATE sent to user (",
-                     getName(),
-                     ") - commands(",
-                     dynamic_cast< const SceneUpdatePacket* >( packet.get() )->getCommands()->size(),
-                     ") - nextCommand_(",
-                     (int)nextCommand_, ")\n" );
-
-        requestUpdate();
-    }
-}
-
-
-/***
- * 6. Selection responses
- ***/
-
-
-void PublicUser::addResponseCommand( CommandConstPtr responseCommand)
-{
-    LOCK
-    pendingResponseCommands_.push( std::move( responseCommand ) );
-    requestUpdate();
-}
-
-
-/***
- * 7. Getters
- ***/
-
-std::uint32_t PublicUser::getColor()
-{
-    LOCK
-    return color_;
 }
 
 } // namespace como
