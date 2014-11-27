@@ -47,8 +47,6 @@ PublicUser::PublicUser( UserID id, const char* name,
     updateRequested_( false ),
     color_( color )
 {
-    LOCK
-
     readSceneUpdatePacket();
     requestUpdate();
 }

@@ -49,7 +49,6 @@ ServerPrimitivesManager::ServerPrimitivesManager(const std::string& sceneDirPath
 
 void ServerPrimitivesManager::createPrimitivesDir()
 {
-    LOCK
     char consoleCommand[256] = {0};
     int lastCommandResult = 0;
 
@@ -77,7 +76,6 @@ void ServerPrimitivesManager::createPrimitivesDir()
 
 void ServerPrimitivesManager::syncPrimitivesDir()
 {
-    LOCK
     //createPrimitivesDir();
 
     const char* filePath = nullptr;
@@ -100,8 +98,6 @@ void ServerPrimitivesManager::syncPrimitivesDir()
 
 ResourceID ServerPrimitivesManager::createCategory( std::string name )
 {
-    LOCK
-
     const ResourceID categoryID = resourceIDsGenerator_->generateResourceIDs( 1 );
 
     AbstractPrimitivesManager::createCategory( categoryID, name );
@@ -117,8 +113,6 @@ ResourceID ServerPrimitivesManager::createCategory( std::string name )
 
 void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
 {
-    LOCK
-
     const boost::filesystem::directory_iterator endIterator;
     boost::filesystem::directory_iterator fileIterator( dirPath );
     std::string filePath;
@@ -190,8 +184,6 @@ std::list<PlainMaterialData> ServerPrimitivesManager::primitivePlainMaterialsDat
 
 ResourceID ServerPrimitivesManager::registerCategory( std::string categoryName )
 {
-    LOCK
-
     const ResourceID categoryID = resourceIDsGenerator_->generateResourceIDs( 1 );
 
     // Register the the given category.

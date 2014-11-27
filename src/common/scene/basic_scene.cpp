@@ -80,8 +80,6 @@ void BasicScene::createSceneDirectory()
 
 void BasicScene::initScene( const std::string &sceneName )
 {
-    LOCK
-
     sceneName_ = sceneName;
 
     createSceneDirectory();

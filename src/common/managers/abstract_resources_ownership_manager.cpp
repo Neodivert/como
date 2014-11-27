@@ -69,7 +69,6 @@ void AbstractResourcesOwnershipManager::executeResourcesSelectionCommand( const 
 
 LogPtr AbstractResourcesOwnershipManager::log()
 {
-    LOCK
     return log_;
 }
 

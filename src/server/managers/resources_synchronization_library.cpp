@@ -56,7 +56,7 @@ ResourcesSynchronizationLibrary::ResourcesSynchronizationLibrary( CommandsHistor
 
 void ResourcesSynchronizationLibrary::processCommand( const Command &command )
 {
-    LOCK
+    LOCK // TODO: Move to the fragments of this method where it is necessary?
     log()->debug( "Processing command (target: ",
                   commandTargetStrings[(int)( command.getTarget())],
                   ")\n" );
@@ -364,7 +364,6 @@ void ResourcesSynchronizationLibrary::removeUser( UserID userID )
 
 void ResourcesSynchronizationLibrary::lockResource( const ResourceID& resourceID, UserID userID )
 {
-    LOCK
     log()->debug( "User (", userID, ") tries to lock resource (", resourceID, "): " );
     if( resourcesSyncData_.at( resourceID )->resourceOwner() == NO_USER ){
         resourcesSyncData_.at( resourceID )->setResourceOwner( userID );
@@ -380,7 +379,6 @@ void ResourcesSynchronizationLibrary::lockResource( const ResourceID& resourceID
 
 void ResourcesSynchronizationLibrary::unlockResourcesSelection( UserID userID )
 {
-    LOCK
     log()->debug( "(User: ", userID, ") Unlocking Selection\n" );
     for( auto& resourceSyncData : resourcesSyncData_ ){
         if( resourceSyncData.second->resourceOwner() == userID ){
@@ -391,7 +389,6 @@ void ResourcesSynchronizationLibrary::unlockResourcesSelection( UserID userID )
 
 void ResourcesSynchronizationLibrary::deleteResourcesSelection( UserID userID )
 {
-    LOCK
     log()->debug( "(User: ", userID, ") Deleting Selection\n" );
     std::map< ResourceID, ResourceSyncDataPtr >::iterator currentElement;
 
@@ -438,7 +435,6 @@ void ResourcesSynchronizationLibrary::deleteResource( const ResourceID &resource
 
 void ResourcesSynchronizationLibrary::processLockResponse( const ResourceID& resourceID, bool lockResponse )
 {
-    LOCK
     // TODO: Make this trick unnecessary.
     (void)( resourceID );
     (void)( lockResponse );
