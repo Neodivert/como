@@ -18,7 +18,7 @@ DESTDIR = .
 CONFIG( debug, debug|release ) {
     TARGET = client_debug
 } else {
-    TARGET = client_release
+    TARGET = client
 }
 message( Building target: $$TARGET )
 
