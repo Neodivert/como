@@ -28,7 +28,7 @@
 // a std::unique_ptr< std::lock_guard< std::recursive_mutex > > and it
 // didn't work.
 #define LOCK \
-    std::lock_guard< std::recursive_mutex > lock( this->mutex_ );
+    std::lock_guard< std::mutex > lock( this->mutex_ );
 
 
 namespace como {
@@ -58,7 +58,7 @@ class Lockable
 
 
     protected:
-        mutable std::recursive_mutex mutex_;
+        mutable std::mutex mutex_;
 };
 
 } // namespace como
