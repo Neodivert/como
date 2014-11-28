@@ -22,7 +22,7 @@ namespace como {
 
 
 /***
- * 1. Initialization and destruction
+ * 1. Construction
  ***/
 
 Packet::Packet( PacketType type ) :
@@ -112,6 +112,10 @@ void Packet::recv( boost::asio::ip::tcp::socket& socket )
 }
 
 
+/***
+ * 5. Asynchronous communication
+ ***/
+
 void Packet::asyncSend( Socket& socket, PacketHandler packetHandler )
 {
     // Update and pack the packet's header into the buffer.
@@ -126,6 +130,62 @@ void Packet::asyncSend( Socket& socket, PacketHandler packetHandler )
                 );
 }
 
+
+void Packet::asyncRecv( Socket& socket, PacketHandler packetHandler )
+{
+    // Read asynchronously the packet's header from the socket.
+    boost::asio::async_read(
+                socket,
+                boost::asio::buffer( headerBuffer_, (int)( header_.getPacketSize() ) ),
+                boost::bind( &Packet::asyncRecvBody, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred, boost::ref( socket ), packetHandler )
+                );
+}
+
+
+/***
+ * 6. Packing and unpacking
+ ***/
+
+void* Packet::pack( void* buffer ) const
+{
+    buffer = packHeader( buffer );
+    return packBody( buffer );
+}
+
+
+const void* Packet::unpack( const void* buffer )
+{
+    buffer = unpackHeader( buffer );
+    return unpackBody( buffer );
+}
+
+
+const void* Packet::unpack( const void* buffer ) const
+{
+    buffer = unpackHeader( buffer );
+    return unpackBody( buffer );
+}
+
+
+/***
+ * 7. Operators
+ ***/
+
+Packet& Packet::operator =( const Packet& b )
+{
+    if( this != &b ){
+        header_ = b.header_;
+        strncpy( headerBuffer_, b.headerBuffer_, PACKET_HEADER_BUFFER_SIZE );
+        bodyBuffer_ = b.bodyBuffer_;
+    }
+
+    return *this;
+}
+
+
+/***
+ * 8. Asynchronous communication (private)
+ ***/
 
 void Packet::asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, Socket& socket, PacketHandler packetHandler )
 {
@@ -152,17 +212,6 @@ void Packet::onPacketSend( const boost::system::error_code& errorCode, std::size
     packetHandler( errorCode, PacketPtr( clone() ) );
 
     bodyBuffer_.clear();
-}
-
-
-void Packet::asyncRecv( Socket& socket, PacketHandler packetHandler )
-{
-    // Read asynchronously the packet's header from the socket.
-    boost::asio::async_read(
-                socket,
-                boost::asio::buffer( headerBuffer_, (int)( header_.getPacketSize() ) ),
-                boost::bind( &Packet::asyncRecvBody, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred, boost::ref( socket ), packetHandler )
-                );
 }
 
 
@@ -206,27 +255,8 @@ void Packet::onPacketRecv( const boost::system::error_code& errorCode, std::size
 
 
 /***
- * 7. Auxiliar networking methods
+ * 9. Packing and unpacking (private)
  ***/
-
-void Packet::updateHeader()
-{
-    // Update the value for the packet body size to be packed.
-    header_.setBodySize( getPacketSize() );
-}
-
-
-
-/***
- * 8. Packing.
- ***/
-
-void* Packet::pack( void* buffer ) const
-{
-    buffer = packHeader( buffer );
-    return packBody( buffer );
-}
-
 
 void* Packet::packHeader( void* buffer ) const
 {
@@ -240,17 +270,6 @@ void* Packet::packBody( void* buffer ) const
 }
 
 
-/***
- * 9. Unpacking.
- ***/
-
-const void* Packet::unpack( const void* buffer )
-{
-    buffer = unpackHeader( buffer );
-    return unpackBody( buffer );
-}
-
-
 const void* Packet::unpackHeader( const void* buffer )
 {
     return header_.unpack( buffer );
@@ -260,17 +279,6 @@ const void* Packet::unpackHeader( const void* buffer )
 const void* Packet::unpackBody( const void* buffer )
 {
     return CompositePackable::unpack( buffer );
-}
-
-
-/***
- * 10. Test unpacking.
- ***/
-
-const void* Packet::unpack( const void* buffer ) const
-{
-    buffer = unpackHeader( buffer );
-    return unpackBody( buffer );
 }
 
 
@@ -287,20 +295,13 @@ const void* Packet::unpackBody( const void* buffer ) const
 
 
 /***
- * 11. Operators.
+ * 10. Auxiliar networking methods.
  ***/
 
-Packet& Packet::operator =( const Packet& b )
+void Packet::updateHeader()
 {
-    if( this != &b ){
-        header_ = b.header_;
-        strncpy( headerBuffer_, b.headerBuffer_, PACKET_HEADER_BUFFER_SIZE );
-        bodyBuffer_ = b.bodyBuffer_;
-    }
-
-    return *this;
+    // Update the value for the packet body size to be packed.
+    header_.setBodySize( getPacketSize() );
 }
 
-
 } // namespace como
-
