@@ -43,11 +43,6 @@ class ClientPrimitivesManager : public QOffscreenSurface, public AbstractPrimiti
 {
     Q_OBJECT
 
-    private:
-        ServerInterfacePtr server_;
-
-        MeshesManagerPtr meshesManager_;
-
     public:
         /***
          * 1. Construction
@@ -68,13 +63,7 @@ class ClientPrimitivesManager : public QOffscreenSurface, public AbstractPrimiti
          * 3. Primitives management
          ***/
         std::string createPrimitive( std::string filePath, ResourceID categoryID );
-    private:
-        ResourceID importMeshFile( std::string srcFilePath, ResourceID categoryID );
-    public:
         void instantiatePrimitive( ResourceID primitiveID );
-    private:
-        void instantiatePrimitive( UserID userID, ResourceID primitiveID, ResourceID meshID, ResourceID firstMaterialID );
-    public:
 
 
         /***
@@ -96,6 +85,21 @@ class ClientPrimitivesManager : public QOffscreenSurface, public AbstractPrimiti
          ***/
     signals:
         void primitiveAdded( ResourceID id, std::string relativePath );
+
+
+    private:
+        /***
+         * 7. Primitives management (private)
+         ***/
+        ResourceID importMeshFile( std::string srcFilePath, ResourceID categoryID );
+        void instantiatePrimitive( UserID userID, ResourceID primitiveID, ResourceID meshID, ResourceID firstMaterialID );
+
+
+        /***
+         * Attributes
+         ***/
+        ServerInterfacePtr server_;
+        MeshesManagerPtr meshesManager_;
 };
 
 typedef std::shared_ptr< ClientPrimitivesManager > ClientPrimitivesManagerPtr;

@@ -57,27 +57,6 @@ std::string ClientPrimitivesManager::createPrimitive( std::string filePath, Reso
 }
 
 
-ResourceID ClientPrimitivesManager::importMeshFile( std::string srcFilePath, ResourceID categoryID )
-{
-    LOCK
-    OBJPrimitivesImporter primitivesImporter;
-    PrimitiveInfo primitive;
-    char primitiveNameSuffix[64];
-
-    // Generate the primitive name.
-    ResourceID primitiveID = server_->reserveResourceIDs( 1 );
-    sprintf( primitiveNameSuffix, "_%u_%u",
-             primitiveID.getCreatorID(),
-             primitiveID.getResourceIndex() );
-
-    primitive = primitivesImporter.importPrimitive( srcFilePath, getCategoryAbsoluteePath( categoryID ), primitiveNameSuffix );
-    primitive.category = categoryID;
-    registerPrimitive( primitiveID, primitive );
-
-    return primitiveID;
-}
-
-
 void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
 {
     LOCK
@@ -98,20 +77,6 @@ void ClientPrimitivesManager::instantiatePrimitive( ResourceID primitiveID )
                         meshID,
                         firstMaterialID,
                         meshCentroid ) ) );
-}
-
-
-// FIXME: Duplicated code.
-void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID primitiveID, ResourceID meshID, ResourceID firstMaterialID )
-{
-    LOCK
-    (void)( userID );
-
-    ImportedPrimitiveData primitiveData;
-
-    primitiveData.importFromFile( getPrimitiveFilePath( primitiveID ) );
-
-    meshesManager_->createMesh( primitiveData, meshID, firstMaterialID );
 }
 
 
@@ -169,6 +134,45 @@ void ClientPrimitivesManager::executeRemoteCommand( const PrimitiveCommand& comm
                                   primitiveCommand.getMaterialID() );
         }break;
     }
+}
+
+
+/***
+ * 7. Primitives management (private)
+ ***/
+
+ResourceID ClientPrimitivesManager::importMeshFile( std::string srcFilePath, ResourceID categoryID )
+{
+    LOCK
+    OBJPrimitivesImporter primitivesImporter;
+    PrimitiveInfo primitive;
+    char primitiveNameSuffix[64];
+
+    // Generate the primitive name.
+    ResourceID primitiveID = server_->reserveResourceIDs( 1 );
+    sprintf( primitiveNameSuffix, "_%u_%u",
+             primitiveID.getCreatorID(),
+             primitiveID.getResourceIndex() );
+
+    primitive = primitivesImporter.importPrimitive( srcFilePath, getCategoryAbsoluteePath( categoryID ), primitiveNameSuffix );
+    primitive.category = categoryID;
+    registerPrimitive( primitiveID, primitive );
+
+    return primitiveID;
+}
+
+
+// FIXME: Duplicated code.
+void ClientPrimitivesManager::instantiatePrimitive( UserID userID, ResourceID primitiveID, ResourceID meshID, ResourceID firstMaterialID )
+{
+    LOCK
+    (void)( userID );
+
+    ImportedPrimitiveData primitiveData;
+
+    primitiveData.importFromFile( getPrimitiveFilePath( primitiveID ) );
+
+    meshesManager_->createMesh( primitiveData, meshID, firstMaterialID );
 }
 
 } // namespace como
