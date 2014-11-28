@@ -48,7 +48,6 @@ const Camera* CamerasManager::activeCamera() const
 
 void CamerasManager::executeRemoteCommand( const CameraCommand &command )
 {
-    LOCK
     switch( command.getType() ){
         case CameraCommandType::CAMERA_CREATION:{
             const CameraCreationCommand& creationCommand =
