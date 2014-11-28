@@ -329,24 +329,6 @@ void ResourcesSynchronizationLibrary::readFromFile( std::ifstream& file )
 
 
 /***
- * 3. Resources registation
- ***
-
-void ResourcesSynchronizationLibrary::registerResource(const ResourceID& resourceID, UserID ownerID, bool deletable )
-{
-    LOCK
-
-    resourcesOwnershipMap_[ resourceID ] = ownerID;
-
-    if( !deletable ){
-        undeletableResources_.insert( resourceID );
-    }
-
-    notifyElementInsertion( resourceID );
-}
-*/
-
-/***
  * 5. Owners management
  ***/
 
