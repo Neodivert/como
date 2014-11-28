@@ -30,11 +30,6 @@ namespace como {
 
 class ServerPrimitivesManager : public AbstractPrimitivesManager
 {
-    private:
-        CommandsHistoricPtr commandsHistoric_;
-
-        ResourceIDsGeneratorPtr resourceIDsGenerator_;
-
     public:
         /***
          * 1. Construction
@@ -50,56 +45,50 @@ class ServerPrimitivesManager : public AbstractPrimitivesManager
 
 
         /***
-         * 2. Initialization
-         ***/
-    private:
-        void createPrimitivesDir();
-        void syncPrimitivesDir();
-        ResourceID createCategory( std::string name );
-        void syncPrimitivesCategoryDir( std::string dirPath );
-    public:
-
-
-        /***
-         * 3. Destruction
+         * 2. Destruction
          ***/
         ~ServerPrimitivesManager() = default;
 
 
         /***
-         * 4. Getters
+         * 3. Getters
          ***/
         std::list< PlainMaterialData > primitivePlainMaterialsData( const ResourceID& primitiveID );
 
 
         /***
-         * 4. Categories management
+         * 4. Primitives management
          ***/
-    private:
-        ResourceID registerCategory( std::string categoryName );
-
-
-        /***
-         * 5. Primitives management
-         ***/
-    public:
         void registerPrimitive( PrimitiveInfo primitive );
         void registerPrimitive( PrimitiveInfo primitive, const ResourceID& primitiveID );
-    private:
 
 
         /***
-         * 5. Auxiliar methods
-         ***/
-    private:
-        bool categoryNameInUse( std::string categoryName );
-
-
-        /***
-         * 6. Operators
+         * 5. Operators
          ***/
         ServerPrimitivesManager& operator = ( const ServerPrimitivesManager& ) = delete;
         ServerPrimitivesManager& operator = ( ServerPrimitivesManager&& ) = delete;
+
+
+    private:
+        /***
+         * 6. Initialization
+         ***/
+        void createPrimitivesDir();
+        void syncPrimitivesDir();
+        ResourceID createCategory( std::string name );
+        void syncPrimitivesCategoryDir( std::string dirPath );
+
+
+        /***
+         * 7. Categories management
+         ***/
+        ResourceID registerCategory( std::string categoryName );
+
+
+    private:
+        CommandsHistoricPtr commandsHistoric_;
+        ResourceIDsGeneratorPtr resourceIDsGenerator_;
 };
 
 } // namespace como

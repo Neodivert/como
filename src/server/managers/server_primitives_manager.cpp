@@ -44,7 +44,61 @@ ServerPrimitivesManager::ServerPrimitivesManager(const std::string& sceneDirPath
 
 
 /***
- * 2. Initialization
+ * 3. Getters
+ ***/
+
+std::list<PlainMaterialData> ServerPrimitivesManager::primitivePlainMaterialsData( const ResourceID &primitiveID )
+{
+    LOCK
+
+    // TODO: Avoid reading full primitive only for retrieving its materials.
+    log_->debug( "Getting materials from primitive (", primitiveID, ")\n" );
+    ImportedPrimitiveData primitiveData;
+    primitiveData.importFromFile( getPrimitiveFilePath( primitiveID ) );
+
+    std::list< PlainMaterialData > materialsData;
+    for( const MaterialInfo& materialInfo : primitiveData.materialsInfo_ ){
+        materialsData.push_back( materialInfo );
+    }
+
+    return materialsData;
+}
+
+
+/***
+ * 4. Primitives management
+ ***/
+
+void ServerPrimitivesManager::registerPrimitive( PrimitiveInfo primitive )
+{
+    const ResourceID primitiveID = resourceIDsGenerator_->generateResourceIDs( 1 );
+    registerPrimitive( primitive, primitiveID );
+}
+
+
+void ServerPrimitivesManager::registerPrimitive(PrimitiveInfo primitive, const ResourceID &primitiveID)
+{
+    // We are about to create a command which needs to keep a copy of the
+    // current primitive, so we create such copy in the tmp directory.
+    PrimitiveInfo primitiveCopy = primitive.copy(
+                tempDirPath_ + '/' +
+                primitive.name + "_" +
+                getCurrentDateTimeStr() +
+                boost::filesystem::extension( primitive.filePath ) );
+    log_->debug( "Primitive creation command created for primitive (",
+                 primitiveCopy.filePath, ")\n" );
+
+    AbstractPrimitivesManager::registerPrimitive( primitiveID, primitive );
+
+    commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCreationCommand( primitiveID.getCreatorID(),
+                                                                                  primitiveID,
+                                                                                  primitiveCopy,
+                                                                                  tempDirPath_ ) ) );
+}
+
+
+/***
+ * 6. Initialization
  ***/
 
 void ServerPrimitivesManager::createPrimitivesDir()
@@ -157,29 +211,7 @@ void ServerPrimitivesManager::syncPrimitivesCategoryDir( std::string dirPath )
 
 
 /***
- * 4. Getters
- ***/
-
-std::list<PlainMaterialData> ServerPrimitivesManager::primitivePlainMaterialsData( const ResourceID &primitiveID )
-{
-    LOCK
-
-    // TODO: Avoid reading full primitive only for retrieving its materials.
-    log_->debug( "Getting materials from primitive (", primitiveID, ")\n" );
-    ImportedPrimitiveData primitiveData;
-    primitiveData.importFromFile( getPrimitiveFilePath( primitiveID ) );
-
-    std::list< PlainMaterialData > materialsData;
-    for( const MaterialInfo& materialInfo : primitiveData.materialsInfo_ ){
-        materialsData.push_back( materialInfo );
-    }
-
-    return materialsData;
-}
-
-
-/***
- * 4. Categories management
+ * 7. Categories management
  ***/
 
 ResourceID ServerPrimitivesManager::registerCategory( std::string categoryName )
@@ -195,41 +227,6 @@ ResourceID ServerPrimitivesManager::registerCategory( std::string categoryName )
     log_->debug( "\tAdding primitive category [", categoryName, "] to scene ...OK\n" );
 
     return categoryID;
-}
-
-
-/***
- * 5. Primitives management
- ***/
-
-void ServerPrimitivesManager::registerPrimitive( PrimitiveInfo primitive )
-{
-    LOCK
-
-    const ResourceID primitiveID = resourceIDsGenerator_->generateResourceIDs( 1 );
-    registerPrimitive( primitive, primitiveID );
-}
-
-
-void ServerPrimitivesManager::registerPrimitive(PrimitiveInfo primitive, const ResourceID &primitiveID)
-{
-    LOCK
-    // We are about to create a command which needs to keep a copy of the
-    // current primitive, so we create such copy in the tmp directory.
-    PrimitiveInfo primitiveCopy = primitive.copy(
-                tempDirPath_ + '/' +
-                primitive.name + "_" +
-                getCurrentDateTimeStr() +
-                boost::filesystem::extension( primitive.filePath ) );
-    log_->debug( "Primitive creation command created for primitive (",
-                 primitiveCopy.filePath, ")\n" );
-
-    AbstractPrimitivesManager::registerPrimitive( primitiveID, primitive );
-
-    commandsHistoric_->addCommand( CommandConstPtr( new PrimitiveCreationCommand( primitiveID.getCreatorID(),
-                                                                                  primitiveID,
-                                                                                  primitiveCopy,
-                                                                                  tempDirPath_ ) ) );
 }
 
 } // namespace como
