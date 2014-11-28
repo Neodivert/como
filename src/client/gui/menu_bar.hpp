@@ -68,7 +68,9 @@ class MenuBar : public QMenuBar, public Observer
         QMenu* createDisplayVertexNormalsMenu( MeshesManager* meshesManager );
 
 
-    private:
+        /***
+         * Arguments
+         ***/
         EntitiesManagerPtr entitiesManager_;
 
         QAction* displayVertexNormalsAlways_;
