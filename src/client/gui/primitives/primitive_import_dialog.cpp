@@ -48,7 +48,7 @@ PrimitiveImportDialog::PrimitiveImportDialog( ClientPrimitivesManager *primitive
 
 
 /***
- * 3. Data validation
+ * 4. Data validation
  ***/
 
 void PrimitiveImportDialog::validate()

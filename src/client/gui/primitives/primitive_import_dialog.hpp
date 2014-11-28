@@ -35,16 +35,6 @@ class PrimitiveImportDialog : public QDialog
 {
     Q_OBJECT
 
-    private:
-        ClientPrimitivesManager* primitivesManager_;
-
-        QPushButton* fileInput_;
-        QFileInfo fileInfo_;
-        ResourceSelector* primitiveCategorySelector_;
-
-        QPushButton* okButton_;
-        QPushButton* cancelButton_;
-
     public:
         /***
          * 1. Construction
@@ -62,18 +52,28 @@ class PrimitiveImportDialog : public QDialog
 
 
         /***
-         * 3. Data validation
-         ***/
-    public slots:
-        void validate();
-    public:
-
-
-        /***
-         * 4. Operators
+         * 3. Operators
          ***/
         PrimitiveImportDialog& operator = ( const PrimitiveImportDialog& ) = delete;
         PrimitiveImportDialog& operator = ( PrimitiveImportDialog&& ) = delete;
+
+
+    public slots:
+        /***
+         * 4. Data validation
+         ***/
+        void validate();
+
+
+    private:
+        ClientPrimitivesManager* primitivesManager_;
+
+        QPushButton* fileInput_;
+        QFileInfo fileInfo_;
+        ResourceSelector* primitiveCategorySelector_;
+
+        QPushButton* okButton_;
+        QPushButton* cancelButton_;
 };
 
 } // namespace como
