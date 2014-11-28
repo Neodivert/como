@@ -38,6 +38,7 @@ CamerasManager::CamerasManager( OpenGL& openGL, ServerInterfacePtr server, LogPt
 
 const Camera* CamerasManager::activeCamera() const
 {
+    LOCK
     return activeCamera_;
 }
 
@@ -48,6 +49,7 @@ const Camera* CamerasManager::activeCamera() const
 
 void CamerasManager::executeRemoteCommand( const CameraCommand &command )
 {
+    LOCK
     switch( command.getType() ){
         case CameraCommandType::CAMERA_CREATION:{
             const CameraCreationCommand& creationCommand =
