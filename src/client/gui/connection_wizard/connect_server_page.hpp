@@ -34,15 +34,6 @@ namespace como {
 
 class ConnectServerPage : public QWizardPage
 {
-    private:
-        ScenePtr& scene_;
-        QLineEdit* ipInput_;
-        QLineEdit* portInput_;
-        QLineEdit* userNameInput_;
-
-        // Log
-        LogPtr log_;
-
     public:
         /***
          * 1. Construction
@@ -60,16 +51,8 @@ class ConnectServerPage : public QWizardPage
 
 
         /***
-         * 3. Validators
+         * 4. Getters
          ***/
-    protected:
-        virtual bool validatePage();
-
-
-        /***
-         * 4. Auxiliar methods
-         ***/
-    public:
         virtual int nextId() const ;
 
 
@@ -78,6 +61,22 @@ class ConnectServerPage : public QWizardPage
          ***/
         ConnectServerPage& operator = ( const ConnectServerPage& ) = delete;
         ConnectServerPage& operator = ( ConnectServerPage&& ) = delete;
+
+
+    protected:
+        /***
+         * 6. Validators
+         ***/
+        virtual bool validatePage();
+
+
+    private:
+        ScenePtr& scene_;
+        QLineEdit* ipInput_;
+        QLineEdit* portInput_;
+        QLineEdit* userNameInput_;
+
+        LogPtr log_;
 };
 
 } // namespace como

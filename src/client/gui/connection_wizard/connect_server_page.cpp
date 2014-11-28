@@ -59,7 +59,17 @@ ConnectServerPage::ConnectServerPage( ScenePtr& scene, LogPtr log ) :
 
 
 /***
- * 3. Validators
+ * 4. Getters
+ ***/
+
+int ConnectServerPage::nextId() const
+{
+    return -1;
+}
+
+
+/***
+ * 6. Validators
  ***/
 
 bool ConnectServerPage::validatePage()
@@ -97,16 +107,6 @@ bool ConnectServerPage::validatePage()
 
         return false;
     }
-}
-
-
-/***
- * 4. Auxiliar methods
- ***/
-
-int ConnectServerPage::nextId() const
-{
-    return -1;
 }
 
 } // namespace como
