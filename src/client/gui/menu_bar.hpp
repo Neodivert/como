@@ -29,12 +29,6 @@ class MenuBar : public QMenuBar, public Observer
 {
     Q_OBJECT
 
-    private:
-        EntitiesManagerPtr entitiesManager_;
-
-        QAction* displayVertexNormalsAlways_;
-        QAction* displayVertexNormalsNever_;
-
 
     public:
         /***
@@ -47,31 +41,38 @@ class MenuBar : public QMenuBar, public Observer
 
 
         /***
-         * 2. Initialization
-         ***/
-    private:
-        QMenu* createViewMenu( EntitiesManager* entitiesManager );
-        QMenu* createDisplayEdgesMenu( MeshesManager* meshesManager );
-        QMenu* createDisplayVertexNormalsMenu( MeshesManager* meshesManager );
-    public:
-
-        /***
-         * 3. Destruction
+         * 2. Destruction
          ***/
         ~MenuBar() = default;
 
 
         /***
-         * 4. Updating
+         * 3. Updating (pattern Observer)
          ***/
         virtual void update();
 
 
         /***
-         * 5. Operators
+         * 4. Operators
          ***/
         MenuBar& operator = ( const MenuBar& ) = delete;
         MenuBar& operator = ( MenuBar&& ) = delete;
+
+
+    private:
+        /***
+         * 5. Initialization
+         ***/
+        QMenu* createViewMenu( EntitiesManager* entitiesManager );
+        QMenu* createDisplayEdgesMenu( MeshesManager* meshesManager );
+        QMenu* createDisplayVertexNormalsMenu( MeshesManager* meshesManager );
+
+
+    private:
+        EntitiesManagerPtr entitiesManager_;
+
+        QAction* displayVertexNormalsAlways_;
+        QAction* displayVertexNormalsNever_;
 };
 
 } // namespace como

@@ -35,7 +35,28 @@ MenuBar::MenuBar( EntitiesManagerPtr entitiesManager ) :
 
 
 /***
- * 2. Initialization
+ * 3. Updating (pattern Observer)
+ ***/
+
+void MenuBar::update()
+{
+    switch( entitiesManager_->getMeshesManager()->displaysVertexNormals() ){
+        case ElementsMeetingCondition::ALL:
+            displayVertexNormalsAlways_->setChecked( true );
+        break;
+        case ElementsMeetingCondition::NONE:
+            displayVertexNormalsNever_->setChecked( true );
+        break;
+        case ElementsMeetingCondition::SOME:
+            displayVertexNormalsAlways_->setChecked( false );
+            displayVertexNormalsNever_->setChecked( false );
+        break;
+    }
+}
+
+
+/***
+ * 5. Initialization
  ***/
 
 QMenu* MenuBar::createViewMenu( EntitiesManager* entitiesManager )
@@ -117,27 +138,6 @@ QMenu* MenuBar::createDisplayVertexNormalsMenu( MeshesManager* meshesManager )
     displayVertexNormalsMenu = new QMenu( "Display vertex normals", this );
     displayVertexNormalsMenu->addActions( displayVertexNormalsActionGroup->actions() );
     return displayVertexNormalsMenu;
-}
-
-
-/***
- * 4. Updating
- ***/
-
-void MenuBar::update()
-{
-    switch( entitiesManager_->getMeshesManager()->displaysVertexNormals() ){
-        case ElementsMeetingCondition::ALL:
-            displayVertexNormalsAlways_->setChecked( true );
-        break;
-        case ElementsMeetingCondition::NONE:
-            displayVertexNormalsNever_->setChecked( true );
-        break;
-        case ElementsMeetingCondition::SOME:
-            displayVertexNormalsAlways_->setChecked( false );
-            displayVertexNormalsNever_->setChecked( false );
-        break;
-    }
 }
 
 } // namespace como
