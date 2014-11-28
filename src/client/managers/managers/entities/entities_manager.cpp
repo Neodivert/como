@@ -206,7 +206,6 @@ void EntitiesManager::executeRemoteSelectionCommand( const SelectionCommand& com
 
 void EntitiesManager::executeRemoteEntityCommand( const EntityCommand &command )
 {
-    // TODO: Apply entity command.
     LOCK
 
     switch( command.getType() ){
@@ -257,7 +256,6 @@ void EntitiesManager::update( ContainerAction lastContainerAction, UserID modifi
 
 void EntitiesManager::lockResource(const ResourceID &resourceID, UserID newOwner)
 {
-    LOCK
     for( auto& manager : managers_ ){
         if( manager->containsResource( resourceID ) ){
             manager->lockResource( resourceID, newOwner );
@@ -268,7 +266,6 @@ void EntitiesManager::lockResource(const ResourceID &resourceID, UserID newOwner
 
 void EntitiesManager::unlockResourcesSelection(UserID currentOwner)
 {
-    LOCK
     for( auto& manager : managers_ ){
         manager->unlockResourcesSelection( currentOwner );
     }
@@ -277,7 +274,6 @@ void EntitiesManager::unlockResourcesSelection(UserID currentOwner)
 
 void EntitiesManager::clearResourcesSelection(UserID currentOwner)
 {
-    LOCK
     for( auto& manager : managers_ ){
         manager->clearResourcesSelection( currentOwner );
     }
