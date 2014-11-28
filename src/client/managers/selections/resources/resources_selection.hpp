@@ -136,10 +136,12 @@ void ResourcesSelection<ResourceType>::moveResource( ResourceID resourceID, Reso
 template <class ResourceType>
 void ResourcesSelection<ResourceType>::moveAll( ResourcesSelection<ResourceType>& dstSelection )
 {
-    LOCK
-    // TODO: Maybe a more efficient way?
-    for( auto& resourcePair : this->resources_ ){
-        dstSelection.addResource( resourcePair.first, std::move( resourcePair.second ), false );
+    {
+        LOCK
+        // TODO: Maybe a more efficient way?
+        for( auto& resourcePair : this->resources_ ){
+            dstSelection.addResource( resourcePair.first, std::move( resourcePair.second ), false );
+        }
     }
     this->clear();
 }

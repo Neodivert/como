@@ -201,7 +201,6 @@ void ServerInterface::run()
 
 void ServerInterface::setTimer()
 {
-    LOCK
     // Set a timer for sending pending commands to the server.
     timer_.expires_from_now( boost::posix_time::milliseconds( TIME_BETWEEN_SHIPMENTS ) );
     timer_.async_wait( boost::bind( &ServerInterface::sendPendingCommands, this ) );
@@ -210,7 +209,11 @@ void ServerInterface::setTimer()
 
 void ServerInterface::sendPendingCommands()
 {
+    // This is a private method, so LOCK shouldn't be called, but this method
+    // is used as a asynchronous handler in method setTimer(), so it would be
+    // called in any time.
     LOCK
+
     unsigned int nCommands = 0;
 
     sceneUpdatePacketToServer_.clear();
@@ -243,7 +246,6 @@ void ServerInterface::sendPendingCommands()
 
 void ServerInterface::listen()
 {
-    LOCK
     log_->debug( "Listening for new scene updates from server ...\n" );
 
     sceneUpdatePacketFromServer_.clear();
@@ -257,8 +259,7 @@ void ServerInterface::listen()
 
 void ServerInterface::onSceneUpdatePacketReceived( const boost::system::error_code& errorCode, PacketPtr packet )
 {
-    LOCK
-
+    LOCK // Private but handler method.
     try {
         if( errorCode ){
             throw std::runtime_error(
@@ -283,7 +284,6 @@ void ServerInterface::onSceneUpdatePacketReceived( const boost::system::error_co
         for( const auto& command : *sceneCommands ){
             emit commandReceived( std::shared_ptr< const Command >( command->clone() ) );
         }
-
         listen();
     }catch( std::runtime_error& ){
         lastException_ = std::current_exception();
@@ -293,7 +293,7 @@ void ServerInterface::onSceneUpdatePacketReceived( const boost::system::error_co
 
 void ServerInterface::onSceneUpdatePacketSended( const boost::system::error_code& errorCode, PacketPtr packet )
 {
-    LOCK
+    LOCK // Private but handler method.
 
     try {
         if( errorCode ){

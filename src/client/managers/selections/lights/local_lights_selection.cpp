@@ -38,8 +38,6 @@ LocalLightsSelection::LocalLightsSelection( ServerInterfacePtr server ) :
 
 ResourceID LocalLightsSelection::addResource( std::unique_ptr<DirectionalLight> resource )
 {
-    LOCK
-
     ResourceID resourceID = reserveResourceIDs( 1 );
 
     LightsSelection::addResource( resourceID, std::move( resource ) );

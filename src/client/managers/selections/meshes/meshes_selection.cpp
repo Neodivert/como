@@ -36,8 +36,10 @@ MeshesSelection::MeshesSelection( glm::vec4 borderColor ) :
 
 void MeshesSelection::addResource( ResourceID id, std::unique_ptr<Mesh> resource, bool notifyObservers )
 {
-    LOCK
-    resource->displayEdges( displayEdges_ );
+    {
+        LOCK
+        resource->displayEdges( displayEdges_ );
+    }
 
     EntitiesSet<Mesh>::addResource( id, std::move( resource ), notifyObservers );
 }

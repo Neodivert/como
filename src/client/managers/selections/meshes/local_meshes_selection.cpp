@@ -33,8 +33,6 @@ LocalMeshesSelection::LocalMeshesSelection( ServerInterfacePtr server ) :
 
 ResourceID LocalMeshesSelection::addResource( std::unique_ptr<Mesh> resource )
 {
-    LOCK
-
     ResourceID resourceID = reserveResourceIDs( 1 );
 
     MeshesSelection::addResource( resourceID, std::move( resource ) );

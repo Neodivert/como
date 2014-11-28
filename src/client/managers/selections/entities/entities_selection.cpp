@@ -87,6 +87,7 @@ bool EntitiesSelection::containsEntity(const ResourceID &entityID) const
 std::string EntitiesSelection::name() const
 {
     LOCK
+
     if( size() == 0 ){
         return "(Nothing selected)";
     }else if( size() == 1 ){
@@ -106,6 +107,7 @@ std::string EntitiesSelection::name() const
 std::string EntitiesSelection::typeName() const
 {
     LOCK
+
     if( size() == 1 ){
         std::string typeName;
         for( auto& selection : specializedEntitiesSelections_ ){
@@ -136,6 +138,8 @@ void EntitiesSelection::setBorderColor(const glm::vec4 &borderColor)
 void EntitiesSelection::setEntityModelMatrix( const ResourceID &entityID,
                                               const glm::mat4 &modelMatrix )
 {
+    LOCK
+
     for( auto& selection : specializedEntitiesSelections_ ){
         if( selection->containsEntity( entityID ) ){
             selection->setEntityModelMatrix( entityID, modelMatrix );
