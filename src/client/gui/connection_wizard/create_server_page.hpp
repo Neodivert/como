@@ -41,17 +41,6 @@ class CreateServerPage : public QWizardPage
 {
     Q_OBJECT
 
-    private:
-        ScenePtr& scene_;
-        QLineEdit* sceneNameInput_;
-        QLineEdit* portInput_;
-        QSpinBox* maxUsersInput_;
-        QPushButton* sceneFileInput_;
-        QFileInfo sceneFileInfo_;
-
-        // Log
-        LogPtr log_;
-
     public:
         /***
          * 1. Construction
@@ -69,16 +58,8 @@ class CreateServerPage : public QWizardPage
 
 
         /***
-         * 2. Validators
+         * 3. Getters
          ***/
-    protected:
-        virtual bool validatePage();
-
-
-        /***
-         * 3. Auxiliar methods
-         ***/
-    public:
         virtual int nextId() const;
 
 
@@ -87,6 +68,25 @@ class CreateServerPage : public QWizardPage
          ***/
         CreateServerPage& operator = ( const CreateServerPage& ) = delete;
         CreateServerPage& operator = ( CreateServerPage&& ) = delete;
+
+
+    protected:
+        /***
+         * 5. Validators
+         ***/
+        virtual bool validatePage();
+
+
+    private:
+        ScenePtr& scene_;
+        QLineEdit* sceneNameInput_;
+        QLineEdit* portInput_;
+        QSpinBox* maxUsersInput_;
+        QPushButton* sceneFileInput_;
+        QFileInfo sceneFileInfo_;
+
+        // Log
+        LogPtr log_;
 };
 
 } // namespace como

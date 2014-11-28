@@ -31,7 +31,7 @@ namespace como {
 const std::string NO_SCENE_FILE_SELECTED = "No scene file selected";
 
 /***
- * 1. Initialization and destruction
+ * 1. Construction
  ***/
 
 CreateServerPage::CreateServerPage( ScenePtr& scene, LogPtr log ) :
@@ -88,7 +88,17 @@ CreateServerPage::CreateServerPage( ScenePtr& scene, LogPtr log ) :
 
 
 /***
- * 2. Validators
+ * 3. Getters
+ ***/
+
+int CreateServerPage::nextId() const
+{
+    return PAGE_CONNECT_SERVER;
+}
+
+
+/***
+ * 5. Validators
  ***/
 
 bool CreateServerPage::validatePage()
@@ -124,13 +134,6 @@ bool CreateServerPage::validatePage()
 }
 
 
-/***
- * 3. Auxiliar methods
- ***/
 
-int CreateServerPage::nextId() const
-{
-    return PAGE_CONNECT_SERVER;
-}
 
 } // namespace como
