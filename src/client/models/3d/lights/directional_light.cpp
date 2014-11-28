@@ -161,13 +161,8 @@ void DirectionalLight::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, cons
 
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
-    // Compute MVP matrix and pass it to the shader.
-    openGL->setMVPMatrix( modelMatrix_, viewMatrix, projectionMatrix );
-
-    // Bind Mesh VAO and VBOs as the active ones.
-    glBindVertexArray( vao );
-    glBindBuffer( GL_ARRAY_BUFFER, vbo );
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
+    // Send this "mesh" and the MVP matrix to the shader.
+    Mesh::sendToShader( *openGL, viewMatrix, projectionMatrix );
 
     for( const auto& trianglesGroup : trianglesGroups_ ){
         // Send this mesh's material to shader.
@@ -179,15 +174,13 @@ void DirectionalLight::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, cons
                         ( std::intptr_t* )( trianglesGroup.firstTriangleIndex * 3 * sizeof( GL_UNSIGNED_INT ) ) );
     }
 
-
     // Set the color for the mesh's contour.
     // TODO: Use only one condition (force contourColor to be passed as a
     // reference?)
-    if( displayEdges_ && ( contourColor != nullptr ) ){
+    if( displaysEdges() && ( contourColor != nullptr ) ){
         openGL->setShadingMode( ShadingMode::SOLID_PLAIN );
 
-        glUniform4fv( uniformColorLocation, 1, glm::value_ptr( *contourColor ) );
-        OpenGL::checkStatus( "contourColor sent to shader" );
+        sendColorToShader( *contourColor );
 
         // Now we'll draw mesh's contour. Set polygon mode for rendering
         // lines.
@@ -195,7 +188,7 @@ void DirectionalLight::draw( OpenGLPtr openGL, const glm::mat4& viewMatrix, cons
         glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
         // Draw Mesh's contour
-        glDrawElements( GL_TRIANGLES, nEboElements_, GL_UNSIGNED_INT, NULL );
+        drawTriangles();
 
         // Return polygon mode to previos GL_FILL.
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );

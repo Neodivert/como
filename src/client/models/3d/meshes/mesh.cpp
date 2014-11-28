@@ -97,6 +97,13 @@ bool Mesh::displaysVertexNormals() const
     return displayVertexNormals_;
 }
 
+
+bool Mesh::displaysEdges() const
+{
+    return displayEdges_;
+}
+
+
 glm::vec3 Mesh::getOriginalCentroid() const
 {
     return glm::vec3( originalCentroid );
@@ -415,6 +422,13 @@ void Mesh::sendMaterialToShader( const unsigned int index ) const
 }
 
 
+void Mesh::sendColorToShader( const glm::vec4 &contourColor ) const
+{
+    glUniform4fv( uniformColorLocation, 1, glm::value_ptr( contourColor ) );
+    OpenGL::checkStatus( "contourColor sent to shader" );
+}
+
+
 /***
  * 12. Drawing
  ***/
@@ -481,6 +495,12 @@ void Mesh::drawTriangles( unsigned int firstTriangleIndex, unsigned int nTriangl
                     nTriangles * 3,
                     GL_UNSIGNED_INT,
                     ( void* )( firstTriangleIndex * 3 * sizeof( GL_UNSIGNED_INT ) ) );
+}
+
+
+void Mesh::drawTriangles() const
+{
+    glDrawElements( GL_TRIANGLES, nEboElements_, GL_UNSIGNED_INT, NULL );
 }
 
 

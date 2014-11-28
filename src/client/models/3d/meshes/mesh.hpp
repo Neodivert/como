@@ -51,8 +51,6 @@ enum class MeshType : std::uint8_t {
 
 class Mesh : public AbstractMesh, public Entity
 {
-    friend class DirectionalLight; // TODO: Remove
-
     public:
         /***
          * 1. Construction.
@@ -73,6 +71,7 @@ class Mesh : public AbstractMesh, public Entity
          ***/
         MeshType getType() const ;
         bool displaysVertexNormals() const;
+        bool displaysEdges() const;
         glm::vec3 getOriginalCentroid() const;
         virtual glm::vec3 centroid() const;
         bool includesUV() const;
@@ -140,6 +139,7 @@ class Mesh : public AbstractMesh, public Entity
          ***/
         virtual void sendToShader( OpenGL& openGL, const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix ) const;
         void sendMaterialToShader( const unsigned int index ) const;
+        void sendColorToShader( const glm::vec4& contourColor ) const;
 
 
         /***
@@ -148,6 +148,7 @@ class Mesh : public AbstractMesh, public Entity
         virtual void drawEdges( OpenGLPtr openGL, const glm::mat4& view, const glm::mat4& projection, const glm::vec4* contourColor = nullptr ) const;
         virtual void drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, glm::vec4 color ) const;
         virtual void drawTriangles( unsigned int firstTriangleIndex, unsigned int nTriangles ) const;
+        virtual void drawTriangles() const;
 
 
     private:
