@@ -45,16 +45,6 @@ class MaterialsManager : public ServerWriter, public Observer, public Observable
     // private to MeshesManager and X will be public?
     friend class MeshesManager;
 
-    private:
-        std::map< ResourceID, MaterialPtr > materials_;
-        MaterialsOwnershipMap materialsOwners_;
-
-        // TODO: Rename this and related methods so they refer to Materials'
-        // "parent resources" instead of meshes.
-        std::map< ResourceID, std::vector< ResourceID > > meshMaterials_;
-
-        MaterialHandlerPtr materialHandler_;
-
     public:
         /***
          * 1. Creation
@@ -74,7 +64,6 @@ class MaterialsManager : public ServerWriter, public Observer, public Observable
         /***
          * 3. Material creation
          ***/
-    public:
         ResourceID createMaterials( const std::vector< MaterialInfo >& materialsInfo, const ResourceID& meshID );
         ResourceID createMaterial( const MaterialInfo& materialInfo, const ResourceID& meshID );
 
@@ -85,14 +74,12 @@ class MaterialsManager : public ServerWriter, public Observer, public Observable
         /***
          * 4. Material selection
          ***/
-    public:
         MaterialHandlerPtr selectMaterial( const ResourceID& id );
 
 
         /***
          * 5. Getters
          ***/
-    public:
         ResourceHeadersList getLocalMaterialsHeaders() const; // TODO: Remove this method and use X::localHeaders().
         bool materialOwnedByLocalUser( const ResourceID& resourceID ) const;
         virtual std::string getResourceName( const ResourceID& resourceID ) const; // TODO: Move to ResourcesManager or any other class.
@@ -108,15 +95,28 @@ class MaterialsManager : public ServerWriter, public Observer, public Observable
 
 
         /***
-         * 7. Updating
+         * 7. Updating (pattern Observer)
          ***/
         virtual void update();
 
 
         /***
-         * 8. Materials locking
+         * 8. Shader communication
          ***/
+        void sendMaterialToShader( const ResourceID& materialID );
+
+
+        /***
+         * 9. Operators
+         ***/
+        MaterialsManager& operator = ( const MaterialsManager& ) = delete;
+        MaterialsManager& operator = ( MaterialsManager&& ) = delete;
+
+
     private:
+        /***
+         * 10. Materials locking
+         ***/
         void lockMaterial( const ResourceID &materialID, UserID newOwner );
         void lockMeshMaterials( const ResourceID& meshID, UserID newOwner );
 
@@ -126,25 +126,24 @@ class MaterialsManager : public ServerWriter, public Observer, public Observable
 
 
         /***
-         * 9. Materials destruction
+         * 11. Materials destruction
          ***/
         void removeMaterial( const ResourceID& materialID );
         void removeMeshMaterials( const ResourceID& meshID );
         void removeUserMaterials( UserID userID );
 
 
-    public:
         /***
-         * 10. Shader communication
+         * Attributes
          ***/
-        void sendMaterialToShader( const ResourceID& materialID );
+        std::map< ResourceID, MaterialPtr > materials_;
+        MaterialsOwnershipMap materialsOwners_;
 
+        // TODO: Rename this and related methods so they refer to Materials'
+        // "parent resources" instead of meshes.
+        std::map< ResourceID, std::vector< ResourceID > > meshMaterials_;
 
-        /***
-         * 11. Operators
-         ***/
-        MaterialsManager& operator = ( const MaterialsManager& ) = delete;
-        MaterialsManager& operator = ( MaterialsManager&& ) = delete;
+        MaterialHandlerPtr materialHandler_;
 };
 
 typedef std::shared_ptr< MaterialsManager > MaterialsManagerPtr;

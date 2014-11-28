@@ -89,21 +89,6 @@ void MaterialsManager::createMaterial( const MaterialInfo& materialInfo, const R
 }
 
 
-/*void MaterialsManager::createRemoteMaterials( const ResourceID& meshID, const std::vector< MaterialData >& materialsInfo, const ResourceID& firstMaterialID )
-{
-    assert( materialsInfo.size() != 0 );
-    ResourceID materialID = firstMaterialID;
-
-    meshMaterials_[meshID] = std::vector<ResourceID>();
-
-    for( auto materialInfo : materialsInfo ){
-        createMaterial( materialID, materialInfo );
-        meshMaterials_.at( meshID ).push_back( materialID );
-        materialID++;
-    }
-}*/
-
-
 /***
  * 4. Material selection
  ***/
@@ -258,17 +243,30 @@ void MaterialsManager::executeRemoteCommand( const MaterialCommand& command )
 }
 
 
+/***
+ * 7. Updating (pattern Observer)
+ ***/
+
 void MaterialsManager::update()
 {
     LOCK
-    //notifyElementModification( materialHandler_->getID() );
-
     notifyObservers();
 }
 
 
 /***
- * 8. Materials locking
+ * 8. Shader communication
+ ***/
+
+void MaterialsManager::sendMaterialToShader( const ResourceID &materialID )
+{
+    LOCK
+    materials_.at( materialID )->sendToShader();
+}
+
+
+/***
+ * 10. Materials locking
  ***/
 
 void MaterialsManager::lockMaterial( const ResourceID &materialID, UserID newOwner )
@@ -328,7 +326,7 @@ void MaterialsManager::unlockUserMaterials( UserID userID )
 
 
 /***
- * 9. Materials destruction
+ * 11. Materials destruction
  ***/
 
 void MaterialsManager::removeMaterial( const ResourceID &materialID )
@@ -369,17 +367,6 @@ void MaterialsManager::removeUserMaterials(UserID userID)
     for( const auto& meshID: meshesToBeRemoved ){
         removeMeshMaterials( meshID );
     }
-}
-
-
-/***
- * 10. Shader communication
- ***/
-
-void MaterialsManager::sendMaterialToShader( const ResourceID &materialID )
-{
-    LOCK
-    materials_.at( materialID )->sendToShader();
 }
 
 
