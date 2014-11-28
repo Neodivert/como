@@ -10,7 +10,11 @@ include( ../common/common.pri )
 # http://stackoverflow.com/questions/2580934/how-to-specify-different-debug-release-output-directories-in-qmake-pro-file
 DESTDIR = .
 
-TARGET = server
+CONFIG( debug, debug|release ) {
+    TARGET = server_debug
+} else {
+    TARGET = server
+}
 message( Building target: $$TARGET )
 
 BUILD_DATA_DIR = $$DESTDIR/.build_data/$$TARGET
