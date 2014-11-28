@@ -116,9 +116,6 @@ bool PublicUser::needsSceneUpdatePacket() const
 
 void PublicUser::onReadSceneUpdatePacket( const boost::system::error_code& errorCode, PacketPtr packet )
 {
-    // Call to lock() or deadlock Server-PublicUser?
-    LOCK
-
     // Call to the processing callback in the server.
     processSceneUpdatePacketCallback_( errorCode, getID(), *( std::dynamic_pointer_cast<const SceneUpdatePacket>( packet ) ) );
 }
