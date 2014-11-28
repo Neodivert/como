@@ -89,7 +89,6 @@ TextureData TexturesManager::getTextureData( const ResourceID& textureID ) const
 
 void TexturesManager::executeRemoteCommand( const TextureCommand &command )
 {
-    LOCK
     switch( command.getType() ){
         case TextureCommandType::TEXTURE_CREATION:{
             const TextureCreationCommand& textureCreationCommand =
@@ -119,7 +118,6 @@ void TexturesManager::sendTextureToShader( const ResourceID& resourceID, glm::ve
 
 void TexturesManager::loadTexture( const ResourceID &textureID, std::string imagePath )
 {
-    LOCK
     boost::system::error_code errorCode;
     std::string dstPath =
             TEXTURES_DIR_PATH_ +
