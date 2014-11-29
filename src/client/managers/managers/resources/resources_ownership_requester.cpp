@@ -38,8 +38,18 @@ ResourcesOwnershipRequester::ResourcesOwnershipRequester( ServerInterfacePtr ser
 
 void ResourcesOwnershipRequester::requestResourceLock( const ResourceID &resourceID )
 {
-    pendingSelections_.insert( resourceID );
-    sendCommandToServer( CommandConstPtr( new ResourceCommand( ResourceCommandType::RESOURCE_LOCK, localUserID(), resourceID ) ) );
+    std::pair< std::set< ResourceID >::iterator, bool > res =
+        pendingSelections_.insert( resourceID );
+
+    // Send the request to the server only if a lock request for the same
+    // resource hasn't been sent already.
+    if( res.second ){
+        sendCommandToServer(
+                    CommandConstPtr(
+                        new ResourceCommand( ResourceCommandType::RESOURCE_LOCK,
+                                             localUserID(),
+                                             resourceID ) ) );
+    }
 }
 
 
