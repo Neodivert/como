@@ -68,7 +68,7 @@ class ResourcesOwnershipRequester : public ResourcesOwnershipManager, public Ser
         /***
          * 6. Lock responses processing
          ***/
-        virtual void processLockResponse( const ResourceID& resourceID, bool lockResponse );
+        virtual void processLockDenial( const ResourceID& resourceID );
 
 
     private:

@@ -56,7 +56,7 @@ class AbstractResourcesOwnershipManager : public Lockable
         virtual void lockResource( const ResourceID& resourceID, UserID userID ) = 0;
         virtual void unlockResourcesSelection( UserID userID ) = 0;
         virtual void deleteResourcesSelection( UserID userID ) = 0;
-        virtual void processLockResponse( const ResourceID& resourceID, bool lockResponse ) = 0;
+        virtual void processLockDenial( const ResourceID& resourceID ) = 0;
 };
 
 } // namespace como

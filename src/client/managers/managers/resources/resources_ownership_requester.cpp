@@ -89,13 +89,10 @@ void ResourcesOwnershipRequester::lockResource( const ResourceID& resourceID, Us
  * 6. Lock responses processing
  ***/
 
-void ResourcesOwnershipRequester::processLockResponse( const ResourceID &resourceID, bool lockResponse )
+void ResourcesOwnershipRequester::processLockDenial( const ResourceID &resourceID )
 {
     LOCK
     pendingSelections_.erase( resourceID );
-    if( lockResponse ){
-        lockResource( resourceID, localUserID() );
-    }
 }
 
 } // namespace como

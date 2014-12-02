@@ -295,13 +295,11 @@ void EntitiesManager::clearResourcesSelection(UserID currentOwner)
 }
 
 
-void EntitiesManager::processLockResponse( const ResourceID& resourceID, bool lockResponse )
+void EntitiesManager::processLockDenial( const ResourceID& resourceID )
 {
-    assert( lockResponse == false );
-
     for( auto& manager : managers_ ){
         if( manager->containsResource( resourceID ) ){
-            // processLockResponse() is protected in every manager, so we use
+            // processLockDenial() is protected in every manager, so we use
             // this "trick" for executing the command there.
             manager->executeResourceCommand(
                         ResourceCommand( ResourceCommandType::RESOURCE_LOCK_DENIAL,

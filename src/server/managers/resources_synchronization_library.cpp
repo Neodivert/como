@@ -433,12 +433,12 @@ void ResourcesSynchronizationLibrary::deleteResource( const ResourceID &resource
 }
 
 
-void ResourcesSynchronizationLibrary::processLockResponse( const ResourceID& resourceID, bool lockResponse )
+void ResourcesSynchronizationLibrary::processLockDenial( const ResourceID& resourceID )
 {
     // TODO: Make this trick unnecessary.
     (void)( resourceID );
     (void)( lockResponse );
-    throw std::runtime_error( "ResourcesOwnershipManager::processLockResponse called!" );
+    throw std::runtime_error( "ResourcesOwnershipManager::processLockDenial called!" );
 }
 
 

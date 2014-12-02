@@ -110,7 +110,7 @@ class EntitiesManager : public AbstractEntitiesManager, public ContainerObserver
         virtual void lockResource(const ResourceID &resourceID, UserID newOwner);
         virtual void unlockResourcesSelection(UserID currentOwner);
         virtual void clearResourcesSelection(UserID currentOwner);
-        virtual void processLockResponse( const ResourceID &resourceID, bool lockResponse );
+        virtual void processLockDenial( const ResourceID &resourceID );
 
 
     private:

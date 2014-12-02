@@ -42,7 +42,7 @@ void ResourceCommandsExecuter::executeResourceCommand( const ResourceCommand& co
             lockResource( command.getResourceID(), command.getUserID() );
         break;
         case ResourceCommandType::RESOURCE_LOCK_DENIAL:
-            processLockResponse( command.getResourceID(), false );
+            processLockDenial( command.getResourceID() );
         break;
     }
 }

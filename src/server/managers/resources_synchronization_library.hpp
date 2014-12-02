@@ -89,7 +89,7 @@ class ResourcesSynchronizationLibrary : public AbstractResourcesOwnershipManager
         virtual void unlockResourcesSelection( UserID userID );
         virtual void deleteResourcesSelection( UserID userID );
         virtual void deleteResource( const ResourceID& resourceID );
-        virtual void processLockResponse( const ResourceID &resourceID, bool lockResponse );
+        virtual void processLockDenial( const ResourceID &resourceID );
 
 
     private:
