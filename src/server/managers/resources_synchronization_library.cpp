@@ -395,10 +395,6 @@ void ResourcesSynchronizationLibrary::deleteResourcesSelection( UserID userID )
 
     currentElement = resourcesSyncData_.begin();
     while( currentElement != resourcesSyncData_.end() ){
-        if( lights_.count( currentElement->first ) ){
-            lights_.erase( currentElement->first );
-        }
-
         if( currentElement->second->resourceOwner() == userID ){
             deleteResource( currentElement->first );
 
@@ -423,6 +419,12 @@ void ResourcesSynchronizationLibrary::deleteResource( const ResourceID &resource
         // Delete first the children of the resource.
         for( const ResourceID& childResourceID : resourceSyncData.childResourceIDs() ){
             deleteResource( childResourceID );
+        }
+
+        // If the deleted resource is a light, remove it from the container
+        // of lights first.
+        if( lights_.count( resourceID ) ){
+            lights_.erase( resourceID );
         }
 
         //notifyElementDeletion( currentElement->first );
