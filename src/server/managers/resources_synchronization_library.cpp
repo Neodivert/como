@@ -64,6 +64,7 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
         case CommandTarget::RESOURCE:{
             const ResourceCommand& resourceCommand = dynamic_cast< const ResourceCommand& >( command );
             executeResourceCommand( resourceCommand );
+            return; // Previous method took care of the command.
         }break;
         case CommandTarget::RESOURCES_SELECTION:{
             const ResourcesSelectionCommand& resourcesSelectionCommand =
@@ -246,7 +247,9 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                     // If the user who originally made the request exists in
                     // the system, send him / her a response command.
                     if( users_.count( lightCommand.getUserID() ) ){
-                        users_.at( lightCommand.getUserID() )->addResponseCommand(
+                        // TODO: Don't use the "public" historic for "private"
+                        // commands!.
+                        commandsHistoric_->addCommand(
                                     CommandConstPtr(
                                         new LightCreationResponseCommand( lightCommand.getResourceID(),
                                                                           true
@@ -350,7 +353,23 @@ void ResourcesSynchronizationLibrary::lockResource( const ResourceID& resourceID
     if( resourcesSyncData_.at( resourceID )->resourceOwner() == NO_USER ){
         resourcesSyncData_.at( resourceID )->setResourceOwner( userID );
         //notifyElementUpdate( resourceID );
-        users_.at( userID )->addResponseCommand( CommandConstPtr( new ResourceSelectionResponse( resourceID, true ) ) );
+
+        // Add the "public" lock command to the commands historic.
+        commandsHistoric_->addCommand(
+                    CommandConstPtr(
+                        new ResourceCommand(
+                            ResourceCommandType::RESOURCE_LOCK,
+                            userID,
+                            resourceID ) ) );
+
+        // Add the "private" lock response command to the commands historic.
+        // TODO: Remove this type of "private commands" from "public" historic.
+        commandsHistoric_->addCommand(
+                    CommandConstPtr(
+                        new ResourceSelectionResponse(
+                            resourceID,
+                            true ) ) );
+
         log()->debug( "Yes!\n" );
     }else{
         users_.at( userID )->addResponseCommand( CommandConstPtr( new ResourceSelectionResponse( resourceID, false ) ) );
