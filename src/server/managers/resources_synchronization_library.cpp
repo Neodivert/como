@@ -437,7 +437,6 @@ void ResourcesSynchronizationLibrary::processLockDenial( const ResourceID& resou
 {
     // TODO: Make this trick unnecessary.
     (void)( resourceID );
-    (void)( lockResponse );
     throw std::runtime_error( "ResourcesOwnershipManager::processLockDenial called!" );
 }
 
