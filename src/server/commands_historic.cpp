@@ -87,9 +87,11 @@ std::uint32_t CommandsHistoric::fillSceneUpdatePacketPacket( SceneUpdatePacket& 
     uint32_t i = 0;
     uint32_t nextCommand = firstCommand;
     while( ( i < nCommands ) && ( it != commands_.end() ) ){
-        // Don't send to the user its own commands.
+        // Don't send to the user its own commands (unless they are commands
+        // with target RESOURCE).
         // TODO: Substract these commands from unsyncCommands field.
-        if( (*it)->getUserID() != userID ){
+        if( (*it)->getUserID() != userID ||
+            (*it)->getTarget() == CommandTarget::RESOURCE ){
             packet.addCommand( CommandConstPtr( (*it)->clone() ), firstCommand + i, commands_.size() );
             i++;
         }

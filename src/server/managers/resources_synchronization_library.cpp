@@ -354,7 +354,7 @@ void ResourcesSynchronizationLibrary::lockResource( const ResourceID& resourceID
         resourcesSyncData_.at( resourceID )->setResourceOwner( userID );
         //notifyElementUpdate( resourceID );
 
-        // Add the "public" lock command to the commands historic.
+        // Add the lock command to the commands historic.
         commandsHistoric_->addCommand(
                     CommandConstPtr(
                         new ResourceCommand(
@@ -362,17 +362,14 @@ void ResourcesSynchronizationLibrary::lockResource( const ResourceID& resourceID
                             userID,
                             resourceID ) ) );
 
-        // Add the "private" lock response command to the commands historic.
-        // TODO: Remove this type of "private commands" from "public" historic.
-        commandsHistoric_->addCommand(
-                    CommandConstPtr(
-                        new ResourceSelectionResponse(
-                            resourceID,
-                            true ) ) );
-
         log()->debug( "Yes!\n" );
     }else{
-        users_.at( userID )->addResponseCommand( CommandConstPtr( new ResourceSelectionResponse( resourceID, false ) ) );
+        users_.at( userID )->addResponseCommand(
+                    CommandConstPtr(
+                        new ResourceCommand(
+                            ResourceCommandType::RESOURCE_LOCK_DENIAL,
+                            NO_USER,
+                            resourceID ) ) );
         log()->debug( "No, resource already locked! :'-(\n" );
     }
 }

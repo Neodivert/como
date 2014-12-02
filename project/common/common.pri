@@ -82,7 +82,6 @@ HEADERS += \
     ../../src/common/commands/light_commands/light_ambient_coefficient_change_command.hpp \
     ../../src/common/commands/resource_commands/resource_command.hpp \
     ../../src/common/commands/resources_selection_commands/resources_selection_command.hpp \
-    ../../src/common/commands/resource_commands/resource_selection_response.hpp \
     ../../src/common/commands/resource_commands/resource_commands.hpp \
     ../../src/common/managers/abstract_resources_ownership_manager.hpp \
     ../../src/common/utilities/observable_container/container_observer.hpp \
@@ -171,7 +170,6 @@ SOURCES += \
     ../../src/common/packables/packable_string.cpp \
     ../../src/common/commands/resource_commands/resource_command.cpp \
     ../../src/common/commands/resources_selection_commands/resources_selection_command.cpp \
-    ../../src/common/commands/resource_commands/resource_selection_response.cpp \
     ../../src/common/managers/abstract_resources_ownership_manager.cpp \
     ../../src/common/commands/light_commands/light_creation_response_command.cpp \
     ../../src/common/primitives/primitive_data/primitive_data.cpp \

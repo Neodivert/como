@@ -263,6 +263,7 @@ template <class ResourceType, class ResourcesSelectionType, class LocalResources
 void ResourcesManager<ResourceType, ResourcesSelectionType, LocalResourcesSelectionType>::lockResource( const ResourceID& resourceID, UserID newOwner )
 {
     LOCK
+    ResourceCommandsExecuter::lockResource( resourceID, newOwner );
     this->nonSelectedResources_->moveResource( resourceID, *( this->getResourcesSelection( newOwner ) ) );
 }
 

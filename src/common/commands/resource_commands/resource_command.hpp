@@ -27,7 +27,7 @@ namespace como {
 enum class ResourceCommandType : std::uint8_t
 {
     RESOURCE_LOCK = 0,
-    RESOURCE_SELECTION_RESPONSE
+    RESOURCE_LOCK_DENIAL
 };
 
 // TODO: Make constructors protected and inherit specialized commands.

@@ -251,7 +251,22 @@ void EntitiesManager::update( ContainerAction lastContainerAction, UserID modifi
 
 
 /***
- * 10. Resources locking / unlocking
+ * 9. Ownership requests
+ ***/
+
+void EntitiesManager::requestResourceLock( const ResourceID &resourceID )
+{
+    for( auto& manager : managers_ ){
+        if( manager->containsResource( resourceID ) ){
+            manager->requestResourceLock( resourceID );
+            return;
+        }
+    }
+}
+
+
+/***
+ * 11. Resources locking / unlocking
  ***/
 
 void EntitiesManager::lockResource(const ResourceID &resourceID, UserID newOwner)
@@ -276,6 +291,23 @@ void EntitiesManager::clearResourcesSelection(UserID currentOwner)
 {
     for( auto& manager : managers_ ){
         manager->clearResourcesSelection( currentOwner );
+    }
+}
+
+
+void EntitiesManager::processLockResponse( const ResourceID& resourceID, bool lockResponse )
+{
+    assert( lockResponse == false );
+
+    for( auto& manager : managers_ ){
+        if( manager->containsResource( resourceID ) ){
+            // processLockResponse() is protected in every manager, so we use
+            // this "trick" for executing the command there.
+            manager->executeResourceCommand(
+                        ResourceCommand( ResourceCommandType::RESOURCE_LOCK_DENIAL,
+                                         NO_USER,
+                                         resourceID ) );
+        }
     }
 }
 

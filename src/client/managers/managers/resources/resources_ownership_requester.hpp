@@ -58,11 +58,17 @@ class ResourcesOwnershipRequester : public ResourcesOwnershipManager, public Ser
         virtual void requestSelectionDeletion();
 
 
+        /***
+         * 5. Ownership management
+         ***/
+        virtual void lockResource( const ResourceID &resourceID, UserID newOwner );
+
+
     protected:
         /***
-         * 5. Lock response processing
+         * 6. Lock responses processing
          ***/
-        void processLockResponse( const ResourceID& resourceID, bool lockResponse );
+        virtual void processLockResponse( const ResourceID& resourceID, bool lockResponse );
 
 
     private:

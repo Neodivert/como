@@ -41,10 +41,8 @@ void AbstractResourcesOwnershipManager::executeResourceCommand( const ResourceCo
         case ResourceCommandType::RESOURCE_LOCK:
             lockResource( command.getResourceID(), command.getUserID() );
         break;
-        case ResourceCommandType::RESOURCE_SELECTION_RESPONSE:{
-            const ResourceSelectionResponse& responseCommand =
-                    dynamic_cast< const ResourceSelectionResponse& >( command );
-            processLockResponse( responseCommand.getResourceID(), responseCommand.getResponse() );
+        case ResourceCommandType::RESOURCE_LOCK_DENIAL:{
+            processLockResponse( command.getResourceID(), false );
         }break;
     }
 }

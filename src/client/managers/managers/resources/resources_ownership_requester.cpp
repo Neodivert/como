@@ -74,7 +74,19 @@ void ResourcesOwnershipRequester::requestSelectionDeletion()
 
 
 /***
- * 5. Lock response processing
+ * 5. Ownership management
+ ***/
+
+void ResourcesOwnershipRequester::lockResource( const ResourceID& resourceID, UserID newOwner )
+{
+    if( newOwner == localUserID() ){
+        pendingSelections_.erase( resourceID );
+    }
+}
+
+
+/***
+ * 6. Lock responses processing
  ***/
 
 void ResourcesOwnershipRequester::processLockResponse( const ResourceID &resourceID, bool lockResponse )

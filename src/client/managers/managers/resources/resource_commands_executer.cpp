@@ -41,10 +41,9 @@ void ResourceCommandsExecuter::executeResourceCommand( const ResourceCommand& co
         case ResourceCommandType::RESOURCE_LOCK:
             lockResource( command.getResourceID(), command.getUserID() );
         break;
-        case ResourceCommandType::RESOURCE_SELECTION_RESPONSE:{
-            const ResourceSelectionResponse& responseCommand = dynamic_cast< const ResourceSelectionResponse& >( command );
-            processLockResponse( responseCommand.getResourceID(), responseCommand.getResponse() );
-        }break;
+        case ResourceCommandType::RESOURCE_LOCK_DENIAL:
+            processLockResponse( command.getResourceID(), false );
+        break;
     }
 }
 

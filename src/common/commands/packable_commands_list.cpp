@@ -250,8 +250,8 @@ CommandPtr PackableCommandsList::createEmtpyCommandFromBuffer(const void *buffer
                 case ResourceCommandType::RESOURCE_LOCK:
                     command = CommandPtr( new ResourceCommand( ResourceCommandType::RESOURCE_LOCK ) );
                 break;
-                case ResourceCommandType::RESOURCE_SELECTION_RESPONSE:
-                    command = CommandPtr( new ResourceSelectionResponse );
+                case ResourceCommandType::RESOURCE_LOCK_DENIAL:
+                    command = CommandPtr( new ResourceCommand( ResourceCommandType::RESOURCE_LOCK_DENIAL ) );
                 break;
             }
         break;

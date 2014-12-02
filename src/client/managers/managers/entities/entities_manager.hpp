@@ -91,7 +91,13 @@ class EntitiesManager : public AbstractEntitiesManager, public ContainerObserver
 
 
         /***
-         * 9. Operators
+         * 9. Ownership requests
+         ***/
+        virtual void requestResourceLock(const ResourceID &resourceID);
+
+
+        /***
+         * 10. Operators
          ***/
         EntitiesManager& operator = ( const EntitiesManager& ) = default;
         EntitiesManager& operator = ( EntitiesManager&& ) = default;
@@ -99,11 +105,12 @@ class EntitiesManager : public AbstractEntitiesManager, public ContainerObserver
 
     protected:
         /***
-         * 10. Resources locking / unlocking
+         * 11. Resources locking / unlocking
          ***/
         virtual void lockResource(const ResourceID &resourceID, UserID newOwner);
         virtual void unlockResourcesSelection(UserID currentOwner);
         virtual void clearResourcesSelection(UserID currentOwner);
+        virtual void processLockResponse( const ResourceID &resourceID, bool lockResponse );
 
 
     private:
