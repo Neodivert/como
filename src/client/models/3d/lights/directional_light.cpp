@@ -46,6 +46,9 @@ DirectionalLight::DirectionalLight( const ResourceID& id, const Color& lightColo
     isValidLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
     assert( isValidLocation_ != -1 );
 
+    // Enable this light in shader.
+    glUniform1i( isValidLocation_, true );
+
     // Get the location of the DirectionalLight::lightIndex variable in shader.
     sprintf( uniformName, "directionalLights[%u].lightIndex", directionalLightIndex_ );
     lightIndexLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );

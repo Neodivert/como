@@ -19,7 +19,12 @@ struct Light {
 	vec3 color;
 	float ambientCoefficient;
 };
-uniform Light lights[MAX_LIGHTS];
+uniform Light lights[MAX_LIGHTS] = Light[](
+	Light( false, vec3( 0.0f ), 0.0f ),
+	Light( false, vec3( 0.0f ), 0.0f ),
+	Light( false, vec3( 0.0f ), 0.0f ),
+	Light( false, vec3( 0.0f ), 0.0f )
+);
 
 // Directional light.
 struct DirectionalLight {
@@ -28,7 +33,12 @@ struct DirectionalLight {
 	vec3 lightVector;
 	vec3 halfVector;
 };
-uniform DirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
+uniform DirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS] = DirectionalLight[](
+	DirectionalLight( false, -1, vec3( 0.0f ), vec3( 0.0f ) ),
+	DirectionalLight( false, -1, vec3( 0.0f ), vec3( 0.0f ) ),
+	DirectionalLight( false, -1, vec3( 0.0f ), vec3( 0.0f ) ),
+	DirectionalLight( false, -1, vec3( 0.0f ), vec3( 0.0f ) )
+);
 
 uniform sampler2D textureSampler;
 

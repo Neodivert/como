@@ -41,6 +41,9 @@ Light::Light( const ResourceID& id, LightType type, const Color& color, std::str
     isValidLocation_ = glGetUniformLocation( defaultShaderProgram, uniformName );
     assert( isValidLocation_ != -1 );
 
+    // Enable this light in shader.
+    glUniform1i( isValidLocation_, true );
+
     // Get the location of this light's color in the GLSL shader program.
     sprintf( uniformName, "lights[%u].color", index_ );
     colorLocation_ = glGetUniformLocation( defaultShaderProgram, uniformName );
