@@ -485,6 +485,9 @@ void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, con
     if( includesUV_ ){
         glEnableVertexAttribArray( SHADER_UV_ATTR_LOCATION );
     }
+
+    // Reload shader program "basic".
+    openGL->setShadingMode( ShadingMode::SOLID_PLAIN );
 }
 
 
