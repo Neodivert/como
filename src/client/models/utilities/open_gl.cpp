@@ -90,12 +90,15 @@ OpenGL::~OpenGL()
 
 ShadingMode OpenGL::getShadingMode() const
 {
+    LOCK
     return currentShadingMode_;
 }
 
 
 GLint OpenGL::getShaderInteger( ShaderProgramType shaderProgramType, std::string varName )
 {
+    LOCK
+
     GLint varLocation = -1;
     GLint varValue = 0;
 
@@ -110,6 +113,8 @@ GLint OpenGL::getShaderInteger( ShaderProgramType shaderProgramType, std::string
 
 GLuint OpenGL::getShaderProgramID( ShaderProgramType shaderProgramType ) const
 {
+    LOCK
+
     return shaderProgramsIDs_.at( shaderProgramType );
 }
 
@@ -120,6 +125,8 @@ GLuint OpenGL::getShaderProgramID( ShaderProgramType shaderProgramType ) const
 
 void OpenGL::setShadingMode( ShadingMode shadingMode )
 {
+    LOCK
+
     currentShadingMode_ = shadingMode;
 
     switch( shadingMode ){
@@ -147,6 +154,8 @@ void OpenGL::setShadingMode( ShadingMode shadingMode )
 
 void OpenGL::setMVPMatrix( const glm::mat4& modelMatrix , const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix )
 {
+    LOCK
+
     GLint uniformLocation = -1;
     const glm::mat4& modelViewMatrix = viewMatrix * modelMatrix;
     const glm::mat4& mvpMatrix = projectionMatrix * modelViewMatrix;
@@ -177,6 +186,8 @@ void OpenGL::setMVPMatrix( const glm::mat4& modelMatrix , const glm::mat4& viewM
 
 GLint OpenGL::getShaderVariableLocation( std::string varName, GLint program ) const
 {
+    LOCK
+
     if( program < 0 ){
         program = shaderProgramsIDs_.at( ShaderProgramType::DEFAULT );
     }

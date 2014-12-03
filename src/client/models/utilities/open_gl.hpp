@@ -22,6 +22,7 @@
 #include <map>
 #include <memory>
 #include <client/models/utilities/msl/src/shader_loader.hpp>
+#include <common/utilities/lockable.hpp>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -46,8 +47,7 @@ enum class ShadingMode {
 
 
 // TODO: Use this class as much as possible for OpenGL work.
-// TODO: Use locks (monitor).
-class OpenGL
+class OpenGL : public Lockable
 {
     public:
         /***
