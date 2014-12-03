@@ -59,12 +59,8 @@ DirectionalLight::DirectionalLight( const ResourceID& id, const Color& lightColo
     lightVectorLocation_ = openGL.getShaderVariableLocation( uniformName );
     assert( lightVectorLocation_ != -1 );
 
-    // Get the location of the DirectionalLight::halfVector variable in shader.
-    sprintf( uniformName, "directionalLights[%u].halfVector", directionalLightIndex_ );
-    halfVectorLocation_ = openGL.getShaderVariableLocation( uniformName );
-
-    // TODO: Replace comparison by "!= 1" when halfVectorLocation_ be implemented in shader.
-    assert( halfVectorLocation_ == -1 );
+    // TODO: Use halfVector.
+    halfVectorLocation_ = -1;
 
     // Set the light index in shader.
     glUniform1i( lightIndexLocation_, getLightIndex() );
