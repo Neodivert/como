@@ -43,7 +43,7 @@ DirectionalLight::DirectionalLight( const ResourceID& id, const Color& lightColo
 
     // Get the location of this light's isValid in the GLSL shader program.
     sprintf( uniformName, "directionalLights[%u].isValid", directionalLightIndex_ );
-    isValidLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
+    isValidLocation_ = openGL.getShaderVariableLocation( uniformName );
     assert( isValidLocation_ != -1 );
 
     // Enable this light in shader.
@@ -51,17 +51,17 @@ DirectionalLight::DirectionalLight( const ResourceID& id, const Color& lightColo
 
     // Get the location of the DirectionalLight::lightIndex variable in shader.
     sprintf( uniformName, "directionalLights[%u].lightIndex", directionalLightIndex_ );
-    lightIndexLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
+    lightIndexLocation_ = openGL.getShaderVariableLocation( uniformName );
     assert( lightIndexLocation_ != -1 );
 
     // Get the location of the DirectionalLight::lightVector variable in shader.
     sprintf( uniformName, "directionalLights[%u].lightVector", directionalLightIndex_ );
-    lightVectorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
+    lightVectorLocation_ = openGL.getShaderVariableLocation( uniformName );
     assert( lightVectorLocation_ != -1 );
 
     // Get the location of the DirectionalLight::halfVector variable in shader.
     sprintf( uniformName, "directionalLights[%u].halfVector", directionalLightIndex_ );
-    halfVectorLocation_ = glGetUniformLocation( currentShaderProgram, uniformName );
+    halfVectorLocation_ = openGL.getShaderVariableLocation( uniformName );
 
     // TODO: Replace comparison by "!= 1" when halfVectorLocation_ be implemented in shader.
     assert( halfVectorLocation_ == -1 );

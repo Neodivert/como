@@ -71,7 +71,8 @@ Viewport::Viewport( View view, Projection projection, std::shared_ptr< ComoApp >
             glGetIntegerv( GL_CURRENT_PROGRAM, &currentShaderProgram );
             assert( currentShaderProgram != 0 );
 
-            viewProjectionMatrixLocation = glGetUniformLocation( currentShaderProgram, "mvpMatrix" );
+            viewProjectionMatrixLocation =
+                    comoApp->getScene()->getOpenGL()->getShaderVariableLocation( "mvpMatrix" );
         }
         assert( viewProjectionMatrixLocation != -1 );
 

@@ -33,12 +33,11 @@ Light::Light( const ResourceID& id, LightType type, const Color& color, std::str
     type_( type ),
     index_( lockShaderLight( openGL ) )
 {
-    const GLint defaultShaderProgram = openGL.getShaderProgramID( ShaderProgramType::DEFAULT );
     char uniformName[64];
 
     // Get the location of this light's isValid in the GLSL shader program.
     sprintf( uniformName, "lights[%u].isValid", index_ );
-    isValidLocation_ = glGetUniformLocation( defaultShaderProgram, uniformName );
+    isValidLocation_ = openGL.getShaderVariableLocation( uniformName );
     assert( isValidLocation_ != -1 );
 
     // Enable this light in shader.
@@ -46,13 +45,13 @@ Light::Light( const ResourceID& id, LightType type, const Color& color, std::str
 
     // Get the location of this light's color in the GLSL shader program.
     sprintf( uniformName, "lights[%u].color", index_ );
-    colorLocation_ = glGetUniformLocation( defaultShaderProgram, uniformName );
+    colorLocation_ = openGL.getShaderVariableLocation( uniformName );
     assert( colorLocation_ != -1 );
 
     // Get the location of this light's ambient coefficient in the GLSL shader
     // program.
     sprintf( uniformName, "lights[%u].ambientCoefficient", index_ );
-    ambientCoefficientLocation_ = glGetUniformLocation( defaultShaderProgram, uniformName );
+    ambientCoefficientLocation_ = openGL.getShaderVariableLocation( uniformName );
     assert( ambientCoefficientLocation_ != -1 );
 
     // Update light color in the shader.
