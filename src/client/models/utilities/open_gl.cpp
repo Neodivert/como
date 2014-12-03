@@ -19,6 +19,8 @@
 #include "open_gl.hpp"
 #include <cassert>
 #include <glm/mat3x3.hpp>
+#define GLM_FORCE_RADIANS
+#include <glm/gtc/type_ptr.hpp>             // glm::value_ptr
 
 namespace como {
 
@@ -177,6 +179,18 @@ void OpenGL::setMVPMatrix( const glm::mat4& modelMatrix , const glm::mat4& viewM
     glUniformMatrix3fv( uniformLocation, 1, GL_FALSE, &normalMatrix[0][0] );
 
     checkStatus( "OpenGL::setMVPMatrix()" );
+}
+
+
+void OpenGL::setUniformVec3( GLint location, const glm::vec3& value )
+{
+    glUniform3fv( location, 1, glm::value_ptr( value ) );
+}
+
+
+void OpenGL::setUniformVec4( GLint location, const glm::vec4& value )
+{
+    glUniform4fv( location, 1, glm::value_ptr( value ) );
 }
 
 

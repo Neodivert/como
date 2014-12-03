@@ -77,6 +77,8 @@ class OpenGL : public Lockable
          ***/
         void setShadingMode( ShadingMode shadingMode );
         void setMVPMatrix( const glm::mat4& modelMatrix, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix );
+        void setUniformVec3( GLint location, const glm::vec3& value );
+        void setUniformVec4( GLint location, const glm::vec4& value );
 
 
         /***
