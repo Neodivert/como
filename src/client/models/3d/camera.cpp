@@ -99,14 +99,11 @@ void Camera::setOrientation( const glm::vec3 &eye, const glm::vec3 &center, cons
 
 void Camera::sendToShader( OpenGL &openGL ) const
 {
-    // TODO: Use OpenGL class.
-    (void)( openGL );
-
     glm::vec3 eyeVector = glm::vec3( transformedEye - transformedCenter );
     if( eyeVector.length() != 0.0f ){
         eyeVector = glm::normalize( eyeVector );
     }
-    glUniform3fv( eyeVectorLocation_, 1, glm::value_ptr( eyeVector ) );
+    openGL.setUniformVec3( eyeVectorLocation_, eyeVector );
 }
 
 

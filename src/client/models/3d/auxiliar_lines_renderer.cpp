@@ -154,7 +154,7 @@ void AuxiliarLinesRenderer::drawGuideAxis( Axis axis,
     openGL_->setMVPMatrix( glm::mat4( 1.0f ), viewMatrix, projectionMatrix );
 
     // Set the draw color
-    glUniform4fv( colorShaderLocation_, 1, glm::value_ptr( guideRectsColor_ ) );
+    openGL_->setUniformVec4( colorShaderLocation_, guideRectsColor_ );
 
     // Bind guide axes' VAO and VBO as the active ones.
     glBindVertexArray( guideAxisVAO_ );
@@ -205,7 +205,7 @@ void AuxiliarLinesRenderer::drawTransformGuideLine( const glm::mat4& viewMatrix,
     glBindBuffer( GL_ARRAY_BUFFER, transformGuideLineVBO_ );
 
     // Set selection centroid color.
-    glUniform4fv( colorShaderLocation_, 1, glm::value_ptr( guideRectsColor_ ) );
+    openGL_->setUniformVec4( colorShaderLocation_, guideRectsColor_ );
 
     // Draw selection centroid point.
     // TODO: The range of point sizes are implementation-dependent. Also I have to
