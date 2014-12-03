@@ -182,6 +182,12 @@ void OpenGL::setMVPMatrix( const glm::mat4& modelMatrix , const glm::mat4& viewM
 }
 
 
+void OpenGL::setUniformInteger( GLint location, GLint value )
+{
+    glUniform1i( location, value );
+}
+
+
 void OpenGL::setUniformVec3( GLint location, const glm::vec3& value )
 {
     glUniform3fv( location, 1, glm::value_ptr( value ) );
