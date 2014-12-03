@@ -27,7 +27,6 @@ TextureWallsManager* SystemMesh::textureWallsManager_ = nullptr;
  * 1. Construction
  ***/
 
-// TODO: Create a "Resource" class with a ResourceID and a name (std::string)?
 SystemMesh::SystemMesh(const ResourceID &meshID, const ResourceID& firstMaterialID, const ResourceID &firstTextureWallID, const SystemPrimitiveData &primitiveData, MaterialsManager& materialsManager, bool displayVertexNormals) :
     Mesh( meshID, firstMaterialID, primitiveData, materialsManager, displayVertexNormals )
 {

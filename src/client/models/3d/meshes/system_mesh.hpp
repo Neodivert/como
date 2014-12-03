@@ -26,7 +26,6 @@
 
 namespace como {
 
-// TODO: Rename?
 class SystemMesh : public Mesh
 {
     public:
