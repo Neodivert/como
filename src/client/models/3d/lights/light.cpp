@@ -41,7 +41,7 @@ Light::Light( const ResourceID& id, LightType type, const Color& color, std::str
     assert( isValidLocation_ != -1 );
 
     // Enable this light in shader.
-    glUniform1i( isValidLocation_, true );
+    openGL.setUniformInteger( isValidLocation_, 1 );
 
     // Get the location of this light's color in the GLSL shader program.
     sprintf( uniformName, "lights[%u].color", index_ );
@@ -126,10 +126,9 @@ void Light::setAmbientCoefficient( float coefficient )
 
 void Light::sendToShader( OpenGL &openGL, const glm::mat4& viewMatrix ) const
 {
-    (void)( openGL );
     (void)( viewMatrix );
 
-    glUniform3fv( colorLocation_, 1, glm::value_ptr( lightData_.color ) );
+    openGL.setUniformVec3( colorLocation_, lightData_.color );
     glUniform1f( ambientCoefficientLocation_, lightData_.ambientCoefficient );
 }
 
@@ -154,7 +153,7 @@ GLuint Light::lockShaderLight( OpenGL& openGL )
         assert( varLocation != -1 );
 
         if( !( openGL.getShaderInteger( ShaderProgramType::DEFAULT, uniformName ) ) ){
-            glUniform1i( varLocation, true );
+            openGL.setUniformInteger( varLocation, 1 );
             return currentLightIndex;
         }
     }

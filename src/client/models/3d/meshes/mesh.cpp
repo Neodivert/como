@@ -444,7 +444,8 @@ void Mesh::drawEdges( OpenGLPtr openGL, const glm::mat4& viewMatrix, const glm::
     if( displayEdges_ && ( contourColor != nullptr ) ){
         openGL->setShadingMode( ShadingMode::SOLID_PLAIN );
 
-        glUniform4fv( uniformColorLocation, 1, glm::value_ptr( *contourColor ) );
+        openGL->setUniformVec4( uniformColorLocation,
+                                *contourColor );
         OpenGL::checkStatus( "contourColor sent to shader" );
 
         // Now we'll draw mesh's contour. Set polygon mode for rendering
@@ -478,7 +479,7 @@ void Mesh::drawVertexNormals( OpenGLPtr openGL, const glm::mat4& viewMatrix, con
     assert( currentProgram != 0 );
     colorUniformLocation = glGetUniformLocation( currentProgram, "color" );
     assert( colorUniformLocation != -1 );
-    glUniform4fv( colorUniformLocation, 1, &( color[0] ) );
+    openGL->setUniformVec4( colorUniformLocation, color );
 
     glDrawArrays( GL_POINTS, 0, vertexData_.vertices.size() * componensPerVertex_ );
 

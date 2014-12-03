@@ -47,7 +47,7 @@ DirectionalLight::DirectionalLight( const ResourceID& id, const Color& lightColo
     assert( isValidLocation_ != -1 );
 
     // Enable this light in shader.
-    glUniform1i( isValidLocation_, true );
+    openGL.setUniformInteger( isValidLocation_, 1 );
 
     // Get the location of the DirectionalLight::lightIndex variable in shader.
     sprintf( uniformName, "directionalLights[%u].lightIndex", directionalLightIndex_ );
@@ -63,7 +63,7 @@ DirectionalLight::DirectionalLight( const ResourceID& id, const Color& lightColo
     halfVectorLocation_ = -1;
 
     // Set the light index in shader.
-    glUniform1i( lightIndexLocation_, getLightIndex() );
+    openGL.setUniformInteger( lightIndexLocation_, getLightIndex() );
 
     // Initialize light vector in shader.
     update();
@@ -77,7 +77,7 @@ DirectionalLight::DirectionalLight( const ResourceID& id, const Color& lightColo
 DirectionalLight::~DirectionalLight()
 {
     // Disable this light in shader.
-    glUniform1i( isValidLocation_, false );
+    glUniform1i( isValidLocation_, 0 );
 }
 
 
@@ -146,7 +146,8 @@ void DirectionalLight::sendToShader( OpenGL &openGL, const glm::mat4& viewMatrix
 {
     Light::sendToShader( openGL, viewMatrix );
 
-    glUniform3fv( lightVectorLocation_, 1, glm::value_ptr( glm::mat3( viewMatrix ) * lightVector_ ) );
+    openGL.setUniformVec3( lightVectorLocation_,
+                           glm::mat3( viewMatrix ) * lightVector_ );
 }
 
 
@@ -215,7 +216,7 @@ GLuint DirectionalLight::lockShaderDirectionalLight( OpenGL& openGL )
         assert( varLocation != -1 );
 
         if( !( openGL.getShaderInteger( ShaderProgramType::DEFAULT, uniformName ) ) ){
-            glUniform1i( varLocation, true );
+            openGL.setUniformInteger( varLocation, 1 );
             return currentLightIndex;
         }
     }
