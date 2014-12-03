@@ -49,14 +49,6 @@ enum class ShadingMode {
 // TODO: Use locks (monitor).
 class OpenGL
 {
-    private:
-        // Index of the current shader program.
-        GLuint currentProgramID_;
-
-        std::map< ShaderProgramType, GLuint > shaderProgramsIDs_;
-
-        ShadingMode currentShadingMode_;
-
     public:
         /***
          * 1. Construction
@@ -87,42 +79,56 @@ class OpenGL
         void setMVPMatrix( const glm::mat4& modelMatrix, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix );
 
 
-    private:
-        void setProgram( ShaderProgramType program );
-
         /***
-         * 5. Lighting
-         ***/
-        void enableLighting() const;
-        void disableLighting() const;
-
-
-        /***
-         * 6. Texturing
-         ***/
-        void enableTexturing() const;
-        void disableTexturing() const;
-    public:
-
-
-        /***
-         * 7. Utilities
+         * 5. Utilities
          ***/
         GLint getShaderVariableLocation( std::string varName, GLint program = -1 ) const;
 
 
         /***
-         * 8. Checking
+         * 6. Checking
          ***/
         static void checkStatus( std::string location );
         static std::string getOpenGLErrorString( GLenum errorCode );
 
 
         /***
-         * 9. Operators
+         * 7. Operators
          ***/
         OpenGL& operator = ( const OpenGL& ) = delete;
         OpenGL& operator = ( OpenGL&& ) = delete;
+
+
+    private:
+        /***
+         * 8. Setters (private)
+         ***/
+        void setProgram( ShaderProgramType program );
+
+
+        /***
+         * 9. Lighting
+         ***/
+        void enableLighting() const;
+        void disableLighting() const;
+
+
+        /***
+         * 10. Texturing
+         ***/
+        void enableTexturing() const;
+        void disableTexturing() const;
+
+
+        /***
+         * Attributes
+         ***/
+        // Index of the current shader program.
+        GLuint currentProgramID_;
+
+        std::map< ShaderProgramType, GLuint > shaderProgramsIDs_;
+
+        ShadingMode currentShadingMode_;
 };
 
 typedef std::shared_ptr< OpenGL > OpenGLPtr;

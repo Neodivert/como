@@ -25,6 +25,11 @@ namespace como {
 GLint defaultShaderProgram_;
 GLint normalsShaderProgram_;
 
+
+/***
+ * 1. Construction
+ ***/
+
 OpenGL::OpenGL() :
     currentProgramID_( 0 )
 {
@@ -166,53 +171,8 @@ void OpenGL::setMVPMatrix( const glm::mat4& modelMatrix , const glm::mat4& viewM
 }
 
 
-void OpenGL::setProgram( ShaderProgramType program )
-{
-    if( currentProgramID_ != shaderProgramsIDs_.at( program) ){
-        currentProgramID_ = shaderProgramsIDs_.at( program );
-        glUseProgram( currentProgramID_ );
-    }
-}
-
-
 /***
- * 5. Lighting
- ***/
-
-void OpenGL::enableLighting() const
-{
-    GLint uniformLocation = getShaderVariableLocation( "lightingEnabled" );
-    glUniform1i( uniformLocation, 1 );
-}
-
-
-void OpenGL::disableLighting() const
-{
-    GLint uniformLocation = getShaderVariableLocation( "lightingEnabled" );
-    glUniform1i( uniformLocation, 0 );
-}
-
-
-/***
- * 6. Texturing
- ***/
-
-void OpenGL::enableTexturing() const
-{
-    GLint uniformLocation = getShaderVariableLocation( "texturingEnabled" );
-    glUniform1i( uniformLocation, 1 );
-}
-
-
-void OpenGL::disableTexturing() const
-{
-    GLint uniformLocation = getShaderVariableLocation( "texturingEnabled" );
-    glUniform1i( uniformLocation, 0 );
-}
-
-
-/***
- * 7. Utilities
+ * 5. Utilities
  ***/
 
 GLint OpenGL::getShaderVariableLocation( std::string varName, GLint program ) const
@@ -238,7 +198,7 @@ GLint OpenGL::getShaderVariableLocation( std::string varName, GLint program ) co
 
 
 /***
- * 8. Checking
+ * 6. Checking
  ***/
 
 void OpenGL::checkStatus( std::string location )
@@ -288,5 +248,55 @@ std::string OpenGL::getOpenGLErrorString( GLenum errorCode )
         break;
     }
 }
+
+
+/***
+ * 8. Setters (private)
+ ***/
+
+void OpenGL::setProgram( ShaderProgramType program )
+{
+    if( currentProgramID_ != shaderProgramsIDs_.at( program) ){
+        currentProgramID_ = shaderProgramsIDs_.at( program );
+        glUseProgram( currentProgramID_ );
+    }
+}
+
+
+/***
+ * 9. Lighting
+ ***/
+
+void OpenGL::enableLighting() const
+{
+    GLint uniformLocation = getShaderVariableLocation( "lightingEnabled" );
+    glUniform1i( uniformLocation, 1 );
+}
+
+
+void OpenGL::disableLighting() const
+{
+    GLint uniformLocation = getShaderVariableLocation( "lightingEnabled" );
+    glUniform1i( uniformLocation, 0 );
+}
+
+
+/***
+ * 10. Texturing
+ ***/
+
+void OpenGL::enableTexturing() const
+{
+    GLint uniformLocation = getShaderVariableLocation( "texturingEnabled" );
+    glUniform1i( uniformLocation, 1 );
+}
+
+
+void OpenGL::disableTexturing() const
+{
+    GLint uniformLocation = getShaderVariableLocation( "texturingEnabled" );
+    glUniform1i( uniformLocation, 0 );
+}
+
 
 } // namespace como
