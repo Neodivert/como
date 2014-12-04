@@ -40,7 +40,7 @@ COMO also depends on the program "gnome-terminal" for creating a server from the
 
 3. Install the rest of dependencies (make sure that the versions are equal or greater than those indicated in "Dependencies".
    ```
-   sudo apt-get install gnome-terminal libglm-dev libboost1.55-dev libboost-system1.55.0 libboost-filesystem1.55.0 libboost-thread1.55.0 libboost-system1.55-dev libboost-thread1.55-dev libboost-filesystem1.55-dev gnome-terminal
+   sudo apt-get install gnome-terminal libglm-dev libboost1.55-dev libboost-system1.55.0 libboost-filesystem1.55.0 libboost-thread1.55.0 libboost-system1.55-dev libboost-thread1.55-dev libboost-filesystem1.55-dev gnome-terminal libsdl2-image-dev
    ```
 
 ### Building
@@ -69,4 +69,4 @@ COMO also depends on the program "gnome-terminal" for creating a server from the
 
 6. Optionally add "-j (n)" to "make additional arguments" in both project's properties. (n) is the desired number of concurrent threads that will be used for building.
 
-7. Build both projects and enjoy!
+7. Build both projects in "release" mode and enjoy!
