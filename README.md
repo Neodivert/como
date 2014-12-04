@@ -2,9 +2,12 @@ COMO: Cooperative Modeller
 ====
 
 ## About
-COMO is a project which aims to create a Cooperative Modeller, where users could share and work on a 3D scene at the same time. Two examples where this can be useful are presented:
-* An online modelling course. Teacher can chat with his/her students and teach them how to create the model while doing it. When finished, students can try to make their own models while the teacher supervises the process.
-* A team working on a map for a videogame. Main designer can sketch the world while the others see it. When finished, the main designer assignes each part of the map to a junior designer, so all can work in parallel while seeing how the whole map envolves.
+
+COMO (Cooperative Modeller) is an 3D modelling software that allows multiple users to work on the same scene through the network (in real time). 
+
+Among other things, users can create geometric primitives (cubes, cones, cylinders and spheres), import meshes from file (.obj), transform selections of objects (translations, rotations and scales), create multiple directional lights, edit materials or apply textures to certain meshes.
+
+Currently COMO is only available for Ubuntu, but it has been built using cross-platform technologies and tools such as OpenGL, Qt or Boost, so porting the project to other platforms would be easier in the future.
 
 [Check COMO's wiki](https://github.com/moisesjbc/como/wiki) for learning what you can do with COMO and how to do it.
 
