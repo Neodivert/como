@@ -21,7 +21,7 @@
 
 #include <common/packables/packable_wrapper.hpp>
 #include <cstdint>
-#include <cassert> // TODO: Remove
+#include <cassert>
 
 namespace como {
 
