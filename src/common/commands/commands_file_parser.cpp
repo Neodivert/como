@@ -39,7 +39,7 @@ CommandPtr CommandsFileParser::readNextCommand( std::ifstream& file )
 {
     PackablePacketSize commandSize;
     CommandPtr command = nullptr;
-    char commandSizeBuffer[8] = {0}; // TODO: use [PackablePacketSize::packetSize()]
+    char commandSizeBuffer[8] = {0};
     std::vector<char> commandBuffer;
 
     if( file.eof() ){

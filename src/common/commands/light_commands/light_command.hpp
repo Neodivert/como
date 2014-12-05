@@ -26,7 +26,7 @@ namespace como {
 
 enum class LightCommandType : std::uint8_t
 {
-    LIGHT_CREATION = 0, // TODO: Rename as DIRECTIONAL_LIGHT_CREATION
+    LIGHT_CREATION = 0,
     LIGHT_CREATION_RESPONSE,
     LIGHT_COLOR_CHANGE,
     LIGHT_AMBIENT_COEFFICIENT_CHANGE
