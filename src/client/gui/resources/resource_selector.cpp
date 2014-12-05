@@ -30,8 +30,9 @@ ResourceSelector::ResourceSelector()
     // TODO: Duplicated code.
 
     // Select the first element as the current one.
-    // TODO: And if there is no resources?
-    setCurrentIndex( 0 );
+    if( count() > 0 ){
+        setCurrentIndex( 0 );
+    }
 
     // Whenever the current index changes, emit a signal with the associated
     // ResourceID.
@@ -51,8 +52,9 @@ ResourceSelector::ResourceSelector( const ResourcesList resourcesList )
     }
 
     // Select the first element as the current one.
-    // TODO: And if there is no resources?
-    setCurrentIndex( 0 );
+    if( count() > 0 ){
+        setCurrentIndex( 0 );
+    }
 
     // Whenever the current index changes, emit a signal with the associated
     // ResourceID.
