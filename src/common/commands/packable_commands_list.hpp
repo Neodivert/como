@@ -128,7 +128,6 @@ class PackableCommandsList : public Packable
         /***
          * 6. Auxiliar methods
          ***/
-        // TODO: Move to another class?
         static CommandPtr createEmtpyCommandFromBuffer( const void* buffer, const std::string& unpackingDirPath );
 
 

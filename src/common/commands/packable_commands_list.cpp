@@ -73,8 +73,6 @@ const void* PackableCommandsList::unpack( const void* buffer )
 
     // Preread each command's type and cast the command to the appropiate
     // derived type. Then unpack.
-    // TODO: Use a better approach?
-    // (http://stackoverflow.com/questions/1732643/choosing-the-right-subclass-to-instantiate-programatically).
     for( i = 0; i < nCommands.getValue(); i++ ){
         CommandPtr command = createEmtpyCommandFromBuffer( buffer, unpackingDirPath_ );
         buffer = command->unpack( buffer );
