@@ -108,7 +108,7 @@ class Packet : public CompositePackable
          * 8. Asynchronous communication (private)
          ***/
         void asyncSendBody( const boost::system::error_code& headerErrorCode, std::size_t, Socket& socket, PacketHandler packetHandler );
-        void onPacketSend( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler ); // TODO: Typo in "onPacketSenD".
+        void onPacketSend( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler );
         void asyncRecvBody( const boost::system::error_code& headerErrorCode, std::size_t, Socket& socket, PacketHandler packetHandler );
         void onPacketRecv( const boost::system::error_code& errorCode, std::size_t, PacketHandler packetHandler );
 

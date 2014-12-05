@@ -46,7 +46,6 @@ PrimitiveInfo OBJPrimitivesImporter::importPrimitive( std::string srcFilePath, s
               boost::filesystem::path( primitiveInfo.name ) ).string() +
             ".prim";
 
-    // TODO: Remove this?
     primitiveData.exportToFile( primitiveInfo.filePath );
 
     return primitiveInfo;
@@ -109,7 +108,7 @@ void OBJPrimitivesImporter::processMeshFileLine( std::string filePath, std::stri
         // Extract the UV coordinates from the line and add it to the Mesh.
         sscanf( lineBody.c_str(), "%f %f", &textureCoordinates[0], &textureCoordinates[1] );
 
-        // Invert Y component. (TODO: Move this computation to another place?)
+        // Invert Y component.
         textureCoordinates.y = 1.0f - textureCoordinates.y;
 
         primitiveData.uvData.uvVertices.push_back( textureCoordinates );
