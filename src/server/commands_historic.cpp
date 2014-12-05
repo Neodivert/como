@@ -89,7 +89,6 @@ std::uint32_t CommandsHistoric::fillSceneUpdatePacketPacket( SceneUpdatePacket& 
     while( ( i < nCommands ) && ( it != commands_.end() ) ){
         // Don't send to the user its own commands (unless they are commands
         // with target RESOURCE).
-        // TODO: Substract these commands from unsyncCommands field.
         if( (*it)->getUserID() != userID ||
             (*it)->getTarget() == CommandTarget::RESOURCE ){
             packet.addCommand( CommandConstPtr( (*it)->clone() ), firstCommand + i, commands_.size() );
