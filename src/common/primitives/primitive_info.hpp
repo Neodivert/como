@@ -50,20 +50,14 @@ class PrimitiveInfo
 
 
         /***
-         * 3. Getters
-         ***/
-        bool includesTexture() const;
-
-
-        /***
-         * 4. Primitive file management
+         * 3. Primitive file management
          ***/
         PrimitiveInfo copy( std::string dstFilePath );
         void move( std::string dstFilePath );
 
 
         /***
-         * 5. Operators
+         * 4. Operators
          ***/
         PrimitiveInfo& operator = ( const PrimitiveInfo& ) = default;
         PrimitiveInfo& operator = ( PrimitiveInfo&& ) = default;

@@ -21,18 +21,7 @@
 namespace como {
 
 /***
- * 3. Getters
- ***/
-
-bool PrimitiveInfo::includesTexture() const
-{
-    // TODO: Return real value.
-    return false;
-}
-
-
-/***
- * 4. Primitive file management
+ * 3. Primitive file management
  ***/
 
 PrimitiveInfo PrimitiveInfo::copy( std::string dstFilePath )
