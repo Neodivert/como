@@ -19,44 +19,19 @@
 #ifndef COMMANDS_HPP
 #define COMMANDS_HPP
 
-// User commands
 #include "user_commands/user_connection_command.hpp"
 #include "user_commands/user_disconnection_command.hpp"
-
-// Selection commands
 #include "selection_commands/selection_transformation_command.hpp"
-
-// Primitive commands
 #include "primitive_commands/primitive_commands.hpp"
-
-// Primitive category commands
 #include "primitive_category_commands/primitive_category_commands.hpp"
-
-// Material commands
-#include "material_commands/material_commands.hpp" // TODO: Make this with the rest of commands.
-
-// Light commands
+#include "material_commands/material_commands.hpp"
 #include "light_commands/light_commands.hpp"
-
-// Resource commands
 #include "resource_commands/resource_commands.hpp"
-
-// Resources selection commands
 #include "resources_selection_commands/resources_selection_command.hpp"
-
-// System primitives commands
 #include "system_primitive_commands/system_primitive_commands.hpp"
-
-// Texture commands
 #include "texture_commands/texture_commands.hpp"
-
-// Texture wall commands
 #include "texture_wall_commands/texture_wall_commands.hpp"
-
-// Camera commands
 #include "camera_commands/camera_commands.hpp"
-
-// Entity commands
 #include "entity_commands/entity_commands.hpp"
 
 #endif // COMMANDS_HPP
