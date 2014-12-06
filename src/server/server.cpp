@@ -392,14 +392,7 @@ void Server::deleteUser( UserID id )
     if( users_.size() == (MAX_SESSIONS - 1) ){
         // If the server was full before this user got out, that means the acceptor wasn't
         // listening for new connections. Start listening now that there is room again.
-
-        //acceptor_.open( endPoint_.protocol() );
-        //acceptor_.listen( 0 );
         openAcceptor();
-
-        // Start listening.
-        // FIXME: Sometimes I get an exception "bind address already in use" when is
-        // the server who closes the connections.
         listen();
     }
 }
