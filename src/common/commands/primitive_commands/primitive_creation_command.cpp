@@ -56,11 +56,4 @@ PrimitiveInfo PrimitiveCreationCommand::getPrimitiveInfo() const
 }
 
 
-bool PrimitiveCreationCommand::includesTexture() const
-{
-    // TODO: Change this.
-    return false;
-}
-
-
 } // namespace como

@@ -35,6 +35,37 @@ namespace como {
  */
 class PrimitiveCreationCommand : public PrimitiveCommand
 {
+    public:
+        /***
+         * 1. Construction
+         ***/
+        PrimitiveCreationCommand() = delete;
+        PrimitiveCreationCommand( const std::string& unpackingDirPath );
+        PrimitiveCreationCommand( UserID userID, ResourceID primitiveID, PrimitiveInfo primitive, const std::string& unpackingDirPath );
+        PrimitiveCreationCommand( const PrimitiveCreationCommand& );
+        PrimitiveCreationCommand( PrimitiveCreationCommand&& ) = delete;
+        COMMAND_CLONE_METHOD( PrimitiveCreationCommand )
+
+
+        /***
+         * 2. Destruction
+         ***/
+        virtual ~PrimitiveCreationCommand() = default;
+
+
+        /***
+         * 3. Getters
+         ***/
+        PrimitiveInfo getPrimitiveInfo() const;
+
+
+        /***
+         * 4. Operators
+         ***/
+        PrimitiveCreationCommand& operator = ( const PrimitiveCreationCommand& ) = delete;
+        PrimitiveCreationCommand& operator = ( PrimitiveCreationCommand&& ) = delete;
+
+
     private:
         /*! Primitive category ID. */
         PackableResourceID category_;
@@ -44,64 +75,6 @@ class PrimitiveCreationCommand : public PrimitiveCommand
 
         /*! Primitive specification files. */
         PackableFile primitiveFile_;
-
-
-    public:
-        /***
-         * 1. Construction
-         ***/
-
-        /*! \brief Default constructor. */
-        PrimitiveCreationCommand() = delete;
-
-
-        PrimitiveCreationCommand( const std::string& unpackingDirPath );
-
-        PrimitiveCreationCommand( UserID userID, ResourceID primitiveID, PrimitiveInfo primitive, const std::string& unpackingDirPath );
-
-        /*! \brief Copy assignment operator */
-        PrimitiveCreationCommand( const PrimitiveCreationCommand& );
-
-        /*! \brief Move assignment operator */
-        PrimitiveCreationCommand( PrimitiveCreationCommand&& ) = delete;
-
-        COMMAND_CLONE_METHOD( PrimitiveCreationCommand )
-
-
-        /***
-         * 2. Destruction
-         ***/
-
-        /*! \brief Destructor. */
-        virtual ~PrimitiveCreationCommand() = default;
-
-
-        /***
-         * 3. Getters
-         ***/
-
-        PrimitiveInfo getPrimitiveInfo() const;
-    private:
-        bool includesTexture() const;
-    public:
-
-
-        /***
-         * 4. Operators
-         ***/
-
-        /*! \brief Copy assignment operator */
-        PrimitiveCreationCommand& operator=( const PrimitiveCreationCommand& ) = delete;
-
-        /*! \brief Move assignment operator */
-        PrimitiveCreationCommand& operator=( PrimitiveCreationCommand&& ) = delete;
-
-
-        /***
-         * 5. Auxiliar methods
-         ***/
-    private:
-        std::string getCurrentDateTimeStr() const;
 };
 
 } // namespace como
