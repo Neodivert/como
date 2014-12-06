@@ -33,7 +33,7 @@ LightsManager::LightsManager( ServerInterfacePtr server, LogPtr log, OpenGL* ope
 
 
 /***
- * 4. Lights management
+ * 3. Lights management (local)
  ***/
 
 void LightsManager::requestDirectionalLightCreation()
@@ -50,22 +50,8 @@ void LightsManager::requestDirectionalLightCreation()
 }
 
 
-void LightsManager::addDirectionalLight( const ResourceID& lightID, const Color& lightColor )
-{
-    LOCK
-    std::unique_ptr< DirectionalLight >
-            light( new DirectionalLight( lightID, lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), *openGL_ ) );
-
-    getResourcesSelection( NO_USER )->addResource( lightID, std::move( light ) );
-
-    //log()->debug( "\n\nDirectional light created: ", lightID, "\n\n" );
-
-    notifyObservers();
-}
-
-
 /***
- * 5. Remote command execution
+ * 4. Remote command execution
  ***/
 
 void LightsManager::executeRemoteCommand( const LightCommand& command )
@@ -127,7 +113,7 @@ void LightsManager::executeRemoteCommand( const LightCommand& command )
 
 
 /***
- * 6. Shader communication
+ * 5. Shader communication
  ***/
 
 void LightsManager::sendLightsToShader( OpenGL &openGL, const glm::mat4& viewMatrix ) const
@@ -141,12 +127,29 @@ void LightsManager::sendLightsToShader( OpenGL &openGL, const glm::mat4& viewMat
 
 
 /***
- * 8. Updating
+ * 6. Updating (pattern Observer)
  ***/
 
 void LightsManager::update()
 {
     LOCK
+    notifyObservers();
+}
+
+
+/***
+ * 8. Lights management (remote)
+ ***/
+
+void LightsManager::addDirectionalLight( const ResourceID& lightID, const Color& lightColor )
+{
+    LOCK
+
+    std::unique_ptr< DirectionalLight >
+            light( new DirectionalLight( lightID, lightColor, glm::vec3( 0.0f, -1.0f, 0.0f ), *openGL_ ) );
+
+    getResourcesSelection( NO_USER )->addResource( lightID, std::move( light ) );
+
     notifyObservers();
 }
 

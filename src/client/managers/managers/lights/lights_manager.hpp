@@ -49,25 +49,27 @@ class LightsManager : public SpecializedEntitiesManager< Light, LightsSelection,
 
 
         /***
-         * 4. Lights management
+         * 3. Lights management (local)
          ***/
         void requestDirectionalLightCreation();
 
-    private:
-        void addDirectionalLight( const ResourceID& lightID, const Color& lightColor );
-
 
         /***
-         * 5. Remote command execution
+         * 4. Remote command execution
          ***/
-    public:
         void executeRemoteCommand( const LightCommand& command );
 
 
         /***
-         * 6. Shader communication
+         * 5. Shader communication
          ***/
         void sendLightsToShader( OpenGL& openGL, const glm::mat4& viewMatrix ) const;
+
+
+        /***
+         * 6. Updating (pattern Observer)
+         ***/
+        virtual void update();
 
 
         /***
@@ -77,13 +79,16 @@ class LightsManager : public SpecializedEntitiesManager< Light, LightsSelection,
         LightsManager& operator = ( LightsManager&& ) = delete;
 
 
-        /***
-         * 8. Updating
-         ***/
     private:
-        virtual void update();
+        /***
+         * 8. Lights management (remote)
+         ***/
+        void addDirectionalLight( const ResourceID& lightID, const Color& lightColor );
 
 
+        /***
+         * 9. Attributes
+         ***/
         OpenGL* openGL_;
 };
 
