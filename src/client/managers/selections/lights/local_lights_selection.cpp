@@ -55,7 +55,6 @@ void LocalLightsSelection::setLightColor( const Color &color )
     LOCK
     LightsSelection::setLightColor( color );
 
-    // TODO: Create and send a LightsSelectionColorChangeCommand?
     for( const auto& light : this->resources_ ){
         sendCommandToServer( CommandConstPtr(
                                  new LightColorChangeCommand( localUserID(),
@@ -70,7 +69,6 @@ void LocalLightsSelection::setAmbientCoefficient( float coefficient )
     LOCK
     LightsSelection::setAmbientCoefficient( coefficient );
 
-    // TODO: Create and send a LightsSelectionAmbientCoefficientChangeCommand?
     for( const auto& light : this->resources_ ){
         sendCommandToServer( CommandConstPtr(
                                  new LightAmbientCoefficientChangeCommand(

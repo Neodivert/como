@@ -56,7 +56,6 @@ class Camera : public ImportedMesh
                 const glm::vec3& cameraEye = glm::vec3( 0.0f, 0.0f, 1.0f ),
                 const glm::vec3& cameraUp = glm::vec3( 0.0f, 1.0f, 0.0f ) );
 
-        // TODO: Is this problematic with Entity's virtual destructor?
         virtual ~Camera() = default;
 
         /***

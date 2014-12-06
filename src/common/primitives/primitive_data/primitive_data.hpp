@@ -32,7 +32,7 @@
 namespace como {
 
 typedef GLuint VertexIndice;
-typedef std::array< VertexIndice, 3 > CompoundVertex; // A vertex formed by a position vertex, a normal and an UV vertex (TODO: These are TRIANGLE INDICES, do I change the name?).
+typedef std::array< VertexIndice, 3 > CompoundVertex; // A vertex formed by a position vertex, a normal and an UV vertex
 typedef std::map< CompoundVertex, VertexIndice > CompoundVerticesMap;
 
 

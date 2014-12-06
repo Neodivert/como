@@ -103,7 +103,6 @@ MaterialHandlerPtr MaterialsManager::selectMaterial( const ResourceID& id )
     // TODO: Ask for permission to server once we can share materials among
     // meshes.
 
-    // TODO: Remove this when interaction with server is completed.
     if( materialHandler_ ){
         materialHandler_->removeObserver( this );
     }

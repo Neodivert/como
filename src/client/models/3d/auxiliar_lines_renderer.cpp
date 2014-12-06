@@ -70,7 +70,7 @@ void AuxiliarLinesRenderer::setTransformGuideLine( const glm::vec3& origin, cons
     unsigned int i = 0;
 
     glBindVertexArray( transformGuideLineVAO_ );
-    glBindBuffer( GL_ARRAY_BUFFER, transformGuideLineVBO_ ); // TODO: Is this needed?
+    glBindBuffer( GL_ARRAY_BUFFER, transformGuideLineVBO_ );
     guideRectsBuffer = (GLfloat *)glMapBuffer( GL_ARRAY_BUFFER,
                                                GL_WRITE_ONLY );
     for( ; i<3; i++ ){
@@ -92,7 +92,7 @@ void AuxiliarLinesRenderer::setGuideAxis( Axis axis, const glm::vec3 &center )
     GLfloat* vboData = nullptr;
 
     glBindVertexArray( guideAxisVAO_ );
-    glBindBuffer( GL_ARRAY_BUFFER, guideAxisVBO_ ); // TODO: Is this needed?
+    glBindBuffer( GL_ARRAY_BUFFER, guideAxisVBO_ );
     vboData = (GLfloat *)glMapBuffer( GL_ARRAY_BUFFER,
                                       GL_WRITE_ONLY );
 
@@ -158,7 +158,7 @@ void AuxiliarLinesRenderer::drawGuideAxis( Axis axis,
 
     // Bind guide axes' VAO and VBO as the active ones.
     glBindVertexArray( guideAxisVAO_ );
-    glBindBuffer( GL_ARRAY_BUFFER, guideAxisVBO_ ); // TODO: Is this needed?
+    glBindBuffer( GL_ARRAY_BUFFER, guideAxisVBO_ );
 
     // Draw the guide axis.
     glDrawArrays( GL_LINES, 0, 2 );
@@ -182,7 +182,7 @@ void AuxiliarLinesRenderer::drawWorldAxes( const glm::mat4& viewMatrix ) const
 
     // Bind world axis rects' VAO and VBO as the active ones.
     glBindVertexArray( worldAxesVAO_ );
-    glBindBuffer( GL_ARRAY_BUFFER, worldAxesVBO_ ); // TODO: Is this needed?
+    glBindBuffer( GL_ARRAY_BUFFER, worldAxesVBO_ );
 
     // Draw each world axis with its corresponding color.
     for( unsigned int i=0; i<3; i++ ){

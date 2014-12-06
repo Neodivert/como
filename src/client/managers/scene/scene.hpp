@@ -120,7 +120,7 @@ class Scene : public QOffscreenSurface, public BasicScene, public Observer, publ
         /***
          * 10. Initialization
          ***/
-        void initOpenGL(); // TODO: Make this private.
+        void initOpenGL();
         void initManagers( const UserAcceptancePacket& userAcceptancePacket );
 
 

@@ -36,8 +36,6 @@ Scene::Scene( const char* host, const char* port, const char* userName, LogPtr l
 
         // Signal / slot: when a command is received from server, execute it on
         // the local scene.
-        // TODO: this randomly causes a command to be executed when Scene isn't
-        // initialized yet.
         qRegisterMetaType< std::shared_ptr< const Command > >( "std::shared_ptr< const Command >" );
         QObject::connect( server_.get(), &ServerInterface::commandReceived, this, &Scene::executeRemoteCommand );
         log_->debug( "Remote command execution signal connected\n" );

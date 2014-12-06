@@ -51,8 +51,6 @@ void MeshNormalData::initFromMeshVertexData( const MeshVertexData& meshVertexDat
 
     // Compute each face normal.
     for( const IndicesTriangle& triangle : meshVertexData.vertexTriangles ){
-        // TODO: Add a a weighting for each face normal based on the triangle
-        // area?
         faceNormal = glm::cross(
                     meshVertexData.vertices[ triangle[1] ] - meshVertexData.vertices[ triangle[0] ],
                     meshVertexData.vertices[ triangle[2] ] - meshVertexData.vertices[ triangle[0] ] );

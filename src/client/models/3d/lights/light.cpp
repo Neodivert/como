@@ -160,7 +160,6 @@ GLuint Light::lockShaderLight( OpenGL& openGL )
 
     OpenGL::checkStatus( "Light::lockShaderLight()" );
 
-    // TODO: Or return -1 (change return type to GLint)?
     throw std::runtime_error( "Light::lockShaderLight() - No free light struct in shader" );
 }
 

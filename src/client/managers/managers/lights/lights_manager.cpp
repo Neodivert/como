@@ -81,7 +81,6 @@ void LightsManager::addDirectionalLight( const ResourceID& lightID, const Color&
  * 5. Remote command execution
  ***/
 
-// TODO: Change this and use a LightCommandConstPtr
 void LightsManager::executeRemoteCommand( const LightCommand& command )
 {
     LOCK

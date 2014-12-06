@@ -28,7 +28,6 @@
 
 namespace como {
 
-// TODO: Inherit this class and Material from a common MaterialInterface.
 class MaterialHandler : public ServerWriter, public Observable, public AbstractMaterial
 {
     private:

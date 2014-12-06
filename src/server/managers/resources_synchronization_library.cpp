@@ -56,7 +56,7 @@ ResourcesSynchronizationLibrary::ResourcesSynchronizationLibrary( CommandsHistor
 
 void ResourcesSynchronizationLibrary::processCommand( const Command &command )
 {
-    LOCK // TODO: Move to the fragments of this method where it is necessary?
+    LOCK
     log()->debug( "Processing command (target: ",
                   commandTargetStrings[(int)( command.getTarget())],
                   ")\n" );
