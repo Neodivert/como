@@ -61,11 +61,6 @@ MainWindow::MainWindow( QWidget* parent, std::shared_ptr< ComoApp > comoApp ) :
     // Create the user's list.
     usersList = new UsersList( nullptr, log_, comoApp->getScene()->getUsersManager() );
 
-    // FIXME: Study why this is necessary.
-    qRegisterMetaType< UserConnectionCommandConstPtr >();
-    qRegisterMetaType< UserConnectionCommandConstPtr >( "UserConnectionCommandConstPtr" );
-    qRegisterMetaType< UserID >( "UserID" );
-
     // Set the window title.
     setWindowTitle( ( comoApp->getScene()->getName() + " - Cooperative Modeller" ).c_str() );
 
