@@ -33,19 +33,6 @@ LightsManager::LightsManager( ServerInterfacePtr server, LogPtr log, OpenGL* ope
 
 
 /***
- * 3. Getters
- ***/
-
-// TODO: Remove this method and use a ResourcesManager::getResourceName one.
-std::string LightsManager::getResourceName( const ResourceID& lightID ) const
-{
-    LOCK
-    (void)( lightID );
-    return "Light";
-}
-
-
-/***
  * 4. Lights management
  ***/
 

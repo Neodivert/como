@@ -49,12 +49,6 @@ class LightsManager : public SpecializedEntitiesManager< Light, LightsSelection,
 
 
         /***
-         * 3. Getters
-         ***/
-        std::string getResourceName( const ResourceID& lightID ) const;
-
-
-        /***
          * 4. Lights management
          ***/
         void requestDirectionalLightCreation();
