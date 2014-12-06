@@ -29,7 +29,6 @@ namespace como {
 const unsigned COMMAND_TYPE_OFFSET = 3;
 
 
-// TODO: Maybe a better name?
 template <class CommandType>
 class TypeCommand : public Command {
     private:
