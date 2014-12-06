@@ -69,7 +69,6 @@ class OpenGL : public Lockable
          ***/
         ShadingMode getShadingMode() const;
         GLint getShaderInteger( ShaderProgramType shaderProgramType, std::string varName );
-        GLuint getShaderProgramID( ShaderProgramType shaderProgramType ) const; // TODO: Remove this method.
 
 
         /***

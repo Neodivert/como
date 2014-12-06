@@ -113,14 +113,6 @@ GLint OpenGL::getShaderInteger( ShaderProgramType shaderProgramType, std::string
 }
 
 
-GLuint OpenGL::getShaderProgramID( ShaderProgramType shaderProgramType ) const
-{
-    LOCK
-
-    return shaderProgramsIDs_.at( shaderProgramType );
-}
-
-
 /***
  * 4. Setters
  ***/
