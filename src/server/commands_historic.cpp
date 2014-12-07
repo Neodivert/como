@@ -89,8 +89,7 @@ std::uint32_t CommandsHistoric::fillSceneUpdatePacketPacket( SceneUpdatePacket& 
     while( ( i < nCommands ) && ( it != commands_.end() ) ){
         // Don't send to the user its own commands (unless they are commands
         // with target RESOURCE).
-        if( (*it)->getUserID() != userID ||
-            (*it)->getTarget() == CommandTarget::RESOURCE ){
+        if( mustSendCommandToUser( *(*it), userID ) ){
             packet.addCommand( CommandConstPtr( (*it)->clone() ), firstCommand + i, commands_.size() );
             i++;
         }
@@ -99,6 +98,34 @@ std::uint32_t CommandsHistoric::fillSceneUpdatePacketPacket( SceneUpdatePacket& 
     }
 
     return nextCommand;
+}
+
+
+/***
+ * 7. Getters (private)
+ ***/
+
+bool CommandsHistoric::mustSendCommandToUser( const Command& command,
+                                              const UserID& userID ) const
+{
+    // Send all the commands performed by other users.
+    if( command.getUserID() != userID ){
+        return true;
+    }
+
+    // Send all RESOURCE commands (locks and lock denials).
+    if( ( command.getTarget() == CommandTarget::RESOURCE ) ){
+        return true;
+    }
+
+    // Send light creation commands.
+    if( ( command.getTarget() == CommandTarget::LIGHT ) &&
+        ( dynamic_cast< const LightCommand& >( command ).getType() ==
+          LightCommandType::LIGHT_CREATION ) ){
+        return true;
+    }
+
+    return false;
 }
 
 } // namespace como

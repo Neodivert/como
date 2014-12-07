@@ -80,6 +80,13 @@ class CommandsHistoric : public Lockable
          ***/
         CommandsHistoric& operator = (const CommandsHistoric& ) = delete;
         CommandsHistoric& operator = ( CommandsHistoric&& ) = delete;
+
+
+    private:
+        /***
+         * 7. Getters (private)
+         ***/
+        bool mustSendCommandToUser( const Command& command, const UserID& userID ) const;
 };
 
 typedef std::shared_ptr< CommandsHistoric > CommandsHistoricPtr;

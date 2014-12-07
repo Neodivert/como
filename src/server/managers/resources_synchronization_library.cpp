@@ -243,18 +243,6 @@ void ResourcesSynchronizationLibrary::processCommand( const Command &command )
                             ResourceSyncDataPtr(
                                 new LightSyncData(
                                     dynamic_cast< const DirectionalLightCreationCommand& >( command ) ) );
-
-                    // If the user who originally made the request exists in
-                    // the system, send him / her a response command.
-                    if( users_.count( lightCommand.getUserID() ) ){
-                        // TODO: Don't use the "public" historic for "private"
-                        // commands!.
-                        commandsHistoric_->addCommand(
-                                    CommandConstPtr(
-                                        new LightCreationResponseCommand( lightCommand.getResourceID(),
-                                                                          true
-                                                                          ) ) );
-                    }
                 }else{
                     // If the user who originally made the request exists in
                     // the system, send him / her a response command.
