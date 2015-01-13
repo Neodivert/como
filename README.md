@@ -3,7 +3,7 @@ COMO: Cooperative Modeller
 
 ## Current status
 
-**"Completed"**, but some refactoring will be made... eventually.
+**"Completed"** (refactoring needed).
 
 ## About
 
