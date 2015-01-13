@@ -1,6 +1,10 @@
 COMO: Cooperative Modeller
 ====
 
+## Current status
+
+**"Completed"**, but some refactoring will be made... eventually.
+
 ## About
 
 COMO (Cooperative Modeller) is an 3D modelling software that allows multiple users to work on the same scene through the network (in real time). 
