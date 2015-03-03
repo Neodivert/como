@@ -2,13 +2,16 @@
 
 ![COMO Screenshot](https://github.com/moisesjbc/como/blob/master/img/como.png "COMO")
 
-## Current status
-
-**"Completed"** (refactoring needed).
 
 ## About
 
 COMO (Cooperative Modeller) is a cooperative 3d modelling sofware. It allows multiple users to connect though the network and work on a same 3D scene in real time.
+
+
+## Current status
+
+**"Completed"** (refactoring needed).
+
 
 ### A scenes modeller
 
