@@ -1,4 +1,4 @@
-# COMO: Cooperative Modeller
+# COMO: Modelador Cooperativo
 
 ![COMO Screenshot](https://github.com/moisesjbc/como/blob/master/img/como.png "COMO")
 
