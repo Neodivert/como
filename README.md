@@ -16,8 +16,8 @@ COMO (Cooperative Modeller) is a cooperative 3d modelling sofware. It allows mul
 
 The cooperative modeller COMO is oriented towards the colaborative creation of scenes instead of the creation of models. This mainly implies:
 
-    Two users can't be working on the same 3D object at the same time. Only the user who selects an object (a mesh, a material, etc) can edit it until he / she until the object is unselected.
-    The edges and vertices of 3D meshes can be edited.
+* Two users can't be working on the same 3D object at the same time. Only the user who selects an object (a mesh, a material, etc) can edit it until he / she until the object is unselected.
+* The edges and vertices of 3D meshes can be edited.
 
 The idea is that multiple users create a scene, for example, of the inside of a building, by combining primitives "wall", "chair", "table", etc. COMO wasn't designed for modelling a human character from zero, for example.
 
@@ -55,11 +55,11 @@ Although COMO has been developed to be cross-platform, it only works on Ubuntu (
 
 COMO makes use of the following libraries:
 
-* Qt 5.2.1 for the GUI.
-* Boost 1.55.0 for network communication, threading and access to the file system.
-* OpenGL 4.2 for 3D graphics.
-* SDL2 y SDL_image 2.0 for textures loading.
-* GLM 0.9.5.1 for vectorial and matrix computation.
+* [Qt 5.2.1](http://qt-project.org/) for the GUI.
+* [Boost 1.55.0](http://www.boost.org/) for network communication, threading and access to the file system.
+* [OpenGL 4.2](http://www.opengl.org/) for 3D graphics.
+* [SDL2](https://www.libsdl.org/) and [SDL_image 2.0](https://www.libsdl.org/projects/SDL_image/) for textures loading.
+* [GLM 0.9.5.1](http://glm.g-truc.net/) for vectorial and matrix computation.
 
 COMO also depends on the program "gnome-terminal" for creating a server from the client software.
 
