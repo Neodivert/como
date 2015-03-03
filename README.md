@@ -1,5 +1,4 @@
-COMO: Cooperative Modeller
-====
+# COMO: Cooperative Modeller
 
 ## Current status
 
@@ -7,24 +6,61 @@ COMO: Cooperative Modeller
 
 ## About
 
-COMO (Cooperative Modeller) is an 3D modelling software that allows multiple users to work on the same scene through the network (in real time). 
+COMO (Cooperative Modeller) is a cooperative 3d modelling sofware. It allows multiple users to connect though the network and work on a same 3D scene in real time.
 
-Among other things, users can create geometric primitives (cubes, cones, cylinders and spheres), import meshes from file (.obj), transform selections of objects (translations, rotations and scales), create multiple directional lights, edit materials or apply textures to certain meshes.
+### A scenes modeller
 
-Currently COMO is only available for Ubuntu, but it has been built using cross-platform technologies and tools such as OpenGL, Qt or Boost, so porting the project to other platforms would be easier in the future.
+The cooperative modeller COMO is oriented towards the colaborative creation of scenes instead of the creation of models. This mainly implies:
+
+    Two users can't be working on the same 3D object at the same time. Only the user who selects an object (a mesh, a material, etc) can edit it until he / she until the object is unselected.
+    The edges and vertices of 3D meshes can be edited.
+
+The idea is that multiple users create a scene, for example, of the inside of a building, by combining primitives "wall", "chair", "table", etc. COMO wasn't designed for modelling a human character from zero, for example.
+
+
+### Features
+
+COMO allows users to:
+
+* create a shared scene or connect to a created one.
+* load meshes from files and add them to the scene (only OBJ files).
+* create cubes, cones, cylinders and spheres.
+* create directional lights until the limit defined by the server is reached.
+* select and transform multiple entities (meshes, lights and cameras).
+	* Allowed transformations are translations, rotations and scales.
+	* Incorporates arbitrary and axis related (X, Y or Z) transformations.
+	* The pivot point for rotations and scales can be one of three: world origin, selection's centroid or individual centroids.
+* remove entities from the scene (excepting the scene's camera).
+* edit the parameters of the materials associated to the meshes:
+	* Color
+	* Ambient reflectivity
+	* Diffuse reflectivity
+	* Specular reflectivity
+	* Specular exponent
+* load textures and apply them to walls of cubes, cones, cylinders and spheres. For every wall and its texture, user can set the texture's offset and scale over the wall.
+* save and load scenes.
 
 [Check COMO's wiki](https://github.com/moisesjbc/como/wiki) for learning what you can do with COMO and how to do it.
 
 
-## Dependencies
-COMO makes use of the following APIs and libraries:
-* Qt v5.2.1
-* Boost v1.55 (boost_system, boost_thread, boost_filesystem and boost_asio).
-* OpenGL v4.2 and GLSL.
-* GLM v0.9.5.1
-* SDL2_image
+## Technical features
+
+### Operative system
+
+Although COMO has been developed to be cross-platform, it only works on Ubuntu (x86_64) currently. With minor changes in code it should work on others platforms... in theory.
+
+### Libraries
+
+COMO makes use of the following libraries:
+
+* Qt 5.2.1 for the GUI.
+* Boost 1.55.0 for network communication, threading and access to the file system.
+* OpenGL 4.2 for 3D graphics.
+* SDL2 y SDL_image 2.0 for textures loading.
+* GLM 0.9.5.1 for vectorial and matrix computation.
 
 COMO also depends on the program "gnome-terminal" for creating a server from the client software.
+
 
 ## Building COMO (Ubuntu 14.04)
 
