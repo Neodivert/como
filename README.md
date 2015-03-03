@@ -1,6 +1,6 @@
 # COMO: Cooperative Modeller
 
-![COMO Screenshot](img/como.png "COMO")
+![COMO Screenshot](https://github.com/moisesjbc/como/blob/master/img/como.png "COMO")
 
 ## Current status
 
