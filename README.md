@@ -18,7 +18,7 @@ The cooperative modeller COMO is oriented towards the colaborative creation of s
 The idea is that multiple users create a scene, for example, of the inside of a building, by combining primitives "wall", "chair", "table", etc. COMO wasn't designed for modelling a human character from zero, for example.
 
 
-### Features
+## Features
 
 COMO allows users to:
 
