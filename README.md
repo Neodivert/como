@@ -87,12 +87,17 @@ COMO also depends on the program "gnome-terminal" for creating a server from the
 
 ### Building
 
-1. Download the latest version of this repository [from here](https://github.com/moisesjbc/como)
+1. Clone this repository.
+
+   ```
+   git clone git@github.com:moisesjbc/como.git
+   ```
+
 
 2. Enter in the downloaded directory.
 
    ```
-   cd <directory>
+   cd como
    ```
 
 3. Initialize and update the repository's submodules:

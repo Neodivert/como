@@ -83,12 +83,16 @@ COMO también depende del programa "gnome-terminal" para crear un servidor desde
 
 ### Construcción
 
-1. Descargar la última versión de este repositorio [aquí](https://github.com/moisesjbc/como)
+1. Clonar este repositorio.
+
+   ```
+   git clone git@github.com:moisesjbc/como.git
+   ```
 
 2. Entrar en el directorio descargado.
 
    ```
-   cd <directorio>
+   cd como
    ```
 
 3. Inicializar y actualizar los submódulos del repositorio:
