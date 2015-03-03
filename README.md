@@ -40,8 +40,6 @@ COMO allows users to:
 * load textures and apply them to walls of cubes, cones, cylinders and spheres. For every wall and its texture, user can set the texture's offset and scale over the wall.
 * save and load scenes.
 
-[Check COMO's wiki](https://github.com/moisesjbc/como/wiki) for learning what you can do with COMO and how to do it.
-
 
 ## Technical features
 
@@ -106,3 +104,14 @@ COMO also depends on the program "gnome-terminal" for creating a server from the
 6. Optionally add "-j (n)" to "make additional arguments" in both project's properties. (n) is the desired number of concurrent threads that will be used for building.
 
 7. Build both projects in "release" mode and enjoy!
+
+
+## Multimedia 
+
+### Documentation
+
+[Check COMO's wiki](https://github.com/moisesjbc/como/wiki) for learning what you can do with COMO and how to do it.
+
+### Videos
+
+On this [Youtube playlist](http://www.youtube.com/playlist?list=PLfi4ueBWh9m5T1Gp72CyoKc2hi_RGa_NG) you can see all the videos I have uploaded about the cooperative modeller COMO.
