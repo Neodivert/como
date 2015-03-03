@@ -2,6 +2,7 @@
 
 ![COMO Screenshot](https://github.com/moisesjbc/como/blob/master/img/como.png "COMO")
 
+[Traducción en Español aquí](https://github.com/moisesjbc/como/blob/master/README_ES.md)
 
 ## About
 

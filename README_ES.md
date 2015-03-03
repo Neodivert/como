@@ -2,6 +2,7 @@
 
 ![COMO Screenshot](https://github.com/moisesjbc/como/blob/master/img/como.png "COMO")
 
+[English translation here](https://github.com/moisesjbc/como/blob/master/README_ES.md)
 
 ## Resumen
 
