@@ -1,5 +1,7 @@
 # COMO: Cooperative Modeller
 
+![COMO Screenshot](img/como.png "COMO")
+
 ## Current status
 
 **"Completed"** (refactoring needed).
