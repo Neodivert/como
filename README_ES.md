@@ -99,7 +99,7 @@ COMO también depende del programa "gnome-terminal" para crear un servidor desde
 
 4. Abrir el fichero "project/client/como_project.pro" con Qt Creator y establecer "../../bin/client" como el directorio de construcción (build directory).
 
-5. Abrir el fichero "project/server/server.pro" con Qt Creator y establecer "../../bin/server" como el directorio directorio de construcción (build directory).
+5. Abrir el fichero "project/server/server.pro" con Qt Creator y establecer "../../bin/server" como el directorio de construcción (build directory).
 
 6. Opcionalmente añadir "-j (n)" a "make additional arguments" en las propiedades de ambos proyectos, donde (n) es el número de hilos que se usarán para la construcción del software.
 
