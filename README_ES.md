@@ -53,7 +53,7 @@ El software hace uso de las siguientes librerías:
 
 * [Qt 5.2.1](http://qt-project.org/) para la interfaz de usuario.
 * [Boost 1.55.0](http://www.boost.org/) para la comunicación en red, los hilos y el sistema de directorios.
-* [OpenGL 4.2](http://www.opengl.org/) para los gráficos 3D.
+* [OpenGL 4.2](http://www.opengl.org/) a través de la librería [Mesa](http://www.mesa3d.org/) para los gráficos 3D.
 * [SDL2](https://www.libsdl.org/) y [SDL_image 2.0](https://www.libsdl.org/projects/SDL_image/) para la carga de texturas.
 * [GLM 0.9.5.1](http://glm.g-truc.net/) para el cálculo con vectores y matrices.
 

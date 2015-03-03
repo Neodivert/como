@@ -57,7 +57,7 @@ COMO makes use of the following libraries:
 
 * [Qt 5.2.1](http://qt-project.org/) for the GUI.
 * [Boost 1.55.0](http://www.boost.org/) for network communication, threading and access to the file system.
-* [OpenGL 4.2](http://www.opengl.org/) for 3D graphics.
+* [OpenGL 4.2](http://www.opengl.org/) through the [Mesa](http://www.mesa3d.org/) library for 3D graphics.
 * [SDL2](https://www.libsdl.org/) and [SDL_image 2.0](https://www.libsdl.org/projects/SDL_image/) for textures loading.
 * [GLM 0.9.5.1](http://glm.g-truc.net/) for vectorial and matrix computation.
 
