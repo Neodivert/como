@@ -1,8 +1,8 @@
 # COMO: Modelador Cooperativo
 
-![COMO Screenshot](https://github.com/moisesjbc/como/blob/master/img/como.png "COMO")
+![COMO Screenshot](img/como.png "COMO")
 
-[English translation here](https://github.com/moisesjbc/como/blob/master/README_ES.md)
+[English translation here](README_ES.md)
 
 ## Resumen
 
