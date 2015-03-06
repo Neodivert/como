@@ -2,7 +2,7 @@
 
 ![COMO Screenshot](img/como.png "COMO")
 
-[Traducción en Español aquí](README_ES.md)
+[Ver en Español](README_ES.md)
 
 ## About
 
