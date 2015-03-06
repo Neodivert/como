@@ -1,8 +1,8 @@
 # COMO: Modelador Cooperativo
 
-![COMO Screenshot](img/como.png "COMO")
+[View in English](README.md)
 
-[English translation here](README_ES.md)
+![COMO Screenshot](img/como.png "COMO")
 
 ## Resumen
 
